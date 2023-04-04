@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerEinzelleistungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerEinzelleistungen")
-@NamedQuery(name="DTOSchuelerTeilleistung.all", query="SELECT e FROM DTOSchuelerTeilleistung e")
-@NamedQuery(name="DTOSchuelerTeilleistung.id", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.id.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.datum", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.datum.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.lehrer_id", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.lehrer_id.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.art_id", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.art_id.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.bemerkung", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.bemerkung.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.leistung_id", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.leistung_id.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.notenkrz", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz = :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.notenkrz.multiple", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz IN :value")
-@NamedQuery(name="DTOSchuelerTeilleistung.primaryKeyQuery", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerTeilleistung.all.migration", query="SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Datum","Lehrer_ID","Art_ID","Bemerkung","Leistung_ID","NotenKrz"})
-public class DTOSchuelerTeilleistung {
+@NamedQuery(name = "DTOSchuelerTeilleistung.all", query = "SELECT e FROM DTOSchuelerTeilleistung e")
+@NamedQuery(name = "DTOSchuelerTeilleistung.id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.datum", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.datum.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Datum IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.lehrer_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.art_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.art_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Art_ID IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.bemerkung", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.leistung_id", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.leistung_id.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.Leistung_ID IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.notenkrz", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz = :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.notenkrz.multiple", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.NotenKrz IN :value")
+@NamedQuery(name = "DTOSchuelerTeilleistung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerTeilleistung.all.migration", query = "SELECT e FROM DTOSchuelerTeilleistung e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Datum", "Lehrer_ID", "Art_ID", "Bemerkung", "Leistung_ID", "NotenKrz"})
+public final class DTOSchuelerTeilleistung {
 
 	/** ID der Teilleistung */
 	@Id
@@ -56,9 +56,9 @@ public class DTOSchuelerTeilleistung {
 	/** Datum der Teilleistung */
 	@Column(name = "Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Datum;
 
 	/** LehrerID der Teilleistung */
@@ -99,11 +99,11 @@ public class DTOSchuelerTeilleistung {
 	 * @param Leistung_ID   der Wert für das Attribut Leistung_ID
 	 */
 	public DTOSchuelerTeilleistung(final Long ID, final Long Leistung_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Leistung_ID == null) { 
+		if (Leistung_ID == null) {
 			throw new NullPointerException("Leistung_ID must not be null");
 		}
 		this.Leistung_ID = Leistung_ID;
@@ -111,7 +111,7 @@ public class DTOSchuelerTeilleistung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

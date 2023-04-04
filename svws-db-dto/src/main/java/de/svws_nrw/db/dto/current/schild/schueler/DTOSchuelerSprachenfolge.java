@@ -26,43 +26,43 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerSprachenfolge.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachenfolge")
-@NamedQuery(name="DTOSchuelerSprachenfolge.all", query="SELECT e FROM DTOSchuelerSprachenfolge e")
-@NamedQuery(name="DTOSchuelerSprachenfolge.id", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.id.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.schueler_id", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.schueler_id.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.sprache", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.sprache.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.reihenfolgenr", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.reihenfolgenr.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.asdjahrgangvon", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.asdjahrgangvon.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.asdjahrgangbis", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.asdjahrgangbis.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.abschnittvon", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.abschnittvon.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.abschnittbis", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.abschnittbis.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.referenzniveau", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.referenzniveau.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.kleineslatinumerreicht", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.kleineslatinumerreicht.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.latinumerreicht", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.latinumerreicht.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.graecumerreicht", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.graecumerreicht.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.hebraicumerreicht", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht = :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.hebraicumerreicht.multiple", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht IN :value")
-@NamedQuery(name="DTOSchuelerSprachenfolge.primaryKeyQuery", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerSprachenfolge.all.migration", query="SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Sprache","ReihenfolgeNr","ASDJahrgangVon","ASDJahrgangBis","AbschnittVon","AbschnittBis","Referenzniveau","KleinesLatinumErreicht","LatinumErreicht","GraecumErreicht","HebraicumErreicht"})
-public class DTOSchuelerSprachenfolge {
+@NamedQuery(name = "DTOSchuelerSprachenfolge.all", query = "SELECT e FROM DTOSchuelerSprachenfolge e")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.id", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.id.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.schueler_id", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.sprache", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.sprache.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.reihenfolgenr", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.reihenfolgenr.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangvon", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangvon.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangVon IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangbis", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.asdjahrgangbis.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ASDJahrgangBis IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittvon", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittvon.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittVon IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittbis", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.abschnittbis.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.AbschnittBis IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.referenzniveau", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.referenzniveau.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Referenzniveau IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.kleineslatinumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.kleineslatinumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.KleinesLatinumErreicht IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.latinumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.latinumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.LatinumErreicht IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.graecumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.graecumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.GraecumErreicht IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht = :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht IN :value")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.all.migration", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ReihenfolgeNr", "ASDJahrgangVon", "ASDJahrgangBis", "AbschnittVon", "AbschnittBis", "Referenzniveau", "KleinesLatinumErreicht", "LatinumErreicht", "GraecumErreicht", "HebraicumErreicht"})
+public final class DTOSchuelerSprachenfolge {
 
 	/** ID des Sprachenfolgeeintrags */
 	@Id
@@ -108,41 +108,41 @@ public class DTOSchuelerSprachenfolge {
 	/** Referenzniveau GeR des Sprachenfolgeeintrags */
 	@Column(name = "Referenzniveau")
 	@JsonProperty
-	@Convert(converter=SprachreferenzniveauConverter.class)
-	@JsonSerialize(using=SprachreferenzniveauConverterSerializer.class)
-	@JsonDeserialize(using=SprachreferenzniveauConverterDeserializer.class)
+	@Convert(converter = SprachreferenzniveauConverter.class)
+	@JsonSerialize(using = SprachreferenzniveauConverterSerializer.class)
+	@JsonDeserialize(using = SprachreferenzniveauConverterDeserializer.class)
 	public Sprachreferenzniveau Referenzniveau;
 
 	/** Gibt an, ob der Schüler das kleine Latinum erreicht hat */
 	@Column(name = "KleinesLatinumErreicht")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean KleinesLatinumErreicht;
 
 	/** Gibt an, ob der Schüler das Latinum erreicht hat */
 	@Column(name = "LatinumErreicht")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean LatinumErreicht;
 
 	/** Gibt an, ob der Schüler das Graecum erreicht hat */
 	@Column(name = "GraecumErreicht")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean GraecumErreicht;
 
 	/** Gibt an, ob der Schüler das Hebraicum erreicht hat */
 	@Column(name = "HebraicumErreicht")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean HebraicumErreicht;
 
 	/**
@@ -159,15 +159,15 @@ public class DTOSchuelerSprachenfolge {
 	 * @param Sprache   der Wert für das Attribut Sprache
 	 */
 	public DTOSchuelerSprachenfolge(final Long ID, final Long Schueler_ID, final String Sprache) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Sprache == null) { 
+		if (Sprache == null) {
 			throw new NullPointerException("Sprache must not be null");
 		}
 		this.Sprache = Sprache;
@@ -175,7 +175,7 @@ public class DTOSchuelerSprachenfolge {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

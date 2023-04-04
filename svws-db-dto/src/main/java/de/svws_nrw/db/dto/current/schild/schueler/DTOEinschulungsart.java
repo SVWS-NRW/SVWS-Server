@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_EinschulungsArt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_EinschulungsArt")
-@NamedQuery(name="DTOEinschulungsart.all", query="SELECT e FROM DTOEinschulungsart e")
-@NamedQuery(name="DTOEinschulungsart.id", query="SELECT e FROM DTOEinschulungsart e WHERE e.ID = :value")
-@NamedQuery(name="DTOEinschulungsart.id.multiple", query="SELECT e FROM DTOEinschulungsart e WHERE e.ID IN :value")
-@NamedQuery(name="DTOEinschulungsart.bezeichnung", query="SELECT e FROM DTOEinschulungsart e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOEinschulungsart.bezeichnung.multiple", query="SELECT e FROM DTOEinschulungsart e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOEinschulungsart.sortierung", query="SELECT e FROM DTOEinschulungsart e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOEinschulungsart.sortierung.multiple", query="SELECT e FROM DTOEinschulungsart e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOEinschulungsart.sichtbar", query="SELECT e FROM DTOEinschulungsart e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOEinschulungsart.sichtbar.multiple", query="SELECT e FROM DTOEinschulungsart e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOEinschulungsart.aenderbar", query="SELECT e FROM DTOEinschulungsart e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOEinschulungsart.aenderbar.multiple", query="SELECT e FROM DTOEinschulungsart e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOEinschulungsart.primaryKeyQuery", query="SELECT e FROM DTOEinschulungsart e WHERE e.ID = ?1")
-@NamedQuery(name="DTOEinschulungsart.all.migration", query="SELECT e FROM DTOEinschulungsart e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar"})
-public class DTOEinschulungsart {
+@NamedQuery(name = "DTOEinschulungsart.all", query = "SELECT e FROM DTOEinschulungsart e")
+@NamedQuery(name = "DTOEinschulungsart.id", query = "SELECT e FROM DTOEinschulungsart e WHERE e.ID = :value")
+@NamedQuery(name = "DTOEinschulungsart.id.multiple", query = "SELECT e FROM DTOEinschulungsart e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOEinschulungsart.bezeichnung", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOEinschulungsart.bezeichnung.multiple", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOEinschulungsart.sortierung", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOEinschulungsart.sortierung.multiple", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOEinschulungsart.sichtbar", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOEinschulungsart.sichtbar.multiple", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOEinschulungsart.aenderbar", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOEinschulungsart.aenderbar.multiple", query = "SELECT e FROM DTOEinschulungsart e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOEinschulungsart.primaryKeyQuery", query = "SELECT e FROM DTOEinschulungsart e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOEinschulungsart.all.migration", query = "SELECT e FROM DTOEinschulungsart e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOEinschulungsart {
 
 	/** ID der Einschulungsart */
 	@Id
@@ -62,17 +62,17 @@ public class DTOEinschulungsart {
 	/** Sichbarkeit der Einschulungsart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Einschulungsart */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOEinschulungsart {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOEinschulungsart(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -100,7 +100,7 @@ public class DTOEinschulungsart {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

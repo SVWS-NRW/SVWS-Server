@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerLehramt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOLehrerLehramtPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramt")
-@NamedQuery(name="DTOLehrerLehramt.all", query="SELECT e FROM DTOLehrerLehramt e")
-@NamedQuery(name="DTOLehrerLehramt.lehrer_id", query="SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOLehrerLehramt.lehrer_id.multiple", query="SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOLehrerLehramt.lehramtkrz", query="SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtKrz = :value")
-@NamedQuery(name="DTOLehrerLehramt.lehramtkrz.multiple", query="SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtKrz IN :value")
-@NamedQuery(name="DTOLehrerLehramt.lehramtanerkennungkrz", query="SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtAnerkennungKrz = :value")
-@NamedQuery(name="DTOLehrerLehramt.lehramtanerkennungkrz.multiple", query="SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtAnerkennungKrz IN :value")
-@NamedQuery(name="DTOLehrerLehramt.primaryKeyQuery", query="SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID = ?1 AND e.LehramtKrz = ?2")
-@NamedQuery(name="DTOLehrerLehramt.all.migration", query="SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID IS NOT NULL AND e.LehramtKrz IS NOT NULL")
-@JsonPropertyOrder({"Lehrer_ID","LehramtKrz","LehramtAnerkennungKrz"})
-public class DTOLehrerLehramt {
+@NamedQuery(name = "DTOLehrerLehramt.all", query = "SELECT e FROM DTOLehrerLehramt e")
+@NamedQuery(name = "DTOLehrerLehramt.lehrer_id", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOLehrerLehramt.lehrer_id.multiple", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOLehrerLehramt.lehramtkrz", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtKrz = :value")
+@NamedQuery(name = "DTOLehrerLehramt.lehramtkrz.multiple", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtKrz IN :value")
+@NamedQuery(name = "DTOLehrerLehramt.lehramtanerkennungkrz", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtAnerkennungKrz = :value")
+@NamedQuery(name = "DTOLehrerLehramt.lehramtanerkennungkrz.multiple", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.LehramtAnerkennungKrz IN :value")
+@NamedQuery(name = "DTOLehrerLehramt.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID = ?1 AND e.LehramtKrz = ?2")
+@NamedQuery(name = "DTOLehrerLehramt.all.migration", query = "SELECT e FROM DTOLehrerLehramt e WHERE e.Lehrer_ID IS NOT NULL AND e.LehramtKrz IS NOT NULL")
+@JsonPropertyOrder({"Lehrer_ID", "LehramtKrz", "LehramtAnerkennungKrz"})
+public final class DTOLehrerLehramt {
 
 	/** LehrerID zu der das Lehramt gehört */
 	@Id
@@ -62,7 +62,7 @@ public class DTOLehrerLehramt {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOLehrerLehramt(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -70,7 +70,7 @@ public class DTOLehrerLehramt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

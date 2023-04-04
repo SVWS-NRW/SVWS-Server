@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Client_Konfiguration_Benutzer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOClientKonfigurationBenutzerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_Client_Konfiguration_Benutzer")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.all", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.benutzer_id", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.benutzer_id.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.appname", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.appname.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.schluessel", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.schluessel.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.wert", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.wert.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.primaryKeyQuery", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3")
-@NamedQuery(name="MigrationDTOClientKonfigurationBenutzer.all.migration", query="SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","AppName","Schluessel","Wert"})
-public class MigrationDTOClientKonfigurationBenutzer {
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.all", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.benutzer_id", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.benutzer_id.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.appname", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.appname.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.AppName IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.schluessel", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.schluessel.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Schluessel IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.wert", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.wert.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Wert IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3")
+@NamedQuery(name = "MigrationDTOClientKonfigurationBenutzer.all.migration", query = "SELECT e FROM MigrationDTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
+@JsonPropertyOrder({"Benutzer_ID", "AppName", "Schluessel", "Wert"})
+public final class MigrationDTOClientKonfigurationBenutzer {
 
 	/** Die ID des Datenbankbenutzers, für den der Client-Konfigurationsdatensatz gespeichert ist */
 	@Id
@@ -73,19 +73,19 @@ public class MigrationDTOClientKonfigurationBenutzer {
 	 * @param Wert   der Wert für das Attribut Wert
 	 */
 	public MigrationDTOClientKonfigurationBenutzer(final Long Benutzer_ID, final String AppName, final String Schluessel, final String Wert) {
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (AppName == null) { 
+		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
 		}
 		this.AppName = AppName;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
-		if (Wert == null) { 
+		if (Wert == null) {
 			throw new NullPointerException("Wert must not be null");
 		}
 		this.Wert = Wert;
@@ -93,7 +93,7 @@ public class MigrationDTOClientKonfigurationBenutzer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

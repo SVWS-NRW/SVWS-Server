@@ -21,45 +21,45 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Kindergarten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Kindergarten")
-@NamedQuery(name="MigrationDTOKindergarten.all", query="SELECT e FROM MigrationDTOKindergarten e")
-@NamedQuery(name="MigrationDTOKindergarten.id", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOKindergarten.id.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.bezeichnung", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOKindergarten.bezeichnung.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.plz", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.PLZ = :value")
-@NamedQuery(name="MigrationDTOKindergarten.plz.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.PLZ IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.ort", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Ort = :value")
-@NamedQuery(name="MigrationDTOKindergarten.ort.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Ort IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.strasse", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Strasse = :value")
-@NamedQuery(name="MigrationDTOKindergarten.strasse.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Strasse IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.strassenname", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Strassenname = :value")
-@NamedQuery(name="MigrationDTOKindergarten.strassenname.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Strassenname IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.hausnr", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNr = :value")
-@NamedQuery(name="MigrationDTOKindergarten.hausnr.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNr IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.hausnrzusatz", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name="MigrationDTOKindergarten.hausnrzusatz.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.tel", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Tel = :value")
-@NamedQuery(name="MigrationDTOKindergarten.tel.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Tel IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.email", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Email = :value")
-@NamedQuery(name="MigrationDTOKindergarten.email.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Email IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.bemerkung", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOKindergarten.bemerkung.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.sichtbar", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOKindergarten.sichtbar.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.sortierung", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOKindergarten.sortierung.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.schulnreigner", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOKindergarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOKindergarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOKindergarten.all.migration", query="SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","PLZ","Ort","Strasse","Strassenname","HausNr","HausNrZusatz","Tel","Email","Bemerkung","Sichtbar","Sortierung","SchulnrEigner"})
-public class MigrationDTOKindergarten {
+@NamedQuery(name = "MigrationDTOKindergarten.all", query = "SELECT e FROM MigrationDTOKindergarten e")
+@NamedQuery(name = "MigrationDTOKindergarten.id", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.id.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.bezeichnung", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.plz", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.PLZ = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.plz.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.PLZ IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.ort", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Ort = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.ort.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Ort IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.strasse", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Strasse = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.strasse.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Strasse IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.strassenname", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Strassenname = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.strassenname.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Strassenname IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.hausnr", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNr = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.hausnr.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNr IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.hausnrzusatz", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNrZusatz = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.HausNrZusatz IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.tel", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Tel = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.tel.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Tel IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.email", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Email = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.email.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Email IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.bemerkung", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.bemerkung.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.sichtbar", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.sichtbar.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.sortierung", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.sortierung.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.schulnreigner", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOKindergarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOKindergarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKindergarten.all.migration", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "PLZ", "Ort", "Strasse", "Strassenname", "HausNr", "HausNrZusatz", "Tel", "Email", "Bemerkung", "Sichtbar", "Sortierung", "SchulnrEigner"})
+public final class MigrationDTOKindergarten {
 
 	/** ID des Kindergartens */
 	@Id
@@ -120,9 +120,9 @@ public class MigrationDTOKindergarten {
 	/** Sichbarkeit des Kindergartens */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierung des Kindergartens */
@@ -147,7 +147,7 @@ public class MigrationDTOKindergarten {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOKindergarten(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -155,7 +155,7 @@ public class MigrationDTOKindergarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

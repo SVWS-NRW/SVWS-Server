@@ -22,48 +22,48 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ImpExp_EigeneImporte_Tabellen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOEigeneImporteTabellenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte_Tabellen")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.all", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.import_id", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.import_id.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.tablename", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.TableName = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.tablename.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.TableName IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstcreateid", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstCreateID = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstcreateid.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstCreateID IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstidfieldname", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstIDFieldName = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstidfieldname.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstIDFieldName IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.sequence", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Sequence = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.sequence.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Sequence IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookuptable", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupTable = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookuptable.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupTable IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfields", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFields = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfields.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFields IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfieldtypes", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldTypes = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfieldtypes.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldTypes IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfieldpos", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldPos = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupfieldpos.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldPos IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupkeyfield", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupKeyField = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupkeyfield.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupKeyField IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupresultfield", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultField = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupresultfield.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultField IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupresultfieldtype", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultFieldType = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.lookupresultfieldtype.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultFieldType IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstdefaultfieldname", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstdefaultfieldname.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstdefaultfieldvalue", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.dstdefaultfieldvalue.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.gu_id_field", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.GU_ID_Field = :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.gu_id_field.multiple", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.GU_ID_Field IN :value")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.primaryKeyQuery", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID = ?1 AND e.TableName = ?2")
-@NamedQuery(name="MigrationDTOEigeneImporteTabellen.all.migration", query="SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID IS NOT NULL AND e.TableName IS NOT NULL")
-@JsonPropertyOrder({"Import_ID","TableName","DstCreateID","DstIDFieldName","Sequence","LookupTable","LookupFields","LookupFieldTypes","LookupFieldPos","LookupKeyField","LookupResultField","LookupResultFieldType","DstDefaultFieldName","DstDefaultFieldValue","GU_ID_Field"})
-public class MigrationDTOEigeneImporteTabellen {
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.all", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.import_id", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.import_id.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.tablename", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.TableName = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.tablename.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.TableName IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstcreateid", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstCreateID = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstcreateid.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstCreateID IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstidfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstIDFieldName = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstidfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstIDFieldName IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.sequence", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Sequence = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.sequence.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Sequence IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookuptable", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupTable = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookuptable.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupTable IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfields", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFields = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfields.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFields IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfieldtypes", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldTypes = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfieldtypes.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldTypes IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfieldpos", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldPos = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupfieldpos.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupFieldPos IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupkeyfield", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupKeyField = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupkeyfield.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupKeyField IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupresultfield", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultField = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupresultfield.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultField IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupresultfieldtype", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultFieldType = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.lookupresultfieldtype.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.LookupResultFieldType IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstdefaultfieldname", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstdefaultfieldname.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstdefaultfieldvalue", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.dstdefaultfieldvalue.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.gu_id_field", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.GU_ID_Field = :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.gu_id_field.multiple", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.GU_ID_Field IN :value")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID = ?1 AND e.TableName = ?2")
+@NamedQuery(name = "MigrationDTOEigeneImporteTabellen.all.migration", query = "SELECT e FROM MigrationDTOEigeneImporteTabellen e WHERE e.Import_ID IS NOT NULL AND e.TableName IS NOT NULL")
+@JsonPropertyOrder({"Import_ID", "TableName", "DstCreateID", "DstIDFieldName", "Sequence", "LookupTable", "LookupFields", "LookupFieldTypes", "LookupFieldPos", "LookupKeyField", "LookupResultField", "LookupResultFieldType", "DstDefaultFieldName", "DstDefaultFieldValue", "GU_ID_Field"})
+public final class MigrationDTOEigeneImporteTabellen {
 
 	/** externen Textimport Tabellen */
 	@Id
@@ -80,9 +80,9 @@ public class MigrationDTOEigeneImporteTabellen {
 	/** externen Textimport Tabellen */
 	@Column(name = "DstCreateID")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean DstCreateID;
 
 	/** externen Textimport Tabellen */
@@ -157,7 +157,7 @@ public class MigrationDTOEigeneImporteTabellen {
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 */
 	public MigrationDTOEigeneImporteTabellen(final Integer Import_ID) {
-		if (Import_ID == null) { 
+		if (Import_ID == null) {
 			throw new NullPointerException("Import_ID must not be null");
 		}
 		this.Import_ID = Import_ID;
@@ -165,7 +165,7 @@ public class MigrationDTOEigeneImporteTabellen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

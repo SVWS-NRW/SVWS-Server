@@ -21,25 +21,25 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Abt_Kl.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abt_Kl")
-@NamedQuery(name="DTOAbteilungsKlassen.all", query="SELECT e FROM DTOAbteilungsKlassen e")
-@NamedQuery(name="DTOAbteilungsKlassen.id", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = :value")
-@NamedQuery(name="DTOAbteilungsKlassen.id.multiple", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOAbteilungsKlassen.abteilung_id", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
-@NamedQuery(name="DTOAbteilungsKlassen.abteilung_id.multiple", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
-@NamedQuery(name="DTOAbteilungsKlassen.klassen_id", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID = :value")
-@NamedQuery(name="DTOAbteilungsKlassen.klassen_id.multiple", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name="DTOAbteilungsKlassen.sichtbar", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOAbteilungsKlassen.sichtbar.multiple", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOAbteilungsKlassen.primaryKeyQuery", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOAbteilungsKlassen.all.migration", query="SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abteilung_ID","Klassen_ID","Sichtbar"})
-public class DTOAbteilungsKlassen {
+@NamedQuery(name = "DTOAbteilungsKlassen.all", query = "SELECT e FROM DTOAbteilungsKlassen e")
+@NamedQuery(name = "DTOAbteilungsKlassen.id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.abteilung_id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.abteilung_id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.klassen_id", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID = :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.klassen_id.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Klassen_ID IN :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.sichtbar", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.sichtbar.multiple", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOAbteilungsKlassen.primaryKeyQuery", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAbteilungsKlassen.all.migration", query = "SELECT e FROM DTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abteilung_ID", "Klassen_ID", "Sichtbar"})
+public final class DTOAbteilungsKlassen {
 
 	/** ID der Klassenzugehörigkeit zu einer Abteilung */
 	@Id
@@ -60,9 +60,9 @@ public class DTOAbteilungsKlassen {
 	/** steuert die Sichtbarkeit der Klasse zur Abteilung */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/**
@@ -79,15 +79,15 @@ public class DTOAbteilungsKlassen {
 	 * @param Klassen_ID   der Wert für das Attribut Klassen_ID
 	 */
 	public DTOAbteilungsKlassen(final Long ID, final Long Abteilung_ID, final Long Klassen_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abteilung_ID == null) { 
+		if (Abteilung_ID == null) {
 			throw new NullPointerException("Abteilung_ID must not be null");
 		}
 		this.Abteilung_ID = Abteilung_ID;
-		if (Klassen_ID == null) { 
+		if (Klassen_ID == null) {
 			throw new NullPointerException("Klassen_ID must not be null");
 		}
 		this.Klassen_ID = Klassen_ID;
@@ -95,7 +95,7 @@ public class DTOAbteilungsKlassen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

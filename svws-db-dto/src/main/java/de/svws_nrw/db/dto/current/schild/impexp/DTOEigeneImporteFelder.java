@@ -22,52 +22,52 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ImpExp_EigeneImporte_Felder.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOEigeneImporteFelderPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte_Felder")
-@NamedQuery(name="DTOEigeneImporteFelder.all", query="SELECT e FROM DTOEigeneImporteFelder e")
-@NamedQuery(name="DTOEigeneImporteFelder.import_id", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.import_id.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.field_id", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Field_ID = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.field_id.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Field_ID IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.tabledescription", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.TableDescription = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.tabledescription.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.TableDescription IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.fielddescription", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.FieldDescription = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.fielddescription.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.FieldDescription IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.srcposition", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.SrcPosition = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.srcposition.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.SrcPosition IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dsttable", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstTable = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dsttable.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstTable IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldname", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldname.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldtype", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldType = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldtype.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldType IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldisidentifier", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstfieldisidentifier.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookupdir", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupDir = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookupdir.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupDir IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookuptable", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTable = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookuptable.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTable IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookupfieldname", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookupfieldname.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookuptableidfieldname", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstlookuptableidfieldname.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstresultfieldname", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstResultFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstresultfieldname.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstResultFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstkeylookupinsert", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstkeylookupinsert.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstkeylookupnamecreateid", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstkeylookupnamecreateid.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstforcenumeric", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstForceNumeric = :value")
-@NamedQuery(name="DTOEigeneImporteFelder.dstforcenumeric.multiple", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstForceNumeric IN :value")
-@NamedQuery(name="DTOEigeneImporteFelder.primaryKeyQuery", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID = ?1 AND e.Field_ID = ?2")
-@NamedQuery(name="DTOEigeneImporteFelder.all.migration", query="SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID IS NOT NULL AND e.Field_ID IS NOT NULL")
-@JsonPropertyOrder({"Import_ID","Field_ID","TableDescription","FieldDescription","SrcPosition","DstTable","DstFieldName","DstFieldType","DstFieldIsIdentifier","DstLookupDir","DstLookupTable","DstLookupFieldName","DstLookupTableIDFieldName","DstResultFieldName","DstKeyLookupInsert","DstKeyLookupNameCreateID","DstForceNumeric"})
-public class DTOEigeneImporteFelder {
+@NamedQuery(name = "DTOEigeneImporteFelder.all", query = "SELECT e FROM DTOEigeneImporteFelder e")
+@NamedQuery(name = "DTOEigeneImporteFelder.import_id", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.import_id.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.field_id", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Field_ID = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.field_id.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Field_ID IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.tabledescription", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.TableDescription = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.tabledescription.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.TableDescription IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.fielddescription", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.FieldDescription = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.fielddescription.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.FieldDescription IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.srcposition", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.SrcPosition = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.srcposition.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.SrcPosition IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dsttable", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstTable = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dsttable.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstTable IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldname", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldtype", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldType = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldtype.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldType IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldisidentifier", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstfieldisidentifier.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstFieldIsIdentifier IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookupdir", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupDir = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookupdir.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupDir IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookuptable", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTable = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookuptable.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTable IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookupfieldname", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookupfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookuptableidfieldname", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstlookuptableidfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstLookupTableIDFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstresultfieldname", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstResultFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstresultfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstResultFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstkeylookupinsert", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstkeylookupinsert.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupInsert IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstkeylookupnamecreateid", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstkeylookupnamecreateid.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstKeyLookupNameCreateID IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstforcenumeric", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstForceNumeric = :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.dstforcenumeric.multiple", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.DstForceNumeric IN :value")
+@NamedQuery(name = "DTOEigeneImporteFelder.primaryKeyQuery", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID = ?1 AND e.Field_ID = ?2")
+@NamedQuery(name = "DTOEigeneImporteFelder.all.migration", query = "SELECT e FROM DTOEigeneImporteFelder e WHERE e.Import_ID IS NOT NULL AND e.Field_ID IS NOT NULL")
+@JsonPropertyOrder({"Import_ID", "Field_ID", "TableDescription", "FieldDescription", "SrcPosition", "DstTable", "DstFieldName", "DstFieldType", "DstFieldIsIdentifier", "DstLookupDir", "DstLookupTable", "DstLookupFieldName", "DstLookupTableIDFieldName", "DstResultFieldName", "DstKeyLookupInsert", "DstKeyLookupNameCreateID", "DstForceNumeric"})
+public final class DTOEigeneImporteFelder {
 
 	/** externen Textimport Felder */
 	@Id
@@ -114,9 +114,9 @@ public class DTOEigeneImporteFelder {
 	/** externen Textimport Felder */
 	@Column(name = "DstFieldIsIdentifier")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean DstFieldIsIdentifier;
 
 	/** externen Textimport Felder */
@@ -147,25 +147,25 @@ public class DTOEigeneImporteFelder {
 	/** externen Textimport Felder */
 	@Column(name = "DstKeyLookupInsert")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean DstKeyLookupInsert;
 
 	/** externen Textimport Felder */
 	@Column(name = "DstKeyLookupNameCreateID")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean DstKeyLookupNameCreateID;
 
 	/** externen Textimport Felder */
 	@Column(name = "DstForceNumeric")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean DstForceNumeric;
 
 	/**
@@ -180,7 +180,7 @@ public class DTOEigeneImporteFelder {
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 */
 	public DTOEigeneImporteFelder(final Integer Import_ID) {
-		if (Import_ID == null) { 
+		if (Import_ID == null) {
 			throw new NullPointerException("Import_ID must not be null");
 		}
 		this.Import_ID = Import_ID;
@@ -188,7 +188,7 @@ public class DTOEigeneImporteFelder {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

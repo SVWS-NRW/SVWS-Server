@@ -29,53 +29,53 @@ import de.svws_nrw.csv.converter.current.KursFortschreibungsartConverterDeserial
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Kurse.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kurse")
-@NamedQuery(name="DTOKurs.all", query="SELECT e FROM DTOKurs e")
-@NamedQuery(name="DTOKurs.id", query="SELECT e FROM DTOKurs e WHERE e.ID = :value")
-@NamedQuery(name="DTOKurs.id.multiple", query="SELECT e FROM DTOKurs e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKurs.schuljahresabschnitts_id", query="SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOKurs.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOKurs.kurzbez", query="SELECT e FROM DTOKurs e WHERE e.KurzBez = :value")
-@NamedQuery(name="DTOKurs.kurzbez.multiple", query="SELECT e FROM DTOKurs e WHERE e.KurzBez IN :value")
-@NamedQuery(name="DTOKurs.jahrgang_id", query="SELECT e FROM DTOKurs e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="DTOKurs.jahrgang_id.multiple", query="SELECT e FROM DTOKurs e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="DTOKurs.asdjahrgang", query="SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="DTOKurs.asdjahrgang.multiple", query="SELECT e FROM DTOKurs e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="DTOKurs.fach_id", query="SELECT e FROM DTOKurs e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOKurs.fach_id.multiple", query="SELECT e FROM DTOKurs e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOKurs.kursartallg", query="SELECT e FROM DTOKurs e WHERE e.KursartAllg = :value")
-@NamedQuery(name="DTOKurs.kursartallg.multiple", query="SELECT e FROM DTOKurs e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="DTOKurs.wochenstd", query="SELECT e FROM DTOKurs e WHERE e.WochenStd = :value")
-@NamedQuery(name="DTOKurs.wochenstd.multiple", query="SELECT e FROM DTOKurs e WHERE e.WochenStd IN :value")
-@NamedQuery(name="DTOKurs.lehrer_id", query="SELECT e FROM DTOKurs e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOKurs.lehrer_id.multiple", query="SELECT e FROM DTOKurs e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOKurs.sortierung", query="SELECT e FROM DTOKurs e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOKurs.sortierung.multiple", query="SELECT e FROM DTOKurs e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOKurs.sichtbar", query="SELECT e FROM DTOKurs e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOKurs.sichtbar.multiple", query="SELECT e FROM DTOKurs e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOKurs.schienen", query="SELECT e FROM DTOKurs e WHERE e.Schienen = :value")
-@NamedQuery(name="DTOKurs.schienen.multiple", query="SELECT e FROM DTOKurs e WHERE e.Schienen IN :value")
-@NamedQuery(name="DTOKurs.fortschreibungsart", query="SELECT e FROM DTOKurs e WHERE e.Fortschreibungsart = :value")
-@NamedQuery(name="DTOKurs.fortschreibungsart.multiple", query="SELECT e FROM DTOKurs e WHERE e.Fortschreibungsart IN :value")
-@NamedQuery(name="DTOKurs.wochenstdkl", query="SELECT e FROM DTOKurs e WHERE e.WochenstdKL = :value")
-@NamedQuery(name="DTOKurs.wochenstdkl.multiple", query="SELECT e FROM DTOKurs e WHERE e.WochenstdKL IN :value")
-@NamedQuery(name="DTOKurs.schulnr", query="SELECT e FROM DTOKurs e WHERE e.SchulNr = :value")
-@NamedQuery(name="DTOKurs.schulnr.multiple", query="SELECT e FROM DTOKurs e WHERE e.SchulNr IN :value")
-@NamedQuery(name="DTOKurs.epochu", query="SELECT e FROM DTOKurs e WHERE e.EpochU = :value")
-@NamedQuery(name="DTOKurs.epochu.multiple", query="SELECT e FROM DTOKurs e WHERE e.EpochU IN :value")
-@NamedQuery(name="DTOKurs.zeugnisbez", query="SELECT e FROM DTOKurs e WHERE e.ZeugnisBez = :value")
-@NamedQuery(name="DTOKurs.zeugnisbez.multiple", query="SELECT e FROM DTOKurs e WHERE e.ZeugnisBez IN :value")
-@NamedQuery(name="DTOKurs.jahrgaenge", query="SELECT e FROM DTOKurs e WHERE e.Jahrgaenge = :value")
-@NamedQuery(name="DTOKurs.jahrgaenge.multiple", query="SELECT e FROM DTOKurs e WHERE e.Jahrgaenge IN :value")
-@NamedQuery(name="DTOKurs.primaryKeyQuery", query="SELECT e FROM DTOKurs e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKurs.all.migration", query="SELECT e FROM DTOKurs e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","KurzBez","Jahrgang_ID","ASDJahrgang","Fach_ID","KursartAllg","WochenStd","Lehrer_ID","Sortierung","Sichtbar","Schienen","Fortschreibungsart","WochenstdKL","SchulNr","EpochU","ZeugnisBez","Jahrgaenge"})
-public class DTOKurs {
+@NamedQuery(name = "DTOKurs.all", query = "SELECT e FROM DTOKurs e")
+@NamedQuery(name = "DTOKurs.id", query = "SELECT e FROM DTOKurs e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKurs.id.multiple", query = "SELECT e FROM DTOKurs e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKurs.schuljahresabschnitts_id", query = "SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOKurs.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOKurs.kurzbez", query = "SELECT e FROM DTOKurs e WHERE e.KurzBez = :value")
+@NamedQuery(name = "DTOKurs.kurzbez.multiple", query = "SELECT e FROM DTOKurs e WHERE e.KurzBez IN :value")
+@NamedQuery(name = "DTOKurs.jahrgang_id", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "DTOKurs.jahrgang_id.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "DTOKurs.asdjahrgang", query = "SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "DTOKurs.asdjahrgang.multiple", query = "SELECT e FROM DTOKurs e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "DTOKurs.fach_id", query = "SELECT e FROM DTOKurs e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOKurs.fach_id.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOKurs.kursartallg", query = "SELECT e FROM DTOKurs e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "DTOKurs.kursartallg.multiple", query = "SELECT e FROM DTOKurs e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "DTOKurs.wochenstd", query = "SELECT e FROM DTOKurs e WHERE e.WochenStd = :value")
+@NamedQuery(name = "DTOKurs.wochenstd.multiple", query = "SELECT e FROM DTOKurs e WHERE e.WochenStd IN :value")
+@NamedQuery(name = "DTOKurs.lehrer_id", query = "SELECT e FROM DTOKurs e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOKurs.lehrer_id.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOKurs.sortierung", query = "SELECT e FROM DTOKurs e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOKurs.sortierung.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOKurs.sichtbar", query = "SELECT e FROM DTOKurs e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOKurs.sichtbar.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOKurs.schienen", query = "SELECT e FROM DTOKurs e WHERE e.Schienen = :value")
+@NamedQuery(name = "DTOKurs.schienen.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Schienen IN :value")
+@NamedQuery(name = "DTOKurs.fortschreibungsart", query = "SELECT e FROM DTOKurs e WHERE e.Fortschreibungsart = :value")
+@NamedQuery(name = "DTOKurs.fortschreibungsart.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Fortschreibungsart IN :value")
+@NamedQuery(name = "DTOKurs.wochenstdkl", query = "SELECT e FROM DTOKurs e WHERE e.WochenstdKL = :value")
+@NamedQuery(name = "DTOKurs.wochenstdkl.multiple", query = "SELECT e FROM DTOKurs e WHERE e.WochenstdKL IN :value")
+@NamedQuery(name = "DTOKurs.schulnr", query = "SELECT e FROM DTOKurs e WHERE e.SchulNr = :value")
+@NamedQuery(name = "DTOKurs.schulnr.multiple", query = "SELECT e FROM DTOKurs e WHERE e.SchulNr IN :value")
+@NamedQuery(name = "DTOKurs.epochu", query = "SELECT e FROM DTOKurs e WHERE e.EpochU = :value")
+@NamedQuery(name = "DTOKurs.epochu.multiple", query = "SELECT e FROM DTOKurs e WHERE e.EpochU IN :value")
+@NamedQuery(name = "DTOKurs.zeugnisbez", query = "SELECT e FROM DTOKurs e WHERE e.ZeugnisBez = :value")
+@NamedQuery(name = "DTOKurs.zeugnisbez.multiple", query = "SELECT e FROM DTOKurs e WHERE e.ZeugnisBez IN :value")
+@NamedQuery(name = "DTOKurs.jahrgaenge", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgaenge = :value")
+@NamedQuery(name = "DTOKurs.jahrgaenge.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgaenge IN :value")
+@NamedQuery(name = "DTOKurs.primaryKeyQuery", query = "SELECT e FROM DTOKurs e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKurs.all.migration", query = "SELECT e FROM DTOKurs e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "KurzBez", "Jahrgang_ID", "ASDJahrgang", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "Sortierung", "Sichtbar", "Schienen", "Fortschreibungsart", "WochenstdKL", "SchulNr", "EpochU", "ZeugnisBez", "Jahrgaenge"})
+public final class DTOKurs {
 
 	/** ID des Kurses */
 	@Id
@@ -131,9 +131,9 @@ public class DTOKurs {
 	/** Sichtbarkeit des Kurses */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Auflistung der Schienen in denen der Kurs ist */
@@ -144,9 +144,9 @@ public class DTOKurs {
 	/** Fortschreibungsart des Kurses für die Hochschreibung in den nächsten Abschnitt */
 	@Column(name = "Fortschreibungsart")
 	@JsonProperty
-	@Convert(converter=KursFortschreibungsartConverter.class)
-	@JsonSerialize(using=KursFortschreibungsartConverterSerializer.class)
-	@JsonDeserialize(using=KursFortschreibungsartConverterDeserializer.class)
+	@Convert(converter = KursFortschreibungsartConverter.class)
+	@JsonSerialize(using = KursFortschreibungsartConverterSerializer.class)
+	@JsonDeserialize(using = KursFortschreibungsartConverterDeserializer.class)
 	public KursFortschreibungsart Fortschreibungsart;
 
 	/** Wochenstunden des Kurslehrers */
@@ -162,9 +162,9 @@ public class DTOKurs {
 	/** Gibt an ob ein Kurs Epochal unterrichtet wird */
 	@Column(name = "EpochU")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean EpochU;
 
 	/** Zeugnisbezeichnung des Kurses */
@@ -192,19 +192,19 @@ public class DTOKurs {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOKurs(final Long ID, final Long Schuljahresabschnitts_ID, final String KurzBez, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (KurzBez == null) { 
+		if (KurzBez == null) {
 			throw new NullPointerException("KurzBez must not be null");
 		}
 		this.KurzBez = KurzBez;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -212,7 +212,7 @@ public class DTOKurs {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

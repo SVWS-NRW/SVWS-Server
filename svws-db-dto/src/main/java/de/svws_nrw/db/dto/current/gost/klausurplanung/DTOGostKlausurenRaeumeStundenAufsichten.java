@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Raeume_Stunden_Aufsichten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Raeume_Stunden_Aufsichten")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.all", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.id", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.id.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.klausurraumstunde_id", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.KlausurRaumStunde_ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.klausurraumstunde_id.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.KlausurRaumStunde_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.lehrer_id", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.lehrer_id.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.startzeit", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Startzeit = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.startzeit.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Startzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.endzeit", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Endzeit = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.endzeit.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Endzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.bemerkungen", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostKlausurenRaeumeStundenAufsichten.all.migration", query="SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","KlausurRaumStunde_ID","Lehrer_ID","Startzeit","Endzeit","Bemerkungen"})
-public class DTOGostKlausurenRaeumeStundenAufsichten {
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.all", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.id", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.klausurraumstunde_id", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.KlausurRaumStunde_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.klausurraumstunde_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.KlausurRaumStunde_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.lehrer_id", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.lehrer_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.startzeit", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Startzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Startzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.endzeit", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Endzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.endzeit.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Endzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.bemerkungen", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenRaeumeStundenAufsichten.all.migration", query = "SELECT e FROM DTOGostKlausurenRaeumeStundenAufsichten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "KlausurRaumStunde_ID", "Lehrer_ID", "Startzeit", "Endzeit", "Bemerkungen"})
+public final class DTOGostKlausurenRaeumeStundenAufsichten {
 
 	/** ID der Klausuraufsicht (generiert) */
 	@Id
@@ -64,17 +64,17 @@ public class DTOGostKlausurenRaeumeStundenAufsichten {
 	/** Die Startzeit der Aufsicht */
 	@Column(name = "Startzeit")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
 	/** Die Endzeit der Aufsicht */
 	@Column(name = "Endzeit")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Endzeit;
 
 	/** Text für Bemerkungen zur Aufsicht */
@@ -95,11 +95,11 @@ public class DTOGostKlausurenRaeumeStundenAufsichten {
 	 * @param KlausurRaumStunde_ID   der Wert für das Attribut KlausurRaumStunde_ID
 	 */
 	public DTOGostKlausurenRaeumeStundenAufsichten(final Long ID, final Long KlausurRaumStunde_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (KlausurRaumStunde_ID == null) { 
+		if (KlausurRaumStunde_ID == null) {
 			throw new NullPointerException("KlausurRaumStunde_ID must not be null");
 		}
 		this.KlausurRaumStunde_ID = KlausurRaumStunde_ID;
@@ -107,7 +107,7 @@ public class DTOGostKlausurenRaeumeStundenAufsichten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

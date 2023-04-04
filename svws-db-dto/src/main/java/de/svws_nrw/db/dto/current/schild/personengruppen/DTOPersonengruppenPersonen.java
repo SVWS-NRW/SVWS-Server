@@ -13,57 +13,57 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Personengruppen_Personen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Personengruppen_Personen")
-@NamedQuery(name="DTOPersonengruppenPersonen.all", query="SELECT e FROM DTOPersonengruppenPersonen e")
-@NamedQuery(name="DTOPersonengruppenPersonen.id", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.id.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.gruppe_id", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Gruppe_ID = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.gruppe_id.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.person_id", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Person_ID = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.person_id.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Person_ID IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personnr", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonNr = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personnr.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonNr IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personart", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonArt = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personart.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonArt IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personname", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonName = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personname.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonName IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personvorname", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonVorname = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personvorname.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonVorname IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personplz", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonPLZ = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personplz.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonPLZ IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personort", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonOrt = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personort.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonOrt IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personstrassenname", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonStrassenname = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personstrassenname.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personhausnr", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNr = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personhausnr.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNr IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personhausnrzusatz", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personhausnrzusatz.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.persontelefon", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonTelefon = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.persontelefon.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonTelefon IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personmobil", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonMobil = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personmobil.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonMobil IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personemail", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonEmail = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personemail.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonEmail IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.bemerkung", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.bemerkung.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.zusatzinfo", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Zusatzinfo = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.zusatzinfo.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.sortierung", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.sortierung.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personanrede", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAnrede = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personanrede.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAnrede IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personakadgrad", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.personakadgrad.multiple", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
-@NamedQuery(name="DTOPersonengruppenPersonen.primaryKeyQuery", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOPersonengruppenPersonen.all.migration", query="SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Gruppe_ID","Person_ID","PersonNr","PersonArt","PersonName","PersonVorname","PersonPLZ","PersonOrt","PersonStrassenname","PersonHausNr","PersonHausNrZusatz","PersonTelefon","PersonMobil","PersonEmail","Bemerkung","Zusatzinfo","Sortierung","PersonAnrede","PersonAkadGrad"})
-public class DTOPersonengruppenPersonen {
+@NamedQuery(name = "DTOPersonengruppenPersonen.all", query = "SELECT e FROM DTOPersonengruppenPersonen e")
+@NamedQuery(name = "DTOPersonengruppenPersonen.id", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.id.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.gruppe_id", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Gruppe_ID = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.gruppe_id.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.person_id", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Person_ID = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.person_id.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Person_ID IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personnr", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonNr = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personnr.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonNr IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personart", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonArt = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personart.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonArt IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personname", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonName = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personname.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonName IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personvorname", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonVorname = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personvorname.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonVorname IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personplz", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonPLZ = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personplz.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonPLZ IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personort", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonOrt = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personort.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonOrt IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personstrassenname", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonStrassenname = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personstrassenname.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personhausnr", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNr = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personhausnr.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNr IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personhausnrzusatz", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personhausnrzusatz.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.persontelefon", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonTelefon = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.persontelefon.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonTelefon IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personmobil", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonMobil = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personmobil.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonMobil IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personemail", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonEmail = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personemail.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonEmail IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.bemerkung", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.bemerkung.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.zusatzinfo", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Zusatzinfo = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.zusatzinfo.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.sortierung", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.sortierung.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personanrede", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAnrede = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personanrede.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAnrede IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personakadgrad", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.personakadgrad.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
+@NamedQuery(name = "DTOPersonengruppenPersonen.primaryKeyQuery", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOPersonengruppenPersonen.all.migration", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Gruppe_ID", "Person_ID", "PersonNr", "PersonArt", "PersonName", "PersonVorname", "PersonPLZ", "PersonOrt", "PersonStrassenname", "PersonHausNr", "PersonHausNrZusatz", "PersonTelefon", "PersonMobil", "PersonEmail", "Bemerkung", "Zusatzinfo", "Sortierung", "PersonAnrede", "PersonAkadGrad"})
+public final class DTOPersonengruppenPersonen {
 
 	/** ID des Personeneintrags zur Personengruppe */
 	@Id
@@ -180,15 +180,15 @@ public class DTOPersonengruppenPersonen {
 	 * @param PersonName   der Wert für das Attribut PersonName
 	 */
 	public DTOPersonengruppenPersonen(final Long ID, final Long Gruppe_ID, final String PersonName) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Gruppe_ID == null) { 
+		if (Gruppe_ID == null) {
 			throw new NullPointerException("Gruppe_ID must not be null");
 		}
 		this.Gruppe_ID = Gruppe_ID;
-		if (PersonName == null) { 
+		if (PersonName == null) {
 			throw new NullPointerException("PersonName must not be null");
 		}
 		this.PersonName = PersonName;
@@ -196,7 +196,7 @@ public class DTOPersonengruppenPersonen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

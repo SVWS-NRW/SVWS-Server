@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerLehramtLehrbef.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOLehrerLehramtBefaehigungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtLehrbef")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.all", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrer_id", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrer_id.multiple", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrbefkrz", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrbefkrz.multiple", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz.multiple", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.schulnreigner", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.schulnreigner.multiple", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.primaryKeyQuery", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2")
-@NamedQuery(name="MigrationDTOLehrerLehramtBefaehigung.all.migration", query="SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL")
-@JsonPropertyOrder({"Lehrer_ID","LehrbefKrz","LehrbefAnerkennungKrz","SchulnrEigner"})
-public class MigrationDTOLehrerLehramtBefaehigung {
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.all", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrer_id", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrbefkrz", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrbefkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.schulnreigner", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2")
+@NamedQuery(name = "MigrationDTOLehrerLehramtBefaehigung.all.migration", query = "SELECT e FROM MigrationDTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL")
+@JsonPropertyOrder({"Lehrer_ID", "LehrbefKrz", "LehrbefAnerkennungKrz", "SchulnrEigner"})
+public final class MigrationDTOLehrerLehramtBefaehigung {
 
 	/** LehrerID zu der die Lehrbefähigung gehört */
 	@Id
@@ -69,7 +69,7 @@ public class MigrationDTOLehrerLehramtBefaehigung {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public MigrationDTOLehrerLehramtBefaehigung(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -77,7 +77,7 @@ public class MigrationDTOLehrerLehramtBefaehigung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

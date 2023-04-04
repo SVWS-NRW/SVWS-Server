@@ -13,35 +13,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchildFilter.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchildFilter")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.all", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.id", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.id.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.art", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Art = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.art.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Art IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.name", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Name = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.name.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Name IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.beschreibung", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Beschreibung = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.beschreibung.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.tabellen", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Tabellen = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.tabellen.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Tabellen IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.zusatztabellen", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ZusatzTabellen = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.zusatztabellen.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ZusatzTabellen IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.bedingung", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Bedingung = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.bedingung.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Bedingung IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.bedingungklartext", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.BedingungKlartext = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.bedingungklartext.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.BedingungKlartext IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.schulnreigner", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchildAuswahlFilter.all.migration", query="SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Art","Name","Beschreibung","Tabellen","ZusatzTabellen","Bedingung","BedingungKlartext","SchulnrEigner"})
-public class MigrationDTOSchildAuswahlFilter {
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.all", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.id", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.id.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.art", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Art = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.art.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Art IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.name", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Name = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.name.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Name IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.beschreibung", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.beschreibung.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.tabellen", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Tabellen = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.tabellen.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Tabellen IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.zusatztabellen", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ZusatzTabellen = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.zusatztabellen.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ZusatzTabellen IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.bedingung", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Bedingung = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.bedingung.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.Bedingung IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.bedingungklartext", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.BedingungKlartext = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.bedingungklartext.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.BedingungKlartext IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.schulnreigner", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchildAuswahlFilter.all.migration", query = "SELECT e FROM MigrationDTOSchildAuswahlFilter e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Art", "Name", "Beschreibung", "Tabellen", "ZusatzTabellen", "Bedingung", "BedingungKlartext", "SchulnrEigner"})
+public final class MigrationDTOSchildAuswahlFilter {
 
 	/** ID des gespeicherten Filters */
 	@Id
@@ -102,11 +102,11 @@ public class MigrationDTOSchildAuswahlFilter {
 	 * @param Name   der Wert für das Attribut Name
 	 */
 	public MigrationDTOSchildAuswahlFilter(final Long ID, final String Name) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Name == null) { 
+		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
@@ -114,7 +114,7 @@ public class MigrationDTOSchildAuswahlFilter {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

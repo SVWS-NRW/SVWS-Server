@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Zertifikate.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Zertifikate")
-@NamedQuery(name="DTOZertifikate.all", query="SELECT e FROM DTOZertifikate e")
-@NamedQuery(name="DTOZertifikate.id", query="SELECT e FROM DTOZertifikate e WHERE e.ID = :value")
-@NamedQuery(name="DTOZertifikate.id.multiple", query="SELECT e FROM DTOZertifikate e WHERE e.ID IN :value")
-@NamedQuery(name="DTOZertifikate.kuerzel", query="SELECT e FROM DTOZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOZertifikate.kuerzel.multiple", query="SELECT e FROM DTOZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOZertifikate.bezeichnung", query="SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOZertifikate.bezeichnung.multiple", query="SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOZertifikate.fach", query="SELECT e FROM DTOZertifikate e WHERE e.Fach = :value")
-@NamedQuery(name="DTOZertifikate.fach.multiple", query="SELECT e FROM DTOZertifikate e WHERE e.Fach IN :value")
-@NamedQuery(name="DTOZertifikate.formatvorlage", query="SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage = :value")
-@NamedQuery(name="DTOZertifikate.formatvorlage.multiple", query="SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage IN :value")
-@NamedQuery(name="DTOZertifikate.primaryKeyQuery", query="SELECT e FROM DTOZertifikate e WHERE e.ID = ?1")
-@NamedQuery(name="DTOZertifikate.all.migration", query="SELECT e FROM DTOZertifikate e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Bezeichnung","Fach","Formatvorlage"})
-public class DTOZertifikate {
+@NamedQuery(name = "DTOZertifikate.all", query = "SELECT e FROM DTOZertifikate e")
+@NamedQuery(name = "DTOZertifikate.id", query = "SELECT e FROM DTOZertifikate e WHERE e.ID = :value")
+@NamedQuery(name = "DTOZertifikate.id.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOZertifikate.kuerzel", query = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOZertifikate.kuerzel.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOZertifikate.bezeichnung", query = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOZertifikate.bezeichnung.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOZertifikate.fach", query = "SELECT e FROM DTOZertifikate e WHERE e.Fach = :value")
+@NamedQuery(name = "DTOZertifikate.fach.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Fach IN :value")
+@NamedQuery(name = "DTOZertifikate.formatvorlage", query = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage = :value")
+@NamedQuery(name = "DTOZertifikate.formatvorlage.multiple", query = "SELECT e FROM DTOZertifikate e WHERE e.Formatvorlage IN :value")
+@NamedQuery(name = "DTOZertifikate.primaryKeyQuery", query = "SELECT e FROM DTOZertifikate e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOZertifikate.all.migration", query = "SELECT e FROM DTOZertifikate e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "Fach", "Formatvorlage"})
+public final class DTOZertifikate {
 
 	/** ID des Zertifikats */
 	@Id
@@ -74,11 +74,11 @@ public class DTOZertifikate {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOZertifikate(final Long ID, final String Kuerzel) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -86,7 +86,7 @@ public class DTOZertifikate {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Gost_Klausuren_NtaZeiten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOGostKlausurenNtaZeitenPK implements Serializable {
+public final class DTOGostKlausurenNtaZeitenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOGostKlausurenNtaZeitenPK implements Serializable {
 	 * @param Vorgabe_ID   der Wert für das Attribut Vorgabe_ID
 	 */
 	public DTOGostKlausurenNtaZeitenPK(final Long Schueler_ID, final Long Vorgabe_ID) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Vorgabe_ID == null) { 
+		if (Vorgabe_ID == null) {
 			throw new NullPointerException("Vorgabe_ID must not be null");
 		}
 		this.Vorgabe_ID = Vorgabe_ID;
@@ -43,7 +43,7 @@ public class DTOGostKlausurenNtaZeitenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

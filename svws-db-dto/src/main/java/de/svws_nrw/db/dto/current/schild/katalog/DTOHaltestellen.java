@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Haltestelle.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Haltestelle")
-@NamedQuery(name="DTOHaltestellen.all", query="SELECT e FROM DTOHaltestellen e")
-@NamedQuery(name="DTOHaltestellen.id", query="SELECT e FROM DTOHaltestellen e WHERE e.ID = :value")
-@NamedQuery(name="DTOHaltestellen.id.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOHaltestellen.bezeichnung", query="SELECT e FROM DTOHaltestellen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOHaltestellen.bezeichnung.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOHaltestellen.sortierung", query="SELECT e FROM DTOHaltestellen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOHaltestellen.sortierung.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOHaltestellen.sichtbar", query="SELECT e FROM DTOHaltestellen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOHaltestellen.sichtbar.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOHaltestellen.aenderbar", query="SELECT e FROM DTOHaltestellen e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOHaltestellen.aenderbar.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOHaltestellen.entfernungschule", query="SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule = :value")
-@NamedQuery(name="DTOHaltestellen.entfernungschule.multiple", query="SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule IN :value")
-@NamedQuery(name="DTOHaltestellen.primaryKeyQuery", query="SELECT e FROM DTOHaltestellen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOHaltestellen.all.migration", query="SELECT e FROM DTOHaltestellen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","EntfernungSchule"})
-public class DTOHaltestellen {
+@NamedQuery(name = "DTOHaltestellen.all", query = "SELECT e FROM DTOHaltestellen e")
+@NamedQuery(name = "DTOHaltestellen.id", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOHaltestellen.id.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOHaltestellen.bezeichnung", query = "SELECT e FROM DTOHaltestellen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOHaltestellen.bezeichnung.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOHaltestellen.sortierung", query = "SELECT e FROM DTOHaltestellen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOHaltestellen.sortierung.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOHaltestellen.sichtbar", query = "SELECT e FROM DTOHaltestellen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOHaltestellen.sichtbar.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOHaltestellen.aenderbar", query = "SELECT e FROM DTOHaltestellen e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOHaltestellen.aenderbar.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOHaltestellen.entfernungschule", query = "SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule = :value")
+@NamedQuery(name = "DTOHaltestellen.entfernungschule.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule IN :value")
+@NamedQuery(name = "DTOHaltestellen.primaryKeyQuery", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOHaltestellen.all.migration", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "EntfernungSchule"})
+public final class DTOHaltestellen {
 
 	/** ID der Haltestelle */
 	@Id
@@ -64,17 +64,17 @@ public class DTOHaltestellen {
 	/** Sichbarkeit der Haltestelle */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Haltestelle */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Enterfung zur Schule von der Haltestelle */
@@ -95,11 +95,11 @@ public class DTOHaltestellen {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOHaltestellen(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -107,7 +107,7 @@ public class DTOHaltestellen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

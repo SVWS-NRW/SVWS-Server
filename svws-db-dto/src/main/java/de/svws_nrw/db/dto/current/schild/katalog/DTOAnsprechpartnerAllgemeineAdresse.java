@@ -13,37 +13,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle AllgAdrAnsprechpartner.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "AllgAdrAnsprechpartner")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.all", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.id", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.id.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.adresse_id", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.adresse_id.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.name", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.name.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.vorname", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.vorname.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.anrede", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.anrede.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.telefon", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.telefon.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.email", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.email.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.abteilung", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.abteilung.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.titel", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.titel.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.gu_id", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name="DTOAnsprechpartnerAllgemeineAdresse.all.migration", query="SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Adresse_ID","Name","Vorname","Anrede","Telefon","Email","Abteilung","Titel","GU_ID"})
-public class DTOAnsprechpartnerAllgemeineAdresse {
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.all", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.id", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.id.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.adresse_id", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.adresse_id.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.name", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.name.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.vorname", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.vorname.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.anrede", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.anrede.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.telefon", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.telefon.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.email", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.email.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.abteilung", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.abteilung.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.titel", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.titel.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.gu_id", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAnsprechpartnerAllgemeineAdresse.all.migration", query = "SELECT e FROM DTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Adresse_ID", "Name", "Vorname", "Anrede", "Telefon", "Email", "Abteilung", "Titel", "GU_ID"})
+public final class DTOAnsprechpartnerAllgemeineAdresse {
 
 	/** ID des Ansprechpartners der Tabelle AllgAdresse (Betriebe) */
 	@Id
@@ -109,11 +109,11 @@ public class DTOAnsprechpartnerAllgemeineAdresse {
 	 * @param Adresse_ID   der Wert für das Attribut Adresse_ID
 	 */
 	public DTOAnsprechpartnerAllgemeineAdresse(final Long ID, final Long Adresse_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Adresse_ID == null) { 
+		if (Adresse_ID == null) {
 			throw new NullPointerException("Adresse_ID must not be null");
 		}
 		this.Adresse_ID = Adresse_ID;
@@ -121,7 +121,7 @@ public class DTOAnsprechpartnerAllgemeineAdresse {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

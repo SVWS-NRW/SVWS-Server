@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle SchuelerReportvorlagen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class MigrationDTOSchuelerReportvorlagenPK implements Serializable {
+public final class MigrationDTOSchuelerReportvorlagenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class MigrationDTOSchuelerReportvorlagenPK implements Serializable {
 	 * @param Reportvorlage   der Wert für das Attribut Reportvorlage
 	 */
 	public MigrationDTOSchuelerReportvorlagenPK(final Long User_ID, final String Reportvorlage) {
-		if (User_ID == null) { 
+		if (User_ID == null) {
 			throw new NullPointerException("User_ID must not be null");
 		}
 		this.User_ID = User_ID;
-		if (Reportvorlage == null) { 
+		if (Reportvorlage == null) {
 			throw new NullPointerException("Reportvorlage must not be null");
 		}
 		this.Reportvorlage = Reportvorlage;
@@ -43,7 +43,7 @@ public class MigrationDTOSchuelerReportvorlagenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

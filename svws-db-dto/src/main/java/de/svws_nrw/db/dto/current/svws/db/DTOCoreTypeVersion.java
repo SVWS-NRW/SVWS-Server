@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Core_Type_Versionen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_Core_Type_Versionen")
-@NamedQuery(name="DTOCoreTypeVersion.all", query="SELECT e FROM DTOCoreTypeVersion e")
-@NamedQuery(name="DTOCoreTypeVersion.nametabelle", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle = :value")
-@NamedQuery(name="DTOCoreTypeVersion.nametabelle.multiple", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle IN :value")
-@NamedQuery(name="DTOCoreTypeVersion.name", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.Name = :value")
-@NamedQuery(name="DTOCoreTypeVersion.name.multiple", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.Name IN :value")
-@NamedQuery(name="DTOCoreTypeVersion.version", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.Version = :value")
-@NamedQuery(name="DTOCoreTypeVersion.version.multiple", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.Version IN :value")
-@NamedQuery(name="DTOCoreTypeVersion.primaryKeyQuery", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle = ?1")
-@NamedQuery(name="DTOCoreTypeVersion.all.migration", query="SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
-@JsonPropertyOrder({"NameTabelle","Name","Version"})
-public class DTOCoreTypeVersion {
+@NamedQuery(name = "DTOCoreTypeVersion.all", query = "SELECT e FROM DTOCoreTypeVersion e")
+@NamedQuery(name = "DTOCoreTypeVersion.nametabelle", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle = :value")
+@NamedQuery(name = "DTOCoreTypeVersion.nametabelle.multiple", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle IN :value")
+@NamedQuery(name = "DTOCoreTypeVersion.name", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.Name = :value")
+@NamedQuery(name = "DTOCoreTypeVersion.name.multiple", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.Name IN :value")
+@NamedQuery(name = "DTOCoreTypeVersion.version", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.Version = :value")
+@NamedQuery(name = "DTOCoreTypeVersion.version.multiple", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.Version IN :value")
+@NamedQuery(name = "DTOCoreTypeVersion.primaryKeyQuery", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "DTOCoreTypeVersion.all.migration", query = "SELECT e FROM DTOCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
+@JsonPropertyOrder({"NameTabelle", "Name", "Version"})
+public final class DTOCoreTypeVersion {
 
 	/** Gibt den Namen der Tabelle an, wo die Daten des Core-Types hinterlegt werden. */
 	@Id
@@ -61,15 +61,15 @@ public class DTOCoreTypeVersion {
 	 * @param Version   der Wert für das Attribut Version
 	 */
 	public DTOCoreTypeVersion(final String NameTabelle, final String Name, final Long Version) {
-		if (NameTabelle == null) { 
+		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
 		this.NameTabelle = NameTabelle;
-		if (Name == null) { 
+		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
-		if (Version == null) { 
+		if (Version == null) {
 			throw new NullPointerException("Version must not be null");
 		}
 		this.Version = Version;
@@ -77,7 +77,7 @@ public class DTOCoreTypeVersion {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

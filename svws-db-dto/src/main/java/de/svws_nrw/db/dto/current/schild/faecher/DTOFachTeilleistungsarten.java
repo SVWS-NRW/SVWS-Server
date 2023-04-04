@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_FachTeilleistungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOFachTeilleistungsartenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_FachTeilleistungen")
-@NamedQuery(name="DTOFachTeilleistungsarten.all", query="SELECT e FROM DTOFachTeilleistungsarten e")
-@NamedQuery(name="DTOFachTeilleistungsarten.teilleistungsart_id", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.teilleistungsart_id.multiple", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.fach_id", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.fach_id.multiple", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.kursart", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart = :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.kursart.multiple", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
-@NamedQuery(name="DTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
-@NamedQuery(name="DTOFachTeilleistungsarten.all.migration", query="SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
-@JsonPropertyOrder({"Teilleistungsart_ID","Fach_ID","Kursart"})
-public class DTOFachTeilleistungsarten {
+@NamedQuery(name = "DTOFachTeilleistungsarten.all", query = "SELECT e FROM DTOFachTeilleistungsarten e")
+@NamedQuery(name = "DTOFachTeilleistungsarten.teilleistungsart_id", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.teilleistungsart_id.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.fach_id", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.fach_id.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.kursart", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart = :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.kursart.multiple", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
+@NamedQuery(name = "DTOFachTeilleistungsarten.primaryKeyQuery", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
+@NamedQuery(name = "DTOFachTeilleistungsarten.all.migration", query = "SELECT e FROM DTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
+@JsonPropertyOrder({"Teilleistungsart_ID", "Fach_ID", "Kursart"})
+public final class DTOFachTeilleistungsarten {
 
 	/** Die eindeutige ID der Teilleistungsart – verweist auf die Teilleistungsart */
 	@Id
@@ -64,11 +64,11 @@ public class DTOFachTeilleistungsarten {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOFachTeilleistungsarten(final Long Teilleistungsart_ID, final Long Fach_ID) {
-		if (Teilleistungsart_ID == null) { 
+		if (Teilleistungsart_ID == null) {
 			throw new NullPointerException("Teilleistungsart_ID must not be null");
 		}
 		this.Teilleistungsart_ID = Teilleistungsart_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -76,7 +76,7 @@ public class DTOFachTeilleistungsarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

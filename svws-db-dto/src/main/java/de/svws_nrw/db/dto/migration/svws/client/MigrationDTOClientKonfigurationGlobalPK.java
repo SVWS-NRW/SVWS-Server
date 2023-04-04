@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle SVWS_Client_Konfiguration_Global.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class MigrationDTOClientKonfigurationGlobalPK implements Serializable {
+public final class MigrationDTOClientKonfigurationGlobalPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class MigrationDTOClientKonfigurationGlobalPK implements Serializable {
 	 * @param Schluessel   der Wert für das Attribut Schluessel
 	 */
 	public MigrationDTOClientKonfigurationGlobalPK(final String AppName, final String Schluessel) {
-		if (AppName == null) { 
+		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
 		}
 		this.AppName = AppName;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
@@ -43,7 +43,7 @@ public class MigrationDTOClientKonfigurationGlobalPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

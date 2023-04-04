@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Usergroups.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Usergroups")
-@NamedQuery(name="MigrationDTOUserGroups.all", query="SELECT e FROM MigrationDTOUserGroups e")
-@NamedQuery(name="MigrationDTOUserGroups.ug_id", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_id.multiple", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_bezeichnung", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_bezeichnung.multiple", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_kompetenzen", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen = :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_kompetenzen.multiple", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen IN :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_nr", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr = :value")
-@NamedQuery(name="MigrationDTOUserGroups.ug_nr.multiple", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr IN :value")
-@NamedQuery(name="MigrationDTOUserGroups.schulnreigner", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOUserGroups.schulnreigner.multiple", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOUserGroups.primaryKeyQuery", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1")
-@NamedQuery(name="MigrationDTOUserGroups.all.migration", query="SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IS NOT NULL")
-@JsonPropertyOrder({"UG_ID","UG_Bezeichnung","UG_Kompetenzen","UG_Nr","SchulnrEigner"})
-public class MigrationDTOUserGroups {
+@NamedQuery(name = "MigrationDTOUserGroups.all", query = "SELECT e FROM MigrationDTOUserGroups e")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_id", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_id.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_bezeichnung", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_bezeichnung.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_kompetenzen", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen = :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_kompetenzen.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Kompetenzen IN :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_nr", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr = :value")
+@NamedQuery(name = "MigrationDTOUserGroups.ug_nr.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_Nr IN :value")
+@NamedQuery(name = "MigrationDTOUserGroups.schulnreigner", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOUserGroups.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOUserGroups.primaryKeyQuery", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1")
+@NamedQuery(name = "MigrationDTOUserGroups.all.migration", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IS NOT NULL")
+@JsonPropertyOrder({"UG_ID", "UG_Bezeichnung", "UG_Kompetenzen", "UG_Nr", "SchulnrEigner"})
+public final class MigrationDTOUserGroups {
 
 	/** ID der Benutzergruppe */
 	@Id
@@ -73,7 +73,7 @@ public class MigrationDTOUserGroups {
 	 * @param UG_ID   der Wert für das Attribut UG_ID
 	 */
 	public MigrationDTOUserGroups(final Long UG_ID) {
-		if (UG_ID == null) { 
+		if (UG_ID == null) {
 			throw new NullPointerException("UG_ID must not be null");
 		}
 		this.UG_ID = UG_ID;
@@ -81,7 +81,7 @@ public class MigrationDTOUserGroups {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerMehrleistung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerMehrleistung")
-@NamedQuery(name="DTOLehrerMehrleistung.all", query="SELECT e FROM DTOLehrerMehrleistung e")
-@NamedQuery(name="DTOLehrerMehrleistung.id", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = :value")
-@NamedQuery(name="DTOLehrerMehrleistung.id.multiple", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN :value")
-@NamedQuery(name="DTOLehrerMehrleistung.abschnitt_id", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOLehrerMehrleistung.abschnitt_id.multiple", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOLehrerMehrleistung.mehrleistungsgrundkrz", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz = :value")
-@NamedQuery(name="DTOLehrerMehrleistung.mehrleistungsgrundkrz.multiple", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz IN :value")
-@NamedQuery(name="DTOLehrerMehrleistung.mehrleistungstd", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name="DTOLehrerMehrleistung.mehrleistungstd.multiple", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name="DTOLehrerMehrleistung.primaryKeyQuery", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1")
-@NamedQuery(name="DTOLehrerMehrleistung.all.migration", query="SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","MehrleistungsgrundKrz","MehrleistungStd"})
-public class DTOLehrerMehrleistung {
+@NamedQuery(name = "DTOLehrerMehrleistung.all", query = "SELECT e FROM DTOLehrerMehrleistung e")
+@NamedQuery(name = "DTOLehrerMehrleistung.id", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.id.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.abschnitt_id", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.abschnitt_id.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungsgrundkrz", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz = :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungsgrundkrz.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungsgrundKrz IN :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd = :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd IN :value")
+@NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerMehrleistung.all.migration", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "MehrleistungsgrundKrz", "MehrleistungStd"})
+public final class DTOLehrerMehrleistung {
 
 	/** ID für den Eintrag für die Mehrarbeitsstunden eines Lehrers */
 	@Id
@@ -68,15 +68,15 @@ public class DTOLehrerMehrleistung {
 	 * @param MehrleistungsgrundKrz   der Wert für das Attribut MehrleistungsgrundKrz
 	 */
 	public DTOLehrerMehrleistung(final Long ID, final Long Abschnitt_ID, final String MehrleistungsgrundKrz) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (MehrleistungsgrundKrz == null) { 
+		if (MehrleistungsgrundKrz == null) {
 			throw new NullPointerException("MehrleistungsgrundKrz must not be null");
 		}
 		this.MehrleistungsgrundKrz = MehrleistungsgrundKrz;
@@ -84,7 +84,7 @@ public class DTOLehrerMehrleistung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

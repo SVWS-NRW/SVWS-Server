@@ -13,35 +13,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle CredentialsLernplattformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "CredentialsLernplattformen")
-@NamedQuery(name="DTOCredentialsLernplattformen.all", query="SELECT e FROM DTOCredentialsLernplattformen e")
-@NamedQuery(name="DTOCredentialsLernplattformen.id", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.id.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.lernplattformid", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.lernplattformid.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.benutzername", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.benutzername.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.benutzernamepseudonym", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.benutzernamepseudonym.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.initialkennwort", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.initialkennwort.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.pashwordhash", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.pashwordhash.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.rsapublickey", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.rsapublickey.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.rsaprivatekey", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.rsaprivatekey.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.aes", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES = :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.aes.multiple", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES IN :value")
-@NamedQuery(name="DTOCredentialsLernplattformen.primaryKeyQuery", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOCredentialsLernplattformen.all.migration", query="SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","LernplattformID","Benutzername","BenutzernamePseudonym","Initialkennwort","PashwordHash","RSAPublicKey","RSAPrivateKey","AES"})
-public class DTOCredentialsLernplattformen {
+@NamedQuery(name = "DTOCredentialsLernplattformen.all", query = "SELECT e FROM DTOCredentialsLernplattformen e")
+@NamedQuery(name = "DTOCredentialsLernplattformen.id", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.id.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.lernplattformid", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.lernplattformid.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.LernplattformID IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.benutzername", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.benutzername.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Benutzername IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.benutzernamepseudonym", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.benutzernamepseudonym.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.initialkennwort", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.initialkennwort.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.Initialkennwort IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.pashwordhash", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.pashwordhash.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.PashwordHash IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.rsapublickey", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.rsapublickey.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.rsaprivatekey", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.rsaprivatekey.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.aes", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES = :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.aes.multiple", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.AES IN :value")
+@NamedQuery(name = "DTOCredentialsLernplattformen.primaryKeyQuery", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOCredentialsLernplattformen.all.migration", query = "SELECT e FROM DTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "LernplattformID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PashwordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
+public final class DTOCredentialsLernplattformen {
 
 	/** ID des Datensatzes für die externen Account-Credentials (Lernplattformen) */
 	@Id
@@ -103,15 +103,15 @@ public class DTOCredentialsLernplattformen {
 	 * @param Benutzername   der Wert für das Attribut Benutzername
 	 */
 	public DTOCredentialsLernplattformen(final Long ID, final Long LernplattformID, final String Benutzername) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (LernplattformID == null) { 
+		if (LernplattformID == null) {
 			throw new NullPointerException("LernplattformID must not be null");
 		}
 		this.LernplattformID = LernplattformID;
-		if (Benutzername == null) { 
+		if (Benutzername == null) {
 			throw new NullPointerException("Benutzername must not be null");
 		}
 		this.Benutzername = Benutzername;
@@ -119,7 +119,7 @@ public class DTOCredentialsLernplattformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

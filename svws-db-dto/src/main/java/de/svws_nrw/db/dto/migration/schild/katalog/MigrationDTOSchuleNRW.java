@@ -21,63 +21,63 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Schule.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Schule")
-@NamedQuery(name="MigrationDTOSchuleNRW.all", query="SELECT e FROM MigrationDTOSchuleNRW e")
-@NamedQuery(name="MigrationDTOSchuleNRW.id", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.id.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnr", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnr.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.name", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.name.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformnr", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformnr.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformkrz", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformkrz.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformbez", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulformbez.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.strassenname", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.strassenname.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.hausnr", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.hausnr.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.hausnrzusatz", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.hausnrzusatz.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.strasse", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.strasse.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.plz", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.plz.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.ort", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.ort.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.telefon", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.telefon.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.fax", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.fax.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.email", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.email.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulleiter", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulleiter.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.sortierung", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.sortierung.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.sichtbar", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.sichtbar.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.aenderbar", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.aenderbar.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnr_sim", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnr_sim.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.kuerzel", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.kuerzel.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.kurzbez", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.kurzbez.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnreigner", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuleNRW.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuleNRW.all.migration", query="SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulNr","Name","SchulformNr","SchulformKrz","SchulformBez","Strassenname","HausNr","HausNrZusatz","Strasse","PLZ","Ort","Telefon","Fax","Email","Schulleiter","Sortierung","Sichtbar","Aenderbar","SchulNr_SIM","Kuerzel","KurzBez","SchulnrEigner"})
-public class MigrationDTOSchuleNRW {
+@NamedQuery(name = "MigrationDTOSchuleNRW.all", query = "SELECT e FROM MigrationDTOSchuleNRW e")
+@NamedQuery(name = "MigrationDTOSchuleNRW.id", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.id.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.name", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.name.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Name IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformNr IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformkrz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformkrz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformbez", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulformbez.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulformBez IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.strassenname", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.strassenname.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strassenname IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.hausnr", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.hausnr.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNr IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.hausnrzusatz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.HausNrZusatz IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.strasse", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.strasse.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Strasse IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.plz", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.plz.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.PLZ IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.ort", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.ort.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Ort IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.telefon", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.telefon.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Telefon IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.fax", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.fax.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Fax IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.email", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.email.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Email IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulleiter", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulleiter.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Schulleiter IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.sortierung", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.sortierung.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.sichtbar", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.sichtbar.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.aenderbar", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.aenderbar.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr_sim", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnr_sim.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulNr_SIM IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.kuerzel", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.kuerzel.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.kurzbez", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.kurzbez.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.KurzBez IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuleNRW.all.migration", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulNr", "Name", "SchulformNr", "SchulformKrz", "SchulformBez", "Strassenname", "HausNr", "HausNrZusatz", "Strasse", "PLZ", "Ort", "Telefon", "Fax", "Email", "Schulleiter", "Sortierung", "Sichtbar", "Aenderbar", "SchulNr_SIM", "Kuerzel", "KurzBez", "SchulnrEigner"})
+public final class MigrationDTOSchuleNRW {
 
 	/** ID des Eintrags der Schulen */
 	@Id
@@ -168,17 +168,17 @@ public class MigrationDTOSchuleNRW {
 	/** Sichbarkeit des Eintrags der Schulen */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit des Eintrags der Schulen */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Statistiklürzel Schulnummer des Eintrags der Schulen */
@@ -214,11 +214,11 @@ public class MigrationDTOSchuleNRW {
 	 * @param SchulNr   der Wert für das Attribut SchulNr
 	 */
 	public MigrationDTOSchuleNRW(final Long ID, final String SchulNr) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulNr == null) { 
+		if (SchulNr == null) {
 			throw new NullPointerException("SchulNr must not be null");
 		}
 		this.SchulNr = SchulNr;
@@ -226,7 +226,7 @@ public class MigrationDTOSchuleNRW {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

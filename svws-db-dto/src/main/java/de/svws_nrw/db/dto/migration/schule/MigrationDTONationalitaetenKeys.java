@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Nationalitaeten_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Nationalitaeten_Keys")
-@NamedQuery(name="MigrationDTONationalitaetenKeys.all", query="SELECT e FROM MigrationDTONationalitaetenKeys e")
-@NamedQuery(name="MigrationDTONationalitaetenKeys.destatiscode", query="SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode = :value")
-@NamedQuery(name="MigrationDTONationalitaetenKeys.destatiscode.multiple", query="SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
-@NamedQuery(name="MigrationDTONationalitaetenKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode = ?1")
-@NamedQuery(name="MigrationDTONationalitaetenKeys.all.migration", query="SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL")
+@NamedQuery(name = "MigrationDTONationalitaetenKeys.all", query = "SELECT e FROM MigrationDTONationalitaetenKeys e")
+@NamedQuery(name = "MigrationDTONationalitaetenKeys.destatiscode", query = "SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode = :value")
+@NamedQuery(name = "MigrationDTONationalitaetenKeys.destatiscode.multiple", query = "SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
+@NamedQuery(name = "MigrationDTONationalitaetenKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode = ?1")
+@NamedQuery(name = "MigrationDTONationalitaetenKeys.all.migration", query = "SELECT e FROM MigrationDTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL")
 @JsonPropertyOrder({"DEStatisCode"})
-public class MigrationDTONationalitaetenKeys {
+public final class MigrationDTONationalitaetenKeys {
 
 	/** Der dreistellige Länder-Code des statistischen Bundesamtes (DESTATIS) */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTONationalitaetenKeys {
 	 * @param DEStatisCode   der Wert für das Attribut DEStatisCode
 	 */
 	public MigrationDTONationalitaetenKeys(final String DEStatisCode) {
-		if (DEStatisCode == null) { 
+		if (DEStatisCode == null) {
 			throw new NullPointerException("DEStatisCode must not be null");
 		}
 		this.DEStatisCode = DEStatisCode;
@@ -53,7 +53,7 @@ public class MigrationDTONationalitaetenKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

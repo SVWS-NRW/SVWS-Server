@@ -30,75 +30,75 @@ import de.svws_nrw.csv.converter.current.gost.GOStBesondereLernleistungConverter
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerAbitur.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAbitur")
-@NamedQuery(name="DTOSchuelerAbitur.all", query="SELECT e FROM DTOSchuelerAbitur e")
-@NamedQuery(name="DTOSchuelerAbitur.id", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerAbitur.id.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.schueler_id", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerAbitur.schueler_id.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.schuljahresabschnitts_id", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOSchuelerAbitur.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.facharbeitfach", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitFach = :value")
-@NamedQuery(name="DTOSchuelerAbitur.facharbeitfach.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitFach IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.facharbeitnotenpunkte", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte = :value")
-@NamedQuery(name="DTOSchuelerAbitur.facharbeitnotenpunkte.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.fehlstundensumme", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSumme = :value")
-@NamedQuery(name="DTOSchuelerAbitur.fehlstundensumme.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSumme IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.fehlstundensummeunentschuldigt", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt = :value")
-@NamedQuery(name="DTOSchuelerAbitur.fehlstundensummeunentschuldigt.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.projektkursthema", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ProjektkursThema = :value")
-@NamedQuery(name="DTOSchuelerAbitur.projektkursthema.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ProjektkursThema IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.fremdsprachesekimanuellgeprueft", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft = :value")
-@NamedQuery(name="DTOSchuelerAbitur.fremdsprachesekimanuellgeprueft.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahlkurseeingebracht", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahlkurseeingebracht.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefiziteeingebracht", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefiziteeingebracht.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefizitelk", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefizitelk.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefizite0punkte", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_anzahldefizite0punkte.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_punktsummenormiert", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_punktsummenormiert.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_summenotenpunktegk", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_summenotenpunktegk.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_summenotenpunktelk", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_summenotenpunktelk.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_hatzulassung", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_HatZulassung = :value")
-@NamedQuery(name="DTOSchuelerAbitur.blocki_hatzulassung.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_HatZulassung IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungart", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungArt = :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungart.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungArt IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungnotenpunkte", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte = :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungnotenpunkte.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungthema", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungThema = :value")
-@NamedQuery(name="DTOSchuelerAbitur.besonderelernleistungthema.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungThema IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_punktsumme", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme = :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_punktsumme.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_anzahldefizite", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite = :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_anzahldefizite.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_anzahldefizitelk", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK = :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_anzahldefizitelk.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_hatbestanden", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden = :value")
-@NamedQuery(name="DTOSchuelerAbitur.pruefung_hatbestanden.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.abiturnote", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturNote = :value")
-@NamedQuery(name="DTOSchuelerAbitur.abiturnote.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturNote IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.abiturgesamtpunktzahl", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl = :value")
-@NamedQuery(name="DTOSchuelerAbitur.abiturgesamtpunktzahl.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.verbesserungabpunktzahl", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl = :value")
-@NamedQuery(name="DTOSchuelerAbitur.verbesserungabpunktzahl.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.verbesserungbenoetigepunkte", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte = :value")
-@NamedQuery(name="DTOSchuelerAbitur.verbesserungbenoetigepunkte.multiple", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte IN :value")
-@NamedQuery(name="DTOSchuelerAbitur.primaryKeyQuery", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerAbitur.all.migration", query="SELECT e FROM DTOSchuelerAbitur e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","FacharbeitFach","FacharbeitNotenpunkte","FehlstundenSumme","FehlstundenSummeUnentschuldigt","-","-","-","-","-","-","-","ProjektkursThema","FremdspracheSekIManuellGeprueft","BlockI_AnzahlKurseEingebracht","BlockI_AnzahlDefiziteEingebracht","BlockI_AnzahlDefiziteLK","BlockI_AnzahlDefizite0Punkte","BlockI_PunktsummeNormiert","BlockI_NotenpunktdurchschnittEingebrachterKurse","BlockI_SummeNotenpunkteGK","BlockI_SummeNotenpunkteLK","-","BlockI_HatZulassung","BesondereLernleistungArt","BesondereLernleistungNotenpunkte","BesondereLernleistungThema","Pruefung_Punktsumme","Pruefung_AnzahlDefizite","Pruefung_AnzahlDefiziteLK","Pruefung_hatBestanden","AbiturNote","AbiturGesamtPunktzahl","VerbesserungAbPunktzahl","VerbesserungBenoetigePunkte"})
-public class DTOSchuelerAbitur {
+@NamedQuery(name = "DTOSchuelerAbitur.all", query = "SELECT e FROM DTOSchuelerAbitur e")
+@NamedQuery(name = "DTOSchuelerAbitur.id", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.id.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.schueler_id", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.schuljahresabschnitts_id", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.facharbeitfach", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitFach = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.facharbeitfach.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitFach IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.facharbeitnotenpunkte", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.facharbeitnotenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fehlstundensumme", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSumme = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fehlstundensumme.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSumme IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fehlstundensummeunentschuldigt", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fehlstundensummeunentschuldigt.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.projektkursthema", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ProjektkursThema = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.projektkursthema.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ProjektkursThema IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fremdsprachesekimanuellgeprueft", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.fremdsprachesekimanuellgeprueft.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahlkurseeingebracht", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahlkurseeingebracht.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefiziteeingebracht", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefiziteeingebracht.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefizitelk", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefizitelk.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefizite0punkte", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_anzahldefizite0punkte.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_punktsummenormiert", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_punktsummenormiert.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_summenotenpunktegk", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_summenotenpunktegk.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_summenotenpunktelk", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_summenotenpunktelk.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_hatzulassung", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_HatZulassung = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.blocki_hatzulassung.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BlockI_HatZulassung IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungart", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungArt = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungart.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungArt IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungnotenpunkte", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungnotenpunkte.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungthema", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungThema = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.besonderelernleistungthema.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.BesondereLernleistungThema IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_punktsumme", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_punktsumme.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_anzahldefizite", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_anzahldefizite.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_anzahldefizitelk", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_anzahldefizitelk.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_hatbestanden", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.pruefung_hatbestanden.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.abiturnote", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturNote = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.abiturnote.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturNote IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.abiturgesamtpunktzahl", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.abiturgesamtpunktzahl.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.verbesserungabpunktzahl", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.verbesserungabpunktzahl.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.verbesserungbenoetigepunkte", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte = :value")
+@NamedQuery(name = "DTOSchuelerAbitur.verbesserungbenoetigepunkte.multiple", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte IN :value")
+@NamedQuery(name = "DTOSchuelerAbitur.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerAbitur.all.migration", query = "SELECT e FROM DTOSchuelerAbitur e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "FacharbeitFach", "FacharbeitNotenpunkte", "FehlstundenSumme", "FehlstundenSummeUnentschuldigt", "-", "-", "-", "-", "-", "-", "-", "ProjektkursThema", "FremdspracheSekIManuellGeprueft", "BlockI_AnzahlKurseEingebracht", "BlockI_AnzahlDefiziteEingebracht", "BlockI_AnzahlDefiziteLK", "BlockI_AnzahlDefizite0Punkte", "BlockI_PunktsummeNormiert", "BlockI_NotenpunktdurchschnittEingebrachterKurse", "BlockI_SummeNotenpunkteGK", "BlockI_SummeNotenpunkteLK", "-", "BlockI_HatZulassung", "BesondereLernleistungArt", "BesondereLernleistungNotenpunkte", "BesondereLernleistungThema", "Pruefung_Punktsumme", "Pruefung_AnzahlDefizite", "Pruefung_AnzahlDefiziteLK", "Pruefung_hatBestanden", "AbiturNote", "AbiturGesamtPunktzahl", "VerbesserungAbPunktzahl", "VerbesserungBenoetigePunkte"})
+public final class DTOSchuelerAbitur {
 
 	/** Eine eindeutige ID für den Abiturdatensatz */
 	@Id
@@ -144,9 +144,9 @@ public class DTOSchuelerAbitur {
 	/** true, falls die zweite Fremsprache in der Sekundarstufe 1 manuell geprüft wurde und vom Algorithmus als gegeben angesehen werden kann. */
 	@Column(name = "FS2_SekI_Manuell")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean FremdspracheSekIManuellGeprueft;
 
 	/** Block I: Die Anzahl der eingebrachten Kurse aus der Qualifikationsphase */
@@ -197,17 +197,17 @@ public class DTOSchuelerAbitur {
 	/** Besondere Lernleistung: Die Art der besonderen Lernleistung(K: Keine, E: Externe, P: in einem Projektkurs) */
 	@Column(name = "BLL_Art")
 	@JsonProperty
-	@Convert(converter=GOStBesondereLernleistungConverter.class)
-	@JsonSerialize(using=GOStBesondereLernleistungConverterSerializer.class)
-	@JsonDeserialize(using=GOStBesondereLernleistungConverterDeserializer.class)
+	@Convert(converter = GOStBesondereLernleistungConverter.class)
+	@JsonSerialize(using = GOStBesondereLernleistungConverterSerializer.class)
+	@JsonDeserialize(using = GOStBesondereLernleistungConverterDeserializer.class)
 	public GostBesondereLernleistung BesondereLernleistungArt;
 
 	/** Besondere Lernleistung: Die Notenpunkte, welche bei der besonderen Lernleistung erreicht wurden – einfach gewichtet */
 	@Column(name = "BLL_Punkte")
 	@JsonProperty
-	@Convert(converter=NoteConverterFromNotenpunkte.class)
-	@JsonSerialize(using=NoteConverterFromNotenpunkteSerializer.class)
-	@JsonDeserialize(using=NoteConverterFromNotenpunkteDeserializer.class)
+	@Convert(converter = NoteConverterFromNotenpunkte.class)
+	@JsonSerialize(using = NoteConverterFromNotenpunkteSerializer.class)
+	@JsonDeserialize(using = NoteConverterFromNotenpunkteDeserializer.class)
 	public Note BesondereLernleistungNotenpunkte;
 
 	/** Besondere Lernleistung: Das Thema der besonderen Lernleistung */
@@ -233,9 +233,9 @@ public class DTOSchuelerAbitur {
 	/** Gesamt: Gibt an, ob die Abiturprüfung bestanden wurde */
 	@Column(name = "PruefungBestanden")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Pruefung_hatBestanden;
 
 	/** Gesamt: Die Abschlussnote des Abiturs */
@@ -271,11 +271,11 @@ public class DTOSchuelerAbitur {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerAbitur(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -283,7 +283,7 @@ public class DTOSchuelerAbitur {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -26,45 +26,45 @@ import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverter
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Jahrgaenge.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Jahrgaenge")
-@NamedQuery(name="DTOJahrgang.all", query="SELECT e FROM DTOJahrgang e")
-@NamedQuery(name="DTOJahrgang.id", query="SELECT e FROM DTOJahrgang e WHERE e.ID = :value")
-@NamedQuery(name="DTOJahrgang.id.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.ID IN :value")
-@NamedQuery(name="DTOJahrgang.internkrz", query="SELECT e FROM DTOJahrgang e WHERE e.InternKrz = :value")
-@NamedQuery(name="DTOJahrgang.internkrz.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.InternKrz IN :value")
-@NamedQuery(name="DTOJahrgang.gueltigvon", query="SELECT e FROM DTOJahrgang e WHERE e.GueltigVon = :value")
-@NamedQuery(name="DTOJahrgang.gueltigvon.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.GueltigVon IN :value")
-@NamedQuery(name="DTOJahrgang.gueltigbis", query="SELECT e FROM DTOJahrgang e WHERE e.GueltigBis = :value")
-@NamedQuery(name="DTOJahrgang.gueltigbis.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.GueltigBis IN :value")
-@NamedQuery(name="DTOJahrgang.asdjahrgang", query="SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="DTOJahrgang.asdjahrgang.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="DTOJahrgang.asdbezeichnung", query="SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung = :value")
-@NamedQuery(name="DTOJahrgang.asdbezeichnung.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung IN :value")
-@NamedQuery(name="DTOJahrgang.sichtbar", query="SELECT e FROM DTOJahrgang e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOJahrgang.sichtbar.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOJahrgang.sortierung", query="SELECT e FROM DTOJahrgang e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOJahrgang.sortierung.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOJahrgang.istchronologisch", query="SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch = :value")
-@NamedQuery(name="DTOJahrgang.istchronologisch.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch IN :value")
-@NamedQuery(name="DTOJahrgang.kurzbezeichnung", query="SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung = :value")
-@NamedQuery(name="DTOJahrgang.kurzbezeichnung.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung IN :value")
-@NamedQuery(name="DTOJahrgang.sekundarstufe", query="SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe = :value")
-@NamedQuery(name="DTOJahrgang.sekundarstufe.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe IN :value")
-@NamedQuery(name="DTOJahrgang.gliederung", query="SELECT e FROM DTOJahrgang e WHERE e.Gliederung = :value")
-@NamedQuery(name="DTOJahrgang.gliederung.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Gliederung IN :value")
-@NamedQuery(name="DTOJahrgang.anzahlrestabschnitte", query="SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte = :value")
-@NamedQuery(name="DTOJahrgang.anzahlrestabschnitte.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte IN :value")
-@NamedQuery(name="DTOJahrgang.folgejahrgang_id", query="SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
-@NamedQuery(name="DTOJahrgang.folgejahrgang_id.multiple", query="SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
-@NamedQuery(name="DTOJahrgang.primaryKeyQuery", query="SELECT e FROM DTOJahrgang e WHERE e.ID = ?1")
-@NamedQuery(name="DTOJahrgang.all.migration", query="SELECT e FROM DTOJahrgang e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","InternKrz","GueltigVon","GueltigBis","ASDJahrgang","ASDBezeichnung","Sichtbar","Sortierung","IstChronologisch","Kurzbezeichnung","Sekundarstufe","Gliederung","AnzahlRestabschnitte","Folgejahrgang_ID"})
-public class DTOJahrgang {
+@NamedQuery(name = "DTOJahrgang.all", query = "SELECT e FROM DTOJahrgang e")
+@NamedQuery(name = "DTOJahrgang.id", query = "SELECT e FROM DTOJahrgang e WHERE e.ID = :value")
+@NamedQuery(name = "DTOJahrgang.id.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOJahrgang.internkrz", query = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz = :value")
+@NamedQuery(name = "DTOJahrgang.internkrz.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.InternKrz IN :value")
+@NamedQuery(name = "DTOJahrgang.gueltigvon", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon = :value")
+@NamedQuery(name = "DTOJahrgang.gueltigvon.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigVon IN :value")
+@NamedQuery(name = "DTOJahrgang.gueltigbis", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis = :value")
+@NamedQuery(name = "DTOJahrgang.gueltigbis.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.GueltigBis IN :value")
+@NamedQuery(name = "DTOJahrgang.asdjahrgang", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "DTOJahrgang.asdjahrgang.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "DTOJahrgang.asdbezeichnung", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung = :value")
+@NamedQuery(name = "DTOJahrgang.asdbezeichnung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ASDBezeichnung IN :value")
+@NamedQuery(name = "DTOJahrgang.sichtbar", query = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOJahrgang.sichtbar.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOJahrgang.sortierung", query = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOJahrgang.sortierung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOJahrgang.istchronologisch", query = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch = :value")
+@NamedQuery(name = "DTOJahrgang.istchronologisch.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.IstChronologisch IN :value")
+@NamedQuery(name = "DTOJahrgang.kurzbezeichnung", query = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung = :value")
+@NamedQuery(name = "DTOJahrgang.kurzbezeichnung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Kurzbezeichnung IN :value")
+@NamedQuery(name = "DTOJahrgang.sekundarstufe", query = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe = :value")
+@NamedQuery(name = "DTOJahrgang.sekundarstufe.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Sekundarstufe IN :value")
+@NamedQuery(name = "DTOJahrgang.gliederung", query = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung = :value")
+@NamedQuery(name = "DTOJahrgang.gliederung.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Gliederung IN :value")
+@NamedQuery(name = "DTOJahrgang.anzahlrestabschnitte", query = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte = :value")
+@NamedQuery(name = "DTOJahrgang.anzahlrestabschnitte.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.AnzahlRestabschnitte IN :value")
+@NamedQuery(name = "DTOJahrgang.folgejahrgang_id", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
+@NamedQuery(name = "DTOJahrgang.folgejahrgang_id.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
+@NamedQuery(name = "DTOJahrgang.primaryKeyQuery", query = "SELECT e FROM DTOJahrgang e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOJahrgang.all.migration", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID"})
+public final class DTOJahrgang {
 
 	/** Eindeutige ID zur Kennzeichnung des Jahrgangs-Datensatzes */
 	@Id
@@ -100,9 +100,9 @@ public class DTOJahrgang {
 	/** true, falls der Jahrgang bei Auswahlen angezeigt werden soll oder nicht. */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Ein Zahlwert, welcher bei für eine Sortierung der Jahrgänge bei der Darstellung verwendet wird. */
@@ -113,9 +113,9 @@ public class DTOJahrgang {
 	/** Gibt an ob ein Jahrgang zu einer chronologischen Reihenfolge gehört */
 	@Column(name = "IstChronologisch")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean IstChronologisch;
 
 	/** Wird in der Übersicht benutzt um den Spaltentitel anzuzeigen. (Kurzbezeichnung in Jahrgangstabelle) */
@@ -131,9 +131,9 @@ public class DTOJahrgang {
 	/** Schulgliederung des Jahrgangs */
 	@Column(name = "SGL")
 	@JsonProperty
-	@Convert(converter=SchulgliederungKuerzelConverter.class)
-	@JsonSerialize(using=SchulgliederungKuerzelConverterSerializer.class)
-	@JsonDeserialize(using=SchulgliederungKuerzelConverterDeserializer.class)
+	@Convert(converter = SchulgliederungKuerzelConverter.class)
+	@JsonSerialize(using = SchulgliederungKuerzelConverterSerializer.class)
+	@JsonDeserialize(using = SchulgliederungKuerzelConverterDeserializer.class)
 	public Schulgliederung Gliederung;
 
 	/** Gibt die Anzahl der Restabschnitte an, die für den Verbleib an dieser Schulform üblich ist. */
@@ -158,7 +158,7 @@ public class DTOJahrgang {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOJahrgang(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -166,7 +166,7 @@ public class DTOJahrgang {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

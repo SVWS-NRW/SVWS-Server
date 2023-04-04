@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Einzelleistungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Einzelleistungen")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.all", query="SELECT e FROM MigrationDTOTeilleistungsarten e")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.id", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.id.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.schulnreigner", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.bezeichnung", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.bezeichnung.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.sortierung", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.sortierung.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.sichtbar", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.sichtbar.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.gewichtung", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Gewichtung = :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.gewichtung.multiple", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Gewichtung IN :value")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOTeilleistungsarten.all.migration", query="SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Bezeichnung","Sortierung","Sichtbar","Gewichtung"})
-public class MigrationDTOTeilleistungsarten {
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.all", query = "SELECT e FROM MigrationDTOTeilleistungsarten e")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.id", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.id.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.schulnreigner", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.bezeichnung", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.sortierung", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.sortierung.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.sichtbar", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.sichtbar.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.gewichtung", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Gewichtung = :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.gewichtung.multiple", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.Gewichtung IN :value")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOTeilleistungsarten.all.migration", query = "SELECT e FROM MigrationDTOTeilleistungsarten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Bezeichnung", "Sortierung", "Sichtbar", "Gewichtung"})
+public final class MigrationDTOTeilleistungsarten {
 
 	/** ID der Teilleistung zu den Leistungsdaten */
 	@Id
@@ -69,9 +69,9 @@ public class MigrationDTOTeilleistungsarten {
 	/** Sichbarkeit der Teilleistung zu den Leistungsdaten */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Gewichtung der Teilleistung zu den Leistungsdaten */
@@ -92,11 +92,11 @@ public class MigrationDTOTeilleistungsarten {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOTeilleistungsarten(final Long ID, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -104,7 +104,7 @@ public class MigrationDTOTeilleistungsarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

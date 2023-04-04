@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerMerkmale.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerMerkmale")
-@NamedQuery(name="DTOSchuelerMerkmale.all", query="SELECT e FROM DTOSchuelerMerkmale e")
-@NamedQuery(name="DTOSchuelerMerkmale.id", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerMerkmale.id.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.schueler_id", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerMerkmale.schueler_id.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.kurztext", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext = :value")
-@NamedQuery(name="DTOSchuelerMerkmale.kurztext.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.datumvon", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon = :value")
-@NamedQuery(name="DTOSchuelerMerkmale.datumvon.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.datumbis", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis = :value")
-@NamedQuery(name="DTOSchuelerMerkmale.datumbis.multiple", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
-@NamedQuery(name="DTOSchuelerMerkmale.primaryKeyQuery", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerMerkmale.all.migration", query="SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Kurztext","DatumVon","DatumBis"})
-public class DTOSchuelerMerkmale {
+@NamedQuery(name = "DTOSchuelerMerkmale.all", query = "SELECT e FROM DTOSchuelerMerkmale e")
+@NamedQuery(name = "DTOSchuelerMerkmale.id", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.id.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.schueler_id", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.kurztext", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext = :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.kurztext.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.Kurztext IN :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.datumvon", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon = :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.datumvon.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumVon IN :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.datumbis", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis = :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.datumbis.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
+@NamedQuery(name = "DTOSchuelerMerkmale.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerMerkmale.all.migration", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Kurztext", "DatumVon", "DatumBis"})
+public final class DTOSchuelerMerkmale {
 
 	/** ID des Eintrag bei besondere Merkmale zum Schüler */
 	@Id
@@ -62,17 +62,17 @@ public class DTOSchuelerMerkmale {
 	/** Datum Beginn des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "DatumVon")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String DatumVon;
 
 	/** Datum Ende des Eintrag bei besondere Merkmale zum Schüler */
 	@Column(name = "DatumBis")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String DatumBis;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOSchuelerMerkmale {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerMerkmale(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -100,7 +100,7 @@ public class DTOSchuelerMerkmale {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

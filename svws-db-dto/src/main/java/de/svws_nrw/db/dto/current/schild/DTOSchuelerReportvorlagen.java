@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerReportvorlagen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOSchuelerReportvorlagenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerReportvorlagen")
-@NamedQuery(name="DTOSchuelerReportvorlagen.all", query="SELECT e FROM DTOSchuelerReportvorlagen e")
-@NamedQuery(name="DTOSchuelerReportvorlagen.user_id", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID = :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.user_id.multiple", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID IN :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.reportvorlage", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Reportvorlage = :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.reportvorlage.multiple", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.schueler_ids", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.schueler_ids.multiple", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN :value")
-@NamedQuery(name="DTOSchuelerReportvorlagen.primaryKeyQuery", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2")
-@NamedQuery(name="DTOSchuelerReportvorlagen.all.migration", query="SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL")
-@JsonPropertyOrder({"User_ID","Reportvorlage","Schueler_IDs"})
-public class DTOSchuelerReportvorlagen {
+@NamedQuery(name = "DTOSchuelerReportvorlagen.all", query = "SELECT e FROM DTOSchuelerReportvorlagen e")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.user_id", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID = :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.user_id.multiple", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID IN :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.reportvorlage", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Reportvorlage = :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.reportvorlage.multiple", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.schueler_ids", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.schueler_ids.multiple", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN :value")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2")
+@NamedQuery(name = "DTOSchuelerReportvorlagen.all.migration", query = "SELECT e FROM DTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL")
+@JsonPropertyOrder({"User_ID", "Reportvorlage", "Schueler_IDs"})
+public final class DTOSchuelerReportvorlagen {
 
 	/** UserID des Users der die zugeordneten Reportvorlagen druckt */
 	@Id
@@ -62,7 +62,7 @@ public class DTOSchuelerReportvorlagen {
 	 * @param User_ID   der Wert für das Attribut User_ID
 	 */
 	public DTOSchuelerReportvorlagen(final Long User_ID) {
-		if (User_ID == null) { 
+		if (User_ID == null) {
 			throw new NullPointerException("User_ID must not be null");
 		}
 		this.User_ID = User_ID;
@@ -70,7 +70,7 @@ public class DTOSchuelerReportvorlagen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,29 +13,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EnmLeistungsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EnmLeistungsdaten")
-@NamedQuery(name="DTOEnmLeistungsdaten.all", query="SELECT e FROM DTOEnmLeistungsdaten e")
-@NamedQuery(name="DTOEnmLeistungsdaten.id", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.id.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsnotenkrz", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsnotenkrz.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsfehlstd", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsfehlstd.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsufehlstd", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tsufehlstd.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tslernentw", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tslernentw.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tswarnung", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung = :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.tswarnung.multiple", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung IN :value")
-@NamedQuery(name="DTOEnmLeistungsdaten.primaryKeyQuery", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOEnmLeistungsdaten.all.migration", query="SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","tsNotenKrz","tsFehlStd","tsuFehlStd","tsLernentw","tsWarnung"})
-public class DTOEnmLeistungsdaten {
+@NamedQuery(name = "DTOEnmLeistungsdaten.all", query = "SELECT e FROM DTOEnmLeistungsdaten e")
+@NamedQuery(name = "DTOEnmLeistungsdaten.id", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.id.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsufehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsufehlstd.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tslernentw", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tslernentw.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tswarnung", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tswarnung.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOEnmLeistungsdaten.all.migration", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "tsNotenKrz", "tsFehlStd", "tsuFehlStd", "tsLernentw", "tsWarnung"})
+public final class DTOEnmLeistungsdaten {
 
 	/** ID der Leistungsdaten */
 	@Id
@@ -85,27 +85,27 @@ public class DTOEnmLeistungsdaten {
 	 * @param tsWarnung   der Wert für das Attribut tsWarnung
 	 */
 	public DTOEnmLeistungsdaten(final Long ID, final String tsNotenKrz, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (tsNotenKrz == null) { 
+		if (tsNotenKrz == null) {
 			throw new NullPointerException("tsNotenKrz must not be null");
 		}
 		this.tsNotenKrz = tsNotenKrz;
-		if (tsFehlStd == null) { 
+		if (tsFehlStd == null) {
 			throw new NullPointerException("tsFehlStd must not be null");
 		}
 		this.tsFehlStd = tsFehlStd;
-		if (tsuFehlStd == null) { 
+		if (tsuFehlStd == null) {
 			throw new NullPointerException("tsuFehlStd must not be null");
 		}
 		this.tsuFehlStd = tsuFehlStd;
-		if (tsLernentw == null) { 
+		if (tsLernentw == null) {
 			throw new NullPointerException("tsLernentw must not be null");
 		}
 		this.tsLernentw = tsLernentw;
-		if (tsWarnung == null) { 
+		if (tsWarnung == null) {
 			throw new NullPointerException("tsWarnung must not be null");
 		}
 		this.tsWarnung = tsWarnung;
@@ -113,7 +113,7 @@ public class DTOEnmLeistungsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

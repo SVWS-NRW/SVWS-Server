@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle ErzieherDatenschutz.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOErzieherDatenschutzPK implements Serializable {
+public final class DTOErzieherDatenschutzPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOErzieherDatenschutzPK implements Serializable {
 	 * @param DatenschutzID   der Wert für das Attribut DatenschutzID
 	 */
 	public DTOErzieherDatenschutzPK(final Long ErzieherID, final Long DatenschutzID) {
-		if (ErzieherID == null) { 
+		if (ErzieherID == null) {
 			throw new NullPointerException("ErzieherID must not be null");
 		}
 		this.ErzieherID = ErzieherID;
-		if (DatenschutzID == null) { 
+		if (DatenschutzID == null) {
 			throw new NullPointerException("DatenschutzID must not be null");
 		}
 		this.DatenschutzID = DatenschutzID;
@@ -43,7 +43,7 @@ public class DTOErzieherDatenschutzPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerLehramtLehrbef.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOLehrerLehramtBefaehigungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLehramtLehrbef")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.all", query="SELECT e FROM DTOLehrerLehramtBefaehigung e")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrer_id", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrer_id.multiple", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrbefkrz", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrbefkrz.multiple", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz.multiple", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN :value")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.primaryKeyQuery", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2")
-@NamedQuery(name="DTOLehrerLehramtBefaehigung.all.migration", query="SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL")
-@JsonPropertyOrder({"Lehrer_ID","LehrbefKrz","LehrbefAnerkennungKrz"})
-public class DTOLehrerLehramtBefaehigung {
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.all", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrer_id", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrer_id.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefkrz", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz = :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefkrz.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefKrz IN :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz = :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.lehrbefanerkennungkrz.multiple", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.LehrbefAnerkennungKrz IN :value")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID = ?1 AND e.LehrbefKrz = ?2")
+@NamedQuery(name = "DTOLehrerLehramtBefaehigung.all.migration", query = "SELECT e FROM DTOLehrerLehramtBefaehigung e WHERE e.Lehrer_ID IS NOT NULL AND e.LehrbefKrz IS NOT NULL")
+@JsonPropertyOrder({"Lehrer_ID", "LehrbefKrz", "LehrbefAnerkennungKrz"})
+public final class DTOLehrerLehramtBefaehigung {
 
 	/** LehrerID zu der die Lehrbefähigung gehört */
 	@Id
@@ -62,7 +62,7 @@ public class DTOLehrerLehramtBefaehigung {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOLehrerLehramtBefaehigung(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -70,7 +70,7 @@ public class DTOLehrerLehramtBefaehigung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

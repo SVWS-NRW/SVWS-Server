@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Textdateien.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Textdateien")
-@NamedQuery(name="MigrationDTOTextDateien.all", query="SELECT e FROM MigrationDTOTextDateien e")
-@NamedQuery(name="MigrationDTOTextDateien.id", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOTextDateien.id.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.bezeichnung", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOTextDateien.bezeichnung.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.text_id", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_ID = :value")
-@NamedQuery(name="MigrationDTOTextDateien.text_id.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_ID IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.text_body", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_Body = :value")
-@NamedQuery(name="MigrationDTOTextDateien.text_body.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_Body IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.sichtbar", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOTextDateien.sichtbar.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.sortierung", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOTextDateien.sortierung.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.schulnreigner", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOTextDateien.schulnreigner.multiple", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOTextDateien.primaryKeyQuery", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOTextDateien.all.migration", query="SELECT e FROM MigrationDTOTextDateien e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Text_ID","Text_Body","Sichtbar","Sortierung","SchulnrEigner"})
-public class MigrationDTOTextDateien {
+@NamedQuery(name = "MigrationDTOTextDateien.all", query = "SELECT e FROM MigrationDTOTextDateien e")
+@NamedQuery(name = "MigrationDTOTextDateien.id", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.id.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.bezeichnung", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.text_id", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_ID = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.text_id.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_ID IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.text_body", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_Body = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.text_body.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Text_Body IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.sichtbar", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.sichtbar.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.sortierung", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.sortierung.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.schulnreigner", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOTextDateien.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOTextDateien.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOTextDateien.all.migration", query = "SELECT e FROM MigrationDTOTextDateien e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Text_ID", "Text_Body", "Sichtbar", "Sortierung", "SchulnrEigner"})
+public final class MigrationDTOTextDateien {
 
 	/** ID des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Id
@@ -71,9 +71,9 @@ public class MigrationDTOTextDateien {
 	/** Sichbarkeit des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierung des Textes der zum Ersatz für txt-Dateien genutzt wird */
@@ -99,11 +99,11 @@ public class MigrationDTOTextDateien {
 	 * @param Text_ID   der Wert für das Attribut Text_ID
 	 */
 	public MigrationDTOTextDateien(final Long ID, final Long Text_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Text_ID == null) { 
+		if (Text_ID == null) {
 			throw new NullPointerException("Text_ID must not be null");
 		}
 		this.Text_ID = Text_ID;
@@ -111,7 +111,7 @@ public class MigrationDTOTextDateien {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

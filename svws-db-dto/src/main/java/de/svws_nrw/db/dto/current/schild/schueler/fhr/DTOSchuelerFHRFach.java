@@ -21,93 +21,93 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerFHRFaecher.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFHRFaecher")
-@NamedQuery(name="DTOSchuelerFHRFach.all", query="SELECT e FROM DTOSchuelerFHRFach e")
-@NamedQuery(name="DTOSchuelerFHRFach.id", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.id.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.schueler_id", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.schueler_id.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fach_id", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fach_id.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.kursartallg", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KursartAllg = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.kursartallg.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fachkrz", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.FachKrz = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fachkrz.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.FachKrz IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_2_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_2_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_2_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.psii_3_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.hsii_3_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.rsii_3_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_2_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_1", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_1.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_2", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2 = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_2.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2 IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_1_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_1_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_2_w", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2_W = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.ksii_3_2_w.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2_W IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fsortierung", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.FSortierung = :value")
-@NamedQuery(name="DTOSchuelerFHRFach.fsortierung.multiple", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.FSortierung IN :value")
-@NamedQuery(name="DTOSchuelerFHRFach.primaryKeyQuery", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerFHRFach.all.migration", query="SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Fach_ID","KursartAllg","FachKrz","PSII_2_1","HSII_2_1","RSII_2_1","PSII_2_2","HSII_2_2","RSII_2_2","PSII_2_1_W","HSII_2_1_W","RSII_2_1_W","PSII_2_2_W","HSII_2_2_W","RSII_2_2_W","PSII_3_1","HSII_3_1","RSII_3_1","PSII_3_2","HSII_3_2","RSII_3_2","PSII_3_1_W","HSII_3_1_W","RSII_3_1_W","PSII_3_2_W","HSII_3_2_W","RSII_3_2_W","KSII_2_1","KSII_2_2","KSII_2_1_W","KSII_2_2_W","KSII_3_1","KSII_3_2","KSII_3_1_W","KSII_3_2_W","FSortierung"})
-public class DTOSchuelerFHRFach {
+@NamedQuery(name = "DTOSchuelerFHRFach.all", query = "SELECT e FROM DTOSchuelerFHRFach e")
+@NamedQuery(name = "DTOSchuelerFHRFach.id", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.id.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.schueler_id", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fach_id", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fach_id.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.kursartallg", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.kursartallg.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fachkrz", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.FachKrz = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fachkrz.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.FachKrz IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_2_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_2_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_2_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_2_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_2_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_2_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.psii_3_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.PSII_3_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.hsii_3_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.HSII_3_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.rsii_3_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.RSII_3_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_2_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_2_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_1", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_1.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_2", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2 = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_2.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2 IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_1_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_1_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_1_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_2_w", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2_W = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.ksii_3_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.KSII_3_2_W IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fsortierung", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.FSortierung = :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.fsortierung.multiple", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.FSortierung IN :value")
+@NamedQuery(name = "DTOSchuelerFHRFach.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerFHRFach.all.migration", query = "SELECT e FROM DTOSchuelerFHRFach e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Fach_ID", "KursartAllg", "FachKrz", "PSII_2_1", "HSII_2_1", "RSII_2_1", "PSII_2_2", "HSII_2_2", "RSII_2_2", "PSII_2_1_W", "HSII_2_1_W", "RSII_2_1_W", "PSII_2_2_W", "HSII_2_2_W", "RSII_2_2_W", "PSII_3_1", "HSII_3_1", "RSII_3_1", "PSII_3_2", "HSII_3_2", "RSII_3_2", "PSII_3_1_W", "HSII_3_1_W", "RSII_3_1_W", "PSII_3_2_W", "HSII_3_2_W", "RSII_3_2_W", "KSII_2_1", "KSII_2_2", "KSII_2_1_W", "KSII_2_2_W", "KSII_3_1", "KSII_3_2", "KSII_3_1_W", "KSII_3_2_W", "FSortierung"})
+public final class DTOSchuelerFHRFach {
 
 	/** ID des Facheintrags für den FHR-Reiter */
 	@Id
@@ -148,9 +148,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_2_1")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_1;
 
 	/** P: Punkte im betreffenden Abschnitt  */
@@ -166,9 +166,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_2_2")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_2;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -184,9 +184,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_2_1_W")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_1_W;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -202,9 +202,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_2_2_W")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_2_W;
 
 	/** Punkte im betreffenden Abschnitt */
@@ -220,9 +220,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_3_1")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_1;
 
 	/** P: Punkte im betreffenden Abschnitt */
@@ -238,9 +238,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_3_2")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_2;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -256,9 +256,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_3_1_W")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_1_W;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -274,9 +274,9 @@ public class DTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_3_2_W")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_2_W;
 
 	/** K: Kursart im betreffenden Abschnitt  */
@@ -338,15 +338,15 @@ public class DTOSchuelerFHRFach {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOSchuelerFHRFach(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -354,7 +354,7 @@ public class DTOSchuelerFHRFach {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

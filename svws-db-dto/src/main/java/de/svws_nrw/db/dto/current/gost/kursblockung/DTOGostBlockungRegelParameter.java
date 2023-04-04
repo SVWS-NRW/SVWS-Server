@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung_Regelparameter.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOGostBlockungRegelParameterPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Regelparameter")
-@NamedQuery(name="DTOGostBlockungRegelParameter.all", query="SELECT e FROM DTOGostBlockungRegelParameter e")
-@NamedQuery(name="DTOGostBlockungRegelParameter.regel_id", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID = :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.regel_id.multiple", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.nummer", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Nummer = :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.nummer.multiple", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Nummer IN :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.parameter", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Parameter = :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.parameter.multiple", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Parameter IN :value")
-@NamedQuery(name="DTOGostBlockungRegelParameter.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID = ?1 AND e.Nummer = ?2")
-@NamedQuery(name="DTOGostBlockungRegelParameter.all.migration", query="SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IS NOT NULL AND e.Nummer IS NOT NULL")
-@JsonPropertyOrder({"Regel_ID","Nummer","Parameter"})
-public class DTOGostBlockungRegelParameter {
+@NamedQuery(name = "DTOGostBlockungRegelParameter.all", query = "SELECT e FROM DTOGostBlockungRegelParameter e")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.regel_id", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID = :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.regel_id.multiple", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.nummer", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Nummer = :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.nummer.multiple", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Nummer IN :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.parameter", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Parameter = :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.parameter.multiple", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Parameter IN :value")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID = ?1 AND e.Nummer = ?2")
+@NamedQuery(name = "DTOGostBlockungRegelParameter.all.migration", query = "SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IS NOT NULL AND e.Nummer IS NOT NULL")
+@JsonPropertyOrder({"Regel_ID", "Nummer", "Parameter"})
+public final class DTOGostBlockungRegelParameter {
 
 	/** ID des Regel-Parameters */
 	@Id
@@ -64,15 +64,15 @@ public class DTOGostBlockungRegelParameter {
 	 * @param Parameter   der Wert für das Attribut Parameter
 	 */
 	public DTOGostBlockungRegelParameter(final Long Regel_ID, final Integer Nummer, final Long Parameter) {
-		if (Regel_ID == null) { 
+		if (Regel_ID == null) {
 			throw new NullPointerException("Regel_ID must not be null");
 		}
 		this.Regel_ID = Regel_ID;
-		if (Nummer == null) { 
+		if (Nummer == null) {
 			throw new NullPointerException("Nummer must not be null");
 		}
 		this.Nummer = Nummer;
-		if (Parameter == null) { 
+		if (Parameter == null) {
 			throw new NullPointerException("Parameter must not be null");
 		}
 		this.Parameter = Parameter;
@@ -80,7 +80,7 @@ public class DTOGostBlockungRegelParameter {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

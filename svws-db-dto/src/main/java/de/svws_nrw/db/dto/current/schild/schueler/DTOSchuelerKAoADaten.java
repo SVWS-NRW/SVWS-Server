@@ -13,37 +13,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerKAoADaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerKAoADaten")
-@NamedQuery(name="DTOSchuelerKAoADaten.all", query="SELECT e FROM DTOSchuelerKAoADaten e")
-@NamedQuery(name="DTOSchuelerKAoADaten.id", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.id.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.abschnitt_id", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.abschnitt_id.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.jahrgang", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.jahrgang.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.kategorieid", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.kategorieid.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.merkmalid", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.merkmalid.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.zusatzmerkmalid", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.zusatzmerkmalid.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.anschlussoptionid", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.anschlussoptionid.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.berufsfeldid", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.berufsfeldid.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.sbo_ebene4id", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.sbo_ebene4id.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.bemerkung", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.bemerkung.multiple", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOSchuelerKAoADaten.primaryKeyQuery", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerKAoADaten.all.migration", query="SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Jahrgang","KategorieID","MerkmalID","ZusatzmerkmalID","AnschlussoptionID","BerufsfeldID","SBO_Ebene4ID","Bemerkung"})
-public class DTOSchuelerKAoADaten {
+@NamedQuery(name = "DTOSchuelerKAoADaten.all", query = "SELECT e FROM DTOSchuelerKAoADaten e")
+@NamedQuery(name = "DTOSchuelerKAoADaten.id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.abschnitt_id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.jahrgang", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.jahrgang.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Jahrgang IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.kategorieid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.kategorieid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.KategorieID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.merkmalid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.merkmalid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.MerkmalID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.zusatzmerkmalid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.zusatzmerkmalid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ZusatzmerkmalID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.anschlussoptionid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.anschlussoptionid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.AnschlussoptionID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.berufsfeldid", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.berufsfeldid.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.BerufsfeldID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.sbo_ebene4id", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.sbo_ebene4id.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.SBO_Ebene4ID IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.bemerkung", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOSchuelerKAoADaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerKAoADaten.all.migration", query = "SELECT e FROM DTOSchuelerKAoADaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "Jahrgang", "KategorieID", "MerkmalID", "ZusatzmerkmalID", "AnschlussoptionID", "BerufsfeldID", "SBO_Ebene4ID", "Bemerkung"})
+public final class DTOSchuelerKAoADaten {
 
 	/** ID des KAOA-Eintrags beim Schüler */
 	@Id
@@ -110,15 +110,15 @@ public class DTOSchuelerKAoADaten {
 	 * @param KategorieID   der Wert für das Attribut KategorieID
 	 */
 	public DTOSchuelerKAoADaten(final Long ID, final Long Abschnitt_ID, final Long KategorieID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (KategorieID == null) { 
+		if (KategorieID == null) {
 			throw new NullPointerException("KategorieID must not be null");
 		}
 		this.KategorieID = KategorieID;
@@ -126,7 +126,7 @@ public class DTOSchuelerKAoADaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

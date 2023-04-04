@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EinschulungsartKatalog_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EinschulungsartKatalog_Keys")
-@NamedQuery(name="DTOEinschulungsartenKatalogKeys.all", query="SELECT e FROM DTOEinschulungsartenKatalogKeys e")
-@NamedQuery(name="DTOEinschulungsartenKatalogKeys.kuerzel", query="SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOEinschulungsartenKatalogKeys.kuerzel.multiple", query="SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOEinschulungsartenKatalogKeys.primaryKeyQuery", query="SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="DTOEinschulungsartenKatalogKeys.all.migration", query="SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "DTOEinschulungsartenKatalogKeys.all", query = "SELECT e FROM DTOEinschulungsartenKatalogKeys e")
+@NamedQuery(name = "DTOEinschulungsartenKatalogKeys.kuerzel", query = "SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOEinschulungsartenKatalogKeys.kuerzel.multiple", query = "SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOEinschulungsartenKatalogKeys.primaryKeyQuery", query = "SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOEinschulungsartenKatalogKeys.all.migration", query = "SELECT e FROM DTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class DTOEinschulungsartenKatalogKeys {
+public final class DTOEinschulungsartenKatalogKeys {
 
 	/** Das Kürzel der Einschulungsart */
 	@Id
@@ -45,7 +45,7 @@ public class DTOEinschulungsartenKatalogKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOEinschulungsartenKatalogKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class DTOEinschulungsartenKatalogKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

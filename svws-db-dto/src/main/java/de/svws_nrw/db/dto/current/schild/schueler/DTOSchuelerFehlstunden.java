@@ -24,35 +24,35 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerFehlstunden.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFehlstunden")
-@NamedQuery(name="DTOSchuelerFehlstunden.all", query="SELECT e FROM DTOSchuelerFehlstunden e")
-@NamedQuery(name="DTOSchuelerFehlstunden.id", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.id.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.abschnitt_id", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.abschnitt_id.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.datum", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.datum.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.fach_id", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.fach_id.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.fehlstd", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.fehlstd.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.vonstd", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.vonstd.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.bisstd", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.bisstd.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.entschuldigt", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.entschuldigt.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.lehrer_id", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.lehrer_id.multiple", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOSchuelerFehlstunden.primaryKeyQuery", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerFehlstunden.all.migration", query="SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Datum","Fach_ID","FehlStd","VonStd","BisStd","Entschuldigt","Lehrer_ID"})
-public class DTOSchuelerFehlstunden {
+@NamedQuery(name = "DTOSchuelerFehlstunden.all", query = "SELECT e FROM DTOSchuelerFehlstunden e")
+@NamedQuery(name = "DTOSchuelerFehlstunden.id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.abschnitt_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.datum", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.datum.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Datum IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.fach_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.fach_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.fehlstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.fehlstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.FehlStd IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.vonstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.vonstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.VonStd IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.bisstd", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.bisstd.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.BisStd IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.entschuldigt", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.entschuldigt.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Entschuldigt IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOSchuelerFehlstunden.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerFehlstunden.all.migration", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "Datum", "Fach_ID", "FehlStd", "VonStd", "BisStd", "Entschuldigt", "Lehrer_ID"})
+public final class DTOSchuelerFehlstunden {
 
 	/** ID des Fehlstundeneintrags */
 	@Id
@@ -68,9 +68,9 @@ public class DTOSchuelerFehlstunden {
 	/** Datum der Fehlzeit */
 	@Column(name = "Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Datum;
 
 	/** FachID der Fehlzeit */
@@ -96,9 +96,9 @@ public class DTOSchuelerFehlstunden {
 	/** Entschuldigt Ja Nein */
 	@Column(name = "Entschuldigt")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Entschuldigt;
 
 	/** LehrerID der Fehlzeit */
@@ -121,19 +121,19 @@ public class DTOSchuelerFehlstunden {
 	 * @param FehlStd   der Wert für das Attribut FehlStd
 	 */
 	public DTOSchuelerFehlstunden(final Long ID, final Long Abschnitt_ID, final String Datum, final Double FehlStd) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Datum == null) { 
+		if (Datum == null) {
 			throw new NullPointerException("Datum must not be null");
 		}
 		this.Datum = Datum;
-		if (FehlStd == null) { 
+		if (FehlStd == null) {
 			throw new NullPointerException("FehlStd must not be null");
 		}
 		this.FehlStd = FehlStd;
@@ -141,7 +141,7 @@ public class DTOSchuelerFehlstunden {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,33 +13,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerAnrechnung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerAnrechnung")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.all", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.id", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.id.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.lehrer_id", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.lehrer_id.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.abschnitt_id", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.abschnitt_id.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.anrechnungstd", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.anrechnungstd.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.jahr", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.jahr.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.abschnitt", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.abschnitt.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.schulnreigner", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.schulnreigner.multiple", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.primaryKeyQuery", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOLehrerAnrechnungsstunde.all.migration", query="SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Lehrer_ID","Abschnitt_ID","AnrechnungsgrundKrz","AnrechnungStd","Jahr","Abschnitt","SchulnrEigner"})
-public class MigrationDTOLehrerAnrechnungsstunde {
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.all", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.lehrer_id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt_id", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungsgrundkrz.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungsgrundKrz IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungstd", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.anrechnungstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.jahr", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.jahr.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.abschnitt.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.schulnreigner", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOLehrerAnrechnungsstunde.all.migration", query = "SELECT e FROM MigrationDTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Lehrer_ID", "Abschnitt_ID", "AnrechnungsgrundKrz", "AnrechnungStd", "Jahr", "Abschnitt", "SchulnrEigner"})
+public final class MigrationDTOLehrerAnrechnungsstunde {
 
 	/** ID für den Eintrag für die Anrechnungsstunden */
 	@Id
@@ -96,15 +96,15 @@ public class MigrationDTOLehrerAnrechnungsstunde {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 */
 	public MigrationDTOLehrerAnrechnungsstunde(final Long ID, final Long Lehrer_ID, final Long Abschnitt_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
@@ -112,7 +112,7 @@ public class MigrationDTOLehrerAnrechnungsstunde {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

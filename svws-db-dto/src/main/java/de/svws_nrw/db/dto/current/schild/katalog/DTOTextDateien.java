@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Textdateien.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Textdateien")
-@NamedQuery(name="DTOTextDateien.all", query="SELECT e FROM DTOTextDateien e")
-@NamedQuery(name="DTOTextDateien.id", query="SELECT e FROM DTOTextDateien e WHERE e.ID = :value")
-@NamedQuery(name="DTOTextDateien.id.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.ID IN :value")
-@NamedQuery(name="DTOTextDateien.bezeichnung", query="SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOTextDateien.bezeichnung.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOTextDateien.text_id", query="SELECT e FROM DTOTextDateien e WHERE e.Text_ID = :value")
-@NamedQuery(name="DTOTextDateien.text_id.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.Text_ID IN :value")
-@NamedQuery(name="DTOTextDateien.text_body", query="SELECT e FROM DTOTextDateien e WHERE e.Text_Body = :value")
-@NamedQuery(name="DTOTextDateien.text_body.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.Text_Body IN :value")
-@NamedQuery(name="DTOTextDateien.sichtbar", query="SELECT e FROM DTOTextDateien e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOTextDateien.sichtbar.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOTextDateien.sortierung", query="SELECT e FROM DTOTextDateien e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOTextDateien.sortierung.multiple", query="SELECT e FROM DTOTextDateien e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOTextDateien.primaryKeyQuery", query="SELECT e FROM DTOTextDateien e WHERE e.ID = ?1")
-@NamedQuery(name="DTOTextDateien.all.migration", query="SELECT e FROM DTOTextDateien e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Text_ID","Text_Body","Sichtbar","Sortierung"})
-public class DTOTextDateien {
+@NamedQuery(name = "DTOTextDateien.all", query = "SELECT e FROM DTOTextDateien e")
+@NamedQuery(name = "DTOTextDateien.id", query = "SELECT e FROM DTOTextDateien e WHERE e.ID = :value")
+@NamedQuery(name = "DTOTextDateien.id.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOTextDateien.bezeichnung", query = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOTextDateien.bezeichnung.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOTextDateien.text_id", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID = :value")
+@NamedQuery(name = "DTOTextDateien.text_id.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_ID IN :value")
+@NamedQuery(name = "DTOTextDateien.text_body", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body = :value")
+@NamedQuery(name = "DTOTextDateien.text_body.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Text_Body IN :value")
+@NamedQuery(name = "DTOTextDateien.sichtbar", query = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOTextDateien.sichtbar.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOTextDateien.sortierung", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOTextDateien.sortierung.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOTextDateien.primaryKeyQuery", query = "SELECT e FROM DTOTextDateien e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOTextDateien.all.migration", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Text_ID", "Text_Body", "Sichtbar", "Sortierung"})
+public final class DTOTextDateien {
 
 	/** ID des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Id
@@ -69,9 +69,9 @@ public class DTOTextDateien {
 	/** Sichbarkeit des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierung des Textes der zum Ersatz für txt-Dateien genutzt wird */
@@ -92,11 +92,11 @@ public class DTOTextDateien {
 	 * @param Text_ID   der Wert für das Attribut Text_ID
 	 */
 	public DTOTextDateien(final Long ID, final Long Text_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Text_ID == null) { 
+		if (Text_ID == null) {
 			throw new NullPointerException("Text_ID must not be null");
 		}
 		this.Text_ID = Text_ID;
@@ -104,7 +104,7 @@ public class DTOTextDateien {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

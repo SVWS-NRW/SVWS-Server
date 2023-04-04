@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Logins.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOProtokollLoginPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Logins")
-@NamedQuery(name="DTOProtokollLogin.all", query="SELECT e FROM DTOProtokollLogin e")
-@NamedQuery(name="DTOProtokollLogin.li_userid", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID = :value")
-@NamedQuery(name="DTOProtokollLogin.li_userid.multiple", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID IN :value")
-@NamedQuery(name="DTOProtokollLogin.li_logintime", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_LoginTime = :value")
-@NamedQuery(name="DTOProtokollLogin.li_logintime.multiple", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_LoginTime IN :value")
-@NamedQuery(name="DTOProtokollLogin.li_logofftime", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_LogoffTime = :value")
-@NamedQuery(name="DTOProtokollLogin.li_logofftime.multiple", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_LogoffTime IN :value")
-@NamedQuery(name="DTOProtokollLogin.primaryKeyQuery", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2")
-@NamedQuery(name="DTOProtokollLogin.all.migration", query="SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL")
-@JsonPropertyOrder({"LI_UserID","LI_LoginTime","LI_LogoffTime"})
-public class DTOProtokollLogin {
+@NamedQuery(name = "DTOProtokollLogin.all", query = "SELECT e FROM DTOProtokollLogin e")
+@NamedQuery(name = "DTOProtokollLogin.li_userid", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID = :value")
+@NamedQuery(name = "DTOProtokollLogin.li_userid.multiple", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID IN :value")
+@NamedQuery(name = "DTOProtokollLogin.li_logintime", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_LoginTime = :value")
+@NamedQuery(name = "DTOProtokollLogin.li_logintime.multiple", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_LoginTime IN :value")
+@NamedQuery(name = "DTOProtokollLogin.li_logofftime", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_LogoffTime = :value")
+@NamedQuery(name = "DTOProtokollLogin.li_logofftime.multiple", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_LogoffTime IN :value")
+@NamedQuery(name = "DTOProtokollLogin.primaryKeyQuery", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2")
+@NamedQuery(name = "DTOProtokollLogin.all.migration", query = "SELECT e FROM DTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL")
+@JsonPropertyOrder({"LI_UserID", "LI_LoginTime", "LI_LogoffTime"})
+public final class DTOProtokollLogin {
 
 	/** UserID des Logins */
 	@Id
@@ -62,7 +62,7 @@ public class DTOProtokollLogin {
 	 * @param LI_UserID   der Wert für das Attribut LI_UserID
 	 */
 	public DTOProtokollLogin(final Long LI_UserID) {
-		if (LI_UserID == null) { 
+		if (LI_UserID == null) {
 			throw new NullPointerException("LI_UserID must not be null");
 		}
 		this.LI_UserID = LI_UserID;
@@ -70,7 +70,7 @@ public class DTOProtokollLogin {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -24,65 +24,65 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Versetzung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Versetzung")
-@NamedQuery(name="MigrationDTOVersetzung.all", query="SELECT e FROM MigrationDTOVersetzung e")
-@NamedQuery(name="MigrationDTOVersetzung.id", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOVersetzung.id.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.bezeichnung", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOVersetzung.bezeichnung.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.asdklasse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDKlasse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.asdklasse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDKlasse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.klasse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Klasse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.klasse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Klasse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.jahrgang_id", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOVersetzung.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.fklasse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.FKlasse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.fklasse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.FKlasse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.vklasse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.VKlasse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.vklasse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.VKlasse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.orgformkrz", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.OrgFormKrz = :value")
-@NamedQuery(name="MigrationDTOVersetzung.orgformkrz.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.OrgFormKrz IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.klassenlehrerkrz", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.KlassenlehrerKrz = :value")
-@NamedQuery(name="MigrationDTOVersetzung.klassenlehrerkrz.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.KlassenlehrerKrz IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.stvklassenlehrerkrz", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.StvKlassenlehrerKrz = :value")
-@NamedQuery(name="MigrationDTOVersetzung.stvklassenlehrerkrz.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.StvKlassenlehrerKrz IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.restabschnitte", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Restabschnitte = :value")
-@NamedQuery(name="MigrationDTOVersetzung.restabschnitte.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Restabschnitte IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.asdschulformnr", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDSchulformNr = :value")
-@NamedQuery(name="MigrationDTOVersetzung.asdschulformnr.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDSchulformNr IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.fachklasse_id", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="MigrationDTOVersetzung.fachklasse_id.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.pruefordnung", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.PruefOrdnung = :value")
-@NamedQuery(name="MigrationDTOVersetzung.pruefordnung.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.PruefOrdnung IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.sichtbar", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOVersetzung.sichtbar.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.sortierung", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOVersetzung.sortierung.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.klassenart", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Klassenart = :value")
-@NamedQuery(name="MigrationDTOVersetzung.klassenart.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Klassenart IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.sommersem", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.SommerSem = :value")
-@NamedQuery(name="MigrationDTOVersetzung.sommersem.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.SommerSem IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.notengesperrt", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.NotenGesperrt = :value")
-@NamedQuery(name="MigrationDTOVersetzung.notengesperrt.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.NotenGesperrt IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.schulnreigner", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOVersetzung.schulnreigner.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.adrmerkmal", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name="MigrationDTOVersetzung.adrmerkmal.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.webnotengesperrt", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.WebNotenGesperrt = :value")
-@NamedQuery(name="MigrationDTOVersetzung.webnotengesperrt.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.WebNotenGesperrt IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.koopklasse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.KoopKlasse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.koopklasse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.KoopKlasse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.ankreuzzeugnisse", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse = :value")
-@NamedQuery(name="MigrationDTOVersetzung.ankreuzzeugnisse.multiple", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse IN :value")
-@NamedQuery(name="MigrationDTOVersetzung.primaryKeyQuery", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOVersetzung.all.migration", query="SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","ASDKlasse","Klasse","Jahrgang_ID","FKlasse","VKlasse","OrgFormKrz","KlassenlehrerKrz","StvKlassenlehrerKrz","Restabschnitte","ASDSchulformNr","Fachklasse_ID","PruefOrdnung","Sichtbar","Sortierung","Klassenart","SommerSem","NotenGesperrt","SchulnrEigner","AdrMerkmal","WebNotenGesperrt","KoopKlasse","Ankreuzzeugnisse"})
-public class MigrationDTOVersetzung {
+@NamedQuery(name = "MigrationDTOVersetzung.all", query = "SELECT e FROM MigrationDTOVersetzung e")
+@NamedQuery(name = "MigrationDTOVersetzung.id", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.id.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.bezeichnung", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.asdklasse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDKlasse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.asdklasse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDKlasse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klasse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Klasse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klasse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Klasse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.jahrgang_id", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.fklasse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.FKlasse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.fklasse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.FKlasse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.vklasse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.VKlasse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.vklasse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.VKlasse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.orgformkrz", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.OrgFormKrz = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.orgformkrz.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.OrgFormKrz IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klassenlehrerkrz", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.KlassenlehrerKrz = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klassenlehrerkrz.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.KlassenlehrerKrz IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.stvklassenlehrerkrz", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.StvKlassenlehrerKrz = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.stvklassenlehrerkrz.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.StvKlassenlehrerKrz IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.restabschnitte", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Restabschnitte = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.restabschnitte.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Restabschnitte IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.asdschulformnr", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDSchulformNr = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.asdschulformnr.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ASDSchulformNr IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.fachklasse_id", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.fachklasse_id.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.pruefordnung", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.PruefOrdnung = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.pruefordnung.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.PruefOrdnung IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sichtbar", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sichtbar.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sortierung", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sortierung.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klassenart", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Klassenart = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.klassenart.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Klassenart IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sommersem", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.SommerSem = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.sommersem.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.SommerSem IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.notengesperrt", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.NotenGesperrt = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.notengesperrt.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.NotenGesperrt IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.schulnreigner", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.adrmerkmal", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.AdrMerkmal = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.adrmerkmal.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.AdrMerkmal IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.webnotengesperrt", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.WebNotenGesperrt = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.webnotengesperrt.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.WebNotenGesperrt IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.koopklasse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.KoopKlasse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.koopklasse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.KoopKlasse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.ankreuzzeugnisse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse = :value")
+@NamedQuery(name = "MigrationDTOVersetzung.ankreuzzeugnisse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse IN :value")
+@NamedQuery(name = "MigrationDTOVersetzung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOVersetzung.all.migration", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "KlassenlehrerKrz", "StvKlassenlehrerKrz", "Restabschnitte", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "SchulnrEigner", "AdrMerkmal", "WebNotenGesperrt", "KoopKlasse", "Ankreuzzeugnisse"})
+public final class MigrationDTOVersetzung {
 
 	/** ID der Klasse in der Klassen- Versetzuungstabelle */
 	@Id
@@ -158,9 +158,9 @@ public class MigrationDTOVersetzung {
 	/** Gibt an ob eine Klasse sichtbar ist */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierungnummer der Klasse */
@@ -176,17 +176,17 @@ public class MigrationDTOVersetzung {
 	/** Beginn im Sommersemester nur WBK */
 	@Column(name = "SommerSem")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean SommerSem;
 
 	/** Noteneingabe für die Klasse gesperrt */
 	@Column(name = "NotenGesperrt")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NotenGesperrt;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -202,25 +202,25 @@ public class MigrationDTOVersetzung {
 	/** DEPRECATED: nicht mehr genutzt SchildWeb */
 	@Column(name = "WebNotenGesperrt")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean WebNotenGesperrt;
 
 	/** Gibt an ob die Klasse eine KOOP-Klasse ist */
 	@Column(name = "KoopKlasse")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean KoopKlasse;
 
 	/** Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden */
 	@Column(name = "Ankreuzzeugnisse")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Ankreuzzeugnisse;
 
 	/**
@@ -236,11 +236,11 @@ public class MigrationDTOVersetzung {
 	 * @param Klasse   der Wert für das Attribut Klasse
 	 */
 	public MigrationDTOVersetzung(final Long ID, final String Klasse) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Klasse == null) { 
+		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
 		}
 		this.Klasse = Klasse;
@@ -248,7 +248,7 @@ public class MigrationDTOVersetzung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

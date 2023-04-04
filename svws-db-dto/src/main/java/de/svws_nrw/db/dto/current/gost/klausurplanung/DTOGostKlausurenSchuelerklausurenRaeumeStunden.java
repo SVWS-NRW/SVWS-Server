@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOGostKlausurenSchuelerklausurenRaeumeStundenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Schuelerklausuren_Raeume_Stunden")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.all", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.schuelerklausur_id", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.schuelerklausur_id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.KlausurRaumStunde_ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.KlausurRaumStunde_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID = ?1 AND e.KlausurRaumStunde_ID = ?2")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausurenRaeumeStunden.all.migration", query="SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IS NOT NULL AND e.KlausurRaumStunde_ID IS NOT NULL")
-@JsonPropertyOrder({"Schuelerklausur_ID","KlausurRaumStunde_ID"})
-public class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.all", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.schuelerklausur_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.schuelerklausur_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.KlausurRaumStunde_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.KlausurRaumStunde_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID = ?1 AND e.KlausurRaumStunde_ID = ?2")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausurenRaeumeStunden.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IS NOT NULL AND e.KlausurRaumStunde_ID IS NOT NULL")
+@JsonPropertyOrder({"Schuelerklausur_ID", "KlausurRaumStunde_ID"})
+public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 
 	/** ID der Schuelerklausur */
 	@Id
@@ -56,11 +56,11 @@ public class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 	 * @param KlausurRaumStunde_ID   der Wert für das Attribut KlausurRaumStunde_ID
 	 */
 	public DTOGostKlausurenSchuelerklausurenRaeumeStunden(final Long Schuelerklausur_ID, final Long KlausurRaumStunde_ID) {
-		if (Schuelerklausur_ID == null) { 
+		if (Schuelerklausur_ID == null) {
 			throw new NullPointerException("Schuelerklausur_ID must not be null");
 		}
 		this.Schuelerklausur_ID = Schuelerklausur_ID;
-		if (KlausurRaumStunde_ID == null) { 
+		if (KlausurRaumStunde_ID == null) {
 			throw new NullPointerException("KlausurRaumStunde_ID must not be null");
 		}
 		this.KlausurRaumStunde_ID = KlausurRaumStunde_ID;
@@ -68,7 +68,7 @@ public class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

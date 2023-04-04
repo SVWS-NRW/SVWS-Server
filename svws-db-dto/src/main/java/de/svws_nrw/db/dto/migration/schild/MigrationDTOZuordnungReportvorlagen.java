@@ -13,41 +13,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ZuordnungReportvorlagen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ZuordnungReportvorlagen")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.all", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.id", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.id.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.schulnreigner", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.jahrgang_id", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschluss", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Abschluss = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschluss.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Abschluss IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschlussbb", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussBB = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschlussbb.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussBB IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschlussart", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussArt = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.abschlussart.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussArt IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.versetzungkrz", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.VersetzungKrz = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.versetzungkrz.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.VersetzungKrz IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.fachklasse_id", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.fachklasse_id.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.reportvorlage", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Reportvorlage = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.reportvorlage.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Reportvorlage IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.beschreibung", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Beschreibung = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.beschreibung.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.gruppe", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Gruppe = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.gruppe.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Gruppe IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.zeugnisart", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Zeugnisart = :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.zeugnisart.multiple", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Zeugnisart IN :value")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.primaryKeyQuery", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOZuordnungReportvorlagen.all.migration", query="SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Jahrgang_ID","Abschluss","AbschlussBB","AbschlussArt","VersetzungKrz","Fachklasse_ID","Reportvorlage","Beschreibung","Gruppe","Zeugnisart"})
-public class MigrationDTOZuordnungReportvorlagen {
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.all", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.id", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.id.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.schulnreigner", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.jahrgang_id", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschluss", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Abschluss = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschluss.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Abschluss IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschlussbb", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussBB = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschlussbb.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussBB IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschlussart", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussArt = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.abschlussart.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.AbschlussArt IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.versetzungkrz", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.VersetzungKrz = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.versetzungkrz.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.VersetzungKrz IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.fachklasse_id", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.fachklasse_id.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.reportvorlage", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Reportvorlage = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.reportvorlage.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Reportvorlage IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.beschreibung", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.beschreibung.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.gruppe", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Gruppe = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.gruppe.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Gruppe IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.zeugnisart", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Zeugnisart = :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.zeugnisart.multiple", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.Zeugnisart IN :value")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOZuordnungReportvorlagen.all.migration", query = "SELECT e FROM MigrationDTOZuordnungReportvorlagen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Jahrgang_ID", "Abschluss", "AbschlussBB", "AbschlussArt", "VersetzungKrz", "Fachklasse_ID", "Reportvorlage", "Beschreibung", "Gruppe", "Zeugnisart"})
+public final class MigrationDTOZuordnungReportvorlagen {
 
 	/** ID des Datensatzes der einen Zeugnisreport einer Gruppe oder Klasse zuordnet */
 	@Id
@@ -123,11 +123,11 @@ public class MigrationDTOZuordnungReportvorlagen {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOZuordnungReportvorlagen(final Long ID, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -135,7 +135,7 @@ public class MigrationDTOZuordnungReportvorlagen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Herkunftsart.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunftsart")
-@NamedQuery(name="MigrationDTOHerkunftsart.all", query="SELECT e FROM MigrationDTOHerkunftsart e")
-@NamedQuery(name="MigrationDTOHerkunftsart.id", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.id.multiple", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.kuerzel", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.kuerzel.multiple", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.gueltigvon", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigVon = :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.gueltigvon.multiple", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.gueltigbis", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigBis = :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.gueltigbis.multiple", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="MigrationDTOHerkunftsart.primaryKeyQuery", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOHerkunftsart.all.migration", query="SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","gueltigVon","gueltigBis"})
-public class MigrationDTOHerkunftsart {
+@NamedQuery(name = "MigrationDTOHerkunftsart.all", query = "SELECT e FROM MigrationDTOHerkunftsart e")
+@NamedQuery(name = "MigrationDTOHerkunftsart.id", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.id.multiple", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.kuerzel", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.kuerzel.multiple", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.gueltigvon", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.gueltigbis", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "MigrationDTOHerkunftsart.primaryKeyQuery", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOHerkunftsart.all.migration", query = "SELECT e FROM MigrationDTOHerkunftsart e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "gueltigVon", "gueltigBis"})
+public final class MigrationDTOHerkunftsart {
 
 	/** Die ID der Herkunftsart */
 	@Id
@@ -67,11 +67,11 @@ public class MigrationDTOHerkunftsart {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOHerkunftsart(final Long ID, final String Kuerzel) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -79,7 +79,7 @@ public class MigrationDTOHerkunftsart {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

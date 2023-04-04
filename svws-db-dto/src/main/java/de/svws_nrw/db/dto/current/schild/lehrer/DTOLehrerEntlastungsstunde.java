@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerEntlastung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerEntlastung")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.all", query="SELECT e FROM DTOLehrerEntlastungsstunde e")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.id", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.id.multiple", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IN :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.abschnitt_id", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.abschnitt_id.multiple", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.entlastungsgrundkrz", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz = :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.entlastungsgrundkrz.multiple", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz IN :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.entlastungstd", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd = :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.entlastungstd.multiple", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd IN :value")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.primaryKeyQuery", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = ?1")
-@NamedQuery(name="DTOLehrerEntlastungsstunde.all.migration", query="SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","EntlastungsgrundKrz","EntlastungStd"})
-public class DTOLehrerEntlastungsstunde {
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.all", query = "SELECT e FROM DTOLehrerEntlastungsstunde e")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.id", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.id.multiple", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.abschnitt_id", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.abschnitt_id.multiple", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.entlastungsgrundkrz", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz = :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.entlastungsgrundkrz.multiple", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungsgrundKrz IN :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.entlastungstd", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd = :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.entlastungstd.multiple", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.EntlastungStd IN :value")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.primaryKeyQuery", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerEntlastungsstunde.all.migration", query = "SELECT e FROM DTOLehrerEntlastungsstunde e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "EntlastungsgrundKrz", "EntlastungStd"})
+public final class DTOLehrerEntlastungsstunde {
 
 	/** ID für den Eintrag für die Entlastungsstunden (Mehr-Minderleistung) */
 	@Id
@@ -67,11 +67,11 @@ public class DTOLehrerEntlastungsstunde {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 */
 	public DTOLehrerEntlastungsstunde(final Long ID, final Long Abschnitt_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
@@ -79,7 +79,7 @@ public class DTOLehrerEntlastungsstunde {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

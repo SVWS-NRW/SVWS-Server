@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan")
-@NamedQuery(name="DTOStundenplan.all", query="SELECT e FROM DTOStundenplan e")
-@NamedQuery(name="DTOStundenplan.id", query="SELECT e FROM DTOStundenplan e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplan.id.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplan.schuljahresabschnitts_id", query="SELECT e FROM DTOStundenplan e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOStundenplan.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOStundenplan.beginn", query="SELECT e FROM DTOStundenplan e WHERE e.Beginn = :value")
-@NamedQuery(name="DTOStundenplan.beginn.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Beginn IN :value")
-@NamedQuery(name="DTOStundenplan.ende", query="SELECT e FROM DTOStundenplan e WHERE e.Ende = :value")
-@NamedQuery(name="DTOStundenplan.ende.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Ende IN :value")
-@NamedQuery(name="DTOStundenplan.beschreibung", query="SELECT e FROM DTOStundenplan e WHERE e.Beschreibung = :value")
-@NamedQuery(name="DTOStundenplan.beschreibung.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="DTOStundenplan.wochentypmodell", query="SELECT e FROM DTOStundenplan e WHERE e.WochentypModell = :value")
-@NamedQuery(name="DTOStundenplan.wochentypmodell.multiple", query="SELECT e FROM DTOStundenplan e WHERE e.WochentypModell IN :value")
-@NamedQuery(name="DTOStundenplan.primaryKeyQuery", query="SELECT e FROM DTOStundenplan e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplan.all.migration", query="SELECT e FROM DTOStundenplan e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","Beginn","Ende","Beschreibung","WochentypModell"})
-public class DTOStundenplan {
+@NamedQuery(name = "DTOStundenplan.all", query = "SELECT e FROM DTOStundenplan e")
+@NamedQuery(name = "DTOStundenplan.id", query = "SELECT e FROM DTOStundenplan e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplan.id.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplan.schuljahresabschnitts_id", query = "SELECT e FROM DTOStundenplan e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOStundenplan.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOStundenplan.beginn", query = "SELECT e FROM DTOStundenplan e WHERE e.Beginn = :value")
+@NamedQuery(name = "DTOStundenplan.beginn.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.Beginn IN :value")
+@NamedQuery(name = "DTOStundenplan.ende", query = "SELECT e FROM DTOStundenplan e WHERE e.Ende = :value")
+@NamedQuery(name = "DTOStundenplan.ende.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOStundenplan.beschreibung", query = "SELECT e FROM DTOStundenplan e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "DTOStundenplan.beschreibung.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "DTOStundenplan.wochentypmodell", query = "SELECT e FROM DTOStundenplan e WHERE e.WochentypModell = :value")
+@NamedQuery(name = "DTOStundenplan.wochentypmodell.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.WochentypModell IN :value")
+@NamedQuery(name = "DTOStundenplan.primaryKeyQuery", query = "SELECT e FROM DTOStundenplan e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplan.all.migration", query = "SELECT e FROM DTOStundenplan e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Beginn", "Ende", "Beschreibung", "WochentypModell"})
+public final class DTOStundenplan {
 
 	/** Die ID des Stundenplans */
 	@Id
@@ -59,17 +59,17 @@ public class DTOStundenplan {
 	/** Das Datum, ab dem der Stundenplan gültig ist */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Beginn;
 
 	/** Das Datum, bis wann der Stundenplan gültig ist - null, wenn kein Ende innerhalb des Abschnitts festgelegt wurde (letzter Stundenplan im Abschnitt) */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Ende;
 
 	/** Eine Beschreibung / Kommentar zu diesem Stundenplan */
@@ -98,23 +98,23 @@ public class DTOStundenplan {
 	 * @param WochentypModell   der Wert für das Attribut WochentypModell
 	 */
 	public DTOStundenplan(final Long ID, final Long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung, final Integer WochentypModell) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (Beginn == null) { 
+		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
-		if (Beschreibung == null) { 
+		if (Beschreibung == null) {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
-		if (WochentypModell == null) { 
+		if (WochentypModell == null) {
 			throw new NullPointerException("WochentypModell must not be null");
 		}
 		this.WochentypModell = WochentypModell;
@@ -122,7 +122,7 @@ public class DTOStundenplan {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

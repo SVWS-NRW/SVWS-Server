@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_Pausenaufsichten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Pausenaufsichten")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.all", query="SELECT e FROM DTOStundenplanPausenaufsichten e")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.id", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.pausenzeit_id", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Pausenzeit_ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.pausenzeit_id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Pausenzeit_ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.wochentyp", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.wochentyp.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.lehrer_id", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.lehrer_id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.primaryKeyQuery", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanPausenaufsichten.all.migration", query="SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Pausenzeit_ID","Wochentyp","Lehrer_ID"})
-public class DTOStundenplanPausenaufsichten {
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.all", query = "SELECT e FROM DTOStundenplanPausenaufsichten e")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.id", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.pausenzeit_id", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Pausenzeit_ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.pausenzeit_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Pausenzeit_ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.wochentyp", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.wochentyp.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Wochentyp IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.lehrer_id", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.lehrer_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.all.migration", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Pausenzeit_ID", "Wochentyp", "Lehrer_ID"})
+public final class DTOStundenplanPausenaufsichten {
 
 	/** Die eindeutige ID für diese Zuordnung des Pausenaufsichts-Eintrages zu einem Stundenplan */
 	@Id
@@ -69,19 +69,19 @@ public class DTOStundenplanPausenaufsichten {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOStundenplanPausenaufsichten(final Long ID, final Long Pausenzeit_ID, final Integer Wochentyp, final Long Lehrer_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Pausenzeit_ID == null) { 
+		if (Pausenzeit_ID == null) {
 			throw new NullPointerException("Pausenzeit_ID must not be null");
 		}
 		this.Pausenzeit_ID = Pausenzeit_ID;
-		if (Wochentyp == null) { 
+		if (Wochentyp == null) {
 			throw new NullPointerException("Wochentyp must not be null");
 		}
 		this.Wochentyp = Wochentyp;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -89,7 +89,7 @@ public class DTOStundenplanPausenaufsichten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

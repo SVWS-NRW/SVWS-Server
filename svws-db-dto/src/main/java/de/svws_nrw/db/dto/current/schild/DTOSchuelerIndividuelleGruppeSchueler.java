@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerListe_Inhalt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOSchuelerIndividuelleGruppeSchuelerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerListe_Inhalt")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.all", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.liste_id", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.liste_id.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.schueler_id", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.schueler_id.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.primaryKeyQuery", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppeSchueler.all.migration", query="SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Liste_ID","Schueler_ID"})
-public class DTOSchuelerIndividuelleGruppeSchueler {
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.all", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.liste_id", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.liste_id.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.schueler_id", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = ?1 AND e.Schueler_ID = ?2")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppeSchueler.all.migration", query = "SELECT e FROM DTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Liste_ID", "Schueler_ID"})
+public final class DTOSchuelerIndividuelleGruppeSchueler {
 
 	/** ID der individuellen Schülerliste */
 	@Id
@@ -56,11 +56,11 @@ public class DTOSchuelerIndividuelleGruppeSchueler {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerIndividuelleGruppeSchueler(final Long Liste_ID, final Long Schueler_ID) {
-		if (Liste_ID == null) { 
+		if (Liste_ID == null) {
 			throw new NullPointerException("Liste_ID must not be null");
 		}
 		this.Liste_ID = Liste_ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -68,7 +68,7 @@ public class DTOSchuelerIndividuelleGruppeSchueler {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

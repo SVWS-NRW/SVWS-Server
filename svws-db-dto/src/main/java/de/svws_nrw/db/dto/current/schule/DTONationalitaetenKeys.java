@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Nationalitaeten_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Nationalitaeten_Keys")
-@NamedQuery(name="DTONationalitaetenKeys.all", query="SELECT e FROM DTONationalitaetenKeys e")
-@NamedQuery(name="DTONationalitaetenKeys.destatiscode", query="SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = :value")
-@NamedQuery(name="DTONationalitaetenKeys.destatiscode.multiple", query="SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
-@NamedQuery(name="DTONationalitaetenKeys.primaryKeyQuery", query="SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = ?1")
-@NamedQuery(name="DTONationalitaetenKeys.all.migration", query="SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL")
+@NamedQuery(name = "DTONationalitaetenKeys.all", query = "SELECT e FROM DTONationalitaetenKeys e")
+@NamedQuery(name = "DTONationalitaetenKeys.destatiscode", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = :value")
+@NamedQuery(name = "DTONationalitaetenKeys.destatiscode.multiple", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IN :value")
+@NamedQuery(name = "DTONationalitaetenKeys.primaryKeyQuery", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode = ?1")
+@NamedQuery(name = "DTONationalitaetenKeys.all.migration", query = "SELECT e FROM DTONationalitaetenKeys e WHERE e.DEStatisCode IS NOT NULL")
 @JsonPropertyOrder({"DEStatisCode"})
-public class DTONationalitaetenKeys {
+public final class DTONationalitaetenKeys {
 
 	/** Der dreistellige Länder-Code des statistischen Bundesamtes (DESTATIS) */
 	@Id
@@ -45,7 +45,7 @@ public class DTONationalitaetenKeys {
 	 * @param DEStatisCode   der Wert für das Attribut DEStatisCode
 	 */
 	public DTONationalitaetenKeys(final String DEStatisCode) {
-		if (DEStatisCode == null) { 
+		if (DEStatisCode == null) {
 			throw new NullPointerException("DEStatisCode must not be null");
 		}
 		this.DEStatisCode = DEStatisCode;
@@ -53,7 +53,7 @@ public class DTONationalitaetenKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

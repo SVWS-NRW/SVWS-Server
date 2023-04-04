@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle KlassenLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOKlassenLeitungPK implements Serializable {
+public final class DTOKlassenLeitungPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOKlassenLeitungPK implements Serializable {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOKlassenLeitungPK(final Long Klassen_ID, final Long Lehrer_ID) {
-		if (Klassen_ID == null) { 
+		if (Klassen_ID == null) {
 			throw new NullPointerException("Klassen_ID must not be null");
 		}
 		this.Klassen_ID = Klassen_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -43,7 +43,7 @@ public class DTOKlassenLeitungPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_TelefonArt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_TelefonArt")
-@NamedQuery(name="MigrationDTOTelefonArt.all", query="SELECT e FROM MigrationDTOTelefonArt e")
-@NamedQuery(name="MigrationDTOTelefonArt.id", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.id.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.bezeichnung", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.bezeichnung.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.sortierung", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.sortierung.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.sichtbar", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.sichtbar.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.aenderbar", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.aenderbar.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.schulnreigner", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOTelefonArt.schulnreigner.multiple", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOTelefonArt.primaryKeyQuery", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOTelefonArt.all.migration", query="SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","SchulnrEigner"})
-public class MigrationDTOTelefonArt {
+@NamedQuery(name = "MigrationDTOTelefonArt.all", query = "SELECT e FROM MigrationDTOTelefonArt e")
+@NamedQuery(name = "MigrationDTOTelefonArt.id", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.id.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.bezeichnung", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.sortierung", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.sortierung.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.sichtbar", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.sichtbar.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.aenderbar", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.aenderbar.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.schulnreigner", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOTelefonArt.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOTelefonArt.all.migration", query = "SELECT e FROM MigrationDTOTelefonArt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
+public final class MigrationDTOTelefonArt {
 
 	/** ID der Telefonart */
 	@Id
@@ -64,17 +64,17 @@ public class MigrationDTOTelefonArt {
 	/** Sichbarkeit der Telefonart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Telefonart */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -95,11 +95,11 @@ public class MigrationDTOTelefonArt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOTelefonArt(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -107,7 +107,7 @@ public class MigrationDTOTelefonArt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

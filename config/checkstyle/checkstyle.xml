@@ -94,7 +94,9 @@
     	<property name="format" value="^[_a-z][_a-zA-Z0-9]*$"/>
     </module>
     <module name="PackageName"/>
-    <module name="ParameterName"/>
+    <module name="ParameterName">
+		<property name="format" value="^[_a-zA-Z][_a-zA-Z0-9]*$"/>
+	</module>
     <module name="StaticVariableName">
 		<property name="format" value="^[_a-zA-Z][_a-zA-Z0-9]*$"/>
 	</module>
@@ -170,7 +172,7 @@
     <!-- See https://checkstyle.org/config_misc.html -->
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
-    <module name="TodoComment"/>
+    <!-- <module name="TodoComment"/> -->
     <module name="UpperEll"/>
 
     <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->

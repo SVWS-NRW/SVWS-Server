@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_ErzieherFunktion.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_ErzieherFunktion")
-@NamedQuery(name="DTOErzieherfunktion.all", query="SELECT e FROM DTOErzieherfunktion e")
-@NamedQuery(name="DTOErzieherfunktion.id", query="SELECT e FROM DTOErzieherfunktion e WHERE e.ID = :value")
-@NamedQuery(name="DTOErzieherfunktion.id.multiple", query="SELECT e FROM DTOErzieherfunktion e WHERE e.ID IN :value")
-@NamedQuery(name="DTOErzieherfunktion.bezeichnung", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOErzieherfunktion.bezeichnung.multiple", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOErzieherfunktion.sortierung", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOErzieherfunktion.sortierung.multiple", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOErzieherfunktion.sichtbar", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOErzieherfunktion.sichtbar.multiple", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOErzieherfunktion.aenderbar", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOErzieherfunktion.aenderbar.multiple", query="SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOErzieherfunktion.primaryKeyQuery", query="SELECT e FROM DTOErzieherfunktion e WHERE e.ID = ?1")
-@NamedQuery(name="DTOErzieherfunktion.all.migration", query="SELECT e FROM DTOErzieherfunktion e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar"})
-public class DTOErzieherfunktion {
+@NamedQuery(name = "DTOErzieherfunktion.all", query = "SELECT e FROM DTOErzieherfunktion e")
+@NamedQuery(name = "DTOErzieherfunktion.id", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID = :value")
+@NamedQuery(name = "DTOErzieherfunktion.id.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOErzieherfunktion.bezeichnung", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOErzieherfunktion.bezeichnung.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOErzieherfunktion.sortierung", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOErzieherfunktion.sortierung.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOErzieherfunktion.sichtbar", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOErzieherfunktion.sichtbar.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOErzieherfunktion.aenderbar", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOErzieherfunktion.aenderbar.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOErzieherfunktion.primaryKeyQuery", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOErzieherfunktion.all.migration", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOErzieherfunktion {
 
 	/** DEPRECATED: ID der Ezieherfunktion */
 	@Id
@@ -62,17 +62,17 @@ public class DTOErzieherfunktion {
 	/** SDEPRECATED: Sichbarkeit der Ezieherfunktion */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** DEPRECATED: Änderbarkeit der Ezieherfunktion */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOErzieherfunktion {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOErzieherfunktion(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -100,7 +100,7 @@ public class DTOErzieherfunktion {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

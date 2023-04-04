@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle ImpExp_EigeneImporte_Tabellen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOEigeneImporteTabellenPK implements Serializable {
+public final class DTOEigeneImporteTabellenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOEigeneImporteTabellenPK implements Serializable {
 	 * @param TableName   der Wert für das Attribut TableName
 	 */
 	public DTOEigeneImporteTabellenPK(final Integer Import_ID, final String TableName) {
-		if (Import_ID == null) { 
+		if (Import_ID == null) {
 			throw new NullPointerException("Import_ID must not be null");
 		}
 		this.Import_ID = Import_ID;
-		if (TableName == null) { 
+		if (TableName == null) {
 			throw new NullPointerException("TableName must not be null");
 		}
 		this.TableName = TableName;
@@ -43,7 +43,7 @@ public class DTOEigeneImporteTabellenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

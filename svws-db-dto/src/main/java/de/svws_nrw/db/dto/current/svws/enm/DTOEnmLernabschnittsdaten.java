@@ -13,31 +13,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EnmLernabschnittsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EnmLernabschnittsdaten")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.all", query="SELECT e FROM DTOEnmLernabschnittsdaten e")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.id", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.id.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tssumfehlstd", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tssumfehlstd.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tssumfehlstdu", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tssumfehlstdu.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tszeugnisbem", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tszeugnisbem.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsasv", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsasv.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsaue", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsaue.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsbemerkungversetzung", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.tsbemerkungversetzung.multiple", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN :value")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.primaryKeyQuery", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOEnmLernabschnittsdaten.all.migration", query="SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","tsSumFehlStd","tsSumFehlStdU","tsZeugnisBem","tsASV","tsAUE","tsBemerkungVersetzung"})
-public class DTOEnmLernabschnittsdaten {
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.all", query = "SELECT e FROM DTOEnmLernabschnittsdaten e")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.id", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.id.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstd", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstd.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstdu", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tssumfehlstdu.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tszeugnisbem", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tszeugnisbem.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsasv", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsasv.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsaue", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsaue.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN :value")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.all.migration", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsBemerkungVersetzung"})
+public final class DTOEnmLernabschnittsdaten {
 
 	/** ID der Lernabschnittsdaten */
 	@Id
@@ -93,31 +93,31 @@ public class DTOEnmLernabschnittsdaten {
 	 * @param tsBemerkungVersetzung   der Wert für das Attribut tsBemerkungVersetzung
 	 */
 	public DTOEnmLernabschnittsdaten(final Long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (tsSumFehlStd == null) { 
+		if (tsSumFehlStd == null) {
 			throw new NullPointerException("tsSumFehlStd must not be null");
 		}
 		this.tsSumFehlStd = tsSumFehlStd;
-		if (tsSumFehlStdU == null) { 
+		if (tsSumFehlStdU == null) {
 			throw new NullPointerException("tsSumFehlStdU must not be null");
 		}
 		this.tsSumFehlStdU = tsSumFehlStdU;
-		if (tsZeugnisBem == null) { 
+		if (tsZeugnisBem == null) {
 			throw new NullPointerException("tsZeugnisBem must not be null");
 		}
 		this.tsZeugnisBem = tsZeugnisBem;
-		if (tsASV == null) { 
+		if (tsASV == null) {
 			throw new NullPointerException("tsASV must not be null");
 		}
 		this.tsASV = tsASV;
-		if (tsAUE == null) { 
+		if (tsAUE == null) {
 			throw new NullPointerException("tsAUE must not be null");
 		}
 		this.tsAUE = tsAUE;
-		if (tsBemerkungVersetzung == null) { 
+		if (tsBemerkungVersetzung == null) {
 			throw new NullPointerException("tsBemerkungVersetzung must not be null");
 		}
 		this.tsBemerkungVersetzung = tsBemerkungVersetzung;
@@ -125,7 +125,7 @@ public class DTOEnmLernabschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

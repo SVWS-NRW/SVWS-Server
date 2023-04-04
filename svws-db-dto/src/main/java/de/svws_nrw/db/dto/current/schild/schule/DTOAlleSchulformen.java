@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schulformen")
-@NamedQuery(name="DTOAlleSchulformen.all", query="SELECT e FROM DTOAlleSchulformen e")
-@NamedQuery(name="DTOAlleSchulformen.id", query="SELECT e FROM DTOAlleSchulformen e WHERE e.ID = :value")
-@NamedQuery(name="DTOAlleSchulformen.id.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOAlleSchulformen.kuerzel", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOAlleSchulformen.kuerzel.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOAlleSchulformen.nummer", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Nummer = :value")
-@NamedQuery(name="DTOAlleSchulformen.nummer.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Nummer IN :value")
-@NamedQuery(name="DTOAlleSchulformen.bezeichnung", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOAlleSchulformen.bezeichnung.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOAlleSchulformen.hatgymob", query="SELECT e FROM DTOAlleSchulformen e WHERE e.HatGymOb = :value")
-@NamedQuery(name="DTOAlleSchulformen.hatgymob.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.HatGymOb IN :value")
-@NamedQuery(name="DTOAlleSchulformen.gueltigvon", query="SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigVon = :value")
-@NamedQuery(name="DTOAlleSchulformen.gueltigvon.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="DTOAlleSchulformen.gueltigbis", query="SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis = :value")
-@NamedQuery(name="DTOAlleSchulformen.gueltigbis.multiple", query="SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTOAlleSchulformen.primaryKeyQuery", query="SELECT e FROM DTOAlleSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOAlleSchulformen.all.migration", query="SELECT e FROM DTOAlleSchulformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Nummer","Bezeichnung","HatGymOb","gueltigVon","gueltigBis"})
-public class DTOAlleSchulformen {
+@NamedQuery(name = "DTOAlleSchulformen.all", query = "SELECT e FROM DTOAlleSchulformen e")
+@NamedQuery(name = "DTOAlleSchulformen.id", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOAlleSchulformen.id.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.kuerzel", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOAlleSchulformen.kuerzel.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.nummer", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Nummer = :value")
+@NamedQuery(name = "DTOAlleSchulformen.nummer.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Nummer IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.bezeichnung", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOAlleSchulformen.bezeichnung.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.hatgymob", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.HatGymOb = :value")
+@NamedQuery(name = "DTOAlleSchulformen.hatgymob.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.HatGymOb IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.gueltigvon", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "DTOAlleSchulformen.gueltigvon.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.gueltigbis", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "DTOAlleSchulformen.gueltigbis.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "DTOAlleSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAlleSchulformen.all.migration", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Nummer", "Bezeichnung", "HatGymOb", "gueltigVon", "gueltigBis"})
+public final class DTOAlleSchulformen {
 
 	/** ID der Schulform */
 	@Id
@@ -71,9 +71,9 @@ public class DTOAlleSchulformen {
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann (1) oder nicht (0) */
 	@Column(name = "HatGymOb")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean HatGymOb;
 
 	/** Gibt an, ab welchem Schuljahr die Schulform gültig ist */
@@ -101,19 +101,19 @@ public class DTOAlleSchulformen {
 	 * @param HatGymOb   der Wert für das Attribut HatGymOb
 	 */
 	public DTOAlleSchulformen(final Long ID, final String Kuerzel, final String Bezeichnung, final Boolean HatGymOb) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (HatGymOb == null) { 
+		if (HatGymOb == null) {
 			throw new NullPointerException("HatGymOb must not be null");
 		}
 		this.HatGymOb = HatGymOb;
@@ -121,7 +121,7 @@ public class DTOAlleSchulformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

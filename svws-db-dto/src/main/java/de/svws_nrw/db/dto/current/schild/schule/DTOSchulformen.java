@@ -24,35 +24,35 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Schulformen")
-@NamedQuery(name="DTOSchulformen.all", query="SELECT e FROM DTOSchulformen e")
-@NamedQuery(name="DTOSchulformen.id", query="SELECT e FROM DTOSchulformen e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchulformen.id.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchulformen.sgl", query="SELECT e FROM DTOSchulformen e WHERE e.SGL = :value")
-@NamedQuery(name="DTOSchulformen.sgl.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.SGL IN :value")
-@NamedQuery(name="DTOSchulformen.sf_sgl", query="SELECT e FROM DTOSchulformen e WHERE e.SF_SGL = :value")
-@NamedQuery(name="DTOSchulformen.sf_sgl.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.SF_SGL IN :value")
-@NamedQuery(name="DTOSchulformen.schulform", query="SELECT e FROM DTOSchulformen e WHERE e.Schulform = :value")
-@NamedQuery(name="DTOSchulformen.schulform.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.Schulform IN :value")
-@NamedQuery(name="DTOSchulformen.doppelqualifikation", query="SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation = :value")
-@NamedQuery(name="DTOSchulformen.doppelqualifikation.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation IN :value")
-@NamedQuery(name="DTOSchulformen.sortierung", query="SELECT e FROM DTOSchulformen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOSchulformen.sortierung.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOSchulformen.sichtbar", query="SELECT e FROM DTOSchulformen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOSchulformen.sichtbar.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOSchulformen.bkindex", query="SELECT e FROM DTOSchulformen e WHERE e.BKIndex = :value")
-@NamedQuery(name="DTOSchulformen.bkindex.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.BKIndex IN :value")
-@NamedQuery(name="DTOSchulformen.schulform2", query="SELECT e FROM DTOSchulformen e WHERE e.Schulform2 = :value")
-@NamedQuery(name="DTOSchulformen.schulform2.multiple", query="SELECT e FROM DTOSchulformen e WHERE e.Schulform2 IN :value")
-@NamedQuery(name="DTOSchulformen.primaryKeyQuery", query="SELECT e FROM DTOSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchulformen.all.migration", query="SELECT e FROM DTOSchulformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SGL","SF_SGL","Schulform","DoppelQualifikation","Sortierung","Sichtbar","BKIndex","Schulform2"})
-public class DTOSchulformen {
+@NamedQuery(name = "DTOSchulformen.all", query = "SELECT e FROM DTOSchulformen e")
+@NamedQuery(name = "DTOSchulformen.id", query = "SELECT e FROM DTOSchulformen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchulformen.id.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchulformen.sgl", query = "SELECT e FROM DTOSchulformen e WHERE e.SGL = :value")
+@NamedQuery(name = "DTOSchulformen.sgl.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.SGL IN :value")
+@NamedQuery(name = "DTOSchulformen.sf_sgl", query = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL = :value")
+@NamedQuery(name = "DTOSchulformen.sf_sgl.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.SF_SGL IN :value")
+@NamedQuery(name = "DTOSchulformen.schulform", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform = :value")
+@NamedQuery(name = "DTOSchulformen.schulform.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform IN :value")
+@NamedQuery(name = "DTOSchulformen.doppelqualifikation", query = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation = :value")
+@NamedQuery(name = "DTOSchulformen.doppelqualifikation.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.DoppelQualifikation IN :value")
+@NamedQuery(name = "DTOSchulformen.sortierung", query = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOSchulformen.sortierung.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOSchulformen.sichtbar", query = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOSchulformen.sichtbar.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOSchulformen.bkindex", query = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex = :value")
+@NamedQuery(name = "DTOSchulformen.bkindex.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.BKIndex IN :value")
+@NamedQuery(name = "DTOSchulformen.schulform2", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 = :value")
+@NamedQuery(name = "DTOSchulformen.schulform2.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 IN :value")
+@NamedQuery(name = "DTOSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOSchulformen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchulformen.all.migration", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SGL", "SF_SGL", "Schulform", "DoppelQualifikation", "Sortierung", "Sichtbar", "BKIndex", "Schulform2"})
+public final class DTOSchulformen {
 
 	/** ID der Schulgliederung */
 	@Id
@@ -78,9 +78,9 @@ public class DTOSchulformen {
 	/** Gibt an, ob am Berufskolleg die SGL mit Doppelqualifikation abgeschlossen werden kann */
 	@Column(name = "DoppelQualifikation")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean DoppelQualifikation;
 
 	/** Sortierung der SGL */
@@ -91,9 +91,9 @@ public class DTOSchulformen {
 	/** Sichtbarkeit der SGL */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** BKIndex zur SGL (IT.NRW) */
@@ -118,7 +118,7 @@ public class DTOSchulformen {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOSchulformen(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -126,7 +126,7 @@ public class DTOSchulformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

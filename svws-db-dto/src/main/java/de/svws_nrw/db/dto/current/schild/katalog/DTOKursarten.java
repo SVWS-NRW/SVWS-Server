@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Kursart.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Kursart")
-@NamedQuery(name="DTOKursarten.all", query="SELECT e FROM DTOKursarten e")
-@NamedQuery(name="DTOKursarten.id", query="SELECT e FROM DTOKursarten e WHERE e.ID = :value")
-@NamedQuery(name="DTOKursarten.id.multiple", query="SELECT e FROM DTOKursarten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKursarten.bezeichnung", query="SELECT e FROM DTOKursarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKursarten.bezeichnung.multiple", query="SELECT e FROM DTOKursarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKursarten.internbez", query="SELECT e FROM DTOKursarten e WHERE e.InternBez = :value")
-@NamedQuery(name="DTOKursarten.internbez.multiple", query="SELECT e FROM DTOKursarten e WHERE e.InternBez IN :value")
-@NamedQuery(name="DTOKursarten.kursart", query="SELECT e FROM DTOKursarten e WHERE e.Kursart = :value")
-@NamedQuery(name="DTOKursarten.kursart.multiple", query="SELECT e FROM DTOKursarten e WHERE e.Kursart IN :value")
-@NamedQuery(name="DTOKursarten.kursartallg", query="SELECT e FROM DTOKursarten e WHERE e.KursartAllg = :value")
-@NamedQuery(name="DTOKursarten.kursartallg.multiple", query="SELECT e FROM DTOKursarten e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="DTOKursarten.sortierung", query="SELECT e FROM DTOKursarten e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOKursarten.sortierung.multiple", query="SELECT e FROM DTOKursarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOKursarten.sichtbar", query="SELECT e FROM DTOKursarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOKursarten.sichtbar.multiple", query="SELECT e FROM DTOKursarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOKursarten.aenderbar", query="SELECT e FROM DTOKursarten e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOKursarten.aenderbar.multiple", query="SELECT e FROM DTOKursarten e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOKursarten.primaryKeyQuery", query="SELECT e FROM DTOKursarten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKursarten.all.migration", query="SELECT e FROM DTOKursarten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","InternBez","Kursart","KursartAllg","Sortierung","Sichtbar","Aenderbar"})
-public class DTOKursarten {
+@NamedQuery(name = "DTOKursarten.all", query = "SELECT e FROM DTOKursarten e")
+@NamedQuery(name = "DTOKursarten.id", query = "SELECT e FROM DTOKursarten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKursarten.id.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKursarten.bezeichnung", query = "SELECT e FROM DTOKursarten e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKursarten.bezeichnung.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKursarten.internbez", query = "SELECT e FROM DTOKursarten e WHERE e.InternBez = :value")
+@NamedQuery(name = "DTOKursarten.internbez.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.InternBez IN :value")
+@NamedQuery(name = "DTOKursarten.kursart", query = "SELECT e FROM DTOKursarten e WHERE e.Kursart = :value")
+@NamedQuery(name = "DTOKursarten.kursart.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Kursart IN :value")
+@NamedQuery(name = "DTOKursarten.kursartallg", query = "SELECT e FROM DTOKursarten e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "DTOKursarten.kursartallg.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "DTOKursarten.sortierung", query = "SELECT e FROM DTOKursarten e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOKursarten.sortierung.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOKursarten.sichtbar", query = "SELECT e FROM DTOKursarten e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOKursarten.sichtbar.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOKursarten.aenderbar", query = "SELECT e FROM DTOKursarten e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOKursarten.aenderbar.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOKursarten.primaryKeyQuery", query = "SELECT e FROM DTOKursarten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKursarten.all.migration", query = "SELECT e FROM DTOKursarten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "InternBez", "Kursart", "KursartAllg", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOKursarten {
 
 	/** ID des Kursarteneintrag */
 	@Id
@@ -83,17 +83,17 @@ public class DTOKursarten {
 	/** Sichtbarkeit der Kursart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Kursart änderbar Ja Nein */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -108,7 +108,7 @@ public class DTOKursarten {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOKursarten(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -116,7 +116,7 @@ public class DTOKursarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerFotos.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFotos")
-@NamedQuery(name="DTOLehrerFoto.all", query="SELECT e FROM DTOLehrerFoto e")
-@NamedQuery(name="DTOLehrerFoto.lehrer_id", query="SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOLehrerFoto.lehrer_id.multiple", query="SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOLehrerFoto.fotobase64", query="SELECT e FROM DTOLehrerFoto e WHERE e.FotoBase64 = :value")
-@NamedQuery(name="DTOLehrerFoto.fotobase64.multiple", query="SELECT e FROM DTOLehrerFoto e WHERE e.FotoBase64 IN :value")
-@NamedQuery(name="DTOLehrerFoto.primaryKeyQuery", query="SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID = ?1")
-@NamedQuery(name="DTOLehrerFoto.all.migration", query="SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Lehrer_ID","FotoBase64"})
-public class DTOLehrerFoto {
+@NamedQuery(name = "DTOLehrerFoto.all", query = "SELECT e FROM DTOLehrerFoto e")
+@NamedQuery(name = "DTOLehrerFoto.lehrer_id", query = "SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOLehrerFoto.lehrer_id.multiple", query = "SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOLehrerFoto.fotobase64", query = "SELECT e FROM DTOLehrerFoto e WHERE e.FotoBase64 = :value")
+@NamedQuery(name = "DTOLehrerFoto.fotobase64.multiple", query = "SELECT e FROM DTOLehrerFoto e WHERE e.FotoBase64 IN :value")
+@NamedQuery(name = "DTOLehrerFoto.primaryKeyQuery", query = "SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID = ?1")
+@NamedQuery(name = "DTOLehrerFoto.all.migration", query = "SELECT e FROM DTOLehrerFoto e WHERE e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Lehrer_ID", "FotoBase64"})
+public final class DTOLehrerFoto {
 
 	/** LehrerID zu der das Foto gehört */
 	@Id
@@ -52,7 +52,7 @@ public class DTOLehrerFoto {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOLehrerFoto(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -60,7 +60,7 @@ public class DTOLehrerFoto {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -31,26 +31,26 @@ import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverter
 
 /**
  * Diese Klasse dient als DTO für die Datenbank-View V_Gost_Schueler_Abiturjahrgang.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "V_Gost_Schueler_Abiturjahrgang")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.all", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.id", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID = :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.id.multiple", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID IN :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.status", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Status = :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.status.multiple", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Status IN :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.schulform", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulform = :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.schulform.multiple", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulform IN :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.schulgliederung", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulgliederung = :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.schulgliederung.multiple", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulgliederung IN :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.abiturjahr", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr = :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.abiturjahr.multiple", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr IN :value")
-@NamedQuery(name="DTOViewGostSchuelerAbiturjahrgang.primaryKeyQuery", query="SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID = ?1")
-@JsonPropertyOrder({"ID","Status","Schulform","Schulgliederung","Abiturjahr"})
-public class DTOViewGostSchuelerAbiturjahrgang {
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.all", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.id", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID = :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.id.multiple", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.status", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Status = :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.status.multiple", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Status IN :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.schulform", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulform = :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.schulform.multiple", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulform IN :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.schulgliederung", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulgliederung = :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.schulgliederung.multiple", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Schulgliederung IN :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.abiturjahr", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr = :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.abiturjahr.multiple", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr IN :value")
+@NamedQuery(name = "DTOViewGostSchuelerAbiturjahrgang.primaryKeyQuery", query = "SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.ID = ?1")
+@JsonPropertyOrder({"ID", "Status", "Schulform", "Schulgliederung", "Abiturjahr"})
+public final class DTOViewGostSchuelerAbiturjahrgang {
 
 	/** Die ID des Schülers */
 	@Id
@@ -61,25 +61,25 @@ public class DTOViewGostSchuelerAbiturjahrgang {
 	/** Der Status des Schülers */
 	@Column(name = "Status")
 	@JsonProperty
-	@Convert(converter=SchuelerStatusConverter.class)
-	@JsonSerialize(using=SchuelerStatusConverterSerializer.class)
-	@JsonDeserialize(using=SchuelerStatusConverterDeserializer.class)
+	@Convert(converter = SchuelerStatusConverter.class)
+	@JsonSerialize(using = SchuelerStatusConverterSerializer.class)
+	@JsonDeserialize(using = SchuelerStatusConverterDeserializer.class)
 	public SchuelerStatus Status;
 
 	/** Die Schulform des Schülers */
 	@Column(name = "Schulform")
 	@JsonProperty
-	@Convert(converter=SchulformKuerzelConverter.class)
-	@JsonSerialize(using=SchulformKuerzelConverterSerializer.class)
-	@JsonDeserialize(using=SchulformKuerzelConverterDeserializer.class)
+	@Convert(converter = SchulformKuerzelConverter.class)
+	@JsonSerialize(using = SchulformKuerzelConverterSerializer.class)
+	@JsonDeserialize(using = SchulformKuerzelConverterDeserializer.class)
 	public Schulform Schulform;
 
 	/** Die Schulgliederung des Schülers */
 	@Column(name = "Schulgliederung")
 	@JsonProperty
-	@Convert(converter=SchulgliederungKuerzelConverter.class)
-	@JsonSerialize(using=SchulgliederungKuerzelConverterSerializer.class)
-	@JsonDeserialize(using=SchulgliederungKuerzelConverterDeserializer.class)
+	@Convert(converter = SchulgliederungKuerzelConverter.class)
+	@JsonSerialize(using = SchulgliederungKuerzelConverterSerializer.class)
+	@JsonDeserialize(using = SchulgliederungKuerzelConverterDeserializer.class)
 	public Schulgliederung Schulgliederung;
 
 	/** Das Abiturjahr des Schülers */
@@ -94,7 +94,7 @@ public class DTOViewGostSchuelerAbiturjahrgang {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

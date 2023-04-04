@@ -24,61 +24,61 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Kurse.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kurse")
-@NamedQuery(name="MigrationDTOKurs.all", query="SELECT e FROM MigrationDTOKurs e")
-@NamedQuery(name="MigrationDTOKurs.id", query="SELECT e FROM MigrationDTOKurs e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOKurs.id.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOKurs.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOKurs e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOKurs.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOKurs.kurzbez", query="SELECT e FROM MigrationDTOKurs e WHERE e.KurzBez = :value")
-@NamedQuery(name="MigrationDTOKurs.kurzbez.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.KurzBez IN :value")
-@NamedQuery(name="MigrationDTOKurs.jahrgang_id", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOKurs.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOKurs.asdjahrgang", query="SELECT e FROM MigrationDTOKurs e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="MigrationDTOKurs.asdjahrgang.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="MigrationDTOKurs.fach_id", query="SELECT e FROM MigrationDTOKurs e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOKurs.fach_id.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOKurs.kursartallg", query="SELECT e FROM MigrationDTOKurs e WHERE e.KursartAllg = :value")
-@NamedQuery(name="MigrationDTOKurs.kursartallg.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="MigrationDTOKurs.wochenstd", query="SELECT e FROM MigrationDTOKurs e WHERE e.WochenStd = :value")
-@NamedQuery(name="MigrationDTOKurs.wochenstd.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.WochenStd IN :value")
-@NamedQuery(name="MigrationDTOKurs.lehrer_id", query="SELECT e FROM MigrationDTOKurs e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOKurs.lehrer_id.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOKurs.lehrerkrz", query="SELECT e FROM MigrationDTOKurs e WHERE e.LehrerKrz = :value")
-@NamedQuery(name="MigrationDTOKurs.lehrerkrz.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.LehrerKrz IN :value")
-@NamedQuery(name="MigrationDTOKurs.sortierung", query="SELECT e FROM MigrationDTOKurs e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOKurs.sortierung.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOKurs.sichtbar", query="SELECT e FROM MigrationDTOKurs e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOKurs.sichtbar.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOKurs.schienen", query="SELECT e FROM MigrationDTOKurs e WHERE e.Schienen = :value")
-@NamedQuery(name="MigrationDTOKurs.schienen.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Schienen IN :value")
-@NamedQuery(name="MigrationDTOKurs.fortschreibungsart", query="SELECT e FROM MigrationDTOKurs e WHERE e.Fortschreibungsart = :value")
-@NamedQuery(name="MigrationDTOKurs.fortschreibungsart.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Fortschreibungsart IN :value")
-@NamedQuery(name="MigrationDTOKurs.wochenstdkl", query="SELECT e FROM MigrationDTOKurs e WHERE e.WochenstdKL = :value")
-@NamedQuery(name="MigrationDTOKurs.wochenstdkl.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.WochenstdKL IN :value")
-@NamedQuery(name="MigrationDTOKurs.schulnr", query="SELECT e FROM MigrationDTOKurs e WHERE e.SchulNr = :value")
-@NamedQuery(name="MigrationDTOKurs.schulnr.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.SchulNr IN :value")
-@NamedQuery(name="MigrationDTOKurs.epochu", query="SELECT e FROM MigrationDTOKurs e WHERE e.EpochU = :value")
-@NamedQuery(name="MigrationDTOKurs.epochu.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.EpochU IN :value")
-@NamedQuery(name="MigrationDTOKurs.schulnreigner", query="SELECT e FROM MigrationDTOKurs e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOKurs.schulnreigner.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOKurs.zeugnisbez", query="SELECT e FROM MigrationDTOKurs e WHERE e.ZeugnisBez = :value")
-@NamedQuery(name="MigrationDTOKurs.zeugnisbez.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.ZeugnisBez IN :value")
-@NamedQuery(name="MigrationDTOKurs.jahrgaenge", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgaenge = :value")
-@NamedQuery(name="MigrationDTOKurs.jahrgaenge.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgaenge IN :value")
-@NamedQuery(name="MigrationDTOKurs.jahr", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOKurs.jahr.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOKurs.abschnitt", query="SELECT e FROM MigrationDTOKurs e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOKurs.abschnitt.multiple", query="SELECT e FROM MigrationDTOKurs e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOKurs.primaryKeyQuery", query="SELECT e FROM MigrationDTOKurs e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOKurs.all.migration", query="SELECT e FROM MigrationDTOKurs e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","KurzBez","Jahrgang_ID","ASDJahrgang","Fach_ID","KursartAllg","WochenStd","Lehrer_ID","LehrerKrz","Sortierung","Sichtbar","Schienen","Fortschreibungsart","WochenstdKL","SchulNr","EpochU","SchulnrEigner","ZeugnisBez","Jahrgaenge","Jahr","Abschnitt"})
-public class MigrationDTOKurs {
+@NamedQuery(name = "MigrationDTOKurs.all", query = "SELECT e FROM MigrationDTOKurs e")
+@NamedQuery(name = "MigrationDTOKurs.id", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOKurs.id.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOKurs.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOKurs.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOKurs.kurzbez", query = "SELECT e FROM MigrationDTOKurs e WHERE e.KurzBez = :value")
+@NamedQuery(name = "MigrationDTOKurs.kurzbez.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.KurzBez IN :value")
+@NamedQuery(name = "MigrationDTOKurs.jahrgang_id", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOKurs.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOKurs.asdjahrgang", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "MigrationDTOKurs.asdjahrgang.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "MigrationDTOKurs.fach_id", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOKurs.fach_id.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOKurs.kursartallg", query = "SELECT e FROM MigrationDTOKurs e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "MigrationDTOKurs.kursartallg.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "MigrationDTOKurs.wochenstd", query = "SELECT e FROM MigrationDTOKurs e WHERE e.WochenStd = :value")
+@NamedQuery(name = "MigrationDTOKurs.wochenstd.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.WochenStd IN :value")
+@NamedQuery(name = "MigrationDTOKurs.lehrer_id", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOKurs.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOKurs.lehrerkrz", query = "SELECT e FROM MigrationDTOKurs e WHERE e.LehrerKrz = :value")
+@NamedQuery(name = "MigrationDTOKurs.lehrerkrz.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.LehrerKrz IN :value")
+@NamedQuery(name = "MigrationDTOKurs.sortierung", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOKurs.sortierung.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOKurs.sichtbar", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOKurs.sichtbar.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOKurs.schienen", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Schienen = :value")
+@NamedQuery(name = "MigrationDTOKurs.schienen.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Schienen IN :value")
+@NamedQuery(name = "MigrationDTOKurs.fortschreibungsart", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Fortschreibungsart = :value")
+@NamedQuery(name = "MigrationDTOKurs.fortschreibungsart.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Fortschreibungsart IN :value")
+@NamedQuery(name = "MigrationDTOKurs.wochenstdkl", query = "SELECT e FROM MigrationDTOKurs e WHERE e.WochenstdKL = :value")
+@NamedQuery(name = "MigrationDTOKurs.wochenstdkl.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.WochenstdKL IN :value")
+@NamedQuery(name = "MigrationDTOKurs.schulnr", query = "SELECT e FROM MigrationDTOKurs e WHERE e.SchulNr = :value")
+@NamedQuery(name = "MigrationDTOKurs.schulnr.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.SchulNr IN :value")
+@NamedQuery(name = "MigrationDTOKurs.epochu", query = "SELECT e FROM MigrationDTOKurs e WHERE e.EpochU = :value")
+@NamedQuery(name = "MigrationDTOKurs.epochu.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.EpochU IN :value")
+@NamedQuery(name = "MigrationDTOKurs.schulnreigner", query = "SELECT e FROM MigrationDTOKurs e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOKurs.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOKurs.zeugnisbez", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ZeugnisBez = :value")
+@NamedQuery(name = "MigrationDTOKurs.zeugnisbez.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ZeugnisBez IN :value")
+@NamedQuery(name = "MigrationDTOKurs.jahrgaenge", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgaenge = :value")
+@NamedQuery(name = "MigrationDTOKurs.jahrgaenge.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahrgaenge IN :value")
+@NamedQuery(name = "MigrationDTOKurs.jahr", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOKurs.jahr.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOKurs.abschnitt", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOKurs.abschnitt.multiple", query = "SELECT e FROM MigrationDTOKurs e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOKurs.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKurs.all.migration", query = "SELECT e FROM MigrationDTOKurs e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "KurzBez", "Jahrgang_ID", "ASDJahrgang", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "LehrerKrz", "Sortierung", "Sichtbar", "Schienen", "Fortschreibungsart", "WochenstdKL", "SchulNr", "EpochU", "SchulnrEigner", "ZeugnisBez", "Jahrgaenge", "Jahr", "Abschnitt"})
+public final class MigrationDTOKurs {
 
 	/** ID des Kurses */
 	@Id
@@ -139,9 +139,9 @@ public class MigrationDTOKurs {
 	/** Sichtbarkeit des Kurses */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Auflistung der Schienen in denen der Kurs ist */
@@ -167,9 +167,9 @@ public class MigrationDTOKurs {
 	/** Gibt an ob ein Kurs Epochal unterrichtet wird */
 	@Column(name = "EpochU")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean EpochU;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -214,27 +214,27 @@ public class MigrationDTOKurs {
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
 	public MigrationDTOKurs(final Long ID, final Long Schuljahresabschnitts_ID, final String KurzBez, final Long Fach_ID, final Integer Jahr, final Integer Abschnitt) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (KurzBez == null) { 
+		if (KurzBez == null) {
 			throw new NullPointerException("KurzBez must not be null");
 		}
 		this.KurzBez = KurzBez;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Jahr == null) { 
+		if (Jahr == null) {
 			throw new NullPointerException("Jahr must not be null");
 		}
 		this.Jahr = Jahr;
-		if (Abschnitt == null) { 
+		if (Abschnitt == null) {
 			throw new NullPointerException("Abschnitt must not be null");
 		}
 		this.Abschnitt = Abschnitt;
@@ -242,7 +242,7 @@ public class MigrationDTOKurs {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

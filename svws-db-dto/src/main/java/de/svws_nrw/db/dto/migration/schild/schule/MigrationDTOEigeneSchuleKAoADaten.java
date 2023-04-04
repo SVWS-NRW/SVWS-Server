@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_KAoADaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_KAoADaten")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.all", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.id", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.id.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.curriculum", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.curriculum.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.koordinator", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.koordinator.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.schulnreigner", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOEigeneSchuleKAoADaten.all.migration", query="SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Curriculum","Koordinator","Berufsorientierungsbuero","KooperationsvereinbarungAA","NutzungReflexionsworkshop","NutzungEntscheidungskompetenzI","NutzungEntscheidungskompetenzII","SchulnrEigner"})
-public class MigrationDTOEigeneSchuleKAoADaten {
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.all", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.id", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.id.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.curriculum", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.curriculum.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Curriculum IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.koordinator", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.koordinator.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Koordinator IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.berufsorientierungsbuero.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.Berufsorientierungsbuero IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.kooperationsvereinbarungaa.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.KooperationsvereinbarungAA IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungreflexionsworkshop.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungReflexionsworkshop IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzi.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzI IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.nutzungentscheidungskompetenzii.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.NutzungEntscheidungskompetenzII IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.all.migration", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Curriculum", "Koordinator", "Berufsorientierungsbuero", "KooperationsvereinbarungAA", "NutzungReflexionsworkshop", "NutzungEntscheidungskompetenzI", "NutzungEntscheidungskompetenzII", "SchulnrEigner"})
+public final class MigrationDTOEigeneSchuleKAoADaten {
 
 	/** ID des KAoA-Dateneintrags für die Schule */
 	@Id
@@ -60,57 +60,57 @@ public class MigrationDTOEigeneSchuleKAoADaten {
 	/** KAOA Curriculumsangaben */
 	@Column(name = "Curriculum")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Curriculum;
 
 	/** KAOA Koordinator */
 	@Column(name = "Koordinator")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Koordinator;
 
 	/** Schule hat Beruforientierungsbüro */
 	@Column(name = "Berufsorientierungsbuero")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Berufsorientierungsbuero;
 
 	/** Kooperationsvereinbarung KAOA geschlossen */
 	@Column(name = "KooperationsvereinbarungAA")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean KooperationsvereinbarungAA;
 
 	/** Reflexionsworkshops werden genutzt */
 	@Column(name = "NutzungReflexionsworkshop")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean NutzungReflexionsworkshop;
 
 	/** Nutzung der Entscheidungskompetenzen 1 */
 	@Column(name = "NutzungEntscheidungskompetenzI")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean NutzungEntscheidungskompetenzI;
 
 	/** Nutzung der Entscheidungskompetenzen 2 */
 	@Column(name = "NutzungEntscheidungskompetenzII")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean NutzungEntscheidungskompetenzII;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -138,39 +138,39 @@ public class MigrationDTOEigeneSchuleKAoADaten {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOEigeneSchuleKAoADaten(final Long ID, final Boolean Curriculum, final Boolean Koordinator, final Boolean Berufsorientierungsbuero, final Boolean KooperationsvereinbarungAA, final Boolean NutzungReflexionsworkshop, final Boolean NutzungEntscheidungskompetenzI, final Boolean NutzungEntscheidungskompetenzII, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Curriculum == null) { 
+		if (Curriculum == null) {
 			throw new NullPointerException("Curriculum must not be null");
 		}
 		this.Curriculum = Curriculum;
-		if (Koordinator == null) { 
+		if (Koordinator == null) {
 			throw new NullPointerException("Koordinator must not be null");
 		}
 		this.Koordinator = Koordinator;
-		if (Berufsorientierungsbuero == null) { 
+		if (Berufsorientierungsbuero == null) {
 			throw new NullPointerException("Berufsorientierungsbuero must not be null");
 		}
 		this.Berufsorientierungsbuero = Berufsorientierungsbuero;
-		if (KooperationsvereinbarungAA == null) { 
+		if (KooperationsvereinbarungAA == null) {
 			throw new NullPointerException("KooperationsvereinbarungAA must not be null");
 		}
 		this.KooperationsvereinbarungAA = KooperationsvereinbarungAA;
-		if (NutzungReflexionsworkshop == null) { 
+		if (NutzungReflexionsworkshop == null) {
 			throw new NullPointerException("NutzungReflexionsworkshop must not be null");
 		}
 		this.NutzungReflexionsworkshop = NutzungReflexionsworkshop;
-		if (NutzungEntscheidungskompetenzI == null) { 
+		if (NutzungEntscheidungskompetenzI == null) {
 			throw new NullPointerException("NutzungEntscheidungskompetenzI must not be null");
 		}
 		this.NutzungEntscheidungskompetenzI = NutzungEntscheidungskompetenzI;
-		if (NutzungEntscheidungskompetenzII == null) { 
+		if (NutzungEntscheidungskompetenzII == null) {
 			throw new NullPointerException("NutzungEntscheidungskompetenzII must not be null");
 		}
 		this.NutzungEntscheidungskompetenzII = NutzungEntscheidungskompetenzII;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -178,7 +178,7 @@ public class MigrationDTOEigeneSchuleKAoADaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

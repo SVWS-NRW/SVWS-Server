@@ -13,37 +13,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Teilstandorte.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Teilstandorte")
-@NamedQuery(name="MigrationDTOTeilstandorte.all", query="SELECT e FROM MigrationDTOTeilstandorte e")
-@NamedQuery(name="MigrationDTOTeilstandorte.schulnreigner", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.schulnreigner.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.adrmerkmal", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.adrmerkmal.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.plz", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.PLZ = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.plz.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.PLZ IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.ort", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Ort = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.ort.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Ort IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.strasse", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strasse = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.strasse.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strasse IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.strassenname", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strassenname = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.strassenname.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strassenname IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.hausnr", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNr = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.hausnr.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNr IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.hausnrzusatz", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.hausnrzusatz.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.bemerkung", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.bemerkung.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.kuerzel", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.kuerzel.multiple", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOTeilstandorte.primaryKeyQuery", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
-@NamedQuery(name="MigrationDTOTeilstandorte.all.migration", query="SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
-@JsonPropertyOrder({"SchulnrEigner","AdrMerkmal","PLZ","Ort","Strasse","Strassenname","HausNr","HausNrZusatz","Bemerkung","Kuerzel"})
-public class MigrationDTOTeilstandorte {
+@NamedQuery(name = "MigrationDTOTeilstandorte.all", query = "SELECT e FROM MigrationDTOTeilstandorte e")
+@NamedQuery(name = "MigrationDTOTeilstandorte.schulnreigner", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.adrmerkmal", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.adrmerkmal.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.plz", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.PLZ = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.plz.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.PLZ IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.ort", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Ort = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.ort.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Ort IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.strasse", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strasse = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.strasse.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strasse IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.strassenname", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strassenname = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.strassenname.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Strassenname IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.hausnr", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNr = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.hausnr.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNr IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.hausnrzusatz", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNrZusatz = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.HausNrZusatz IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.bemerkung", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.bemerkung.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.kuerzel", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.kuerzel.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOTeilstandorte.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
+@NamedQuery(name = "MigrationDTOTeilstandorte.all.migration", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
+@JsonPropertyOrder({"SchulnrEigner", "AdrMerkmal", "PLZ", "Ort", "Strasse", "Strassenname", "HausNr", "HausNrZusatz", "Bemerkung", "Kuerzel"})
+public final class MigrationDTOTeilstandorte {
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
 	@Column(name = "SchulnrEigner")
@@ -109,11 +109,11 @@ public class MigrationDTOTeilstandorte {
 	 * @param AdrMerkmal   der Wert für das Attribut AdrMerkmal
 	 */
 	public MigrationDTOTeilstandorte(final Integer SchulnrEigner, final String AdrMerkmal) {
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (AdrMerkmal == null) { 
+		if (AdrMerkmal == null) {
 			throw new NullPointerException("AdrMerkmal must not be null");
 		}
 		this.AdrMerkmal = AdrMerkmal;
@@ -121,7 +121,7 @@ public class MigrationDTOTeilstandorte {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

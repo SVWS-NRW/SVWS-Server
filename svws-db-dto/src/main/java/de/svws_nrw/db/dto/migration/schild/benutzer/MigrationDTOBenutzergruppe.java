@@ -21,23 +21,23 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Benutzergruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzergruppen")
-@NamedQuery(name="MigrationDTOBenutzergruppe.all", query="SELECT e FROM MigrationDTOBenutzergruppe e")
-@NamedQuery(name="MigrationDTOBenutzergruppe.id", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.id.multiple", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.bezeichnung", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.bezeichnung.multiple", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.istadmin", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin = :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.istadmin.multiple", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin IN :value")
-@NamedQuery(name="MigrationDTOBenutzergruppe.primaryKeyQuery", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOBenutzergruppe.all.migration", query="SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","IstAdmin"})
-public class MigrationDTOBenutzergruppe {
+@NamedQuery(name = "MigrationDTOBenutzergruppe.all", query = "SELECT e FROM MigrationDTOBenutzergruppe e")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.id", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.id.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.bezeichnung", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.istadmin", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin = :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.istadmin.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin IN :value")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.all.migration", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "IstAdmin"})
+public final class MigrationDTOBenutzergruppe {
 
 	/** Die ID der Benutzergruppe */
 	@Id
@@ -53,9 +53,9 @@ public class MigrationDTOBenutzergruppe {
 	/** Gibt an, ob die Benutzergruppe Administrator-Rechte hat (1) oder nicht (0) */
 	@Column(name = "IstAdmin")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstAdmin;
 
 	/**
@@ -72,15 +72,15 @@ public class MigrationDTOBenutzergruppe {
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
 	public MigrationDTOBenutzergruppe(final Long ID, final String Bezeichnung, final Boolean IstAdmin) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (IstAdmin == null) { 
+		if (IstAdmin == null) {
 			throw new NullPointerException("IstAdmin must not be null");
 		}
 		this.IstAdmin = IstAdmin;
@@ -88,7 +88,7 @@ public class MigrationDTOBenutzergruppe {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

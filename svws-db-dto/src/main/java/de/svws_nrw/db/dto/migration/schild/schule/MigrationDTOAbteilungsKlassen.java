@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Abt_Kl.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abt_Kl")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.all", query="SELECT e FROM MigrationDTOAbteilungsKlassen e")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.id", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.id.multiple", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.abteilung_id", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.abteilung_id.multiple", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.klasse", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse = :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.klasse.multiple", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse IN :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.sichtbar", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.sichtbar.multiple", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.schulnreigner", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.primaryKeyQuery", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOAbteilungsKlassen.all.migration", query="SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abteilung_ID","Klasse","Sichtbar","SchulnrEigner"})
-public class MigrationDTOAbteilungsKlassen {
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.all", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.id", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.id.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.abteilung_id", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID = :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.abteilung_id.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Abteilung_ID IN :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.klasse", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse = :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.klasse.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Klasse IN :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.sichtbar", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.sichtbar.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.all.migration", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abteilung_ID", "Klasse", "Sichtbar", "SchulnrEigner"})
+public final class MigrationDTOAbteilungsKlassen {
 
 	/** ID der Klassenzugehörigkeit zu einer Abteilung */
 	@Id
@@ -62,9 +62,9 @@ public class MigrationDTOAbteilungsKlassen {
 	/** steuert die Sichtbarkeit der Klasse zur Abteilung */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -86,15 +86,15 @@ public class MigrationDTOAbteilungsKlassen {
 	 * @param Klasse   der Wert für das Attribut Klasse
 	 */
 	public MigrationDTOAbteilungsKlassen(final Long ID, final Long Abteilung_ID, final String Klasse) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abteilung_ID == null) { 
+		if (Abteilung_ID == null) {
 			throw new NullPointerException("Abteilung_ID must not be null");
 		}
 		this.Abteilung_ID = Abteilung_ID;
-		if (Klasse == null) { 
+		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
 		}
 		this.Klasse = Klasse;
@@ -102,7 +102,7 @@ public class MigrationDTOAbteilungsKlassen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

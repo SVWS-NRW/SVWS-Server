@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerZuweisungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOSchuelerZuweisungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerZuweisungen")
-@NamedQuery(name="DTOSchuelerZuweisung.all", query="SELECT e FROM DTOSchuelerZuweisung e")
-@NamedQuery(name="DTOSchuelerZuweisung.abschnitt_id", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOSchuelerZuweisung.abschnitt_id.multiple", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOSchuelerZuweisung.fach_id", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerZuweisung.fach_id.multiple", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerZuweisung.kursart", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart = :value")
-@NamedQuery(name="DTOSchuelerZuweisung.kursart.multiple", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart IN :value")
-@NamedQuery(name="DTOSchuelerZuweisung.primaryKeyQuery", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2")
-@NamedQuery(name="DTOSchuelerZuweisung.all.migration", query="SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL")
-@JsonPropertyOrder({"Abschnitt_ID","Fach_ID","Kursart"})
-public class DTOSchuelerZuweisung {
+@NamedQuery(name = "DTOSchuelerZuweisung.all", query = "SELECT e FROM DTOSchuelerZuweisung e")
+@NamedQuery(name = "DTOSchuelerZuweisung.abschnitt_id", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.fach_id", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.fach_id.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.kursart", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart = :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.kursart.multiple", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Kursart IN :value")
+@NamedQuery(name = "DTOSchuelerZuweisung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2")
+@NamedQuery(name = "DTOSchuelerZuweisung.all.migration", query = "SELECT e FROM DTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL")
+@JsonPropertyOrder({"Abschnitt_ID", "Fach_ID", "Kursart"})
+public final class DTOSchuelerZuweisung {
 
 	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
 	@Id
@@ -63,11 +63,11 @@ public class DTOSchuelerZuweisung {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOSchuelerZuweisung(final Long Abschnitt_ID, final Long Fach_ID) {
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -75,7 +75,7 @@ public class DTOSchuelerZuweisung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,47 +13,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerAbschnittsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerAbschnittsdaten")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.all", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.id", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.id.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.lehrer_id", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.lehrer_id.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.rechtsverhaeltnis", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.rechtsverhaeltnis.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.beschaeftigungsart", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.einsatzstatus", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.einsatzstatus.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.unterrichtsstd", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.unterrichtsstd.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.mehrleistungstd", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.mehrleistungstd.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.entlastungstd", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.EntlastungStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.entlastungstd.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.EntlastungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.anrechnungstd", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.anrechnungstd.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.reststd", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.RestStd = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.reststd.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.schulnreigner", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.jahr", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.jahr.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.abschnitt", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.abschnitt.multiple", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOLehrerAbschnittsdaten.all.migration", query="SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Lehrer_ID","Schuljahresabschnitts_ID","Rechtsverhaeltnis","Beschaeftigungsart","Einsatzstatus","PflichtstdSoll","UnterrichtsStd","MehrleistungStd","EntlastungStd","AnrechnungStd","RestStd","SchulnrEigner","Jahr","Abschnitt"})
-public class MigrationDTOLehrerAbschnittsdaten {
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.all", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.id", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.id.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.lehrer_id", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.rechtsverhaeltnis", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.rechtsverhaeltnis.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.beschaeftigungsart", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.einsatzstatus", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.einsatzstatus.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.unterrichtsstd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.unterrichtsstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.mehrleistungstd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.mehrleistungstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.entlastungstd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.EntlastungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.entlastungstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.EntlastungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.anrechnungstd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.anrechnungstd.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.reststd", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.RestStd = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.reststd.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.schulnreigner", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.jahr", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.jahr.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.abschnitt", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.abschnitt.multiple", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOLehrerAbschnittsdaten.all.migration", query = "SELECT e FROM MigrationDTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd", "SchulnrEigner", "Jahr", "Abschnitt"})
+public final class MigrationDTOLehrerAbschnittsdaten {
 
 	/** ID des Eintrags für die LehrerAbschnittsdaten */
 	@Id
@@ -147,23 +147,23 @@ public class MigrationDTOLehrerAbschnittsdaten {
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
 	public MigrationDTOLehrerAbschnittsdaten(final Long ID, final Long Lehrer_ID, final Long Schuljahresabschnitts_ID, final Integer Jahr, final Integer Abschnitt) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (Jahr == null) { 
+		if (Jahr == null) {
 			throw new NullPointerException("Jahr must not be null");
 		}
 		this.Jahr = Jahr;
-		if (Abschnitt == null) { 
+		if (Abschnitt == null) {
 			throw new NullPointerException("Abschnitt must not be null");
 		}
 		this.Abschnitt = Abschnitt;
@@ -171,7 +171,7 @@ public class MigrationDTOLehrerAbschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

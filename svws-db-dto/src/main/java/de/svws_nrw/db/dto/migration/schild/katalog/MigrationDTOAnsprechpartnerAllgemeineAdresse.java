@@ -13,39 +13,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle AllgAdrAnsprechpartner.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "AllgAdrAnsprechpartner")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.all", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.id", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.id.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.name", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.name.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.email", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.email.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.titel", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.titel.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOAnsprechpartnerAllgemeineAdresse.all.migration", query="SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Adresse_ID","Name","Vorname","Anrede","Telefon","Email","Abteilung","SchulnrEigner","Titel","GU_ID"})
-public class MigrationDTOAnsprechpartnerAllgemeineAdresse {
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.all", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.adresse_id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Adresse_ID IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.name", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.name.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Name IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.vorname.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Vorname IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.anrede.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Anrede IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.telefon.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Telefon IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.email", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.email.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Email IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.abteilung.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Abteilung IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.titel", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.titel.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.Titel IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Adresse_ID", "Name", "Vorname", "Anrede", "Telefon", "Email", "Abteilung", "SchulnrEigner", "Titel", "GU_ID"})
+public final class MigrationDTOAnsprechpartnerAllgemeineAdresse {
 
 	/** ID des Ansprechpartners der Tabelle AllgAdresse (Betriebe) */
 	@Id
@@ -116,11 +116,11 @@ public class MigrationDTOAnsprechpartnerAllgemeineAdresse {
 	 * @param Adresse_ID   der Wert für das Attribut Adresse_ID
 	 */
 	public MigrationDTOAnsprechpartnerAllgemeineAdresse(final Long ID, final Long Adresse_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Adresse_ID == null) { 
+		if (Adresse_ID == null) {
 			throw new NullPointerException("Adresse_ID must not be null");
 		}
 		this.Adresse_ID = Adresse_ID;
@@ -128,7 +128,7 @@ public class MigrationDTOAnsprechpartnerAllgemeineAdresse {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

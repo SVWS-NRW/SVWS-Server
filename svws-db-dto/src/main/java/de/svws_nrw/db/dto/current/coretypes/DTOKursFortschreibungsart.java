@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KursFortschreibungsarten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KursFortschreibungsarten")
-@NamedQuery(name="DTOKursFortschreibungsart.all", query="SELECT e FROM DTOKursFortschreibungsart e")
-@NamedQuery(name="DTOKursFortschreibungsart.id", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID = :value")
-@NamedQuery(name="DTOKursFortschreibungsart.id.multiple", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKursFortschreibungsart.kuerzel", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOKursFortschreibungsart.kuerzel.multiple", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOKursFortschreibungsart.bezeichnung", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKursFortschreibungsart.bezeichnung.multiple", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKursFortschreibungsart.gueltigvon", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigVon = :value")
-@NamedQuery(name="DTOKursFortschreibungsart.gueltigvon.multiple", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="DTOKursFortschreibungsart.gueltigbis", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigBis = :value")
-@NamedQuery(name="DTOKursFortschreibungsart.gueltigbis.multiple", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTOKursFortschreibungsart.primaryKeyQuery", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKursFortschreibungsart.all.migration", query="SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Bezeichnung","gueltigVon","gueltigBis"})
-public class DTOKursFortschreibungsart {
+@NamedQuery(name = "DTOKursFortschreibungsart.all", query = "SELECT e FROM DTOKursFortschreibungsart e")
+@NamedQuery(name = "DTOKursFortschreibungsart.id", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.id.multiple", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.kuerzel", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.kuerzel.multiple", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.bezeichnung", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.bezeichnung.multiple", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.gueltigvon", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.gueltigvon.multiple", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.gueltigbis", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.gueltigbis.multiple", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "DTOKursFortschreibungsart.primaryKeyQuery", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKursFortschreibungsart.all.migration", query = "SELECT e FROM DTOKursFortschreibungsart e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
+public final class DTOKursFortschreibungsart {
 
 	/** ID der Kurs-Fortschreibungsart */
 	@Id
@@ -74,11 +74,11 @@ public class DTOKursFortschreibungsart {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOKursFortschreibungsart(final Long ID, final String Kuerzel) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -86,7 +86,7 @@ public class DTOKursFortschreibungsart {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

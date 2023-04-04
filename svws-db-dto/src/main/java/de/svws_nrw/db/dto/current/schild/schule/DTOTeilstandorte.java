@@ -13,33 +13,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Teilstandorte.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Teilstandorte")
-@NamedQuery(name="DTOTeilstandorte.all", query="SELECT e FROM DTOTeilstandorte e")
-@NamedQuery(name="DTOTeilstandorte.adrmerkmal", query="SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name="DTOTeilstandorte.adrmerkmal.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name="DTOTeilstandorte.plz", query="SELECT e FROM DTOTeilstandorte e WHERE e.PLZ = :value")
-@NamedQuery(name="DTOTeilstandorte.plz.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.PLZ IN :value")
-@NamedQuery(name="DTOTeilstandorte.ort", query="SELECT e FROM DTOTeilstandorte e WHERE e.Ort = :value")
-@NamedQuery(name="DTOTeilstandorte.ort.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.Ort IN :value")
-@NamedQuery(name="DTOTeilstandorte.strassenname", query="SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname = :value")
-@NamedQuery(name="DTOTeilstandorte.strassenname.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname IN :value")
-@NamedQuery(name="DTOTeilstandorte.hausnr", query="SELECT e FROM DTOTeilstandorte e WHERE e.HausNr = :value")
-@NamedQuery(name="DTOTeilstandorte.hausnr.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.HausNr IN :value")
-@NamedQuery(name="DTOTeilstandorte.hausnrzusatz", query="SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name="DTOTeilstandorte.hausnrzusatz.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name="DTOTeilstandorte.bemerkung", query="SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOTeilstandorte.bemerkung.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOTeilstandorte.kuerzel", query="SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOTeilstandorte.kuerzel.multiple", query="SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOTeilstandorte.primaryKeyQuery", query="SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
-@NamedQuery(name="DTOTeilstandorte.all.migration", query="SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
-@JsonPropertyOrder({"AdrMerkmal","PLZ","Ort","Strassenname","HausNr","HausNrZusatz","Bemerkung","Kuerzel"})
-public class DTOTeilstandorte {
+@NamedQuery(name = "DTOTeilstandorte.all", query = "SELECT e FROM DTOTeilstandorte e")
+@NamedQuery(name = "DTOTeilstandorte.adrmerkmal", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = :value")
+@NamedQuery(name = "DTOTeilstandorte.adrmerkmal.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
+@NamedQuery(name = "DTOTeilstandorte.plz", query = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ = :value")
+@NamedQuery(name = "DTOTeilstandorte.plz.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.PLZ IN :value")
+@NamedQuery(name = "DTOTeilstandorte.ort", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort = :value")
+@NamedQuery(name = "DTOTeilstandorte.ort.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Ort IN :value")
+@NamedQuery(name = "DTOTeilstandorte.strassenname", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname = :value")
+@NamedQuery(name = "DTOTeilstandorte.strassenname.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Strassenname IN :value")
+@NamedQuery(name = "DTOTeilstandorte.hausnr", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr = :value")
+@NamedQuery(name = "DTOTeilstandorte.hausnr.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNr IN :value")
+@NamedQuery(name = "DTOTeilstandorte.hausnrzusatz", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz = :value")
+@NamedQuery(name = "DTOTeilstandorte.hausnrzusatz.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.HausNrZusatz IN :value")
+@NamedQuery(name = "DTOTeilstandorte.bemerkung", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOTeilstandorte.bemerkung.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOTeilstandorte.kuerzel", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOTeilstandorte.kuerzel.multiple", query = "SELECT e FROM DTOTeilstandorte e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOTeilstandorte.primaryKeyQuery", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
+@NamedQuery(name = "DTOTeilstandorte.all.migration", query = "SELECT e FROM DTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
+@JsonPropertyOrder({"AdrMerkmal", "PLZ", "Ort", "Strassenname", "HausNr", "HausNrZusatz", "Bemerkung", "Kuerzel"})
+public final class DTOTeilstandorte {
 
 	/** Adressmerkmal des Teilstandortes (A...Z) */
 	@Id
@@ -94,7 +94,7 @@ public class DTOTeilstandorte {
 	 * @param AdrMerkmal   der Wert für das Attribut AdrMerkmal
 	 */
 	public DTOTeilstandorte(final String AdrMerkmal) {
-		if (AdrMerkmal == null) { 
+		if (AdrMerkmal == null) {
 			throw new NullPointerException("AdrMerkmal must not be null");
 		}
 		this.AdrMerkmal = AdrMerkmal;
@@ -102,7 +102,7 @@ public class DTOTeilstandorte {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

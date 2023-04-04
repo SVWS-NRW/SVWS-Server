@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuleCredentials.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuleCredentials")
-@NamedQuery(name="MigrationDTOSchuleCredentials.all", query="SELECT e FROM MigrationDTOSchuleCredentials e")
-@NamedQuery(name="MigrationDTOSchuleCredentials.schulnummer", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer = :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.schulnummer.multiple", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer IN :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.rsapublickey", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.rsapublickey.multiple", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.rsaprivatekey", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.rsaprivatekey.multiple", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.aes", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.AES = :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.aes.multiple", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.AES IN :value")
-@NamedQuery(name="MigrationDTOSchuleCredentials.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer = ?1")
-@NamedQuery(name="MigrationDTOSchuleCredentials.all.migration", query="SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
-@JsonPropertyOrder({"Schulnummer","RSAPublicKey","RSAPrivateKey","AES"})
-public class MigrationDTOSchuleCredentials {
+@NamedQuery(name = "MigrationDTOSchuleCredentials.all", query = "SELECT e FROM MigrationDTOSchuleCredentials e")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.schulnummer", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer = :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.schulnummer.multiple", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer IN :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.rsapublickey", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPublicKey = :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.rsapublickey.multiple", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPublicKey IN :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.rsaprivatekey", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPrivateKey = :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.rsaprivatekey.multiple", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.RSAPrivateKey IN :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.aes", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.AES = :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.aes.multiple", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.AES IN :value")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer = ?1")
+@NamedQuery(name = "MigrationDTOSchuleCredentials.all.migration", query = "SELECT e FROM MigrationDTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
+@JsonPropertyOrder({"Schulnummer", "RSAPublicKey", "RSAPrivateKey", "AES"})
+public final class MigrationDTOSchuleCredentials {
 
 	/** ID für den Credential-Datensatz einer Schule (also auch für den PublicKey der anderen Schulen) */
 	@Id
@@ -66,7 +66,7 @@ public class MigrationDTOSchuleCredentials {
 	 * @param Schulnummer   der Wert für das Attribut Schulnummer
 	 */
 	public MigrationDTOSchuleCredentials(final Integer Schulnummer) {
-		if (Schulnummer == null) { 
+		if (Schulnummer == null) {
 			throw new NullPointerException("Schulnummer must not be null");
 		}
 		this.Schulnummer = Schulnummer;
@@ -74,7 +74,7 @@ public class MigrationDTOSchuleCredentials {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

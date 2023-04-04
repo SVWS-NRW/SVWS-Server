@@ -13,35 +13,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle NichtMoeglAbiFachKombi.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "NichtMoeglAbiFachKombi")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.all", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.fach1_id", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.fach1_id.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.fach2_id", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.fach2_id.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.kursart1", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.kursart1.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.kursart2", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.kursart2.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.pk", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.pk.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.sortierung", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.sortierung.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.phase", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.phase.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.typ", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ = :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.typ.multiple", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN :value")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1")
-@NamedQuery(name="MigrationDTOFaecherNichtMoeglicheKombination.all.migration", query="SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL")
-@JsonPropertyOrder({"Fach1_ID","Fach2_ID","SchulnrEigner","Kursart1","Kursart2","PK","Sortierung","Phase","Typ"})
-public class MigrationDTOFaecherNichtMoeglicheKombination {
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.all", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach1_id", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach1_id.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach1_ID IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach2_id", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.fach2_id.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Fach2_ID IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart1", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart1.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart1 IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart2", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.kursart2.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Kursart2 IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.pk", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.pk.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.sortierung", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.sortierung.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.phase", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.phase.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Phase IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ = :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN :value")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.all.migration", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL")
+@JsonPropertyOrder({"Fach1_ID", "Fach2_ID", "SchulnrEigner", "Kursart1", "Kursart2", "PK", "Sortierung", "Phase", "Typ"})
+public final class MigrationDTOFaecherNichtMoeglicheKombination {
 
 	/** FACH1ID für eine nicht mögliche Kombination */
 	@Column(name = "Fach1_ID")
@@ -104,19 +104,19 @@ public class MigrationDTOFaecherNichtMoeglicheKombination {
 	 * @param PK   der Wert für das Attribut PK
 	 */
 	public MigrationDTOFaecherNichtMoeglicheKombination(final Long Fach1_ID, final Long Fach2_ID, final Integer SchulnrEigner, final String PK) {
-		if (Fach1_ID == null) { 
+		if (Fach1_ID == null) {
 			throw new NullPointerException("Fach1_ID must not be null");
 		}
 		this.Fach1_ID = Fach1_ID;
-		if (Fach2_ID == null) { 
+		if (Fach2_ID == null) {
 			throw new NullPointerException("Fach2_ID must not be null");
 		}
 		this.Fach2_ID = Fach2_ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (PK == null) { 
+		if (PK == null) {
 			throw new NullPointerException("PK must not be null");
 		}
 		this.PK = PK;
@@ -124,7 +124,7 @@ public class MigrationDTOFaecherNichtMoeglicheKombination {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

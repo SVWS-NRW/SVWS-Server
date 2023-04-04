@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle BenutzergruppenMitglieder.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOBenutzergruppenMitgliedPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzergruppenMitglieder")
-@NamedQuery(name="DTOBenutzergruppenMitglied.all", query="SELECT e FROM DTOBenutzergruppenMitglied e")
-@NamedQuery(name="DTOBenutzergruppenMitglied.gruppe_id", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID = :value")
-@NamedQuery(name="DTOBenutzergruppenMitglied.gruppe_id.multiple", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID IN :value")
-@NamedQuery(name="DTOBenutzergruppenMitglied.benutzer_id", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="DTOBenutzergruppenMitglied.benutzer_id.multiple", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="DTOBenutzergruppenMitglied.primaryKeyQuery", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID = ?1 AND e.Benutzer_ID = ?2")
-@NamedQuery(name="DTOBenutzergruppenMitglied.all.migration", query="SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID IS NOT NULL AND e.Benutzer_ID IS NOT NULL")
-@JsonPropertyOrder({"Gruppe_ID","Benutzer_ID"})
-public class DTOBenutzergruppenMitglied {
+@NamedQuery(name = "DTOBenutzergruppenMitglied.all", query = "SELECT e FROM DTOBenutzergruppenMitglied e")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.gruppe_id", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID = :value")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.gruppe_id.multiple", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID IN :value")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.benutzer_id", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.benutzer_id.multiple", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.primaryKeyQuery", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID = ?1 AND e.Benutzer_ID = ?2")
+@NamedQuery(name = "DTOBenutzergruppenMitglied.all.migration", query = "SELECT e FROM DTOBenutzergruppenMitglied e WHERE e.Gruppe_ID IS NOT NULL AND e.Benutzer_ID IS NOT NULL")
+@JsonPropertyOrder({"Gruppe_ID", "Benutzer_ID"})
+public final class DTOBenutzergruppenMitglied {
 
 	/** Die ID der Benutzergruppe */
 	@Id
@@ -56,11 +56,11 @@ public class DTOBenutzergruppenMitglied {
 	 * @param Benutzer_ID   der Wert für das Attribut Benutzer_ID
 	 */
 	public DTOBenutzergruppenMitglied(final Long Gruppe_ID, final Long Benutzer_ID) {
-		if (Gruppe_ID == null) { 
+		if (Gruppe_ID == null) {
 			throw new NullPointerException("Gruppe_ID must not be null");
 		}
 		this.Gruppe_ID = Gruppe_ID;
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
@@ -68,7 +68,7 @@ public class DTOBenutzergruppenMitglied {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

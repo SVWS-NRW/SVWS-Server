@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundentafel.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundentafel")
-@NamedQuery(name="MigrationDTOStundentafel.all", query="SELECT e FROM MigrationDTOStundentafel e")
-@NamedQuery(name="MigrationDTOStundentafel.id", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOStundentafel.id.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.bezeichnung", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOStundentafel.bezeichnung.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.jahrgang_id", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOStundentafel.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.asdjahrgang", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="MigrationDTOStundentafel.asdjahrgang.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.sgl", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.SGL = :value")
-@NamedQuery(name="MigrationDTOStundentafel.sgl.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.SGL IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.fachklasse_id", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="MigrationDTOStundentafel.fachklasse_id.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.sichtbar", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOStundentafel.sichtbar.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.schulnreigner", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOStundentafel.schulnreigner.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.sortierung", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOStundentafel.sortierung.multiple", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOStundentafel.primaryKeyQuery", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOStundentafel.all.migration", query="SELECT e FROM MigrationDTOStundentafel e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Jahrgang_ID","ASDJahrgang","SGL","Fachklasse_ID","Sichtbar","SchulnrEigner","Sortierung"})
-public class MigrationDTOStundentafel {
+@NamedQuery(name = "MigrationDTOStundentafel.all", query = "SELECT e FROM MigrationDTOStundentafel e")
+@NamedQuery(name = "MigrationDTOStundentafel.id", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.id.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.bezeichnung", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.jahrgang_id", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.asdjahrgang", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.asdjahrgang.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sgl", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.SGL = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sgl.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.SGL IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.fachklasse_id", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.fachklasse_id.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sichtbar", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sichtbar.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.schulnreigner", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sortierung", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOStundentafel.sortierung.multiple", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOStundentafel.primaryKeyQuery", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOStundentafel.all.migration", query = "SELECT e FROM MigrationDTOStundentafel e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Jahrgang_ID", "ASDJahrgang", "SGL", "Fachklasse_ID", "Sichtbar", "SchulnrEigner", "Sortierung"})
+public final class MigrationDTOStundentafel {
 
 	/** ID der Stundentafel */
 	@Id
@@ -85,9 +85,9 @@ public class MigrationDTOStundentafel {
 	/** Sichtbarkeit der Stundentafel */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -113,11 +113,11 @@ public class MigrationDTOStundentafel {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOStundentafel(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -125,7 +125,7 @@ public class MigrationDTOStundentafel {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

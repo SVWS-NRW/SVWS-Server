@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Religion.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Religion")
-@NamedQuery(name="DTOKonfession.all", query="SELECT e FROM DTOKonfession e")
-@NamedQuery(name="DTOKonfession.id", query="SELECT e FROM DTOKonfession e WHERE e.ID = :value")
-@NamedQuery(name="DTOKonfession.id.multiple", query="SELECT e FROM DTOKonfession e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKonfession.bezeichnung", query="SELECT e FROM DTOKonfession e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKonfession.bezeichnung.multiple", query="SELECT e FROM DTOKonfession e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKonfession.statistikkrz", query="SELECT e FROM DTOKonfession e WHERE e.StatistikKrz = :value")
-@NamedQuery(name="DTOKonfession.statistikkrz.multiple", query="SELECT e FROM DTOKonfession e WHERE e.StatistikKrz IN :value")
-@NamedQuery(name="DTOKonfession.sortierung", query="SELECT e FROM DTOKonfession e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOKonfession.sortierung.multiple", query="SELECT e FROM DTOKonfession e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOKonfession.sichtbar", query="SELECT e FROM DTOKonfession e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOKonfession.sichtbar.multiple", query="SELECT e FROM DTOKonfession e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOKonfession.aenderbar", query="SELECT e FROM DTOKonfession e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOKonfession.aenderbar.multiple", query="SELECT e FROM DTOKonfession e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOKonfession.exportbez", query="SELECT e FROM DTOKonfession e WHERE e.ExportBez = :value")
-@NamedQuery(name="DTOKonfession.exportbez.multiple", query="SELECT e FROM DTOKonfession e WHERE e.ExportBez IN :value")
-@NamedQuery(name="DTOKonfession.zeugnisbezeichnung", query="SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung = :value")
-@NamedQuery(name="DTOKonfession.zeugnisbezeichnung.multiple", query="SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung IN :value")
-@NamedQuery(name="DTOKonfession.primaryKeyQuery", query="SELECT e FROM DTOKonfession e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKonfession.all.migration", query="SELECT e FROM DTOKonfession e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","StatistikKrz","Sortierung","Sichtbar","Aenderbar","ExportBez","ZeugnisBezeichnung"})
-public class DTOKonfession {
+@NamedQuery(name = "DTOKonfession.all", query = "SELECT e FROM DTOKonfession e")
+@NamedQuery(name = "DTOKonfession.id", query = "SELECT e FROM DTOKonfession e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKonfession.id.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKonfession.bezeichnung", query = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKonfession.bezeichnung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKonfession.statistikkrz", query = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz = :value")
+@NamedQuery(name = "DTOKonfession.statistikkrz.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.StatistikKrz IN :value")
+@NamedQuery(name = "DTOKonfession.sortierung", query = "SELECT e FROM DTOKonfession e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOKonfession.sortierung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOKonfession.sichtbar", query = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOKonfession.sichtbar.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOKonfession.aenderbar", query = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOKonfession.aenderbar.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOKonfession.exportbez", query = "SELECT e FROM DTOKonfession e WHERE e.ExportBez = :value")
+@NamedQuery(name = "DTOKonfession.exportbez.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ExportBez IN :value")
+@NamedQuery(name = "DTOKonfession.zeugnisbezeichnung", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung = :value")
+@NamedQuery(name = "DTOKonfession.zeugnisbezeichnung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung IN :value")
+@NamedQuery(name = "DTOKonfession.primaryKeyQuery", query = "SELECT e FROM DTOKonfession e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKonfession.all.migration", query = "SELECT e FROM DTOKonfession e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar", "ExportBez", "ZeugnisBezeichnung"})
+public final class DTOKonfession {
 
 	/** ID der Religion */
 	@Id
@@ -73,17 +73,17 @@ public class DTOKonfession {
 	/** Sichbarkeit der Religion */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Religion */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Exportbezeichnung der Religion */
@@ -109,11 +109,11 @@ public class DTOKonfession {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOKonfession(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -121,7 +121,7 @@ public class DTOKonfession {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

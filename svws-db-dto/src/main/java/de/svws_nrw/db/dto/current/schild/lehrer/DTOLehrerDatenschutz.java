@@ -22,26 +22,26 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerDatenschutz.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOLehrerDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerDatenschutz")
-@NamedQuery(name="DTOLehrerDatenschutz.all", query="SELECT e FROM DTOLehrerDatenschutz e")
-@NamedQuery(name="DTOLehrerDatenschutz.lehrerid", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID = :value")
-@NamedQuery(name="DTOLehrerDatenschutz.lehrerid.multiple", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID IN :value")
-@NamedQuery(name="DTOLehrerDatenschutz.datenschutzid", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.DatenschutzID = :value")
-@NamedQuery(name="DTOLehrerDatenschutz.datenschutzid.multiple", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.DatenschutzID IN :value")
-@NamedQuery(name="DTOLehrerDatenschutz.status", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.Status = :value")
-@NamedQuery(name="DTOLehrerDatenschutz.status.multiple", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.Status IN :value")
-@NamedQuery(name="DTOLehrerDatenschutz.abgefragt", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.Abgefragt = :value")
-@NamedQuery(name="DTOLehrerDatenschutz.abgefragt.multiple", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name="DTOLehrerDatenschutz.primaryKeyQuery", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID = ?1 AND e.DatenschutzID = ?2")
-@NamedQuery(name="DTOLehrerDatenschutz.all.migration", query="SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID IS NOT NULL AND e.DatenschutzID IS NOT NULL")
-@JsonPropertyOrder({"LehrerID","DatenschutzID","Status","Abgefragt"})
-public class DTOLehrerDatenschutz {
+@NamedQuery(name = "DTOLehrerDatenschutz.all", query = "SELECT e FROM DTOLehrerDatenschutz e")
+@NamedQuery(name = "DTOLehrerDatenschutz.lehrerid", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID = :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.lehrerid.multiple", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID IN :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.datenschutzid", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.DatenschutzID = :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.datenschutzid.multiple", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.DatenschutzID IN :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.status", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.Status = :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.status.multiple", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.Status IN :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.abgefragt", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.Abgefragt = :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.abgefragt.multiple", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.Abgefragt IN :value")
+@NamedQuery(name = "DTOLehrerDatenschutz.primaryKeyQuery", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID = ?1 AND e.DatenschutzID = ?2")
+@NamedQuery(name = "DTOLehrerDatenschutz.all.migration", query = "SELECT e FROM DTOLehrerDatenschutz e WHERE e.LehrerID IS NOT NULL AND e.DatenschutzID IS NOT NULL")
+@JsonPropertyOrder({"LehrerID", "DatenschutzID", "Status", "Abgefragt"})
+public final class DTOLehrerDatenschutz {
 
 	/** LehrerID des Datenschutzeintrags */
 	@Id
@@ -58,17 +58,17 @@ public class DTOLehrerDatenschutz {
 	/** Status des Datenschutz-Eintrags (true/false) */
 	@Column(name = "Status")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean Status;
 
 	/** Status der Abfrage Datenschutz-Eintrags (true/false) */
 	@Column(name = "Abgefragt")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean Abgefragt;
 
 	/**
@@ -86,19 +86,19 @@ public class DTOLehrerDatenschutz {
 	 * @param Abgefragt   der Wert für das Attribut Abgefragt
 	 */
 	public DTOLehrerDatenschutz(final Long LehrerID, final Long DatenschutzID, final Boolean Status, final Boolean Abgefragt) {
-		if (LehrerID == null) { 
+		if (LehrerID == null) {
 			throw new NullPointerException("LehrerID must not be null");
 		}
 		this.LehrerID = LehrerID;
-		if (DatenschutzID == null) { 
+		if (DatenschutzID == null) {
 			throw new NullPointerException("DatenschutzID must not be null");
 		}
 		this.DatenschutzID = DatenschutzID;
-		if (Status == null) { 
+		if (Status == null) {
 			throw new NullPointerException("Status must not be null");
 		}
 		this.Status = Status;
-		if (Abgefragt == null) { 
+		if (Abgefragt == null) {
 			throw new NullPointerException("Abgefragt must not be null");
 		}
 		this.Abgefragt = Abgefragt;
@@ -106,7 +106,7 @@ public class DTOLehrerDatenschutz {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

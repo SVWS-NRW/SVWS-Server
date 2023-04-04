@@ -13,33 +13,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchildFilter.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchildFilter")
-@NamedQuery(name="DTOSchildAuswahlFilter.all", query="SELECT e FROM DTOSchildAuswahlFilter e")
-@NamedQuery(name="DTOSchildAuswahlFilter.id", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.id.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.art", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Art = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.art.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Art IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.name", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Name = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.name.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Name IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.beschreibung", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Beschreibung = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.beschreibung.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.tabellen", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Tabellen = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.tabellen.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Tabellen IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.zusatztabellen", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ZusatzTabellen = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.zusatztabellen.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ZusatzTabellen IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.bedingung", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Bedingung = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.bedingung.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Bedingung IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.bedingungklartext", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext = :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.bedingungklartext.multiple", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext IN :value")
-@NamedQuery(name="DTOSchildAuswahlFilter.primaryKeyQuery", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchildAuswahlFilter.all.migration", query="SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Art","Name","Beschreibung","Tabellen","ZusatzTabellen","Bedingung","BedingungKlartext"})
-public class DTOSchildAuswahlFilter {
+@NamedQuery(name = "DTOSchildAuswahlFilter.all", query = "SELECT e FROM DTOSchildAuswahlFilter e")
+@NamedQuery(name = "DTOSchildAuswahlFilter.id", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.id.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.art", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Art = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.art.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Art IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.name", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Name = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.name.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Name IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.beschreibung", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.beschreibung.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.tabellen", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Tabellen = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.tabellen.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Tabellen IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.zusatztabellen", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ZusatzTabellen = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.zusatztabellen.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ZusatzTabellen IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.bedingung", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Bedingung = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.bedingung.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.Bedingung IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.bedingungklartext", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext = :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.bedingungklartext.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext IN :value")
+@NamedQuery(name = "DTOSchildAuswahlFilter.primaryKeyQuery", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchildAuswahlFilter.all.migration", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Art", "Name", "Beschreibung", "Tabellen", "ZusatzTabellen", "Bedingung", "BedingungKlartext"})
+public final class DTOSchildAuswahlFilter {
 
 	/** ID des gespeicherten Filters */
 	@Id
@@ -95,11 +95,11 @@ public class DTOSchildAuswahlFilter {
 	 * @param Name   der Wert für das Attribut Name
 	 */
 	public DTOSchildAuswahlFilter(final Long ID, final String Name) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Name == null) { 
+		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
@@ -107,7 +107,7 @@ public class DTOSchildAuswahlFilter {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

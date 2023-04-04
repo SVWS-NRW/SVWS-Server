@@ -22,48 +22,48 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ImpExp_EigeneImporte_Tabellen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOEigeneImporteTabellenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte_Tabellen")
-@NamedQuery(name="DTOEigeneImporteTabellen.all", query="SELECT e FROM DTOEigeneImporteTabellen e")
-@NamedQuery(name="DTOEigeneImporteTabellen.import_id", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.import_id.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.tablename", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.TableName = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.tablename.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.TableName IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstcreateid", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstCreateID = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstcreateid.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstCreateID IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstidfieldname", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstIDFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstidfieldname.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstIDFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.sequence", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Sequence = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.sequence.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Sequence IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookuptable", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupTable = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookuptable.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupTable IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfields", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFields = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfields.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFields IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfieldtypes", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldTypes = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfieldtypes.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldTypes IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfieldpos", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldPos = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupfieldpos.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldPos IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupkeyfield", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupKeyField = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupkeyfield.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupKeyField IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupresultfield", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultField = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupresultfield.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultField IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupresultfieldtype", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultFieldType = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.lookupresultfieldtype.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultFieldType IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstdefaultfieldname", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstdefaultfieldname.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstdefaultfieldvalue", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.dstdefaultfieldvalue.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.gu_id_field", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.GU_ID_Field = :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.gu_id_field.multiple", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.GU_ID_Field IN :value")
-@NamedQuery(name="DTOEigeneImporteTabellen.primaryKeyQuery", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID = ?1 AND e.TableName = ?2")
-@NamedQuery(name="DTOEigeneImporteTabellen.all.migration", query="SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID IS NOT NULL AND e.TableName IS NOT NULL")
-@JsonPropertyOrder({"Import_ID","TableName","DstCreateID","DstIDFieldName","Sequence","LookupTable","LookupFields","LookupFieldTypes","LookupFieldPos","LookupKeyField","LookupResultField","LookupResultFieldType","DstDefaultFieldName","DstDefaultFieldValue","GU_ID_Field"})
-public class DTOEigeneImporteTabellen {
+@NamedQuery(name = "DTOEigeneImporteTabellen.all", query = "SELECT e FROM DTOEigeneImporteTabellen e")
+@NamedQuery(name = "DTOEigeneImporteTabellen.import_id", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.import_id.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.tablename", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.TableName = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.tablename.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.TableName IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstcreateid", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstCreateID = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstcreateid.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstCreateID IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstidfieldname", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstIDFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstidfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstIDFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.sequence", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Sequence = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.sequence.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Sequence IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookuptable", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupTable = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookuptable.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupTable IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfields", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFields = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfields.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFields IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfieldtypes", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldTypes = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfieldtypes.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldTypes IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfieldpos", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldPos = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupfieldpos.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupFieldPos IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupkeyfield", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupKeyField = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupkeyfield.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupKeyField IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupresultfield", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultField = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupresultfield.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultField IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupresultfieldtype", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultFieldType = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.lookupresultfieldtype.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.LookupResultFieldType IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstdefaultfieldname", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstdefaultfieldname.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldName IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstdefaultfieldvalue", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.dstdefaultfieldvalue.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.DstDefaultFieldValue IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.gu_id_field", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.GU_ID_Field = :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.gu_id_field.multiple", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.GU_ID_Field IN :value")
+@NamedQuery(name = "DTOEigeneImporteTabellen.primaryKeyQuery", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID = ?1 AND e.TableName = ?2")
+@NamedQuery(name = "DTOEigeneImporteTabellen.all.migration", query = "SELECT e FROM DTOEigeneImporteTabellen e WHERE e.Import_ID IS NOT NULL AND e.TableName IS NOT NULL")
+@JsonPropertyOrder({"Import_ID", "TableName", "DstCreateID", "DstIDFieldName", "Sequence", "LookupTable", "LookupFields", "LookupFieldTypes", "LookupFieldPos", "LookupKeyField", "LookupResultField", "LookupResultFieldType", "DstDefaultFieldName", "DstDefaultFieldValue", "GU_ID_Field"})
+public final class DTOEigeneImporteTabellen {
 
 	/** externen Textimport Tabellen */
 	@Id
@@ -80,9 +80,9 @@ public class DTOEigeneImporteTabellen {
 	/** externen Textimport Tabellen */
 	@Column(name = "DstCreateID")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean DstCreateID;
 
 	/** externen Textimport Tabellen */
@@ -157,7 +157,7 @@ public class DTOEigeneImporteTabellen {
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 */
 	public DTOEigeneImporteTabellen(final Integer Import_ID) {
-		if (Import_ID == null) { 
+		if (Import_ID == null) {
 			throw new NullPointerException("Import_ID must not be null");
 		}
 		this.Import_ID = Import_ID;
@@ -165,7 +165,7 @@ public class DTOEigeneImporteTabellen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle FachKatalog_Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOFaecherKatalogSchulformenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "FachKatalog_Schulformen")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.all", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.fach_id", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.fach_id.multiple", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.schulform_kuerzel", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulform_Kuerzel = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.schulform_kuerzel.multiple", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulform_Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.schulgliederung_kuerzel", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulgliederung_Kuerzel = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.schulgliederung_kuerzel.multiple", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulgliederung_Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.primaryKeyQuery", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID = ?1 AND e.Schulform_Kuerzel = ?2 AND e.Schulgliederung_Kuerzel = ?3")
-@NamedQuery(name="MigrationDTOFaecherKatalogSchulformen.all.migration", query="SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL AND e.Schulgliederung_Kuerzel IS NOT NULL")
-@JsonPropertyOrder({"Fach_ID","Schulform_Kuerzel","Schulgliederung_Kuerzel"})
-public class MigrationDTOFaecherKatalogSchulformen {
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.all", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.fach_id", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.fach_id.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.schulform_kuerzel", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulform_Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.schulform_kuerzel.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulform_Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.schulgliederung_kuerzel", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulgliederung_Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.schulgliederung_kuerzel.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Schulgliederung_Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID = ?1 AND e.Schulform_Kuerzel = ?2 AND e.Schulgliederung_Kuerzel = ?3")
+@NamedQuery(name = "MigrationDTOFaecherKatalogSchulformen.all.migration", query = "SELECT e FROM MigrationDTOFaecherKatalogSchulformen e WHERE e.Fach_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL AND e.Schulgliederung_Kuerzel IS NOT NULL")
+@JsonPropertyOrder({"Fach_ID", "Schulform_Kuerzel", "Schulgliederung_Kuerzel"})
+public final class MigrationDTOFaecherKatalogSchulformen {
 
 	/** die ID des Faches */
 	@Id
@@ -65,15 +65,15 @@ public class MigrationDTOFaecherKatalogSchulformen {
 	 * @param Schulgliederung_Kuerzel   der Wert für das Attribut Schulgliederung_Kuerzel
 	 */
 	public MigrationDTOFaecherKatalogSchulformen(final Long Fach_ID, final String Schulform_Kuerzel, final String Schulgliederung_Kuerzel) {
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Schulform_Kuerzel == null) { 
+		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
 		}
 		this.Schulform_Kuerzel = Schulform_Kuerzel;
-		if (Schulgliederung_Kuerzel == null) { 
+		if (Schulgliederung_Kuerzel == null) {
 			throw new NullPointerException("Schulgliederung_Kuerzel must not be null");
 		}
 		this.Schulgliederung_Kuerzel = Schulgliederung_Kuerzel;
@@ -81,7 +81,7 @@ public class MigrationDTOFaecherKatalogSchulformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_ErzieherArt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_ErzieherArt")
-@NamedQuery(name="MigrationDTOErzieherart.all", query="SELECT e FROM MigrationDTOErzieherart e")
-@NamedQuery(name="MigrationDTOErzieherart.id", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOErzieherart.id.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.bezeichnung", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOErzieherart.bezeichnung.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.sortierung", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOErzieherart.sortierung.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.sichtbar", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOErzieherart.sichtbar.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.aenderbar", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOErzieherart.aenderbar.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.exportbez", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ExportBez = :value")
-@NamedQuery(name="MigrationDTOErzieherart.exportbez.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ExportBez IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.schulnreigner", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOErzieherart.schulnreigner.multiple", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOErzieherart.primaryKeyQuery", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOErzieherart.all.migration", query="SELECT e FROM MigrationDTOErzieherart e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","ExportBez","SchulnrEigner"})
-public class MigrationDTOErzieherart {
+@NamedQuery(name = "MigrationDTOErzieherart.all", query = "SELECT e FROM MigrationDTOErzieherart e")
+@NamedQuery(name = "MigrationDTOErzieherart.id", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.id.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.bezeichnung", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.sortierung", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.sortierung.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.sichtbar", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.sichtbar.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.aenderbar", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.aenderbar.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.exportbez", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ExportBez = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.exportbez.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ExportBez IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.schulnreigner", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOErzieherart.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOErzieherart.primaryKeyQuery", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOErzieherart.all.migration", query = "SELECT e FROM MigrationDTOErzieherart e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "ExportBez", "SchulnrEigner"})
+public final class MigrationDTOErzieherart {
 
 	/** ID der Erzieherart */
 	@Id
@@ -66,17 +66,17 @@ public class MigrationDTOErzieherart {
 	/** Sichbarkeit der Erzieherart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Erzieherart */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Exportbezeichnung der Erzieherart */
@@ -102,11 +102,11 @@ public class MigrationDTOErzieherart {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOErzieherart(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -114,7 +114,7 @@ public class MigrationDTOErzieherart {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

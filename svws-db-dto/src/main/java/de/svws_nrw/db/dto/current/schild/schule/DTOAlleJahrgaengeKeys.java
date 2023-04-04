@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Jahrgaenge_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Jahrgaenge_Keys")
-@NamedQuery(name="DTOAlleJahrgaengeKeys.all", query="SELECT e FROM DTOAlleJahrgaengeKeys e")
-@NamedQuery(name="DTOAlleJahrgaengeKeys.kuerzel", query="SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOAlleJahrgaengeKeys.kuerzel.multiple", query="SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOAlleJahrgaengeKeys.primaryKeyQuery", query="SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="DTOAlleJahrgaengeKeys.all.migration", query="SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "DTOAlleJahrgaengeKeys.all", query = "SELECT e FROM DTOAlleJahrgaengeKeys e")
+@NamedQuery(name = "DTOAlleJahrgaengeKeys.kuerzel", query = "SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOAlleJahrgaengeKeys.kuerzel.multiple", query = "SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOAlleJahrgaengeKeys.primaryKeyQuery", query = "SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOAlleJahrgaengeKeys.all.migration", query = "SELECT e FROM DTOAlleJahrgaengeKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class DTOAlleJahrgaengeKeys {
+public final class DTOAlleJahrgaengeKeys {
 
 	/** Das zweistellige Kürzel des Jahrgangs */
 	@Id
@@ -45,7 +45,7 @@ public class DTOAlleJahrgaengeKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOAlleJahrgaengeKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class DTOAlleJahrgaengeKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

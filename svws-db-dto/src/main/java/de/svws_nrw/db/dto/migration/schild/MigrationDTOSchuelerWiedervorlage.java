@@ -24,39 +24,39 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerWiedervorlage.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerWiedervorlage")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.all", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.id", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.id.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.schueler_id", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.bemerkung", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.bemerkung.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.angelegtam", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.AngelegtAm = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.angelegtam.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.wiedervorlageam", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.wiedervorlageam.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.erledigtam", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ErledigtAm = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.erledigtam.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.user_id", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.User_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.user_id.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.User_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.sekretariat", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Sekretariat = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.sekretariat.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Sekretariat IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.typ", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Typ = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.typ.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Typ IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.nichtloeschen", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.nichtloeschen.multiple", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerWiedervorlage.all.migration", query="SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","SchulnrEigner","Bemerkung","AngelegtAm","WiedervorlageAm","ErledigtAm","User_ID","Sekretariat","Typ","NichtLoeschen"})
-public class MigrationDTOSchuelerWiedervorlage {
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.all", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.id", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.bemerkung", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.bemerkung.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.angelegtam", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.AngelegtAm = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.angelegtam.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.wiedervorlageam", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.wiedervorlageam.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.erledigtam", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ErledigtAm = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.erledigtam.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.user_id", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.User_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.user_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.User_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.sekretariat", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Sekretariat = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.sekretariat.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Sekretariat IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.typ", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Typ = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.typ.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.Typ IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.nichtloeschen", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.nichtloeschen.multiple", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerWiedervorlage.all.migration", query = "SELECT e FROM MigrationDTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "SchulnrEigner", "Bemerkung", "AngelegtAm", "WiedervorlageAm", "ErledigtAm", "User_ID", "Sekretariat", "Typ", "NichtLoeschen"})
+public final class MigrationDTOSchuelerWiedervorlage {
 
 	/** ID des Wiedervorlageeitrags beim Schüler */
 	@Id
@@ -102,9 +102,9 @@ public class MigrationDTOSchuelerWiedervorlage {
 	/** Steuert die Sichtbarkeit für den User Sekretariat */
 	@Column(name = "Sekretariat")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sekretariat;
 
 	/** Typ des Wiedervorlageeintrags */
@@ -115,9 +115,9 @@ public class MigrationDTOSchuelerWiedervorlage {
 	/** Steuert die automatische Löschung der Einträge */
 	@Column(name = "NichtLoeschen")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NichtLoeschen;
 
 	/**
@@ -134,15 +134,15 @@ public class MigrationDTOSchuelerWiedervorlage {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOSchuelerWiedervorlage(final Long ID, final Long Schueler_ID, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -150,7 +150,7 @@ public class MigrationDTOSchuelerWiedervorlage {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

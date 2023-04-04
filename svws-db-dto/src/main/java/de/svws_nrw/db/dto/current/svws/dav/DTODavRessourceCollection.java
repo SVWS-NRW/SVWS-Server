@@ -26,31 +26,31 @@ import de.svws_nrw.csv.converter.current.DavRessourceCollectionTypConverterDeser
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavRessourceCollections.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessourceCollections")
-@NamedQuery(name="DTODavRessourceCollection.all", query="SELECT e FROM DTODavRessourceCollection e")
-@NamedQuery(name="DTODavRessourceCollection.benutzer_id", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="DTODavRessourceCollection.benutzer_id.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="DTODavRessourceCollection.id", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID = :value")
-@NamedQuery(name="DTODavRessourceCollection.id.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN :value")
-@NamedQuery(name="DTODavRessourceCollection.typ", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Typ = :value")
-@NamedQuery(name="DTODavRessourceCollection.typ.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Typ IN :value")
-@NamedQuery(name="DTODavRessourceCollection.anzeigename", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename = :value")
-@NamedQuery(name="DTODavRessourceCollection.anzeigename.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename IN :value")
-@NamedQuery(name="DTODavRessourceCollection.beschreibung", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung = :value")
-@NamedQuery(name="DTODavRessourceCollection.beschreibung.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="DTODavRessourceCollection.synctoken", query="SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken = :value")
-@NamedQuery(name="DTODavRessourceCollection.synctoken.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken IN :value")
-@NamedQuery(name="DTODavRessourceCollection.geloeschtam", query="SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = :value")
-@NamedQuery(name="DTODavRessourceCollection.geloeschtam.multiple", query="SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
-@NamedQuery(name="DTODavRessourceCollection.primaryKeyQuery", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1")
-@NamedQuery(name="DTODavRessourceCollection.all.migration", query="SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","ID","Typ","Anzeigename","Beschreibung","SyncToken","geloeschtam"})
-public class DTODavRessourceCollection {
+@NamedQuery(name = "DTODavRessourceCollection.all", query = "SELECT e FROM DTODavRessourceCollection e")
+@NamedQuery(name = "DTODavRessourceCollection.benutzer_id", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "DTODavRessourceCollection.benutzer_id.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.id", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = :value")
+@NamedQuery(name = "DTODavRessourceCollection.id.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.typ", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ = :value")
+@NamedQuery(name = "DTODavRessourceCollection.typ.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Typ IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.anzeigename", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename = :value")
+@NamedQuery(name = "DTODavRessourceCollection.anzeigename.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Anzeigename IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.beschreibung", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "DTODavRessourceCollection.beschreibung.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.synctoken", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken = :value")
+@NamedQuery(name = "DTODavRessourceCollection.synctoken.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.SyncToken IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.geloeschtam", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = :value")
+@NamedQuery(name = "DTODavRessourceCollection.geloeschtam.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
+@NamedQuery(name = "DTODavRessourceCollection.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavRessourceCollection.all.migration", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"Benutzer_ID", "ID", "Typ", "Anzeigename", "Beschreibung", "SyncToken", "geloeschtam"})
+public final class DTODavRessourceCollection {
 
 	/** Die ID des Benutzers, zu dem der Datensatz gehört */
 	@Column(name = "Benutzer_ID")
@@ -66,9 +66,9 @@ public class DTODavRessourceCollection {
 	/** Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender */
 	@Column(name = "Typ")
 	@JsonProperty
-	@Convert(converter=DavRessourceCollectionTypConverter.class)
-	@JsonSerialize(using=DavRessourceCollectionTypConverterSerializer.class)
-	@JsonDeserialize(using=DavRessourceCollectionTypConverterDeserializer.class)
+	@Convert(converter = DavRessourceCollectionTypConverter.class)
+	@JsonSerialize(using = DavRessourceCollectionTypConverterSerializer.class)
+	@JsonDeserialize(using = DavRessourceCollectionTypConverterDeserializer.class)
 	public DavRessourceCollectionTyp Typ;
 
 	/** Der Anzeigename der Ressourcensammlung */
@@ -84,17 +84,17 @@ public class DTODavRessourceCollection {
 	/** Das SyncToken der Ressourcensammlung */
 	@Column(name = "SyncToken")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String SyncToken;
 
 	/** Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde. */
 	@Column(name = "geloeschtam")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String geloeschtam;
 
 	/**
@@ -113,23 +113,23 @@ public class DTODavRessourceCollection {
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
 	public DTODavRessourceCollection(final Long Benutzer_ID, final Long ID, final DavRessourceCollectionTyp Typ, final String Anzeigename, final String SyncToken) {
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Typ == null) { 
+		if (Typ == null) {
 			throw new NullPointerException("Typ must not be null");
 		}
 		this.Typ = Typ;
-		if (Anzeigename == null) { 
+		if (Anzeigename == null) {
 			throw new NullPointerException("Anzeigename must not be null");
 		}
 		this.Anzeigename = Anzeigename;
-		if (SyncToken == null) { 
+		if (SyncToken == null) {
 			throw new NullPointerException("SyncToken must not be null");
 		}
 		this.SyncToken = SyncToken;
@@ -137,7 +137,7 @@ public class DTODavRessourceCollection {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

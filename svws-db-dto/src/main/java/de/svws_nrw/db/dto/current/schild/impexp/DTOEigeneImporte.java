@@ -21,43 +21,43 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ImpExp_EigeneImporte.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ImpExp_EigeneImporte")
-@NamedQuery(name="DTOEigeneImporte.all", query="SELECT e FROM DTOEigeneImporte e")
-@NamedQuery(name="DTOEigeneImporte.id", query="SELECT e FROM DTOEigeneImporte e WHERE e.ID = :value")
-@NamedQuery(name="DTOEigeneImporte.id.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.ID IN :value")
-@NamedQuery(name="DTOEigeneImporte.title", query="SELECT e FROM DTOEigeneImporte e WHERE e.Title = :value")
-@NamedQuery(name="DTOEigeneImporte.title.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.Title IN :value")
-@NamedQuery(name="DTOEigeneImporte.delimiterchar", query="SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar = :value")
-@NamedQuery(name="DTOEigeneImporte.delimiterchar.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar IN :value")
-@NamedQuery(name="DTOEigeneImporte.textquote", query="SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote = :value")
-@NamedQuery(name="DTOEigeneImporte.textquote.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote IN :value")
-@NamedQuery(name="DTOEigeneImporte.skiplines", query="SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines = :value")
-@NamedQuery(name="DTOEigeneImporte.skiplines.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines IN :value")
-@NamedQuery(name="DTOEigeneImporte.dateformat", query="SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat = :value")
-@NamedQuery(name="DTOEigeneImporte.dateformat.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat IN :value")
-@NamedQuery(name="DTOEigeneImporte.booleantrue", query="SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue = :value")
-@NamedQuery(name="DTOEigeneImporte.booleantrue.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue IN :value")
-@NamedQuery(name="DTOEigeneImporte.abkweiblich", query="SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich = :value")
-@NamedQuery(name="DTOEigeneImporte.abkweiblich.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich IN :value")
-@NamedQuery(name="DTOEigeneImporte.abkmaennlich", query="SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich = :value")
-@NamedQuery(name="DTOEigeneImporte.abkmaennlich.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich IN :value")
-@NamedQuery(name="DTOEigeneImporte.maintable", query="SELECT e FROM DTOEigeneImporte e WHERE e.MainTable = :value")
-@NamedQuery(name="DTOEigeneImporte.maintable.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.MainTable IN :value")
-@NamedQuery(name="DTOEigeneImporte.insertmode", query="SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode = :value")
-@NamedQuery(name="DTOEigeneImporte.insertmode.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode IN :value")
-@NamedQuery(name="DTOEigeneImporte.lookuptabledir", query="SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir = :value")
-@NamedQuery(name="DTOEigeneImporte.lookuptabledir.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir IN :value")
-@NamedQuery(name="DTOEigeneImporte.schueleridmode", query="SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode = :value")
-@NamedQuery(name="DTOEigeneImporte.schueleridmode.multiple", query="SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode IN :value")
-@NamedQuery(name="DTOEigeneImporte.primaryKeyQuery", query="SELECT e FROM DTOEigeneImporte e WHERE e.ID = ?1")
-@NamedQuery(name="DTOEigeneImporte.all.migration", query="SELECT e FROM DTOEigeneImporte e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Title","DelimiterChar","TextQuote","SkipLines","DateFormat","BooleanTrue","AbkWeiblich","AbkMaennlich","MainTable","InsertMode","LookupTableDir","SchuelerIDMode"})
-public class DTOEigeneImporte {
+@NamedQuery(name = "DTOEigeneImporte.all", query = "SELECT e FROM DTOEigeneImporte e")
+@NamedQuery(name = "DTOEigeneImporte.id", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = :value")
+@NamedQuery(name = "DTOEigeneImporte.id.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOEigeneImporte.title", query = "SELECT e FROM DTOEigeneImporte e WHERE e.Title = :value")
+@NamedQuery(name = "DTOEigeneImporte.title.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.Title IN :value")
+@NamedQuery(name = "DTOEigeneImporte.delimiterchar", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar = :value")
+@NamedQuery(name = "DTOEigeneImporte.delimiterchar.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DelimiterChar IN :value")
+@NamedQuery(name = "DTOEigeneImporte.textquote", query = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote = :value")
+@NamedQuery(name = "DTOEigeneImporte.textquote.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.TextQuote IN :value")
+@NamedQuery(name = "DTOEigeneImporte.skiplines", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines = :value")
+@NamedQuery(name = "DTOEigeneImporte.skiplines.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SkipLines IN :value")
+@NamedQuery(name = "DTOEigeneImporte.dateformat", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat = :value")
+@NamedQuery(name = "DTOEigeneImporte.dateformat.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.DateFormat IN :value")
+@NamedQuery(name = "DTOEigeneImporte.booleantrue", query = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue = :value")
+@NamedQuery(name = "DTOEigeneImporte.booleantrue.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.BooleanTrue IN :value")
+@NamedQuery(name = "DTOEigeneImporte.abkweiblich", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich = :value")
+@NamedQuery(name = "DTOEigeneImporte.abkweiblich.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkWeiblich IN :value")
+@NamedQuery(name = "DTOEigeneImporte.abkmaennlich", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich = :value")
+@NamedQuery(name = "DTOEigeneImporte.abkmaennlich.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.AbkMaennlich IN :value")
+@NamedQuery(name = "DTOEigeneImporte.maintable", query = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable = :value")
+@NamedQuery(name = "DTOEigeneImporte.maintable.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.MainTable IN :value")
+@NamedQuery(name = "DTOEigeneImporte.insertmode", query = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode = :value")
+@NamedQuery(name = "DTOEigeneImporte.insertmode.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.InsertMode IN :value")
+@NamedQuery(name = "DTOEigeneImporte.lookuptabledir", query = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir = :value")
+@NamedQuery(name = "DTOEigeneImporte.lookuptabledir.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.LookupTableDir IN :value")
+@NamedQuery(name = "DTOEigeneImporte.schueleridmode", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode = :value")
+@NamedQuery(name = "DTOEigeneImporte.schueleridmode.multiple", query = "SELECT e FROM DTOEigeneImporte e WHERE e.SchuelerIDMode IN :value")
+@NamedQuery(name = "DTOEigeneImporte.primaryKeyQuery", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOEigeneImporte.all.migration", query = "SELECT e FROM DTOEigeneImporte e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Title", "DelimiterChar", "TextQuote", "SkipLines", "DateFormat", "BooleanTrue", "AbkWeiblich", "AbkMaennlich", "MainTable", "InsertMode", "LookupTableDir", "SchuelerIDMode"})
+public final class DTOEigeneImporte {
 
 	/** ID des Importschemas für den externen Textimport */
 	@Id
@@ -113,9 +113,9 @@ public class DTOEigeneImporte {
 	/** externen Textimport */
 	@Column(name = "InsertMode")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean InsertMode;
 
 	/** externen Textimport */
@@ -140,7 +140,7 @@ public class DTOEigeneImporte {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOEigeneImporte(final Integer ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -148,7 +148,7 @@ public class DTOEigeneImporte {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

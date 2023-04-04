@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Kompetenzen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kompetenzen")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.all", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_id", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID = :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_id.multiple", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_gruppe", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe = :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_gruppe.multiple", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe IN :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_bezeichnung", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.ko_bezeichnung.multiple", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.primaryKeyQuery", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID = ?1")
-@NamedQuery(name="MigrationDTOKatalogBenutzerKompetenz.all.migration", query="SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID IS NOT NULL")
-@JsonPropertyOrder({"KO_ID","KO_Gruppe","KO_Bezeichnung"})
-public class MigrationDTOKatalogBenutzerKompetenz {
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.all", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_id", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID = :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_id.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID IN :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_gruppe", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe = :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_gruppe.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Gruppe IN :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_bezeichnung", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.ko_bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID = ?1")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenz.all.migration", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenz e WHERE e.KO_ID IS NOT NULL")
+@JsonPropertyOrder({"KO_ID", "KO_Gruppe", "KO_Bezeichnung"})
+public final class MigrationDTOKatalogBenutzerKompetenz {
 
 	/** ID für die Berechtigungskompetenz */
 	@Id
@@ -61,15 +61,15 @@ public class MigrationDTOKatalogBenutzerKompetenz {
 	 * @param KO_Bezeichnung   der Wert für das Attribut KO_Bezeichnung
 	 */
 	public MigrationDTOKatalogBenutzerKompetenz(final Long KO_ID, final Long KO_Gruppe, final String KO_Bezeichnung) {
-		if (KO_ID == null) { 
+		if (KO_ID == null) {
 			throw new NullPointerException("KO_ID must not be null");
 		}
 		this.KO_ID = KO_ID;
-		if (KO_Gruppe == null) { 
+		if (KO_Gruppe == null) {
 			throw new NullPointerException("KO_Gruppe must not be null");
 		}
 		this.KO_Gruppe = KO_Gruppe;
-		if (KO_Bezeichnung == null) { 
+		if (KO_Bezeichnung == null) {
 			throw new NullPointerException("KO_Bezeichnung must not be null");
 		}
 		this.KO_Bezeichnung = KO_Bezeichnung;
@@ -77,7 +77,7 @@ public class MigrationDTOKatalogBenutzerKompetenz {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

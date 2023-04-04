@@ -14,21 +14,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbank-View V_Benutzerkompetenzen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOViewBenutzerKompetenzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "V_Benutzerkompetenzen")
-@NamedQuery(name="DTOViewBenutzerKompetenz.all", query="SELECT e FROM DTOViewBenutzerKompetenz e")
-@NamedQuery(name="DTOViewBenutzerKompetenz.benutzer_id", query="SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="DTOViewBenutzerKompetenz.benutzer_id.multiple", query="SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="DTOViewBenutzerKompetenz.kompetenz_id", query="SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Kompetenz_ID = :value")
-@NamedQuery(name="DTOViewBenutzerKompetenz.kompetenz_id.multiple", query="SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Kompetenz_ID IN :value")
-@NamedQuery(name="DTOViewBenutzerKompetenz.primaryKeyQuery", query="SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID = ?1 AND e.Kompetenz_ID = ?2")
-@JsonPropertyOrder({"Benutzer_ID","Kompetenz_ID"})
-public class DTOViewBenutzerKompetenz {
+@NamedQuery(name = "DTOViewBenutzerKompetenz.all", query = "SELECT e FROM DTOViewBenutzerKompetenz e")
+@NamedQuery(name = "DTOViewBenutzerKompetenz.benutzer_id", query = "SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "DTOViewBenutzerKompetenz.benutzer_id.multiple", query = "SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "DTOViewBenutzerKompetenz.kompetenz_id", query = "SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Kompetenz_ID = :value")
+@NamedQuery(name = "DTOViewBenutzerKompetenz.kompetenz_id.multiple", query = "SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Kompetenz_ID IN :value")
+@NamedQuery(name = "DTOViewBenutzerKompetenz.primaryKeyQuery", query = "SELECT e FROM DTOViewBenutzerKompetenz e WHERE e.Benutzer_ID = ?1 AND e.Kompetenz_ID = ?2")
+@JsonPropertyOrder({"Benutzer_ID", "Kompetenz_ID"})
+public final class DTOViewBenutzerKompetenz {
 
 	/** Die ID des Benutzers */
 	@Id
@@ -49,7 +49,7 @@ public class DTOViewBenutzerKompetenz {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

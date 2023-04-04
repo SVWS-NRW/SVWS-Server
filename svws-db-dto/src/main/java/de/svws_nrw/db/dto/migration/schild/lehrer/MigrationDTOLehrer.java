@@ -24,141 +24,141 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Lehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Lehrer")
-@NamedQuery(name="MigrationDTOLehrer.all", query="SELECT e FROM MigrationDTOLehrer e")
-@NamedQuery(name="MigrationDTOLehrer.id", query="SELECT e FROM MigrationDTOLehrer e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOLehrer.id.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.gu_id", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GU_ID = :value")
-@NamedQuery(name="MigrationDTOLehrer.gu_id.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GU_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.kuerzel", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOLehrer.kuerzel.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOLehrer.kuerzellid", query="SELECT e FROM MigrationDTOLehrer e WHERE e.kuerzelLID = :value")
-@NamedQuery(name="MigrationDTOLehrer.kuerzellid.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.kuerzelLID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.nachname", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Nachname = :value")
-@NamedQuery(name="MigrationDTOLehrer.nachname.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Nachname IN :value")
-@NamedQuery(name="MigrationDTOLehrer.vorname", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Vorname = :value")
-@NamedQuery(name="MigrationDTOLehrer.vorname.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Vorname IN :value")
-@NamedQuery(name="MigrationDTOLehrer.persontyp", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PersonTyp = :value")
-@NamedQuery(name="MigrationDTOLehrer.persontyp.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PersonTyp IN :value")
-@NamedQuery(name="MigrationDTOLehrer.schulnreigner", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOLehrer.schulnreigner.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOLehrer.sortierung", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOLehrer.sortierung.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOLehrer.sichtbar", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOLehrer.sichtbar.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOLehrer.aenderbar", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOLehrer.aenderbar.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOLehrer.fuerexport", query="SELECT e FROM MigrationDTOLehrer e WHERE e.FuerExport = :value")
-@NamedQuery(name="MigrationDTOLehrer.fuerexport.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.FuerExport IN :value")
-@NamedQuery(name="MigrationDTOLehrer.statistikrelevant", query="SELECT e FROM MigrationDTOLehrer e WHERE e.statistikRelevant = :value")
-@NamedQuery(name="MigrationDTOLehrer.statistikrelevant.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.statistikRelevant IN :value")
-@NamedQuery(name="MigrationDTOLehrer.strasse", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Strasse = :value")
-@NamedQuery(name="MigrationDTOLehrer.strasse.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Strasse IN :value")
-@NamedQuery(name="MigrationDTOLehrer.strassenname", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Strassenname = :value")
-@NamedQuery(name="MigrationDTOLehrer.strassenname.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Strassenname IN :value")
-@NamedQuery(name="MigrationDTOLehrer.hausnr", query="SELECT e FROM MigrationDTOLehrer e WHERE e.HausNr = :value")
-@NamedQuery(name="MigrationDTOLehrer.hausnr.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.HausNr IN :value")
-@NamedQuery(name="MigrationDTOLehrer.hausnrzusatz", query="SELECT e FROM MigrationDTOLehrer e WHERE e.HausNrZusatz = :value")
-@NamedQuery(name="MigrationDTOLehrer.hausnrzusatz.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.HausNrZusatz IN :value")
-@NamedQuery(name="MigrationDTOLehrer.ort_id", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Ort_ID = :value")
-@NamedQuery(name="MigrationDTOLehrer.ort_id.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Ort_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.plz", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PLZ = :value")
-@NamedQuery(name="MigrationDTOLehrer.plz.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PLZ IN :value")
-@NamedQuery(name="MigrationDTOLehrer.ortsteil_id", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Ortsteil_ID = :value")
-@NamedQuery(name="MigrationDTOLehrer.ortsteil_id.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Ortsteil_ID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.telefon", query="SELECT e FROM MigrationDTOLehrer e WHERE e.telefon = :value")
-@NamedQuery(name="MigrationDTOLehrer.telefon.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.telefon IN :value")
-@NamedQuery(name="MigrationDTOLehrer.telefonmobil", query="SELECT e FROM MigrationDTOLehrer e WHERE e.telefonMobil = :value")
-@NamedQuery(name="MigrationDTOLehrer.telefonmobil.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.telefonMobil IN :value")
-@NamedQuery(name="MigrationDTOLehrer.emailprivat", query="SELECT e FROM MigrationDTOLehrer e WHERE e.eMailPrivat = :value")
-@NamedQuery(name="MigrationDTOLehrer.emailprivat.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.eMailPrivat IN :value")
-@NamedQuery(name="MigrationDTOLehrer.emaildienstlich", query="SELECT e FROM MigrationDTOLehrer e WHERE e.eMailDienstlich = :value")
-@NamedQuery(name="MigrationDTOLehrer.emaildienstlich.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.eMailDienstlich IN :value")
-@NamedQuery(name="MigrationDTOLehrer.staatsangehoerigkeit", query="SELECT e FROM MigrationDTOLehrer e WHERE e.staatsangehoerigkeit = :value")
-@NamedQuery(name="MigrationDTOLehrer.staatsangehoerigkeit.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.staatsangehoerigkeit IN :value")
-@NamedQuery(name="MigrationDTOLehrer.geburtsdatum", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Geburtsdatum = :value")
-@NamedQuery(name="MigrationDTOLehrer.geburtsdatum.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Geburtsdatum IN :value")
-@NamedQuery(name="MigrationDTOLehrer.geschlecht", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Geschlecht = :value")
-@NamedQuery(name="MigrationDTOLehrer.geschlecht.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Geschlecht IN :value")
-@NamedQuery(name="MigrationDTOLehrer.anrede", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Anrede = :value")
-@NamedQuery(name="MigrationDTOLehrer.anrede.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Anrede IN :value")
-@NamedQuery(name="MigrationDTOLehrer.amtsbezeichnung", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Amtsbezeichnung = :value")
-@NamedQuery(name="MigrationDTOLehrer.amtsbezeichnung.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Amtsbezeichnung IN :value")
-@NamedQuery(name="MigrationDTOLehrer.titel", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Titel = :value")
-@NamedQuery(name="MigrationDTOLehrer.titel.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Titel IN :value")
-@NamedQuery(name="MigrationDTOLehrer.faecher", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Faecher = :value")
-@NamedQuery(name="MigrationDTOLehrer.faecher.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Faecher IN :value")
-@NamedQuery(name="MigrationDTOLehrer.identnrteil1", query="SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil1 = :value")
-@NamedQuery(name="MigrationDTOLehrer.identnrteil1.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil1 IN :value")
-@NamedQuery(name="MigrationDTOLehrer.identnrteil2sernr", query="SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil2SerNr = :value")
-@NamedQuery(name="MigrationDTOLehrer.identnrteil2sernr.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil2SerNr IN :value")
-@NamedQuery(name="MigrationDTOLehrer.panr", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PANr = :value")
-@NamedQuery(name="MigrationDTOLehrer.panr.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PANr IN :value")
-@NamedQuery(name="MigrationDTOLehrer.personalnrlbv", query="SELECT e FROM MigrationDTOLehrer e WHERE e.personalNrLBV = :value")
-@NamedQuery(name="MigrationDTOLehrer.personalnrlbv.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.personalNrLBV IN :value")
-@NamedQuery(name="MigrationDTOLehrer.verguetungsschluessel", query="SELECT e FROM MigrationDTOLehrer e WHERE e.verguetungsSchluessel = :value")
-@NamedQuery(name="MigrationDTOLehrer.verguetungsschluessel.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.verguetungsSchluessel IN :value")
-@NamedQuery(name="MigrationDTOLehrer.datumzugang", query="SELECT e FROM MigrationDTOLehrer e WHERE e.DatumZugang = :value")
-@NamedQuery(name="MigrationDTOLehrer.datumzugang.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.DatumZugang IN :value")
-@NamedQuery(name="MigrationDTOLehrer.grundzugang", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GrundZugang = :value")
-@NamedQuery(name="MigrationDTOLehrer.grundzugang.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GrundZugang IN :value")
-@NamedQuery(name="MigrationDTOLehrer.datumabgang", query="SELECT e FROM MigrationDTOLehrer e WHERE e.DatumAbgang = :value")
-@NamedQuery(name="MigrationDTOLehrer.datumabgang.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.DatumAbgang IN :value")
-@NamedQuery(name="MigrationDTOLehrer.grundabgang", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GrundAbgang = :value")
-@NamedQuery(name="MigrationDTOLehrer.grundabgang.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.GrundAbgang IN :value")
-@NamedQuery(name="MigrationDTOLehrer.pflichtstdsoll", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PflichtstdSoll = :value")
-@NamedQuery(name="MigrationDTOLehrer.pflichtstdsoll.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PflichtstdSoll IN :value")
-@NamedQuery(name="MigrationDTOLehrer.rechtsverhaeltnis", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Rechtsverhaeltnis = :value")
-@NamedQuery(name="MigrationDTOLehrer.rechtsverhaeltnis.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Rechtsverhaeltnis IN :value")
-@NamedQuery(name="MigrationDTOLehrer.beschaeftigungsart", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Beschaeftigungsart = :value")
-@NamedQuery(name="MigrationDTOLehrer.beschaeftigungsart.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Beschaeftigungsart IN :value")
-@NamedQuery(name="MigrationDTOLehrer.einsatzstatus", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Einsatzstatus = :value")
-@NamedQuery(name="MigrationDTOLehrer.einsatzstatus.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Einsatzstatus IN :value")
-@NamedQuery(name="MigrationDTOLehrer.stammschulnr", query="SELECT e FROM MigrationDTOLehrer e WHERE e.StammschulNr = :value")
-@NamedQuery(name="MigrationDTOLehrer.stammschulnr.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.StammschulNr IN :value")
-@NamedQuery(name="MigrationDTOLehrer.unterrichtsstd", query="SELECT e FROM MigrationDTOLehrer e WHERE e.UnterrichtsStd = :value")
-@NamedQuery(name="MigrationDTOLehrer.unterrichtsstd.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.UnterrichtsStd IN :value")
-@NamedQuery(name="MigrationDTOLehrer.mehrleistungstd", query="SELECT e FROM MigrationDTOLehrer e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name="MigrationDTOLehrer.mehrleistungstd.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrer.entlastungstd", query="SELECT e FROM MigrationDTOLehrer e WHERE e.EntlastungStd = :value")
-@NamedQuery(name="MigrationDTOLehrer.entlastungstd.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.EntlastungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrer.anrechnungstd", query="SELECT e FROM MigrationDTOLehrer e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name="MigrationDTOLehrer.anrechnungstd.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name="MigrationDTOLehrer.reststd", query="SELECT e FROM MigrationDTOLehrer e WHERE e.RestStd = :value")
-@NamedQuery(name="MigrationDTOLehrer.reststd.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.RestStd IN :value")
-@NamedQuery(name="MigrationDTOLehrer.lpassword", query="SELECT e FROM MigrationDTOLehrer e WHERE e.LPassword = :value")
-@NamedQuery(name="MigrationDTOLehrer.lpassword.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.LPassword IN :value")
-@NamedQuery(name="MigrationDTOLehrer.pwaktuell", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PWAktuell = :value")
-@NamedQuery(name="MigrationDTOLehrer.pwaktuell.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.PWAktuell IN :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_fl", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_FL = :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_fl.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_FL IN :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_kl", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_KL = :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_kl.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_KL IN :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_config", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_Config = :value")
-@NamedQuery(name="MigrationDTOLehrer.schildweb_config.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_Config IN :value")
-@NamedQuery(name="MigrationDTOLehrer.kennworttools", query="SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortTools = :value")
-@NamedQuery(name="MigrationDTOLehrer.kennworttools.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortTools IN :value")
-@NamedQuery(name="MigrationDTOLehrer.antwort1", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort1 = :value")
-@NamedQuery(name="MigrationDTOLehrer.antwort1.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort1 IN :value")
-@NamedQuery(name="MigrationDTOLehrer.antwort2", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort2 = :value")
-@NamedQuery(name="MigrationDTOLehrer.antwort2.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort2 IN :value")
-@NamedQuery(name="MigrationDTOLehrer.kennworttoolsaktuell", query="SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortToolsAktuell = :value")
-@NamedQuery(name="MigrationDTOLehrer.kennworttoolsaktuell.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortToolsAktuell IN :value")
-@NamedQuery(name="MigrationDTOLehrer.xnmpassword", query="SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword = :value")
-@NamedQuery(name="MigrationDTOLehrer.xnmpassword.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword IN :value")
-@NamedQuery(name="MigrationDTOLehrer.xnmpassword2", query="SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword2 = :value")
-@NamedQuery(name="MigrationDTOLehrer.xnmpassword2.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword2 IN :value")
-@NamedQuery(name="MigrationDTOLehrer.credentialid", query="SELECT e FROM MigrationDTOLehrer e WHERE e.CredentialID = :value")
-@NamedQuery(name="MigrationDTOLehrer.credentialid.multiple", query="SELECT e FROM MigrationDTOLehrer e WHERE e.CredentialID IN :value")
-@NamedQuery(name="MigrationDTOLehrer.primaryKeyQuery", query="SELECT e FROM MigrationDTOLehrer e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOLehrer.all.migration", query="SELECT e FROM MigrationDTOLehrer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","GU_ID","Kuerzel","kuerzelLID","Nachname","Vorname","PersonTyp","SchulnrEigner","Sortierung","Sichtbar","Aenderbar","FuerExport","statistikRelevant","Strasse","Strassenname","HausNr","HausNrZusatz","Ort_ID","PLZ","Ortsteil_ID","telefon","telefonMobil","eMailPrivat","eMailDienstlich","staatsangehoerigkeit","Geburtsdatum","Geschlecht","Anrede","Amtsbezeichnung","Titel","Faecher","identNrTeil1","identNrTeil2SerNr","PANr","personalNrLBV","verguetungsSchluessel","DatumZugang","GrundZugang","DatumAbgang","GrundAbgang","PflichtstdSoll","Rechtsverhaeltnis","Beschaeftigungsart","Einsatzstatus","StammschulNr","UnterrichtsStd","MehrleistungStd","EntlastungStd","AnrechnungStd","RestStd","LPassword","PWAktuell","SchILDweb_FL","SchILDweb_KL","SchILDweb_Config","KennwortTools","Antwort1","Antwort2","KennwortToolsAktuell","XNMPassword","XNMPassword2","CredentialID"})
-public class MigrationDTOLehrer {
+@NamedQuery(name = "MigrationDTOLehrer.all", query = "SELECT e FROM MigrationDTOLehrer e")
+@NamedQuery(name = "MigrationDTOLehrer.id", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.id.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.gu_id", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GU_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.gu_id.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GU_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.kuerzel", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOLehrer.kuerzel.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.kuerzellid", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.kuerzelLID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.kuerzellid.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.kuerzelLID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.nachname", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Nachname = :value")
+@NamedQuery(name = "MigrationDTOLehrer.nachname.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Nachname IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.vorname", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Vorname = :value")
+@NamedQuery(name = "MigrationDTOLehrer.vorname.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Vorname IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.persontyp", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PersonTyp = :value")
+@NamedQuery(name = "MigrationDTOLehrer.persontyp.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PersonTyp IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.schulnreigner", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOLehrer.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.sortierung", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOLehrer.sortierung.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.sichtbar", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOLehrer.sichtbar.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.aenderbar", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOLehrer.aenderbar.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.fuerexport", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.FuerExport = :value")
+@NamedQuery(name = "MigrationDTOLehrer.fuerexport.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.FuerExport IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.statistikrelevant", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.statistikRelevant = :value")
+@NamedQuery(name = "MigrationDTOLehrer.statistikrelevant.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.statistikRelevant IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.strasse", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Strasse = :value")
+@NamedQuery(name = "MigrationDTOLehrer.strasse.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Strasse IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.strassenname", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Strassenname = :value")
+@NamedQuery(name = "MigrationDTOLehrer.strassenname.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Strassenname IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.hausnr", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.HausNr = :value")
+@NamedQuery(name = "MigrationDTOLehrer.hausnr.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.HausNr IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.hausnrzusatz", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.HausNrZusatz = :value")
+@NamedQuery(name = "MigrationDTOLehrer.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.HausNrZusatz IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.ort_id", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Ort_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.ort_id.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Ort_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.plz", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PLZ = :value")
+@NamedQuery(name = "MigrationDTOLehrer.plz.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PLZ IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.ortsteil_id", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Ortsteil_ID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.ortsteil_id.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Ortsteil_ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.telefon", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.telefon = :value")
+@NamedQuery(name = "MigrationDTOLehrer.telefon.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.telefon IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.telefonmobil", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.telefonMobil = :value")
+@NamedQuery(name = "MigrationDTOLehrer.telefonmobil.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.telefonMobil IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.emailprivat", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.eMailPrivat = :value")
+@NamedQuery(name = "MigrationDTOLehrer.emailprivat.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.eMailPrivat IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.emaildienstlich", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.eMailDienstlich = :value")
+@NamedQuery(name = "MigrationDTOLehrer.emaildienstlich.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.eMailDienstlich IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.staatsangehoerigkeit", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.staatsangehoerigkeit = :value")
+@NamedQuery(name = "MigrationDTOLehrer.staatsangehoerigkeit.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.staatsangehoerigkeit IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.geburtsdatum", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Geburtsdatum = :value")
+@NamedQuery(name = "MigrationDTOLehrer.geburtsdatum.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Geburtsdatum IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.geschlecht", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Geschlecht = :value")
+@NamedQuery(name = "MigrationDTOLehrer.geschlecht.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Geschlecht IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.anrede", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Anrede = :value")
+@NamedQuery(name = "MigrationDTOLehrer.anrede.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Anrede IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.amtsbezeichnung", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Amtsbezeichnung = :value")
+@NamedQuery(name = "MigrationDTOLehrer.amtsbezeichnung.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Amtsbezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.titel", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Titel = :value")
+@NamedQuery(name = "MigrationDTOLehrer.titel.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Titel IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.faecher", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Faecher = :value")
+@NamedQuery(name = "MigrationDTOLehrer.faecher.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Faecher IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.identnrteil1", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil1 = :value")
+@NamedQuery(name = "MigrationDTOLehrer.identnrteil1.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil1 IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.identnrteil2sernr", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil2SerNr = :value")
+@NamedQuery(name = "MigrationDTOLehrer.identnrteil2sernr.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.identNrTeil2SerNr IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.panr", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PANr = :value")
+@NamedQuery(name = "MigrationDTOLehrer.panr.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PANr IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.personalnrlbv", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.personalNrLBV = :value")
+@NamedQuery(name = "MigrationDTOLehrer.personalnrlbv.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.personalNrLBV IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.verguetungsschluessel", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.verguetungsSchluessel = :value")
+@NamedQuery(name = "MigrationDTOLehrer.verguetungsschluessel.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.verguetungsSchluessel IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.datumzugang", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.DatumZugang = :value")
+@NamedQuery(name = "MigrationDTOLehrer.datumzugang.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.DatumZugang IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.grundzugang", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GrundZugang = :value")
+@NamedQuery(name = "MigrationDTOLehrer.grundzugang.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GrundZugang IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.datumabgang", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.DatumAbgang = :value")
+@NamedQuery(name = "MigrationDTOLehrer.datumabgang.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.DatumAbgang IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.grundabgang", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GrundAbgang = :value")
+@NamedQuery(name = "MigrationDTOLehrer.grundabgang.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.GrundAbgang IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.pflichtstdsoll", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PflichtstdSoll = :value")
+@NamedQuery(name = "MigrationDTOLehrer.pflichtstdsoll.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PflichtstdSoll IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.rechtsverhaeltnis", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Rechtsverhaeltnis = :value")
+@NamedQuery(name = "MigrationDTOLehrer.rechtsverhaeltnis.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Rechtsverhaeltnis IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.beschaeftigungsart", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Beschaeftigungsart = :value")
+@NamedQuery(name = "MigrationDTOLehrer.beschaeftigungsart.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Beschaeftigungsart IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.einsatzstatus", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Einsatzstatus = :value")
+@NamedQuery(name = "MigrationDTOLehrer.einsatzstatus.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Einsatzstatus IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.stammschulnr", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.StammschulNr = :value")
+@NamedQuery(name = "MigrationDTOLehrer.stammschulnr.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.StammschulNr IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.unterrichtsstd", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.UnterrichtsStd = :value")
+@NamedQuery(name = "MigrationDTOLehrer.unterrichtsstd.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.UnterrichtsStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.mehrleistungstd", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.MehrleistungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrer.mehrleistungstd.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.MehrleistungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.entlastungstd", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.EntlastungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrer.entlastungstd.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.EntlastungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.anrechnungstd", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.AnrechnungStd = :value")
+@NamedQuery(name = "MigrationDTOLehrer.anrechnungstd.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.AnrechnungStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.reststd", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.RestStd = :value")
+@NamedQuery(name = "MigrationDTOLehrer.reststd.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.RestStd IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.lpassword", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.LPassword = :value")
+@NamedQuery(name = "MigrationDTOLehrer.lpassword.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.LPassword IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.pwaktuell", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PWAktuell = :value")
+@NamedQuery(name = "MigrationDTOLehrer.pwaktuell.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.PWAktuell IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_fl", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_FL = :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_fl.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_FL IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_kl", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_KL = :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_kl.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_KL IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_config", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_Config = :value")
+@NamedQuery(name = "MigrationDTOLehrer.schildweb_config.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.SchILDweb_Config IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.kennworttools", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortTools = :value")
+@NamedQuery(name = "MigrationDTOLehrer.kennworttools.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortTools IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.antwort1", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort1 = :value")
+@NamedQuery(name = "MigrationDTOLehrer.antwort1.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort1 IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.antwort2", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort2 = :value")
+@NamedQuery(name = "MigrationDTOLehrer.antwort2.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.Antwort2 IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.kennworttoolsaktuell", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortToolsAktuell = :value")
+@NamedQuery(name = "MigrationDTOLehrer.kennworttoolsaktuell.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.KennwortToolsAktuell IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.xnmpassword", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword = :value")
+@NamedQuery(name = "MigrationDTOLehrer.xnmpassword.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.xnmpassword2", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword2 = :value")
+@NamedQuery(name = "MigrationDTOLehrer.xnmpassword2.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.XNMPassword2 IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.credentialid", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.CredentialID = :value")
+@NamedQuery(name = "MigrationDTOLehrer.credentialid.multiple", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.CredentialID IN :value")
+@NamedQuery(name = "MigrationDTOLehrer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOLehrer.all.migration", query = "SELECT e FROM MigrationDTOLehrer e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "SchulnrEigner", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strasse", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "PLZ", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "PflichtstdSoll", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "StammschulNr", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd", "LPassword", "PWAktuell", "SchILDweb_FL", "SchILDweb_KL", "SchILDweb_Config", "KennwortTools", "Antwort1", "Antwort2", "KennwortToolsAktuell", "XNMPassword", "XNMPassword2", "CredentialID"})
+public final class MigrationDTOLehrer {
 
 	/** Eindeutige ID zur Kennzeichnung des Lehrer-Datensatzes */
 	@Id
@@ -209,33 +209,33 @@ public class MigrationDTOLehrer {
 	/** Gibt an, ob der Lehrer-Datensatz in der Oberfläche sichtbar sein soll und bei einer Auswahl zur Verfügung steht.  */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Gibt an, ob Änderungen am Lehrer-Datensatz erlaubt sind. */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Gibt an, ob der Lehrer-Datensatz für den Export in andere Software verwendet werden soll - TODO fuer welche(n) Zweck(e) wird dies gespeichert - gehört dies an diese Stelle?  */
 	@Column(name = "FuerExport")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean FuerExport;
 
 	/** Gibt an, ob der Lehrer-Datensatz bei der Statistik berücksichtigt werden soll. */
 	@Column(name = "Statistik")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean statistikRelevant;
 
 	/** Adressdaten des Lehrers: Strasse */
@@ -301,9 +301,9 @@ public class MigrationDTOLehrer {
 	/** Das Geburtsdatum des Lehrers */
 	@Column(name = "Geburtsdatum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String Geburtsdatum;
 
 	/** Das Geschlecht des Lehrers - TODO ist in der Datenbank als String und nicht als Integer (3/4) hinterlegt, dies sollte in allen Tabellen einheitlich sein */
@@ -359,9 +359,9 @@ public class MigrationDTOLehrer {
 	/** Das Datum, wann der Lehrer an die Schule gekommen ist. */
 	@Column(name = "DatumZugang")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String DatumZugang;
 
 	/** Der Grund für den Zugang des Lehrers */
@@ -372,9 +372,9 @@ public class MigrationDTOLehrer {
 	/** Das Datum, wann der Lehrer die Schule verlassen hat. */
 	@Column(name = "DatumAbgang")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String DatumAbgang;
 
 	/** Der Grund für das Verlassen der Schule durch den Lehrer */
@@ -445,17 +445,17 @@ public class MigrationDTOLehrer {
 	/** DEPRECATED: nicht mehr genutzt SchildWeb */
 	@Column(name = "SchILDweb_FL")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean SchILDweb_FL;
 
 	/** DEPRECATED: nicht mehr genutzt SchildWeb */
 	@Column(name = "SchILDweb_KL")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean SchILDweb_KL;
 
 	/** DEPRECATED: nicht mehr genutzt SchildWeb */
@@ -512,15 +512,15 @@ public class MigrationDTOLehrer {
 	 * @param Nachname   der Wert für das Attribut Nachname
 	 */
 	public MigrationDTOLehrer(final Long ID, final String Kuerzel, final String Nachname) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Nachname == null) { 
+		if (Nachname == null) {
 			throw new NullPointerException("Nachname must not be null");
 		}
 		this.Nachname = Nachname;
@@ -528,7 +528,7 @@ public class MigrationDTOLehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

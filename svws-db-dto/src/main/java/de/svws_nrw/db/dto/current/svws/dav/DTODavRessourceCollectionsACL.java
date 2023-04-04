@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavRessourceCollectionsACL.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessourceCollectionsACL")
-@NamedQuery(name="DTODavRessourceCollectionsACL.all", query="SELECT e FROM DTODavRessourceCollectionsACL e")
-@NamedQuery(name="DTODavRessourceCollectionsACL.id", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.id.multiple", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.benutzer_id", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.benutzer_id.multiple", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.ressourcecollection_id", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID = :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.ressourcecollection_id.multiple", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID IN :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.berechtigungen", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen = :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.berechtigungen.multiple", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen IN :value")
-@NamedQuery(name="DTODavRessourceCollectionsACL.primaryKeyQuery", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1")
-@NamedQuery(name="DTODavRessourceCollectionsACL.all.migration", query="SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Benutzer_ID","RessourceCollection_ID","berechtigungen"})
-public class DTODavRessourceCollectionsACL {
+@NamedQuery(name = "DTODavRessourceCollectionsACL.all", query = "SELECT e FROM DTODavRessourceCollectionsACL e")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.benutzer_id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.benutzer_id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.ressourcecollection_id", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID = :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.ressourcecollection_id.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.RessourceCollection_ID IN :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen = :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen IN :value")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.all.migration", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Benutzer_ID", "RessourceCollection_ID", "berechtigungen"})
+public final class DTODavRessourceCollectionsACL {
 
 	/** ID des ACL Eintrags */
 	@Id
@@ -69,19 +69,19 @@ public class DTODavRessourceCollectionsACL {
 	 * @param berechtigungen   der Wert für das Attribut berechtigungen
 	 */
 	public DTODavRessourceCollectionsACL(final Long ID, final Long Benutzer_ID, final Long RessourceCollection_ID, final String berechtigungen) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (RessourceCollection_ID == null) { 
+		if (RessourceCollection_ID == null) {
 			throw new NullPointerException("RessourceCollection_ID must not be null");
 		}
 		this.RessourceCollection_ID = RessourceCollection_ID;
-		if (berechtigungen == null) { 
+		if (berechtigungen == null) {
 			throw new NullPointerException("berechtigungen must not be null");
 		}
 		this.berechtigungen = berechtigungen;
@@ -89,7 +89,7 @@ public class DTODavRessourceCollectionsACL {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

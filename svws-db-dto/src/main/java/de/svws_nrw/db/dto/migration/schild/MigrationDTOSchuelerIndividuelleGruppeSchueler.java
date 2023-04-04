@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerListe_Inhalt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOSchuelerIndividuelleGruppeSchuelerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerListe_Inhalt")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.all", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.liste_id", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.liste_id.multiple", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.schueler_id", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name="MigrationDTOSchuelerIndividuelleGruppeSchueler.all.migration", query="SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Liste_ID","Schueler_ID","SchulnrEigner"})
-public class MigrationDTOSchuelerIndividuelleGruppeSchueler {
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.all", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.liste_id", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.liste_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID = ?1 AND e.Schueler_ID = ?2")
+@NamedQuery(name = "MigrationDTOSchuelerIndividuelleGruppeSchueler.all.migration", query = "SELECT e FROM MigrationDTOSchuelerIndividuelleGruppeSchueler e WHERE e.Liste_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Liste_ID", "Schueler_ID", "SchulnrEigner"})
+public final class MigrationDTOSchuelerIndividuelleGruppeSchueler {
 
 	/** ID der individuellen Schülerliste */
 	@Id
@@ -63,11 +63,11 @@ public class MigrationDTOSchuelerIndividuelleGruppeSchueler {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerIndividuelleGruppeSchueler(final Long Liste_ID, final Long Schueler_ID) {
-		if (Liste_ID == null) { 
+		if (Liste_ID == null) {
 			throw new NullPointerException("Liste_ID must not be null");
 		}
 		this.Liste_ID = Liste_ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -75,7 +75,7 @@ public class MigrationDTOSchuelerIndividuelleGruppeSchueler {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

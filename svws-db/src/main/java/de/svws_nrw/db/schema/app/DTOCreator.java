@@ -113,8 +113,8 @@ public class DTOCreator {
 				}
 				// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
 				codeDTOImports += "import " + javaPackage + "." + dto.tabelle.getJavaKlasse(rev) + ";" + System.lineSeparator();
-				codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + dto.tabelle.getJavaKlasse(rev) + ".class.getSimpleName()," + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
-				codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + dto.tabelle.name() + "\"," + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
+				codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + dto.tabelle.getJavaKlasse(rev) + ".class.getSimpleName(), " + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
+				codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + dto.tabelle.name() + "\", " + dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
 				// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
 				if ((dto.tabelle.pkSpalten() == null) || (dto.tabelle.pkSpalten().size() != 1)) {
 					logger.log(" (" + dto.tabelle.getJavaKlasse(rev) + "PK)");
@@ -163,8 +163,8 @@ public class DTOCreator {
 					}
 					// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
 					codeDTOImports += "import " + javaPackage + "." + className + ";" + System.lineSeparator();
-					codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + className + ".class.getSimpleName()," + className + ".class);" + System.lineSeparator();
-					codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + view.name + "\"," + className + ".class);" + System.lineSeparator();
+					codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + className + ".class.getSimpleName(), " + className + ".class);" + System.lineSeparator();
+					codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + view.name + "\", " + className + ".class);" + System.lineSeparator();
 					// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
 					if (!view.hasSimplePrimaryKey()) {
 						logger.log(" (" + className + "PK)");
@@ -196,7 +196,7 @@ public class DTOCreator {
 			 + " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
 			 + " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
 			 + " */" + System.lineSeparator()
-			 + "public class " + dtosClassname + " {" + System.lineSeparator()
+			 + "public final class " + dtosClassname + " {" + System.lineSeparator()
 			 + "" + System.lineSeparator()
 			 + "    /** Enthält das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den entsprechenden Java-DTO-Klassen. */" + System.lineSeparator()
 			 + "    private static HashMap<String, Class<? extends Object>> mapDTOName2DTOClass = null;" + System.lineSeparator()
@@ -210,7 +210,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "     private static final HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {" + System.lineSeparator()
+			 + "     private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {" + System.lineSeparator()
 			 + "         if (mapDTOName2DTOClass == null) {" + System.lineSeparator()
 		     + "             mapDTOName2DTOClass = new HashMap<>();" + System.lineSeparator()
 			 + codeMapDTOName2DTOClass
@@ -226,7 +226,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromDTOName(String name) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromDTOName(final String name) {" + System.lineSeparator()
 			 + "    	return getMapDTOName2DTOClass().get(name);" + System.lineSeparator()
 			 + "    }" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -237,7 +237,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "     private static final HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {" + System.lineSeparator()
+			 + "     private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {" + System.lineSeparator()
 			 + "         if (mapTablename2DTOClass == null) {" + System.lineSeparator()
 		     + "             mapTablename2DTOClass = new HashMap<>();" + System.lineSeparator()
 			 + codeMapTablename2DTOClass
@@ -253,7 +253,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromTableName(String name) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromTableName(final String name) {" + System.lineSeparator()
 			 + "    	return getMapTablename2DTOClass().get(name);" + System.lineSeparator()
 			 + "    }" + System.lineSeparator()
 			 + "" + System.lineSeparator()
@@ -296,7 +296,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromDTOName(String name, long rev) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromDTOName(final String name, final long rev) {" + System.lineSeparator()
 			 + "        if (rev == 0) {" + System.lineSeparator()
 		     + "            return MigrationDTOs.getFromDTOName(name);" + System.lineSeparator()
 		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
@@ -317,7 +317,7 @@ public class DTOCreator {
 			 + "     *" + System.lineSeparator()
 			 + "     * @return die DTO-Klasse" + System.lineSeparator()
 			 + "     */" + System.lineSeparator()
-			 + "    public static Class<? extends Object> getFromTableName(String name, long rev) {" + System.lineSeparator()
+			 + "    public static Class<? extends Object> getFromTableName(final String name, final long rev) {" + System.lineSeparator()
 			 + "        if (rev == 0) {" + System.lineSeparator()
 		     + "            return MigrationDTOs.getFromTableName(name);" + System.lineSeparator()
 		     + "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()

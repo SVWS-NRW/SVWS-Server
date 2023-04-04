@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Client_Konfiguration_Global.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOClientKonfigurationGlobalPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_Client_Konfiguration_Global")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.all", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.appname", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.appname.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.schluessel", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Schluessel = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.schluessel.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Schluessel IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.wert", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Wert = :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.wert.multiple", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Wert IN :value")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.primaryKeyQuery", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2")
-@NamedQuery(name="MigrationDTOClientKonfigurationGlobal.all.migration", query="SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
-@JsonPropertyOrder({"AppName","Schluessel","Wert"})
-public class MigrationDTOClientKonfigurationGlobal {
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.all", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.appname", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.appname.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.schluessel", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Schluessel = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.schluessel.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Schluessel IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.wert", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Wert = :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.wert.multiple", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.Wert IN :value")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.primaryKeyQuery", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2")
+@NamedQuery(name = "MigrationDTOClientKonfigurationGlobal.all.migration", query = "SELECT e FROM MigrationDTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
+@JsonPropertyOrder({"AppName", "Schluessel", "Wert"})
+public final class MigrationDTOClientKonfigurationGlobal {
 
 	/** Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist */
 	@Id
@@ -64,15 +64,15 @@ public class MigrationDTOClientKonfigurationGlobal {
 	 * @param Wert   der Wert für das Attribut Wert
 	 */
 	public MigrationDTOClientKonfigurationGlobal(final String AppName, final String Schluessel, final String Wert) {
-		if (AppName == null) { 
+		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
 		}
 		this.AppName = AppName;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
-		if (Wert == null) { 
+		if (Wert == null) {
 			throw new NullPointerException("Wert must not be null");
 		}
 		this.Wert = Wert;
@@ -80,7 +80,7 @@ public class MigrationDTOClientKonfigurationGlobal {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

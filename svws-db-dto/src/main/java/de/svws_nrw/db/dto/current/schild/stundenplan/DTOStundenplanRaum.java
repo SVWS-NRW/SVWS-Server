@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_Raeume.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Raeume")
-@NamedQuery(name="DTOStundenplanRaum.all", query="SELECT e FROM DTOStundenplanRaum e")
-@NamedQuery(name="DTOStundenplanRaum.id", query="SELECT e FROM DTOStundenplanRaum e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanRaum.id.multiple", query="SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanRaum.stundenplan_id", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = :value")
-@NamedQuery(name="DTOStundenplanRaum.stundenplan_id.multiple", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID IN :value")
-@NamedQuery(name="DTOStundenplanRaum.kuerzel", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOStundenplanRaum.kuerzel.multiple", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOStundenplanRaum.beschreibung", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung = :value")
-@NamedQuery(name="DTOStundenplanRaum.beschreibung.multiple", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="DTOStundenplanRaum.groesse", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse = :value")
-@NamedQuery(name="DTOStundenplanRaum.groesse.multiple", query="SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse IN :value")
-@NamedQuery(name="DTOStundenplanRaum.primaryKeyQuery", query="SELECT e FROM DTOStundenplanRaum e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanRaum.all.migration", query="SELECT e FROM DTOStundenplanRaum e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Stundenplan_ID","Kuerzel","Beschreibung","Groesse"})
-public class DTOStundenplanRaum {
+@NamedQuery(name = "DTOStundenplanRaum.all", query = "SELECT e FROM DTOStundenplanRaum e")
+@NamedQuery(name = "DTOStundenplanRaum.id", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanRaum.id.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanRaum.stundenplan_id", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = :value")
+@NamedQuery(name = "DTOStundenplanRaum.stundenplan_id.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID IN :value")
+@NamedQuery(name = "DTOStundenplanRaum.kuerzel", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOStundenplanRaum.kuerzel.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOStundenplanRaum.beschreibung", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "DTOStundenplanRaum.beschreibung.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "DTOStundenplanRaum.groesse", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse = :value")
+@NamedQuery(name = "DTOStundenplanRaum.groesse.multiple", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.Groesse IN :value")
+@NamedQuery(name = "DTOStundenplanRaum.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanRaum.all.migration", query = "SELECT e FROM DTOStundenplanRaum e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Stundenplan_ID", "Kuerzel", "Beschreibung", "Groesse"})
+public final class DTOStundenplanRaum {
 
 	/** Die ID identifiziert einen Raumeintrag für einen Stundenplan eindeutig - hat keinen Bezug zur ID der Katalog-Tabelle */
 	@Id
@@ -77,23 +77,23 @@ public class DTOStundenplanRaum {
 	 * @param Groesse   der Wert für das Attribut Groesse
 	 */
 	public DTOStundenplanRaum(final Long ID, final Long Stundenplan_ID, final String Kuerzel, final String Beschreibung, final Integer Groesse) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Stundenplan_ID == null) { 
+		if (Stundenplan_ID == null) {
 			throw new NullPointerException("Stundenplan_ID must not be null");
 		}
 		this.Stundenplan_ID = Stundenplan_ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Beschreibung == null) { 
+		if (Beschreibung == null) {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
-		if (Groesse == null) { 
+		if (Groesse == null) {
 			throw new NullPointerException("Groesse must not be null");
 		}
 		this.Groesse = Groesse;
@@ -101,7 +101,7 @@ public class DTOStundenplanRaum {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

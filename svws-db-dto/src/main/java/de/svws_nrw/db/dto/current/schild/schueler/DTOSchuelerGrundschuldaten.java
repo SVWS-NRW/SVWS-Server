@@ -21,55 +21,55 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerGSDaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerGSDaten")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.all", query="SELECT e FROM DTOSchuelerGrundschuldaten e")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.schueler_id", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.schueler_id.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sprachgebrauch", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sprachgebrauch.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_lesen", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_lesen.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_rechtschreiben", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_rechtschreiben.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sachunterricht", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sachunterricht.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_mathematik", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_mathematik.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_englisch", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_englisch.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_kunsttextil", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_kunsttextil.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_musik", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_musik.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sport", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_sport.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_religion", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.note_religion.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_sprache", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_sprache.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_einfach", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_einfach.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.anrede_klassenlehrer", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.anrede_klassenlehrer.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.nachname_klassenlehrer", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.nachname_klassenlehrer.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.gs_klasse", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.gs_klasse.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.bemerkungen", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.bemerkungen.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.geschwisterkind", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.geschwisterkind.multiple", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.primaryKeyQuery", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="DTOSchuelerGrundschuldaten.all.migration", query="SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","Note_Sprachgebrauch","Note_Lesen","Note_Rechtschreiben","Note_Sachunterricht","Note_Mathematik","Note_Englisch","Note_KunstTextil","Note_Musik","Note_Sport","Note_Religion","Durchschnittsnote_Sprache","Durchschnittsnote_Einfach","Durchschnittsnote_Gewichtet","Anrede_Klassenlehrer","Nachname_Klassenlehrer","GS_Klasse","Bemerkungen","Geschwisterkind"})
-public class DTOSchuelerGrundschuldaten {
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.all", query = "SELECT e FROM DTOSchuelerGrundschuldaten e")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.schueler_id", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sprachgebrauch", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sprachgebrauch.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_lesen", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_lesen.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_rechtschreiben", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_rechtschreiben.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sachunterricht", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sachunterricht.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_mathematik", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_mathematik.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_englisch", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_englisch.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_kunsttextil", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_kunsttextil.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_musik", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_musik.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sport", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_sport.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_religion", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.note_religion.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_sprache", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_sprache.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_einfach", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_einfach.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.anrede_klassenlehrer", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.anrede_klassenlehrer.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.nachname_klassenlehrer", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.nachname_klassenlehrer.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.gs_klasse", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.gs_klasse.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.bemerkungen", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.bemerkungen.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.all.migration", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "Note_Sprachgebrauch", "Note_Lesen", "Note_Rechtschreiben", "Note_Sachunterricht", "Note_Mathematik", "Note_Englisch", "Note_KunstTextil", "Note_Musik", "Note_Sport", "Note_Religion", "Durchschnittsnote_Sprache", "Durchschnittsnote_Einfach", "Durchschnittsnote_Gewichtet", "Anrede_Klassenlehrer", "Nachname_Klassenlehrer", "GS_Klasse", "Bemerkungen", "Geschwisterkind"})
+public final class DTOSchuelerGrundschuldaten {
 
 	/** SchülerID zum GS-Daten-Eintrag */
 	@Id
@@ -165,9 +165,9 @@ public class DTOSchuelerGrundschuldaten {
 	/** Angabe Geschwisterkind Ja Nein  zum GS-Daten-Eintrag */
 	@Column(name = "Geschwisterkind")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Geschwisterkind;
 
 	/**
@@ -182,7 +182,7 @@ public class DTOSchuelerGrundschuldaten {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerGrundschuldaten(final Long Schueler_ID) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -190,7 +190,7 @@ public class DTOSchuelerGrundschuldaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Vermerkart.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Vermerkart")
-@NamedQuery(name="DTOVermerkArt.all", query="SELECT e FROM DTOVermerkArt e")
-@NamedQuery(name="DTOVermerkArt.id", query="SELECT e FROM DTOVermerkArt e WHERE e.ID = :value")
-@NamedQuery(name="DTOVermerkArt.id.multiple", query="SELECT e FROM DTOVermerkArt e WHERE e.ID IN :value")
-@NamedQuery(name="DTOVermerkArt.bezeichnung", query="SELECT e FROM DTOVermerkArt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOVermerkArt.bezeichnung.multiple", query="SELECT e FROM DTOVermerkArt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOVermerkArt.sortierung", query="SELECT e FROM DTOVermerkArt e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOVermerkArt.sortierung.multiple", query="SELECT e FROM DTOVermerkArt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOVermerkArt.sichtbar", query="SELECT e FROM DTOVermerkArt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOVermerkArt.sichtbar.multiple", query="SELECT e FROM DTOVermerkArt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOVermerkArt.aenderbar", query="SELECT e FROM DTOVermerkArt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOVermerkArt.aenderbar.multiple", query="SELECT e FROM DTOVermerkArt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOVermerkArt.primaryKeyQuery", query="SELECT e FROM DTOVermerkArt e WHERE e.ID = ?1")
-@NamedQuery(name="DTOVermerkArt.all.migration", query="SELECT e FROM DTOVermerkArt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar"})
-public class DTOVermerkArt {
+@NamedQuery(name = "DTOVermerkArt.all", query = "SELECT e FROM DTOVermerkArt e")
+@NamedQuery(name = "DTOVermerkArt.id", query = "SELECT e FROM DTOVermerkArt e WHERE e.ID = :value")
+@NamedQuery(name = "DTOVermerkArt.id.multiple", query = "SELECT e FROM DTOVermerkArt e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOVermerkArt.bezeichnung", query = "SELECT e FROM DTOVermerkArt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOVermerkArt.bezeichnung.multiple", query = "SELECT e FROM DTOVermerkArt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOVermerkArt.sortierung", query = "SELECT e FROM DTOVermerkArt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOVermerkArt.sortierung.multiple", query = "SELECT e FROM DTOVermerkArt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOVermerkArt.sichtbar", query = "SELECT e FROM DTOVermerkArt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOVermerkArt.sichtbar.multiple", query = "SELECT e FROM DTOVermerkArt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOVermerkArt.aenderbar", query = "SELECT e FROM DTOVermerkArt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOVermerkArt.aenderbar.multiple", query = "SELECT e FROM DTOVermerkArt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOVermerkArt.primaryKeyQuery", query = "SELECT e FROM DTOVermerkArt e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOVermerkArt.all.migration", query = "SELECT e FROM DTOVermerkArt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOVermerkArt {
 
 	/** ID der Vermerkart */
 	@Id
@@ -62,17 +62,17 @@ public class DTOVermerkArt {
 	/** Sichbarkeit der Vermerkart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Vermerkart */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOVermerkArt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOVermerkArt(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -100,7 +100,7 @@ public class DTOVermerkArt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerFunktionen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerFunktionen")
-@NamedQuery(name="DTOLehrerFunktion.all", query="SELECT e FROM DTOLehrerFunktion e")
-@NamedQuery(name="DTOLehrerFunktion.id", query="SELECT e FROM DTOLehrerFunktion e WHERE e.ID = :value")
-@NamedQuery(name="DTOLehrerFunktion.id.multiple", query="SELECT e FROM DTOLehrerFunktion e WHERE e.ID IN :value")
-@NamedQuery(name="DTOLehrerFunktion.abschnitt_id", query="SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOLehrerFunktion.abschnitt_id.multiple", query="SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOLehrerFunktion.funktion_id", query="SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID = :value")
-@NamedQuery(name="DTOLehrerFunktion.funktion_id.multiple", query="SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID IN :value")
-@NamedQuery(name="DTOLehrerFunktion.primaryKeyQuery", query="SELECT e FROM DTOLehrerFunktion e WHERE e.ID = ?1")
-@NamedQuery(name="DTOLehrerFunktion.all.migration", query="SELECT e FROM DTOLehrerFunktion e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Funktion_ID"})
-public class DTOLehrerFunktion {
+@NamedQuery(name = "DTOLehrerFunktion.all", query = "SELECT e FROM DTOLehrerFunktion e")
+@NamedQuery(name = "DTOLehrerFunktion.id", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID = :value")
+@NamedQuery(name = "DTOLehrerFunktion.id.multiple", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOLehrerFunktion.abschnitt_id", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOLehrerFunktion.abschnitt_id.multiple", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOLehrerFunktion.funktion_id", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID = :value")
+@NamedQuery(name = "DTOLehrerFunktion.funktion_id.multiple", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.Funktion_ID IN :value")
+@NamedQuery(name = "DTOLehrerFunktion.primaryKeyQuery", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerFunktion.all.migration", query = "SELECT e FROM DTOLehrerFunktion e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "Funktion_ID"})
+public final class DTOLehrerFunktion {
 
 	/** ID für den Eintrag für die schulinterne Funktion eines Lehrers */
 	@Id
@@ -61,15 +61,15 @@ public class DTOLehrerFunktion {
 	 * @param Funktion_ID   der Wert für das Attribut Funktion_ID
 	 */
 	public DTOLehrerFunktion(final Long ID, final Long Abschnitt_ID, final Long Funktion_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Funktion_ID == null) { 
+		if (Funktion_ID == null) {
 			throw new NullPointerException("Funktion_ID must not be null");
 		}
 		this.Funktion_ID = Funktion_ID;
@@ -77,7 +77,7 @@ public class DTOLehrerFunktion {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

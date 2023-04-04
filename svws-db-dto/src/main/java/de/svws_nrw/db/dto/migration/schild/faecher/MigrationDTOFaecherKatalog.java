@@ -21,49 +21,49 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle FachKatalog.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "FachKatalog")
-@NamedQuery(name="MigrationDTOFaecherKatalog.all", query="SELECT e FROM MigrationDTOFaecherKatalog e")
-@NamedQuery(name="MigrationDTOFaecherKatalog.id", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.id.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.kuerzelasd", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.kuerzelasd.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.bezeichnung", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.bezeichnung.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.kuerzel", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.kuerzel.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.aufgabenfeld", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.aufgabenfeld.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.fachgruppe", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.fachgruppe.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.jahrgangab", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.jahrgangab.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istfremdsprache", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istfremdsprache.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.isthkfs", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.isthkfs.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istausregufach", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istausregufach.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istersatzpflichtfs", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istersatzpflichtfs.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istkonfkoop", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.istkonfkoop.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.nursii", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.nursii.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.exportasd", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.exportasd.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.gueltigvon", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.gueltigvon.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.gueltigbis", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.gueltigbis.multiple", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalog.primaryKeyQuery", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOFaecherKatalog.all.migration", query="SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","KuerzelASD","Bezeichnung","Kuerzel","Aufgabenfeld","Fachgruppe","JahrgangAb","IstFremdsprache","IstHKFS","IstAusRegUFach","IstErsatzPflichtFS","IstKonfKoop","NurSII","ExportASD","gueltigVon","gueltigBis"})
-public class MigrationDTOFaecherKatalog {
+@NamedQuery(name = "MigrationDTOFaecherKatalog.all", query = "SELECT e FROM MigrationDTOFaecherKatalog e")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.id", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.id.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzelasd", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzelasd.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.KuerzelASD IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.bezeichnung", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzel", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.aufgabenfeld", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.aufgabenfeld.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Aufgabenfeld IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.fachgruppe", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.fachgruppe.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.Fachgruppe IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.jahrgangab", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.jahrgangab.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.JahrgangAb IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istfremdsprache", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istfremdsprache.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstFremdsprache IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.isthkfs", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.isthkfs.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstHKFS IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istausregufach", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istausregufach.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstAusRegUFach IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istersatzpflichtfs", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istersatzpflichtfs.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstErsatzPflichtFS IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istkonfkoop", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.istkonfkoop.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.IstKonfKoop IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.nursii", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.nursii.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.NurSII IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.exportasd", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.exportasd.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ExportASD IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigvon", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.all.migration", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "KuerzelASD", "Bezeichnung", "Kuerzel", "Aufgabenfeld", "Fachgruppe", "JahrgangAb", "IstFremdsprache", "IstHKFS", "IstAusRegUFach", "IstErsatzPflichtFS", "IstKonfKoop", "NurSII", "ExportASD", "gueltigVon", "gueltigBis"})
+public final class MigrationDTOFaecherKatalog {
 
 	/** ID des Faches */
 	@Id
@@ -104,57 +104,57 @@ public class MigrationDTOFaecherKatalog {
 	/** Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
 	@Column(name = "IstFremdsprache")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstFremdsprache;
 
 	/** Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
 	@Column(name = "IstHKFS")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstHKFS;
 
 	/** Gibt an, ob das Fach außerhalb des regulären Fachunterichts unterrichtet wird */
 	@Column(name = "IstAusRegUFach")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstAusRegUFach;
 
 	/** Gibt an, ob es sich bei dem Fach um einen Ersatz für eine Pflichtfremdsprache handelt (siehe auch istHKFS) */
 	@Column(name = "IstErsatzPflichtFS")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstErsatzPflichtFS;
 
 	/** Gibt an, ob das Religionsfach konfessionell kooperativ unterrichtet wird oder nicht - Teil des Kürzels für die amtliche Schulstatistik */
 	@Column(name = "IstKonfKoop")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstKonfKoop;
 
 	/** Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird */
 	@Column(name = "NurSII")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean NurSII;
 
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht */
 	@Column(name = "ExportASD")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean ExportASD;
 
 	/** Gibt die Gültigkeit ab welchem Schuljahr an */
@@ -189,47 +189,47 @@ public class MigrationDTOFaecherKatalog {
 	 * @param ExportASD   der Wert für das Attribut ExportASD
 	 */
 	public MigrationDTOFaecherKatalog(final Long ID, final String KuerzelASD, final String Bezeichnung, final String Kuerzel, final Boolean IstFremdsprache, final Boolean IstHKFS, final Boolean IstAusRegUFach, final Boolean IstErsatzPflichtFS, final Boolean IstKonfKoop, final Boolean NurSII, final Boolean ExportASD) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (KuerzelASD == null) { 
+		if (KuerzelASD == null) {
 			throw new NullPointerException("KuerzelASD must not be null");
 		}
 		this.KuerzelASD = KuerzelASD;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (IstFremdsprache == null) { 
+		if (IstFremdsprache == null) {
 			throw new NullPointerException("IstFremdsprache must not be null");
 		}
 		this.IstFremdsprache = IstFremdsprache;
-		if (IstHKFS == null) { 
+		if (IstHKFS == null) {
 			throw new NullPointerException("IstHKFS must not be null");
 		}
 		this.IstHKFS = IstHKFS;
-		if (IstAusRegUFach == null) { 
+		if (IstAusRegUFach == null) {
 			throw new NullPointerException("IstAusRegUFach must not be null");
 		}
 		this.IstAusRegUFach = IstAusRegUFach;
-		if (IstErsatzPflichtFS == null) { 
+		if (IstErsatzPflichtFS == null) {
 			throw new NullPointerException("IstErsatzPflichtFS must not be null");
 		}
 		this.IstErsatzPflichtFS = IstErsatzPflichtFS;
-		if (IstKonfKoop == null) { 
+		if (IstKonfKoop == null) {
 			throw new NullPointerException("IstKonfKoop must not be null");
 		}
 		this.IstKonfKoop = IstKonfKoop;
-		if (NurSII == null) { 
+		if (NurSII == null) {
 			throw new NullPointerException("NurSII must not be null");
 		}
 		this.NurSII = NurSII;
-		if (ExportASD == null) { 
+		if (ExportASD == null) {
 			throw new NullPointerException("ExportASD must not be null");
 		}
 		this.ExportASD = ExportASD;
@@ -237,7 +237,7 @@ public class MigrationDTOFaecherKatalog {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

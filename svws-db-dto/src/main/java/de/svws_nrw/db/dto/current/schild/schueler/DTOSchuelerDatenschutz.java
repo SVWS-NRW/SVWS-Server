@@ -25,26 +25,26 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerDatenschutz.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOSchuelerDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerDatenschutz")
-@NamedQuery(name="DTOSchuelerDatenschutz.all", query="SELECT e FROM DTOSchuelerDatenschutz e")
-@NamedQuery(name="DTOSchuelerDatenschutz.schueler_id", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.schueler_id.multiple", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.datenschutz_id", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.datenschutz_id.multiple", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.status", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Status = :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.status.multiple", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Status IN :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.abgefragt", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.abgefragt.multiple", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name="DTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
-@NamedQuery(name="DTOSchuelerDatenschutz.all.migration", query="SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","Datenschutz_ID","Status","Abgefragt"})
-public class DTOSchuelerDatenschutz {
+@NamedQuery(name = "DTOSchuelerDatenschutz.all", query = "SELECT e FROM DTOSchuelerDatenschutz e")
+@NamedQuery(name = "DTOSchuelerDatenschutz.schueler_id", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.datenschutz_id", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.datenschutz_id.multiple", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.status", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Status = :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.status.multiple", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Status IN :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.abgefragt", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.abgefragt.multiple", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
+@NamedQuery(name = "DTOSchuelerDatenschutz.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
+@NamedQuery(name = "DTOSchuelerDatenschutz.all.migration", query = "SELECT e FROM DTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "Datenschutz_ID", "Status", "Abgefragt"})
+public final class DTOSchuelerDatenschutz {
 
 	/** Fremdschlüssel auf Tabelle Schueler */
 	@Id
@@ -61,17 +61,17 @@ public class DTOSchuelerDatenschutz {
 	/** Gibt an ob eine Zustimmung zum Merkmal vorliegt. */
 	@Column(name = "Status")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Status;
 
 	/** Status der Abfrage Datenschutz-Eintrags (true/false) */
 	@Column(name = "Abgefragt")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean Abgefragt;
 
 	/**
@@ -89,19 +89,19 @@ public class DTOSchuelerDatenschutz {
 	 * @param Abgefragt   der Wert für das Attribut Abgefragt
 	 */
 	public DTOSchuelerDatenschutz(final Long Schueler_ID, final Long Datenschutz_ID, final Boolean Status, final Boolean Abgefragt) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Datenschutz_ID == null) { 
+		if (Datenschutz_ID == null) {
 			throw new NullPointerException("Datenschutz_ID must not be null");
 		}
 		this.Datenschutz_ID = Datenschutz_ID;
-		if (Status == null) { 
+		if (Status == null) {
 			throw new NullPointerException("Status must not be null");
 		}
 		this.Status = Status;
-		if (Abgefragt == null) { 
+		if (Abgefragt == null) {
 			throw new NullPointerException("Abgefragt must not be null");
 		}
 		this.Abgefragt = Abgefragt;
@@ -109,7 +109,7 @@ public class DTOSchuelerDatenschutz {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

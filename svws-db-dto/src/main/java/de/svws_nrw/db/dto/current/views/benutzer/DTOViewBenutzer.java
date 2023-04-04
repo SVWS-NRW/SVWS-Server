@@ -21,26 +21,26 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbank-View V_Benutzer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "V_Benutzer")
-@NamedQuery(name="DTOViewBenutzer.all", query="SELECT e FROM DTOViewBenutzer e")
-@NamedQuery(name="DTOViewBenutzer.id", query="SELECT e FROM DTOViewBenutzer e WHERE e.ID = :value")
-@NamedQuery(name="DTOViewBenutzer.id.multiple", query="SELECT e FROM DTOViewBenutzer e WHERE e.ID IN :value")
-@NamedQuery(name="DTOViewBenutzer.anzeigename", query="SELECT e FROM DTOViewBenutzer e WHERE e.AnzeigeName = :value")
-@NamedQuery(name="DTOViewBenutzer.anzeigename.multiple", query="SELECT e FROM DTOViewBenutzer e WHERE e.AnzeigeName IN :value")
-@NamedQuery(name="DTOViewBenutzer.benutzername", query="SELECT e FROM DTOViewBenutzer e WHERE e.Benutzername = :value")
-@NamedQuery(name="DTOViewBenutzer.benutzername.multiple", query="SELECT e FROM DTOViewBenutzer e WHERE e.Benutzername IN :value")
-@NamedQuery(name="DTOViewBenutzer.passwordhash", query="SELECT e FROM DTOViewBenutzer e WHERE e.PasswordHash = :value")
-@NamedQuery(name="DTOViewBenutzer.passwordhash.multiple", query="SELECT e FROM DTOViewBenutzer e WHERE e.PasswordHash IN :value")
-@NamedQuery(name="DTOViewBenutzer.istadmin", query="SELECT e FROM DTOViewBenutzer e WHERE e.IstAdmin = :value")
-@NamedQuery(name="DTOViewBenutzer.istadmin.multiple", query="SELECT e FROM DTOViewBenutzer e WHERE e.IstAdmin IN :value")
-@NamedQuery(name="DTOViewBenutzer.primaryKeyQuery", query="SELECT e FROM DTOViewBenutzer e WHERE e.ID = ?1")
-@JsonPropertyOrder({"ID","AnzeigeName","Benutzername","PasswordHash","IstAdmin"})
-public class DTOViewBenutzer {
+@NamedQuery(name = "DTOViewBenutzer.all", query = "SELECT e FROM DTOViewBenutzer e")
+@NamedQuery(name = "DTOViewBenutzer.id", query = "SELECT e FROM DTOViewBenutzer e WHERE e.ID = :value")
+@NamedQuery(name = "DTOViewBenutzer.id.multiple", query = "SELECT e FROM DTOViewBenutzer e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOViewBenutzer.anzeigename", query = "SELECT e FROM DTOViewBenutzer e WHERE e.AnzeigeName = :value")
+@NamedQuery(name = "DTOViewBenutzer.anzeigename.multiple", query = "SELECT e FROM DTOViewBenutzer e WHERE e.AnzeigeName IN :value")
+@NamedQuery(name = "DTOViewBenutzer.benutzername", query = "SELECT e FROM DTOViewBenutzer e WHERE e.Benutzername = :value")
+@NamedQuery(name = "DTOViewBenutzer.benutzername.multiple", query = "SELECT e FROM DTOViewBenutzer e WHERE e.Benutzername IN :value")
+@NamedQuery(name = "DTOViewBenutzer.passwordhash", query = "SELECT e FROM DTOViewBenutzer e WHERE e.PasswordHash = :value")
+@NamedQuery(name = "DTOViewBenutzer.passwordhash.multiple", query = "SELECT e FROM DTOViewBenutzer e WHERE e.PasswordHash IN :value")
+@NamedQuery(name = "DTOViewBenutzer.istadmin", query = "SELECT e FROM DTOViewBenutzer e WHERE e.IstAdmin = :value")
+@NamedQuery(name = "DTOViewBenutzer.istadmin.multiple", query = "SELECT e FROM DTOViewBenutzer e WHERE e.IstAdmin IN :value")
+@NamedQuery(name = "DTOViewBenutzer.primaryKeyQuery", query = "SELECT e FROM DTOViewBenutzer e WHERE e.ID = ?1")
+@JsonPropertyOrder({"ID", "AnzeigeName", "Benutzername", "PasswordHash", "IstAdmin"})
+public final class DTOViewBenutzer {
 
 	/** Die eindeutige ID des Benutzers */
 	@Id
@@ -66,9 +66,9 @@ public class DTOViewBenutzer {
 	/** Gibt an, ob es sich um einen administrativen Benutzer handelt oder nicht */
 	@Column(name = "IstAdmin")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstAdmin;
 
 	/**
@@ -78,7 +78,7 @@ public class DTOViewBenutzer {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

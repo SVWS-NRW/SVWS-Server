@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Haltestelle.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Haltestelle")
-@NamedQuery(name="MigrationDTOHaltestellen.all", query="SELECT e FROM MigrationDTOHaltestellen e")
-@NamedQuery(name="MigrationDTOHaltestellen.id", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.id.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.bezeichnung", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.bezeichnung.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.sortierung", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.sortierung.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.sichtbar", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.sichtbar.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.aenderbar", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.aenderbar.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.entfernungschule", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.EntfernungSchule = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.entfernungschule.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.EntfernungSchule IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.schulnreigner", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOHaltestellen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOHaltestellen.primaryKeyQuery", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOHaltestellen.all.migration", query="SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","EntfernungSchule","SchulnrEigner"})
-public class MigrationDTOHaltestellen {
+@NamedQuery(name = "MigrationDTOHaltestellen.all", query = "SELECT e FROM MigrationDTOHaltestellen e")
+@NamedQuery(name = "MigrationDTOHaltestellen.id", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.id.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.bezeichnung", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.sortierung", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.sortierung.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.sichtbar", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.sichtbar.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.aenderbar", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.aenderbar.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.entfernungschule", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.EntfernungSchule = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.entfernungschule.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.EntfernungSchule IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.schulnreigner", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOHaltestellen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOHaltestellen.all.migration", query = "SELECT e FROM MigrationDTOHaltestellen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "EntfernungSchule", "SchulnrEigner"})
+public final class MigrationDTOHaltestellen {
 
 	/** ID der Haltestelle */
 	@Id
@@ -66,17 +66,17 @@ public class MigrationDTOHaltestellen {
 	/** Sichbarkeit der Haltestelle */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Haltestelle */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Enterfung zur Schule von der Haltestelle */
@@ -102,11 +102,11 @@ public class MigrationDTOHaltestellen {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOHaltestellen(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -114,7 +114,7 @@ public class MigrationDTOHaltestellen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

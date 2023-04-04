@@ -26,27 +26,27 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung")
-@NamedQuery(name="DTOGostBlockung.all", query="SELECT e FROM DTOGostBlockung e")
-@NamedQuery(name="DTOGostBlockung.id", query="SELECT e FROM DTOGostBlockung e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostBlockung.id.multiple", query="SELECT e FROM DTOGostBlockung e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostBlockung.name", query="SELECT e FROM DTOGostBlockung e WHERE e.Name = :value")
-@NamedQuery(name="DTOGostBlockung.name.multiple", query="SELECT e FROM DTOGostBlockung e WHERE e.Name IN :value")
-@NamedQuery(name="DTOGostBlockung.abi_jahrgang", query="SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name="DTOGostBlockung.abi_jahrgang.multiple", query="SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name="DTOGostBlockung.halbjahr", query="SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr = :value")
-@NamedQuery(name="DTOGostBlockung.halbjahr.multiple", query="SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr IN :value")
-@NamedQuery(name="DTOGostBlockung.istaktiv", query="SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv = :value")
-@NamedQuery(name="DTOGostBlockung.istaktiv.multiple", query="SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv IN :value")
-@NamedQuery(name="DTOGostBlockung.primaryKeyQuery", query="SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostBlockung.all.migration", query="SELECT e FROM DTOGostBlockung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Name","Abi_Jahrgang","Halbjahr","IstAktiv"})
-public class DTOGostBlockung {
+@NamedQuery(name = "DTOGostBlockung.all", query = "SELECT e FROM DTOGostBlockung e")
+@NamedQuery(name = "DTOGostBlockung.id", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostBlockung.id.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostBlockung.name", query = "SELECT e FROM DTOGostBlockung e WHERE e.Name = :value")
+@NamedQuery(name = "DTOGostBlockung.name.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Name IN :value")
+@NamedQuery(name = "DTOGostBlockung.abi_jahrgang", query = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = :value")
+@NamedQuery(name = "DTOGostBlockung.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang IN :value")
+@NamedQuery(name = "DTOGostBlockung.halbjahr", query = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr = :value")
+@NamedQuery(name = "DTOGostBlockung.halbjahr.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.Halbjahr IN :value")
+@NamedQuery(name = "DTOGostBlockung.istaktiv", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv = :value")
+@NamedQuery(name = "DTOGostBlockung.istaktiv.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv IN :value")
+@NamedQuery(name = "DTOGostBlockung.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostBlockung.all.migration", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Name", "Abi_Jahrgang", "Halbjahr", "IstAktiv"})
+public final class DTOGostBlockung {
 
 	/** ID der Blockung (generiert) */
 	@Id
@@ -67,17 +67,17 @@ public class DTOGostBlockung {
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
 	@JsonProperty
-	@Convert(converter=GOStHalbjahrConverter.class)
-	@JsonSerialize(using=GOStHalbjahrConverterSerializer.class)
-	@JsonDeserialize(using=GOStHalbjahrConverterDeserializer.class)
+	@Convert(converter = GOStHalbjahrConverter.class)
+	@JsonSerialize(using = GOStHalbjahrConverterSerializer.class)
+	@JsonDeserialize(using = GOStHalbjahrConverterDeserializer.class)
 	public GostHalbjahr Halbjahr;
 
 	/** Gibt an, ob die Blockung aktiviert wurde oder nicht: 1 - true, 0 - false.Bei einer aktivierten Blockung wurde die Vorlage (siehe Vorlage_ID) bereits in die Leistungsdaten übertragen. */
 	@Column(name = "IstAktiv")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstAktiv;
 
 	/**
@@ -96,23 +96,23 @@ public class DTOGostBlockung {
 	 * @param IstAktiv   der Wert für das Attribut IstAktiv
 	 */
 	public DTOGostBlockung(final Long ID, final String Name, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Boolean IstAktiv) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Name == null) { 
+		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
-		if (Abi_Jahrgang == null) { 
+		if (Abi_Jahrgang == null) {
 			throw new NullPointerException("Abi_Jahrgang must not be null");
 		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Halbjahr == null) { 
+		if (Halbjahr == null) {
 			throw new NullPointerException("Halbjahr must not be null");
 		}
 		this.Halbjahr = Halbjahr;
-		if (IstAktiv == null) { 
+		if (IstAktiv == null) {
 			throw new NullPointerException("IstAktiv must not be null");
 		}
 		this.IstAktiv = IstAktiv;
@@ -120,7 +120,7 @@ public class DTOGostBlockung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -23,23 +23,23 @@ import de.svws_nrw.csv.converter.current.kursblockung.GostKursblockungRegelTypCo
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung_Regeln.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Regeln")
-@NamedQuery(name="DTOGostBlockungRegel.all", query="SELECT e FROM DTOGostBlockungRegel e")
-@NamedQuery(name="DTOGostBlockungRegel.id", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostBlockungRegel.id.multiple", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostBlockungRegel.blockung_id", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = :value")
-@NamedQuery(name="DTOGostBlockungRegel.blockung_id.multiple", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name="DTOGostBlockungRegel.typ", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ = :value")
-@NamedQuery(name="DTOGostBlockungRegel.typ.multiple", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ IN :value")
-@NamedQuery(name="DTOGostBlockungRegel.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostBlockungRegel.all.migration", query="SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","Typ"})
-public class DTOGostBlockungRegel {
+@NamedQuery(name = "DTOGostBlockungRegel.all", query = "SELECT e FROM DTOGostBlockungRegel e")
+@NamedQuery(name = "DTOGostBlockungRegel.id", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostBlockungRegel.id.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostBlockungRegel.blockung_id", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = :value")
+@NamedQuery(name = "DTOGostBlockungRegel.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungRegel.typ", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ = :value")
+@NamedQuery(name = "DTOGostBlockungRegel.typ.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ IN :value")
+@NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostBlockungRegel.all.migration", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Blockung_ID", "Typ"})
+public final class DTOGostBlockungRegel {
 
 	/** ID der Regel (generiert) */
 	@Id
@@ -55,9 +55,9 @@ public class DTOGostBlockungRegel {
 	/** Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp) */
 	@Column(name = "Typ")
 	@JsonProperty
-	@Convert(converter=GostKursblockungRegelTypConverter.class)
-	@JsonSerialize(using=GostKursblockungRegelTypConverterSerializer.class)
-	@JsonDeserialize(using=GostKursblockungRegelTypConverterDeserializer.class)
+	@Convert(converter = GostKursblockungRegelTypConverter.class)
+	@JsonSerialize(using = GostKursblockungRegelTypConverterSerializer.class)
+	@JsonDeserialize(using = GostKursblockungRegelTypConverterDeserializer.class)
 	public GostKursblockungRegelTyp Typ;
 
 	/**
@@ -74,15 +74,15 @@ public class DTOGostBlockungRegel {
 	 * @param Typ   der Wert für das Attribut Typ
 	 */
 	public DTOGostBlockungRegel(final Long ID, final Long Blockung_ID, final GostKursblockungRegelTyp Typ) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Blockung_ID == null) { 
+		if (Blockung_ID == null) {
 			throw new NullPointerException("Blockung_ID must not be null");
 		}
 		this.Blockung_ID = Blockung_ID;
-		if (Typ == null) { 
+		if (Typ == null) {
 			throw new NullPointerException("Typ must not be null");
 		}
 		this.Typ = Typ;
@@ -90,7 +90,7 @@ public class DTOGostBlockungRegel {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,25 +21,25 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerListe.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerListe")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.all", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.id", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.id.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.bezeichnung", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.bezeichnung.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.erzeuger", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.erzeuger.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.privat", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat = :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.privat.multiple", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat IN :value")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.primaryKeyQuery", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerIndividuelleGruppe.all.migration", query="SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Erzeuger","Privat"})
-public class DTOSchuelerIndividuelleGruppe {
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.all", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.id", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.id.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.bezeichnung", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.bezeichnung.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.erzeuger", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.erzeuger.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Erzeuger IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.privat", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat = :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.privat.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat IN :value")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.all.migration", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Erzeuger", "Privat"})
+public final class DTOSchuelerIndividuelleGruppe {
 
 	/** ID der individuellen Schülerliste */
 	@Id
@@ -60,9 +60,9 @@ public class DTOSchuelerIndividuelleGruppe {
 	/** Schülerliste Privat oder Öffentlich */
 	@Column(name = "Privat")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Privat;
 
 	/**
@@ -78,11 +78,11 @@ public class DTOSchuelerIndividuelleGruppe {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOSchuelerIndividuelleGruppe(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -90,7 +90,7 @@ public class DTOSchuelerIndividuelleGruppe {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

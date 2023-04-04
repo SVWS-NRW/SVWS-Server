@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavSyncTokenSchueler.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavSyncTokenSchueler")
-@NamedQuery(name="DTODavSyncTokenSchueler.all", query="SELECT e FROM DTODavSyncTokenSchueler e")
-@NamedQuery(name="DTODavSyncTokenSchueler.id", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID = :value")
-@NamedQuery(name="DTODavSyncTokenSchueler.id.multiple", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IN :value")
-@NamedQuery(name="DTODavSyncTokenSchueler.synctoken", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken = :value")
-@NamedQuery(name="DTODavSyncTokenSchueler.synctoken.multiple", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken IN :value")
-@NamedQuery(name="DTODavSyncTokenSchueler.primaryKeyQuery", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID = ?1")
-@NamedQuery(name="DTODavSyncTokenSchueler.all.migration", query="SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SyncToken"})
-public class DTODavSyncTokenSchueler {
+@NamedQuery(name = "DTODavSyncTokenSchueler.all", query = "SELECT e FROM DTODavSyncTokenSchueler e")
+@NamedQuery(name = "DTODavSyncTokenSchueler.id", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID = :value")
+@NamedQuery(name = "DTODavSyncTokenSchueler.id.multiple", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IN :value")
+@NamedQuery(name = "DTODavSyncTokenSchueler.synctoken", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken = :value")
+@NamedQuery(name = "DTODavSyncTokenSchueler.synctoken.multiple", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken IN :value")
+@NamedQuery(name = "DTODavSyncTokenSchueler.primaryKeyQuery", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavSyncTokenSchueler.all.migration", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SyncToken"})
+public final class DTODavSyncTokenSchueler {
 
 	/** ID des Schülers */
 	@Id
@@ -53,11 +53,11 @@ public class DTODavSyncTokenSchueler {
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
 	public DTODavSyncTokenSchueler(final Long ID, final String SyncToken) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SyncToken == null) { 
+		if (SyncToken == null) {
 			throw new NullPointerException("SyncToken must not be null");
 		}
 		this.SyncToken = SyncToken;
@@ -65,7 +65,7 @@ public class DTODavSyncTokenSchueler {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

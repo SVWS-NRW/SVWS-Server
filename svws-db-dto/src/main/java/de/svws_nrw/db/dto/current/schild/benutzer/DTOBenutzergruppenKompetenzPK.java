@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle BenutzergruppenKompetenzen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOBenutzergruppenKompetenzPK implements Serializable {
+public final class DTOBenutzergruppenKompetenzPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOBenutzergruppenKompetenzPK implements Serializable {
 	 * @param Kompetenz_ID   der Wert für das Attribut Kompetenz_ID
 	 */
 	public DTOBenutzergruppenKompetenzPK(final Long Gruppe_ID, final Long Kompetenz_ID) {
-		if (Gruppe_ID == null) { 
+		if (Gruppe_ID == null) {
 			throw new NullPointerException("Gruppe_ID must not be null");
 		}
 		this.Gruppe_ID = Gruppe_ID;
-		if (Kompetenz_ID == null) { 
+		if (Kompetenz_ID == null) {
 			throw new NullPointerException("Kompetenz_ID must not be null");
 		}
 		this.Kompetenz_ID = Kompetenz_ID;
@@ -43,7 +43,7 @@ public class DTOBenutzergruppenKompetenzPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

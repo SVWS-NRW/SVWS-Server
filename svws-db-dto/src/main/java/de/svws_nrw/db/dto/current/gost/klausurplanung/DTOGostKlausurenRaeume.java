@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Raeume.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Raeume")
-@NamedQuery(name="DTOGostKlausurenRaeume.all", query="SELECT e FROM DTOGostKlausurenRaeume e")
-@NamedQuery(name="DTOGostKlausurenRaeume.id", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.id.multiple", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.termin_id", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Termin_ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.termin_id.multiple", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Termin_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.katalog_raum_id", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID = :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.katalog_raum_id.multiple", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.bemerkungen", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="DTOGostKlausurenRaeume.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostKlausurenRaeume.all.migration", query="SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Termin_ID","Katalog_Raum_ID","Bemerkungen"})
-public class DTOGostKlausurenRaeume {
+@NamedQuery(name = "DTOGostKlausurenRaeume.all", query = "SELECT e FROM DTOGostKlausurenRaeume e")
+@NamedQuery(name = "DTOGostKlausurenRaeume.id", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.termin_id", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Termin_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Termin_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.katalog_raum_id", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.katalog_raum_id.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Katalog_Raum_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.bemerkungen", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOGostKlausurenRaeume.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenRaeume.all.migration", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Termin_ID", "Katalog_Raum_ID", "Bemerkungen"})
+public final class DTOGostKlausurenRaeume {
 
 	/** ID des Klausurraums (generiert) */
 	@Id
@@ -66,7 +66,7 @@ public class DTOGostKlausurenRaeume {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOGostKlausurenRaeume(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -74,7 +74,7 @@ public class DTOGostKlausurenRaeume {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

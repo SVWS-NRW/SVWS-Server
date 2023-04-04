@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Personengruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Personengruppen")
-@NamedQuery(name="MigrationDTOPersonengruppen.all", query="SELECT e FROM MigrationDTOPersonengruppen e")
-@NamedQuery(name="MigrationDTOPersonengruppen.id", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.id.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.schulnreigner", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.gruppenname", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Gruppenname = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.gruppenname.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Gruppenname IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.zusatzinfo", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Zusatzinfo = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.zusatzinfo.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Zusatzinfo IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sammelemail", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SammelEmail = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sammelemail.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SammelEmail IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.gruppenart", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.GruppenArt = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.gruppenart.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.GruppenArt IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.xmlexport", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.XMLExport = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.xmlexport.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.XMLExport IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sortierung", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sortierung.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sichtbar", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.sichtbar.multiple", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppen.primaryKeyQuery", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOPersonengruppen.all.migration", query="SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Gruppenname","Zusatzinfo","SammelEmail","GruppenArt","XMLExport","Sortierung","Sichtbar"})
-public class MigrationDTOPersonengruppen {
+@NamedQuery(name = "MigrationDTOPersonengruppen.all", query = "SELECT e FROM MigrationDTOPersonengruppen e")
+@NamedQuery(name = "MigrationDTOPersonengruppen.id", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.schulnreigner", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.gruppenname", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Gruppenname = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.gruppenname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Gruppenname IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.zusatzinfo", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Zusatzinfo = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.zusatzinfo.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Zusatzinfo IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sammelemail", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SammelEmail = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sammelemail.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.SammelEmail IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.gruppenart", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.GruppenArt = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.gruppenart.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.GruppenArt IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.xmlexport", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.XMLExport = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.xmlexport.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.XMLExport IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sortierung", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sortierung.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sichtbar", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.sichtbar.multiple", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOPersonengruppen.all.migration", query = "SELECT e FROM MigrationDTOPersonengruppen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Gruppenname", "Zusatzinfo", "SammelEmail", "GruppenArt", "XMLExport", "Sortierung", "Sichtbar"})
+public final class MigrationDTOPersonengruppen {
 
 	/** ID der Personengruppe */
 	@Id
@@ -85,9 +85,9 @@ public class MigrationDTOPersonengruppen {
 	/** Steuert den LogineoXML-Export */
 	@Column(name = "XMLExport")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean XMLExport;
 
 	/** Sortierung der Personengruppe */
@@ -98,9 +98,9 @@ public class MigrationDTOPersonengruppen {
 	/** Sichtbarkeit der Personengruppe */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/**
@@ -117,15 +117,15 @@ public class MigrationDTOPersonengruppen {
 	 * @param Gruppenname   der Wert für das Attribut Gruppenname
 	 */
 	public MigrationDTOPersonengruppen(final Long ID, final Integer SchulnrEigner, final String Gruppenname) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (Gruppenname == null) { 
+		if (Gruppenname == null) {
 			throw new NullPointerException("Gruppenname must not be null");
 		}
 		this.Gruppenname = Gruppenname;
@@ -133,7 +133,7 @@ public class MigrationDTOPersonengruppen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

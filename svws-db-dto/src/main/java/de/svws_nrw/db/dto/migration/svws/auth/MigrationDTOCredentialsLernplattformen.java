@@ -13,35 +13,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle CredentialsLernplattformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "CredentialsLernplattformen")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.all", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.id", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.id.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.lernplattformid", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.LernplattformID = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.lernplattformid.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.LernplattformID IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.benutzername", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Benutzername = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.benutzername.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Benutzername IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.benutzernamepseudonym", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.benutzernamepseudonym.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.initialkennwort", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Initialkennwort = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.initialkennwort.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Initialkennwort IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.pashwordhash", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.PashwordHash = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.pashwordhash.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.PashwordHash IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.rsapublickey", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.rsapublickey.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.rsaprivatekey", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.rsaprivatekey.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.aes", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.AES = :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.aes.multiple", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.AES IN :value")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.primaryKeyQuery", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOCredentialsLernplattformen.all.migration", query="SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","LernplattformID","Benutzername","BenutzernamePseudonym","Initialkennwort","PashwordHash","RSAPublicKey","RSAPrivateKey","AES"})
-public class MigrationDTOCredentialsLernplattformen {
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.all", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.id", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.id.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.lernplattformid", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.LernplattformID = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.lernplattformid.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.LernplattformID IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.benutzername", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Benutzername = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.benutzername.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Benutzername IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.benutzernamepseudonym", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.benutzernamepseudonym.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.BenutzernamePseudonym IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.initialkennwort", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Initialkennwort = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.initialkennwort.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.Initialkennwort IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.pashwordhash", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.PashwordHash = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.pashwordhash.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.PashwordHash IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.rsapublickey", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPublicKey = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.rsapublickey.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPublicKey IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.rsaprivatekey", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPrivateKey = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.rsaprivatekey.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.RSAPrivateKey IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.aes", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.AES = :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.aes.multiple", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.AES IN :value")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOCredentialsLernplattformen.all.migration", query = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "LernplattformID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PashwordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
+public final class MigrationDTOCredentialsLernplattformen {
 
 	/** ID des Datensatzes für die externen Account-Credentials (Lernplattformen) */
 	@Id
@@ -103,15 +103,15 @@ public class MigrationDTOCredentialsLernplattformen {
 	 * @param Benutzername   der Wert für das Attribut Benutzername
 	 */
 	public MigrationDTOCredentialsLernplattformen(final Long ID, final Long LernplattformID, final String Benutzername) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (LernplattformID == null) { 
+		if (LernplattformID == null) {
 			throw new NullPointerException("LernplattformID must not be null");
 		}
 		this.LernplattformID = LernplattformID;
-		if (Benutzername == null) { 
+		if (Benutzername == null) {
 			throw new NullPointerException("Benutzername must not be null");
 		}
 		this.Benutzername = Benutzername;
@@ -119,7 +119,7 @@ public class MigrationDTOCredentialsLernplattformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

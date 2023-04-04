@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Floskelgruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Floskelgruppen")
-@NamedQuery(name="MigrationDTOFloskelgruppen.all", query="SELECT e FROM MigrationDTOFloskelgruppen e")
-@NamedQuery(name="MigrationDTOFloskelgruppen.kuerzel", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.kuerzel.multiple", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.hauptgruppe", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe = :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.hauptgruppe.multiple", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe IN :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.bezeichnung", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.bezeichnung.multiple", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.farbe", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe = :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.farbe.multiple", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe IN :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.schulnreigner", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOFloskelgruppen.primaryKeyQuery", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOFloskelgruppen.all.migration", query="SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL")
-@JsonPropertyOrder({"Kuerzel","Hauptgruppe","Bezeichnung","Farbe","SchulnrEigner"})
-public class MigrationDTOFloskelgruppen {
+@NamedQuery(name = "MigrationDTOFloskelgruppen.all", query = "SELECT e FROM MigrationDTOFloskelgruppen e")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.kuerzel", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.hauptgruppe", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe = :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.hauptgruppe.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Hauptgruppe IN :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.bezeichnung", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.farbe", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe = :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.farbe.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Farbe IN :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.schulnreigner", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOFloskelgruppen.all.migration", query = "SELECT e FROM MigrationDTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL")
+@JsonPropertyOrder({"Kuerzel", "Hauptgruppe", "Bezeichnung", "Farbe", "SchulnrEigner"})
+public final class MigrationDTOFloskelgruppen {
 
 	/** Kürzel der Floskelgruppe */
 	@Id
@@ -75,15 +75,15 @@ public class MigrationDTOFloskelgruppen {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOFloskelgruppen(final String Kuerzel, final String Bezeichnung, final Integer SchulnrEigner) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -91,7 +91,7 @@ public class MigrationDTOFloskelgruppen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

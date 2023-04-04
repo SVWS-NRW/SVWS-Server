@@ -22,42 +22,42 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Fach_Gliederungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOFachgliederungenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Fach_Gliederungen")
-@NamedQuery(name="DTOFachgliederungen.all", query="SELECT e FROM DTOFachgliederungen e")
-@NamedQuery(name="DTOFachgliederungen.fach_id", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOFachgliederungen.fach_id.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOFachgliederungen.gliederung", query="SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung = :value")
-@NamedQuery(name="DTOFachgliederungen.gliederung.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung IN :value")
-@NamedQuery(name="DTOFachgliederungen.faechergruppe", query="SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe = :value")
-@NamedQuery(name="DTOFachgliederungen.faechergruppe.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe IN :value")
-@NamedQuery(name="DTOFachgliederungen.gewichtungab", query="SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB = :value")
-@NamedQuery(name="DTOFachgliederungen.gewichtungab.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB IN :value")
-@NamedQuery(name="DTOFachgliederungen.gewichtungbb", query="SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB = :value")
-@NamedQuery(name="DTOFachgliederungen.gewichtungbb.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB IN :value")
-@NamedQuery(name="DTOFachgliederungen.schriftlichab", query="SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB = :value")
-@NamedQuery(name="DTOFachgliederungen.schriftlichab.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB IN :value")
-@NamedQuery(name="DTOFachgliederungen.schriftlichbb", query="SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB = :value")
-@NamedQuery(name="DTOFachgliederungen.schriftlichbb.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB IN :value")
-@NamedQuery(name="DTOFachgliederungen.gymosfach", query="SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach = :value")
-@NamedQuery(name="DTOFachgliederungen.gymosfach.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach IN :value")
-@NamedQuery(name="DTOFachgliederungen.zeugnisbez", query="SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez = :value")
-@NamedQuery(name="DTOFachgliederungen.zeugnisbez.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez IN :value")
-@NamedQuery(name="DTOFachgliederungen.lernfelder", query="SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder = :value")
-@NamedQuery(name="DTOFachgliederungen.lernfelder.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder IN :value")
-@NamedQuery(name="DTOFachgliederungen.fachklasse_id", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="DTOFachgliederungen.fachklasse_id.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="DTOFachgliederungen.sortierung", query="SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOFachgliederungen.sortierung.multiple", query="SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOFachgliederungen.primaryKeyQuery", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Fachklasse_ID = ?2")
-@NamedQuery(name="DTOFachgliederungen.all.migration", query="SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Fachklasse_ID IS NOT NULL")
-@JsonPropertyOrder({"Fach_ID","Gliederung","Faechergruppe","GewichtungAB","GewichtungBB","SchriftlichAB","SchriftlichBB","GymOSFach","ZeugnisBez","Lernfelder","Fachklasse_ID","Sortierung"})
-public class DTOFachgliederungen {
+@NamedQuery(name = "DTOFachgliederungen.all", query = "SELECT e FROM DTOFachgliederungen e")
+@NamedQuery(name = "DTOFachgliederungen.fach_id", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOFachgliederungen.fach_id.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOFachgliederungen.gliederung", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung = :value")
+@NamedQuery(name = "DTOFachgliederungen.gliederung.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Gliederung IN :value")
+@NamedQuery(name = "DTOFachgliederungen.faechergruppe", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe = :value")
+@NamedQuery(name = "DTOFachgliederungen.faechergruppe.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Faechergruppe IN :value")
+@NamedQuery(name = "DTOFachgliederungen.gewichtungab", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB = :value")
+@NamedQuery(name = "DTOFachgliederungen.gewichtungab.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungAB IN :value")
+@NamedQuery(name = "DTOFachgliederungen.gewichtungbb", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB = :value")
+@NamedQuery(name = "DTOFachgliederungen.gewichtungbb.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GewichtungBB IN :value")
+@NamedQuery(name = "DTOFachgliederungen.schriftlichab", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB = :value")
+@NamedQuery(name = "DTOFachgliederungen.schriftlichab.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichAB IN :value")
+@NamedQuery(name = "DTOFachgliederungen.schriftlichbb", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB = :value")
+@NamedQuery(name = "DTOFachgliederungen.schriftlichbb.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.SchriftlichBB IN :value")
+@NamedQuery(name = "DTOFachgliederungen.gymosfach", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach = :value")
+@NamedQuery(name = "DTOFachgliederungen.gymosfach.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.GymOSFach IN :value")
+@NamedQuery(name = "DTOFachgliederungen.zeugnisbez", query = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez = :value")
+@NamedQuery(name = "DTOFachgliederungen.zeugnisbez.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.ZeugnisBez IN :value")
+@NamedQuery(name = "DTOFachgliederungen.lernfelder", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder = :value")
+@NamedQuery(name = "DTOFachgliederungen.lernfelder.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Lernfelder IN :value")
+@NamedQuery(name = "DTOFachgliederungen.fachklasse_id", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "DTOFachgliederungen.fachklasse_id.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "DTOFachgliederungen.sortierung", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOFachgliederungen.sortierung.multiple", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOFachgliederungen.primaryKeyQuery", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID = ?1 AND e.Fachklasse_ID = ?2")
+@NamedQuery(name = "DTOFachgliederungen.all.migration", query = "SELECT e FROM DTOFachgliederungen e WHERE e.Fach_ID IS NOT NULL AND e.Fachklasse_ID IS NOT NULL")
+@JsonPropertyOrder({"Fach_ID", "Gliederung", "Faechergruppe", "GewichtungAB", "GewichtungBB", "SchriftlichAB", "SchriftlichBB", "GymOSFach", "ZeugnisBez", "Lernfelder", "Fachklasse_ID", "Sortierung"})
+public final class DTOFachgliederungen {
 
 	/** ID für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Id
@@ -88,25 +88,25 @@ public class DTOFachgliederungen {
 	/** Ist schriftliches Fach Allgemeinbildend für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Column(name = "SchriftlichAB")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean SchriftlichAB;
 
 	/** Ist schriftliches Fach Berufsbildend für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Column(name = "SchriftlichBB")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean SchriftlichBB;
 
 	/** Ist Fach der GymOB für die gliederungsbezogenen Einstellungen zum Fach (BK) */
 	@Column(name = "GymOSFach")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean GymOSFach;
 
 	/** Zeugnisbezeihnung für die gliederungsbezogenen Einstellungen zum Fach (BK) */
@@ -144,15 +144,15 @@ public class DTOFachgliederungen {
 	 * @param Fachklasse_ID   der Wert für das Attribut Fachklasse_ID
 	 */
 	public DTOFachgliederungen(final Long Fach_ID, final String Gliederung, final Long Fachklasse_ID) {
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Gliederung == null) { 
+		if (Gliederung == null) {
 			throw new NullPointerException("Gliederung must not be null");
 		}
 		this.Gliederung = Gliederung;
-		if (Fachklasse_ID == null) { 
+		if (Fachklasse_ID == null) {
 			throw new NullPointerException("Fachklasse_ID must not be null");
 		}
 		this.Fachklasse_ID = Fachklasse_ID;
@@ -160,7 +160,7 @@ public class DTOFachgliederungen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

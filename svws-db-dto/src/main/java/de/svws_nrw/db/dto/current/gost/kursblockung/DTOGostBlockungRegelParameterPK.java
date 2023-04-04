@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Gost_Blockung_Regelparameter.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOGostBlockungRegelParameterPK implements Serializable {
+public final class DTOGostBlockungRegelParameterPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOGostBlockungRegelParameterPK implements Serializable {
 	 * @param Nummer   der Wert für das Attribut Nummer
 	 */
 	public DTOGostBlockungRegelParameterPK(final Long Regel_ID, final Integer Nummer) {
-		if (Regel_ID == null) { 
+		if (Regel_ID == null) {
 			throw new NullPointerException("Regel_ID must not be null");
 		}
 		this.Regel_ID = Regel_ID;
-		if (Nummer == null) { 
+		if (Nummer == null) {
 			throw new NullPointerException("Nummer must not be null");
 		}
 		this.Nummer = Nummer;
@@ -43,7 +43,7 @@ public class DTOGostBlockungRegelParameterPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

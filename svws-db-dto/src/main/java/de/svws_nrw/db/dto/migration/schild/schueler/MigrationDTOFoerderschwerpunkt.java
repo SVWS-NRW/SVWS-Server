@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Foerderschwerpunkt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Foerderschwerpunkt")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.all", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.id", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.id.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.bezeichnung", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.bezeichnung.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.statistikkrz", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.StatistikKrz = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.statistikkrz.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.StatistikKrz IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.sortierung", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.sortierung.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.sichtbar", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.sichtbar.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.aenderbar", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.aenderbar.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.schulnreigner", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.schulnreigner.multiple", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.primaryKeyQuery", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOFoerderschwerpunkt.all.migration", query="SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","StatistikKrz","Sortierung","Sichtbar","Aenderbar","SchulnrEigner"})
-public class MigrationDTOFoerderschwerpunkt {
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.all", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.id", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.id.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.bezeichnung", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.statistikkrz", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.StatistikKrz = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.statistikkrz.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.StatistikKrz IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.sortierung", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.sortierung.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.sichtbar", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.sichtbar.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.aenderbar", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.aenderbar.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.schulnreigner", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOFoerderschwerpunkt.all.migration", query = "SELECT e FROM MigrationDTOFoerderschwerpunkt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
+public final class MigrationDTOFoerderschwerpunkt {
 
 	/** ID des Förderschwerpunktes */
 	@Id
@@ -71,17 +71,17 @@ public class MigrationDTOFoerderschwerpunkt {
 	/** Sichbarkeit des Förderschwerpunktes */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit des Förderschwerpunktes */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -102,11 +102,11 @@ public class MigrationDTOFoerderschwerpunkt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOFoerderschwerpunkt(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -114,7 +114,7 @@ public class MigrationDTOFoerderschwerpunkt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

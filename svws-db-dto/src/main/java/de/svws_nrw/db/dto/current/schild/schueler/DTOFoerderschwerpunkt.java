@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Foerderschwerpunkt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Foerderschwerpunkt")
-@NamedQuery(name="DTOFoerderschwerpunkt.all", query="SELECT e FROM DTOFoerderschwerpunkt e")
-@NamedQuery(name="DTOFoerderschwerpunkt.id", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.id.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.bezeichnung", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.bezeichnung.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.statistikkrz", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.StatistikKrz = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.statistikkrz.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.StatistikKrz IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.sortierung", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.sortierung.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.sichtbar", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.sichtbar.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.aenderbar", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.aenderbar.multiple", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOFoerderschwerpunkt.primaryKeyQuery", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID = ?1")
-@NamedQuery(name="DTOFoerderschwerpunkt.all.migration", query="SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","StatistikKrz","Sortierung","Sichtbar","Aenderbar"})
-public class DTOFoerderschwerpunkt {
+@NamedQuery(name = "DTOFoerderschwerpunkt.all", query = "SELECT e FROM DTOFoerderschwerpunkt e")
+@NamedQuery(name = "DTOFoerderschwerpunkt.id", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.id.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.bezeichnung", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.bezeichnung.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.statistikkrz", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.StatistikKrz = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.statistikkrz.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.StatistikKrz IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.sortierung", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.sortierung.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.sichtbar", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.sichtbar.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.aenderbar", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.aenderbar.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOFoerderschwerpunkt.primaryKeyQuery", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOFoerderschwerpunkt.all.migration", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOFoerderschwerpunkt {
 
 	/** ID des Förderschwerpunktes */
 	@Id
@@ -69,17 +69,17 @@ public class DTOFoerderschwerpunkt {
 	/** Sichbarkeit des Förderschwerpunktes */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit des Förderschwerpunktes */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -95,11 +95,11 @@ public class DTOFoerderschwerpunkt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOFoerderschwerpunkt(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -107,7 +107,7 @@ public class DTOFoerderschwerpunkt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

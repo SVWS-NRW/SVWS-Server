@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.current.DatumUhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavRessources.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavRessources")
-@NamedQuery(name="DTODavRessource.all", query="SELECT e FROM DTODavRessource e")
-@NamedQuery(name="DTODavRessource.id", query="SELECT e FROM DTODavRessource e WHERE e.ID = :value")
-@NamedQuery(name="DTODavRessource.id.multiple", query="SELECT e FROM DTODavRessource e WHERE e.ID IN :value")
-@NamedQuery(name="DTODavRessource.davressourcecollection_id", query="SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID = :value")
-@NamedQuery(name="DTODavRessource.davressourcecollection_id.multiple", query="SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID IN :value")
-@NamedQuery(name="DTODavRessource.uid", query="SELECT e FROM DTODavRessource e WHERE e.UID = :value")
-@NamedQuery(name="DTODavRessource.uid.multiple", query="SELECT e FROM DTODavRessource e WHERE e.UID IN :value")
-@NamedQuery(name="DTODavRessource.lastmodified", query="SELECT e FROM DTODavRessource e WHERE e.lastModified = :value")
-@NamedQuery(name="DTODavRessource.lastmodified.multiple", query="SELECT e FROM DTODavRessource e WHERE e.lastModified IN :value")
-@NamedQuery(name="DTODavRessource.kalendertyp", query="SELECT e FROM DTODavRessource e WHERE e.KalenderTyp = :value")
-@NamedQuery(name="DTODavRessource.kalendertyp.multiple", query="SELECT e FROM DTODavRessource e WHERE e.KalenderTyp IN :value")
-@NamedQuery(name="DTODavRessource.kalenderstart", query="SELECT e FROM DTODavRessource e WHERE e.KalenderStart = :value")
-@NamedQuery(name="DTODavRessource.kalenderstart.multiple", query="SELECT e FROM DTODavRessource e WHERE e.KalenderStart IN :value")
-@NamedQuery(name="DTODavRessource.kalenderende", query="SELECT e FROM DTODavRessource e WHERE e.KalenderEnde = :value")
-@NamedQuery(name="DTODavRessource.kalenderende.multiple", query="SELECT e FROM DTODavRessource e WHERE e.KalenderEnde IN :value")
-@NamedQuery(name="DTODavRessource.ressource", query="SELECT e FROM DTODavRessource e WHERE e.ressource = :value")
-@NamedQuery(name="DTODavRessource.ressource.multiple", query="SELECT e FROM DTODavRessource e WHERE e.ressource IN :value")
-@NamedQuery(name="DTODavRessource.geloeschtam", query="SELECT e FROM DTODavRessource e WHERE e.geloeschtam = :value")
-@NamedQuery(name="DTODavRessource.geloeschtam.multiple", query="SELECT e FROM DTODavRessource e WHERE e.geloeschtam IN :value")
-@NamedQuery(name="DTODavRessource.primaryKeyQuery", query="SELECT e FROM DTODavRessource e WHERE e.ID = ?1")
-@NamedQuery(name="DTODavRessource.all.migration", query="SELECT e FROM DTODavRessource e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","DavRessourceCollection_ID","UID","lastModified","KalenderTyp","KalenderStart","KalenderEnde","ressource","geloeschtam"})
-public class DTODavRessource {
+@NamedQuery(name = "DTODavRessource.all", query = "SELECT e FROM DTODavRessource e")
+@NamedQuery(name = "DTODavRessource.id", query = "SELECT e FROM DTODavRessource e WHERE e.ID = :value")
+@NamedQuery(name = "DTODavRessource.id.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ID IN :value")
+@NamedQuery(name = "DTODavRessource.davressourcecollection_id", query = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID = :value")
+@NamedQuery(name = "DTODavRessource.davressourcecollection_id.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.DavRessourceCollection_ID IN :value")
+@NamedQuery(name = "DTODavRessource.uid", query = "SELECT e FROM DTODavRessource e WHERE e.UID = :value")
+@NamedQuery(name = "DTODavRessource.uid.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.UID IN :value")
+@NamedQuery(name = "DTODavRessource.lastmodified", query = "SELECT e FROM DTODavRessource e WHERE e.lastModified = :value")
+@NamedQuery(name = "DTODavRessource.lastmodified.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.lastModified IN :value")
+@NamedQuery(name = "DTODavRessource.kalendertyp", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp = :value")
+@NamedQuery(name = "DTODavRessource.kalendertyp.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderTyp IN :value")
+@NamedQuery(name = "DTODavRessource.kalenderstart", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart = :value")
+@NamedQuery(name = "DTODavRessource.kalenderstart.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderStart IN :value")
+@NamedQuery(name = "DTODavRessource.kalenderende", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde = :value")
+@NamedQuery(name = "DTODavRessource.kalenderende.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.KalenderEnde IN :value")
+@NamedQuery(name = "DTODavRessource.ressource", query = "SELECT e FROM DTODavRessource e WHERE e.ressource = :value")
+@NamedQuery(name = "DTODavRessource.ressource.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ressource IN :value")
+@NamedQuery(name = "DTODavRessource.geloeschtam", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam = :value")
+@NamedQuery(name = "DTODavRessource.geloeschtam.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam IN :value")
+@NamedQuery(name = "DTODavRessource.primaryKeyQuery", query = "SELECT e FROM DTODavRessource e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavRessource.all.migration", query = "SELECT e FROM DTODavRessource e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "DavRessourceCollection_ID", "UID", "lastModified", "KalenderTyp", "KalenderStart", "KalenderEnde", "ressource", "geloeschtam"})
+public final class DTODavRessource {
 
 	/** ID der Dav Ressource */
 	@Id
@@ -70,9 +70,9 @@ public class DTODavRessource {
 	/** Das Datum an dem die Ressource zuletzt geändert wurde, als Synctoken einsetzbar */
 	@Column(name = "lastModified")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String lastModified;
 
 	/** Die Art der Kalenderressource, wenn es eine Kalenderressource ist */
@@ -83,17 +83,17 @@ public class DTODavRessource {
 	/** Der Start der Kalenderressource, wenn es eine Kalenderressource ist */
 	@Column(name = "KalenderStart")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String KalenderStart;
 
 	/** Das Ende der Kalenderressource, wenn es eines Kalenderressource ist */
 	@Column(name = "KalenderEnde")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String KalenderEnde;
 
 	/** Die Daten der Ressource */
@@ -104,9 +104,9 @@ public class DTODavRessource {
 	/** Der Zeitpunkt, an dem diese ggf. Ressource gelöscht wurde. */
 	@Column(name = "geloeschtam")
 	@JsonProperty
-	@Convert(converter=DatumUhrzeitConverter.class)
-	@JsonSerialize(using=DatumUhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=DatumUhrzeitConverterDeserializer.class)
+	@Convert(converter = DatumUhrzeitConverter.class)
+	@JsonSerialize(using = DatumUhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = DatumUhrzeitConverterDeserializer.class)
 	public String geloeschtam;
 
 	/**
@@ -128,35 +128,35 @@ public class DTODavRessource {
 	 * @param ressource   der Wert für das Attribut ressource
 	 */
 	public DTODavRessource(final Long ID, final Long DavRessourceCollection_ID, final String UID, final String lastModified, final String KalenderTyp, final String KalenderStart, final String KalenderEnde, final byte[] ressource) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (DavRessourceCollection_ID == null) { 
+		if (DavRessourceCollection_ID == null) {
 			throw new NullPointerException("DavRessourceCollection_ID must not be null");
 		}
 		this.DavRessourceCollection_ID = DavRessourceCollection_ID;
-		if (UID == null) { 
+		if (UID == null) {
 			throw new NullPointerException("UID must not be null");
 		}
 		this.UID = UID;
-		if (lastModified == null) { 
+		if (lastModified == null) {
 			throw new NullPointerException("lastModified must not be null");
 		}
 		this.lastModified = lastModified;
-		if (KalenderTyp == null) { 
+		if (KalenderTyp == null) {
 			throw new NullPointerException("KalenderTyp must not be null");
 		}
 		this.KalenderTyp = KalenderTyp;
-		if (KalenderStart == null) { 
+		if (KalenderStart == null) {
 			throw new NullPointerException("KalenderStart must not be null");
 		}
 		this.KalenderStart = KalenderStart;
-		if (KalenderEnde == null) { 
+		if (KalenderEnde == null) {
 			throw new NullPointerException("KalenderEnde must not be null");
 		}
 		this.KalenderEnde = KalenderEnde;
-		if (ressource == null) { 
+		if (ressource == null) {
 			throw new NullPointerException("ressource must not be null");
 		}
 		this.ressource = ressource;
@@ -164,7 +164,7 @@ public class DTODavRessource {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,39 +21,39 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerZP10.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerZP10")
-@NamedQuery(name="DTOSchuelerZP10.all", query="SELECT e FROM DTOSchuelerZP10 e")
-@NamedQuery(name="DTOSchuelerZP10.id", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerZP10.id.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerZP10.schueler_id", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerZP10.schueler_id.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerZP10.schuljahresabschnitts_id", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOSchuelerZP10.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOSchuelerZP10.fach_id", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerZP10.fach_id.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerZP10.vornote", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Vornote = :value")
-@NamedQuery(name="DTOSchuelerZP10.vornote.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Vornote IN :value")
-@NamedQuery(name="DTOSchuelerZP10.noteschriftlich", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteSchriftlich = :value")
-@NamedQuery(name="DTOSchuelerZP10.noteschriftlich.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteSchriftlich IN :value")
-@NamedQuery(name="DTOSchuelerZP10.mdlpruefung", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefung = :value")
-@NamedQuery(name="DTOSchuelerZP10.mdlpruefung.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefung IN :value")
-@NamedQuery(name="DTOSchuelerZP10.mdlpruefungfw", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefungFW = :value")
-@NamedQuery(name="DTOSchuelerZP10.mdlpruefungfw.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefungFW IN :value")
-@NamedQuery(name="DTOSchuelerZP10.notemuendlich", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteMuendlich = :value")
-@NamedQuery(name="DTOSchuelerZP10.notemuendlich.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteMuendlich IN :value")
-@NamedQuery(name="DTOSchuelerZP10.noteabschluss", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteAbschluss = :value")
-@NamedQuery(name="DTOSchuelerZP10.noteabschluss.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteAbschluss IN :value")
-@NamedQuery(name="DTOSchuelerZP10.fachlehrer_id", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name="DTOSchuelerZP10.fachlehrer_id.multiple", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name="DTOSchuelerZP10.primaryKeyQuery", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerZP10.all.migration", query="SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","Fach_ID","Vornote","NoteSchriftlich","MdlPruefung","MdlPruefungFW","NoteMuendlich","NoteAbschluss","Fachlehrer_ID"})
-public class DTOSchuelerZP10 {
+@NamedQuery(name = "DTOSchuelerZP10.all", query = "SELECT e FROM DTOSchuelerZP10 e")
+@NamedQuery(name = "DTOSchuelerZP10.id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerZP10.id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.schueler_id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerZP10.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.schuljahresabschnitts_id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOSchuelerZP10.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.fach_id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerZP10.fach_id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.vornote", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Vornote = :value")
+@NamedQuery(name = "DTOSchuelerZP10.vornote.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Vornote IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.noteschriftlich", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteSchriftlich = :value")
+@NamedQuery(name = "DTOSchuelerZP10.noteschriftlich.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteSchriftlich IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.mdlpruefung", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefung = :value")
+@NamedQuery(name = "DTOSchuelerZP10.mdlpruefung.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefung IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.mdlpruefungfw", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefungFW = :value")
+@NamedQuery(name = "DTOSchuelerZP10.mdlpruefungfw.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.MdlPruefungFW IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.notemuendlich", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteMuendlich = :value")
+@NamedQuery(name = "DTOSchuelerZP10.notemuendlich.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteMuendlich IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.noteabschluss", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteAbschluss = :value")
+@NamedQuery(name = "DTOSchuelerZP10.noteabschluss.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.NoteAbschluss IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.fachlehrer_id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID = :value")
+@NamedQuery(name = "DTOSchuelerZP10.fachlehrer_id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID IN :value")
+@NamedQuery(name = "DTOSchuelerZP10.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerZP10.all.migration", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "Fach_ID", "Vornote", "NoteSchriftlich", "MdlPruefung", "MdlPruefungFW", "NoteMuendlich", "NoteAbschluss", "Fachlehrer_ID"})
+public final class DTOSchuelerZP10 {
 
 	/** ID des Facheintrags für den ZP10 Abschluss */
 	@Id
@@ -89,17 +89,17 @@ public class DTOSchuelerZP10 {
 	/** Gibt an, ob zum ZP10-Facheintrag eine mündliche Prüfung angesetzt ist */
 	@Column(name = "MdlPruefung")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusConverterDeserializer.class)
 	public Boolean MdlPruefung;
 
 	/** Gibt an, ob zum ZP10-Facheintrag eine freiwilliege mündliche Prüfung angesetzt ist */
 	@Column(name = "MdlPruefungFW")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusConverterDeserializer.class)
 	public Boolean MdlPruefungFW;
 
 	/** Die Note der mündlichen Prüfung zum ZP10-Facheintrag */
@@ -131,15 +131,15 @@ public class DTOSchuelerZP10 {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOSchuelerZP10(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -147,7 +147,7 @@ public class DTOSchuelerZP10 {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

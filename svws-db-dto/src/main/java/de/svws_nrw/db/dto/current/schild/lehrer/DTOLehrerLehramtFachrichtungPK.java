@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle LehrerLehramtFachr.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOLehrerLehramtFachrichtungPK implements Serializable {
+public final class DTOLehrerLehramtFachrichtungPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOLehrerLehramtFachrichtungPK implements Serializable {
 	 * @param FachrKrz   der Wert für das Attribut FachrKrz
 	 */
 	public DTOLehrerLehramtFachrichtungPK(final Long Lehrer_ID, final String FachrKrz) {
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (FachrKrz == null) { 
+		if (FachrKrz == null) {
 			throw new NullPointerException("FachrKrz must not be null");
 		}
 		this.FachrKrz = FachrKrz;
@@ -43,7 +43,7 @@ public class DTOLehrerLehramtFachrichtungPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

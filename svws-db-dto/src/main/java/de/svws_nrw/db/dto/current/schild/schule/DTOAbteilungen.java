@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Abteilungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Abteilungen")
-@NamedQuery(name="DTOAbteilungen.all", query="SELECT e FROM DTOAbteilungen e")
-@NamedQuery(name="DTOAbteilungen.id", query="SELECT e FROM DTOAbteilungen e WHERE e.ID = :value")
-@NamedQuery(name="DTOAbteilungen.id.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOAbteilungen.bezeichnung", query="SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOAbteilungen.bezeichnung.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOAbteilungen.schuljahresabschnitts_id", query="SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOAbteilungen.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOAbteilungen.abteilungsleiter_id", query="SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID = :value")
-@NamedQuery(name="DTOAbteilungen.abteilungsleiter_id.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID IN :value")
-@NamedQuery(name="DTOAbteilungen.sichtbar", query="SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOAbteilungen.sichtbar.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOAbteilungen.raum", query="SELECT e FROM DTOAbteilungen e WHERE e.Raum = :value")
-@NamedQuery(name="DTOAbteilungen.raum.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Raum IN :value")
-@NamedQuery(name="DTOAbteilungen.email", query="SELECT e FROM DTOAbteilungen e WHERE e.Email = :value")
-@NamedQuery(name="DTOAbteilungen.email.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Email IN :value")
-@NamedQuery(name="DTOAbteilungen.durchwahl", query="SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl = :value")
-@NamedQuery(name="DTOAbteilungen.durchwahl.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl IN :value")
-@NamedQuery(name="DTOAbteilungen.sortierung", query="SELECT e FROM DTOAbteilungen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOAbteilungen.sortierung.multiple", query="SELECT e FROM DTOAbteilungen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOAbteilungen.primaryKeyQuery", query="SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOAbteilungen.all.migration", query="SELECT e FROM DTOAbteilungen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Schuljahresabschnitts_ID","AbteilungsLeiter_ID","Sichtbar","Raum","Email","Durchwahl","Sortierung"})
-public class DTOAbteilungen {
+@NamedQuery(name = "DTOAbteilungen.all", query = "SELECT e FROM DTOAbteilungen e")
+@NamedQuery(name = "DTOAbteilungen.id", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOAbteilungen.id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOAbteilungen.bezeichnung", query = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOAbteilungen.bezeichnung.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOAbteilungen.schuljahresabschnitts_id", query = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOAbteilungen.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOAbteilungen.abteilungsleiter_id", query = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID = :value")
+@NamedQuery(name = "DTOAbteilungen.abteilungsleiter_id.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.AbteilungsLeiter_ID IN :value")
+@NamedQuery(name = "DTOAbteilungen.sichtbar", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOAbteilungen.sichtbar.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOAbteilungen.raum", query = "SELECT e FROM DTOAbteilungen e WHERE e.Raum = :value")
+@NamedQuery(name = "DTOAbteilungen.raum.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Raum IN :value")
+@NamedQuery(name = "DTOAbteilungen.email", query = "SELECT e FROM DTOAbteilungen e WHERE e.Email = :value")
+@NamedQuery(name = "DTOAbteilungen.email.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Email IN :value")
+@NamedQuery(name = "DTOAbteilungen.durchwahl", query = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl = :value")
+@NamedQuery(name = "DTOAbteilungen.durchwahl.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Durchwahl IN :value")
+@NamedQuery(name = "DTOAbteilungen.sortierung", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOAbteilungen.sortierung.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOAbteilungen.primaryKeyQuery", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAbteilungen.all.migration", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Schuljahresabschnitts_ID", "AbteilungsLeiter_ID", "Sichtbar", "Raum", "Email", "Durchwahl", "Sortierung"})
+public final class DTOAbteilungen {
 
 	/** ID der Abteilung */
 	@Id
@@ -75,9 +75,9 @@ public class DTOAbteilungen {
 	/** steuert die Sichtbarkeit der Abteilung */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Bezeichnung für den Raum des Abteilungsleiter z.B. für Briefköpfe */
@@ -114,15 +114,15 @@ public class DTOAbteilungen {
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 */
 	public DTOAbteilungen(final Long ID, final String Bezeichnung, final Long Schuljahresabschnitts_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
@@ -130,7 +130,7 @@ public class DTOAbteilungen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

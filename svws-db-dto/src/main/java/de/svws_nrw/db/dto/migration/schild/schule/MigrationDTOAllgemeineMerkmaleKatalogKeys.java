@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle AllgemeineMerkmaleKatalog_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "AllgemeineMerkmaleKatalog_Keys")
-@NamedQuery(name="MigrationDTOAllgemeineMerkmaleKatalogKeys.all", query="SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e")
-@NamedQuery(name="MigrationDTOAllgemeineMerkmaleKatalogKeys.kuerzel", query="SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOAllgemeineMerkmaleKatalogKeys.kuerzel.multiple", query="SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOAllgemeineMerkmaleKatalogKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOAllgemeineMerkmaleKatalogKeys.all.migration", query="SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "MigrationDTOAllgemeineMerkmaleKatalogKeys.all", query = "SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e")
+@NamedQuery(name = "MigrationDTOAllgemeineMerkmaleKatalogKeys.kuerzel", query = "SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOAllgemeineMerkmaleKatalogKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOAllgemeineMerkmaleKatalogKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOAllgemeineMerkmaleKatalogKeys.all.migration", query = "SELECT e FROM MigrationDTOAllgemeineMerkmaleKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class MigrationDTOAllgemeineMerkmaleKatalogKeys {
+public final class MigrationDTOAllgemeineMerkmaleKatalogKeys {
 
 	/** Das ASD-Kürzel des allgemeinen Merkmals bei Schulen und/oder Schülern */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOAllgemeineMerkmaleKatalogKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOAllgemeineMerkmaleKatalogKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class MigrationDTOAllgemeineMerkmaleKatalogKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

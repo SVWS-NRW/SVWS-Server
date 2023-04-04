@@ -21,39 +21,39 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Noten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Noten")
-@NamedQuery(name="DTONote.all", query="SELECT e FROM DTONote e")
-@NamedQuery(name="DTONote.id", query="SELECT e FROM DTONote e WHERE e.ID = :value")
-@NamedQuery(name="DTONote.id.multiple", query="SELECT e FROM DTONote e WHERE e.ID IN :value")
-@NamedQuery(name="DTONote.kuerzel", query="SELECT e FROM DTONote e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTONote.kuerzel.multiple", query="SELECT e FROM DTONote e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTONote.isttendenznote", query="SELECT e FROM DTONote e WHERE e.IstTendenznote = :value")
-@NamedQuery(name="DTONote.isttendenznote.multiple", query="SELECT e FROM DTONote e WHERE e.IstTendenznote IN :value")
-@NamedQuery(name="DTONote.text", query="SELECT e FROM DTONote e WHERE e.Text = :value")
-@NamedQuery(name="DTONote.text.multiple", query="SELECT e FROM DTONote e WHERE e.Text IN :value")
-@NamedQuery(name="DTONote.aufzeugnis", query="SELECT e FROM DTONote e WHERE e.AufZeugnis = :value")
-@NamedQuery(name="DTONote.aufzeugnis.multiple", query="SELECT e FROM DTONote e WHERE e.AufZeugnis IN :value")
-@NamedQuery(name="DTONote.notenpunkte", query="SELECT e FROM DTONote e WHERE e.Notenpunkte = :value")
-@NamedQuery(name="DTONote.notenpunkte.multiple", query="SELECT e FROM DTONote e WHERE e.Notenpunkte IN :value")
-@NamedQuery(name="DTONote.textlaufbahnsii", query="SELECT e FROM DTONote e WHERE e.TextLaufbahnSII = :value")
-@NamedQuery(name="DTONote.textlaufbahnsii.multiple", query="SELECT e FROM DTONote e WHERE e.TextLaufbahnSII IN :value")
-@NamedQuery(name="DTONote.auflaufbahnsii", query="SELECT e FROM DTONote e WHERE e.AufLaufbahnSII = :value")
-@NamedQuery(name="DTONote.auflaufbahnsii.multiple", query="SELECT e FROM DTONote e WHERE e.AufLaufbahnSII IN :value")
-@NamedQuery(name="DTONote.sortierung", query="SELECT e FROM DTONote e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTONote.sortierung.multiple", query="SELECT e FROM DTONote e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTONote.gueltigvon", query="SELECT e FROM DTONote e WHERE e.gueltigVon = :value")
-@NamedQuery(name="DTONote.gueltigvon.multiple", query="SELECT e FROM DTONote e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="DTONote.gueltigbis", query="SELECT e FROM DTONote e WHERE e.gueltigBis = :value")
-@NamedQuery(name="DTONote.gueltigbis.multiple", query="SELECT e FROM DTONote e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTONote.primaryKeyQuery", query="SELECT e FROM DTONote e WHERE e.ID = ?1")
-@NamedQuery(name="DTONote.all.migration", query="SELECT e FROM DTONote e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","IstTendenznote","Text","AufZeugnis","Notenpunkte","TextLaufbahnSII","AufLaufbahnSII","Sortierung","gueltigVon","gueltigBis"})
-public class DTONote {
+@NamedQuery(name = "DTONote.all", query = "SELECT e FROM DTONote e")
+@NamedQuery(name = "DTONote.id", query = "SELECT e FROM DTONote e WHERE e.ID = :value")
+@NamedQuery(name = "DTONote.id.multiple", query = "SELECT e FROM DTONote e WHERE e.ID IN :value")
+@NamedQuery(name = "DTONote.kuerzel", query = "SELECT e FROM DTONote e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTONote.kuerzel.multiple", query = "SELECT e FROM DTONote e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTONote.isttendenznote", query = "SELECT e FROM DTONote e WHERE e.IstTendenznote = :value")
+@NamedQuery(name = "DTONote.isttendenznote.multiple", query = "SELECT e FROM DTONote e WHERE e.IstTendenznote IN :value")
+@NamedQuery(name = "DTONote.text", query = "SELECT e FROM DTONote e WHERE e.Text = :value")
+@NamedQuery(name = "DTONote.text.multiple", query = "SELECT e FROM DTONote e WHERE e.Text IN :value")
+@NamedQuery(name = "DTONote.aufzeugnis", query = "SELECT e FROM DTONote e WHERE e.AufZeugnis = :value")
+@NamedQuery(name = "DTONote.aufzeugnis.multiple", query = "SELECT e FROM DTONote e WHERE e.AufZeugnis IN :value")
+@NamedQuery(name = "DTONote.notenpunkte", query = "SELECT e FROM DTONote e WHERE e.Notenpunkte = :value")
+@NamedQuery(name = "DTONote.notenpunkte.multiple", query = "SELECT e FROM DTONote e WHERE e.Notenpunkte IN :value")
+@NamedQuery(name = "DTONote.textlaufbahnsii", query = "SELECT e FROM DTONote e WHERE e.TextLaufbahnSII = :value")
+@NamedQuery(name = "DTONote.textlaufbahnsii.multiple", query = "SELECT e FROM DTONote e WHERE e.TextLaufbahnSII IN :value")
+@NamedQuery(name = "DTONote.auflaufbahnsii", query = "SELECT e FROM DTONote e WHERE e.AufLaufbahnSII = :value")
+@NamedQuery(name = "DTONote.auflaufbahnsii.multiple", query = "SELECT e FROM DTONote e WHERE e.AufLaufbahnSII IN :value")
+@NamedQuery(name = "DTONote.sortierung", query = "SELECT e FROM DTONote e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTONote.sortierung.multiple", query = "SELECT e FROM DTONote e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTONote.gueltigvon", query = "SELECT e FROM DTONote e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "DTONote.gueltigvon.multiple", query = "SELECT e FROM DTONote e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "DTONote.gueltigbis", query = "SELECT e FROM DTONote e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "DTONote.gueltigbis.multiple", query = "SELECT e FROM DTONote e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "DTONote.primaryKeyQuery", query = "SELECT e FROM DTONote e WHERE e.ID = ?1")
+@NamedQuery(name = "DTONote.all.migration", query = "SELECT e FROM DTONote e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "IstTendenznote", "Text", "AufZeugnis", "Notenpunkte", "TextLaufbahnSII", "AufLaufbahnSII", "Sortierung", "gueltigVon", "gueltigBis"})
+public final class DTONote {
 
 	/** ID der Noten */
 	@Id
@@ -69,9 +69,9 @@ public class DTONote {
 	/** Gibt an, ob es sich um eine Tendenznote (plus) oder (minus) handelt */
 	@Column(name = "IstTendenznote")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstTendenznote;
 
 	/** Die Bezeichnung der Note */
@@ -82,9 +82,9 @@ public class DTONote {
 	/** Gibt an, ob die Note auf einem Zeugnis als erteilte Note gedruckt wird oder nicht. */
 	@Column(name = "AufZeugnis")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean AufZeugnis;
 
 	/** Die Notenpunkte der Note in der Sekundarstufe II */
@@ -100,9 +100,9 @@ public class DTONote {
 	/** Gibt an, ob die Note bei der Laufbahn in der Sekundarstufe II gedruckt wird oder nicht. */
 	@Column(name = "AufLaufbahnSII")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean AufLaufbahnSII;
 
 	/** Eine Default-Sortierung der Noten */
@@ -137,27 +137,27 @@ public class DTONote {
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
 	public DTONote(final Long ID, final String Kuerzel, final Boolean IstTendenznote, final Boolean AufZeugnis, final Boolean AufLaufbahnSII, final Integer Sortierung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (IstTendenznote == null) { 
+		if (IstTendenznote == null) {
 			throw new NullPointerException("IstTendenznote must not be null");
 		}
 		this.IstTendenznote = IstTendenznote;
-		if (AufZeugnis == null) { 
+		if (AufZeugnis == null) {
 			throw new NullPointerException("AufZeugnis must not be null");
 		}
 		this.AufZeugnis = AufZeugnis;
-		if (AufLaufbahnSII == null) { 
+		if (AufLaufbahnSII == null) {
 			throw new NullPointerException("AufLaufbahnSII must not be null");
 		}
 		this.AufLaufbahnSII = AufLaufbahnSII;
-		if (Sortierung == null) { 
+		if (Sortierung == null) {
 			throw new NullPointerException("Sortierung must not be null");
 		}
 		this.Sortierung = Sortierung;
@@ -165,7 +165,7 @@ public class DTONote {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

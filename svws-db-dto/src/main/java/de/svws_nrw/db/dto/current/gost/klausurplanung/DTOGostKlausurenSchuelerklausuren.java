@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Schuelerklausuren.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Schuelerklausuren")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.all", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.id", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.kursklausur_id", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Kursklausur_ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Kursklausur_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.termin_id", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Termin_ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.termin_id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Termin_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.schueler_id", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.schueler_id.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.startzeit", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Startzeit = :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.startzeit.multiple", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Startzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostKlausurenSchuelerklausuren.all.migration", query="SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kursklausur_ID","Termin_ID","Schueler_ID","Startzeit"})
-public class DTOGostKlausurenSchuelerklausuren {
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.all", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.kursklausur_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Kursklausur_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Kursklausur_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.termin_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Termin_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.termin_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Termin_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.schueler_id", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.schueler_id.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.startzeit", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Startzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Startzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenSchuelerklausuren.all.migration", query = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kursklausur_ID", "Termin_ID", "Schueler_ID", "Startzeit"})
+public final class DTOGostKlausurenSchuelerklausuren {
 
 	/** ID der Klausurvorgaben (generiert) */
 	@Id
@@ -67,9 +67,9 @@ public class DTOGostKlausurenSchuelerklausuren {
 	/** Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene */
 	@Column(name = "Startzeit")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
 	/**
@@ -86,15 +86,15 @@ public class DTOGostKlausurenSchuelerklausuren {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOGostKlausurenSchuelerklausuren(final Long ID, final Long Kursklausur_ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kursklausur_ID == null) { 
+		if (Kursklausur_ID == null) {
 			throw new NullPointerException("Kursklausur_ID must not be null");
 		}
 		this.Kursklausur_ID = Kursklausur_ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -102,7 +102,7 @@ public class DTOGostKlausurenSchuelerklausuren {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

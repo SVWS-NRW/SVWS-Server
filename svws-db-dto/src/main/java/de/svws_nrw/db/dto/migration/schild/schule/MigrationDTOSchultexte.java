@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Texte.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Texte")
-@NamedQuery(name="MigrationDTOSchultexte.all", query="SELECT e FROM MigrationDTOSchultexte e")
-@NamedQuery(name="MigrationDTOSchultexte.id", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchultexte.id.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.schulnreigner", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchultexte.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.kuerzel", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOSchultexte.kuerzel.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.inhalt", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Inhalt = :value")
-@NamedQuery(name="MigrationDTOSchultexte.inhalt.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Inhalt IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.beschreibung", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Beschreibung = :value")
-@NamedQuery(name="MigrationDTOSchultexte.beschreibung.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.aenderbar", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOSchultexte.aenderbar.multiple", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOSchultexte.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchultexte.all.migration", query="SELECT e FROM MigrationDTOSchultexte e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Kuerzel","Inhalt","Beschreibung","Aenderbar"})
-public class MigrationDTOSchultexte {
+@NamedQuery(name = "MigrationDTOSchultexte.all", query = "SELECT e FROM MigrationDTOSchultexte e")
+@NamedQuery(name = "MigrationDTOSchultexte.id", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.id.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.schulnreigner", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.kuerzel", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.kuerzel.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.inhalt", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Inhalt = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.inhalt.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Inhalt IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.beschreibung", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.beschreibung.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.aenderbar", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOSchultexte.aenderbar.multiple", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOSchultexte.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchultexte.all.migration", query = "SELECT e FROM MigrationDTOSchultexte e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Kuerzel", "Inhalt", "Beschreibung", "Aenderbar"})
+public final class MigrationDTOSchultexte {
 
 	/** ID des Textes unter Schulverwaltung Eigene Schule bearbeiten */
 	@Id
@@ -74,9 +74,9 @@ public class MigrationDTOSchultexte {
 	/** Gibt an ob der Text änderbar ist */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -92,11 +92,11 @@ public class MigrationDTOSchultexte {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOSchultexte(final Long ID, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -104,7 +104,7 @@ public class MigrationDTOSchultexte {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

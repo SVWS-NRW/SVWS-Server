@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_PausenaufsichtenBereich.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_PausenaufsichtenBereich")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.all", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.id", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id.multiple", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.primaryKeyQuery", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanPausenaufsichtenBereiche.all.migration", query="SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Pausenaufsicht_ID","Aufsichtsbereich_ID"})
-public class DTOStundenplanPausenaufsichtenBereiche {
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.all", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.pausenaufsicht_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.aufsichtsbereich_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Aufsichtsbereich_ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanPausenaufsichtenBereiche.all.migration", query = "SELECT e FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Pausenaufsicht_ID", "Aufsichtsbereich_ID"})
+public final class DTOStundenplanPausenaufsichtenBereiche {
 
 	/** Die eindeutige ID für die Zuordnung des Aufsichtsbereichs zur Pausenaufsicht */
 	@Id
@@ -61,15 +61,15 @@ public class DTOStundenplanPausenaufsichtenBereiche {
 	 * @param Aufsichtsbereich_ID   der Wert für das Attribut Aufsichtsbereich_ID
 	 */
 	public DTOStundenplanPausenaufsichtenBereiche(final Long ID, final Long Pausenaufsicht_ID, final Long Aufsichtsbereich_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Pausenaufsicht_ID == null) { 
+		if (Pausenaufsicht_ID == null) {
 			throw new NullPointerException("Pausenaufsicht_ID must not be null");
 		}
 		this.Pausenaufsicht_ID = Pausenaufsicht_ID;
-		if (Aufsichtsbereich_ID == null) { 
+		if (Aufsichtsbereich_ID == null) {
 			throw new NullPointerException("Aufsichtsbereich_ID must not be null");
 		}
 		this.Aufsichtsbereich_ID = Aufsichtsbereich_ID;
@@ -77,7 +77,7 @@ public class DTOStundenplanPausenaufsichtenBereiche {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung_Kurslehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOGostBlockungKurslehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Kurslehrer")
-@NamedQuery(name="DTOGostBlockungKurslehrer.all", query="SELECT e FROM DTOGostBlockungKurslehrer e")
-@NamedQuery(name="DTOGostBlockungKurslehrer.blockung_kurs_id", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IN :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.lehrer_id", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.lehrer_id.multiple", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.reihenfolge", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge = :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.reihenfolge.multiple", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge IN :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.wochenstunden", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden = :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.wochenstunden.multiple", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden IN :value")
-@NamedQuery(name="DTOGostBlockungKurslehrer.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name="DTOGostBlockungKurslehrer.all.migration", query="SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Blockung_Kurs_ID","Lehrer_ID","Reihenfolge","Wochenstunden"})
-public class DTOGostBlockungKurslehrer {
+@NamedQuery(name = "DTOGostBlockungKurslehrer.all", query = "SELECT e FROM DTOGostBlockungKurslehrer e")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.blockung_kurs_id", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.lehrer_id", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.lehrer_id.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.reihenfolge", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge = :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.reihenfolge.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Reihenfolge IN :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.wochenstunden", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden = :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Wochenstunden IN :value")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
+@NamedQuery(name = "DTOGostBlockungKurslehrer.all.migration", query = "SELECT e FROM DTOGostBlockungKurslehrer e WHERE e.Blockung_Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Blockung_Kurs_ID", "Lehrer_ID", "Reihenfolge", "Wochenstunden"})
+public final class DTOGostBlockungKurslehrer {
 
 	/** ID des Kurses */
 	@Id
@@ -72,19 +72,19 @@ public class DTOGostBlockungKurslehrer {
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
 	public DTOGostBlockungKurslehrer(final Long Blockung_Kurs_ID, final Long Lehrer_ID, final Integer Reihenfolge, final Integer Wochenstunden) {
-		if (Blockung_Kurs_ID == null) { 
+		if (Blockung_Kurs_ID == null) {
 			throw new NullPointerException("Blockung_Kurs_ID must not be null");
 		}
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Reihenfolge == null) { 
+		if (Reihenfolge == null) {
 			throw new NullPointerException("Reihenfolge must not be null");
 		}
 		this.Reihenfolge = Reihenfolge;
-		if (Wochenstunden == null) { 
+		if (Wochenstunden == null) {
 			throw new NullPointerException("Wochenstunden must not be null");
 		}
 		this.Wochenstunden = Wochenstunden;
@@ -92,7 +92,7 @@ public class DTOGostBlockungKurslehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

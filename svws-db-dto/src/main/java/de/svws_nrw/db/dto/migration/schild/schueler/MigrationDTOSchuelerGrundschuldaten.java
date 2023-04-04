@@ -21,57 +21,57 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerGSDaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerGSDaten")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.all", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.schueler_id", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sprachgebrauch", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sprachgebrauch.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_lesen", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_lesen.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_rechtschreiben", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_rechtschreiben.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sachunterricht", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sachunterricht.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_mathematik", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_mathematik.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_englisch", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_englisch.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_kunsttextil", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_kunsttextil.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_musik", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Musik = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_musik.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sport", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sport = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_sport.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_religion", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Religion = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.note_religion.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_sprache", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_sprache.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_einfach", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_einfach.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.anrede_klassenlehrer", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.anrede_klassenlehrer.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.nachname_klassenlehrer", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.nachname_klassenlehrer.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.gs_klasse", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.gs_klasse.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.bemerkungen", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.bemerkungen.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.geschwisterkind", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.geschwisterkind.multiple", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerGrundschuldaten.all.migration", query="SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","SchulnrEigner","Note_Sprachgebrauch","Note_Lesen","Note_Rechtschreiben","Note_Sachunterricht","Note_Mathematik","Note_Englisch","Note_KunstTextil","Note_Musik","Note_Sport","Note_Religion","Durchschnittsnote_Sprache","Durchschnittsnote_Einfach","Durchschnittsnote_Gewichtet","Anrede_Klassenlehrer","Nachname_Klassenlehrer","GS_Klasse","Bemerkungen","Geschwisterkind"})
-public class MigrationDTOSchuelerGrundschuldaten {
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.all", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sprachgebrauch", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sprachgebrauch.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sprachgebrauch IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_lesen", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Lesen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_lesen.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Lesen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_rechtschreiben", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_rechtschreiben.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Rechtschreiben IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sachunterricht", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sachunterricht.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sachunterricht IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_mathematik", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_mathematik.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Mathematik IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_englisch", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Englisch = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_englisch.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Englisch IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_kunsttextil", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_kunsttextil.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_KunstTextil IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_musik", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Musik = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_musik.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Musik IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sport", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sport = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_sport.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Sport IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_religion", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Religion = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.note_religion.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Note_Religion IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_sprache", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_sprache.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Sprache IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_einfach", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_einfach.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Einfach IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.durchschnittsnote_gewichtet.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Durchschnittsnote_Gewichtet IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.anrede_klassenlehrer", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.anrede_klassenlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Anrede_Klassenlehrer IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.nachname_klassenlehrer", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.nachname_klassenlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Nachname_Klassenlehrer IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.gs_klasse", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.GS_Klasse = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.gs_klasse.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.GS_Klasse IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.bemerkungen", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.bemerkungen.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.geschwisterkind", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.geschwisterkind.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "SchulnrEigner", "Note_Sprachgebrauch", "Note_Lesen", "Note_Rechtschreiben", "Note_Sachunterricht", "Note_Mathematik", "Note_Englisch", "Note_KunstTextil", "Note_Musik", "Note_Sport", "Note_Religion", "Durchschnittsnote_Sprache", "Durchschnittsnote_Einfach", "Durchschnittsnote_Gewichtet", "Anrede_Klassenlehrer", "Nachname_Klassenlehrer", "GS_Klasse", "Bemerkungen", "Geschwisterkind"})
+public final class MigrationDTOSchuelerGrundschuldaten {
 
 	/** SchülerID zum GS-Daten-Eintrag */
 	@Id
@@ -172,9 +172,9 @@ public class MigrationDTOSchuelerGrundschuldaten {
 	/** Angabe Geschwisterkind Ja Nein  zum GS-Daten-Eintrag */
 	@Column(name = "Geschwisterkind")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Geschwisterkind;
 
 	/**
@@ -190,11 +190,11 @@ public class MigrationDTOSchuelerGrundschuldaten {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOSchuelerGrundschuldaten(final Long Schueler_ID, final Integer SchulnrEigner) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -202,7 +202,7 @@ public class MigrationDTOSchuelerGrundschuldaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

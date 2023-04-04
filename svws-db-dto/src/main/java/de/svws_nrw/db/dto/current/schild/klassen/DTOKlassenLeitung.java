@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KlassenLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOKlassenLeitungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KlassenLehrer")
-@NamedQuery(name="DTOKlassenLeitung.all", query="SELECT e FROM DTOKlassenLeitung e")
-@NamedQuery(name="DTOKlassenLeitung.klassen_id", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID = :value")
-@NamedQuery(name="DTOKlassenLeitung.klassen_id.multiple", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name="DTOKlassenLeitung.lehrer_id", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOKlassenLeitung.lehrer_id.multiple", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOKlassenLeitung.reihenfolge", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Reihenfolge = :value")
-@NamedQuery(name="DTOKlassenLeitung.reihenfolge.multiple", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Reihenfolge IN :value")
-@NamedQuery(name="DTOKlassenLeitung.primaryKeyQuery", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name="DTOKlassenLeitung.all.migration", query="SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Klassen_ID","Lehrer_ID","Reihenfolge"})
-public class DTOKlassenLeitung {
+@NamedQuery(name = "DTOKlassenLeitung.all", query = "SELECT e FROM DTOKlassenLeitung e")
+@NamedQuery(name = "DTOKlassenLeitung.klassen_id", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID = :value")
+@NamedQuery(name = "DTOKlassenLeitung.klassen_id.multiple", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID IN :value")
+@NamedQuery(name = "DTOKlassenLeitung.lehrer_id", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOKlassenLeitung.lehrer_id.multiple", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOKlassenLeitung.reihenfolge", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Reihenfolge = :value")
+@NamedQuery(name = "DTOKlassenLeitung.reihenfolge.multiple", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Reihenfolge IN :value")
+@NamedQuery(name = "DTOKlassenLeitung.primaryKeyQuery", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID = ?1 AND e.Lehrer_ID = ?2")
+@NamedQuery(name = "DTOKlassenLeitung.all.migration", query = "SELECT e FROM DTOKlassenLeitung e WHERE e.Klassen_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Klassen_ID", "Lehrer_ID", "Reihenfolge"})
+public final class DTOKlassenLeitung {
 
 	/** ID der Klasse */
 	@Id
@@ -64,15 +64,15 @@ public class DTOKlassenLeitung {
 	 * @param Reihenfolge   der Wert für das Attribut Reihenfolge
 	 */
 	public DTOKlassenLeitung(final Long Klassen_ID, final Long Lehrer_ID, final Integer Reihenfolge) {
-		if (Klassen_ID == null) { 
+		if (Klassen_ID == null) {
 			throw new NullPointerException("Klassen_ID must not be null");
 		}
 		this.Klassen_ID = Klassen_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Reihenfolge == null) { 
+		if (Reihenfolge == null) {
 			throw new NullPointerException("Reihenfolge must not be null");
 		}
 		this.Reihenfolge = Reihenfolge;
@@ -80,7 +80,7 @@ public class DTOKlassenLeitung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

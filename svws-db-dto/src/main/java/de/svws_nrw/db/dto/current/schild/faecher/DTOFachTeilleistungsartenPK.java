@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle EigeneSchule_FachTeilleistungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOFachTeilleistungsartenPK implements Serializable {
+public final class DTOFachTeilleistungsartenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -35,15 +35,15 @@ public class DTOFachTeilleistungsartenPK implements Serializable {
 	 * @param Kursart   der Wert für das Attribut Kursart
 	 */
 	public DTOFachTeilleistungsartenPK(final Long Teilleistungsart_ID, final Long Fach_ID, final String Kursart) {
-		if (Teilleistungsart_ID == null) { 
+		if (Teilleistungsart_ID == null) {
 			throw new NullPointerException("Teilleistungsart_ID must not be null");
 		}
 		this.Teilleistungsart_ID = Teilleistungsart_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Kursart == null) { 
+		if (Kursart == null) {
 			throw new NullPointerException("Kursart must not be null");
 		}
 		this.Kursart = Kursart;
@@ -51,7 +51,7 @@ public class DTOFachTeilleistungsartenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schulformen")
-@NamedQuery(name="MigrationDTOAlleSchulformen.all", query="SELECT e FROM MigrationDTOAlleSchulformen e")
-@NamedQuery(name="MigrationDTOAlleSchulformen.id", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.id.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.kuerzel", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.kuerzel.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.nummer", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.nummer.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.bezeichnung", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.bezeichnung.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.hatgymob", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.hatgymob.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.gueltigvon", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.gueltigvon.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.gueltigbis", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis = :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.gueltigbis.multiple", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="MigrationDTOAlleSchulformen.primaryKeyQuery", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOAlleSchulformen.all.migration", query="SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Nummer","Bezeichnung","HatGymOb","gueltigVon","gueltigBis"})
-public class MigrationDTOAlleSchulformen {
+@NamedQuery(name = "MigrationDTOAlleSchulformen.all", query = "SELECT e FROM MigrationDTOAlleSchulformen e")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.id", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.id.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.kuerzel", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.kuerzel.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.nummer", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.nummer.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Nummer IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.bezeichnung", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.hatgymob", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.hatgymob.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.HatGymOb IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigvon", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.all.migration", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Nummer", "Bezeichnung", "HatGymOb", "gueltigVon", "gueltigBis"})
+public final class MigrationDTOAlleSchulformen {
 
 	/** ID der Schulform */
 	@Id
@@ -71,9 +71,9 @@ public class MigrationDTOAlleSchulformen {
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann (1) oder nicht (0) */
 	@Column(name = "HatGymOb")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean HatGymOb;
 
 	/** Gibt an, ab welchem Schuljahr die Schulform gültig ist */
@@ -101,19 +101,19 @@ public class MigrationDTOAlleSchulformen {
 	 * @param HatGymOb   der Wert für das Attribut HatGymOb
 	 */
 	public MigrationDTOAlleSchulformen(final Long ID, final String Kuerzel, final String Bezeichnung, final Boolean HatGymOb) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (HatGymOb == null) { 
+		if (HatGymOb == null) {
 			throw new NullPointerException("HatGymOb must not be null");
 		}
 		this.HatGymOb = HatGymOb;
@@ -121,7 +121,7 @@ public class MigrationDTOAlleSchulformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

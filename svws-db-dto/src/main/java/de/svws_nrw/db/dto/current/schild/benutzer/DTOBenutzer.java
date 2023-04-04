@@ -26,31 +26,31 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Benutzer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzer")
-@NamedQuery(name="DTOBenutzer.all", query="SELECT e FROM DTOBenutzer e")
-@NamedQuery(name="DTOBenutzer.id", query="SELECT e FROM DTOBenutzer e WHERE e.ID = :value")
-@NamedQuery(name="DTOBenutzer.id.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.ID IN :value")
-@NamedQuery(name="DTOBenutzer.typ", query="SELECT e FROM DTOBenutzer e WHERE e.Typ = :value")
-@NamedQuery(name="DTOBenutzer.typ.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.Typ IN :value")
-@NamedQuery(name="DTOBenutzer.allgemein_id", query="SELECT e FROM DTOBenutzer e WHERE e.Allgemein_ID = :value")
-@NamedQuery(name="DTOBenutzer.allgemein_id.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.Allgemein_ID IN :value")
-@NamedQuery(name="DTOBenutzer.lehrer_id", query="SELECT e FROM DTOBenutzer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOBenutzer.lehrer_id.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOBenutzer.schueler_id", query="SELECT e FROM DTOBenutzer e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOBenutzer.schueler_id.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOBenutzer.erzieher_id", query="SELECT e FROM DTOBenutzer e WHERE e.Erzieher_ID = :value")
-@NamedQuery(name="DTOBenutzer.erzieher_id.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.Erzieher_ID IN :value")
-@NamedQuery(name="DTOBenutzer.istadmin", query="SELECT e FROM DTOBenutzer e WHERE e.IstAdmin = :value")
-@NamedQuery(name="DTOBenutzer.istadmin.multiple", query="SELECT e FROM DTOBenutzer e WHERE e.IstAdmin IN :value")
-@NamedQuery(name="DTOBenutzer.primaryKeyQuery", query="SELECT e FROM DTOBenutzer e WHERE e.ID = ?1")
-@NamedQuery(name="DTOBenutzer.all.migration", query="SELECT e FROM DTOBenutzer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Typ","Allgemein_ID","Lehrer_ID","Schueler_ID","Erzieher_ID","IstAdmin"})
-public class DTOBenutzer {
+@NamedQuery(name = "DTOBenutzer.all", query = "SELECT e FROM DTOBenutzer e")
+@NamedQuery(name = "DTOBenutzer.id", query = "SELECT e FROM DTOBenutzer e WHERE e.ID = :value")
+@NamedQuery(name = "DTOBenutzer.id.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOBenutzer.typ", query = "SELECT e FROM DTOBenutzer e WHERE e.Typ = :value")
+@NamedQuery(name = "DTOBenutzer.typ.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.Typ IN :value")
+@NamedQuery(name = "DTOBenutzer.allgemein_id", query = "SELECT e FROM DTOBenutzer e WHERE e.Allgemein_ID = :value")
+@NamedQuery(name = "DTOBenutzer.allgemein_id.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.Allgemein_ID IN :value")
+@NamedQuery(name = "DTOBenutzer.lehrer_id", query = "SELECT e FROM DTOBenutzer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOBenutzer.lehrer_id.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOBenutzer.schueler_id", query = "SELECT e FROM DTOBenutzer e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOBenutzer.schueler_id.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOBenutzer.erzieher_id", query = "SELECT e FROM DTOBenutzer e WHERE e.Erzieher_ID = :value")
+@NamedQuery(name = "DTOBenutzer.erzieher_id.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.Erzieher_ID IN :value")
+@NamedQuery(name = "DTOBenutzer.istadmin", query = "SELECT e FROM DTOBenutzer e WHERE e.IstAdmin = :value")
+@NamedQuery(name = "DTOBenutzer.istadmin.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.IstAdmin IN :value")
+@NamedQuery(name = "DTOBenutzer.primaryKeyQuery", query = "SELECT e FROM DTOBenutzer e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOBenutzer.all.migration", query = "SELECT e FROM DTOBenutzer e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Typ", "Allgemein_ID", "Lehrer_ID", "Schueler_ID", "Erzieher_ID", "IstAdmin"})
+public final class DTOBenutzer {
 
 	/** Die ID des Benutzers */
 	@Id
@@ -61,9 +61,9 @@ public class DTOBenutzer {
 	/** Der Typ des Benutzers (0 = Allgemeiner Benutzer, 1 = Lehrer bzw. Personal aus K_Lehrer, 2 = Schueler, 3 = Erzieher) */
 	@Column(name = "Typ")
 	@JsonProperty
-	@Convert(converter=BenutzerTypConverter.class)
-	@JsonSerialize(using=BenutzerTypConverterSerializer.class)
-	@JsonDeserialize(using=BenutzerTypConverterDeserializer.class)
+	@Convert(converter = BenutzerTypConverter.class)
+	@JsonSerialize(using = BenutzerTypConverterSerializer.class)
+	@JsonDeserialize(using = BenutzerTypConverterDeserializer.class)
 	public BenutzerTyp Typ;
 
 	/** Die ID des allgemeinen Benutzers, falls der Benutzer es sich um einen allgemeinen Benutzer handelt */
@@ -89,9 +89,9 @@ public class DTOBenutzer {
 	/** Gibt an, ob der Benutzer Administrator-Rechte hat (1) oder nicht (0) */
 	@Column(name = "IstAdmin")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstAdmin;
 
 	/**
@@ -108,15 +108,15 @@ public class DTOBenutzer {
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
 	public DTOBenutzer(final Long ID, final BenutzerTyp Typ, final Boolean IstAdmin) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Typ == null) { 
+		if (Typ == null) {
 			throw new NullPointerException("Typ must not be null");
 		}
 		this.Typ = Typ;
-		if (IstAdmin == null) { 
+		if (IstAdmin == null) {
 			throw new NullPointerException("IstAdmin must not be null");
 		}
 		this.IstAdmin = IstAdmin;
@@ -124,7 +124,7 @@ public class DTOBenutzer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

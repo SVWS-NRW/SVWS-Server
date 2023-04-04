@@ -30,41 +30,41 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Vorgaben.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Vorgaben")
-@NamedQuery(name="DTOGostKlausurenVorgaben.all", query="SELECT e FROM DTOGostKlausurenVorgaben e")
-@NamedQuery(name="DTOGostKlausurenVorgaben.id", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.id.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.abi_jahrgang", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.abi_jahrgang.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.halbjahr", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Halbjahr = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.halbjahr.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Halbjahr IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.quartal", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Quartal = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.quartal.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Quartal IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.fach_id", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.fach_id.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.kursart", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.kursart.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.dauer", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.dauer.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.auswahlzeit", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.auswahlzeit.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istmdlpruefung", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istmdlpruefung.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istaudionotwendig", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istaudionotwendig.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istvideonotwendig", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.istvideonotwendig.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.bemerkungen", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="DTOGostKlausurenVorgaben.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostKlausurenVorgaben.all.migration", query="SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abi_Jahrgang","Halbjahr","Quartal","Fach_ID","Kursart","Dauer","Auswahlzeit","IstMdlPruefung","IstAudioNotwendig","IstVideoNotwendig","Bemerkungen"})
-public class DTOGostKlausurenVorgaben {
+@NamedQuery(name = "DTOGostKlausurenVorgaben.all", query = "SELECT e FROM DTOGostKlausurenVorgaben e")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.id", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.id.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.abi_jahrgang", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Abi_Jahrgang = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Abi_Jahrgang IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.halbjahr", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Halbjahr = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.halbjahr.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Halbjahr IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.quartal", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Quartal = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.quartal.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Quartal IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.fach_id", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.fach_id.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.kursart", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.kursart.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Kursart IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.dauer", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.dauer.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Dauer IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.auswahlzeit", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.auswahlzeit.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Auswahlzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istmdlpruefung", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istmdlpruefung.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstMdlPruefung IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istaudionotwendig", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istaudionotwendig.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstAudioNotwendig IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istvideonotwendig", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.istvideonotwendig.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.IstVideoNotwendig IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.bemerkungen", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.all.migration", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Fach_ID", "Kursart", "Dauer", "Auswahlzeit", "IstMdlPruefung", "IstAudioNotwendig", "IstVideoNotwendig", "Bemerkungen"})
+public final class DTOGostKlausurenVorgaben {
 
 	/** ID der Klausurvorgaben (generiert) */
 	@Id
@@ -80,9 +80,9 @@ public class DTOGostKlausurenVorgaben {
 	/** Das Halbjahr, welchem die Klausurvorgabe zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
 	@JsonProperty
-	@Convert(converter=GOStHalbjahrConverter.class)
-	@JsonSerialize(using=GOStHalbjahrConverterSerializer.class)
-	@JsonDeserialize(using=GOStHalbjahrConverterDeserializer.class)
+	@Convert(converter = GOStHalbjahrConverter.class)
+	@JsonSerialize(using = GOStHalbjahrConverterSerializer.class)
+	@JsonDeserialize(using = GOStHalbjahrConverterDeserializer.class)
 	public GostHalbjahr Halbjahr;
 
 	/** Das Quartal, in dem die Klausur geschrieben wird. */
@@ -98,9 +98,9 @@ public class DTOGostKlausurenVorgaben {
 	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
 	@Column(name = "Kursart")
 	@JsonProperty
-	@Convert(converter=GOStKursartConverter.class)
-	@JsonSerialize(using=GOStKursartConverterSerializer.class)
-	@JsonDeserialize(using=GOStKursartConverterDeserializer.class)
+	@Convert(converter = GOStKursartConverter.class)
+	@JsonSerialize(using = GOStKursartConverterSerializer.class)
+	@JsonDeserialize(using = GOStKursartConverterDeserializer.class)
 	public GostKursart Kursart;
 
 	/** Das Dauer der Klausur/Prüfung in Minuten */
@@ -116,25 +116,25 @@ public class DTOGostKlausurenVorgaben {
 	/** Gibt an, ob es sich um eine mündliche Prüfunge handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstMdlPruefung")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstMdlPruefung;
 
 	/** Gibt an, ob es sich um eine Klausur mit Hörverstehen handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstAudioNotwendig")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstAudioNotwendig;
 
 	/** Gibt an, ob es sich um eine Klausur handelt, in der ein Video gezeigt werden muss oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstVideoNotwendig")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstVideoNotwendig;
 
 	/** Text für Bemerkungen zur Klausurvorlage */
@@ -164,47 +164,47 @@ public class DTOGostKlausurenVorgaben {
 	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
 	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal, final Long Fach_ID, final GostKursart Kursart, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abi_Jahrgang == null) { 
+		if (Abi_Jahrgang == null) {
 			throw new NullPointerException("Abi_Jahrgang must not be null");
 		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Halbjahr == null) { 
+		if (Halbjahr == null) {
 			throw new NullPointerException("Halbjahr must not be null");
 		}
 		this.Halbjahr = Halbjahr;
-		if (Quartal == null) { 
+		if (Quartal == null) {
 			throw new NullPointerException("Quartal must not be null");
 		}
 		this.Quartal = Quartal;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Kursart == null) { 
+		if (Kursart == null) {
 			throw new NullPointerException("Kursart must not be null");
 		}
 		this.Kursart = Kursart;
-		if (Dauer == null) { 
+		if (Dauer == null) {
 			throw new NullPointerException("Dauer must not be null");
 		}
 		this.Dauer = Dauer;
-		if (Auswahlzeit == null) { 
+		if (Auswahlzeit == null) {
 			throw new NullPointerException("Auswahlzeit must not be null");
 		}
 		this.Auswahlzeit = Auswahlzeit;
-		if (IstMdlPruefung == null) { 
+		if (IstMdlPruefung == null) {
 			throw new NullPointerException("IstMdlPruefung must not be null");
 		}
 		this.IstMdlPruefung = IstMdlPruefung;
-		if (IstAudioNotwendig == null) { 
+		if (IstAudioNotwendig == null) {
 			throw new NullPointerException("IstAudioNotwendig must not be null");
 		}
 		this.IstAudioNotwendig = IstAudioNotwendig;
-		if (IstVideoNotwendig == null) { 
+		if (IstVideoNotwendig == null) {
 			throw new NullPointerException("IstVideoNotwendig must not be null");
 		}
 		this.IstVideoNotwendig = IstVideoNotwendig;
@@ -212,7 +212,7 @@ public class DTOGostKlausurenVorgaben {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

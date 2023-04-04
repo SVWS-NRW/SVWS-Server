@@ -21,43 +21,43 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schild_Verwaltung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schild_Verwaltung")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.all", query="SELECT e FROM MigrationDTOSchildVerwaltung e")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.backupdatum", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.backupdatum.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.autoberechnung", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.autoberechnung.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumstatkue", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumstatkue.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumschildintern", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumschildintern.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.bescheinigung", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.bescheinigung.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.stammblatt", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.stammblatt.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datengeprueft", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datengeprueft.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.version", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.version.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.gu_id", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.gu_id.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.schulnreigner", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumdatengeloescht", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.datumdatengeloescht.multiple", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1")
-@NamedQuery(name="MigrationDTOSchildVerwaltung.all.migration", query="SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
-@JsonPropertyOrder({"BackupDatum","AutoBerechnung","DatumStatkue","DatumSchildIntern","Bescheinigung","Stammblatt","DatenGeprueft","Version","GU_ID","SchulnrEigner","DatumLoeschfristHinweisDeaktiviert","DatumLoeschfristHinweisDeaktiviertUserID","DatumDatenGeloescht"})
-public class MigrationDTOSchildVerwaltung {
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.all", query = "SELECT e FROM MigrationDTOSchildVerwaltung e")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.backupdatum", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.backupdatum.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.BackupDatum IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.autoberechnung", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.autoberechnung.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.AutoBerechnung IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumstatkue", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumstatkue.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumStatkue IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumschildintern", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumschildintern.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumSchildIntern IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.bescheinigung", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.bescheinigung.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Bescheinigung IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.stammblatt", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.stammblatt.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Stammblatt IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datengeprueft", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datengeprueft.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatenGeprueft IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.version", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.version.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.Version IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.gu_id", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.gu_id.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.schulnreigner", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.all.migration", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
+@JsonPropertyOrder({"BackupDatum", "AutoBerechnung", "DatumStatkue", "DatumSchildIntern", "Bescheinigung", "Stammblatt", "DatenGeprueft", "Version", "GU_ID", "SchulnrEigner", "DatumLoeschfristHinweisDeaktiviert", "DatumLoeschfristHinweisDeaktiviertUserID", "DatumDatenGeloescht"})
+public final class MigrationDTOSchildVerwaltung {
 
 	/** Wird das Dateum des letzten Backupo eingetragen. */
 	@Column(name = "BackupDatum")
@@ -92,9 +92,9 @@ public class MigrationDTOSchildVerwaltung {
 	/** Stößt eine Datenprüfung nach großen Importen an */
 	@Column(name = "DatenGeprueft")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean DatenGeprueft;
 
 	/** Versionsdatum (wird zur Erkennung für Updates genutzt) */
@@ -141,11 +141,11 @@ public class MigrationDTOSchildVerwaltung {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOSchildVerwaltung(final String GU_ID, final Integer SchulnrEigner) {
-		if (GU_ID == null) { 
+		if (GU_ID == null) {
 			throw new NullPointerException("GU_ID must not be null");
 		}
 		this.GU_ID = GU_ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -153,7 +153,7 @@ public class MigrationDTOSchildVerwaltung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

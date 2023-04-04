@@ -24,41 +24,41 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundentafel_Faecher.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundentafel_Faecher")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.all", query="SELECT e FROM MigrationDTOStundentafelFaecher e")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.id", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.id.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.stundentafel_id", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.stundentafel_id.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.fach_id", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.fach_id.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.kursartallg", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.kursartallg.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.wochenstd", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.wochenstd.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.lehrer_id", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.lehrer_id.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.epochenunterricht", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.epochenunterricht.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.sortierung", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.sortierung.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.sichtbar", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.sichtbar.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.gewichtung", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.gewichtung.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.schulnreigner", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.schulnreigner.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.lehrerkrz", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz = :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.lehrerkrz.multiple", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz IN :value")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.primaryKeyQuery", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOStundentafelFaecher.all.migration", query="SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Stundentafel_ID","Fach_ID","KursartAllg","WochenStd","Lehrer_ID","EpochenUnterricht","Sortierung","Sichtbar","Gewichtung","SchulnrEigner","LehrerKrz"})
-public class MigrationDTOStundentafelFaecher {
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.all", query = "SELECT e FROM MigrationDTOStundentafelFaecher e")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.stundentafel_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.stundentafel_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Stundentafel_ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.fach_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.fach_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.kursartallg", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.kursartallg.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.wochenstd", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.wochenstd.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.WochenStd IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrer_id", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.epochenunterricht", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.epochenunterricht.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.EpochenUnterricht IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.sortierung", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.sortierung.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.sichtbar", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.sichtbar.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.gewichtung", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.gewichtung.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.schulnreigner", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz = :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz IN :value")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.all.migration", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Stundentafel_ID", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "EpochenUnterricht", "Sortierung", "Sichtbar", "Gewichtung", "SchulnrEigner", "LehrerKrz"})
+public final class MigrationDTOStundentafelFaecher {
 
 	/** ID des Facheintrags für die Stundentafel */
 	@Id
@@ -94,9 +94,9 @@ public class MigrationDTOStundentafelFaecher {
 	/** Merkmal Epochenunterricht des Faches in der Stundentafel */
 	@Column(name = "EpochenUnterricht")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean EpochenUnterricht;
 
 	/** Sortierung des Faches in der Stundentafel */
@@ -107,9 +107,9 @@ public class MigrationDTOStundentafelFaecher {
 	/** Sichtbarkeit des Faches in der Stundentafel */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** ??? entweder BB auch oder weg ??? Gewichtung allgemeinbidend BK  des Faches in der Stundentafel */
@@ -141,15 +141,15 @@ public class MigrationDTOStundentafelFaecher {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public MigrationDTOStundentafelFaecher(final Long ID, final Long Stundentafel_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Stundentafel_ID == null) { 
+		if (Stundentafel_ID == null) {
 			throw new NullPointerException("Stundentafel_ID must not be null");
 		}
 		this.Stundentafel_ID = Stundentafel_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -157,7 +157,7 @@ public class MigrationDTOStundentafelFaecher {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

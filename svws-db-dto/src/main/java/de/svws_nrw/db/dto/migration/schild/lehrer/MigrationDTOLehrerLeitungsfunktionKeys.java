@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerLeitungsfunktion_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLeitungsfunktion_Keys")
-@NamedQuery(name="MigrationDTOLehrerLeitungsfunktionKeys.all", query="SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e")
-@NamedQuery(name="MigrationDTOLehrerLeitungsfunktionKeys.id", query="SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOLehrerLeitungsfunktionKeys.id.multiple", query="SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOLehrerLeitungsfunktionKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOLehrerLeitungsfunktionKeys.all.migration", query="SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID IS NOT NULL")
+@NamedQuery(name = "MigrationDTOLehrerLeitungsfunktionKeys.all", query = "SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e")
+@NamedQuery(name = "MigrationDTOLehrerLeitungsfunktionKeys.id", query = "SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOLehrerLeitungsfunktionKeys.id.multiple", query = "SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOLehrerLeitungsfunktionKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOLehrerLeitungsfunktionKeys.all.migration", query = "SELECT e FROM MigrationDTOLehrerLeitungsfunktionKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
-public class MigrationDTOLehrerLeitungsfunktionKeys {
+public final class MigrationDTOLehrerLeitungsfunktionKeys {
 
 	/** ID der Leitungsfunktion */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOLehrerLeitungsfunktionKeys {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOLehrerLeitungsfunktionKeys(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -53,7 +53,7 @@ public class MigrationDTOLehrerLeitungsfunktionKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

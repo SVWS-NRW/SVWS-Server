@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle FachKatalog_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "FachKatalog_Keys")
-@NamedQuery(name="MigrationDTOFaecherKatalogKeys.all", query="SELECT e FROM MigrationDTOFaecherKatalogKeys e")
-@NamedQuery(name="MigrationDTOFaecherKatalogKeys.kuerzel", query="SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogKeys.kuerzel.multiple", query="SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOFaecherKatalogKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOFaecherKatalogKeys.all.migration", query="SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "MigrationDTOFaecherKatalogKeys.all", query = "SELECT e FROM MigrationDTOFaecherKatalogKeys e")
+@NamedQuery(name = "MigrationDTOFaecherKatalogKeys.kuerzel", query = "SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOFaecherKatalogKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOFaecherKatalogKeys.all.migration", query = "SELECT e FROM MigrationDTOFaecherKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class MigrationDTOFaecherKatalogKeys {
+public final class MigrationDTOFaecherKatalogKeys {
 
 	/** Das ASD-Kürzel des Faches */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOFaecherKatalogKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOFaecherKatalogKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class MigrationDTOFaecherKatalogKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

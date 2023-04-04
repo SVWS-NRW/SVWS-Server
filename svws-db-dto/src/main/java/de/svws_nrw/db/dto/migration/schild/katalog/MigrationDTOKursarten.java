@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Kursart.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Kursart")
-@NamedQuery(name="MigrationDTOKursarten.all", query="SELECT e FROM MigrationDTOKursarten e")
-@NamedQuery(name="MigrationDTOKursarten.id", query="SELECT e FROM MigrationDTOKursarten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOKursarten.id.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOKursarten.bezeichnung", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOKursarten.bezeichnung.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOKursarten.internbez", query="SELECT e FROM MigrationDTOKursarten e WHERE e.InternBez = :value")
-@NamedQuery(name="MigrationDTOKursarten.internbez.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.InternBez IN :value")
-@NamedQuery(name="MigrationDTOKursarten.kursart", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Kursart = :value")
-@NamedQuery(name="MigrationDTOKursarten.kursart.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Kursart IN :value")
-@NamedQuery(name="MigrationDTOKursarten.kursartallg", query="SELECT e FROM MigrationDTOKursarten e WHERE e.KursartAllg = :value")
-@NamedQuery(name="MigrationDTOKursarten.kursartallg.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="MigrationDTOKursarten.sortierung", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOKursarten.sortierung.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOKursarten.sichtbar", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOKursarten.sichtbar.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOKursarten.aenderbar", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOKursarten.aenderbar.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOKursarten.schulnreigner", query="SELECT e FROM MigrationDTOKursarten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOKursarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOKursarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOKursarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOKursarten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOKursarten.all.migration", query="SELECT e FROM MigrationDTOKursarten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","InternBez","Kursart","KursartAllg","Sortierung","Sichtbar","Aenderbar","SchulnrEigner"})
-public class MigrationDTOKursarten {
+@NamedQuery(name = "MigrationDTOKursarten.all", query = "SELECT e FROM MigrationDTOKursarten e")
+@NamedQuery(name = "MigrationDTOKursarten.id", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOKursarten.id.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.bezeichnung", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOKursarten.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.internbez", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.InternBez = :value")
+@NamedQuery(name = "MigrationDTOKursarten.internbez.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.InternBez IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.kursart", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Kursart = :value")
+@NamedQuery(name = "MigrationDTOKursarten.kursart.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Kursart IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.kursartallg", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "MigrationDTOKursarten.kursartallg.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.sortierung", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOKursarten.sortierung.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.sichtbar", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOKursarten.sichtbar.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.aenderbar", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOKursarten.aenderbar.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.schulnreigner", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOKursarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOKursarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKursarten.all.migration", query = "SELECT e FROM MigrationDTOKursarten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "InternBez", "Kursart", "KursartAllg", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
+public final class MigrationDTOKursarten {
 
 	/** ID des Kursarteneintrag */
 	@Id
@@ -85,17 +85,17 @@ public class MigrationDTOKursarten {
 	/** Sichtbarkeit der Kursart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Kursart änderbar Ja Nein */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -115,7 +115,7 @@ public class MigrationDTOKursarten {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOKursarten(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -123,7 +123,7 @@ public class MigrationDTOKursarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

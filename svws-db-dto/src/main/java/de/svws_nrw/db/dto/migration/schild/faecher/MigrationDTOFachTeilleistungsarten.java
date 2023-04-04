@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_FachTeilleistungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOFachTeilleistungsartenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_FachTeilleistungen")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.all", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.teilleistungsart_id", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.teilleistungsart_id.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.fach_id", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.fach_id.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.kursart", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Kursart = :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.kursart.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.schulnreigner", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
-@NamedQuery(name="MigrationDTOFachTeilleistungsarten.all.migration", query="SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
-@JsonPropertyOrder({"Teilleistungsart_ID","Fach_ID","Kursart","SchulnrEigner"})
-public class MigrationDTOFachTeilleistungsarten {
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.all", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.teilleistungsart_id", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.teilleistungsart_id.multiple", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IN :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.fach_id", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.fach_id.multiple", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.kursart", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Kursart = :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.kursart.multiple", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Kursart IN :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.schulnreigner", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3")
+@NamedQuery(name = "MigrationDTOFachTeilleistungsarten.all.migration", query = "SELECT e FROM MigrationDTOFachTeilleistungsarten e WHERE e.Teilleistungsart_ID IS NOT NULL AND e.Fach_ID IS NOT NULL AND e.Kursart IS NOT NULL")
+@JsonPropertyOrder({"Teilleistungsart_ID", "Fach_ID", "Kursart", "SchulnrEigner"})
+public final class MigrationDTOFachTeilleistungsarten {
 
 	/** Die eindeutige ID der Teilleistungsart – verweist auf die Teilleistungsart */
 	@Id
@@ -72,15 +72,15 @@ public class MigrationDTOFachTeilleistungsarten {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOFachTeilleistungsarten(final Long Teilleistungsart_ID, final Long Fach_ID, final Integer SchulnrEigner) {
-		if (Teilleistungsart_ID == null) { 
+		if (Teilleistungsart_ID == null) {
 			throw new NullPointerException("Teilleistungsart_ID must not be null");
 		}
 		this.Teilleistungsart_ID = Teilleistungsart_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -88,7 +88,7 @@ public class MigrationDTOFachTeilleistungsarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

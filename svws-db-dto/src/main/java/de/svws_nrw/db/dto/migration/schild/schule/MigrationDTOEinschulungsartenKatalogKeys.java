@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EinschulungsartKatalog_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EinschulungsartKatalog_Keys")
-@NamedQuery(name="MigrationDTOEinschulungsartenKatalogKeys.all", query="SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e")
-@NamedQuery(name="MigrationDTOEinschulungsartenKatalogKeys.kuerzel", query="SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOEinschulungsartenKatalogKeys.kuerzel.multiple", query="SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOEinschulungsartenKatalogKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOEinschulungsartenKatalogKeys.all.migration", query="SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "MigrationDTOEinschulungsartenKatalogKeys.all", query = "SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e")
+@NamedQuery(name = "MigrationDTOEinschulungsartenKatalogKeys.kuerzel", query = "SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOEinschulungsartenKatalogKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOEinschulungsartenKatalogKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOEinschulungsartenKatalogKeys.all.migration", query = "SELECT e FROM MigrationDTOEinschulungsartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class MigrationDTOEinschulungsartenKatalogKeys {
+public final class MigrationDTOEinschulungsartenKatalogKeys {
 
 	/** Das Kürzel der Einschulungsart */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOEinschulungsartenKatalogKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOEinschulungsartenKatalogKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class MigrationDTOEinschulungsartenKatalogKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

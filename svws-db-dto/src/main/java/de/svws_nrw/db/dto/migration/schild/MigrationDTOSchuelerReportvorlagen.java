@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerReportvorlagen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOSchuelerReportvorlagenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerReportvorlagen")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.all", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.user_id", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.user_id.multiple", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.reportvorlage", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage = :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.reportvorlage.multiple", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.schueler_ids", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.schueler_ids.multiple", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN :value")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2")
-@NamedQuery(name="MigrationDTOSchuelerReportvorlagen.all.migration", query="SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL")
-@JsonPropertyOrder({"User_ID","SchulnrEigner","Reportvorlage","Schueler_IDs"})
-public class MigrationDTOSchuelerReportvorlagen {
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.all", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.user_id", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.user_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.reportvorlage", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage = :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.reportvorlage.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Reportvorlage IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schueler_ids", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs = :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.schueler_ids.multiple", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.Schueler_IDs IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID = ?1 AND e.Reportvorlage = ?2")
+@NamedQuery(name = "MigrationDTOSchuelerReportvorlagen.all.migration", query = "SELECT e FROM MigrationDTOSchuelerReportvorlagen e WHERE e.User_ID IS NOT NULL AND e.Reportvorlage IS NOT NULL")
+@JsonPropertyOrder({"User_ID", "SchulnrEigner", "Reportvorlage", "Schueler_IDs"})
+public final class MigrationDTOSchuelerReportvorlagen {
 
 	/** UserID des Users der die zugeordneten Reportvorlagen druckt */
 	@Id
@@ -69,7 +69,7 @@ public class MigrationDTOSchuelerReportvorlagen {
 	 * @param User_ID   der Wert für das Attribut User_ID
 	 */
 	public MigrationDTOSchuelerReportvorlagen(final Long User_ID) {
-		if (User_ID == null) { 
+		if (User_ID == null) {
 			throw new NullPointerException("User_ID must not be null");
 		}
 		this.User_ID = User_ID;
@@ -77,7 +77,7 @@ public class MigrationDTOSchuelerReportvorlagen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

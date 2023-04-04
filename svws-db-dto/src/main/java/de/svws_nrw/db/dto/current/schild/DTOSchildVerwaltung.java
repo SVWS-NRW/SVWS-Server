@@ -21,41 +21,41 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schild_Verwaltung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schild_Verwaltung")
-@NamedQuery(name="DTOSchildVerwaltung.all", query="SELECT e FROM DTOSchildVerwaltung e")
-@NamedQuery(name="DTOSchildVerwaltung.backupdatum", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.BackupDatum = :value")
-@NamedQuery(name="DTOSchildVerwaltung.backupdatum.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.BackupDatum IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.autoberechnung", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.AutoBerechnung = :value")
-@NamedQuery(name="DTOSchildVerwaltung.autoberechnung.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.AutoBerechnung IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumstatkue", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumStatkue = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumstatkue.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumStatkue IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumschildintern", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumSchildIntern = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumschildintern.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumSchildIntern IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.bescheinigung", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Bescheinigung = :value")
-@NamedQuery(name="DTOSchildVerwaltung.bescheinigung.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Bescheinigung IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.stammblatt", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Stammblatt = :value")
-@NamedQuery(name="DTOSchildVerwaltung.stammblatt.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Stammblatt IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datengeprueft", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatenGeprueft = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datengeprueft.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatenGeprueft IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.version", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Version = :value")
-@NamedQuery(name="DTOSchildVerwaltung.version.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.Version IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.gu_id", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID = :value")
-@NamedQuery(name="DTOSchildVerwaltung.gu_id.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumdatengeloescht", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
-@NamedQuery(name="DTOSchildVerwaltung.datumdatengeloescht.multiple", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
-@NamedQuery(name="DTOSchildVerwaltung.primaryKeyQuery", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID = ?1")
-@NamedQuery(name="DTOSchildVerwaltung.all.migration", query="SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
-@JsonPropertyOrder({"BackupDatum","AutoBerechnung","DatumStatkue","DatumSchildIntern","Bescheinigung","Stammblatt","DatenGeprueft","Version","GU_ID","DatumLoeschfristHinweisDeaktiviert","DatumLoeschfristHinweisDeaktiviertUserID","DatumDatenGeloescht"})
-public class DTOSchildVerwaltung {
+@NamedQuery(name = "DTOSchildVerwaltung.all", query = "SELECT e FROM DTOSchildVerwaltung e")
+@NamedQuery(name = "DTOSchildVerwaltung.backupdatum", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.BackupDatum = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.backupdatum.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.BackupDatum IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.autoberechnung", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.AutoBerechnung = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.autoberechnung.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.AutoBerechnung IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumstatkue", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumStatkue = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumstatkue.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumStatkue IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumschildintern", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumSchildIntern = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumschildintern.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumSchildIntern IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.bescheinigung", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Bescheinigung = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.bescheinigung.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Bescheinigung IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.stammblatt", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Stammblatt = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.stammblatt.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Stammblatt IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datengeprueft", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatenGeprueft = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datengeprueft.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatenGeprueft IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.version", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Version = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.version.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.Version IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.gu_id", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.gu_id.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviert.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviert IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumloeschfristhinweisdeaktiviertuserid.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumLoeschfristHinweisDeaktiviertUserID IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumdatengeloescht", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
+@NamedQuery(name = "DTOSchildVerwaltung.datumdatengeloescht.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
+@NamedQuery(name = "DTOSchildVerwaltung.primaryKeyQuery", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID = ?1")
+@NamedQuery(name = "DTOSchildVerwaltung.all.migration", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
+@JsonPropertyOrder({"BackupDatum", "AutoBerechnung", "DatumStatkue", "DatumSchildIntern", "Bescheinigung", "Stammblatt", "DatenGeprueft", "Version", "GU_ID", "DatumLoeschfristHinweisDeaktiviert", "DatumLoeschfristHinweisDeaktiviertUserID", "DatumDatenGeloescht"})
+public final class DTOSchildVerwaltung {
 
 	/** Wird das Dateum des letzten Backupo eingetragen. */
 	@Column(name = "BackupDatum")
@@ -90,9 +90,9 @@ public class DTOSchildVerwaltung {
 	/** Stößt eine Datenprüfung nach großen Importen an */
 	@Column(name = "DatenGeprueft")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean DatenGeprueft;
 
 	/** Versionsdatum (wird zur Erkennung für Updates genutzt) */
@@ -133,7 +133,7 @@ public class DTOSchildVerwaltung {
 	 * @param GU_ID   der Wert für das Attribut GU_ID
 	 */
 	public DTOSchildVerwaltung(final String GU_ID) {
-		if (GU_ID == null) { 
+		if (GU_ID == null) {
 			throw new NullPointerException("GU_ID must not be null");
 		}
 		this.GU_ID = GU_ID;
@@ -141,7 +141,7 @@ public class DTOSchildVerwaltung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

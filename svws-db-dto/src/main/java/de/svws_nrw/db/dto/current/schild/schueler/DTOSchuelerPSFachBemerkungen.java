@@ -13,33 +13,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerLD_PSFachBem.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLD_PSFachBem")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.all", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.id", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.id.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.abschnitt_id", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.abschnitt_id.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.asv", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.asv.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.lels", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.lels.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.aue", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.aue.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.esf", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.esf.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.bemerkungfsp", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.bemerkungfsp.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.bemerkungversetzung", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung = :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.bemerkungversetzung.multiple", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung IN :value")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.primaryKeyQuery", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerPSFachBemerkungen.all.migration", query="SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","ASV","LELS","AUE","ESF","BemerkungFSP","BemerkungVersetzung"})
-public class DTOSchuelerPSFachBemerkungen {
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.all", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.id", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.id.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.abschnitt_id", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.asv", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.asv.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ASV IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.lels", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.lels.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.LELS IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.aue", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.aue.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.AUE IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.esf", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.esf.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ESF IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungfsp", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungfsp.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungFSP IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung = :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung IN :value")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.all.migration", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "ASV", "LELS", "AUE", "ESF", "BemerkungFSP", "BemerkungVersetzung"})
+public final class DTOSchuelerPSFachBemerkungen {
 
 	/** ID des Bemerkungseintrags */
 	@Id
@@ -95,11 +95,11 @@ public class DTOSchuelerPSFachBemerkungen {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 */
 	public DTOSchuelerPSFachBemerkungen(final Long ID, final Long Abschnitt_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
@@ -107,7 +107,7 @@ public class DTOSchuelerPSFachBemerkungen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

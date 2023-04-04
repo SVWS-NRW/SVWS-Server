@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Kurs_Schueler.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOKursSchuelerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kurs_Schueler")
-@NamedQuery(name="DTOKursSchueler.all", query="SELECT e FROM DTOKursSchueler e")
-@NamedQuery(name="DTOKursSchueler.kurs_id", query="SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value")
-@NamedQuery(name="DTOKursSchueler.kurs_id.multiple", query="SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name="DTOKursSchueler.schueler_id", query="SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOKursSchueler.schueler_id.multiple", query="SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOKursSchueler.primaryKeyQuery", query="SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name="DTOKursSchueler.all.migration", query="SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Kurs_ID","Schueler_ID"})
-public class DTOKursSchueler {
+@NamedQuery(name = "DTOKursSchueler.all", query = "SELECT e FROM DTOKursSchueler e")
+@NamedQuery(name = "DTOKursSchueler.kurs_id", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value")
+@NamedQuery(name = "DTOKursSchueler.kurs_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN :value")
+@NamedQuery(name = "DTOKursSchueler.schueler_id", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOKursSchueler.schueler_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOKursSchueler.primaryKeyQuery", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2")
+@NamedQuery(name = "DTOKursSchueler.all.migration", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Kurs_ID", "Schueler_ID"})
+public final class DTOKursSchueler {
 
 	/** Die eindeutige ID des Kurses – verweist auf den Kurs */
 	@Id
@@ -56,11 +56,11 @@ public class DTOKursSchueler {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOKursSchueler(final Long Kurs_ID, final Long Schueler_ID) {
-		if (Kurs_ID == null) { 
+		if (Kurs_ID == null) {
 			throw new NullPointerException("Kurs_ID must not be null");
 		}
 		this.Kurs_ID = Kurs_ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -68,7 +68,7 @@ public class DTOKursSchueler {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

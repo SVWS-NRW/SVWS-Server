@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Kompetenzgruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Kompetenzgruppen")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.all", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_id", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_id.multiple", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung = :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung.multiple", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung IN :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_spalte", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte = :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_spalte.multiple", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte IN :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_zeile", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile = :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.kg_zeile.multiple", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile IN :value")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1")
-@NamedQuery(name="DTOKatalogBenutzerKompetenzGruppe.all.migration", query="SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IS NOT NULL")
-@JsonPropertyOrder({"KG_ID","KG_Bezeichnung","KG_Spalte","KG_Zeile"})
-public class DTOKatalogBenutzerKompetenzGruppe {
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.all", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_id", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_id.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung = :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_bezeichnung.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Bezeichnung IN :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_spalte", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte = :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_spalte.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Spalte IN :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_zeile", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile = :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.kg_zeile.multiple", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile IN :value")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1")
+@NamedQuery(name = "DTOKatalogBenutzerKompetenzGruppe.all.migration", query = "SELECT e FROM DTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IS NOT NULL")
+@JsonPropertyOrder({"KG_ID", "KG_Bezeichnung", "KG_Spalte", "KG_Zeile"})
+public final class DTOKatalogBenutzerKompetenzGruppe {
 
 	/** ID der Kompetenzgruppe */
 	@Id
@@ -69,19 +69,19 @@ public class DTOKatalogBenutzerKompetenzGruppe {
 	 * @param KG_Zeile   der Wert für das Attribut KG_Zeile
 	 */
 	public DTOKatalogBenutzerKompetenzGruppe(final Long KG_ID, final String KG_Bezeichnung, final Long KG_Spalte, final Long KG_Zeile) {
-		if (KG_ID == null) { 
+		if (KG_ID == null) {
 			throw new NullPointerException("KG_ID must not be null");
 		}
 		this.KG_ID = KG_ID;
-		if (KG_Bezeichnung == null) { 
+		if (KG_Bezeichnung == null) {
 			throw new NullPointerException("KG_Bezeichnung must not be null");
 		}
 		this.KG_Bezeichnung = KG_Bezeichnung;
-		if (KG_Spalte == null) { 
+		if (KG_Spalte == null) {
 			throw new NullPointerException("KG_Spalte must not be null");
 		}
 		this.KG_Spalte = KG_Spalte;
-		if (KG_Zeile == null) { 
+		if (KG_Zeile == null) {
 			throw new NullPointerException("KG_Zeile must not be null");
 		}
 		this.KG_Zeile = KG_Zeile;
@@ -89,7 +89,7 @@ public class DTOKatalogBenutzerKompetenzGruppe {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

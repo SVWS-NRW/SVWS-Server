@@ -21,89 +21,89 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerAbitur.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAbitur")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.all", query="SELECT e FROM MigrationDTOSchuelerAbitur e")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.id", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.id.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schueler_id", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.facharbeitfach", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitFach = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.facharbeitfach.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitFach IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.facharbeitnotenpunkte", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.facharbeitnotenpunkte.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fehlstundensumme", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSumme = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fehlstundensumme.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSumme IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fehlstundensummeunentschuldigt", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fehlstundensummeunentschuldigt.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatlatinum", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatLatinum = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatlatinum.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatLatinum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatkleineslatinum", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatKleinesLatinum = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatkleineslatinum.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatKleinesLatinum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatgraecum", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatGraecum = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hatgraecum.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatGraecum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hathebraicum", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatHebraicum = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.hathebraicum.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatHebraicum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.projektkursthema", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ProjektkursThema = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.projektkursthema.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ProjektkursThema IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fremdsprachesekimanuellgeprueft", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.fremdsprachesekimanuellgeprueft.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahlkurseeingebracht", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahlkurseeingebracht.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefiziteeingebracht", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefiziteeingebracht.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefizitelk", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefizitelk.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefizite0punkte", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_anzahldefizite0punkte.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_punktsummenormiert", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_punktsummenormiert.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_summenotenpunktegk", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_summenotenpunktegk.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_summenotenpunktelk", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_summenotenpunktelk.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_hatzulassung", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_HatZulassung = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.blocki_hatzulassung.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_HatZulassung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungart", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungArt = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungart.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungArt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungnotenpunkte", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungnotenpunkte.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungthema", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungThema = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.besonderelernleistungthema.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungThema IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_punktsumme", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_punktsumme.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_anzahldefizite", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_anzahldefizite.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_anzahldefizitelk", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_anzahldefizitelk.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_hatbestanden", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_hatbestanden.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.abiturnote", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturNote = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.abiturnote.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturNote IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.abiturgesamtpunktzahl", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.abiturgesamtpunktzahl.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.verbesserungabpunktzahl", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.verbesserungabpunktzahl.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.verbesserungbenoetigepunkte", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.verbesserungbenoetigepunkte.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_schuljahr", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Schuljahr = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_schuljahr.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Schuljahr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_schuljahresabschnitt", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_SchuljahresAbschnitt = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.pruefung_schuljahresabschnitt.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_SchuljahresAbschnitt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerAbitur.all.migration", query="SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","FacharbeitFach","FacharbeitNotenpunkte","FehlstundenSumme","FehlstundenSummeUnentschuldigt","hatLatinum","hatKleinesLatinum","hatGraecum","hatHebraicum","-","-","-","-","-","-","-","ProjektkursThema","FremdspracheSekIManuellGeprueft","BlockI_AnzahlKurseEingebracht","BlockI_AnzahlDefiziteEingebracht","BlockI_AnzahlDefiziteLK","BlockI_AnzahlDefizite0Punkte","BlockI_PunktsummeNormiert","BlockI_NotenpunktdurchschnittEingebrachterKurse","BlockI_SummeNotenpunkteGK","BlockI_SummeNotenpunkteLK","-","BlockI_HatZulassung","BesondereLernleistungArt","BesondereLernleistungNotenpunkte","BesondereLernleistungThema","Pruefung_Punktsumme","Pruefung_AnzahlDefizite","Pruefung_AnzahlDefiziteLK","Pruefung_hatBestanden","AbiturNote","AbiturGesamtPunktzahl","VerbesserungAbPunktzahl","VerbesserungBenoetigePunkte","Pruefung_Schuljahr","Pruefung_SchuljahresAbschnitt","SchulnrEigner"})
-public class MigrationDTOSchuelerAbitur {
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.all", query = "SELECT e FROM MigrationDTOSchuelerAbitur e")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.id", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.facharbeitfach", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitFach = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.facharbeitfach.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitFach IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.facharbeitnotenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.facharbeitnotenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FacharbeitNotenpunkte IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fehlstundensumme", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSumme = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fehlstundensumme.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSumme IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fehlstundensummeunentschuldigt", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fehlstundensummeunentschuldigt.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FehlstundenSummeUnentschuldigt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatlatinum", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatLatinum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatlatinum.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatLatinum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatkleineslatinum", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatKleinesLatinum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatkleineslatinum.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatKleinesLatinum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatgraecum", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatGraecum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hatgraecum.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatGraecum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hathebraicum", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatHebraicum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.hathebraicum.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.hatHebraicum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.projektkursthema", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ProjektkursThema = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.projektkursthema.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ProjektkursThema IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fremdsprachesekimanuellgeprueft", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.fremdsprachesekimanuellgeprueft.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.FremdspracheSekIManuellGeprueft IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahlkurseeingebracht", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahlkurseeingebracht.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlKurseEingebracht IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefiziteeingebracht", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefiziteeingebracht.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteEingebracht IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefizitelk", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefizitelk.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefiziteLK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefizite0punkte", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_anzahldefizite0punkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_AnzahlDefizite0Punkte IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_punktsummenormiert", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_punktsummenormiert.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_PunktsummeNormiert IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_notenpunktdurchschnitteingebrachterkurse.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_NotenpunktdurchschnittEingebrachterKurse IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_summenotenpunktegk", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_summenotenpunktegk.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteGK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_summenotenpunktelk", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_summenotenpunktelk.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_SummeNotenpunkteLK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_hatzulassung", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_HatZulassung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.blocki_hatzulassung.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BlockI_HatZulassung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungart", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungArt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungart.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungArt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungnotenpunkte", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungnotenpunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungNotenpunkte IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungthema", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungThema = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.besonderelernleistungthema.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.BesondereLernleistungThema IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_punktsumme", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_punktsumme.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Punktsumme IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_anzahldefizite", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_anzahldefizite.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefizite IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_anzahldefizitelk", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_anzahldefizitelk.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_AnzahlDefiziteLK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_hatbestanden", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_hatbestanden.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_hatBestanden IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.abiturnote", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturNote = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.abiturnote.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturNote IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.abiturgesamtpunktzahl", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.abiturgesamtpunktzahl.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.AbiturGesamtPunktzahl IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.verbesserungabpunktzahl", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.verbesserungabpunktzahl.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungAbPunktzahl IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.verbesserungbenoetigepunkte", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.verbesserungbenoetigepunkte.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.VerbesserungBenoetigePunkte IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_schuljahr", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Schuljahr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_schuljahr.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_Schuljahr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_schuljahresabschnitt", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_SchuljahresAbschnitt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.pruefung_schuljahresabschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.Pruefung_SchuljahresAbschnitt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerAbitur.all.migration", query = "SELECT e FROM MigrationDTOSchuelerAbitur e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "FacharbeitFach", "FacharbeitNotenpunkte", "FehlstundenSumme", "FehlstundenSummeUnentschuldigt", "hatLatinum", "hatKleinesLatinum", "hatGraecum", "hatHebraicum", "-", "-", "-", "-", "-", "-", "-", "ProjektkursThema", "FremdspracheSekIManuellGeprueft", "BlockI_AnzahlKurseEingebracht", "BlockI_AnzahlDefiziteEingebracht", "BlockI_AnzahlDefiziteLK", "BlockI_AnzahlDefizite0Punkte", "BlockI_PunktsummeNormiert", "BlockI_NotenpunktdurchschnittEingebrachterKurse", "BlockI_SummeNotenpunkteGK", "BlockI_SummeNotenpunkteLK", "-", "BlockI_HatZulassung", "BesondereLernleistungArt", "BesondereLernleistungNotenpunkte", "BesondereLernleistungThema", "Pruefung_Punktsumme", "Pruefung_AnzahlDefizite", "Pruefung_AnzahlDefiziteLK", "Pruefung_hatBestanden", "AbiturNote", "AbiturGesamtPunktzahl", "VerbesserungAbPunktzahl", "VerbesserungBenoetigePunkte", "Pruefung_Schuljahr", "Pruefung_SchuljahresAbschnitt", "SchulnrEigner"})
+public final class MigrationDTOSchuelerAbitur {
 
 	/** Eine eindeutige ID für den Abiturdatensatz */
 	@Id
@@ -144,33 +144,33 @@ public class MigrationDTOSchuelerAbitur {
 	/** Sprachqualifikation: Latinum */
 	@Column(name = "Latinum")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean hatLatinum;
 
 	/** Sprachqualifikation: Kleines Latinum */
 	@Column(name = "KlLatinum")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean hatKleinesLatinum;
 
 	/** Sprachqualifikation: Graecum */
 	@Column(name = "Graecum")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean hatGraecum;
 
 	/** Sprachqualifikation: Hebraicum */
 	@Column(name = "Hebraicum")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean hatHebraicum;
 
 	/** Projektkurs: Das Thema des Projektkurses */
@@ -181,9 +181,9 @@ public class MigrationDTOSchuelerAbitur {
 	/** true, falls die zweite Fremsprache in der Sekundarstufe 1 manuell geprüft wurde und vom Algorithmus als gegeben angesehen werden kann. */
 	@Column(name = "FS2_SekI_Manuell")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean FremdspracheSekIManuellGeprueft;
 
 	/** Block I: Die Anzahl der eingebrachten Kurse aus der Qualifikationsphase */
@@ -264,9 +264,9 @@ public class MigrationDTOSchuelerAbitur {
 	/** Gesamt: Gibt an, ob die Abiturprüfung bestanden wurde */
 	@Column(name = "PruefungBestanden")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Pruefung_hatBestanden;
 
 	/** Gesamt: Die Abschlussnote des Abiturs */
@@ -317,11 +317,11 @@ public class MigrationDTOSchuelerAbitur {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerAbitur(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -329,7 +329,7 @@ public class MigrationDTOSchuelerAbitur {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

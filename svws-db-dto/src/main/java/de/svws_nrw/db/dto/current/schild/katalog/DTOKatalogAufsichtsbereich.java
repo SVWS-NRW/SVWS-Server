@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Katalog_Aufsichtsbereich.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Katalog_Aufsichtsbereich")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.all", query="SELECT e FROM DTOKatalogAufsichtsbereich e")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.id", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID = :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.id.multiple", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.kuerzel", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.kuerzel.multiple", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.beschreibung", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung = :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.beschreibung.multiple", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung IN :value")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.primaryKeyQuery", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKatalogAufsichtsbereich.all.migration", query="SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Beschreibung"})
-public class DTOKatalogAufsichtsbereich {
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.all", query = "SELECT e FROM DTOKatalogAufsichtsbereich e")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.id", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.id.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.kuerzel", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.kuerzel.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.beschreibung", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung = :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.beschreibung.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung IN :value")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.all.migration", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Beschreibung"})
+public final class DTOKatalogAufsichtsbereich {
 
 	/** Die ID identifiziert einen Aufsichtsbereich eindeutig */
 	@Id
@@ -61,15 +61,15 @@ public class DTOKatalogAufsichtsbereich {
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 */
 	public DTOKatalogAufsichtsbereich(final Long ID, final String Kuerzel, final String Beschreibung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Beschreibung == null) { 
+		if (Beschreibung == null) {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
@@ -77,7 +77,7 @@ public class DTOKatalogAufsichtsbereich {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

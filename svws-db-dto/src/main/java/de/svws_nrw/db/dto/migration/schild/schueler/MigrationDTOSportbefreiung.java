@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Sportbefreiung.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Sportbefreiung")
-@NamedQuery(name="MigrationDTOSportbefreiung.all", query="SELECT e FROM MigrationDTOSportbefreiung e")
-@NamedQuery(name="MigrationDTOSportbefreiung.id", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.id.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.bezeichnung", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.bezeichnung.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.sortierung", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.sortierung.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.sichtbar", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.sichtbar.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.aenderbar", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.aenderbar.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.schulnreigner", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSportbefreiung.primaryKeyQuery", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSportbefreiung.all.migration", query="SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","SchulnrEigner"})
-public class MigrationDTOSportbefreiung {
+@NamedQuery(name = "MigrationDTOSportbefreiung.all", query = "SELECT e FROM MigrationDTOSportbefreiung e")
+@NamedQuery(name = "MigrationDTOSportbefreiung.id", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.id.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.bezeichnung", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.sortierung", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.sortierung.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.sichtbar", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.sichtbar.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.aenderbar", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.aenderbar.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.schulnreigner", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSportbefreiung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSportbefreiung.all.migration", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
+public final class MigrationDTOSportbefreiung {
 
 	/** ID der Sportbefreiung */
 	@Id
@@ -64,17 +64,17 @@ public class MigrationDTOSportbefreiung {
 	/** Sichbarkeit der Sportbefreiung */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Sportbefreiung */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -95,11 +95,11 @@ public class MigrationDTOSportbefreiung {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOSportbefreiung(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -107,7 +107,7 @@ public class MigrationDTOSportbefreiung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_UnterrichtLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_UnterrichtLehrer")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.all", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.id", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.id.multiple", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.unterricht_id", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.unterricht_id.multiple", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.lehrer_id", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.lehrer_id.multiple", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.primaryKeyQuery", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanUnterrichtLehrer.all.migration", query="SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Unterricht_ID","Lehrer_ID"})
-public class DTOStundenplanUnterrichtLehrer {
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.all", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.id", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.unterricht_id", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.unterricht_id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.lehrer_id", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.lehrer_id.multiple", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanUnterrichtLehrer.all.migration", query = "SELECT e FROM DTOStundenplanUnterrichtLehrer e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Unterricht_ID", "Lehrer_ID"})
+public final class DTOStundenplanUnterrichtLehrer {
 
 	/** Die eindeutige ID für die Zuordnung des Lehrer zum Unterricht */
 	@Id
@@ -61,15 +61,15 @@ public class DTOStundenplanUnterrichtLehrer {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOStundenplanUnterrichtLehrer(final Long ID, final Long Unterricht_ID, final Long Lehrer_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Unterricht_ID == null) { 
+		if (Unterricht_ID == null) {
 			throw new NullPointerException("Unterricht_ID must not be null");
 		}
 		this.Unterricht_ID = Unterricht_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -77,7 +77,7 @@ public class DTOStundenplanUnterrichtLehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

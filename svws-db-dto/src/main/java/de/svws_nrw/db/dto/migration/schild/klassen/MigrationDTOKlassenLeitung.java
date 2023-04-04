@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KlassenLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOKlassenLeitungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KlassenLehrer")
-@NamedQuery(name="MigrationDTOKlassenLeitung.all", query="SELECT e FROM MigrationDTOKlassenLeitung e")
-@NamedQuery(name="MigrationDTOKlassenLeitung.klassen_id", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID = :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.klassen_id.multiple", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.lehrer_id", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.lehrer_id.multiple", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.reihenfolge", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Reihenfolge = :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.reihenfolge.multiple", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Reihenfolge IN :value")
-@NamedQuery(name="MigrationDTOKlassenLeitung.primaryKeyQuery", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name="MigrationDTOKlassenLeitung.all.migration", query="SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Klassen_ID","Lehrer_ID","Reihenfolge"})
-public class MigrationDTOKlassenLeitung {
+@NamedQuery(name = "MigrationDTOKlassenLeitung.all", query = "SELECT e FROM MigrationDTOKlassenLeitung e")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.klassen_id", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID = :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.klassen_id.multiple", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.lehrer_id", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.reihenfolge", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Reihenfolge = :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.reihenfolge.multiple", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Reihenfolge IN :value")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID = ?1 AND e.Lehrer_ID = ?2")
+@NamedQuery(name = "MigrationDTOKlassenLeitung.all.migration", query = "SELECT e FROM MigrationDTOKlassenLeitung e WHERE e.Klassen_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Klassen_ID", "Lehrer_ID", "Reihenfolge"})
+public final class MigrationDTOKlassenLeitung {
 
 	/** ID der Klasse */
 	@Id
@@ -64,15 +64,15 @@ public class MigrationDTOKlassenLeitung {
 	 * @param Reihenfolge   der Wert für das Attribut Reihenfolge
 	 */
 	public MigrationDTOKlassenLeitung(final Long Klassen_ID, final Long Lehrer_ID, final Integer Reihenfolge) {
-		if (Klassen_ID == null) { 
+		if (Klassen_ID == null) {
 			throw new NullPointerException("Klassen_ID must not be null");
 		}
 		this.Klassen_ID = Klassen_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Reihenfolge == null) { 
+		if (Reihenfolge == null) {
 			throw new NullPointerException("Reihenfolge must not be null");
 		}
 		this.Reihenfolge = Reihenfolge;
@@ -80,7 +80,7 @@ public class MigrationDTOKlassenLeitung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

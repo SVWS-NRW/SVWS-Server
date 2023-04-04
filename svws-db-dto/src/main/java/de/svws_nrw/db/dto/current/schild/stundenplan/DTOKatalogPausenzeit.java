@@ -21,25 +21,25 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Katalog_Pausenzeiten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Katalog_Pausenzeiten")
-@NamedQuery(name="DTOKatalogPausenzeit.all", query="SELECT e FROM DTOKatalogPausenzeit e")
-@NamedQuery(name="DTOKatalogPausenzeit.id", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = :value")
-@NamedQuery(name="DTOKatalogPausenzeit.id.multiple", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKatalogPausenzeit.tag", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Tag = :value")
-@NamedQuery(name="DTOKatalogPausenzeit.tag.multiple", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Tag IN :value")
-@NamedQuery(name="DTOKatalogPausenzeit.beginn", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Beginn = :value")
-@NamedQuery(name="DTOKatalogPausenzeit.beginn.multiple", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Beginn IN :value")
-@NamedQuery(name="DTOKatalogPausenzeit.ende", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende = :value")
-@NamedQuery(name="DTOKatalogPausenzeit.ende.multiple", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende IN :value")
-@NamedQuery(name="DTOKatalogPausenzeit.primaryKeyQuery", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKatalogPausenzeit.all.migration", query="SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Tag","Beginn","Ende"})
-public class DTOKatalogPausenzeit {
+@NamedQuery(name = "DTOKatalogPausenzeit.all", query = "SELECT e FROM DTOKatalogPausenzeit e")
+@NamedQuery(name = "DTOKatalogPausenzeit.id", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.id.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.tag", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Tag = :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.tag.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Tag IN :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.beginn", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Beginn = :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.beginn.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Beginn IN :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.ende", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende = :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.ende.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.primaryKeyQuery", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKatalogPausenzeit.all.migration", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Tag", "Beginn", "Ende"})
+public final class DTOKatalogPausenzeit {
 
 	/** Eine ID, die einen Pausenzeit-Eintrag eindeutig identifiziert */
 	@Id
@@ -55,17 +55,17 @@ public class DTOKatalogPausenzeit {
 	/** Die Uhrzeit, wann die Pausenzeit beginnt */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Beginn;
 
 	/** Die Uhrzeit, wann die Pausenzeit endet */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Ende;
 
 	/**
@@ -83,19 +83,19 @@ public class DTOKatalogPausenzeit {
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
 	public DTOKatalogPausenzeit(final Long ID, final Integer Tag, final String Beginn, final String Ende) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Tag == null) { 
+		if (Tag == null) {
 			throw new NullPointerException("Tag must not be null");
 		}
 		this.Tag = Tag;
-		if (Beginn == null) { 
+		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
-		if (Ende == null) { 
+		if (Ende == null) {
 			throw new NullPointerException("Ende must not be null");
 		}
 		this.Ende = Ende;
@@ -103,7 +103,7 @@ public class DTOKatalogPausenzeit {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

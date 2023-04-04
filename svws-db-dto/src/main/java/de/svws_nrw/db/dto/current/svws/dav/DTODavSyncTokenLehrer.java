@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle DavSyncTokenLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "DavSyncTokenLehrer")
-@NamedQuery(name="DTODavSyncTokenLehrer.all", query="SELECT e FROM DTODavSyncTokenLehrer e")
-@NamedQuery(name="DTODavSyncTokenLehrer.id", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID = :value")
-@NamedQuery(name="DTODavSyncTokenLehrer.id.multiple", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID IN :value")
-@NamedQuery(name="DTODavSyncTokenLehrer.synctoken", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.SyncToken = :value")
-@NamedQuery(name="DTODavSyncTokenLehrer.synctoken.multiple", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.SyncToken IN :value")
-@NamedQuery(name="DTODavSyncTokenLehrer.primaryKeyQuery", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID = ?1")
-@NamedQuery(name="DTODavSyncTokenLehrer.all.migration", query="SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SyncToken"})
-public class DTODavSyncTokenLehrer {
+@NamedQuery(name = "DTODavSyncTokenLehrer.all", query = "SELECT e FROM DTODavSyncTokenLehrer e")
+@NamedQuery(name = "DTODavSyncTokenLehrer.id", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID = :value")
+@NamedQuery(name = "DTODavSyncTokenLehrer.id.multiple", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID IN :value")
+@NamedQuery(name = "DTODavSyncTokenLehrer.synctoken", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.SyncToken = :value")
+@NamedQuery(name = "DTODavSyncTokenLehrer.synctoken.multiple", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.SyncToken IN :value")
+@NamedQuery(name = "DTODavSyncTokenLehrer.primaryKeyQuery", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavSyncTokenLehrer.all.migration", query = "SELECT e FROM DTODavSyncTokenLehrer e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SyncToken"})
+public final class DTODavSyncTokenLehrer {
 
 	/** ID des Lehrers */
 	@Id
@@ -53,11 +53,11 @@ public class DTODavSyncTokenLehrer {
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
 	public DTODavSyncTokenLehrer(final Long ID, final String SyncToken) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SyncToken == null) { 
+		if (SyncToken == null) {
 			throw new NullPointerException("SyncToken must not be null");
 		}
 		this.SyncToken = SyncToken;
@@ -65,7 +65,7 @@ public class DTODavSyncTokenLehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

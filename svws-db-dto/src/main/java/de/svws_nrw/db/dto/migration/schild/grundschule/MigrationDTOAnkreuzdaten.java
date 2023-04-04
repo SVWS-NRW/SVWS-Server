@@ -13,33 +13,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Ankreuzdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ankreuzdaten")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.all", query="SELECT e FROM MigrationDTOAnkreuzdaten e")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.id", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.id.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.schulnreigner", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe1", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe1 = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe1.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe1 IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe2", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe2 = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe2.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe2 IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe3", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe3 = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe3.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe3 IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe4", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe4 = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe4.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe4 IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe5", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe5 = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.textstufe5.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe5 IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.bezeichnungsonst", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.BezeichnungSONST = :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.bezeichnungsonst.multiple", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.BezeichnungSONST IN :value")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOAnkreuzdaten.all.migration", query="SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","TextStufe1","TextStufe2","TextStufe3","TextStufe4","TextStufe5","BezeichnungSONST"})
-public class MigrationDTOAnkreuzdaten {
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.all", query = "SELECT e FROM MigrationDTOAnkreuzdaten e")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.id", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.id.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.schulnreigner", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe1", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe1 = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe1.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe1 IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe2", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe2 = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe2.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe2 IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe3", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe3 = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe3.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe3 IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe4", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe4 = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe4.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe4 IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe5", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe5 = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.textstufe5.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.TextStufe5 IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.bezeichnungsonst", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.BezeichnungSONST = :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.bezeichnungsonst.multiple", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.BezeichnungSONST IN :value")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAnkreuzdaten.all.migration", query = "SELECT e FROM MigrationDTOAnkreuzdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "TextStufe1", "TextStufe2", "TextStufe3", "TextStufe4", "TextStufe5", "BezeichnungSONST"})
+public final class MigrationDTOAnkreuzdaten {
 
 	/** ID des Datensatzes für die Angaben zu den Ankreuzkompetenzen */
 	@Id
@@ -95,11 +95,11 @@ public class MigrationDTOAnkreuzdaten {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOAnkreuzdaten(final Long ID, final Integer SchulnrEigner) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -107,7 +107,7 @@ public class MigrationDTOAnkreuzdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

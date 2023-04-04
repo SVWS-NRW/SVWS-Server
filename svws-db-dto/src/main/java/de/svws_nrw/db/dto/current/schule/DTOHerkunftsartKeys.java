@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Herkunftsart_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunftsart_Keys")
-@NamedQuery(name="DTOHerkunftsartKeys.all", query="SELECT e FROM DTOHerkunftsartKeys e")
-@NamedQuery(name="DTOHerkunftsartKeys.kuerzel", query="SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOHerkunftsartKeys.kuerzel.multiple", query="SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOHerkunftsartKeys.primaryKeyQuery", query="SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="DTOHerkunftsartKeys.all.migration", query="SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "DTOHerkunftsartKeys.all", query = "SELECT e FROM DTOHerkunftsartKeys e")
+@NamedQuery(name = "DTOHerkunftsartKeys.kuerzel", query = "SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOHerkunftsartKeys.kuerzel.multiple", query = "SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOHerkunftsartKeys.primaryKeyQuery", query = "SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOHerkunftsartKeys.all.migration", query = "SELECT e FROM DTOHerkunftsartKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class DTOHerkunftsartKeys {
+public final class DTOHerkunftsartKeys {
 
 	/** Das Kürzel der Herkunftsart */
 	@Id
@@ -45,7 +45,7 @@ public class DTOHerkunftsartKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOHerkunftsartKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class DTOHerkunftsartKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

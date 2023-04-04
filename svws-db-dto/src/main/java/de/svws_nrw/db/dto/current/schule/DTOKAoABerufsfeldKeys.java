@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KAoA_Berufsfeld_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KAoA_Berufsfeld_Keys")
-@NamedQuery(name="DTOKAoABerufsfeldKeys.all", query="SELECT e FROM DTOKAoABerufsfeldKeys e")
-@NamedQuery(name="DTOKAoABerufsfeldKeys.id", query="SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID = :value")
-@NamedQuery(name="DTOKAoABerufsfeldKeys.id.multiple", query="SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKAoABerufsfeldKeys.primaryKeyQuery", query="SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKAoABerufsfeldKeys.all.migration", query="SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID IS NOT NULL")
+@NamedQuery(name = "DTOKAoABerufsfeldKeys.all", query = "SELECT e FROM DTOKAoABerufsfeldKeys e")
+@NamedQuery(name = "DTOKAoABerufsfeldKeys.id", query = "SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKAoABerufsfeldKeys.id.multiple", query = "SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKAoABerufsfeldKeys.primaryKeyQuery", query = "SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKAoABerufsfeldKeys.all.migration", query = "SELECT e FROM DTOKAoABerufsfeldKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
-public class DTOKAoABerufsfeldKeys {
+public final class DTOKAoABerufsfeldKeys {
 
 	/** Die eindeutige ID für das Berufsfeld */
 	@Id
@@ -45,7 +45,7 @@ public class DTOKAoABerufsfeldKeys {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOKAoABerufsfeldKeys(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -53,7 +53,7 @@ public class DTOKAoABerufsfeldKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,53 +21,53 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerBKAbschluss.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerBKAbschluss")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.all", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schueler_id", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassung", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Zulassung = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassung.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Zulassung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestanden", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Bestanden = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestanden.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Bestanden IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zertifikatbk", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZertifikatBK = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zertifikatbk.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZertifikatBK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassungerwbk", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungErwBK = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassungerwbk.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungErwBK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestandenerwbk", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenErwBK = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestandenerwbk.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenErwBK IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassungba", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungBA = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.zulassungba.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungBA IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestandenba", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenBA = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bestandenba.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenBA IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.praktprfnote", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.PraktPrfNote = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.praktprfnote.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.PraktPrfNote IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.notekolloquium", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteKolloquium = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.notekolloquium.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteKolloquium IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.themaabschlussarbeit", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ThemaAbschlussarbeit = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.themaabschlussarbeit.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ThemaAbschlussarbeit IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bap_vorhanden", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BAP_Vorhanden = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.bap_vorhanden.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BAP_Vorhanden IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.notefachpraxis", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteFachpraxis = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.notefachpraxis.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteFachpraxis IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.fachpraktanteilausr", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.fachpraktanteilausr.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.jahr", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.jahr.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.abschnitt", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.abschnitt.multiple", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerBKAbschluss.all.migration", query="SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","Schuljahresabschnitts_ID","Zulassung","Bestanden","ZertifikatBK","ZulassungErwBK","BestandenErwBK","ZulassungBA","BestandenBA","PraktPrfNote","NoteKolloquium","ThemaAbschlussarbeit","SchulnrEigner","BAP_Vorhanden","NoteFachpraxis","FachPraktAnteilAusr","Jahr","Abschnitt"})
-public class MigrationDTOSchuelerBKAbschluss {
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.all", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassung", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Zulassung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassung.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Zulassung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestanden", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Bestanden = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestanden.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Bestanden IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zertifikatbk", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZertifikatBK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zertifikatbk.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZertifikatBK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassungerwbk", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungErwBK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassungerwbk.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungErwBK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestandenerwbk", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenErwBK = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestandenerwbk.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenErwBK IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassungba", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungBA = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.zulassungba.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ZulassungBA IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestandenba", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenBA = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bestandenba.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BestandenBA IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.praktprfnote", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.PraktPrfNote = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.praktprfnote.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.PraktPrfNote IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.notekolloquium", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteKolloquium = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.notekolloquium.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteKolloquium IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.themaabschlussarbeit", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ThemaAbschlussarbeit = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.themaabschlussarbeit.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.ThemaAbschlussarbeit IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bap_vorhanden", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BAP_Vorhanden = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.bap_vorhanden.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.BAP_Vorhanden IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.notefachpraxis", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteFachpraxis = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.notefachpraxis.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.NoteFachpraxis IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.fachpraktanteilausr", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.fachpraktanteilausr.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.jahr", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.jahr.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.abschnitt", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.abschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.all.migration", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "Schuljahresabschnitts_ID", "Zulassung", "Bestanden", "ZertifikatBK", "ZulassungErwBK", "BestandenErwBK", "ZulassungBA", "BestandenBA", "PraktPrfNote", "NoteKolloquium", "ThemaAbschlussarbeit", "SchulnrEigner", "BAP_Vorhanden", "NoteFachpraxis", "FachPraktAnteilAusr", "Jahr", "Abschnitt"})
+public final class MigrationDTOSchuelerBKAbschluss {
 
 	/** SchülerID für den BKAbschlussReiter */
 	@Id
@@ -83,57 +83,57 @@ public class MigrationDTOSchuelerBKAbschluss {
 	/** Zulassung Ja Nein für den BKAbschlussReiter */
 	@Column(name = "Zulassung")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean Zulassung;
 
 	/** Bestanden Ja Nein  für den BKAbschlussReiter */
 	@Column(name = "Bestanden")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean Bestanden;
 
 	/** DEPRECATED: Zertifikat für den BKAbschlussReiter */
 	@Column(name = "ZertifikatBK")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean ZertifikatBK;
 
 	/** Zulassung erweiterte Beruflliche Kenntnisse */
 	@Column(name = "ZulassungErwBK")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean ZulassungErwBK;
 
 	/** Bestanden erweiterte Beruflliche Kenntnisse */
 	@Column(name = "BestandenErwBK")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean BestandenErwBK;
 
 	/** Zulassung Berufsabschluss  für den BKAbschlussReiter */
 	@Column(name = "ZulassungBA")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean ZulassungBA;
 
 	/** Bestanden Berufsabschluss für den BKAbschlussReiter */
 	@Column(name = "BestandenBA")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean BestandenBA;
 
 	/** Note Praktische Prüfung für den BKAbschlussReiter */
@@ -169,9 +169,9 @@ public class MigrationDTOSchuelerBKAbschluss {
 	/** Fachpraktische Anteile mindestens ausreichend für den BKAbschlussReiter */
 	@Column(name = "FachPraktAnteilAusr")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean FachPraktAnteilAusr;
 
 	/** Schuljahr für den BKAbschlussReiter */
@@ -196,7 +196,7 @@ public class MigrationDTOSchuelerBKAbschluss {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerBKAbschluss(final Long Schueler_ID) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -204,7 +204,7 @@ public class MigrationDTOSchuelerBKAbschluss {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

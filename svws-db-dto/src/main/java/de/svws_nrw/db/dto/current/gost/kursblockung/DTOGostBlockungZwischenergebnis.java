@@ -21,25 +21,25 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung_Zwischenergebnisse.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Zwischenergebnisse")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.all", query="SELECT e FROM DTOGostBlockungZwischenergebnis e")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.id", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.blockung_id", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.blockung_id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.istvorlage", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.istvorlage.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostBlockungZwischenergebnis.all.migration", query="SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Blockung_ID","IstMarkiert","IstVorlage"})
-public class DTOGostBlockungZwischenergebnis {
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.all", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.id", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.blockung_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.Blockung_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istmarkiert", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istmarkiert.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstMarkiert IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.all.migration", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Blockung_ID", "IstMarkiert", "IstVorlage"})
+public final class DTOGostBlockungZwischenergebnis {
 
 	/** ID der Zwischenergebnisses einer Blockung (generiert) */
 	@Id
@@ -55,17 +55,17 @@ public class DTOGostBlockungZwischenergebnis {
 	/** Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstMarkiert")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstMarkiert;
 
 	/** Gibt an, ob das Zwischenergebnis im Zusammenhang mit der Erstellen einer Blockung erstellt wurde und somit als Vorlage für Regeldefinitionen dient oder nicht: 1 - true, 0 - false. Die Vorlage kann zu einem späteren Zeitpunkt ggf. auf ein anderes (berechnetes) Ergebnis umgesetzt werden.In diesem Fall müssten jedoch alle anderen Ergebnisse der Blockungsdefinition entfernt werden. */
 	@Column(name = "IstVorlage")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstVorlage;
 
 	/**
@@ -83,19 +83,19 @@ public class DTOGostBlockungZwischenergebnis {
 	 * @param IstVorlage   der Wert für das Attribut IstVorlage
 	 */
 	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Boolean IstMarkiert, final Boolean IstVorlage) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Blockung_ID == null) { 
+		if (Blockung_ID == null) {
 			throw new NullPointerException("Blockung_ID must not be null");
 		}
 		this.Blockung_ID = Blockung_ID;
-		if (IstMarkiert == null) { 
+		if (IstMarkiert == null) {
 			throw new NullPointerException("IstMarkiert must not be null");
 		}
 		this.IstMarkiert = IstMarkiert;
-		if (IstVorlage == null) { 
+		if (IstVorlage == null) {
 			throw new NullPointerException("IstVorlage must not be null");
 		}
 		this.IstVorlage = IstVorlage;
@@ -103,7 +103,7 @@ public class DTOGostBlockungZwischenergebnis {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

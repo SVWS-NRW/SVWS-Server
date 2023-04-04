@@ -36,149 +36,149 @@ import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverter
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerLernabschnittsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLernabschnittsdaten")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.all", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schueler_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schueler_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.wechselnr", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.WechselNr = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.wechselnr.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.WechselNr IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schulbesuchsjahre", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schulbesuchsjahre.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.hochrechnung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.hochrechnung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.semesterwertung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.semesterwertung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.pruefordnung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.pruefordnung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.klassen_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.klassen_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.tutor_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.tutor_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.verspaetet", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.verspaetet.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_fach_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_fach_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_notekrz", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_notekrz.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_datum", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npv_datum.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_fach_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_fach_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_notekrz", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_notekrz.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_datum", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npaa_datum.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_fach_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_fach_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_notekrz", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_notekrz.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_datum", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.npbq_datum.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.versetzungkrz", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.versetzungkrz.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschlussart", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschlussart.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschlistprognose", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschlistprognose.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.konferenzdatum", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.konferenzdatum.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisdatum", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisdatum.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schulgliederung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schulgliederung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.asdjahrgang", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.asdjahrgang.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.jahrgang_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.jahrgang_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fachklasse_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fachklasse_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schwerpunkt_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schwerpunkt_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisbem", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisbem.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schwerbehinderung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.schwerbehinderung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.orgformkrz", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.orgformkrz.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.refpaed", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.RefPaed = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.refpaed.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.RefPaed IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.klassenart", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassenart = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.klassenart.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassenart IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sumfehlstd", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sumfehlstd.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sumfehlstdu", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sumfehlstdu.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.wiederholung", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.wiederholung.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.gesamtnote_gs", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.gesamtnote_gs.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.gesamtnote_nw", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.gesamtnote_nw.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.folgeklasse_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.folgeklasse_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschluss", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschluss.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschluss_b", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.abschluss_b.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.dsnote", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DSNote = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.dsnote.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DSNote IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_leist", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_leist.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_zuv", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_zuv.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_selbst", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.av_selbst.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_verant", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_verant.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_konfl", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_konfl.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_koop", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sv_koop.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.moeglnpfaecher", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.moeglnpfaecher.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zertifikate", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zertifikate.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumfhr", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumfhr.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.pruefalgoergebnis", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.pruefalgoergebnis.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisart", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zeugnisart.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumvon", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumVon = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumvon.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumVon IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumbis", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumBis = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.datumbis.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumBis IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fehlstundengrenzwert", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fehlstundengrenzwert.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sonderpaedagoge_id", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.sonderpaedagoge_id.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fachpraktanteilausr", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.fachpraktanteilausr.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.bilingualerzweig", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.bilingualerzweig.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.aosf", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AOSF = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.aosf.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AOSF IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.autist", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Autist = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.autist.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Autist IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zieldifferenteslernen", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen = :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.zieldifferenteslernen.multiple", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen IN :value")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.primaryKeyQuery", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerLernabschnittsdaten.all.migration", query="SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","WechselNr","Schulbesuchsjahre","Hochrechnung","SemesterWertung","PruefOrdnung","Klassen_ID","Tutor_ID","Verspaetet","NPV_Fach_ID","NPV_NoteKrz","NPV_Datum","NPAA_Fach_ID","NPAA_NoteKrz","NPAA_Datum","NPBQ_Fach_ID","NPBQ_NoteKrz","NPBQ_Datum","VersetzungKrz","AbschlussArt","AbschlIstPrognose","Konferenzdatum","ZeugnisDatum","Schulgliederung","ASDJahrgang","Jahrgang_ID","Fachklasse_ID","Schwerpunkt_ID","ZeugnisBem","Schwerbehinderung","Foerderschwerpunkt_ID","OrgFormKrz","RefPaed","Klassenart","SumFehlStd","SumFehlStdU","Wiederholung","Gesamtnote_GS","Gesamtnote_NW","Folgeklasse_ID","Foerderschwerpunkt2_ID","Abschluss","Abschluss_B","DSNote","AV_Leist","AV_Zuv","AV_Selbst","SV_Verant","SV_Konfl","SV_Koop","MoeglNPFaecher","Zertifikate","DatumFHR","PruefAlgoErgebnis","Zeugnisart","DatumVon","DatumBis","FehlstundenGrenzwert","Sonderpaedagoge_ID","FachPraktAnteilAusr","BilingualerZweig","AOSF","Autist","ZieldifferentesLernen"})
-public class DTOSchuelerLernabschnittsdaten {
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.all", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schueler_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.wechselnr", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.WechselNr = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.wechselnr.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.WechselNr IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schulbesuchsjahre", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schulbesuchsjahre.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.hochrechnung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.hochrechnung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.semesterwertung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.semesterwertung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.pruefordnung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.pruefordnung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.klassen_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.klassen_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.tutor_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.tutor_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.verspaetet", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.verspaetet.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_fach_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_fach_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_notekrz", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_notekrz.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_datum", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npv_datum.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_fach_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_fach_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_notekrz", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_notekrz.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_datum", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npaa_datum.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_fach_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_fach_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_notekrz", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_notekrz.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_datum", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.npbq_datum.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.versetzungkrz", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.versetzungkrz.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschlussart", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschlussart.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschlistprognose", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschlistprognose.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.konferenzdatum", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.konferenzdatum.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisdatum", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisdatum.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schulgliederung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schulgliederung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.asdjahrgang", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.asdjahrgang.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.jahrgang_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.jahrgang_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fachklasse_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fachklasse_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schwerpunkt_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schwerpunkt_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisbem", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisbem.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schwerbehinderung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.schwerbehinderung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.orgformkrz", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.orgformkrz.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.refpaed", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.RefPaed = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.refpaed.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.RefPaed IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.klassenart", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassenart = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.klassenart.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassenart IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sumfehlstd", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sumfehlstd.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sumfehlstdu", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sumfehlstdu.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.wiederholung", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.wiederholung.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.gesamtnote_gs", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.gesamtnote_gs.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.gesamtnote_nw", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.gesamtnote_nw.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.folgeklasse_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.folgeklasse_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschluss", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschluss.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschluss_b", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.abschluss_b.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.dsnote", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DSNote = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.dsnote.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DSNote IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_leist", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_leist.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_zuv", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_zuv.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_selbst", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.av_selbst.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_verant", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_verant.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_konfl", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_konfl.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_koop", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sv_koop.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.moeglnpfaecher", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.moeglnpfaecher.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zertifikate", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zertifikate.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumfhr", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumfhr.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.pruefalgoergebnis", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.pruefalgoergebnis.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisart", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zeugnisart.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumvon", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumVon = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumvon.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumVon IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumbis", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumBis = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.datumbis.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.DatumBis IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fehlstundengrenzwert", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fehlstundengrenzwert.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sonderpaedagoge_id", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.sonderpaedagoge_id.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fachpraktanteilausr", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.fachpraktanteilausr.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.bilingualerzweig", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.bilingualerzweig.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.aosf", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AOSF = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.aosf.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.AOSF IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.autist", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Autist = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.autist.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Autist IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zieldifferenteslernen", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen = :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.zieldifferenteslernen.multiple", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen IN :value")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerLernabschnittsdaten.all.migration", query = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Schulbesuchsjahre", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Schulgliederung", "ASDJahrgang", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen"})
+public final class DTOSchuelerLernabschnittsdaten {
 
 	/** Eine eindeutige ID für den Lernabschnitt des Schülers */
 	@Id
@@ -214,9 +214,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Gewerteter Abschnitt (Ja/Nein) */
 	@Column(name = "SemesterWertung")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean SemesterWertung;
 
 	/** Prüfungsordnung des Lernabschnitts */
@@ -252,9 +252,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** TODO: BK: ID des Nachprüfungsfaches für den allgemein-bildenen Abschluss */
 	@Column(name = "NPV_Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String NPV_Datum;
 
 	/** TODO: BK: Note des Nachprüfungsfaches für den allgemein-bildenen Abschluss */
@@ -270,9 +270,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** TODO: BK: dito für berufs-qualifizierende Nachprüfung */
 	@Column(name = "NPAA_Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String NPAA_Datum;
 
 	/** TODO: BK: dito für berufs-qualifizierende Nachprüfung */
@@ -288,9 +288,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** TODO: ID des Nachprüfungsfaches */
 	@Column(name = "NPBQ_Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String NPBQ_Datum;
 
 	/** Kürzel des Versetungsvermerk */
@@ -306,33 +306,33 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Gibt an ob Abschluss Prognose ist (GE, PS und SK) */
 	@Column(name = "AbschlIstPrognose")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean AbschlIstPrognose;
 
 	/** Konferenzdatum */
 	@Column(name = "Konferenzdatum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Konferenzdatum;
 
 	/** Zeugnisdatum */
 	@Column(name = "ZeugnisDatum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String ZeugnisDatum;
 
 	/** ASD-Kürzel SGL */
 	@Column(name = "ASDSchulgliederung")
 	@JsonProperty
-	@Convert(converter=SchulgliederungKuerzelConverter.class)
-	@JsonSerialize(using=SchulgliederungKuerzelConverterSerializer.class)
-	@JsonDeserialize(using=SchulgliederungKuerzelConverterDeserializer.class)
+	@Convert(converter = SchulgliederungKuerzelConverter.class)
+	@JsonSerialize(using = SchulgliederungKuerzelConverterSerializer.class)
+	@JsonDeserialize(using = SchulgliederungKuerzelConverterDeserializer.class)
 	public Schulgliederung Schulgliederung;
 
 	/** ASD-Jahrgang kann alles über ID geregelt werden */
@@ -363,9 +363,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Schwerbehinderung (Ja/Nein) */
 	@Column(name = "Schwerbehinderung")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Schwerbehinderung;
 
 	/** ID Hauptförderschwerpunkt */
@@ -381,9 +381,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** TODO DEPRECATED: Reformpädagogik */
 	@Column(name = "RefPaed")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RefPaed;
 
 	/** Klassenart */
@@ -404,25 +404,25 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Lernabschnitt wurde wiederholt (Ja/Nein) */
 	@Column(name = "Wiederholung")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Wiederholung;
 
 	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
 	@Column(name = "Gesamtnote_GS")
 	@JsonProperty
-	@Convert(converter=NoteConverterFromInteger.class)
-	@JsonSerialize(using=NoteConverterFromIntegerSerializer.class)
-	@JsonDeserialize(using=NoteConverterFromIntegerDeserializer.class)
+	@Convert(converter = NoteConverterFromInteger.class)
+	@JsonSerialize(using = NoteConverterFromIntegerSerializer.class)
+	@JsonDeserialize(using = NoteConverterFromIntegerDeserializer.class)
 	public Note Gesamtnote_GS;
 
 	/** Lernbereichnote Naturwissenschaft HA10 */
 	@Column(name = "Gesamtnote_NW")
 	@JsonProperty
-	@Convert(converter=NoteConverterFromInteger.class)
-	@JsonSerialize(using=NoteConverterFromIntegerSerializer.class)
-	@JsonDeserialize(using=NoteConverterFromIntegerDeserializer.class)
+	@Convert(converter = NoteConverterFromInteger.class)
+	@JsonSerialize(using = NoteConverterFromIntegerSerializer.class)
+	@JsonDeserialize(using = NoteConverterFromIntegerDeserializer.class)
 	public Note Gesamtnote_NW;
 
 	/** ID der Folgeklasse für den Lernabschnitt, sofern dieser vom Standard der Klassentabelle abweicht */
@@ -493,9 +493,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Datum FHR */
 	@Column(name = "DatumFHR")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String DatumFHR;
 
 	/** Text für die Ergebnisse der Abschlussberechnungen */
@@ -511,17 +511,17 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Beginn Lernabschnitt */
 	@Column(name = "DatumVon")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String DatumVon;
 
 	/** Ende Lernabschnitt */
 	@Column(name = "DatumBis")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String DatumBis;
 
 	/** Grenzwert für Fehlstunden (BK Warnbriefe zur Entlassung) */
@@ -537,9 +537,9 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Enthält die Angabe, ob die Fachpraktischen Anteile in Anlage B08 B09 B10 ausreichend sind für Versetzung (BK) */
 	@Column(name = "FachPraktAnteilAusr")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean FachPraktAnteilAusr;
 
 	/** Sprache des Bilingualen Zweigs */
@@ -550,25 +550,25 @@ public class DTOSchuelerLernabschnittsdaten {
 	/** Gibt an ob der Schüler ein AOSF hat */
 	@Column(name = "AOSF")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean AOSF;
 
 	/** Gibt an ob Autismuss vorliegt (Ja/Nein) */
 	@Column(name = "Autist")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Autist;
 
 	/** Gibt an ob der Schüler zieldifferent unterrichtet wird */
 	@Column(name = "ZieldifferentesLernen")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean ZieldifferentesLernen;
 
 	/**
@@ -586,19 +586,19 @@ public class DTOSchuelerLernabschnittsdaten {
 	 * @param FachPraktAnteilAusr   der Wert für das Attribut FachPraktAnteilAusr
 	 */
 	public DTOSchuelerLernabschnittsdaten(final Long ID, final Long Schueler_ID, final Long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (FachPraktAnteilAusr == null) { 
+		if (FachPraktAnteilAusr == null) {
 			throw new NullPointerException("FachPraktAnteilAusr must not be null");
 		}
 		this.FachPraktAnteilAusr = FachPraktAnteilAusr;
@@ -606,7 +606,7 @@ public class DTOSchuelerLernabschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

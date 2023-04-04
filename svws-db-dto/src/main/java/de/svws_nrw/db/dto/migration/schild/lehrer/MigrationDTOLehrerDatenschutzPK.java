@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle LehrerDatenschutz.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class MigrationDTOLehrerDatenschutzPK implements Serializable {
+public final class MigrationDTOLehrerDatenschutzPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class MigrationDTOLehrerDatenschutzPK implements Serializable {
 	 * @param DatenschutzID   der Wert für das Attribut DatenschutzID
 	 */
 	public MigrationDTOLehrerDatenschutzPK(final Long LehrerID, final Long DatenschutzID) {
-		if (LehrerID == null) { 
+		if (LehrerID == null) {
 			throw new NullPointerException("LehrerID must not be null");
 		}
 		this.LehrerID = LehrerID;
-		if (DatenschutzID == null) { 
+		if (DatenschutzID == null) {
 			throw new NullPointerException("DatenschutzID must not be null");
 		}
 		this.DatenschutzID = DatenschutzID;
@@ -43,7 +43,7 @@ public class MigrationDTOLehrerDatenschutzPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,41 +13,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerAbschnittsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerAbschnittsdaten")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.all", query="SELECT e FROM DTOLehrerAbschnittsdaten e")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.id", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.id.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.lehrer_id", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.lehrer_id.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.schuljahresabschnitts_id", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.rechtsverhaeltnis", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.rechtsverhaeltnis.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.beschaeftigungsart", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.einsatzstatus", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.einsatzstatus.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.pflichtstdsoll", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.unterrichtsstd", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.unterrichtsstd.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.mehrleistungstd", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.mehrleistungstd.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.entlastungstd", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.EntlastungStd = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.entlastungstd.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.EntlastungStd IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.anrechnungstd", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.anrechnungstd.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.reststd", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd = :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.reststd.multiple", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.primaryKeyQuery", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="DTOLehrerAbschnittsdaten.all.migration", query="SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Lehrer_ID","Schuljahresabschnitts_ID","Rechtsverhaeltnis","Beschaeftigungsart","Einsatzstatus","PflichtstdSoll","UnterrichtsStd","MehrleistungStd","EntlastungStd","AnrechnungStd","RestStd"})
-public class DTOLehrerAbschnittsdaten {
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.all", query = "SELECT e FROM DTOLehrerAbschnittsdaten e")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.id", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.id.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.lehrer_id", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.lehrer_id.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.schuljahresabschnitts_id", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.rechtsverhaeltnis", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.rechtsverhaeltnis.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Rechtsverhaeltnis IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.beschaeftigungsart", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.einsatzstatus", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.einsatzstatus.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.pflichtstdsoll", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.unterrichtsstd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.unterrichtsstd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.mehrleistungstd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.mehrleistungstd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.MehrleistungStd IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.entlastungstd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.EntlastungStd = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.entlastungstd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.EntlastungStd IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.anrechnungstd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.anrechnungstd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.AnrechnungStd IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.reststd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.reststd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.all.migration", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd"})
+public final class DTOLehrerAbschnittsdaten {
 
 	/** ID des Eintrags für die LehrerAbschnittsdaten */
 	@Id
@@ -124,15 +124,15 @@ public class DTOLehrerAbschnittsdaten {
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 */
 	public DTOLehrerAbschnittsdaten(final Long ID, final Long Lehrer_ID, final Long Schuljahresabschnitts_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
@@ -140,7 +140,7 @@ public class DTOLehrerAbschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

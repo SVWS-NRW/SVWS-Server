@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_Zeitraster.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Zeitraster")
-@NamedQuery(name="DTOStundenplanZeitraster.all", query="SELECT e FROM DTOStundenplanZeitraster e")
-@NamedQuery(name="DTOStundenplanZeitraster.id", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.id.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.stundenplan_id", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.stundenplan_id.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.tag", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.tag.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.stunde", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.stunde.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.beginn", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.beginn.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.ende", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende = :value")
-@NamedQuery(name="DTOStundenplanZeitraster.ende.multiple", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende IN :value")
-@NamedQuery(name="DTOStundenplanZeitraster.primaryKeyQuery", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanZeitraster.all.migration", query="SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Stundenplan_ID","Tag","Stunde","Beginn","Ende"})
-public class DTOStundenplanZeitraster {
+@NamedQuery(name = "DTOStundenplanZeitraster.all", query = "SELECT e FROM DTOStundenplanZeitraster e")
+@NamedQuery(name = "DTOStundenplanZeitraster.id", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.id.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.stundenplan_id", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.stundenplan_id.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.tag", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.tag.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Tag IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.stunde", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.stunde.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stunde IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.beginn", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.beginn.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Beginn IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.ende", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende = :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.ende.multiple", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOStundenplanZeitraster.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanZeitraster.all.migration", query = "SELECT e FROM DTOStundenplanZeitraster e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Stundenplan_ID", "Tag", "Stunde", "Beginn", "Ende"})
+public final class DTOStundenplanZeitraster {
 
 	/** Eine ID, die einen Zeitraster-Eintrag eindeutig identifiziert - hat keinen Bezug zur ID der Katalog-Tabelle */
 	@Id
@@ -69,17 +69,17 @@ public class DTOStundenplanZeitraster {
 	/** Die Uhrzeit, wann die Stunde beginnt */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Beginn;
 
 	/** Die Uhrzeit, wann die Stunde endet */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Ende;
 
 	/**
@@ -99,27 +99,27 @@ public class DTOStundenplanZeitraster {
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
 	public DTOStundenplanZeitraster(final Long ID, final Long Stundenplan_ID, final Integer Tag, final Integer Stunde, final String Beginn, final String Ende) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Stundenplan_ID == null) { 
+		if (Stundenplan_ID == null) {
 			throw new NullPointerException("Stundenplan_ID must not be null");
 		}
 		this.Stundenplan_ID = Stundenplan_ID;
-		if (Tag == null) { 
+		if (Tag == null) {
 			throw new NullPointerException("Tag must not be null");
 		}
 		this.Tag = Tag;
-		if (Stunde == null) { 
+		if (Stunde == null) {
 			throw new NullPointerException("Stunde must not be null");
 		}
 		this.Stunde = Stunde;
-		if (Beginn == null) { 
+		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
-		if (Ende == null) { 
+		if (Ende == null) {
 			throw new NullPointerException("Ende must not be null");
 		}
 		this.Ende = Ende;
@@ -127,7 +127,7 @@ public class DTOStundenplanZeitraster {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

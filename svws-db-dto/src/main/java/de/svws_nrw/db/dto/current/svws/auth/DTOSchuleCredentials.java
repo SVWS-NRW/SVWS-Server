@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuleCredentials.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuleCredentials")
-@NamedQuery(name="DTOSchuleCredentials.all", query="SELECT e FROM DTOSchuleCredentials e")
-@NamedQuery(name="DTOSchuleCredentials.schulnummer", query="SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = :value")
-@NamedQuery(name="DTOSchuleCredentials.schulnummer.multiple", query="SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN :value")
-@NamedQuery(name="DTOSchuleCredentials.rsapublickey", query="SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey = :value")
-@NamedQuery(name="DTOSchuleCredentials.rsapublickey.multiple", query="SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey IN :value")
-@NamedQuery(name="DTOSchuleCredentials.rsaprivatekey", query="SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey = :value")
-@NamedQuery(name="DTOSchuleCredentials.rsaprivatekey.multiple", query="SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey IN :value")
-@NamedQuery(name="DTOSchuleCredentials.aes", query="SELECT e FROM DTOSchuleCredentials e WHERE e.AES = :value")
-@NamedQuery(name="DTOSchuleCredentials.aes.multiple", query="SELECT e FROM DTOSchuleCredentials e WHERE e.AES IN :value")
-@NamedQuery(name="DTOSchuleCredentials.primaryKeyQuery", query="SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1")
-@NamedQuery(name="DTOSchuleCredentials.all.migration", query="SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
-@JsonPropertyOrder({"Schulnummer","RSAPublicKey","RSAPrivateKey","AES"})
-public class DTOSchuleCredentials {
+@NamedQuery(name = "DTOSchuleCredentials.all", query = "SELECT e FROM DTOSchuleCredentials e")
+@NamedQuery(name = "DTOSchuleCredentials.schulnummer", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = :value")
+@NamedQuery(name = "DTOSchuleCredentials.schulnummer.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN :value")
+@NamedQuery(name = "DTOSchuleCredentials.rsapublickey", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey = :value")
+@NamedQuery(name = "DTOSchuleCredentials.rsapublickey.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPublicKey IN :value")
+@NamedQuery(name = "DTOSchuleCredentials.rsaprivatekey", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey = :value")
+@NamedQuery(name = "DTOSchuleCredentials.rsaprivatekey.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.RSAPrivateKey IN :value")
+@NamedQuery(name = "DTOSchuleCredentials.aes", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES = :value")
+@NamedQuery(name = "DTOSchuleCredentials.aes.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES IN :value")
+@NamedQuery(name = "DTOSchuleCredentials.primaryKeyQuery", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1")
+@NamedQuery(name = "DTOSchuleCredentials.all.migration", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
+@JsonPropertyOrder({"Schulnummer", "RSAPublicKey", "RSAPrivateKey", "AES"})
+public final class DTOSchuleCredentials {
 
 	/** ID für den Credential-Datensatz einer Schule (also auch für den PublicKey der anderen Schulen) */
 	@Id
@@ -66,7 +66,7 @@ public class DTOSchuleCredentials {
 	 * @param Schulnummer   der Wert für das Attribut Schulnummer
 	 */
 	public DTOSchuleCredentials(final Integer Schulnummer) {
-		if (Schulnummer == null) { 
+		if (Schulnummer == null) {
 			throw new NullPointerException("Schulnummer must not be null");
 		}
 		this.Schulnummer = Schulnummer;
@@ -74,7 +74,7 @@ public class DTOSchuleCredentials {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

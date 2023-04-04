@@ -24,57 +24,57 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Klassen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Klassen")
-@NamedQuery(name="DTOKlassen.all", query="SELECT e FROM DTOKlassen e")
-@NamedQuery(name="DTOKlassen.id", query="SELECT e FROM DTOKlassen e WHERE e.ID = :value")
-@NamedQuery(name="DTOKlassen.id.multiple", query="SELECT e FROM DTOKlassen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKlassen.schuljahresabschnitts_id", query="SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="DTOKlassen.schuljahresabschnitts_id.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="DTOKlassen.bezeichnung", query="SELECT e FROM DTOKlassen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKlassen.bezeichnung.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKlassen.asdklasse", query="SELECT e FROM DTOKlassen e WHERE e.ASDKlasse = :value")
-@NamedQuery(name="DTOKlassen.asdklasse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.ASDKlasse IN :value")
-@NamedQuery(name="DTOKlassen.klasse", query="SELECT e FROM DTOKlassen e WHERE e.Klasse = :value")
-@NamedQuery(name="DTOKlassen.klasse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Klasse IN :value")
-@NamedQuery(name="DTOKlassen.jahrgang_id", query="SELECT e FROM DTOKlassen e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="DTOKlassen.jahrgang_id.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="DTOKlassen.fklasse", query="SELECT e FROM DTOKlassen e WHERE e.FKlasse = :value")
-@NamedQuery(name="DTOKlassen.fklasse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.FKlasse IN :value")
-@NamedQuery(name="DTOKlassen.vklasse", query="SELECT e FROM DTOKlassen e WHERE e.VKlasse = :value")
-@NamedQuery(name="DTOKlassen.vklasse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.VKlasse IN :value")
-@NamedQuery(name="DTOKlassen.orgformkrz", query="SELECT e FROM DTOKlassen e WHERE e.OrgFormKrz = :value")
-@NamedQuery(name="DTOKlassen.orgformkrz.multiple", query="SELECT e FROM DTOKlassen e WHERE e.OrgFormKrz IN :value")
-@NamedQuery(name="DTOKlassen.asdschulformnr", query="SELECT e FROM DTOKlassen e WHERE e.ASDSchulformNr = :value")
-@NamedQuery(name="DTOKlassen.asdschulformnr.multiple", query="SELECT e FROM DTOKlassen e WHERE e.ASDSchulformNr IN :value")
-@NamedQuery(name="DTOKlassen.fachklasse_id", query="SELECT e FROM DTOKlassen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="DTOKlassen.fachklasse_id.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="DTOKlassen.pruefordnung", query="SELECT e FROM DTOKlassen e WHERE e.PruefOrdnung = :value")
-@NamedQuery(name="DTOKlassen.pruefordnung.multiple", query="SELECT e FROM DTOKlassen e WHERE e.PruefOrdnung IN :value")
-@NamedQuery(name="DTOKlassen.sichtbar", query="SELECT e FROM DTOKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOKlassen.sichtbar.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOKlassen.sortierung", query="SELECT e FROM DTOKlassen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOKlassen.sortierung.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOKlassen.klassenart", query="SELECT e FROM DTOKlassen e WHERE e.Klassenart = :value")
-@NamedQuery(name="DTOKlassen.klassenart.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Klassenart IN :value")
-@NamedQuery(name="DTOKlassen.sommersem", query="SELECT e FROM DTOKlassen e WHERE e.SommerSem = :value")
-@NamedQuery(name="DTOKlassen.sommersem.multiple", query="SELECT e FROM DTOKlassen e WHERE e.SommerSem IN :value")
-@NamedQuery(name="DTOKlassen.notengesperrt", query="SELECT e FROM DTOKlassen e WHERE e.NotenGesperrt = :value")
-@NamedQuery(name="DTOKlassen.notengesperrt.multiple", query="SELECT e FROM DTOKlassen e WHERE e.NotenGesperrt IN :value")
-@NamedQuery(name="DTOKlassen.adrmerkmal", query="SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name="DTOKlassen.adrmerkmal.multiple", query="SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name="DTOKlassen.koopklasse", query="SELECT e FROM DTOKlassen e WHERE e.KoopKlasse = :value")
-@NamedQuery(name="DTOKlassen.koopklasse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.KoopKlasse IN :value")
-@NamedQuery(name="DTOKlassen.ankreuzzeugnisse", query="SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
-@NamedQuery(name="DTOKlassen.ankreuzzeugnisse.multiple", query="SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
-@NamedQuery(name="DTOKlassen.primaryKeyQuery", query="SELECT e FROM DTOKlassen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKlassen.all.migration", query="SELECT e FROM DTOKlassen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","Bezeichnung","ASDKlasse","Klasse","Jahrgang_ID","FKlasse","VKlasse","OrgFormKrz","ASDSchulformNr","Fachklasse_ID","PruefOrdnung","Sichtbar","Sortierung","Klassenart","SommerSem","NotenGesperrt","AdrMerkmal","KoopKlasse","Ankreuzzeugnisse"})
-public class DTOKlassen {
+@NamedQuery(name = "DTOKlassen.all", query = "SELECT e FROM DTOKlassen e")
+@NamedQuery(name = "DTOKlassen.id", query = "SELECT e FROM DTOKlassen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKlassen.id.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKlassen.schuljahresabschnitts_id", query = "SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "DTOKlassen.schuljahresabschnitts_id.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "DTOKlassen.bezeichnung", query = "SELECT e FROM DTOKlassen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKlassen.bezeichnung.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKlassen.asdklasse", query = "SELECT e FROM DTOKlassen e WHERE e.ASDKlasse = :value")
+@NamedQuery(name = "DTOKlassen.asdklasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.ASDKlasse IN :value")
+@NamedQuery(name = "DTOKlassen.klasse", query = "SELECT e FROM DTOKlassen e WHERE e.Klasse = :value")
+@NamedQuery(name = "DTOKlassen.klasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Klasse IN :value")
+@NamedQuery(name = "DTOKlassen.jahrgang_id", query = "SELECT e FROM DTOKlassen e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "DTOKlassen.jahrgang_id.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "DTOKlassen.fklasse", query = "SELECT e FROM DTOKlassen e WHERE e.FKlasse = :value")
+@NamedQuery(name = "DTOKlassen.fklasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.FKlasse IN :value")
+@NamedQuery(name = "DTOKlassen.vklasse", query = "SELECT e FROM DTOKlassen e WHERE e.VKlasse = :value")
+@NamedQuery(name = "DTOKlassen.vklasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.VKlasse IN :value")
+@NamedQuery(name = "DTOKlassen.orgformkrz", query = "SELECT e FROM DTOKlassen e WHERE e.OrgFormKrz = :value")
+@NamedQuery(name = "DTOKlassen.orgformkrz.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.OrgFormKrz IN :value")
+@NamedQuery(name = "DTOKlassen.asdschulformnr", query = "SELECT e FROM DTOKlassen e WHERE e.ASDSchulformNr = :value")
+@NamedQuery(name = "DTOKlassen.asdschulformnr.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.ASDSchulformNr IN :value")
+@NamedQuery(name = "DTOKlassen.fachklasse_id", query = "SELECT e FROM DTOKlassen e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "DTOKlassen.fachklasse_id.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "DTOKlassen.pruefordnung", query = "SELECT e FROM DTOKlassen e WHERE e.PruefOrdnung = :value")
+@NamedQuery(name = "DTOKlassen.pruefordnung.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.PruefOrdnung IN :value")
+@NamedQuery(name = "DTOKlassen.sichtbar", query = "SELECT e FROM DTOKlassen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOKlassen.sichtbar.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOKlassen.sortierung", query = "SELECT e FROM DTOKlassen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOKlassen.sortierung.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOKlassen.klassenart", query = "SELECT e FROM DTOKlassen e WHERE e.Klassenart = :value")
+@NamedQuery(name = "DTOKlassen.klassenart.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Klassenart IN :value")
+@NamedQuery(name = "DTOKlassen.sommersem", query = "SELECT e FROM DTOKlassen e WHERE e.SommerSem = :value")
+@NamedQuery(name = "DTOKlassen.sommersem.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.SommerSem IN :value")
+@NamedQuery(name = "DTOKlassen.notengesperrt", query = "SELECT e FROM DTOKlassen e WHERE e.NotenGesperrt = :value")
+@NamedQuery(name = "DTOKlassen.notengesperrt.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.NotenGesperrt IN :value")
+@NamedQuery(name = "DTOKlassen.adrmerkmal", query = "SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal = :value")
+@NamedQuery(name = "DTOKlassen.adrmerkmal.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.AdrMerkmal IN :value")
+@NamedQuery(name = "DTOKlassen.koopklasse", query = "SELECT e FROM DTOKlassen e WHERE e.KoopKlasse = :value")
+@NamedQuery(name = "DTOKlassen.koopklasse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.KoopKlasse IN :value")
+@NamedQuery(name = "DTOKlassen.ankreuzzeugnisse", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
+@NamedQuery(name = "DTOKlassen.ankreuzzeugnisse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
+@NamedQuery(name = "DTOKlassen.primaryKeyQuery", query = "SELECT e FROM DTOKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKlassen.all.migration", query = "SELECT e FROM DTOKlassen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "KoopKlasse", "Ankreuzzeugnisse"})
+public final class DTOKlassen {
 
 	/** ID der Klasse in der Klassen- Versetzuungstabelle */
 	@Id
@@ -140,9 +140,9 @@ public class DTOKlassen {
 	/** Gibt an ob eine Klasse sichtbar ist */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierungnummer der Klasse */
@@ -158,17 +158,17 @@ public class DTOKlassen {
 	/** Beginn im Sommersemester nur WBK */
 	@Column(name = "SommerSem")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean SommerSem;
 
 	/** Noteneingabe für die Klasse gesperrt */
 	@Column(name = "NotenGesperrt")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NotenGesperrt;
 
 	/** Adressmerkmal des Teilstandorts für die Klasse */
@@ -179,17 +179,17 @@ public class DTOKlassen {
 	/** Gibt an ob die Klasse eine KOOP-Klasse ist */
 	@Column(name = "KoopKlasse")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean KoopKlasse;
 
 	/** Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden */
 	@Column(name = "Ankreuzzeugnisse")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Ankreuzzeugnisse;
 
 	/**
@@ -206,15 +206,15 @@ public class DTOKlassen {
 	 * @param Klasse   der Wert für das Attribut Klasse
 	 */
 	public DTOKlassen(final Long ID, final Long Schuljahresabschnitts_ID, final String Klasse) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (Klasse == null) { 
+		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
 		}
 		this.Klasse = Klasse;
@@ -222,7 +222,7 @@ public class DTOKlassen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

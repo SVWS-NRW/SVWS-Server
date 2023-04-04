@@ -13,61 +13,61 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Personengruppen_Personen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Personengruppen_Personen")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.all", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.id", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.id.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.schulnreigner", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.schulnreigner.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.gruppe_id", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.gruppe_id.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.person_id", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.person_id.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personnr", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personnr.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personart", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personart.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personname", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personname.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personvorname", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personvorname.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personplz", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personplz.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personort", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personort.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personstrasse", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personstrasse.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personstrassenname", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personstrassenname.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personhausnr", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personhausnr.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personhausnrzusatz", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personhausnrzusatz.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.persontelefon", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.persontelefon.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personmobil", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personmobil.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personemail", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personemail.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.bemerkung", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.bemerkung.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.zusatzinfo", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.zusatzinfo.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.sortierung", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.sortierung.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personanrede", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personanrede.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personakadgrad", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.personakadgrad.multiple", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.primaryKeyQuery", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOPersonengruppenPersonen.all.migration", query="SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Gruppe_ID","Person_ID","PersonNr","PersonArt","PersonName","PersonVorname","PersonPLZ","PersonOrt","PersonStrasse","PersonStrassenname","PersonHausNr","PersonHausNrZusatz","PersonTelefon","PersonMobil","PersonEmail","Bemerkung","Zusatzinfo","Sortierung","PersonAnrede","PersonAkadGrad"})
-public class MigrationDTOPersonengruppenPersonen {
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.all", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.schulnreigner", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.gruppe_id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.gruppe_id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Gruppe_ID IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.person_id", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.person_id.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Person_ID IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personnr", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personnr.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonNr IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personart", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personart.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonArt IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonName IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personvorname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personvorname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonVorname IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personplz", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personplz.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonPLZ IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personort", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personort.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonOrt IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrasse", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrasse.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrasse IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrassenname", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personstrassenname.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonStrassenname IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnr", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnr.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNr IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnrzusatz", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personhausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonHausNrZusatz IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.persontelefon", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.persontelefon.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonTelefon IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personmobil", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personmobil.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonMobil IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personemail", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personemail.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonEmail IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.bemerkung", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.bemerkung.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.zusatzinfo", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.zusatzinfo.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Zusatzinfo IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.sortierung", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.sortierung.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personanrede", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personanrede.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAnrede IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personakadgrad", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.personakadgrad.multiple", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOPersonengruppenPersonen.all.migration", query = "SELECT e FROM MigrationDTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Gruppe_ID", "Person_ID", "PersonNr", "PersonArt", "PersonName", "PersonVorname", "PersonPLZ", "PersonOrt", "PersonStrasse", "PersonStrassenname", "PersonHausNr", "PersonHausNrZusatz", "PersonTelefon", "PersonMobil", "PersonEmail", "Bemerkung", "Zusatzinfo", "Sortierung", "PersonAnrede", "PersonAkadGrad"})
+public final class MigrationDTOPersonengruppenPersonen {
 
 	/** ID des Personeneintrags zur Personengruppe */
 	@Id
@@ -195,19 +195,19 @@ public class MigrationDTOPersonengruppenPersonen {
 	 * @param PersonName   der Wert für das Attribut PersonName
 	 */
 	public MigrationDTOPersonengruppenPersonen(final Long ID, final Integer SchulnrEigner, final Long Gruppe_ID, final String PersonName) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (Gruppe_ID == null) { 
+		if (Gruppe_ID == null) {
 			throw new NullPointerException("Gruppe_ID must not be null");
 		}
 		this.Gruppe_ID = Gruppe_ID;
-		if (PersonName == null) { 
+		if (PersonName == null) {
 			throw new NullPointerException("PersonName must not be null");
 		}
 		this.PersonName = PersonName;
@@ -215,7 +215,7 @@ public class MigrationDTOPersonengruppenPersonen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

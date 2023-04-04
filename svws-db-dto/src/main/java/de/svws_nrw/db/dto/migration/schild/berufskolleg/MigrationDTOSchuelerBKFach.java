@@ -21,61 +21,61 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerBKFaecher.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerBKFaecher")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.all", query="SELECT e FROM MigrationDTOSchuelerBKFach e")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.id", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schueler_id", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fach_id", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachkrz", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachkrz.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachschriftlich", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlich = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachschriftlich.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlich IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachschriftlichba", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlichBA = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachschriftlichba.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlichBA IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.vornote", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Vornote = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.vornote.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Vornote IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteschriftlich", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteSchriftlich = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteschriftlich.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteSchriftlich IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.mdlpruefung", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefung = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.mdlpruefung.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.mdlpruefungfw", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefungFW = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.mdlpruefungfw.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefungFW IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.notemuendlich", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteMuendlich = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.notemuendlich.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteMuendlich IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteabschluss", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschluss = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteabschluss.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschluss IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteprfgesamt", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NotePrfGesamt = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteprfgesamt.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NotePrfGesamt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fsortierung", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FSortierung = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fsortierung.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FSortierung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachlehrer_id", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachlehrer_id.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteabschlussba", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschlussBA = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.noteabschlussba.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschlussBA IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.kursart", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Kursart = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.kursart.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Kursart IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.jahr", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.jahr.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.abschnitt", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.abschnitt.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachlehrer", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer = :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.fachlehrer.multiple", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer IN :value")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerBKFach.all.migration", query="SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","Fach_ID","FachKrz","FachSchriftlich","FachSchriftlichBA","Vornote","NoteSchriftlich","MdlPruefung","MdlPruefungFW","NoteMuendlich","NoteAbschluss","NotePrfGesamt","FSortierung","SchulnrEigner","Fachlehrer_ID","NoteAbschlussBA","Kursart","Jahr","Abschnitt","Fachlehrer"})
-public class MigrationDTOSchuelerBKFach {
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.all", query = "SELECT e FROM MigrationDTOSchuelerBKFach e")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.id", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fach_id", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachkrz", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachkrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachschriftlich", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlich = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachschriftlich.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlich IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachschriftlichba", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlichBA = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachschriftlichba.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FachSchriftlichBA IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.vornote", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Vornote = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.vornote.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Vornote IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteschriftlich", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteSchriftlich = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteschriftlich.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteSchriftlich IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.mdlpruefung", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.mdlpruefung.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.mdlpruefungfw", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefungFW = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.mdlpruefungfw.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.MdlPruefungFW IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.notemuendlich", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteMuendlich = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.notemuendlich.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteMuendlich IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteabschluss", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschluss = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteabschluss.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschluss IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteprfgesamt", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NotePrfGesamt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteprfgesamt.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NotePrfGesamt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fsortierung", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FSortierung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fsortierung.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.FSortierung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer_id", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteabschlussba", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschlussBA = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.noteabschlussba.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.NoteAbschlussBA IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.kursart", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Kursart = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.kursart.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Kursart IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.jahr", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.jahr.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.abschnitt", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.abschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer = :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.all.migration", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "Fach_ID", "FachKrz", "FachSchriftlich", "FachSchriftlichBA", "Vornote", "NoteSchriftlich", "MdlPruefung", "MdlPruefungFW", "NoteMuendlich", "NoteAbschluss", "NotePrfGesamt", "FSortierung", "SchulnrEigner", "Fachlehrer_ID", "NoteAbschlussBA", "Kursart", "Jahr", "Abschnitt", "Fachlehrer"})
+public final class MigrationDTOSchuelerBKFach {
 
 	/** ID des Facheintrags für den BKAbschlussReiter */
 	@Id
@@ -106,17 +106,17 @@ public class MigrationDTOSchuelerBKFach {
 	/** Schriftlichkeit Allgemeinbildend  des Facheintrags für den BKAbschlussReiter */
 	@Column(name = "FachSchriftlich")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean FachSchriftlich;
 
 	/** Schriftlichkeit Berufsbezogen des Facheintrags für den BKAbschlussReiter */
 	@Column(name = "FachSchriftlichBA")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean FachSchriftlichBA;
 
 	/** Vornote zum Fach des Facheintrags für den BKAbschlussReiter */
@@ -132,17 +132,17 @@ public class MigrationDTOSchuelerBKFach {
 	/** Mündliche Prüfung angesetzt Ja Nein  des Facheintrags für den BKAbschlussReiter */
 	@Column(name = "MdlPruefung")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean MdlPruefung;
 
 	/** Freiwilliege mündliche Prüfung angesetzt Ja Nein  des Facheintrags für den BKAbschlussReiter */
 	@Column(name = "MdlPruefungFW")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusConverterDeserializer.class)
 	public Boolean MdlPruefungFW;
 
 	/** Note mündliche Prüfung  des Facheintrags für den BKAbschlussReiter */
@@ -214,15 +214,15 @@ public class MigrationDTOSchuelerBKFach {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public MigrationDTOSchuelerBKFach(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -230,7 +230,7 @@ public class MigrationDTOSchuelerBKFach {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

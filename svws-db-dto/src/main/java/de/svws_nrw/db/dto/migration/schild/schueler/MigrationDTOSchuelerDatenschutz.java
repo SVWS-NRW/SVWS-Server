@@ -25,28 +25,28 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerDatenschutz.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOSchuelerDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerDatenschutz")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.all", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.schueler_id", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.datenschutz_id", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.datenschutz_id.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.status", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status = :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.status.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.abgefragt", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.abgefragt.multiple", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
-@NamedQuery(name="MigrationDTOSchuelerDatenschutz.all.migration", query="SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","Datenschutz_ID","Status","SchulnrEigner","Abgefragt"})
-public class MigrationDTOSchuelerDatenschutz {
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.all", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.datenschutz_id", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.datenschutz_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Datenschutz_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.status", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status = :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.status.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Status IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.abgefragt", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.abgefragt.multiple", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Abgefragt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID = ?1 AND e.Datenschutz_ID = ?2")
+@NamedQuery(name = "MigrationDTOSchuelerDatenschutz.all.migration", query = "SELECT e FROM MigrationDTOSchuelerDatenschutz e WHERE e.Schueler_ID IS NOT NULL AND e.Datenschutz_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "Datenschutz_ID", "Status", "SchulnrEigner", "Abgefragt"})
+public final class MigrationDTOSchuelerDatenschutz {
 
 	/** Fremdschlüssel auf Tabelle Schueler */
 	@Id
@@ -63,9 +63,9 @@ public class MigrationDTOSchuelerDatenschutz {
 	/** Gibt an ob eine Zustimmung zum Merkmal vorliegt. */
 	@Column(name = "Status")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Status;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -76,9 +76,9 @@ public class MigrationDTOSchuelerDatenschutz {
 	/** Status der Abfrage Datenschutz-Eintrags (true/false) */
 	@Column(name = "Abgefragt")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean Abgefragt;
 
 	/**
@@ -97,23 +97,23 @@ public class MigrationDTOSchuelerDatenschutz {
 	 * @param Abgefragt   der Wert für das Attribut Abgefragt
 	 */
 	public MigrationDTOSchuelerDatenschutz(final Long Schueler_ID, final Long Datenschutz_ID, final Boolean Status, final Integer SchulnrEigner, final Boolean Abgefragt) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Datenschutz_ID == null) { 
+		if (Datenschutz_ID == null) {
 			throw new NullPointerException("Datenschutz_ID must not be null");
 		}
 		this.Datenschutz_ID = Datenschutz_ID;
-		if (Status == null) { 
+		if (Status == null) {
 			throw new NullPointerException("Status must not be null");
 		}
 		this.Status = Status;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (Abgefragt == null) { 
+		if (Abgefragt == null) {
 			throw new NullPointerException("Abgefragt must not be null");
 		}
 		this.Abgefragt = Abgefragt;
@@ -121,7 +121,7 @@ public class MigrationDTOSchuelerDatenschutz {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

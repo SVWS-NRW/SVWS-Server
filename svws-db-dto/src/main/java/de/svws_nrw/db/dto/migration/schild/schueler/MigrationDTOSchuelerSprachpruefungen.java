@@ -21,47 +21,47 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerSprachpruefungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachpruefungen")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.all", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.id", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.id.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.schueler_id", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.sprache", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Sprache = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.sprache.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Sprache IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.asdjahrgang", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.asdjahrgang.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.anspruchsniveau", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.anspruchsniveau.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.pruefungsdatum", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.pruefungsdatum.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.ersetztesprache", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.ersetztesprache.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.isthsupruefung", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.isthsupruefung.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.istfeststellungspruefung", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.istfeststellungspruefung.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.referenzniveau", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Referenzniveau = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.referenzniveau.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Referenzniveau IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.notepruefung", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung = :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.notepruefung.multiple", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerSprachpruefungen.all.migration", query="SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Sprache","ASDJahrgang","Anspruchsniveau","Pruefungsdatum","ErsetzteSprache","IstHSUPruefung","IstFeststellungspruefung","KannErstePflichtfremdspracheErsetzen","KannZweitePflichtfremdspracheErsetzen","KannWahlpflichtfremdspracheErsetzen","KannBelegungAlsFortgefuehrteSpracheErlauben","Referenzniveau","NotePruefung"})
-public class MigrationDTOSchuelerSprachpruefungen {
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.all", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.id", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.sprache", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Sprache = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.sprache.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Sprache IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.asdjahrgang", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.asdjahrgang.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.anspruchsniveau", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.anspruchsniveau.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Anspruchsniveau IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.pruefungsdatum", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.pruefungsdatum.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Pruefungsdatum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.ersetztesprache", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.ersetztesprache.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ErsetzteSprache IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.isthsupruefung", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.isthsupruefung.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstHSUPruefung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.istfeststellungspruefung", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.istfeststellungspruefung.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.IstFeststellungspruefung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannerstepflichtfremdspracheersetzen.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannErstePflichtfremdspracheErsetzen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannzweitepflichtfremdspracheersetzen.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannZweitePflichtfremdspracheErsetzen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannwahlpflichtfremdspracheersetzen.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannWahlpflichtfremdspracheErsetzen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.kannbelegungalsfortgefuehrtespracheerlauben.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.KannBelegungAlsFortgefuehrteSpracheErlauben IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.referenzniveau", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Referenzniveau = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.referenzniveau.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.Referenzniveau IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.notepruefung", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.notepruefung.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.all.migration", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "ErsetzteSprache", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
+public final class MigrationDTOSchuelerSprachpruefungen {
 
 	/** ID des Sprachprüfungseintrags */
 	@Id
@@ -102,49 +102,49 @@ public class MigrationDTOSchuelerSprachpruefungen {
 	/** Gibt an, dass die Prüfung eine Prüfung in der Herkunftssprache ist (BASS 13-61 Nr. 2). Entspricht dem Eintrag P in Schild 2 */
 	@Column(name = "IstHSUPruefung")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstHSUPruefung;
 
 	/** Gibt an, ob die Prüfung eine Sprachfeststellungsprüfung ist (BASS 13-61 Nr. 1). Entspricht N in Schild 2 */
 	@Column(name = "IstFeststellungspruefung")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstFeststellungspruefung;
 
 	/** Gibt an, ob die Sprachprüfung an die Stelle der ersten Pflichtfremdsprache treten kann */
 	@Column(name = "KannErstePflichtfremdspracheErsetzen")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean KannErstePflichtfremdspracheErsetzen;
 
 	/** Gibt an, ob die Sprachprüfung an die Stelle der zweiten Pflichtfremdsprache treten kann */
 	@Column(name = "KannZweitePflichtfremdspracheErsetzen")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean KannZweitePflichtfremdspracheErsetzen;
 
 	/** Gibt an, ob die Sprachprüfung an die Stelle einer Wahlpflichtfremdsprache der Klassen 05-07 treten kann */
 	@Column(name = "KannWahlpflichtfremdspracheErsetzen")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean KannWahlpflichtfremdspracheErsetzen;
 
 	/** Gibt an, ob die Sprachprüfung nachweist, dass die Sprache als fortgeführte Fremdsprache in der Oberstufe belegt werden kann (BASS 13-61 Nr. 1 Abs. 11) */
 	@Column(name = "KannBelegungAlsFortgefuehrteSpracheErlauben")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean KannBelegungAlsFortgefuehrteSpracheErlauben;
 
 	/** Das Sprachreferenzniveau der Sprachprüfung gemäß GeR */
@@ -171,15 +171,15 @@ public class MigrationDTOSchuelerSprachpruefungen {
 	 * @param Sprache   der Wert für das Attribut Sprache
 	 */
 	public MigrationDTOSchuelerSprachpruefungen(final Long ID, final Long Schueler_ID, final String Sprache) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Sprache == null) { 
+		if (Sprache == null) {
 			throw new NullPointerException("Sprache must not be null");
 		}
 		this.Sprache = Sprache;
@@ -187,7 +187,7 @@ public class MigrationDTOSchuelerSprachpruefungen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

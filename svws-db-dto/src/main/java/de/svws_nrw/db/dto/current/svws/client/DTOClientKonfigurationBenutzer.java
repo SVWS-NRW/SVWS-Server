@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Client_Konfiguration_Benutzer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOClientKonfigurationBenutzerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_Client_Konfiguration_Benutzer")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.all", query="SELECT e FROM DTOClientKonfigurationBenutzer e")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.benutzer_id", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.benutzer_id.multiple", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.appname", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.AppName = :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.appname.multiple", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.AppName IN :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.schluessel", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Schluessel = :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.schluessel.multiple", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Schluessel IN :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.wert", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Wert = :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.wert.multiple", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Wert IN :value")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.primaryKeyQuery", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3")
-@NamedQuery(name="DTOClientKonfigurationBenutzer.all.migration", query="SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","AppName","Schluessel","Wert"})
-public class DTOClientKonfigurationBenutzer {
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.all", query = "SELECT e FROM DTOClientKonfigurationBenutzer e")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.benutzer_id", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.benutzer_id.multiple", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.appname", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.AppName = :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.appname.multiple", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.AppName IN :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.schluessel", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Schluessel = :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.schluessel.multiple", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Schluessel IN :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.wert", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Wert = :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.wert.multiple", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Wert IN :value")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.primaryKeyQuery", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2 AND e.Schluessel = ?3")
+@NamedQuery(name = "DTOClientKonfigurationBenutzer.all.migration", query = "SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID IS NOT NULL AND e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
+@JsonPropertyOrder({"Benutzer_ID", "AppName", "Schluessel", "Wert"})
+public final class DTOClientKonfigurationBenutzer {
 
 	/** Die ID des Datenbankbenutzers, für den der Client-Konfigurationsdatensatz gespeichert ist */
 	@Id
@@ -73,19 +73,19 @@ public class DTOClientKonfigurationBenutzer {
 	 * @param Wert   der Wert für das Attribut Wert
 	 */
 	public DTOClientKonfigurationBenutzer(final Long Benutzer_ID, final String AppName, final String Schluessel, final String Wert) {
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (AppName == null) { 
+		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
 		}
 		this.AppName = AppName;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
-		if (Wert == null) { 
+		if (Wert == null) {
 			throw new NullPointerException("Wert must not be null");
 		}
 		this.Wert = Wert;
@@ -93,7 +93,7 @@ public class DTOClientKonfigurationBenutzer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

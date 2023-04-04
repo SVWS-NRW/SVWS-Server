@@ -24,37 +24,37 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundentafel_Faecher.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundentafel_Faecher")
-@NamedQuery(name="DTOStundentafelFaecher.all", query="SELECT e FROM DTOStundentafelFaecher e")
-@NamedQuery(name="DTOStundentafelFaecher.id", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundentafelFaecher.id.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.stundentafel_id", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Stundentafel_ID = :value")
-@NamedQuery(name="DTOStundentafelFaecher.stundentafel_id.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Stundentafel_ID IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.fach_id", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOStundentafelFaecher.fach_id.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.kursartallg", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.KursartAllg = :value")
-@NamedQuery(name="DTOStundentafelFaecher.kursartallg.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.wochenstd", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.WochenStd = :value")
-@NamedQuery(name="DTOStundentafelFaecher.wochenstd.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.WochenStd IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.lehrer_id", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOStundentafelFaecher.lehrer_id.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.epochenunterricht", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.EpochenUnterricht = :value")
-@NamedQuery(name="DTOStundentafelFaecher.epochenunterricht.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.EpochenUnterricht IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.sortierung", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOStundentafelFaecher.sortierung.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.sichtbar", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOStundentafelFaecher.sichtbar.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.gewichtung", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung = :value")
-@NamedQuery(name="DTOStundentafelFaecher.gewichtung.multiple", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
-@NamedQuery(name="DTOStundentafelFaecher.primaryKeyQuery", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundentafelFaecher.all.migration", query="SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Stundentafel_ID","Fach_ID","KursartAllg","WochenStd","Lehrer_ID","EpochenUnterricht","Sortierung","Sichtbar","Gewichtung"})
-public class DTOStundentafelFaecher {
+@NamedQuery(name = "DTOStundentafelFaecher.all", query = "SELECT e FROM DTOStundentafelFaecher e")
+@NamedQuery(name = "DTOStundentafelFaecher.id", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.id.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.stundentafel_id", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Stundentafel_ID = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.stundentafel_id.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Stundentafel_ID IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.fach_id", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.fach_id.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.kursartallg", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.kursartallg.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.wochenstd", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.WochenStd = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.wochenstd.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.WochenStd IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.lehrer_id", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.lehrer_id.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.epochenunterricht", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.EpochenUnterricht = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.epochenunterricht.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.EpochenUnterricht IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.sortierung", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.sortierung.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.sichtbar", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.sichtbar.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.gewichtung", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung = :value")
+@NamedQuery(name = "DTOStundentafelFaecher.gewichtung.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
+@NamedQuery(name = "DTOStundentafelFaecher.primaryKeyQuery", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundentafelFaecher.all.migration", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Stundentafel_ID", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "EpochenUnterricht", "Sortierung", "Sichtbar", "Gewichtung"})
+public final class DTOStundentafelFaecher {
 
 	/** ID des Facheintrags für die Stundentafel */
 	@Id
@@ -90,9 +90,9 @@ public class DTOStundentafelFaecher {
 	/** Merkmal Epochenunterricht des Faches in der Stundentafel */
 	@Column(name = "EpochenUnterricht")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean EpochenUnterricht;
 
 	/** Sortierung des Faches in der Stundentafel */
@@ -103,9 +103,9 @@ public class DTOStundentafelFaecher {
 	/** Sichtbarkeit des Faches in der Stundentafel */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** ??? entweder BB auch oder weg ??? Gewichtung allgemeinbidend BK  des Faches in der Stundentafel */
@@ -127,15 +127,15 @@ public class DTOStundentafelFaecher {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOStundentafelFaecher(final Long ID, final Long Stundentafel_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Stundentafel_ID == null) { 
+		if (Stundentafel_ID == null) {
 			throw new NullPointerException("Stundentafel_ID must not be null");
 		}
 		this.Stundentafel_ID = Stundentafel_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -143,7 +143,7 @@ public class DTOStundentafelFaecher {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

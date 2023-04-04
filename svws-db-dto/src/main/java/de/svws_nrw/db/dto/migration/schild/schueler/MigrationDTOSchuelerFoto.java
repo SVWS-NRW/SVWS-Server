@@ -13,25 +13,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerFotos.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFotos")
-@NamedQuery(name="MigrationDTOSchuelerFoto.all", query="SELECT e FROM MigrationDTOSchuelerFoto e")
-@NamedQuery(name="MigrationDTOSchuelerFoto.schueler_id", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.foto", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Foto = :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.foto.multiple", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Foto IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.fotobase64", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.FotoBase64 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.fotobase64.multiple", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.FotoBase64 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFoto.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerFoto.all.migration", query="SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Schueler_ID","Foto","FotoBase64","SchulnrEigner"})
-public class MigrationDTOSchuelerFoto {
+@NamedQuery(name = "MigrationDTOSchuelerFoto.all", query = "SELECT e FROM MigrationDTOSchuelerFoto e")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.foto", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Foto = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.foto.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Foto IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.fotobase64", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.FotoBase64 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.fotobase64.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.FotoBase64 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFoto.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFoto e WHERE e.Schueler_ID IS NOT NULL")
+@JsonPropertyOrder({"Schueler_ID", "Foto", "FotoBase64", "SchulnrEigner"})
+public final class MigrationDTOSchuelerFoto {
 
 	/** SchülerID zum Foto */
 	@Id
@@ -66,7 +66,7 @@ public class MigrationDTOSchuelerFoto {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerFoto(final Long Schueler_ID) {
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -74,7 +74,7 @@ public class MigrationDTOSchuelerFoto {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

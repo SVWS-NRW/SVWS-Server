@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerVermerke.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerVermerke")
-@NamedQuery(name="DTOSchuelerVermerke.all", query="SELECT e FROM DTOSchuelerVermerke e")
-@NamedQuery(name="DTOSchuelerVermerke.id", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerVermerke.id.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.schueler_id", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerVermerke.schueler_id.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.vermerkart_id", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.VermerkArt_ID = :value")
-@NamedQuery(name="DTOSchuelerVermerke.vermerkart_id.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.VermerkArt_ID IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.datum", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Datum = :value")
-@NamedQuery(name="DTOSchuelerVermerke.datum.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Datum IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.bemerkung", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOSchuelerVermerke.bemerkung.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.angelegtvon", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.AngelegtVon = :value")
-@NamedQuery(name="DTOSchuelerVermerke.angelegtvon.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.AngelegtVon IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.geaendertvon", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.GeaendertVon = :value")
-@NamedQuery(name="DTOSchuelerVermerke.geaendertvon.multiple", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.GeaendertVon IN :value")
-@NamedQuery(name="DTOSchuelerVermerke.primaryKeyQuery", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerVermerke.all.migration", query="SELECT e FROM DTOSchuelerVermerke e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","VermerkArt_ID","Datum","Bemerkung","AngelegtVon","GeaendertVon"})
-public class DTOSchuelerVermerke {
+@NamedQuery(name = "DTOSchuelerVermerke.all", query = "SELECT e FROM DTOSchuelerVermerke e")
+@NamedQuery(name = "DTOSchuelerVermerke.id", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.id.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.schueler_id", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.vermerkart_id", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.VermerkArt_ID = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.vermerkart_id.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.VermerkArt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.datum", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Datum = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.datum.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Datum IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.bemerkung", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.angelegtvon", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.AngelegtVon = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.angelegtvon.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.AngelegtVon IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.geaendertvon", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.GeaendertVon = :value")
+@NamedQuery(name = "DTOSchuelerVermerke.geaendertvon.multiple", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.GeaendertVon IN :value")
+@NamedQuery(name = "DTOSchuelerVermerke.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerVermerke.all.migration", query = "SELECT e FROM DTOSchuelerVermerke e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "VermerkArt_ID", "Datum", "Bemerkung", "AngelegtVon", "GeaendertVon"})
+public final class DTOSchuelerVermerke {
 
 	/** ID des Vermerkeintrages beim Schüler */
 	@Id
@@ -66,9 +66,9 @@ public class DTOSchuelerVermerke {
 	/** Datum des Vermerkeintrages beim Schüler */
 	@Column(name = "Datum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Datum;
 
 	/** Bemerkung des Vermerkeintrages beim Schüler */
@@ -99,11 +99,11 @@ public class DTOSchuelerVermerke {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerVermerke(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -111,7 +111,7 @@ public class DTOSchuelerVermerke {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

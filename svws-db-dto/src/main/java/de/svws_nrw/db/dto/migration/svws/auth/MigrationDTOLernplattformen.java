@@ -13,29 +13,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Lernplattformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Lernplattformen")
-@NamedQuery(name="MigrationDTOLernplattformen.all", query="SELECT e FROM MigrationDTOLernplattformen e")
-@NamedQuery(name="MigrationDTOLernplattformen.id", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.id.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.bezeichnung", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.bezeichnung.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixlehrer", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixlehrer.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixerzieher", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixerzieher.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixschueler", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.benutzernamesuffixschueler.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.konfiguration", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration = :value")
-@NamedQuery(name="MigrationDTOLernplattformen.konfiguration.multiple", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration IN :value")
-@NamedQuery(name="MigrationDTOLernplattformen.primaryKeyQuery", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOLernplattformen.all.migration", query="SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","BenutzernameSuffixLehrer","BenutzernameSuffixErzieher","BenutzernameSuffixSchueler","Konfiguration"})
-public class MigrationDTOLernplattformen {
+@NamedQuery(name = "MigrationDTOLernplattformen.all", query = "SELECT e FROM MigrationDTOLernplattformen e")
+@NamedQuery(name = "MigrationDTOLernplattformen.id", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.id.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.bezeichnung", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixlehrer", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixlehrer.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixLehrer IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixerzieher", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixerzieher.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixErzieher IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixschueler", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.benutzernamesuffixschueler.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.BenutzernameSuffixSchueler IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.konfiguration", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration = :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.konfiguration.multiple", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.Konfiguration IN :value")
+@NamedQuery(name = "MigrationDTOLernplattformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOLernplattformen.all.migration", query = "SELECT e FROM MigrationDTOLernplattformen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "BenutzernameSuffixLehrer", "BenutzernameSuffixErzieher", "BenutzernameSuffixSchueler", "Konfiguration"})
+public final class MigrationDTOLernplattformen {
 
 	/** ID des Datensatzes für die verwendete Lernplattform */
 	@Id
@@ -81,11 +81,11 @@ public class MigrationDTOLernplattformen {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOLernplattformen(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -93,7 +93,7 @@ public class MigrationDTOLernplattformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

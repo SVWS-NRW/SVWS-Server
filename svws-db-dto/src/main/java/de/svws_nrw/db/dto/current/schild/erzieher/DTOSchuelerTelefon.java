@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerTelefone.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerTelefone")
-@NamedQuery(name="DTOSchuelerTelefon.all", query="SELECT e FROM DTOSchuelerTelefon e")
-@NamedQuery(name="DTOSchuelerTelefon.id", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerTelefon.id.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.schueler_id", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerTelefon.schueler_id.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.telefonart_id", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID = :value")
-@NamedQuery(name="DTOSchuelerTelefon.telefonart_id.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.telefonnummer", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer = :value")
-@NamedQuery(name="DTOSchuelerTelefon.telefonnummer.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.bemerkung", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOSchuelerTelefon.bemerkung.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.sortierung", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOSchuelerTelefon.sortierung.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.gesperrt", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt = :value")
-@NamedQuery(name="DTOSchuelerTelefon.gesperrt.multiple", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
-@NamedQuery(name="DTOSchuelerTelefon.primaryKeyQuery", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerTelefon.all.migration", query="SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","TelefonArt_ID","Telefonnummer","Bemerkung","Sortierung","Gesperrt"})
-public class DTOSchuelerTelefon {
+@NamedQuery(name = "DTOSchuelerTelefon.all", query = "SELECT e FROM DTOSchuelerTelefon e")
+@NamedQuery(name = "DTOSchuelerTelefon.id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.schueler_id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.telefonart_id", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.telefonart_id.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.TelefonArt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.telefonnummer", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.telefonnummer.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Telefonnummer IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.bemerkung", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.sortierung", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.sortierung.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.gesperrt", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt = :value")
+@NamedQuery(name = "DTOSchuelerTelefon.gesperrt.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
+@NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerTelefon.all.migration", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "TelefonArt_ID", "Telefonnummer", "Bemerkung", "Sortierung", "Gesperrt"})
+public final class DTOSchuelerTelefon {
 
 	/** ID des Telefonnummerneintrags */
 	@Id
@@ -81,9 +81,9 @@ public class DTOSchuelerTelefon {
 	/** Sperrung des Telefonnummerneintrags */
 	@Column(name = "Gesperrt")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Gesperrt;
 
 	/**
@@ -99,11 +99,11 @@ public class DTOSchuelerTelefon {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerTelefon(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -111,7 +111,7 @@ public class DTOSchuelerTelefon {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

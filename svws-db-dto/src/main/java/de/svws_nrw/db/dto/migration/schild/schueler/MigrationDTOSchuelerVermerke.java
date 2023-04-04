@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerVermerke.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerVermerke")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.all", query="SELECT e FROM MigrationDTOSchuelerVermerke e")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.id", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.id.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.schueler_id", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.vermerkart_id", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.vermerkart_id.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.datum", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.datum.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.bemerkung", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.bemerkung.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.angelegtvon", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.angelegtvon.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.geaendertvon", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon = :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.geaendertvon.multiple", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon IN :value")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerVermerke.all.migration", query="SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","VermerkArt_ID","Datum","Bemerkung","SchulnrEigner","AngelegtVon","GeaendertVon"})
-public class MigrationDTOSchuelerVermerke {
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.all", query = "SELECT e FROM MigrationDTOSchuelerVermerke e")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.vermerkart_id", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.vermerkart_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.VermerkArt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.datum", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Datum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.bemerkung", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.bemerkung.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.angelegtvon", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.angelegtvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.AngelegtVon IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.geaendertvon", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon = :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.geaendertvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.GeaendertVon IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerVermerke.all.migration", query = "SELECT e FROM MigrationDTOSchuelerVermerke e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "VermerkArt_ID", "Datum", "Bemerkung", "SchulnrEigner", "AngelegtVon", "GeaendertVon"})
+public final class MigrationDTOSchuelerVermerke {
 
 	/** ID des Vermerkeintrages beim Schüler */
 	@Id
@@ -68,9 +68,9 @@ public class MigrationDTOSchuelerVermerke {
 	/** Datum des Vermerkeintrages beim Schüler */
 	@Column(name = "Datum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String Datum;
 
 	/** Bemerkung des Vermerkeintrages beim Schüler */
@@ -106,11 +106,11 @@ public class MigrationDTOSchuelerVermerke {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerVermerke(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -118,7 +118,7 @@ public class MigrationDTOSchuelerVermerke {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

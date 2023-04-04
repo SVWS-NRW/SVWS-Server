@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Logins.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOProtokollLoginPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Logins")
-@NamedQuery(name="MigrationDTOProtokollLogin.all", query="SELECT e FROM MigrationDTOProtokollLogin e")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_userid", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_userid.multiple", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IN :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_logintime", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime = :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_logintime.multiple", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime IN :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_logofftime", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime = :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.li_logofftime.multiple", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime IN :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.schulnreigner", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.schulnreigner.multiple", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOProtokollLogin.primaryKeyQuery", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2")
-@NamedQuery(name="MigrationDTOProtokollLogin.all.migration", query="SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL")
-@JsonPropertyOrder({"LI_UserID","LI_LoginTime","LI_LogoffTime","SchulnrEigner"})
-public class MigrationDTOProtokollLogin {
+@NamedQuery(name = "MigrationDTOProtokollLogin.all", query = "SELECT e FROM MigrationDTOProtokollLogin e")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_userid", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_userid.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IN :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_logintime", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime = :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_logintime.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LoginTime IN :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_logofftime", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime = :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.li_logofftime.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_LogoffTime IN :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.schulnreigner", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOProtokollLogin.primaryKeyQuery", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID = ?1 AND e.LI_LoginTime = ?2")
+@NamedQuery(name = "MigrationDTOProtokollLogin.all.migration", query = "SELECT e FROM MigrationDTOProtokollLogin e WHERE e.LI_UserID IS NOT NULL AND e.LI_LoginTime IS NOT NULL")
+@JsonPropertyOrder({"LI_UserID", "LI_LoginTime", "LI_LogoffTime", "SchulnrEigner"})
+public final class MigrationDTOProtokollLogin {
 
 	/** UserID des Logins */
 	@Id
@@ -69,7 +69,7 @@ public class MigrationDTOProtokollLogin {
 	 * @param LI_UserID   der Wert für das Attribut LI_UserID
 	 */
 	public MigrationDTOProtokollLogin(final Long LI_UserID) {
-		if (LI_UserID == null) { 
+		if (LI_UserID == null) {
 			throw new NullPointerException("LI_UserID must not be null");
 		}
 		this.LI_UserID = LI_UserID;
@@ -77,7 +77,7 @@ public class MigrationDTOProtokollLogin {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

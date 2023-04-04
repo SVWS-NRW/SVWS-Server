@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle FachKatalog_Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class MigrationDTOFaecherKatalogSchulformenPK implements Serializable {
+public final class MigrationDTOFaecherKatalogSchulformenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -35,15 +35,15 @@ public class MigrationDTOFaecherKatalogSchulformenPK implements Serializable {
 	 * @param Schulgliederung_Kuerzel   der Wert für das Attribut Schulgliederung_Kuerzel
 	 */
 	public MigrationDTOFaecherKatalogSchulformenPK(final Long Fach_ID, final String Schulform_Kuerzel, final String Schulgliederung_Kuerzel) {
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Schulform_Kuerzel == null) { 
+		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
 		}
 		this.Schulform_Kuerzel = Schulform_Kuerzel;
-		if (Schulgliederung_Kuerzel == null) { 
+		if (Schulgliederung_Kuerzel == null) {
 			throw new NullPointerException("Schulgliederung_Kuerzel must not be null");
 		}
 		this.Schulgliederung_Kuerzel = Schulgliederung_Kuerzel;
@@ -51,7 +51,7 @@ public class MigrationDTOFaecherKatalogSchulformenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

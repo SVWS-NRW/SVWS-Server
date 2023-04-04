@@ -24,57 +24,57 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Klassen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Klassen")
-@NamedQuery(name="MigrationDTOKlassen.all", query="SELECT e FROM MigrationDTOKlassen e")
-@NamedQuery(name="MigrationDTOKlassen.id", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOKlassen.id.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOKlassen.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOKlassen.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOKlassen.bezeichnung", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOKlassen.bezeichnung.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOKlassen.asdklasse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ASDKlasse = :value")
-@NamedQuery(name="MigrationDTOKlassen.asdklasse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ASDKlasse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.klasse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Klasse = :value")
-@NamedQuery(name="MigrationDTOKlassen.klasse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Klasse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.jahrgang_id", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOKlassen.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOKlassen.fklasse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.FKlasse = :value")
-@NamedQuery(name="MigrationDTOKlassen.fklasse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.FKlasse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.vklasse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.VKlasse = :value")
-@NamedQuery(name="MigrationDTOKlassen.vklasse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.VKlasse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.orgformkrz", query="SELECT e FROM MigrationDTOKlassen e WHERE e.OrgFormKrz = :value")
-@NamedQuery(name="MigrationDTOKlassen.orgformkrz.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.OrgFormKrz IN :value")
-@NamedQuery(name="MigrationDTOKlassen.asdschulformnr", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ASDSchulformNr = :value")
-@NamedQuery(name="MigrationDTOKlassen.asdschulformnr.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ASDSchulformNr IN :value")
-@NamedQuery(name="MigrationDTOKlassen.fachklasse_id", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="MigrationDTOKlassen.fachklasse_id.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOKlassen.pruefordnung", query="SELECT e FROM MigrationDTOKlassen e WHERE e.PruefOrdnung = :value")
-@NamedQuery(name="MigrationDTOKlassen.pruefordnung.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.PruefOrdnung IN :value")
-@NamedQuery(name="MigrationDTOKlassen.sichtbar", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOKlassen.sichtbar.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOKlassen.sortierung", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOKlassen.sortierung.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOKlassen.klassenart", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Klassenart = :value")
-@NamedQuery(name="MigrationDTOKlassen.klassenart.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Klassenart IN :value")
-@NamedQuery(name="MigrationDTOKlassen.sommersem", query="SELECT e FROM MigrationDTOKlassen e WHERE e.SommerSem = :value")
-@NamedQuery(name="MigrationDTOKlassen.sommersem.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.SommerSem IN :value")
-@NamedQuery(name="MigrationDTOKlassen.notengesperrt", query="SELECT e FROM MigrationDTOKlassen e WHERE e.NotenGesperrt = :value")
-@NamedQuery(name="MigrationDTOKlassen.notengesperrt.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.NotenGesperrt IN :value")
-@NamedQuery(name="MigrationDTOKlassen.adrmerkmal", query="SELECT e FROM MigrationDTOKlassen e WHERE e.AdrMerkmal = :value")
-@NamedQuery(name="MigrationDTOKlassen.adrmerkmal.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.AdrMerkmal IN :value")
-@NamedQuery(name="MigrationDTOKlassen.koopklasse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.KoopKlasse = :value")
-@NamedQuery(name="MigrationDTOKlassen.koopklasse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.KoopKlasse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.ankreuzzeugnisse", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
-@NamedQuery(name="MigrationDTOKlassen.ankreuzzeugnisse.multiple", query="SELECT e FROM MigrationDTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
-@NamedQuery(name="MigrationDTOKlassen.primaryKeyQuery", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOKlassen.all.migration", query="SELECT e FROM MigrationDTOKlassen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schuljahresabschnitts_ID","Bezeichnung","ASDKlasse","Klasse","Jahrgang_ID","FKlasse","VKlasse","OrgFormKrz","ASDSchulformNr","Fachklasse_ID","PruefOrdnung","Sichtbar","Sortierung","Klassenart","SommerSem","NotenGesperrt","AdrMerkmal","KoopKlasse","Ankreuzzeugnisse"})
-public class MigrationDTOKlassen {
+@NamedQuery(name = "MigrationDTOKlassen.all", query = "SELECT e FROM MigrationDTOKlassen e")
+@NamedQuery(name = "MigrationDTOKlassen.id", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOKlassen.id.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOKlassen.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.bezeichnung", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOKlassen.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.asdklasse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ASDKlasse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.asdklasse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ASDKlasse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.klasse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Klasse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.klasse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Klasse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.jahrgang_id", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOKlassen.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.fklasse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.FKlasse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.fklasse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.FKlasse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.vklasse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.VKlasse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.vklasse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.VKlasse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.orgformkrz", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.OrgFormKrz = :value")
+@NamedQuery(name = "MigrationDTOKlassen.orgformkrz.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.OrgFormKrz IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.asdschulformnr", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ASDSchulformNr = :value")
+@NamedQuery(name = "MigrationDTOKlassen.asdschulformnr.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ASDSchulformNr IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.fachklasse_id", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOKlassen.fachklasse_id.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.pruefordnung", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.PruefOrdnung = :value")
+@NamedQuery(name = "MigrationDTOKlassen.pruefordnung.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.PruefOrdnung IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.sichtbar", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOKlassen.sichtbar.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.sortierung", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOKlassen.sortierung.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.klassenart", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Klassenart = :value")
+@NamedQuery(name = "MigrationDTOKlassen.klassenart.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Klassenart IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.sommersem", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.SommerSem = :value")
+@NamedQuery(name = "MigrationDTOKlassen.sommersem.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.SommerSem IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.notengesperrt", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.NotenGesperrt = :value")
+@NamedQuery(name = "MigrationDTOKlassen.notengesperrt.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.NotenGesperrt IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.adrmerkmal", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.AdrMerkmal = :value")
+@NamedQuery(name = "MigrationDTOKlassen.adrmerkmal.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.AdrMerkmal IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.koopklasse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.KoopKlasse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.koopklasse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.KoopKlasse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.ankreuzzeugnisse", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
+@NamedQuery(name = "MigrationDTOKlassen.ankreuzzeugnisse.multiple", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
+@NamedQuery(name = "MigrationDTOKlassen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKlassen.all.migration", query = "SELECT e FROM MigrationDTOKlassen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "KoopKlasse", "Ankreuzzeugnisse"})
+public final class MigrationDTOKlassen {
 
 	/** ID der Klasse in der Klassen- Versetzuungstabelle */
 	@Id
@@ -140,9 +140,9 @@ public class MigrationDTOKlassen {
 	/** Gibt an ob eine Klasse sichtbar ist */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierungnummer der Klasse */
@@ -158,17 +158,17 @@ public class MigrationDTOKlassen {
 	/** Beginn im Sommersemester nur WBK */
 	@Column(name = "SommerSem")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean SommerSem;
 
 	/** Noteneingabe für die Klasse gesperrt */
 	@Column(name = "NotenGesperrt")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NotenGesperrt;
 
 	/** Adressmerkmal des Teilstandorts für die Klasse */
@@ -179,17 +179,17 @@ public class MigrationDTOKlassen {
 	/** Gibt an ob die Klasse eine KOOP-Klasse ist */
 	@Column(name = "KoopKlasse")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean KoopKlasse;
 
 	/** Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden */
 	@Column(name = "Ankreuzzeugnisse")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Ankreuzzeugnisse;
 
 	/**
@@ -206,15 +206,15 @@ public class MigrationDTOKlassen {
 	 * @param Klasse   der Wert für das Attribut Klasse
 	 */
 	public MigrationDTOKlassen(final Long ID, final Long Schuljahresabschnitts_ID, final String Klasse) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (Klasse == null) { 
+		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
 		}
 		this.Klasse = Klasse;
@@ -222,7 +222,7 @@ public class MigrationDTOKlassen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

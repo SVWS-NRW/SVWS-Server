@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DevDTOs {
+public final class DevDTOs {
 
     /** Enthält das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den entsprechenden Java-DTO-Klassen. */
     private static HashMap<String, Class<? extends Object>> mapDTOName2DTOClass = null;
@@ -22,7 +22,7 @@ public class DevDTOs {
      *
      * @return eine Hashmap mit dem Mapping
      */
-     private static final HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {
+     private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {
          if (mapDTOName2DTOClass == null) {
              mapDTOName2DTOClass = new HashMap<>();
          }
@@ -37,7 +37,7 @@ public class DevDTOs {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromDTOName(String name) {
+    public static Class<? extends Object> getFromDTOName(final String name) {
     	return getMapDTOName2DTOClass().get(name);
     }
 
@@ -48,7 +48,7 @@ public class DevDTOs {
      *
      * @return eine Hashmap mit dem Mapping
      */
-     private static final HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {
+     private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {
          if (mapTablename2DTOClass == null) {
              mapTablename2DTOClass = new HashMap<>();
          }
@@ -63,7 +63,7 @@ public class DevDTOs {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromTableName(String name) {
+    public static Class<? extends Object> getFromTableName(final String name) {
     	return getMapTablename2DTOClass().get(name);
     }
 

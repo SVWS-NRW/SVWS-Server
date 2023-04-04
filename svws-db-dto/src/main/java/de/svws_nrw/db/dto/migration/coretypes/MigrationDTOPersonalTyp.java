@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle PersonalTypen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "PersonalTypen")
-@NamedQuery(name="MigrationDTOPersonalTyp.all", query="SELECT e FROM MigrationDTOPersonalTyp e")
-@NamedQuery(name="MigrationDTOPersonalTyp.id", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.id.multiple", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.kuerzel", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.kuerzel.multiple", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.bezeichnung", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.bezeichnung.multiple", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.gueltigvon", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigVon = :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.gueltigvon.multiple", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.gueltigbis", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis = :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.gueltigbis.multiple", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="MigrationDTOPersonalTyp.primaryKeyQuery", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOPersonalTyp.all.migration", query="SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Bezeichnung","gueltigVon","gueltigBis"})
-public class MigrationDTOPersonalTyp {
+@NamedQuery(name = "MigrationDTOPersonalTyp.all", query = "SELECT e FROM MigrationDTOPersonalTyp e")
+@NamedQuery(name = "MigrationDTOPersonalTyp.id", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.id.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.kuerzel", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.kuerzel.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.bezeichnung", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.gueltigvon", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.gueltigbis", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "MigrationDTOPersonalTyp.primaryKeyQuery", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOPersonalTyp.all.migration", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
+public final class MigrationDTOPersonalTyp {
 
 	/** ID des Personal-Typs */
 	@Id
@@ -73,7 +73,7 @@ public class MigrationDTOPersonalTyp {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOPersonalTyp(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -81,7 +81,7 @@ public class MigrationDTOPersonalTyp {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

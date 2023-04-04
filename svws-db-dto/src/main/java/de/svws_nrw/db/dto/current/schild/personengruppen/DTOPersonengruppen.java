@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Personengruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Personengruppen")
-@NamedQuery(name="DTOPersonengruppen.all", query="SELECT e FROM DTOPersonengruppen e")
-@NamedQuery(name="DTOPersonengruppen.id", query="SELECT e FROM DTOPersonengruppen e WHERE e.ID = :value")
-@NamedQuery(name="DTOPersonengruppen.id.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOPersonengruppen.gruppenname", query="SELECT e FROM DTOPersonengruppen e WHERE e.Gruppenname = :value")
-@NamedQuery(name="DTOPersonengruppen.gruppenname.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.Gruppenname IN :value")
-@NamedQuery(name="DTOPersonengruppen.zusatzinfo", query="SELECT e FROM DTOPersonengruppen e WHERE e.Zusatzinfo = :value")
-@NamedQuery(name="DTOPersonengruppen.zusatzinfo.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.Zusatzinfo IN :value")
-@NamedQuery(name="DTOPersonengruppen.sammelemail", query="SELECT e FROM DTOPersonengruppen e WHERE e.SammelEmail = :value")
-@NamedQuery(name="DTOPersonengruppen.sammelemail.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.SammelEmail IN :value")
-@NamedQuery(name="DTOPersonengruppen.gruppenart", query="SELECT e FROM DTOPersonengruppen e WHERE e.GruppenArt = :value")
-@NamedQuery(name="DTOPersonengruppen.gruppenart.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.GruppenArt IN :value")
-@NamedQuery(name="DTOPersonengruppen.xmlexport", query="SELECT e FROM DTOPersonengruppen e WHERE e.XMLExport = :value")
-@NamedQuery(name="DTOPersonengruppen.xmlexport.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.XMLExport IN :value")
-@NamedQuery(name="DTOPersonengruppen.sortierung", query="SELECT e FROM DTOPersonengruppen e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOPersonengruppen.sortierung.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOPersonengruppen.sichtbar", query="SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOPersonengruppen.sichtbar.multiple", query="SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOPersonengruppen.primaryKeyQuery", query="SELECT e FROM DTOPersonengruppen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOPersonengruppen.all.migration", query="SELECT e FROM DTOPersonengruppen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Gruppenname","Zusatzinfo","SammelEmail","GruppenArt","XMLExport","Sortierung","Sichtbar"})
-public class DTOPersonengruppen {
+@NamedQuery(name = "DTOPersonengruppen.all", query = "SELECT e FROM DTOPersonengruppen e")
+@NamedQuery(name = "DTOPersonengruppen.id", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOPersonengruppen.id.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOPersonengruppen.gruppenname", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Gruppenname = :value")
+@NamedQuery(name = "DTOPersonengruppen.gruppenname.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Gruppenname IN :value")
+@NamedQuery(name = "DTOPersonengruppen.zusatzinfo", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Zusatzinfo = :value")
+@NamedQuery(name = "DTOPersonengruppen.zusatzinfo.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Zusatzinfo IN :value")
+@NamedQuery(name = "DTOPersonengruppen.sammelemail", query = "SELECT e FROM DTOPersonengruppen e WHERE e.SammelEmail = :value")
+@NamedQuery(name = "DTOPersonengruppen.sammelemail.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.SammelEmail IN :value")
+@NamedQuery(name = "DTOPersonengruppen.gruppenart", query = "SELECT e FROM DTOPersonengruppen e WHERE e.GruppenArt = :value")
+@NamedQuery(name = "DTOPersonengruppen.gruppenart.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.GruppenArt IN :value")
+@NamedQuery(name = "DTOPersonengruppen.xmlexport", query = "SELECT e FROM DTOPersonengruppen e WHERE e.XMLExport = :value")
+@NamedQuery(name = "DTOPersonengruppen.xmlexport.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.XMLExport IN :value")
+@NamedQuery(name = "DTOPersonengruppen.sortierung", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOPersonengruppen.sortierung.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOPersonengruppen.sichtbar", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOPersonengruppen.sichtbar.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOPersonengruppen.primaryKeyQuery", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOPersonengruppen.all.migration", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Gruppenname", "Zusatzinfo", "SammelEmail", "GruppenArt", "XMLExport", "Sortierung", "Sichtbar"})
+public final class DTOPersonengruppen {
 
 	/** ID der Personengruppe */
 	@Id
@@ -78,9 +78,9 @@ public class DTOPersonengruppen {
 	/** Steuert den LogineoXML-Export */
 	@Column(name = "XMLExport")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean XMLExport;
 
 	/** Sortierung der Personengruppe */
@@ -91,9 +91,9 @@ public class DTOPersonengruppen {
 	/** Sichtbarkeit der Personengruppe */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/**
@@ -109,11 +109,11 @@ public class DTOPersonengruppen {
 	 * @param Gruppenname   der Wert für das Attribut Gruppenname
 	 */
 	public DTOPersonengruppen(final Long ID, final String Gruppenname) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Gruppenname == null) { 
+		if (Gruppenname == null) {
 			throw new NullPointerException("Gruppenname must not be null");
 		}
 		this.Gruppenname = Gruppenname;
@@ -121,7 +121,7 @@ public class DTOPersonengruppen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

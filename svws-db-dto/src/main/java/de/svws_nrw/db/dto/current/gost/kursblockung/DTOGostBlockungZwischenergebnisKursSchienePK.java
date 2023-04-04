@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Gost_Blockung_Zwischenergebnisse_Kurs_Schienen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOGostBlockungZwischenergebnisKursSchienePK implements Serializable {
+public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -35,15 +35,15 @@ public class DTOGostBlockungZwischenergebnisKursSchienePK implements Serializabl
 	 * @param Schienen_ID   der Wert für das Attribut Schienen_ID
 	 */
 	public DTOGostBlockungZwischenergebnisKursSchienePK(final Long Zwischenergebnis_ID, final Long Blockung_Kurs_ID, final Long Schienen_ID) {
-		if (Zwischenergebnis_ID == null) { 
+		if (Zwischenergebnis_ID == null) {
 			throw new NullPointerException("Zwischenergebnis_ID must not be null");
 		}
 		this.Zwischenergebnis_ID = Zwischenergebnis_ID;
-		if (Blockung_Kurs_ID == null) { 
+		if (Blockung_Kurs_ID == null) {
 			throw new NullPointerException("Blockung_Kurs_ID must not be null");
 		}
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Schienen_ID == null) { 
+		if (Schienen_ID == null) {
 			throw new NullPointerException("Schienen_ID must not be null");
 		}
 		this.Schienen_ID = Schienen_ID;
@@ -51,7 +51,7 @@ public class DTOGostBlockungZwischenergebnisKursSchienePK implements Serializabl
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

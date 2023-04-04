@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerZuweisungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOSchuelerZuweisungPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerZuweisungen")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.all", query="SELECT e FROM MigrationDTOSchuelerZuweisung e")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.abschnitt_id", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.abschnitt_id.multiple", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.fach_id", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.kursart", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Kursart = :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.kursart.multiple", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Kursart IN :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2")
-@NamedQuery(name="MigrationDTOSchuelerZuweisung.all.migration", query="SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL")
-@JsonPropertyOrder({"Abschnitt_ID","Fach_ID","Kursart","SchulnrEigner"})
-public class MigrationDTOSchuelerZuweisung {
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.all", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.abschnitt_id", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.abschnitt_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.fach_id", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.kursart", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Kursart = :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.kursart.multiple", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Kursart IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2")
+@NamedQuery(name = "MigrationDTOSchuelerZuweisung.all.migration", query = "SELECT e FROM MigrationDTOSchuelerZuweisung e WHERE e.Abschnitt_ID IS NOT NULL AND e.Fach_ID IS NOT NULL")
+@JsonPropertyOrder({"Abschnitt_ID", "Fach_ID", "Kursart", "SchulnrEigner"})
+public final class MigrationDTOSchuelerZuweisung {
 
 	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
 	@Id
@@ -70,11 +70,11 @@ public class MigrationDTOSchuelerZuweisung {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public MigrationDTOSchuelerZuweisung(final Long Abschnitt_ID, final Long Fach_ID) {
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -82,7 +82,7 @@ public class MigrationDTOSchuelerZuweisung {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

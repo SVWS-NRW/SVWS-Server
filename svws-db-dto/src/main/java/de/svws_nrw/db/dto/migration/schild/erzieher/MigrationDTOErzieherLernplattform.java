@@ -22,32 +22,32 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle ErzieherLernplattform.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOErzieherLernplattformPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ErzieherLernplattform")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.all", query="SELECT e FROM MigrationDTOErzieherLernplattform e")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.erzieherid", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.erzieherid.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.lernplattformid", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.LernplattformID = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.lernplattformid.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.LernplattformID IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.credentialid", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.CredentialID = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.credentialid.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.CredentialID IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungabgefragt", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAbgefragt = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungabgefragt.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAbgefragt IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungnutzung", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungNutzung = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungnutzung.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungNutzung IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungaudiokonferenz", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAudiokonferenz = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungaudiokonferenz.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAudiokonferenz IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungvideokonferenz", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungVideokonferenz = :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.einwilligungvideokonferenz.multiple", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungVideokonferenz IN :value")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.primaryKeyQuery", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID = ?1 AND e.LernplattformID = ?2")
-@NamedQuery(name="MigrationDTOErzieherLernplattform.all.migration", query="SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID IS NOT NULL AND e.LernplattformID IS NOT NULL")
-@JsonPropertyOrder({"ErzieherID","LernplattformID","CredentialID","EinwilligungAbgefragt","EinwilligungNutzung","EinwilligungAudiokonferenz","EinwilligungVideokonferenz"})
-public class MigrationDTOErzieherLernplattform {
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.all", query = "SELECT e FROM MigrationDTOErzieherLernplattform e")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.erzieherid", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.erzieherid.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.lernplattformid", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.LernplattformID = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.lernplattformid.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.LernplattformID IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.credentialid", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.CredentialID = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.credentialid.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.CredentialID IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungabgefragt", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAbgefragt = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungabgefragt.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAbgefragt IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungnutzung", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungNutzung = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungnutzung.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungNutzung IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungaudiokonferenz", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAudiokonferenz = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungaudiokonferenz.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungAudiokonferenz IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungvideokonferenz", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungVideokonferenz = :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.einwilligungvideokonferenz.multiple", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.EinwilligungVideokonferenz IN :value")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.primaryKeyQuery", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID = ?1 AND e.LernplattformID = ?2")
+@NamedQuery(name = "MigrationDTOErzieherLernplattform.all.migration", query = "SELECT e FROM MigrationDTOErzieherLernplattform e WHERE e.ErzieherID IS NOT NULL AND e.LernplattformID IS NOT NULL")
+@JsonPropertyOrder({"ErzieherID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz"})
+public final class MigrationDTOErzieherLernplattform {
 
 	/** ErzieherID für den Lernplattform-Datensatz */
 	@Id
@@ -69,33 +69,33 @@ public class MigrationDTOErzieherLernplattform {
 	/** Einwilligung wurde abgefragt */
 	@Column(name = "EinwilligungAbgefragt")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungAbgefragt;
 
 	/** Einwilligung zur Nutzung liegt vor */
 	@Column(name = "EinwilligungNutzung")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungNutzung;
 
 	/** Einwilligung zur Audiokonferenz liegt vor */
 	@Column(name = "EinwilligungAudiokonferenz")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungAudiokonferenz;
 
 	/** Einwilligung zur Videokonferenz liegt vor */
 	@Column(name = "EinwilligungVideokonferenz")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungVideokonferenz;
 
 	/**
@@ -115,27 +115,27 @@ public class MigrationDTOErzieherLernplattform {
 	 * @param EinwilligungVideokonferenz   der Wert für das Attribut EinwilligungVideokonferenz
 	 */
 	public MigrationDTOErzieherLernplattform(final Long ErzieherID, final Long LernplattformID, final Boolean EinwilligungAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
-		if (ErzieherID == null) { 
+		if (ErzieherID == null) {
 			throw new NullPointerException("ErzieherID must not be null");
 		}
 		this.ErzieherID = ErzieherID;
-		if (LernplattformID == null) { 
+		if (LernplattformID == null) {
 			throw new NullPointerException("LernplattformID must not be null");
 		}
 		this.LernplattformID = LernplattformID;
-		if (EinwilligungAbgefragt == null) { 
+		if (EinwilligungAbgefragt == null) {
 			throw new NullPointerException("EinwilligungAbgefragt must not be null");
 		}
 		this.EinwilligungAbgefragt = EinwilligungAbgefragt;
-		if (EinwilligungNutzung == null) { 
+		if (EinwilligungNutzung == null) {
 			throw new NullPointerException("EinwilligungNutzung must not be null");
 		}
 		this.EinwilligungNutzung = EinwilligungNutzung;
-		if (EinwilligungAudiokonferenz == null) { 
+		if (EinwilligungAudiokonferenz == null) {
 			throw new NullPointerException("EinwilligungAudiokonferenz must not be null");
 		}
 		this.EinwilligungAudiokonferenz = EinwilligungAudiokonferenz;
-		if (EinwilligungVideokonferenz == null) { 
+		if (EinwilligungVideokonferenz == null) {
 			throw new NullPointerException("EinwilligungVideokonferenz must not be null");
 		}
 		this.EinwilligungVideokonferenz = EinwilligungVideokonferenz;
@@ -143,7 +143,7 @@ public class MigrationDTOErzieherLernplattform {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

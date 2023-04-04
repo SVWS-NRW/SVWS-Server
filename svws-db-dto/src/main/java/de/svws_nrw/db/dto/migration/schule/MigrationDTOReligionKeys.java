@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Religionen_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Religionen_Keys")
-@NamedQuery(name="MigrationDTOReligionKeys.all", query="SELECT e FROM MigrationDTOReligionKeys e")
-@NamedQuery(name="MigrationDTOReligionKeys.kuerzel", query="SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOReligionKeys.kuerzel.multiple", query="SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOReligionKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOReligionKeys.all.migration", query="SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "MigrationDTOReligionKeys.all", query = "SELECT e FROM MigrationDTOReligionKeys e")
+@NamedQuery(name = "MigrationDTOReligionKeys.kuerzel", query = "SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOReligionKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOReligionKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOReligionKeys.all.migration", query = "SELECT e FROM MigrationDTOReligionKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class MigrationDTOReligionKeys {
+public final class MigrationDTOReligionKeys {
 
 	/** Das Kürzel der Religion / Konfession */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOReligionKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOReligionKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class MigrationDTOReligionKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

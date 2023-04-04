@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerTelefone.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerTelefone")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.all", query="SELECT e FROM MigrationDTOSchuelerTelefon e")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.id", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.id.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.schueler_id", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.telefonart_id", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.TelefonArt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.telefonart_id.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.TelefonArt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.telefonnummer", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Telefonnummer = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.telefonnummer.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Telefonnummer IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.bemerkung", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Bemerkung = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.bemerkung.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.sortierung", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.sortierung.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.gesperrt", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Gesperrt = :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.gesperrt.multiple", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerTelefon.all.migration", query="SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","TelefonArt_ID","Telefonnummer","Bemerkung","Sortierung","SchulnrEigner","Gesperrt"})
-public class MigrationDTOSchuelerTelefon {
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.all", query = "SELECT e FROM MigrationDTOSchuelerTelefon e")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.id", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.telefonart_id", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.TelefonArt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.telefonart_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.TelefonArt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.telefonnummer", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Telefonnummer = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.telefonnummer.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Telefonnummer IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.bemerkung", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.bemerkung.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.sortierung", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.sortierung.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.gesperrt", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Gesperrt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.gesperrt.multiple", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerTelefon.all.migration", query = "SELECT e FROM MigrationDTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "TelefonArt_ID", "Telefonnummer", "Bemerkung", "Sortierung", "SchulnrEigner", "Gesperrt"})
+public final class MigrationDTOSchuelerTelefon {
 
 	/** ID des Telefonnummerneintrags */
 	@Id
@@ -88,9 +88,9 @@ public class MigrationDTOSchuelerTelefon {
 	/** Sperrung des Telefonnummerneintrags */
 	@Column(name = "Gesperrt")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Gesperrt;
 
 	/**
@@ -106,11 +106,11 @@ public class MigrationDTOSchuelerTelefon {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public MigrationDTOSchuelerTelefon(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -118,7 +118,7 @@ public class MigrationDTOSchuelerTelefon {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

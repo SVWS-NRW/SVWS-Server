@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Merkmale.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@NamedQuery(name="MigrationDTOMerkmale.all", query="SELECT e FROM MigrationDTOMerkmale e")
-@NamedQuery(name="MigrationDTOMerkmale.id", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOMerkmale.id.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.schule", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule = :value")
-@NamedQuery(name="MigrationDTOMerkmale.schule.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.schueler", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler = :value")
-@NamedQuery(name="MigrationDTOMerkmale.schueler.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.kurztext", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext = :value")
-@NamedQuery(name="MigrationDTOMerkmale.kurztext.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.langtext", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext = :value")
-@NamedQuery(name="MigrationDTOMerkmale.langtext.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.schulnreigner", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOMerkmale.schulnreigner.multiple", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOMerkmale.primaryKeyQuery", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOMerkmale.all.migration", query="SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schule","Schueler","Kurztext","Langtext","SchulnrEigner"})
-public class MigrationDTOMerkmale {
+@NamedQuery(name = "MigrationDTOMerkmale.all", query = "SELECT e FROM MigrationDTOMerkmale e")
+@NamedQuery(name = "MigrationDTOMerkmale.id", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.id.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schule", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schule.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schule IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schueler", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schueler.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Schueler IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.kurztext", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.kurztext.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Kurztext IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.langtext", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.langtext.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.Langtext IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schulnreigner", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOMerkmale.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOMerkmale.primaryKeyQuery", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOMerkmale.all.migration", query = "SELECT e FROM MigrationDTOMerkmale e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext", "SchulnrEigner"})
+public final class MigrationDTOMerkmale {
 
 	/** ID des Merkmals das an der Schule vorhanden ist */
 	@Id
@@ -54,17 +54,17 @@ public class MigrationDTOMerkmale {
 	/** Merkmal kann der Schule zugewiesen werden */
 	@Column(name = "Schule")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Schule;
 
 	/** Merkmal kann auch einem einzelnen Schüler auf Individualdaten II zugewiesen werden */
 	@Column(name = "Schueler")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Schueler;
 
 	/** Kurztext des Merkmals zB OGS */
@@ -94,7 +94,7 @@ public class MigrationDTOMerkmale {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOMerkmale(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -102,7 +102,7 @@ public class MigrationDTOMerkmale {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

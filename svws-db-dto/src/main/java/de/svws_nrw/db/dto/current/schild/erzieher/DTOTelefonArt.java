@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_TelefonArt.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_TelefonArt")
-@NamedQuery(name="DTOTelefonArt.all", query="SELECT e FROM DTOTelefonArt e")
-@NamedQuery(name="DTOTelefonArt.id", query="SELECT e FROM DTOTelefonArt e WHERE e.ID = :value")
-@NamedQuery(name="DTOTelefonArt.id.multiple", query="SELECT e FROM DTOTelefonArt e WHERE e.ID IN :value")
-@NamedQuery(name="DTOTelefonArt.bezeichnung", query="SELECT e FROM DTOTelefonArt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOTelefonArt.bezeichnung.multiple", query="SELECT e FROM DTOTelefonArt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOTelefonArt.sortierung", query="SELECT e FROM DTOTelefonArt e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOTelefonArt.sortierung.multiple", query="SELECT e FROM DTOTelefonArt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOTelefonArt.sichtbar", query="SELECT e FROM DTOTelefonArt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOTelefonArt.sichtbar.multiple", query="SELECT e FROM DTOTelefonArt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOTelefonArt.aenderbar", query="SELECT e FROM DTOTelefonArt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOTelefonArt.aenderbar.multiple", query="SELECT e FROM DTOTelefonArt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOTelefonArt.primaryKeyQuery", query="SELECT e FROM DTOTelefonArt e WHERE e.ID = ?1")
-@NamedQuery(name="DTOTelefonArt.all.migration", query="SELECT e FROM DTOTelefonArt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar"})
-public class DTOTelefonArt {
+@NamedQuery(name = "DTOTelefonArt.all", query = "SELECT e FROM DTOTelefonArt e")
+@NamedQuery(name = "DTOTelefonArt.id", query = "SELECT e FROM DTOTelefonArt e WHERE e.ID = :value")
+@NamedQuery(name = "DTOTelefonArt.id.multiple", query = "SELECT e FROM DTOTelefonArt e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOTelefonArt.bezeichnung", query = "SELECT e FROM DTOTelefonArt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOTelefonArt.bezeichnung.multiple", query = "SELECT e FROM DTOTelefonArt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOTelefonArt.sortierung", query = "SELECT e FROM DTOTelefonArt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOTelefonArt.sortierung.multiple", query = "SELECT e FROM DTOTelefonArt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOTelefonArt.sichtbar", query = "SELECT e FROM DTOTelefonArt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOTelefonArt.sichtbar.multiple", query = "SELECT e FROM DTOTelefonArt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOTelefonArt.aenderbar", query = "SELECT e FROM DTOTelefonArt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOTelefonArt.aenderbar.multiple", query = "SELECT e FROM DTOTelefonArt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOTelefonArt.primaryKeyQuery", query = "SELECT e FROM DTOTelefonArt e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOTelefonArt.all.migration", query = "SELECT e FROM DTOTelefonArt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOTelefonArt {
 
 	/** ID der Telefonart */
 	@Id
@@ -62,17 +62,17 @@ public class DTOTelefonArt {
 	/** Sichbarkeit der Telefonart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit der Telefonart */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOTelefonArt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOTelefonArt(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -100,7 +100,7 @@ public class DTOTelefonArt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

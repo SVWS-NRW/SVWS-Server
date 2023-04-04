@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Herkunft_Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOHerkunftSchulformenPK implements Serializable {
+public final class DTOHerkunftSchulformenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOHerkunftSchulformenPK implements Serializable {
 	 * @param Schulform_Kuerzel   der Wert für das Attribut Schulform_Kuerzel
 	 */
 	public DTOHerkunftSchulformenPK(final Long Herkunft_ID, final String Schulform_Kuerzel) {
-		if (Herkunft_ID == null) { 
+		if (Herkunft_ID == null) {
 			throw new NullPointerException("Herkunft_ID must not be null");
 		}
 		this.Herkunft_ID = Herkunft_ID;
-		if (Schulform_Kuerzel == null) { 
+		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
 		}
 		this.Schulform_Kuerzel = Schulform_Kuerzel;
@@ -43,7 +43,7 @@ public class DTOHerkunftSchulformenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

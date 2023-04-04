@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KAoA_SBO_Ebene4_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KAoA_SBO_Ebene4_Keys")
-@NamedQuery(name="DTOKAoASBOEB4Keys.all", query="SELECT e FROM DTOKAoASBOEB4Keys e")
-@NamedQuery(name="DTOKAoASBOEB4Keys.id", query="SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID = :value")
-@NamedQuery(name="DTOKAoASBOEB4Keys.id.multiple", query="SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKAoASBOEB4Keys.primaryKeyQuery", query="SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKAoASBOEB4Keys.all.migration", query="SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID IS NOT NULL")
+@NamedQuery(name = "DTOKAoASBOEB4Keys.all", query = "SELECT e FROM DTOKAoASBOEB4Keys e")
+@NamedQuery(name = "DTOKAoASBOEB4Keys.id", query = "SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKAoASBOEB4Keys.id.multiple", query = "SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKAoASBOEB4Keys.primaryKeyQuery", query = "SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKAoASBOEB4Keys.all.migration", query = "SELECT e FROM DTOKAoASBOEB4Keys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
-public class DTOKAoASBOEB4Keys {
+public final class DTOKAoASBOEB4Keys {
 
 	/** Die eindeutige ID des Merkmals der SBO-Ebene 4 */
 	@Id
@@ -45,7 +45,7 @@ public class DTOKAoASBOEB4Keys {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOKAoASBOEB4Keys(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -53,7 +53,7 @@ public class DTOKAoASBOEB4Keys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

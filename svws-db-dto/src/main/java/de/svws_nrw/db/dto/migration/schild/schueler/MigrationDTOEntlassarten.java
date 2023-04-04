@@ -21,29 +21,29 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_EntlassGrund.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_EntlassGrund")
-@NamedQuery(name="MigrationDTOEntlassarten.all", query="SELECT e FROM MigrationDTOEntlassarten e")
-@NamedQuery(name="MigrationDTOEntlassarten.id", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.id.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.bezeichnung", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.bezeichnung.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.sortierung", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.sortierung.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.sichtbar", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.sichtbar.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.aenderbar", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.aenderbar.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.schulnreigner", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOEntlassarten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOEntlassarten.primaryKeyQuery", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOEntlassarten.all.migration", query="SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar","SchulnrEigner"})
-public class MigrationDTOEntlassarten {
+@NamedQuery(name = "MigrationDTOEntlassarten.all", query = "SELECT e FROM MigrationDTOEntlassarten e")
+@NamedQuery(name = "MigrationDTOEntlassarten.id", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.id.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.bezeichnung", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.sortierung", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.sortierung.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.sichtbar", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.sichtbar.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.aenderbar", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.aenderbar.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.schulnreigner", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOEntlassarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOEntlassarten.all.migration", query = "SELECT e FROM MigrationDTOEntlassarten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
+public final class MigrationDTOEntlassarten {
 
 	/** ID des Entlassgrundes */
 	@Id
@@ -64,17 +64,17 @@ public class MigrationDTOEntlassarten {
 	/** Sichbarkeit des Entlassgrundes */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit des Entlassgrundes */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
@@ -95,11 +95,11 @@ public class MigrationDTOEntlassarten {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOEntlassarten(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -107,7 +107,7 @@ public class MigrationDTOEntlassarten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

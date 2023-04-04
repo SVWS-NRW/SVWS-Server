@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Jahrgang_Beratungslehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOGostJahrgangBeratungslehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Jahrgang_Beratungslehrer")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.all", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.abi_jahrgang", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = :value")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.abi_jahrgang.multiple", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IN :value")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.lehrer_id", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.lehrer_id.multiple", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.primaryKeyQuery", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name="DTOGostJahrgangBeratungslehrer.all.migration", query="SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Abi_Jahrgang","Lehrer_ID"})
-public class DTOGostJahrgangBeratungslehrer {
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.all", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.abi_jahrgang", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = :value")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.abi_jahrgang.multiple", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IN :value")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.lehrer_id", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.lehrer_id.multiple", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang = ?1 AND e.Lehrer_ID = ?2")
+@NamedQuery(name = "DTOGostJahrgangBeratungslehrer.all.migration", query = "SELECT e FROM DTOGostJahrgangBeratungslehrer e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Abi_Jahrgang", "Lehrer_ID"})
+public final class DTOGostJahrgangBeratungslehrer {
 
 	/** Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht  */
 	@Id
@@ -56,11 +56,11 @@ public class DTOGostJahrgangBeratungslehrer {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public DTOGostJahrgangBeratungslehrer(final Integer Abi_Jahrgang, final Long Lehrer_ID) {
-		if (Abi_Jahrgang == null) { 
+		if (Abi_Jahrgang == null) {
 			throw new NullPointerException("Abi_Jahrgang must not be null");
 		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -68,7 +68,7 @@ public class DTOGostJahrgangBeratungslehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,95 +21,95 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerFHRFaecher.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFHRFaecher")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.all", query="SELECT e FROM MigrationDTOSchuelerFHRFach e")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.id", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.id.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.schueler_id", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fach_id", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.kursartallg", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KursartAllg = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.kursartallg.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KursartAllg IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fachkrz", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FachKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fachkrz.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FachKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_2_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_2_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_2_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.psii_3_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.hsii_3_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.rsii_3_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_2_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_1", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_1.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_2", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2 = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_2.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2 IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_1_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_1_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_2_w", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2_W = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.ksii_3_2_w.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2_W IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fsortierung", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FSortierung = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.fsortierung.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FSortierung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerFHRFach.all.migration", query="SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Fach_ID","KursartAllg","FachKrz","PSII_2_1","HSII_2_1","RSII_2_1","PSII_2_2","HSII_2_2","RSII_2_2","PSII_2_1_W","HSII_2_1_W","RSII_2_1_W","PSII_2_2_W","HSII_2_2_W","RSII_2_2_W","PSII_3_1","HSII_3_1","RSII_3_1","PSII_3_2","HSII_3_2","RSII_3_2","PSII_3_1_W","HSII_3_1_W","RSII_3_1_W","PSII_3_2_W","HSII_3_2_W","RSII_3_2_W","KSII_2_1","KSII_2_2","KSII_2_1_W","KSII_2_2_W","KSII_3_1","KSII_3_2","KSII_3_1_W","KSII_3_2_W","FSortierung","SchulnrEigner"})
-public class MigrationDTOSchuelerFHRFach {
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.all", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.id", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fach_id", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.kursartallg", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KursartAllg = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.kursartallg.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KursartAllg IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fachkrz", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FachKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fachkrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FachKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_2_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_2_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_2_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_2_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_2_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_2_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.psii_3_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.PSII_3_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.hsii_3_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.HSII_3_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.rsii_3_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.RSII_3_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_2_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_2_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_1", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_1.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_2", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2 = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_2.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2 IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_1_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_1_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_1_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_2_w", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2_W = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.ksii_3_2_w.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.KSII_3_2_W IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fsortierung", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FSortierung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.fsortierung.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.FSortierung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Fach_ID", "KursartAllg", "FachKrz", "PSII_2_1", "HSII_2_1", "RSII_2_1", "PSII_2_2", "HSII_2_2", "RSII_2_2", "PSII_2_1_W", "HSII_2_1_W", "RSII_2_1_W", "PSII_2_2_W", "HSII_2_2_W", "RSII_2_2_W", "PSII_3_1", "HSII_3_1", "RSII_3_1", "PSII_3_2", "HSII_3_2", "RSII_3_2", "PSII_3_1_W", "HSII_3_1_W", "RSII_3_1_W", "PSII_3_2_W", "HSII_3_2_W", "RSII_3_2_W", "KSII_2_1", "KSII_2_2", "KSII_2_1_W", "KSII_2_2_W", "KSII_3_1", "KSII_3_2", "KSII_3_1_W", "KSII_3_2_W", "FSortierung", "SchulnrEigner"})
+public final class MigrationDTOSchuelerFHRFach {
 
 	/** ID des Facheintrags für den FHR-Reiter */
 	@Id
@@ -150,9 +150,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_2_1")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_1;
 
 	/** P: Punkte im betreffenden Abschnitt  */
@@ -168,9 +168,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_2_2")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_2;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -186,9 +186,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_2_1_W")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_1_W;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -204,9 +204,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_2_2_W")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_2_2_W;
 
 	/** Punkte im betreffenden Abschnitt */
@@ -222,9 +222,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_3_1")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_1;
 
 	/** P: Punkte im betreffenden Abschnitt */
@@ -240,9 +240,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt)  */
 	@Column(name = "RSII_3_2")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_2;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -258,9 +258,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_3_1_W")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_1_W;
 
 	/** P: Punkte im betreffenden Abschnitt W=wiederholt */
@@ -276,9 +276,9 @@ public class MigrationDTOSchuelerFHRFach {
 	/** R: Relevanz für Berechnung (+ wenn das Fach im betreffenden Abschnitt in die Berechnung eingeht, in SchILD wird das dann hellblau im Grid dargestellt) W=wiederholt */
 	@Column(name = "RSII_3_2_W")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RSII_3_2_W;
 
 	/** K: Kursart im betreffenden Abschnitt  */
@@ -345,15 +345,15 @@ public class MigrationDTOSchuelerFHRFach {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public MigrationDTOSchuelerFHRFach(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -361,7 +361,7 @@ public class MigrationDTOSchuelerFHRFach {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

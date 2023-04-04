@@ -24,37 +24,37 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerFehlstunden.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerFehlstunden")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.all", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.id", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.id.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.abschnitt_id", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.abschnitt_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.datum", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Datum = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.datum.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Datum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.fach_id", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.fehlstd", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.FehlStd = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.fehlstd.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.FehlStd IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.vonstd", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.VonStd = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.vonstd.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.VonStd IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.bisstd", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.BisStd = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.bisstd.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.BisStd IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.entschuldigt", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Entschuldigt = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.entschuldigt.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Entschuldigt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.lehrer_id", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.lehrer_id.multiple", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerFehlstunden.all.migration", query="SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Abschnitt_ID","Datum","Fach_ID","FehlStd","VonStd","BisStd","Entschuldigt","Lehrer_ID"})
-public class MigrationDTOSchuelerFehlstunden {
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.all", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.id", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.abschnitt_id", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.abschnitt_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.datum", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Datum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Datum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.fach_id", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.fehlstd", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.FehlStd = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.fehlstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.FehlStd IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.vonstd", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.VonStd = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.vonstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.VonStd IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.bisstd", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.BisStd = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.bisstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.BisStd IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.entschuldigt", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Entschuldigt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.entschuldigt.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Entschuldigt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.lehrer_id", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Abschnitt_ID", "Datum", "Fach_ID", "FehlStd", "VonStd", "BisStd", "Entschuldigt", "Lehrer_ID"})
+public final class MigrationDTOSchuelerFehlstunden {
 
 	/** ID des Fehlstundeneintrags */
 	@Id
@@ -75,9 +75,9 @@ public class MigrationDTOSchuelerFehlstunden {
 	/** Datum der Fehlzeit */
 	@Column(name = "Datum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String Datum;
 
 	/** FachID der Fehlzeit */
@@ -103,9 +103,9 @@ public class MigrationDTOSchuelerFehlstunden {
 	/** Entschuldigt Ja Nein */
 	@Column(name = "Entschuldigt")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Entschuldigt;
 
 	/** LehrerID der Fehlzeit */
@@ -129,23 +129,23 @@ public class MigrationDTOSchuelerFehlstunden {
 	 * @param FehlStd   der Wert für das Attribut FehlStd
 	 */
 	public MigrationDTOSchuelerFehlstunden(final Long ID, final Integer SchulnrEigner, final Long Abschnitt_ID, final String Datum, final Double FehlStd) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Datum == null) { 
+		if (Datum == null) {
 			throw new NullPointerException("Datum must not be null");
 		}
 		this.Datum = Datum;
-		if (FehlStd == null) { 
+		if (FehlStd == null) {
 			throw new NullPointerException("FehlStd must not be null");
 		}
 		this.FehlStd = FehlStd;
@@ -153,7 +153,7 @@ public class MigrationDTOSchuelerFehlstunden {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

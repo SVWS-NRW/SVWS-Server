@@ -21,39 +21,39 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Ankreuzfloskeln.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ankreuzfloskeln")
-@NamedQuery(name="DTOAnkreuzfloskeln.all", query="SELECT e FROM DTOAnkreuzfloskeln e")
-@NamedQuery(name="DTOAnkreuzfloskeln.id", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.id.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.fach_id", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.fach_id.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.istasv", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.istasv.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.jahrgang", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.jahrgang.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.gliederung", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.gliederung.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.floskeltext", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.floskeltext.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.sortierung", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.sortierung.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.fachsortierung", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.fachsortierung.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.abschnitt", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.abschnitt.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.sichtbar", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.sichtbar.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.aktiv", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv = :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.aktiv.multiple", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv IN :value")
-@NamedQuery(name="DTOAnkreuzfloskeln.primaryKeyQuery", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1")
-@NamedQuery(name="DTOAnkreuzfloskeln.all.migration", query="SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Fach_ID","IstASV","Jahrgang","Gliederung","FloskelText","Sortierung","FachSortierung","Abschnitt","Sichtbar","Aktiv"})
-public class DTOAnkreuzfloskeln {
+@NamedQuery(name = "DTOAnkreuzfloskeln.all", query = "SELECT e FROM DTOAnkreuzfloskeln e")
+@NamedQuery(name = "DTOAnkreuzfloskeln.id", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.id.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.fach_id", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.fach_id.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.istasv", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.istasv.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.jahrgang", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.jahrgang.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.gliederung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.gliederung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.floskeltext", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.floskeltext.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FloskelText IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.sortierung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.sortierung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.fachsortierung", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.fachsortierung.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.FachSortierung IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.abschnitt", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.abschnitt.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.sichtbar", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.sichtbar.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.aktiv", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv = :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.aktiv.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv IN :value")
+@NamedQuery(name = "DTOAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Fach_ID", "IstASV", "Jahrgang", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
+public final class DTOAnkreuzfloskeln {
 
 	/** ID der Ankreuzfloskel */
 	@Id
@@ -104,17 +104,17 @@ public class DTOAnkreuzfloskeln {
 	/** Sichtbarkeit der Ankreuzfloskel */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Gibt an ob die Ankreuzfloskel aktiv ist */
 	@Column(name = "Aktiv")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aktiv;
 
 	/**
@@ -132,19 +132,19 @@ public class DTOAnkreuzfloskeln {
 	 * @param FloskelText   der Wert für das Attribut FloskelText
 	 */
 	public DTOAnkreuzfloskeln(final Long ID, final Integer IstASV, final String Jahrgang, final String FloskelText) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (IstASV == null) { 
+		if (IstASV == null) {
 			throw new NullPointerException("IstASV must not be null");
 		}
 		this.IstASV = IstASV;
-		if (Jahrgang == null) { 
+		if (Jahrgang == null) {
 			throw new NullPointerException("Jahrgang must not be null");
 		}
 		this.Jahrgang = Jahrgang;
-		if (FloskelText == null) { 
+		if (FloskelText == null) {
 			throw new NullPointerException("FloskelText must not be null");
 		}
 		this.FloskelText = FloskelText;
@@ -152,7 +152,7 @@ public class DTOAnkreuzfloskeln {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

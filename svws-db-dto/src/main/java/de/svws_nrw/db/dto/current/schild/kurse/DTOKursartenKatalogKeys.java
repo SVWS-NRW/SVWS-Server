@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KursartenKatalog_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KursartenKatalog_Keys")
-@NamedQuery(name="DTOKursartenKatalogKeys.all", query="SELECT e FROM DTOKursartenKatalogKeys e")
-@NamedQuery(name="DTOKursartenKatalogKeys.kuerzel", query="SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOKursartenKatalogKeys.kuerzel.multiple", query="SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOKursartenKatalogKeys.primaryKeyQuery", query="SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="DTOKursartenKatalogKeys.all.migration", query="SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "DTOKursartenKatalogKeys.all", query = "SELECT e FROM DTOKursartenKatalogKeys e")
+@NamedQuery(name = "DTOKursartenKatalogKeys.kuerzel", query = "SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOKursartenKatalogKeys.kuerzel.multiple", query = "SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOKursartenKatalogKeys.primaryKeyQuery", query = "SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOKursartenKatalogKeys.all.migration", query = "SELECT e FROM DTOKursartenKatalogKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class DTOKursartenKatalogKeys {
+public final class DTOKursartenKatalogKeys {
 
 	/** Das Kürzel der Kursart */
 	@Id
@@ -45,7 +45,7 @@ public class DTOKursartenKatalogKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public DTOKursartenKatalogKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class DTOKursartenKatalogKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

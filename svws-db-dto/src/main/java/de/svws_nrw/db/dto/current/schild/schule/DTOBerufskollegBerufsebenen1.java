@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Berufskolleg_Berufsebenen1.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Berufskolleg_Berufsebenen1")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.all", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.id", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID = :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.id.multiple", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID IN :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.kuerzel", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.kuerzel.multiple", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.bezeichnung", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.bezeichnung.multiple", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.gueltigvon", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigVon = :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.gueltigvon.multiple", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigVon IN :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.gueltigbis", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigBis = :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.gueltigbis.multiple", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigBis IN :value")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.primaryKeyQuery", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID = ?1")
-@NamedQuery(name="DTOBerufskollegBerufsebenen1.all.migration", query="SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Kuerzel","Bezeichnung","gueltigVon","gueltigBis"})
-public class DTOBerufskollegBerufsebenen1 {
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.all", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.id", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID = :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.id.multiple", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.kuerzel", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.kuerzel.multiple", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.bezeichnung", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.bezeichnung.multiple", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.gueltigvon", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigVon = :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.gueltigvon.multiple", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigVon IN :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.gueltigbis", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigBis = :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.gueltigbis.multiple", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.gueltigBis IN :value")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.primaryKeyQuery", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOBerufskollegBerufsebenen1.all.migration", query = "SELECT e FROM DTOBerufskollegBerufsebenen1 e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
+public final class DTOBerufskollegBerufsebenen1 {
 
 	/** ID der Berufsebene  */
 	@Id
@@ -75,15 +75,15 @@ public class DTOBerufskollegBerufsebenen1 {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOBerufskollegBerufsebenen1(final Long ID, final String Kuerzel, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -91,7 +91,7 @@ public class DTOBerufskollegBerufsebenen1 {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

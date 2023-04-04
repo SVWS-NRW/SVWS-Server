@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KursLehrer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOKursLehrerPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KursLehrer")
-@NamedQuery(name="MigrationDTOKursLehrer.all", query="SELECT e FROM MigrationDTOKursLehrer e")
-@NamedQuery(name="MigrationDTOKursLehrer.kurs_id", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID = :value")
-@NamedQuery(name="MigrationDTOKursLehrer.kurs_id.multiple", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name="MigrationDTOKursLehrer.lehrer_id", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOKursLehrer.lehrer_id.multiple", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOKursLehrer.anteil", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Anteil = :value")
-@NamedQuery(name="MigrationDTOKursLehrer.anteil.multiple", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Anteil IN :value")
-@NamedQuery(name="MigrationDTOKursLehrer.schulnreigner", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOKursLehrer.schulnreigner.multiple", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOKursLehrer.primaryKeyQuery", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
-@NamedQuery(name="MigrationDTOKursLehrer.all.migration", query="SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
-@JsonPropertyOrder({"Kurs_ID","Lehrer_ID","Anteil","SchulnrEigner"})
-public class MigrationDTOKursLehrer {
+@NamedQuery(name = "MigrationDTOKursLehrer.all", query = "SELECT e FROM MigrationDTOKursLehrer e")
+@NamedQuery(name = "MigrationDTOKursLehrer.kurs_id", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID = :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.kurs_id.multiple", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID IN :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.lehrer_id", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.anteil", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Anteil = :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.anteil.multiple", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Anteil IN :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.schulnreigner", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOKursLehrer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID = ?1 AND e.Lehrer_ID = ?2")
+@NamedQuery(name = "MigrationDTOKursLehrer.all.migration", query = "SELECT e FROM MigrationDTOKursLehrer e WHERE e.Kurs_ID IS NOT NULL AND e.Lehrer_ID IS NOT NULL")
+@JsonPropertyOrder({"Kurs_ID", "Lehrer_ID", "Anteil", "SchulnrEigner"})
+public final class MigrationDTOKursLehrer {
 
 	/** ID des Kurses zu denen der Lehrer gehört */
 	@Id
@@ -70,11 +70,11 @@ public class MigrationDTOKursLehrer {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
 	public MigrationDTOKursLehrer(final Long Kurs_ID, final Long Lehrer_ID) {
-		if (Kurs_ID == null) { 
+		if (Kurs_ID == null) {
 			throw new NullPointerException("Kurs_ID must not be null");
 		}
 		this.Kurs_ID = Kurs_ID;
-		if (Lehrer_ID == null) { 
+		if (Lehrer_ID == null) {
 			throw new NullPointerException("Lehrer_ID must not be null");
 		}
 		this.Lehrer_ID = Lehrer_ID;
@@ -82,7 +82,7 @@ public class MigrationDTOKursLehrer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

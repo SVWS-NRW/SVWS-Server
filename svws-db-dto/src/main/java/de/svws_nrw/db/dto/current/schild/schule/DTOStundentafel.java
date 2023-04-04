@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundentafel.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundentafel")
-@NamedQuery(name="DTOStundentafel.all", query="SELECT e FROM DTOStundentafel e")
-@NamedQuery(name="DTOStundentafel.id", query="SELECT e FROM DTOStundentafel e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundentafel.id.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundentafel.bezeichnung", query="SELECT e FROM DTOStundentafel e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOStundentafel.bezeichnung.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOStundentafel.jahrgang_id", query="SELECT e FROM DTOStundentafel e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="DTOStundentafel.jahrgang_id.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="DTOStundentafel.asdjahrgang", query="SELECT e FROM DTOStundentafel e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="DTOStundentafel.asdjahrgang.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="DTOStundentafel.sgl", query="SELECT e FROM DTOStundentafel e WHERE e.SGL = :value")
-@NamedQuery(name="DTOStundentafel.sgl.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.SGL IN :value")
-@NamedQuery(name="DTOStundentafel.fachklasse_id", query="SELECT e FROM DTOStundentafel e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="DTOStundentafel.fachklasse_id.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="DTOStundentafel.sichtbar", query="SELECT e FROM DTOStundentafel e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOStundentafel.sichtbar.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOStundentafel.sortierung", query="SELECT e FROM DTOStundentafel e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOStundentafel.sortierung.multiple", query="SELECT e FROM DTOStundentafel e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOStundentafel.primaryKeyQuery", query="SELECT e FROM DTOStundentafel e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundentafel.all.migration", query="SELECT e FROM DTOStundentafel e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Jahrgang_ID","ASDJahrgang","SGL","Fachklasse_ID","Sichtbar","Sortierung"})
-public class DTOStundentafel {
+@NamedQuery(name = "DTOStundentafel.all", query = "SELECT e FROM DTOStundentafel e")
+@NamedQuery(name = "DTOStundentafel.id", query = "SELECT e FROM DTOStundentafel e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundentafel.id.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundentafel.bezeichnung", query = "SELECT e FROM DTOStundentafel e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOStundentafel.bezeichnung.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOStundentafel.jahrgang_id", query = "SELECT e FROM DTOStundentafel e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "DTOStundentafel.jahrgang_id.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "DTOStundentafel.asdjahrgang", query = "SELECT e FROM DTOStundentafel e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "DTOStundentafel.asdjahrgang.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "DTOStundentafel.sgl", query = "SELECT e FROM DTOStundentafel e WHERE e.SGL = :value")
+@NamedQuery(name = "DTOStundentafel.sgl.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.SGL IN :value")
+@NamedQuery(name = "DTOStundentafel.fachklasse_id", query = "SELECT e FROM DTOStundentafel e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "DTOStundentafel.fachklasse_id.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "DTOStundentafel.sichtbar", query = "SELECT e FROM DTOStundentafel e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOStundentafel.sichtbar.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOStundentafel.sortierung", query = "SELECT e FROM DTOStundentafel e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOStundentafel.sortierung.multiple", query = "SELECT e FROM DTOStundentafel e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOStundentafel.primaryKeyQuery", query = "SELECT e FROM DTOStundentafel e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundentafel.all.migration", query = "SELECT e FROM DTOStundentafel e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Jahrgang_ID", "ASDJahrgang", "SGL", "Fachklasse_ID", "Sichtbar", "Sortierung"})
+public final class DTOStundentafel {
 
 	/** ID der Stundentafel */
 	@Id
@@ -83,9 +83,9 @@ public class DTOStundentafel {
 	/** Sichtbarkeit der Stundentafel */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Sortierungnummer  der Stundentafel */
@@ -106,11 +106,11 @@ public class DTOStundentafel {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOStundentafel(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -118,7 +118,7 @@ public class DTOStundentafel {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

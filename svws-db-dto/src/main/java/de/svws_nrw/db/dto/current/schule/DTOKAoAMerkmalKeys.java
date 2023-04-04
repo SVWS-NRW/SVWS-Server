@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle KAoA_Merkmal_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "KAoA_Merkmal_Keys")
-@NamedQuery(name="DTOKAoAMerkmalKeys.all", query="SELECT e FROM DTOKAoAMerkmalKeys e")
-@NamedQuery(name="DTOKAoAMerkmalKeys.id", query="SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID = :value")
-@NamedQuery(name="DTOKAoAMerkmalKeys.id.multiple", query="SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKAoAMerkmalKeys.primaryKeyQuery", query="SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKAoAMerkmalKeys.all.migration", query="SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID IS NOT NULL")
+@NamedQuery(name = "DTOKAoAMerkmalKeys.all", query = "SELECT e FROM DTOKAoAMerkmalKeys e")
+@NamedQuery(name = "DTOKAoAMerkmalKeys.id", query = "SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKAoAMerkmalKeys.id.multiple", query = "SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKAoAMerkmalKeys.primaryKeyQuery", query = "SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKAoAMerkmalKeys.all.migration", query = "SELECT e FROM DTOKAoAMerkmalKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
-public class DTOKAoAMerkmalKeys {
+public final class DTOKAoAMerkmalKeys {
 
 	/** Die eindeutige ID des Merkmals */
 	@Id
@@ -45,7 +45,7 @@ public class DTOKAoAMerkmalKeys {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOKAoAMerkmalKeys(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -53,7 +53,7 @@ public class DTOKAoAMerkmalKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

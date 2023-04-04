@@ -14,26 +14,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Herkunftsart_Schulformen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOHerkunftsartSchulformenPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Herkunftsart_Schulformen")
-@NamedQuery(name="DTOHerkunftsartSchulformen.all", query="SELECT e FROM DTOHerkunftsartSchulformen e")
-@NamedQuery(name="DTOHerkunftsartSchulformen.herkunftsart_id", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.herkunftsart_id.multiple", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IN :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.schulform_kuerzel", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel = :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.schulform_kuerzel.multiple", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel IN :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.kurzbezeichnung", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung = :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.kurzbezeichnung.multiple", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung IN :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.bezeichnung", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.bezeichnung.multiple", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOHerkunftsartSchulformen.primaryKeyQuery", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = ?1 AND e.Schulform_Kuerzel = ?2")
-@NamedQuery(name="DTOHerkunftsartSchulformen.all.migration", query="SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL")
-@JsonPropertyOrder({"Herkunftsart_ID","Schulform_Kuerzel","KurzBezeichnung","Bezeichnung"})
-public class DTOHerkunftsartSchulformen {
+@NamedQuery(name = "DTOHerkunftsartSchulformen.all", query = "SELECT e FROM DTOHerkunftsartSchulformen e")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.herkunftsart_id", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.herkunftsart_id.multiple", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IN :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.schulform_kuerzel", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel = :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.schulform_kuerzel.multiple", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Schulform_Kuerzel IN :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.kurzbezeichnung", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung = :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.kurzbezeichnung.multiple", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.KurzBezeichnung IN :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.bezeichnung", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.bezeichnung.multiple", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID = ?1 AND e.Schulform_Kuerzel = ?2")
+@NamedQuery(name = "DTOHerkunftsartSchulformen.all.migration", query = "SELECT e FROM DTOHerkunftsartSchulformen e WHERE e.Herkunftsart_ID IS NOT NULL AND e.Schulform_Kuerzel IS NOT NULL")
+@JsonPropertyOrder({"Herkunftsart_ID", "Schulform_Kuerzel", "KurzBezeichnung", "Bezeichnung"})
+public final class DTOHerkunftsartSchulformen {
 
 	/** die ID der Herkunftsart */
 	@Id
@@ -72,19 +72,19 @@ public class DTOHerkunftsartSchulformen {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOHerkunftsartSchulformen(final Long Herkunftsart_ID, final String Schulform_Kuerzel, final String KurzBezeichnung, final String Bezeichnung) {
-		if (Herkunftsart_ID == null) { 
+		if (Herkunftsart_ID == null) {
 			throw new NullPointerException("Herkunftsart_ID must not be null");
 		}
 		this.Herkunftsart_ID = Herkunftsart_ID;
-		if (Schulform_Kuerzel == null) { 
+		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
 		}
 		this.Schulform_Kuerzel = Schulform_Kuerzel;
-		if (KurzBezeichnung == null) { 
+		if (KurzBezeichnung == null) {
 			throw new NullPointerException("KurzBezeichnung must not be null");
 		}
 		this.KurzBezeichnung = KurzBezeichnung;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -92,7 +92,7 @@ public class DTOHerkunftsartSchulformen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

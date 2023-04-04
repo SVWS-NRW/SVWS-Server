@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Blockung_Zwischenergebnisse_Kurs_Schienen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOGostBlockungZwischenergebnisKursSchienePK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Blockung_Zwischenergebnisse_Kurs_Schienen")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.all", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Blockung_Kurs_ID = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Blockung_Kurs_ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.schienen_id", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Schienen_ID = :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.schienen_id.multiple", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Schienen_ID IN :value")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.primaryKeyQuery", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = ?1 AND e.Blockung_Kurs_ID = ?2 AND e.Schienen_ID = ?3")
-@NamedQuery(name="DTOGostBlockungZwischenergebnisKursSchiene.all.migration", query="SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID IS NOT NULL AND e.Blockung_Kurs_ID IS NOT NULL AND e.Schienen_ID IS NOT NULL")
-@JsonPropertyOrder({"Zwischenergebnis_ID","Blockung_Kurs_ID","Schienen_ID"})
-public class DTOGostBlockungZwischenergebnisKursSchiene {
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.all", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.zwischenergebnis_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Blockung_Kurs_ID = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Blockung_Kurs_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.schienen_id", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Schienen_ID = :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.schienen_id.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Schienen_ID IN :value")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = ?1 AND e.Blockung_Kurs_ID = ?2 AND e.Schienen_ID = ?3")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnisKursSchiene.all.migration", query = "SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID IS NOT NULL AND e.Blockung_Kurs_ID IS NOT NULL AND e.Schienen_ID IS NOT NULL")
+@JsonPropertyOrder({"Zwischenergebnis_ID", "Blockung_Kurs_ID", "Schienen_ID"})
+public final class DTOGostBlockungZwischenergebnisKursSchiene {
 
 	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses */
 	@Id
@@ -65,15 +65,15 @@ public class DTOGostBlockungZwischenergebnisKursSchiene {
 	 * @param Schienen_ID   der Wert für das Attribut Schienen_ID
 	 */
 	public DTOGostBlockungZwischenergebnisKursSchiene(final Long Zwischenergebnis_ID, final Long Blockung_Kurs_ID, final Long Schienen_ID) {
-		if (Zwischenergebnis_ID == null) { 
+		if (Zwischenergebnis_ID == null) {
 			throw new NullPointerException("Zwischenergebnis_ID must not be null");
 		}
 		this.Zwischenergebnis_ID = Zwischenergebnis_ID;
-		if (Blockung_Kurs_ID == null) { 
+		if (Blockung_Kurs_ID == null) {
 			throw new NullPointerException("Blockung_Kurs_ID must not be null");
 		}
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Schienen_ID == null) { 
+		if (Schienen_ID == null) {
 			throw new NullPointerException("Schienen_ID must not be null");
 		}
 		this.Schienen_ID = Schienen_ID;
@@ -81,7 +81,7 @@ public class DTOGostBlockungZwischenergebnisKursSchiene {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

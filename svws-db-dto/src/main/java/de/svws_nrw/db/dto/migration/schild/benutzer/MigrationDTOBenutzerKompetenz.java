@@ -14,22 +14,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle BenutzerKompetenzen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(MigrationDTOBenutzerKompetenzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzerKompetenzen")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.all", query="SELECT e FROM MigrationDTOBenutzerKompetenz e")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.benutzer_id", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.benutzer_id.multiple", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.kompetenz_id", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Kompetenz_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.kompetenz_id.multiple", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Kompetenz_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.primaryKeyQuery", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID = ?1 AND e.Kompetenz_ID = ?2")
-@NamedQuery(name="MigrationDTOBenutzerKompetenz.all.migration", query="SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID IS NOT NULL AND e.Kompetenz_ID IS NOT NULL")
-@JsonPropertyOrder({"Benutzer_ID","Kompetenz_ID"})
-public class MigrationDTOBenutzerKompetenz {
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.all", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.benutzer_id", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.benutzer_id.multiple", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.kompetenz_id", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Kompetenz_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.kompetenz_id.multiple", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Kompetenz_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID = ?1 AND e.Kompetenz_ID = ?2")
+@NamedQuery(name = "MigrationDTOBenutzerKompetenz.all.migration", query = "SELECT e FROM MigrationDTOBenutzerKompetenz e WHERE e.Benutzer_ID IS NOT NULL AND e.Kompetenz_ID IS NOT NULL")
+@JsonPropertyOrder({"Benutzer_ID", "Kompetenz_ID"})
+public final class MigrationDTOBenutzerKompetenz {
 
 	/** Die ID des Benutzers */
 	@Id
@@ -56,11 +56,11 @@ public class MigrationDTOBenutzerKompetenz {
 	 * @param Kompetenz_ID   der Wert für das Attribut Kompetenz_ID
 	 */
 	public MigrationDTOBenutzerKompetenz(final Long Benutzer_ID, final Long Kompetenz_ID) {
-		if (Benutzer_ID == null) { 
+		if (Benutzer_ID == null) {
 			throw new NullPointerException("Benutzer_ID must not be null");
 		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (Kompetenz_ID == null) { 
+		if (Kompetenz_ID == null) {
 			throw new NullPointerException("Kompetenz_ID must not be null");
 		}
 		this.Kompetenz_ID = Kompetenz_ID;
@@ -68,7 +68,7 @@ public class MigrationDTOBenutzerKompetenz {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

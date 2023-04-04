@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle TextExportVorlagen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "TextExportVorlagen")
-@NamedQuery(name="DTOTextExportVorlagen.all", query="SELECT e FROM DTOTextExportVorlagen e")
-@NamedQuery(name="DTOTextExportVorlagen.vorlagename", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = :value")
-@NamedQuery(name="DTOTextExportVorlagen.vorlagename.multiple", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN :value")
-@NamedQuery(name="DTOTextExportVorlagen.daten", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten = :value")
-@NamedQuery(name="DTOTextExportVorlagen.daten.multiple", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten IN :value")
-@NamedQuery(name="DTOTextExportVorlagen.primaryKeyQuery", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = ?1")
-@NamedQuery(name="DTOTextExportVorlagen.all.migration", query="SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL")
-@JsonPropertyOrder({"VorlageName","Daten"})
-public class DTOTextExportVorlagen {
+@NamedQuery(name = "DTOTextExportVorlagen.all", query = "SELECT e FROM DTOTextExportVorlagen e")
+@NamedQuery(name = "DTOTextExportVorlagen.vorlagename", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = :value")
+@NamedQuery(name = "DTOTextExportVorlagen.vorlagename.multiple", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IN :value")
+@NamedQuery(name = "DTOTextExportVorlagen.daten", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten = :value")
+@NamedQuery(name = "DTOTextExportVorlagen.daten.multiple", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.Daten IN :value")
+@NamedQuery(name = "DTOTextExportVorlagen.primaryKeyQuery", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName = ?1")
+@NamedQuery(name = "DTOTextExportVorlagen.all.migration", query = "SELECT e FROM DTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL")
+@JsonPropertyOrder({"VorlageName", "Daten"})
+public final class DTOTextExportVorlagen {
 
 	/** Name der Export-Textvorlage */
 	@Id
@@ -52,7 +52,7 @@ public class DTOTextExportVorlagen {
 	 * @param VorlageName   der Wert für das Attribut VorlageName
 	 */
 	public DTOTextExportVorlagen(final String VorlageName) {
-		if (VorlageName == null) { 
+		if (VorlageName == null) {
 			throw new NullPointerException("VorlageName must not be null");
 		}
 		this.VorlageName = VorlageName;
@@ -60,7 +60,7 @@ public class DTOTextExportVorlagen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

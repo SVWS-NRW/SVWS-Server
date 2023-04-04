@@ -27,33 +27,33 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Gost_Klausuren_Kalenderinformationen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Kalenderinformationen")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.all", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.id", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.id.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.bezeichnung", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.bezeichnung.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.startdatum", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.startdatum.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.startzeit", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.startzeit.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.enddatum", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.enddatum.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.endzeit", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.endzeit.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.istsperrtermin", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.istsperrtermin.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.bemerkungen", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen = :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.bemerkungen.multiple", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen IN :value")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.primaryKeyQuery", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = ?1")
-@NamedQuery(name="DTOGostKlausurenKalenderinformationen.all.migration", query="SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Startdatum","Startzeit","Enddatum","Endzeit","IstSperrtermin","Bemerkungen"})
-public class DTOGostKlausurenKalenderinformationen {
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.all", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.id", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.id.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bezeichnung", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bezeichnung.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startdatum", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startdatum.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startdatum IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startzeit", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Startzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.enddatum", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.enddatum.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Enddatum IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.endzeit", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.endzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Endzeit IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.istsperrtermin", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.istsperrtermin.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.IstSperrtermin IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bemerkungen", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen = :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.Bemerkungen IN :value")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenKalenderinformationen.all.migration", query = "SELECT e FROM DTOGostKlausurenKalenderinformationen e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Startdatum", "Startzeit", "Enddatum", "Endzeit", "IstSperrtermin", "Bemerkungen"})
+public final class DTOGostKlausurenKalenderinformationen {
 
 	/** ID der Kalenderinformation (generiert) */
 	@Id
@@ -69,41 +69,41 @@ public class DTOGostKlausurenKalenderinformationen {
 	/** Startdatum für den Kalendereintrag */
 	@Column(name = "Startdatum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Startdatum;
 
 	/** Startzeit für den Kalendereintrag */
 	@Column(name = "Startzeit")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Startzeit;
 
 	/** Enddatum für den Kalendereintrag */
 	@Column(name = "Enddatum")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Enddatum;
 
 	/** Endzeit für den Kalendereintrag */
 	@Column(name = "Endzeit")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Endzeit;
 
 	/** Gibt an, ob es sich um einen Sperrtermin handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstSperrtermin")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstSperrtermin;
 
 	/** Text für Bemerkungen zur Kalenderinformation */
@@ -124,11 +124,11 @@ public class DTOGostKlausurenKalenderinformationen {
 	 * @param IstSperrtermin   der Wert für das Attribut IstSperrtermin
 	 */
 	public DTOGostKlausurenKalenderinformationen(final Long ID, final Boolean IstSperrtermin) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (IstSperrtermin == null) { 
+		if (IstSperrtermin == null) {
 			throw new NullPointerException("IstSperrtermin must not be null");
 		}
 		this.IstSperrtermin = IstSperrtermin;
@@ -136,7 +136,7 @@ public class DTOGostKlausurenKalenderinformationen {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

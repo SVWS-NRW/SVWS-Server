@@ -21,23 +21,23 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Benutzergruppen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzergruppen")
-@NamedQuery(name="DTOBenutzergruppe.all", query="SELECT e FROM DTOBenutzergruppe e")
-@NamedQuery(name="DTOBenutzergruppe.id", query="SELECT e FROM DTOBenutzergruppe e WHERE e.ID = :value")
-@NamedQuery(name="DTOBenutzergruppe.id.multiple", query="SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN :value")
-@NamedQuery(name="DTOBenutzergruppe.bezeichnung", query="SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOBenutzergruppe.bezeichnung.multiple", query="SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOBenutzergruppe.istadmin", query="SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin = :value")
-@NamedQuery(name="DTOBenutzergruppe.istadmin.multiple", query="SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin IN :value")
-@NamedQuery(name="DTOBenutzergruppe.primaryKeyQuery", query="SELECT e FROM DTOBenutzergruppe e WHERE e.ID = ?1")
-@NamedQuery(name="DTOBenutzergruppe.all.migration", query="SELECT e FROM DTOBenutzergruppe e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","IstAdmin"})
-public class DTOBenutzergruppe {
+@NamedQuery(name = "DTOBenutzergruppe.all", query = "SELECT e FROM DTOBenutzergruppe e")
+@NamedQuery(name = "DTOBenutzergruppe.id", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = :value")
+@NamedQuery(name = "DTOBenutzergruppe.id.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOBenutzergruppe.bezeichnung", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOBenutzergruppe.bezeichnung.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOBenutzergruppe.istadmin", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin = :value")
+@NamedQuery(name = "DTOBenutzergruppe.istadmin.multiple", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.IstAdmin IN :value")
+@NamedQuery(name = "DTOBenutzergruppe.primaryKeyQuery", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOBenutzergruppe.all.migration", query = "SELECT e FROM DTOBenutzergruppe e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "IstAdmin"})
+public final class DTOBenutzergruppe {
 
 	/** Die ID der Benutzergruppe */
 	@Id
@@ -53,9 +53,9 @@ public class DTOBenutzergruppe {
 	/** Gibt an, ob die Benutzergruppe Administrator-Rechte hat (1) oder nicht (0) */
 	@Column(name = "IstAdmin")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean IstAdmin;
 
 	/**
@@ -72,15 +72,15 @@ public class DTOBenutzergruppe {
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
 	public DTOBenutzergruppe(final Long ID, final String Bezeichnung, final Boolean IstAdmin) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (IstAdmin == null) { 
+		if (IstAdmin == null) {
 			throw new NullPointerException("IstAdmin must not be null");
 		}
 		this.IstAdmin = IstAdmin;
@@ -88,7 +88,7 @@ public class DTOBenutzergruppe {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

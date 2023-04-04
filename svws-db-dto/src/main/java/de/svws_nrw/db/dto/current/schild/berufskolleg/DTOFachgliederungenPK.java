@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 /**
  * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Fach_Gliederungen.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
-public class DTOFachgliederungenPK implements Serializable {
+public final class DTOFachgliederungenPK implements Serializable {
 
 	/** Die UID für diese Klasse */
 	private static final long serialVersionUID = 1L;
@@ -31,11 +31,11 @@ public class DTOFachgliederungenPK implements Serializable {
 	 * @param Fachklasse_ID   der Wert für das Attribut Fachklasse_ID
 	 */
 	public DTOFachgliederungenPK(final Long Fach_ID, final Long Fachklasse_ID) {
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
-		if (Fachklasse_ID == null) { 
+		if (Fachklasse_ID == null) {
 			throw new NullPointerException("Fachklasse_ID must not be null");
 		}
 		this.Fachklasse_ID = Fachklasse_ID;
@@ -43,7 +43,7 @@ public class DTOFachgliederungenPK implements Serializable {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

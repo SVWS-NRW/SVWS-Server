@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Zertifikate.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Zertifikate")
-@NamedQuery(name="DTOKatalogZertifikate.all", query="SELECT e FROM DTOKatalogZertifikate e")
-@NamedQuery(name="DTOKatalogZertifikate.kuerzel", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name="DTOKatalogZertifikate.kuerzel.multiple", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="DTOKatalogZertifikate.bezeichnung", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKatalogZertifikate.bezeichnung.multiple", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKatalogZertifikate.primaryKeyQuery", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="DTOKatalogZertifikate.all.migration", query="SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL")
-@JsonPropertyOrder({"Kuerzel","Bezeichnung"})
-public class DTOKatalogZertifikate {
+@NamedQuery(name = "DTOKatalogZertifikate.all", query = "SELECT e FROM DTOKatalogZertifikate e")
+@NamedQuery(name = "DTOKatalogZertifikate.kuerzel", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "DTOKatalogZertifikate.kuerzel.multiple", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "DTOKatalogZertifikate.bezeichnung", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKatalogZertifikate.bezeichnung.multiple", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKatalogZertifikate.primaryKeyQuery", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOKatalogZertifikate.all.migration", query = "SELECT e FROM DTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL")
+@JsonPropertyOrder({"Kuerzel", "Bezeichnung"})
+public final class DTOKatalogZertifikate {
 
 	/** Kürzel des Zertifikats */
 	@Id
@@ -53,11 +53,11 @@ public class DTOKatalogZertifikate {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOKatalogZertifikate(final String Kuerzel, final String Bezeichnung) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -65,7 +65,7 @@ public class DTOKatalogZertifikate {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

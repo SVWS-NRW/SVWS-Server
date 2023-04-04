@@ -21,47 +21,47 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Jahrgaenge.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Jahrgaenge")
-@NamedQuery(name="MigrationDTOJahrgang.all", query="SELECT e FROM MigrationDTOJahrgang e")
-@NamedQuery(name="MigrationDTOJahrgang.id", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOJahrgang.id.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.internkrz", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.InternKrz = :value")
-@NamedQuery(name="MigrationDTOJahrgang.internkrz.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.InternKrz IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.gueltigvon", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigVon = :value")
-@NamedQuery(name="MigrationDTOJahrgang.gueltigvon.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigVon IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.gueltigbis", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigBis = :value")
-@NamedQuery(name="MigrationDTOJahrgang.gueltigbis.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigBis IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.asdjahrgang", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="MigrationDTOJahrgang.asdjahrgang.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.asdbezeichnung", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDBezeichnung = :value")
-@NamedQuery(name="MigrationDTOJahrgang.asdbezeichnung.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDBezeichnung IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.sichtbar", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOJahrgang.sichtbar.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.sortierung", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOJahrgang.sortierung.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.istchronologisch", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.IstChronologisch = :value")
-@NamedQuery(name="MigrationDTOJahrgang.istchronologisch.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.IstChronologisch IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.kurzbezeichnung", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Kurzbezeichnung = :value")
-@NamedQuery(name="MigrationDTOJahrgang.kurzbezeichnung.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Kurzbezeichnung IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.sekundarstufe", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sekundarstufe = :value")
-@NamedQuery(name="MigrationDTOJahrgang.sekundarstufe.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Sekundarstufe IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.gliederung", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung = :value")
-@NamedQuery(name="MigrationDTOJahrgang.gliederung.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.anzahlrestabschnitte", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.AnzahlRestabschnitte = :value")
-@NamedQuery(name="MigrationDTOJahrgang.anzahlrestabschnitte.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.AnzahlRestabschnitte IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.folgejahrgang_id", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOJahrgang.folgejahrgang_id.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.schulnreigner", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOJahrgang.schulnreigner.multiple", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOJahrgang.primaryKeyQuery", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOJahrgang.all.migration", query="SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","InternKrz","GueltigVon","GueltigBis","ASDJahrgang","ASDBezeichnung","Sichtbar","Sortierung","IstChronologisch","Kurzbezeichnung","Sekundarstufe","Gliederung","AnzahlRestabschnitte","Folgejahrgang_ID","SchulnrEigner"})
-public class MigrationDTOJahrgang {
+@NamedQuery(name = "MigrationDTOJahrgang.all", query = "SELECT e FROM MigrationDTOJahrgang e")
+@NamedQuery(name = "MigrationDTOJahrgang.id", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.id.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.internkrz", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.InternKrz = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.internkrz.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.InternKrz IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gueltigvon", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigVon = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gueltigvon.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigVon IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gueltigbis", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigBis = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GueltigBis IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.asdjahrgang", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.asdjahrgang.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.asdbezeichnung", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDBezeichnung = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.asdbezeichnung.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ASDBezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sichtbar", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sichtbar.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sortierung", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sortierung.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.istchronologisch", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.IstChronologisch = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.istchronologisch.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.IstChronologisch IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.kurzbezeichnung", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Kurzbezeichnung = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.kurzbezeichnung.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Kurzbezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sekundarstufe", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sekundarstufe = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.sekundarstufe.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sekundarstufe IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gliederung", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.gliederung.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.anzahlrestabschnitte", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.AnzahlRestabschnitte = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.anzahlrestabschnitte.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.AnzahlRestabschnitte IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.folgejahrgang_id", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.folgejahrgang_id.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.schulnreigner", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOJahrgang.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOJahrgang.primaryKeyQuery", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOJahrgang.all.migration", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID", "SchulnrEigner"})
+public final class MigrationDTOJahrgang {
 
 	/** Eindeutige ID zur Kennzeichnung des Jahrgangs-Datensatzes */
 	@Id
@@ -97,9 +97,9 @@ public class MigrationDTOJahrgang {
 	/** true, falls der Jahrgang bei Auswahlen angezeigt werden soll oder nicht. */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Ein Zahlwert, welcher bei für eine Sortierung der Jahrgänge bei der Darstellung verwendet wird. */
@@ -110,9 +110,9 @@ public class MigrationDTOJahrgang {
 	/** Gibt an ob ein Jahrgang zu einer chronologischen Reihenfolge gehört */
 	@Column(name = "IstChronologisch")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean IstChronologisch;
 
 	/** Wird in der Übersicht benutzt um den Spaltentitel anzuzeigen. (Kurzbezeichnung in Jahrgangstabelle) */
@@ -157,7 +157,7 @@ public class MigrationDTOJahrgang {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOJahrgang(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -165,7 +165,7 @@ public class MigrationDTOJahrgang {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

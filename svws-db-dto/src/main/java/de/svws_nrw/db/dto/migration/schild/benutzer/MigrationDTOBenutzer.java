@@ -21,31 +21,31 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Benutzer.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Benutzer")
-@NamedQuery(name="MigrationDTOBenutzer.all", query="SELECT e FROM MigrationDTOBenutzer e")
-@NamedQuery(name="MigrationDTOBenutzer.id", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOBenutzer.id.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.typ", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ = :value")
-@NamedQuery(name="MigrationDTOBenutzer.typ.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.allgemein_id", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzer.allgemein_id.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.lehrer_id", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzer.lehrer_id.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.schueler_id", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzer.schueler_id.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.erzieher_id", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID = :value")
-@NamedQuery(name="MigrationDTOBenutzer.erzieher_id.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.istadmin", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin = :value")
-@NamedQuery(name="MigrationDTOBenutzer.istadmin.multiple", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin IN :value")
-@NamedQuery(name="MigrationDTOBenutzer.primaryKeyQuery", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOBenutzer.all.migration", query="SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Typ","Allgemein_ID","Lehrer_ID","Schueler_ID","Erzieher_ID","IstAdmin"})
-public class MigrationDTOBenutzer {
+@NamedQuery(name = "MigrationDTOBenutzer.all", query = "SELECT e FROM MigrationDTOBenutzer e")
+@NamedQuery(name = "MigrationDTOBenutzer.id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.typ", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.typ.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Typ IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.allgemein_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.allgemein_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Allgemein_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.lehrer_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Lehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.schueler_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.schueler_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.erzieher_id", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.erzieher_id.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.Erzieher_ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.istadmin", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin = :value")
+@NamedQuery(name = "MigrationDTOBenutzer.istadmin.multiple", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.IstAdmin IN :value")
+@NamedQuery(name = "MigrationDTOBenutzer.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzer.all.migration", query = "SELECT e FROM MigrationDTOBenutzer e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Typ", "Allgemein_ID", "Lehrer_ID", "Schueler_ID", "Erzieher_ID", "IstAdmin"})
+public final class MigrationDTOBenutzer {
 
 	/** Die ID des Benutzers */
 	@Id
@@ -81,9 +81,9 @@ public class MigrationDTOBenutzer {
 	/** Gibt an, ob der Benutzer Administrator-Rechte hat (1) oder nicht (0) */
 	@Column(name = "IstAdmin")
 	@JsonProperty
-	@Convert(converter=MigrationBoolean01Converter.class)
-	@JsonSerialize(using=MigrationBoolean01ConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBoolean01ConverterDeserializer.class)
+	@Convert(converter = MigrationBoolean01Converter.class)
+	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean IstAdmin;
 
 	/**
@@ -100,15 +100,15 @@ public class MigrationDTOBenutzer {
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
 	public MigrationDTOBenutzer(final Long ID, final Integer Typ, final Boolean IstAdmin) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Typ == null) { 
+		if (Typ == null) {
 			throw new NullPointerException("Typ must not be null");
 		}
 		this.Typ = Typ;
-		if (IstAdmin == null) { 
+		if (IstAdmin == null) {
 			throw new NullPointerException("IstAdmin must not be null");
 		}
 		this.IstAdmin = IstAdmin;
@@ -116,7 +116,7 @@ public class MigrationDTOBenutzer {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

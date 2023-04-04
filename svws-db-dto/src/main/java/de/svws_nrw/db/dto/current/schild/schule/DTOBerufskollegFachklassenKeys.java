@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Berufskolleg_Fachklassen_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOBerufskollegFachklassenKeysPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Berufskolleg_Fachklassen_Keys")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.all", query="SELECT e FROM DTOBerufskollegFachklassenKeys e")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.fachklassenindex", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.fachklassenindex.multiple", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IN :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.schluessel", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel = :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.schluessel.multiple", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel IN :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.schluessel2", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 = :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.schluessel2.multiple", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 IN :value")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.primaryKeyQuery", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = ?1 AND e.Schluessel = ?2 AND e.Schluessel2 = ?3")
-@NamedQuery(name="DTOBerufskollegFachklassenKeys.all.migration", query="SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IS NOT NULL AND e.Schluessel IS NOT NULL AND e.Schluessel2 IS NOT NULL")
-@JsonPropertyOrder({"FachklassenIndex","Schluessel","Schluessel2"})
-public class DTOBerufskollegFachklassenKeys {
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.all", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.fachklassenindex", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.fachklassenindex.multiple", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IN :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.schluessel", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel = :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.schluessel.multiple", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel IN :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.schluessel2", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 = :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.schluessel2.multiple", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.Schluessel2 IN :value")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.primaryKeyQuery", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex = ?1 AND e.Schluessel = ?2 AND e.Schluessel2 = ?3")
+@NamedQuery(name = "DTOBerufskollegFachklassenKeys.all.migration", query = "SELECT e FROM DTOBerufskollegFachklassenKeys e WHERE e.FachklassenIndex IS NOT NULL AND e.Schluessel IS NOT NULL AND e.Schluessel2 IS NOT NULL")
+@JsonPropertyOrder({"FachklassenIndex", "Schluessel", "Schluessel2"})
+public final class DTOBerufskollegFachklassenKeys {
 
 	/** Der Index, welcher der Fachklasse für die Zuordnung zum Bildungsgang zugeordnet ist */
 	@Id
@@ -65,15 +65,15 @@ public class DTOBerufskollegFachklassenKeys {
 	 * @param Schluessel2   der Wert für das Attribut Schluessel2
 	 */
 	public DTOBerufskollegFachklassenKeys(final Integer FachklassenIndex, final String Schluessel, final String Schluessel2) {
-		if (FachklassenIndex == null) { 
+		if (FachklassenIndex == null) {
 			throw new NullPointerException("FachklassenIndex must not be null");
 		}
 		this.FachklassenIndex = FachklassenIndex;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
-		if (Schluessel2 == null) { 
+		if (Schluessel2 == null) {
 			throw new NullPointerException("Schluessel2 must not be null");
 		}
 		this.Schluessel2 = Schluessel2;
@@ -81,7 +81,7 @@ public class DTOBerufskollegFachklassenKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

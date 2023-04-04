@@ -14,24 +14,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Client_Konfiguration_Global.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOClientKonfigurationGlobalPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_Client_Konfiguration_Global")
-@NamedQuery(name="DTOClientKonfigurationGlobal.all", query="SELECT e FROM DTOClientKonfigurationGlobal e")
-@NamedQuery(name="DTOClientKonfigurationGlobal.appname", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.appname.multiple", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IN :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.schluessel", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel = :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.schluessel.multiple", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel IN :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.wert", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert = :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.wert.multiple", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert IN :value")
-@NamedQuery(name="DTOClientKonfigurationGlobal.primaryKeyQuery", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2")
-@NamedQuery(name="DTOClientKonfigurationGlobal.all.migration", query="SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
-@JsonPropertyOrder({"AppName","Schluessel","Wert"})
-public class DTOClientKonfigurationGlobal {
+@NamedQuery(name = "DTOClientKonfigurationGlobal.all", query = "SELECT e FROM DTOClientKonfigurationGlobal e")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.appname", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.appname.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IN :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.schluessel", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel = :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.schluessel.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Schluessel IN :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.wert", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert = :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.wert.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.Wert IN :value")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.primaryKeyQuery", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = ?1 AND e.Schluessel = ?2")
+@NamedQuery(name = "DTOClientKonfigurationGlobal.all.migration", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IS NOT NULL AND e.Schluessel IS NOT NULL")
+@JsonPropertyOrder({"AppName", "Schluessel", "Wert"})
+public final class DTOClientKonfigurationGlobal {
 
 	/** Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist */
 	@Id
@@ -64,15 +64,15 @@ public class DTOClientKonfigurationGlobal {
 	 * @param Wert   der Wert für das Attribut Wert
 	 */
 	public DTOClientKonfigurationGlobal(final String AppName, final String Schluessel, final String Wert) {
-		if (AppName == null) { 
+		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
 		}
 		this.AppName = AppName;
-		if (Schluessel == null) { 
+		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
 		}
 		this.Schluessel = Schluessel;
-		if (Wert == null) { 
+		if (Wert == null) {
 			throw new NullPointerException("Wert must not be null");
 		}
 		this.Wert = Wert;
@@ -80,7 +80,7 @@ public class DTOClientKonfigurationGlobal {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

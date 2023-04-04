@@ -21,33 +21,33 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerAnkreuzfloskeln.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerAnkreuzfloskeln")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.all", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.id", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.id.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.abschnitt_id", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.abschnitt_id.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.floskel_id", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.floskel_id.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe1", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe1.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe2", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe2.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe3", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe3.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe4", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe4.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe5", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 = :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.stufe5.multiple", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 IN :value")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.primaryKeyQuery", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerAnkreuzfloskeln.all.migration", query="SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Abschnitt_ID","Floskel_ID","Stufe1","Stufe2","Stufe3","Stufe4","Stufe5"})
-public class DTOSchuelerAnkreuzfloskeln {
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.all", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.abschnitt_id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.abschnitt_id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Abschnitt_ID IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.floskel_id", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.floskel_id.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Floskel_ID IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe1", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe1.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe1 IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe2", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe2.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe2 IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe3", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe3.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe3 IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe4", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe4.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe4 IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 = :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 IN :value")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Abschnitt_ID", "Floskel_ID", "Stufe1", "Stufe2", "Stufe3", "Stufe4", "Stufe5"})
+public final class DTOSchuelerAnkreuzfloskeln {
 
 	/** ID des Ankreuzfloskeleintrags */
 	@Id
@@ -68,41 +68,41 @@ public class DTOSchuelerAnkreuzfloskeln {
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe1")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Stufe1;
 
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe2")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Stufe2;
 
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe3")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Stufe3;
 
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe4")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Stufe4;
 
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe5")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Stufe5;
 
 	/**
@@ -119,15 +119,15 @@ public class DTOSchuelerAnkreuzfloskeln {
 	 * @param Floskel_ID   der Wert für das Attribut Floskel_ID
 	 */
 	public DTOSchuelerAnkreuzfloskeln(final Long ID, final Long Abschnitt_ID, final Long Floskel_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Abschnitt_ID == null) { 
+		if (Abschnitt_ID == null) {
 			throw new NullPointerException("Abschnitt_ID must not be null");
 		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Floskel_ID == null) { 
+		if (Floskel_ID == null) {
 			throw new NullPointerException("Floskel_ID must not be null");
 		}
 		this.Floskel_ID = Floskel_ID;
@@ -135,7 +135,7 @@ public class DTOSchuelerAnkreuzfloskeln {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Merkmale.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Merkmale")
-@NamedQuery(name="DTOMerkmale.all", query="SELECT e FROM DTOMerkmale e")
-@NamedQuery(name="DTOMerkmale.id", query="SELECT e FROM DTOMerkmale e WHERE e.ID = :value")
-@NamedQuery(name="DTOMerkmale.id.multiple", query="SELECT e FROM DTOMerkmale e WHERE e.ID IN :value")
-@NamedQuery(name="DTOMerkmale.schule", query="SELECT e FROM DTOMerkmale e WHERE e.Schule = :value")
-@NamedQuery(name="DTOMerkmale.schule.multiple", query="SELECT e FROM DTOMerkmale e WHERE e.Schule IN :value")
-@NamedQuery(name="DTOMerkmale.schueler", query="SELECT e FROM DTOMerkmale e WHERE e.Schueler = :value")
-@NamedQuery(name="DTOMerkmale.schueler.multiple", query="SELECT e FROM DTOMerkmale e WHERE e.Schueler IN :value")
-@NamedQuery(name="DTOMerkmale.kurztext", query="SELECT e FROM DTOMerkmale e WHERE e.Kurztext = :value")
-@NamedQuery(name="DTOMerkmale.kurztext.multiple", query="SELECT e FROM DTOMerkmale e WHERE e.Kurztext IN :value")
-@NamedQuery(name="DTOMerkmale.langtext", query="SELECT e FROM DTOMerkmale e WHERE e.Langtext = :value")
-@NamedQuery(name="DTOMerkmale.langtext.multiple", query="SELECT e FROM DTOMerkmale e WHERE e.Langtext IN :value")
-@NamedQuery(name="DTOMerkmale.primaryKeyQuery", query="SELECT e FROM DTOMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name="DTOMerkmale.all.migration", query="SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schule","Schueler","Kurztext","Langtext"})
-public class DTOMerkmale {
+@NamedQuery(name = "DTOMerkmale.all", query = "SELECT e FROM DTOMerkmale e")
+@NamedQuery(name = "DTOMerkmale.id", query = "SELECT e FROM DTOMerkmale e WHERE e.ID = :value")
+@NamedQuery(name = "DTOMerkmale.id.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOMerkmale.schule", query = "SELECT e FROM DTOMerkmale e WHERE e.Schule = :value")
+@NamedQuery(name = "DTOMerkmale.schule.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Schule IN :value")
+@NamedQuery(name = "DTOMerkmale.schueler", query = "SELECT e FROM DTOMerkmale e WHERE e.Schueler = :value")
+@NamedQuery(name = "DTOMerkmale.schueler.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Schueler IN :value")
+@NamedQuery(name = "DTOMerkmale.kurztext", query = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext = :value")
+@NamedQuery(name = "DTOMerkmale.kurztext.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Kurztext IN :value")
+@NamedQuery(name = "DTOMerkmale.langtext", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext = :value")
+@NamedQuery(name = "DTOMerkmale.langtext.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext IN :value")
+@NamedQuery(name = "DTOMerkmale.primaryKeyQuery", query = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOMerkmale.all.migration", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext"})
+public final class DTOMerkmale {
 
 	/** ID des Merkmals das an der Schule vorhanden ist */
 	@Id
@@ -52,17 +52,17 @@ public class DTOMerkmale {
 	/** Merkmal kann der Schule zugewiesen werden */
 	@Column(name = "Schule")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Schule;
 
 	/** Merkmal kann auch einem einzelnen Schüler auf Individualdaten II zugewiesen werden */
 	@Column(name = "Schueler")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Schueler;
 
 	/** Kurztext des Merkmals zB OGS */
@@ -87,7 +87,7 @@ public class DTOMerkmale {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public DTOMerkmale(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -95,7 +95,7 @@ public class DTOMerkmale {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

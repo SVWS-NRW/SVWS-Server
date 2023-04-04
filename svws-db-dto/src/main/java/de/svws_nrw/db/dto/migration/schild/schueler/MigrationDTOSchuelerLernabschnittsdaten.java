@@ -27,163 +27,163 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerLernabschnittsdaten.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerLernabschnittsdaten")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.all", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schueler_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schueler_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.wechselnr", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.WechselNr = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.wechselnr.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.WechselNr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulbesuchsjahre", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulbesuchsjahre.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.hochrechnung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.hochrechnung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.semesterwertung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.semesterwertung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.pruefordnung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.pruefordnung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassen_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassen_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.tutor_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.tutor_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.verspaetet", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.verspaetet.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_fach_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_notekrz", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_notekrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_datum", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npv_datum.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_fach_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_notekrz", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_notekrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_datum", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npaa_datum.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_fach_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_fach_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_notekrz", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_notekrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_datum", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.npbq_datum.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.versetzungkrz", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.versetzungkrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschlussart", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschlussart.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschlistprognose", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschlistprognose.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.konferenzdatum", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.konferenzdatum.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisdatum", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisdatum.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassenlehrer", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenlehrer = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassenlehrer.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenlehrer IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulgliederung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulgliederung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.asdjahrgang", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.asdjahrgang.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.jahrgang_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.jahrgang_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fachklasse_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fachklasse_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schwerpunkt_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schwerpunkt_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisbem", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisbem.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schwerbehinderung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schwerbehinderung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.orgformkrz", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.orgformkrz.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.refpaed", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.RefPaed = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.refpaed.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.RefPaed IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassenart", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenart = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klassenart.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenart IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sumfehlstd", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sumfehlstd.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sumfehlstdu", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sumfehlstdu.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.wiederholung", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.wiederholung.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_gs", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_gs.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_nw", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_nw.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.folgeklasse_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.folgeklasse_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschluss", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschluss.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschluss_b", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschluss_b.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.dsnote", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DSNote = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.dsnote.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DSNote IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_leist", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_leist.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_zuv", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_zuv.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_selbst", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.av_selbst.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_verant", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_verant.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_konfl", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_konfl.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_koop", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sv_koop.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.stvklassenlehrer_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.StvKlassenlehrer_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.stvklassenlehrer_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.StvKlassenlehrer_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.moeglnpfaecher", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.moeglnpfaecher.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zertifikate", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zertifikate.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumfhr", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumfhr.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.pruefalgoergebnis", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.pruefalgoergebnis.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisart", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zeugnisart.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumvon", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumVon = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumvon.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumVon IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumbis", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumBis = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.datumbis.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumBis IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fehlstundengrenzwert", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fehlstundengrenzwert.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sonderpaedagoge_id", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.sonderpaedagoge_id.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fachpraktanteilausr", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.fachpraktanteilausr.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.bilingualerzweig", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.bilingualerzweig.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.aosf", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AOSF = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.aosf.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AOSF IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.autist", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Autist = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.autist.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Autist IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.jahr", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.jahr.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschnitt", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschnitt = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.abschnitt.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschnitt IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulnreigner", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.schulnreigner.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klasse", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klasse = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.klasse.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klasse IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.folgeklasse", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse = :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.folgeklasse.multiple", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse IN :value")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.primaryKeyQuery", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOSchuelerLernabschnittsdaten.all.migration", query="SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Schuljahresabschnitts_ID","WechselNr","Schulbesuchsjahre","Hochrechnung","SemesterWertung","PruefOrdnung","Klassen_ID","Tutor_ID","Verspaetet","NPV_Fach_ID","NPV_NoteKrz","NPV_Datum","NPAA_Fach_ID","NPAA_NoteKrz","NPAA_Datum","NPBQ_Fach_ID","NPBQ_NoteKrz","NPBQ_Datum","VersetzungKrz","AbschlussArt","AbschlIstPrognose","Konferenzdatum","ZeugnisDatum","Klassenlehrer","Schulgliederung","ASDJahrgang","Jahrgang_ID","Fachklasse_ID","Schwerpunkt_ID","ZeugnisBem","Schwerbehinderung","Foerderschwerpunkt_ID","OrgFormKrz","RefPaed","Klassenart","SumFehlStd","SumFehlStdU","Wiederholung","Gesamtnote_GS","Gesamtnote_NW","Folgeklasse_ID","Foerderschwerpunkt2_ID","Abschluss","Abschluss_B","DSNote","AV_Leist","AV_Zuv","AV_Selbst","SV_Verant","SV_Konfl","SV_Koop","StvKlassenlehrer_ID","MoeglNPFaecher","Zertifikate","DatumFHR","PruefAlgoErgebnis","Zeugnisart","DatumVon","DatumBis","FehlstundenGrenzwert","Sonderpaedagoge_ID","FachPraktAnteilAusr","BilingualerZweig","AOSF","Autist","ZieldifferentesLernen","Jahr","Abschnitt","SchulnrEigner","Klasse","Folgeklasse"})
-public class MigrationDTOSchuelerLernabschnittsdaten {
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.all", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schueler_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schueler_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schuljahresabschnitts_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.wechselnr", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.WechselNr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.wechselnr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.WechselNr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulbesuchsjahre", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulbesuchsjahre.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulbesuchsjahre IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.hochrechnung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.hochrechnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Hochrechnung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.semesterwertung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.semesterwertung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SemesterWertung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.pruefordnung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.pruefordnung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefOrdnung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassen_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassen_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.tutor_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.tutor_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Tutor_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.verspaetet", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.verspaetet.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Verspaetet IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_fach_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_notekrz", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_notekrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_NoteKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_datum", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npv_datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPV_Datum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_fach_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_notekrz", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_notekrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_NoteKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_datum", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npaa_datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPAA_Datum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_fach_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_fach_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Fach_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_notekrz", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_notekrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_NoteKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_datum", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.npbq_datum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.NPBQ_Datum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.versetzungkrz", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.versetzungkrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.VersetzungKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschlussart", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschlussart.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlussArt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschlistprognose", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschlistprognose.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AbschlIstPrognose IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.konferenzdatum", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.konferenzdatum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Konferenzdatum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisdatum", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisdatum.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisDatum IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassenlehrer", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenlehrer = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassenlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenlehrer IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulgliederung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulgliederung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schulgliederung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.asdjahrgang", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.asdjahrgang.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ASDJahrgang IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahrgang_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahrgang_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahrgang_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fachklasse_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fachklasse_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Fachklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schwerpunkt_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schwerpunkt_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerpunkt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisbem", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisbem.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZeugnisBem IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schwerbehinderung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schwerbehinderung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Schwerbehinderung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.orgformkrz", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.orgformkrz.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.OrgFormKrz IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.refpaed", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.RefPaed = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.refpaed.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.RefPaed IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassenart", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenart = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klassenart.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klassenart IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sumfehlstd", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sumfehlstd.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStd IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sumfehlstdu", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sumfehlstdu.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SumFehlStdU IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.wiederholung", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.wiederholung.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Wiederholung IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_gs", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_gs.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_GS IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_nw", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.gesamtnote_nw.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Gesamtnote_NW IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.folgeklasse_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.folgeklasse_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.foerderschwerpunkt2_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Foerderschwerpunkt2_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschluss", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschluss.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschluss_b", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschluss_b.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschluss_B IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.dsnote", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DSNote = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.dsnote.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DSNote IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_leist", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_leist.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Leist IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_zuv", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_zuv.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Zuv IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_selbst", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.av_selbst.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AV_Selbst IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_verant", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_verant.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Verant IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_konfl", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_konfl.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Konfl IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_koop", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sv_koop.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SV_Koop IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.stvklassenlehrer_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.StvKlassenlehrer_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.stvklassenlehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.StvKlassenlehrer_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.moeglnpfaecher", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.moeglnpfaecher.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.MoeglNPFaecher IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zertifikate", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zertifikate.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zertifikate IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumfhr", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumfhr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumFHR IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.pruefalgoergebnis", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.pruefalgoergebnis.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.PruefAlgoErgebnis IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisart", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zeugnisart.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Zeugnisart IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumvon", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumVon = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumvon.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumVon IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumbis", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumBis = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.datumbis.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.DatumBis IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fehlstundengrenzwert", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fehlstundengrenzwert.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FehlstundenGrenzwert IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sonderpaedagoge_id", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.sonderpaedagoge_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Sonderpaedagoge_ID IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fachpraktanteilausr", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.fachpraktanteilausr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.FachPraktAnteilAusr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.bilingualerzweig", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.bilingualerzweig.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.BilingualerZweig IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.aosf", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AOSF = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.aosf.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.AOSF IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.autist", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Autist = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.autist.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Autist IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.zieldifferenteslernen.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ZieldifferentesLernen IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahr", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.jahr.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Jahr IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschnitt", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschnitt = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.abschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Abschnitt IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klasse", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klasse = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.klasse.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Klasse IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.folgeklasse", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse = :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.folgeklasse.multiple", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.Folgeklasse IN :value")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerLernabschnittsdaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "WechselNr", "Schulbesuchsjahre", "Hochrechnung", "SemesterWertung", "PruefOrdnung", "Klassen_ID", "Tutor_ID", "Verspaetet", "NPV_Fach_ID", "NPV_NoteKrz", "NPV_Datum", "NPAA_Fach_ID", "NPAA_NoteKrz", "NPAA_Datum", "NPBQ_Fach_ID", "NPBQ_NoteKrz", "NPBQ_Datum", "VersetzungKrz", "AbschlussArt", "AbschlIstPrognose", "Konferenzdatum", "ZeugnisDatum", "Klassenlehrer", "Schulgliederung", "ASDJahrgang", "Jahrgang_ID", "Fachklasse_ID", "Schwerpunkt_ID", "ZeugnisBem", "Schwerbehinderung", "Foerderschwerpunkt_ID", "OrgFormKrz", "RefPaed", "Klassenart", "SumFehlStd", "SumFehlStdU", "Wiederholung", "Gesamtnote_GS", "Gesamtnote_NW", "Folgeklasse_ID", "Foerderschwerpunkt2_ID", "Abschluss", "Abschluss_B", "DSNote", "AV_Leist", "AV_Zuv", "AV_Selbst", "SV_Verant", "SV_Konfl", "SV_Koop", "StvKlassenlehrer_ID", "MoeglNPFaecher", "Zertifikate", "DatumFHR", "PruefAlgoErgebnis", "Zeugnisart", "DatumVon", "DatumBis", "FehlstundenGrenzwert", "Sonderpaedagoge_ID", "FachPraktAnteilAusr", "BilingualerZweig", "AOSF", "Autist", "ZieldifferentesLernen", "Jahr", "Abschnitt", "SchulnrEigner", "Klasse", "Folgeklasse"})
+public final class MigrationDTOSchuelerLernabschnittsdaten {
 
 	/** Eine eindeutige ID für den Lernabschnitt des Schülers */
 	@Id
@@ -219,9 +219,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Gewerteter Abschnitt (Ja/Nein) */
 	@Column(name = "SemesterWertung")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean SemesterWertung;
 
 	/** Prüfungsordnung des Lernabschnitts */
@@ -257,9 +257,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** TODO: BK: ID des Nachprüfungsfaches für den allgemein-bildenen Abschluss */
 	@Column(name = "NPV_Datum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String NPV_Datum;
 
 	/** TODO: BK: Note des Nachprüfungsfaches für den allgemein-bildenen Abschluss */
@@ -275,9 +275,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** TODO: BK: dito für berufs-qualifizierende Nachprüfung */
 	@Column(name = "NPAA_Datum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String NPAA_Datum;
 
 	/** TODO: BK: dito für berufs-qualifizierende Nachprüfung */
@@ -293,9 +293,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** TODO: ID des Nachprüfungsfaches */
 	@Column(name = "NPBQ_Datum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String NPBQ_Datum;
 
 	/** Kürzel des Versetungsvermerk */
@@ -311,25 +311,25 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Gibt an ob Abschluss Prognose ist (GE, PS und SK) */
 	@Column(name = "AbschlIstPrognose")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean AbschlIstPrognose;
 
 	/** Konferenzdatum */
 	@Column(name = "Konferenzdatum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String Konferenzdatum;
 
 	/** Zeugnisdatum */
 	@Column(name = "ZeugnisDatum")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String ZeugnisDatum;
 
 	/** Klassenlehrer Kürzel (hier muss ID rein) */
@@ -370,9 +370,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Schwerbehinderung (Ja/Nein) */
 	@Column(name = "Schwerbehinderung")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Schwerbehinderung;
 
 	/** ID Hauptförderschwerpunkt */
@@ -388,9 +388,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** TODO DEPRECATED: Reformpädagogik */
 	@Column(name = "RefPaed")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean RefPaed;
 
 	/** Klassenart */
@@ -411,9 +411,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Lernabschnitt wurde wiederholt (Ja/Nein) */
 	@Column(name = "Wiederholung")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Wiederholung;
 
 	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
@@ -499,9 +499,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Datum FHR */
 	@Column(name = "DatumFHR")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String DatumFHR;
 
 	/** Text für die Ergebnisse der Abschlussberechnungen */
@@ -517,17 +517,17 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Beginn Lernabschnitt */
 	@Column(name = "DatumVon")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String DatumVon;
 
 	/** Ende Lernabschnitt */
 	@Column(name = "DatumBis")
 	@JsonProperty
-	@Convert(converter=MigrationDatumConverter.class)
-	@JsonSerialize(using=MigrationDatumConverterSerializer.class)
-	@JsonDeserialize(using=MigrationDatumConverterDeserializer.class)
+	@Convert(converter = MigrationDatumConverter.class)
+	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
+	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
 	public String DatumBis;
 
 	/** Grenzwert für Fehlstunden (BK Warnbriefe zur Entlassung) */
@@ -543,9 +543,9 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Enthält die Angabe, ob die Fachpraktischen Anteile in Anlage B08 B09 B10 ausreichend sind für Versetzung (BK) */
 	@Column(name = "FachPraktAnteilAusr")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean FachPraktAnteilAusr;
 
 	/** Sprache des Bilingualen Zweigs */
@@ -556,25 +556,25 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	/** Gibt an ob der Schüler ein AOSF hat */
 	@Column(name = "AOSF")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean AOSF;
 
 	/** Gibt an ob Autismuss vorliegt (Ja/Nein) */
 	@Column(name = "Autist")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean Autist;
 
 	/** Gibt an ob der Schüler zieldifferent unterrichtet wird */
 	@Column(name = "ZieldifferentesLernen")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean ZieldifferentesLernen;
 
 	/** DEPRECATED: Schuljahr des Lernabschnitts */
@@ -619,27 +619,27 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
 	public MigrationDTOSchuelerLernabschnittsdaten(final Long ID, final Long Schueler_ID, final Long Schuljahresabschnitts_ID, final Boolean FachPraktAnteilAusr, final Integer Jahr, final Integer Abschnitt) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
-		if (Schuljahresabschnitts_ID == null) { 
+		if (Schuljahresabschnitts_ID == null) {
 			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
 		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
-		if (FachPraktAnteilAusr == null) { 
+		if (FachPraktAnteilAusr == null) {
 			throw new NullPointerException("FachPraktAnteilAusr must not be null");
 		}
 		this.FachPraktAnteilAusr = FachPraktAnteilAusr;
-		if (Jahr == null) { 
+		if (Jahr == null) {
 			throw new NullPointerException("Jahr must not be null");
 		}
 		this.Jahr = Jahr;
-		if (Abschnitt == null) { 
+		if (Abschnitt == null) {
 			throw new NullPointerException("Abschnitt must not be null");
 		}
 		this.Abschnitt = Abschnitt;
@@ -647,7 +647,7 @@ public class MigrationDTOSchuelerLernabschnittsdaten {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

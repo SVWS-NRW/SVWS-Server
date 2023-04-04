@@ -13,29 +13,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle EigeneSchule_Zertifikate.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Zertifikate")
-@NamedQuery(name="MigrationDTOZertifikate.all", query="SELECT e FROM MigrationDTOZertifikate e")
-@NamedQuery(name="MigrationDTOZertifikate.id", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOZertifikate.id.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.schulnreigner", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOZertifikate.schulnreigner.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.kuerzel", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOZertifikate.kuerzel.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.bezeichnung", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOZertifikate.bezeichnung.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.fach", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Fach = :value")
-@NamedQuery(name="MigrationDTOZertifikate.fach.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Fach IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.formatvorlage", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Formatvorlage = :value")
-@NamedQuery(name="MigrationDTOZertifikate.formatvorlage.multiple", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.Formatvorlage IN :value")
-@NamedQuery(name="MigrationDTOZertifikate.primaryKeyQuery", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOZertifikate.all.migration", query="SELECT e FROM MigrationDTOZertifikate e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","SchulnrEigner","Kuerzel","Bezeichnung","Fach","Formatvorlage"})
-public class MigrationDTOZertifikate {
+@NamedQuery(name = "MigrationDTOZertifikate.all", query = "SELECT e FROM MigrationDTOZertifikate e")
+@NamedQuery(name = "MigrationDTOZertifikate.id", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.id.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.schulnreigner", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.kuerzel", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.kuerzel.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.bezeichnung", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.fach", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Fach = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.fach.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Fach IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.formatvorlage", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Formatvorlage = :value")
+@NamedQuery(name = "MigrationDTOZertifikate.formatvorlage.multiple", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.Formatvorlage IN :value")
+@NamedQuery(name = "MigrationDTOZertifikate.primaryKeyQuery", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOZertifikate.all.migration", query = "SELECT e FROM MigrationDTOZertifikate e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "SchulnrEigner", "Kuerzel", "Bezeichnung", "Fach", "Formatvorlage"})
+public final class MigrationDTOZertifikate {
 
 	/** ID des Zertifikats */
 	@Id
@@ -82,15 +82,15 @@ public class MigrationDTOZertifikate {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOZertifikate(final Long ID, final Integer SchulnrEigner, final String Kuerzel) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -98,7 +98,7 @@ public class MigrationDTOZertifikate {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

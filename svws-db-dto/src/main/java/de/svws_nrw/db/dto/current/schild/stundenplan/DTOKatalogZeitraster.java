@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Katalog_Zeitraster.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Katalog_Zeitraster")
-@NamedQuery(name="DTOKatalogZeitraster.all", query="SELECT e FROM DTOKatalogZeitraster e")
-@NamedQuery(name="DTOKatalogZeitraster.id", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = :value")
-@NamedQuery(name="DTOKatalogZeitraster.id.multiple", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKatalogZeitraster.tag", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag = :value")
-@NamedQuery(name="DTOKatalogZeitraster.tag.multiple", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag IN :value")
-@NamedQuery(name="DTOKatalogZeitraster.stunde", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde = :value")
-@NamedQuery(name="DTOKatalogZeitraster.stunde.multiple", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde IN :value")
-@NamedQuery(name="DTOKatalogZeitraster.beginn", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn = :value")
-@NamedQuery(name="DTOKatalogZeitraster.beginn.multiple", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn IN :value")
-@NamedQuery(name="DTOKatalogZeitraster.ende", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende = :value")
-@NamedQuery(name="DTOKatalogZeitraster.ende.multiple", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende IN :value")
-@NamedQuery(name="DTOKatalogZeitraster.primaryKeyQuery", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKatalogZeitraster.all.migration", query="SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Tag","Stunde","Beginn","Ende"})
-public class DTOKatalogZeitraster {
+@NamedQuery(name = "DTOKatalogZeitraster.all", query = "SELECT e FROM DTOKatalogZeitraster e")
+@NamedQuery(name = "DTOKatalogZeitraster.id", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKatalogZeitraster.id.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKatalogZeitraster.tag", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag = :value")
+@NamedQuery(name = "DTOKatalogZeitraster.tag.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Tag IN :value")
+@NamedQuery(name = "DTOKatalogZeitraster.stunde", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde = :value")
+@NamedQuery(name = "DTOKatalogZeitraster.stunde.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Stunde IN :value")
+@NamedQuery(name = "DTOKatalogZeitraster.beginn", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn = :value")
+@NamedQuery(name = "DTOKatalogZeitraster.beginn.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Beginn IN :value")
+@NamedQuery(name = "DTOKatalogZeitraster.ende", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende = :value")
+@NamedQuery(name = "DTOKatalogZeitraster.ende.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOKatalogZeitraster.primaryKeyQuery", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKatalogZeitraster.all.migration", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Tag", "Stunde", "Beginn", "Ende"})
+public final class DTOKatalogZeitraster {
 
 	/** Eine ID, die einen Zeitraster-Eintrag eindeutig identifiziert */
 	@Id
@@ -62,17 +62,17 @@ public class DTOKatalogZeitraster {
 	/** Die Uhrzeit, wann die Stunde beginnt */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Beginn;
 
 	/** Die Uhrzeit, wann die Stunde endet */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter=DatumConverter.class)
-	@JsonSerialize(using=DatumConverterSerializer.class)
-	@JsonDeserialize(using=DatumConverterDeserializer.class)
+	@Convert(converter = DatumConverter.class)
+	@JsonSerialize(using = DatumConverterSerializer.class)
+	@JsonDeserialize(using = DatumConverterDeserializer.class)
 	public String Ende;
 
 	/**
@@ -91,23 +91,23 @@ public class DTOKatalogZeitraster {
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
 	public DTOKatalogZeitraster(final Long ID, final Integer Tag, final Integer Stunde, final String Beginn, final String Ende) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Tag == null) { 
+		if (Tag == null) {
 			throw new NullPointerException("Tag must not be null");
 		}
 		this.Tag = Tag;
-		if (Stunde == null) { 
+		if (Stunde == null) {
 			throw new NullPointerException("Stunde must not be null");
 		}
 		this.Stunde = Stunde;
-		if (Beginn == null) { 
+		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
-		if (Ende == null) { 
+		if (Ende == null) {
 			throw new NullPointerException("Ende must not be null");
 		}
 		this.Ende = Ende;
@@ -115,7 +115,7 @@ public class DTOKatalogZeitraster {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

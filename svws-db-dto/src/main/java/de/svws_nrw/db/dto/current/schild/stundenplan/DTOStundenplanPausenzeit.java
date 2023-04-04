@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_Pausenzeit.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Pausenzeit")
-@NamedQuery(name="DTOStundenplanPausenzeit.all", query="SELECT e FROM DTOStundenplanPausenzeit e")
-@NamedQuery(name="DTOStundenplanPausenzeit.id", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.id.multiple", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.stundenplan_id", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Stundenplan_ID = :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.stundenplan_id.multiple", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Stundenplan_ID IN :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.tag", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Tag = :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.tag.multiple", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Tag IN :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.beginn", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Beginn = :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.beginn.multiple", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Beginn IN :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.ende", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Ende = :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.ende.multiple", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Ende IN :value")
-@NamedQuery(name="DTOStundenplanPausenzeit.primaryKeyQuery", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanPausenzeit.all.migration", query="SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Stundenplan_ID","Tag","Beginn","Ende"})
-public class DTOStundenplanPausenzeit {
+@NamedQuery(name = "DTOStundenplanPausenzeit.all", query = "SELECT e FROM DTOStundenplanPausenzeit e")
+@NamedQuery(name = "DTOStundenplanPausenzeit.id", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.id.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.stundenplan_id", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Stundenplan_ID = :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.stundenplan_id.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Stundenplan_ID IN :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.tag", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Tag = :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.tag.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Tag IN :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.beginn", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Beginn = :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.beginn.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Beginn IN :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.ende", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Ende = :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.ende.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOStundenplanPausenzeit.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanPausenzeit.all.migration", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Stundenplan_ID", "Tag", "Beginn", "Ende"})
+public final class DTOStundenplanPausenzeit {
 
 	/** Eine ID, die einen Pausenzeit-Eintrag eindeutig identifiziert - hat keinen Bezug zur ID der Katalog-Tabelle */
 	@Id
@@ -62,17 +62,17 @@ public class DTOStundenplanPausenzeit {
 	/** Die Uhrzeit, wann die Pausenzeit beginnt */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Beginn;
 
 	/** Die Uhrzeit, wann die Pausenzeit endet */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter=UhrzeitConverter.class)
-	@JsonSerialize(using=UhrzeitConverterSerializer.class)
-	@JsonDeserialize(using=UhrzeitConverterDeserializer.class)
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public String Ende;
 
 	/**
@@ -91,23 +91,23 @@ public class DTOStundenplanPausenzeit {
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
 	public DTOStundenplanPausenzeit(final Long ID, final Long Stundenplan_ID, final Integer Tag, final String Beginn, final String Ende) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Stundenplan_ID == null) { 
+		if (Stundenplan_ID == null) {
 			throw new NullPointerException("Stundenplan_ID must not be null");
 		}
 		this.Stundenplan_ID = Stundenplan_ID;
-		if (Tag == null) { 
+		if (Tag == null) {
 			throw new NullPointerException("Tag must not be null");
 		}
 		this.Tag = Tag;
-		if (Beginn == null) { 
+		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
 		}
 		this.Beginn = Beginn;
-		if (Ende == null) { 
+		if (Ende == null) {
 			throw new NullPointerException("Ende must not be null");
 		}
 		this.Ende = Ende;
@@ -115,7 +115,7 @@ public class DTOStundenplanPausenzeit {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_DB_AutoInkremente.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SVWS_DB_AutoInkremente")
-@NamedQuery(name="DTODBAutoInkremente.all", query="SELECT e FROM DTODBAutoInkremente e")
-@NamedQuery(name="DTODBAutoInkremente.nametabelle", query="SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = :value")
-@NamedQuery(name="DTODBAutoInkremente.nametabelle.multiple", query="SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IN :value")
-@NamedQuery(name="DTODBAutoInkremente.maxid", query="SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID = :value")
-@NamedQuery(name="DTODBAutoInkremente.maxid.multiple", query="SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID IN :value")
-@NamedQuery(name="DTODBAutoInkremente.primaryKeyQuery", query="SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = ?1")
-@NamedQuery(name="DTODBAutoInkremente.all.migration", query="SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
-@JsonPropertyOrder({"NameTabelle","MaxID"})
-public class DTODBAutoInkremente {
+@NamedQuery(name = "DTODBAutoInkremente.all", query = "SELECT e FROM DTODBAutoInkremente e")
+@NamedQuery(name = "DTODBAutoInkremente.nametabelle", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = :value")
+@NamedQuery(name = "DTODBAutoInkremente.nametabelle.multiple", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IN :value")
+@NamedQuery(name = "DTODBAutoInkremente.maxid", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID = :value")
+@NamedQuery(name = "DTODBAutoInkremente.maxid.multiple", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID IN :value")
+@NamedQuery(name = "DTODBAutoInkremente.primaryKeyQuery", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "DTODBAutoInkremente.all.migration", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
+@JsonPropertyOrder({"NameTabelle", "MaxID"})
+public final class DTODBAutoInkremente {
 
 	/** Gibt den Tabellennamen an, für dessen Auto-Inkrement der ID-Wert verwendet werden soll. */
 	@Id
@@ -53,11 +53,11 @@ public class DTODBAutoInkremente {
 	 * @param MaxID   der Wert für das Attribut MaxID
 	 */
 	public DTODBAutoInkremente(final String NameTabelle, final Long MaxID) {
-		if (NameTabelle == null) { 
+		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
 		this.NameTabelle = NameTabelle;
-		if (MaxID == null) { 
+		if (MaxID == null) {
 			throw new NullPointerException("MaxID must not be null");
 		}
 		this.MaxID = MaxID;
@@ -65,7 +65,7 @@ public class DTODBAutoInkremente {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

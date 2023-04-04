@@ -22,32 +22,32 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle LehrerLernplattform.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOLehrerLernplattformPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLernplattform")
-@NamedQuery(name="DTOLehrerLernplattform.all", query="SELECT e FROM DTOLehrerLernplattform e")
-@NamedQuery(name="DTOLehrerLernplattform.lehrerid", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = :value")
-@NamedQuery(name="DTOLehrerLernplattform.lehrerid.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.lernplattformid", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID = :value")
-@NamedQuery(name="DTOLehrerLernplattform.lernplattformid.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.credentialid", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID = :value")
-@NamedQuery(name="DTOLehrerLernplattform.credentialid.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungabgefragt", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt = :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungabgefragt.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungnutzung", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung = :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungnutzung.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungaudiokonferenz", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz = :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungaudiokonferenz.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungvideokonferenz", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz = :value")
-@NamedQuery(name="DTOLehrerLernplattform.einwilligungvideokonferenz.multiple", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN :value")
-@NamedQuery(name="DTOLehrerLernplattform.primaryKeyQuery", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = ?1 AND e.LernplattformID = ?2")
-@NamedQuery(name="DTOLehrerLernplattform.all.migration", query="SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IS NOT NULL AND e.LernplattformID IS NOT NULL")
-@JsonPropertyOrder({"LehrerID","LernplattformID","CredentialID","EinwilligungAbgefragt","EinwilligungNutzung","EinwilligungAudiokonferenz","EinwilligungVideokonferenz"})
-public class DTOLehrerLernplattform {
+@NamedQuery(name = "DTOLehrerLernplattform.all", query = "SELECT e FROM DTOLehrerLernplattform e")
+@NamedQuery(name = "DTOLehrerLernplattform.lehrerid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.lehrerid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.lernplattformid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.lernplattformid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LernplattformID IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.credentialid", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.credentialid.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.CredentialID IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungabgefragt", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungabgefragt.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungnutzung", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungnutzung.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungNutzung IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungaudiokonferenz", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungaudiokonferenz.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungAudiokonferenz IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungvideokonferenz", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz = :value")
+@NamedQuery(name = "DTOLehrerLernplattform.einwilligungvideokonferenz.multiple", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN :value")
+@NamedQuery(name = "DTOLehrerLernplattform.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID = ?1 AND e.LernplattformID = ?2")
+@NamedQuery(name = "DTOLehrerLernplattform.all.migration", query = "SELECT e FROM DTOLehrerLernplattform e WHERE e.LehrerID IS NOT NULL AND e.LernplattformID IS NOT NULL")
+@JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz"})
+public final class DTOLehrerLernplattform {
 
 	/** LehrerID für den Lernplattform-Datensatz */
 	@Id
@@ -69,33 +69,33 @@ public class DTOLehrerLernplattform {
 	/** Einwilligung wurde abgefragt */
 	@Column(name = "EinwilligungAbgefragt")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean EinwilligungAbgefragt;
 
 	/** Einwilligung zur Nutzung liegt vor */
 	@Column(name = "EinwilligungNutzung")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean EinwilligungNutzung;
 
 	/** Einwilligung zur Audiokonferenz liegt vor */
 	@Column(name = "EinwilligungAudiokonferenz")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean EinwilligungAudiokonferenz;
 
 	/** Einwilligung zur Videokonferenz liegt vor */
 	@Column(name = "EinwilligungVideokonferenz")
 	@JsonProperty
-	@Convert(converter=Boolean01Converter.class)
-	@JsonSerialize(using=Boolean01ConverterSerializer.class)
-	@JsonDeserialize(using=Boolean01ConverterDeserializer.class)
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
 	public Boolean EinwilligungVideokonferenz;
 
 	/**
@@ -115,27 +115,27 @@ public class DTOLehrerLernplattform {
 	 * @param EinwilligungVideokonferenz   der Wert für das Attribut EinwilligungVideokonferenz
 	 */
 	public DTOLehrerLernplattform(final Long LehrerID, final Long LernplattformID, final Boolean EinwilligungAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
-		if (LehrerID == null) { 
+		if (LehrerID == null) {
 			throw new NullPointerException("LehrerID must not be null");
 		}
 		this.LehrerID = LehrerID;
-		if (LernplattformID == null) { 
+		if (LernplattformID == null) {
 			throw new NullPointerException("LernplattformID must not be null");
 		}
 		this.LernplattformID = LernplattformID;
-		if (EinwilligungAbgefragt == null) { 
+		if (EinwilligungAbgefragt == null) {
 			throw new NullPointerException("EinwilligungAbgefragt must not be null");
 		}
 		this.EinwilligungAbgefragt = EinwilligungAbgefragt;
-		if (EinwilligungNutzung == null) { 
+		if (EinwilligungNutzung == null) {
 			throw new NullPointerException("EinwilligungNutzung must not be null");
 		}
 		this.EinwilligungNutzung = EinwilligungNutzung;
-		if (EinwilligungAudiokonferenz == null) { 
+		if (EinwilligungAudiokonferenz == null) {
 			throw new NullPointerException("EinwilligungAudiokonferenz must not be null");
 		}
 		this.EinwilligungAudiokonferenz = EinwilligungAudiokonferenz;
-		if (EinwilligungVideokonferenz == null) { 
+		if (EinwilligungVideokonferenz == null) {
 			throw new NullPointerException("EinwilligungVideokonferenz must not be null");
 		}
 		this.EinwilligungVideokonferenz = EinwilligungVideokonferenz;
@@ -143,7 +143,7 @@ public class DTOLehrerLernplattform {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

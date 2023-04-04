@@ -13,19 +13,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Jahrgaenge_Keys.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Jahrgaenge_Keys")
-@NamedQuery(name="MigrationDTOAlleJahrgaengeKeys.all", query="SELECT e FROM MigrationDTOAlleJahrgaengeKeys e")
-@NamedQuery(name="MigrationDTOAlleJahrgaengeKeys.kuerzel", query="SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOAlleJahrgaengeKeys.kuerzel.multiple", query="SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOAlleJahrgaengeKeys.primaryKeyQuery", query="SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOAlleJahrgaengeKeys.all.migration", query="SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel IS NOT NULL")
+@NamedQuery(name = "MigrationDTOAlleJahrgaengeKeys.all", query = "SELECT e FROM MigrationDTOAlleJahrgaengeKeys e")
+@NamedQuery(name = "MigrationDTOAlleJahrgaengeKeys.kuerzel", query = "SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOAlleJahrgaengeKeys.kuerzel.multiple", query = "SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOAlleJahrgaengeKeys.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOAlleJahrgaengeKeys.all.migration", query = "SELECT e FROM MigrationDTOAlleJahrgaengeKeys e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel"})
-public class MigrationDTOAlleJahrgaengeKeys {
+public final class MigrationDTOAlleJahrgaengeKeys {
 
 	/** Das zweistellige Kürzel des Jahrgangs */
 	@Id
@@ -45,7 +45,7 @@ public class MigrationDTOAlleJahrgaengeKeys {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
 	public MigrationDTOAlleJahrgaengeKeys(final String Kuerzel) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
@@ -53,7 +53,7 @@ public class MigrationDTOAlleJahrgaengeKeys {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -21,27 +21,27 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Adressart.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Adressart")
-@NamedQuery(name="DTOKatalogAdressart.all", query="SELECT e FROM DTOKatalogAdressart e")
-@NamedQuery(name="DTOKatalogAdressart.id", query="SELECT e FROM DTOKatalogAdressart e WHERE e.ID = :value")
-@NamedQuery(name="DTOKatalogAdressart.id.multiple", query="SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN :value")
-@NamedQuery(name="DTOKatalogAdressart.bezeichnung", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="DTOKatalogAdressart.bezeichnung.multiple", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="DTOKatalogAdressart.sortierung", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung = :value")
-@NamedQuery(name="DTOKatalogAdressart.sortierung.multiple", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung IN :value")
-@NamedQuery(name="DTOKatalogAdressart.sichtbar", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar = :value")
-@NamedQuery(name="DTOKatalogAdressart.sichtbar.multiple", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="DTOKatalogAdressart.aenderbar", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar = :value")
-@NamedQuery(name="DTOKatalogAdressart.aenderbar.multiple", query="SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="DTOKatalogAdressart.primaryKeyQuery", query="SELECT e FROM DTOKatalogAdressart e WHERE e.ID = ?1")
-@NamedQuery(name="DTOKatalogAdressart.all.migration", query="SELECT e FROM DTOKatalogAdressart e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Bezeichnung","Sortierung","Sichtbar","Aenderbar"})
-public class DTOKatalogAdressart {
+@NamedQuery(name = "DTOKatalogAdressart.all", query = "SELECT e FROM DTOKatalogAdressart e")
+@NamedQuery(name = "DTOKatalogAdressart.id", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID = :value")
+@NamedQuery(name = "DTOKatalogAdressart.id.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOKatalogAdressart.bezeichnung", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKatalogAdressart.bezeichnung.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "DTOKatalogAdressart.sortierung", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung = :value")
+@NamedQuery(name = "DTOKatalogAdressart.sortierung.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "DTOKatalogAdressart.sichtbar", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "DTOKatalogAdressart.sichtbar.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "DTOKatalogAdressart.aenderbar", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "DTOKatalogAdressart.aenderbar.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "DTOKatalogAdressart.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKatalogAdressart.all.migration", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
+public final class DTOKatalogAdressart {
 
 	/** ID der Adressart */
 	@Id
@@ -62,17 +62,17 @@ public class DTOKatalogAdressart {
 	/** Sichtbarkeit der Adressart */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Adressart ist änderbar Ja Nein */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/**
@@ -88,11 +88,11 @@ public class DTOKatalogAdressart {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public DTOKatalogAdressart(final Long ID, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -100,7 +100,7 @@ public class DTOKatalogAdressart {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -18,7 +18,7 @@ public class DTOHelper {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromDTOName(String name, long rev) {
+    public static Class<? extends Object> getFromDTOName(final String name, final long rev) {
         if (rev == 0) {
             return MigrationDTOs.getFromDTOName(name);
         } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {
@@ -39,7 +39,7 @@ public class DTOHelper {
      *
      * @return die DTO-Klasse
      */
-    public static Class<? extends Object> getFromTableName(String name, long rev) {
+    public static Class<? extends Object> getFromTableName(final String name, final long rev) {
         if (rev == 0) {
             return MigrationDTOs.getFromTableName(name);
         } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {

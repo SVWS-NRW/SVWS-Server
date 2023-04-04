@@ -13,27 +13,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Stundenplan_Unterricht.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Stundenplan_Unterricht")
-@NamedQuery(name="DTOStundenplanUnterricht.all", query="SELECT e FROM DTOStundenplanUnterricht e")
-@NamedQuery(name="DTOStundenplanUnterricht.id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.zeitraster_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.zeitraster_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.wochentyp", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.wochentyp.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.kurs_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.kurs_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.fach_id", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID = :value")
-@NamedQuery(name="DTOStundenplanUnterricht.fach_id.multiple", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID IN :value")
-@NamedQuery(name="DTOStundenplanUnterricht.primaryKeyQuery", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID = ?1")
-@NamedQuery(name="DTOStundenplanUnterricht.all.migration", query="SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Zeitraster_ID","Wochentyp","Kurs_ID","Fach_ID"})
-public class DTOStundenplanUnterricht {
+@NamedQuery(name = "DTOStundenplanUnterricht.all", query = "SELECT e FROM DTOStundenplanUnterricht e")
+@NamedQuery(name = "DTOStundenplanUnterricht.id", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.id.multiple", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.zeitraster_id", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.zeitraster_id.multiple", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.wochentyp", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp = :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.wochentyp.multiple", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Wochentyp IN :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.kurs_id", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.kurs_id.multiple", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Kurs_ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.fach_id", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID = :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.fach_id.multiple", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.Fach_ID IN :value")
+@NamedQuery(name = "DTOStundenplanUnterricht.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanUnterricht.all.migration", query = "SELECT e FROM DTOStundenplanUnterricht e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Zeitraster_ID", "Wochentyp", "Kurs_ID", "Fach_ID"})
+public final class DTOStundenplanUnterricht {
 
 	/** Die eindeutige ID für diese Zuordnung des Untericht-Eintrages zu einem Stundenplan */
 	@Id
@@ -76,19 +76,19 @@ public class DTOStundenplanUnterricht {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
 	public DTOStundenplanUnterricht(final Long ID, final Long Zeitraster_ID, final Integer Wochentyp, final Long Fach_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Zeitraster_ID == null) { 
+		if (Zeitraster_ID == null) {
 			throw new NullPointerException("Zeitraster_ID must not be null");
 		}
 		this.Zeitraster_ID = Zeitraster_ID;
-		if (Wochentyp == null) { 
+		if (Wochentyp == null) {
 			throw new NullPointerException("Wochentyp must not be null");
 		}
 		this.Wochentyp = Wochentyp;
-		if (Fach_ID == null) { 
+		if (Fach_ID == null) {
 			throw new NullPointerException("Fach_ID must not be null");
 		}
 		this.Fach_ID = Fach_ID;
@@ -96,7 +96,7 @@ public class DTOStundenplanUnterricht {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

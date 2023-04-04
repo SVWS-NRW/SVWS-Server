@@ -24,37 +24,37 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerWiedervorlage.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerWiedervorlage")
-@NamedQuery(name="DTOSchuelerWiedervorlage.all", query="SELECT e FROM DTOSchuelerWiedervorlage e")
-@NamedQuery(name="DTOSchuelerWiedervorlage.id", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.id.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.schueler_id", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.schueler_id.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.bemerkung", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.bemerkung.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.angelegtam", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.angelegtam.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.wiedervorlageam", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.wiedervorlageam.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.erledigtam", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.erledigtam.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.user_id", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.user_id.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.sekretariat", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.sekretariat.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.typ", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.typ.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.nichtloeschen", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.nichtloeschen.multiple", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
-@NamedQuery(name="DTOSchuelerWiedervorlage.primaryKeyQuery", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1")
-@NamedQuery(name="DTOSchuelerWiedervorlage.all.migration", query="SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","Schueler_ID","Bemerkung","AngelegtAm","WiedervorlageAm","ErledigtAm","User_ID","Sekretariat","Typ","NichtLoeschen"})
-public class DTOSchuelerWiedervorlage {
+@NamedQuery(name = "DTOSchuelerWiedervorlage.all", query = "SELECT e FROM DTOSchuelerWiedervorlage e")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.schueler_id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.schueler_id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Schueler_ID IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.bemerkung", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.bemerkung.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Bemerkung IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.angelegtam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.angelegtam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.AngelegtAm IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.wiedervorlageam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.wiedervorlageam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.WiedervorlageAm IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.erledigtam", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.erledigtam.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ErledigtAm IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.user_id", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.user_id.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.User_ID IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.sekretariat", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.sekretariat.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Sekretariat IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.typ", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.typ.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.Typ IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.all.migration", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "Schueler_ID", "Bemerkung", "AngelegtAm", "WiedervorlageAm", "ErledigtAm", "User_ID", "Sekretariat", "Typ", "NichtLoeschen"})
+public final class DTOSchuelerWiedervorlage {
 
 	/** ID des Wiedervorlageeitrags beim Schüler */
 	@Id
@@ -95,9 +95,9 @@ public class DTOSchuelerWiedervorlage {
 	/** Steuert die Sichtbarkeit für den User Sekretariat */
 	@Column(name = "Sekretariat")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sekretariat;
 
 	/** Typ des Wiedervorlageeintrags */
@@ -108,9 +108,9 @@ public class DTOSchuelerWiedervorlage {
 	/** Steuert die automatische Löschung der Einträge */
 	@Column(name = "NichtLoeschen")
 	@JsonProperty
-	@Convert(converter=BooleanPlusMinusDefaultMinusConverter.class)
-	@JsonSerialize(using=BooleanPlusMinusDefaultMinusConverterSerializer.class)
-	@JsonDeserialize(using=BooleanPlusMinusDefaultMinusConverterDeserializer.class)
+	@Convert(converter = BooleanPlusMinusDefaultMinusConverter.class)
+	@JsonSerialize(using = BooleanPlusMinusDefaultMinusConverterSerializer.class)
+	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean NichtLoeschen;
 
 	/**
@@ -126,11 +126,11 @@ public class DTOSchuelerWiedervorlage {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
 	public DTOSchuelerWiedervorlage(final Long ID, final Long Schueler_ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (Schueler_ID == null) { 
+		if (Schueler_ID == null) {
 			throw new NullPointerException("Schueler_ID must not be null");
 		}
 		this.Schueler_ID = Schueler_ID;
@@ -138,7 +138,7 @@ public class DTOSchuelerWiedervorlage {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle BenutzerAllgemein.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "BenutzerAllgemein")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.all", query="SELECT e FROM MigrationDTOBenutzerAllgemein e")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.id", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.id.multiple", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.anzeigename", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName = :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.anzeigename.multiple", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName IN :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.credentialid", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID = :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.credentialid.multiple", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID IN :value")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.primaryKeyQuery", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOBenutzerAllgemein.all.migration", query="SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","AnzeigeName","CredentialID"})
-public class MigrationDTOBenutzerAllgemein {
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.all", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.id", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.id.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.anzeigename", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName = :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.anzeigename.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.AnzeigeName IN :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID = :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID IN :value")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.all.migration", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "AnzeigeName", "CredentialID"})
+public final class MigrationDTOBenutzerAllgemein {
 
 	/** Die ID des allgemeinen Benutzers */
 	@Id
@@ -59,7 +59,7 @@ public class MigrationDTOBenutzerAllgemein {
 	 * @param ID   der Wert für das Attribut ID
 	 */
 	public MigrationDTOBenutzerAllgemein(final Long ID) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
@@ -67,7 +67,7 @@ public class MigrationDTOBenutzerAllgemein {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

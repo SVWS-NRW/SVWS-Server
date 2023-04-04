@@ -21,35 +21,35 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Ort.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ort")
-@NamedQuery(name="MigrationDTOOrt.all", query="SELECT e FROM MigrationDTOOrt e")
-@NamedQuery(name="MigrationDTOOrt.id", query="SELECT e FROM MigrationDTOOrt e WHERE e.ID = :value")
-@NamedQuery(name="MigrationDTOOrt.id.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.ID IN :value")
-@NamedQuery(name="MigrationDTOOrt.plz", query="SELECT e FROM MigrationDTOOrt e WHERE e.PLZ = :value")
-@NamedQuery(name="MigrationDTOOrt.plz.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.PLZ IN :value")
-@NamedQuery(name="MigrationDTOOrt.bezeichnung", query="SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOOrt.bezeichnung.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOOrt.kreis", query="SELECT e FROM MigrationDTOOrt e WHERE e.Kreis = :value")
-@NamedQuery(name="MigrationDTOOrt.kreis.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Kreis IN :value")
-@NamedQuery(name="MigrationDTOOrt.sortierung", query="SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung = :value")
-@NamedQuery(name="MigrationDTOOrt.sortierung.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung IN :value")
-@NamedQuery(name="MigrationDTOOrt.sichtbar", query="SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar = :value")
-@NamedQuery(name="MigrationDTOOrt.sichtbar.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar IN :value")
-@NamedQuery(name="MigrationDTOOrt.aenderbar", query="SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar = :value")
-@NamedQuery(name="MigrationDTOOrt.aenderbar.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar IN :value")
-@NamedQuery(name="MigrationDTOOrt.land", query="SELECT e FROM MigrationDTOOrt e WHERE e.Land = :value")
-@NamedQuery(name="MigrationDTOOrt.land.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.Land IN :value")
-@NamedQuery(name="MigrationDTOOrt.schulnreigner", query="SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOOrt.schulnreigner.multiple", query="SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOOrt.primaryKeyQuery", query="SELECT e FROM MigrationDTOOrt e WHERE e.ID = ?1")
-@NamedQuery(name="MigrationDTOOrt.all.migration", query="SELECT e FROM MigrationDTOOrt e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID","PLZ","Bezeichnung","Kreis","Sortierung","Sichtbar","Aenderbar","Land","SchulnrEigner"})
-public class MigrationDTOOrt {
+@NamedQuery(name = "MigrationDTOOrt.all", query = "SELECT e FROM MigrationDTOOrt e")
+@NamedQuery(name = "MigrationDTOOrt.id", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID = :value")
+@NamedQuery(name = "MigrationDTOOrt.id.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IN :value")
+@NamedQuery(name = "MigrationDTOOrt.plz", query = "SELECT e FROM MigrationDTOOrt e WHERE e.PLZ = :value")
+@NamedQuery(name = "MigrationDTOOrt.plz.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.PLZ IN :value")
+@NamedQuery(name = "MigrationDTOOrt.bezeichnung", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOOrt.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOOrt.kreis", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Kreis = :value")
+@NamedQuery(name = "MigrationDTOOrt.kreis.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Kreis IN :value")
+@NamedQuery(name = "MigrationDTOOrt.sortierung", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung = :value")
+@NamedQuery(name = "MigrationDTOOrt.sortierung.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Sortierung IN :value")
+@NamedQuery(name = "MigrationDTOOrt.sichtbar", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar = :value")
+@NamedQuery(name = "MigrationDTOOrt.sichtbar.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Sichtbar IN :value")
+@NamedQuery(name = "MigrationDTOOrt.aenderbar", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar = :value")
+@NamedQuery(name = "MigrationDTOOrt.aenderbar.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Aenderbar IN :value")
+@NamedQuery(name = "MigrationDTOOrt.land", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Land = :value")
+@NamedQuery(name = "MigrationDTOOrt.land.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.Land IN :value")
+@NamedQuery(name = "MigrationDTOOrt.schulnreigner", query = "SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOOrt.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOOrt.primaryKeyQuery", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOOrt.all.migration", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IS NOT NULL")
+@JsonPropertyOrder({"ID", "PLZ", "Bezeichnung", "Kreis", "Sortierung", "Sichtbar", "Aenderbar", "Land", "SchulnrEigner"})
+public final class MigrationDTOOrt {
 
 	/** ID des Ortes */
 	@Id
@@ -80,17 +80,17 @@ public class MigrationDTOOrt {
 	/** Sichbarkeit des Ortes */
 	@Column(name = "Sichtbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Sichtbar;
 
 	/** Änderbarkeit des Ortes */
 	@Column(name = "Aenderbar")
 	@JsonProperty
-	@Convert(converter=MigrationBooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using=MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using=MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
+	@Convert(converter = MigrationBooleanPlusMinusDefaultPlusConverter.class)
+	@JsonSerialize(using = MigrationBooleanPlusMinusDefaultPlusConverterSerializer.class)
+	@JsonDeserialize(using = MigrationBooleanPlusMinusDefaultPlusConverterDeserializer.class)
 	public Boolean Aenderbar;
 
 	/** Land des Ortes */
@@ -117,15 +117,15 @@ public class MigrationDTOOrt {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
 	public MigrationDTOOrt(final Long ID, final String PLZ, final String Bezeichnung) {
-		if (ID == null) { 
+		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
 		this.ID = ID;
-		if (PLZ == null) { 
+		if (PLZ == null) {
 			throw new NullPointerException("PLZ must not be null");
 		}
 		this.PLZ = PLZ;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
@@ -133,7 +133,7 @@ public class MigrationDTOOrt {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

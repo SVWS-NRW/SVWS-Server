@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Zertifikate.
- * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden, 
+ * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Zertifikate")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.all", query="SELECT e FROM MigrationDTOKatalogZertifikate e")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.kuerzel", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.kuerzel.multiple", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.bezeichnung", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung = :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.bezeichnung.multiple", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung IN :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.schulnreigner", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner = :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.schulnreigner.multiple", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner IN :value")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.primaryKeyQuery", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = ?1")
-@NamedQuery(name="MigrationDTOKatalogZertifikate.all.migration", query="SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL")
-@JsonPropertyOrder({"Kuerzel","Bezeichnung","SchulnrEigner"})
-public class MigrationDTOKatalogZertifikate {
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.all", query = "SELECT e FROM MigrationDTOKatalogZertifikate e")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.kuerzel", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.kuerzel.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IN :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.bezeichnung", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.bezeichnung.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Bezeichnung IN :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.schulnreigner", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner = :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.SchulnrEigner IN :value")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOKatalogZertifikate.all.migration", query = "SELECT e FROM MigrationDTOKatalogZertifikate e WHERE e.Kuerzel IS NOT NULL")
+@JsonPropertyOrder({"Kuerzel", "Bezeichnung", "SchulnrEigner"})
+public final class MigrationDTOKatalogZertifikate {
 
 	/** Kürzel des Zertifikats */
 	@Id
@@ -61,15 +61,15 @@ public class MigrationDTOKatalogZertifikate {
 	 * @param SchulnrEigner   der Wert für das Attribut SchulnrEigner
 	 */
 	public MigrationDTOKatalogZertifikate(final String Kuerzel, final String Bezeichnung, final Integer SchulnrEigner) {
-		if (Kuerzel == null) { 
+		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (Bezeichnung == null) { 
+		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (SchulnrEigner == null) { 
+		if (SchulnrEigner == null) {
 			throw new NullPointerException("SchulnrEigner must not be null");
 		}
 		this.SchulnrEigner = SchulnrEigner;
@@ -77,7 +77,7 @@ public class MigrationDTOKatalogZertifikate {
 
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
