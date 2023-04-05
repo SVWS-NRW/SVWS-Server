@@ -25,7 +25,7 @@
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="login" />
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="login" />
-										<svws-ui-button @click="login" type="primary">
+										<svws-ui-button @click="login" type="primary" :disabled="authenticating">
 											Anmelden
 											<svws-ui-spinner v-if="authenticating" spinning />
 											<i-ri-login-circle-line v-else />

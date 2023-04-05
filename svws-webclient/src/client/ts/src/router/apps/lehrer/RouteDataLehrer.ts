@@ -99,7 +99,7 @@ export class RouteDataLehrer {
 		if (lehrer?.id === this._state.value.auswahl?.id)
 			return;
 		if ((lehrer === undefined) || (this.mapLehrer.size === 0)) {
-			this.setPatchedDefaultState({
+			this.setPatchedState({
 				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 				mapLehrer: this._state.value.mapLehrer,
 			});
@@ -108,7 +108,7 @@ export class RouteDataLehrer {
 		const neueAuswahl = (this.mapLehrer.get(lehrer.id) === undefined) ? this.firstLehrer(this.mapLehrer) : lehrer;
 		const stammdaten = await this.ladeStammdaten(neueAuswahl);
 		const personaldaten = this.hatPersonaldaten ? await this.ladePersonaldaten(neueAuswahl) : undefined;
-		this.setPatchedDefaultState({
+		this.setPatchedState({
 			idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 			mapLehrer: this._state.value.mapLehrer,
 			auswahl: neueAuswahl,

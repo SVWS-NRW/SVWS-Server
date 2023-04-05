@@ -197,8 +197,7 @@
 		<Variant title="Collapsible">
 			<section class="flex flex-col">
 				<svws-ui-data-table :items="dataCollapsible" collapsible>
-					<template #header >
-					</template>
+					<template #header />
 					<template #body>
 						<div role="row" class="data-table__tr data-table__tbody__tr">
 							<div role="row" class="data-table__tr data-table__tbody__tr">

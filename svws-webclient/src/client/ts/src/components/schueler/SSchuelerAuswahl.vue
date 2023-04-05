@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+	import { computed, ComputedRef, Ref, ref, watch, WritableComputedRef } from "vue";
 	import { SchuelerListeEintrag, SchuelerStatus, JahrgangsListeEintrag,
 		KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core";
 	import { DataTableColumn } from "@ui";
@@ -70,6 +70,11 @@
 			.filter(s => !props.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(props.filter.kurs.id))
 			.filter(s => !props.filter.schulgliederung || s.schulgliederung === props.filter.schulgliederung.daten.kuerzel)
 	);
+
+	watch(()=>rows.value, async (neu)=> {
+		if (props.auswahl && neu.includes(props.auswahl) === false)
+			await props.gotoSchueler(neu[0]);
+	})
 
 	const rowsFiltered = computed(() => rows.value.filter((e: any) =>
 		e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
