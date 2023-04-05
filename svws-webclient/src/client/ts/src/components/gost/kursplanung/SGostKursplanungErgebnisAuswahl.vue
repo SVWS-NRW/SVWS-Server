@@ -9,7 +9,7 @@
 						<template #content>
 							<div class="normal-case text-base rich-text">
 								<div class="my-1">Anzahl von Problemen durch:</div>
-								<ul class="font-bold mb-1">
+								<ul class="mb-1">
 									<li>Regelverletzungen</li>
 									<li>Wahlkonflikte</li>
 									<li>max. Kursdifferenz</li>
@@ -25,7 +25,7 @@
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
 						<template #content>
-							<span class="inline-flex items-center gap-1">
+							<span class="inline-flex items-center gap-0.5">
 								{{ getDatenmanager().getOfBewertung1Wert(row.id) }} Regelverletzungen
 								<span v-if="getDatenmanager().getOfBewertung1Wert(row.id) === 0">
 									<i-ri-check-line class="opacity-25" />
@@ -36,19 +36,34 @@
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
 						<template #content>
-							{{ getDatenmanager().getOfBewertung2Wert(row.id) }} Wahlkonflikte
+							<span class="inline-flex items-center gap-0.5">
+								{{ getDatenmanager().getOfBewertung2Wert(row.id) }} Wahlkonflikte
+								<span v-if="getDatenmanager().getOfBewertung2Wert(row.id) === 0">
+									<i-ri-check-line class="opacity-25" />
+								</span>
+							</span>
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color3(row)}">{{ getDatenmanager().getOfBewertung3Wert(row.id) }}</span>
 						<template #content>
-							max. Kursdifferenz: {{ getDatenmanager().getOfBewertung3Wert(row.id) }}
+							<span class="inline-flex items-center gap-0.5">
+								max. Kursdifferenz: {{ getDatenmanager().getOfBewertung3Wert(row.id) }}
+								<span v-if="getDatenmanager().getOfBewertung3Wert(row.id) === 0">
+									<i-ri-check-line class="opacity-25" />
+								</span>
+							</span>
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
 						<template #content>
-							{{ getDatenmanager().getOfBewertung4Wert(row.id) }} Fächerparallelität
+							<span class="inline-flex items-center gap-0.5">
+								Fächerparallelität: {{ getDatenmanager().getOfBewertung4Wert(row.id) }}
+								<span v-if="getDatenmanager().getOfBewertung4Wert(row.id) === 0">
+									<i-ri-check-line class="opacity-25" />
+								</span>
+							</span>
 						</template>
 					</svws-ui-tooltip>
 				</span>

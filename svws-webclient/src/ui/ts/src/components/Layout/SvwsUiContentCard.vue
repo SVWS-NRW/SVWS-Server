@@ -48,7 +48,7 @@
 	}
 
 	.content-card--header--has-actions {
-		@apply flex w-full items-start;
+		@apply flex flex-wrap gap-x-4 gap-y-2 w-full items-start;
 	}
 
 	.content-card--actions {

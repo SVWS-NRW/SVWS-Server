@@ -6,89 +6,68 @@
 					<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
 					<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
 				</div>
-				<svws-ui-data-table :items="vorgaben" :columns="[{key: 'kursart', label: 'Kursart', sortable: true},{key:'idFach', label: 'Fach', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Min.', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
+				<svws-ui-data-table :items="vorgaben" :columns="[{key: 'kursart', label: 'Kursart', sortable: true},{key:'idFach', label: 'Fach', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 					<template #cell(idFach)="{ value }">
 						{{ faecherManager.get(value)?.bezeichnung }}
 					</template>
 					<template #cell(features)="value">
-						<svws-ui-popover v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0">
-							<template #trigger>
-								<i-ri-information-line class="cursor-help" />
-							</template>
-							<template #content>
-								<svws-ui-tooltip>
+						<div class="cursor-pointer flex items-center gap-1">
+							<svws-ui-tooltip
+								v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0">
+								<i-ri-information-line/>
+								<template #content>
 									Bemerkung: {{ value.rowData.bemerkungVorgabe }}
-								</svws-ui-tooltip>
-							</template>
-						</svws-ui-popover>&nbsp;
-						<svws-ui-popover v-if="value.rowData.auswahlzeit > 0">
-							<template #trigger>
-								<i-ri-time-line class="cursor-help" />
-							</template>
-							<template #content>
-								<svws-ui-tooltip>
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-if="value.rowData.auswahlzeit > 0">
+								<i-ri-time-line/>
+								<template #content>
 									Auswahlzeit: {{ value.rowData.auswahlzeit }} Minuten
-								</svws-ui-tooltip>
-							</template>
-						</svws-ui-popover>&nbsp;
-						<svws-ui-popover v-if="value.rowData.istMdlPruefung">
-							<template #trigger>
-								<i-ri-kakao-talk-line class="cursor-help" />
-							</template>
-							<template #content>
-								<svws-ui-tooltip>
-									Dies ist eine mündliche Prüfung.
-								</svws-ui-tooltip>
-							</template>
-						</svws-ui-popover>&nbsp;
-						<svws-ui-popover v-if="value.rowData.istAudioNotwendig">
-							<template #trigger>
-								<i-ri-music-line class="cursor-help" />
-							</template>
-							<template #content>
-								<svws-ui-tooltip>
-									inkl. Audioteil
-								</svws-ui-tooltip>
-							</template>
-						</svws-ui-popover>&nbsp;
-						<svws-ui-popover v-if="value.rowData.istVideoNotwendig">
-							<template #trigger>
-								<i-ri-video-add-line class="cursor-help" />
-							</template>
-							<template #content>
-								<svws-ui-tooltip>
-									inkl. Videoteil
-								</svws-ui-tooltip>
-							</template>
-						</svws-ui-popover>
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-if="value.rowData.istMdlPruefung">
+								<i-ri-chat-1-line/>
+								<template #content>
+									Mündliche Prüfung
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-if="value.rowData.istAudioNotwendig">
+								<i-ri-headphone-line/>
+								<template #content>
+									Inkl. Audioteil
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-if="value.rowData.istVideoNotwendig">
+								<i-ri-vidicon-line/>
+								<template #content>
+									Inkl. Videoteil
+								</template>
+							</svws-ui-tooltip>
+						</div>
 					</template>
 				</svws-ui-data-table>
 			</svws-ui-content-card>
 		</div>
 		<div class="w-1/4" v-if="activeVorgabe.idVorgabe >= 0">
-			<svws-ui-content-card title="Klausurvorgabe" class="w-full">
+			<svws-ui-content-card title="Klausurvorgabe" class="w-full pt-8">
 				<template #actions>
-					<svws-ui-button @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined">Löschen</svws-ui-button>
-					<svws-ui-button @click="cancelEdit">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="saveKlausurvorgabe">Speichern</svws-ui-button>
+					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line/>Löschen</svws-ui-button>
 				</template>
-				<div class="flex flex-row items-start space-x-4">
-					<div class="flex-grow space-y-3">
-						<div class="flex flex-row items-center">
-							<label for="rbgKursart">Kursart: </label>
-							<svws-ui-radio-group id="rbgKursart" :row="true">
-								<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
-							</svws-ui-radio-group>
-						</div>
-						<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung" v-model="inputVorgabeFach" />
-						<div class="flex flex-row items-center">
-							<label for="rbgQuartal">Quartal: </label>
-							<svws-ui-radio-group id="rbgQuartal" :row="true">
-								<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+''" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
-							</svws-ui-radio-group>
-						</div>
+				<div class="flex flex-col gap-4">
+					<div class="input-wrapper-1-col">
+						<svws-ui-radio-group id="rbgKursart" :row="true">
+							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
+						</svws-ui-radio-group>
+						<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung" v-model="inputVorgabeFach" title="Fach" />
+					</div>
+					<svws-ui-radio-group id="rbgQuartal" :row="true">
+						<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
+					</svws-ui-radio-group>
+					<div class="input-wrapper-1-col">
 						<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" />
 						<svws-ui-text-input placeholder="Auswahlzeit" type="number" v-model:modelValue="activeVorgabe.auswahlzeit" />
+					</div>
+					<div class="flex flex-col gap-1">
 						<div class="flex flex-row items-center">
 							<label for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
@@ -107,8 +86,12 @@
 								<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istVideoNotwendig = value.key" />
 							</svws-ui-radio-group>
 						</div>
-						<svws-ui-textarea-input placeholder="Bemerkungen" v-model="activeVorgabe.bemerkungVorgabe">dasdas</svws-ui-textarea-input>
 					</div>
+					<svws-ui-textarea-input placeholder="Bemerkungen" v-model="activeVorgabe.bemerkungVorgabe" resizeable="vertical">dasdas</svws-ui-textarea-input>
+				</div>
+				<div class="flex flex-wrap gap-2 mt-8">
+					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
+					<svws-ui-button @click="saveKlausurvorgabe">Speichern</svws-ui-button>
 				</div>
 			</svws-ui-content-card>
 		</div>
