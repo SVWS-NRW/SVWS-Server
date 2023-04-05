@@ -59,7 +59,13 @@ export class RouteDataSchueler {
 	private firstSchueler(mapSchueler: Map<number, SchuelerListeEintrag>): SchuelerListeEintrag | undefined {
 		if (mapSchueler.size === 0)
 			return undefined;
-		return mapSchueler.values().next().value;
+		const arr = [...mapSchueler.values()]
+			.filter(s => !this.filter.status.length || this.filter.status.map(s => s.id).includes(s.status))
+			.filter(s => !this.filter.jahrgang || s.jahrgang === this.filter.jahrgang.kuerzel)
+			.filter(s => !this.filter.klasse || s.idKlasse === this.filter.klasse.id)
+			.filter(s => !this.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(this.filter.kurs.id))
+			.filter(s => !this.filter.schulgliederung || s.schulgliederung === this.filter.schulgliederung.daten.kuerzel)
+		return arr[0];
 	}
 
 	private async ladeStammdaten(eintrag: SchuelerListeEintrag | undefined): Promise<SchuelerStammdaten | undefined> {
