@@ -119,14 +119,14 @@
 				'text-input--placeholder--prefix': url
 			}">
 			{{ placeholder }}
-			<svws-ui-popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
-				<template #trigger>
+			<span v-if="statistics" class="cursor-pointer">
+				<svws-ui-tooltip position="right">
 					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
-				</template>
-				<template #content>
-					Relevant für die Statistik
-				</template>
-			</svws-ui-popover>
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
 		</span>
 		<svws-ui-icon v-if="type !== 'date' && hasIcon">
 			<slot />
@@ -326,6 +326,7 @@
 
 	.text-input--statistics .text-input--control {
 		@apply border-purple;
+		/*@apply bg-purple/5;*/
 	}
 
 	.text-input-invalid:not(:focus-within) .text-input--control {
@@ -333,7 +334,7 @@
 	}
 
 	.text-input--statistics .text-input--placeholder {
-		@apply text-purple font-bold;
+		@apply font-bold text-purple;
 	}
 
 	.text-input-invalid:not(:focus-within) .text-input--placeholder,

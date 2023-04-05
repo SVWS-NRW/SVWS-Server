@@ -133,14 +133,14 @@
 				'textarea-input--placeholder--required': required
 			}">
 			{{ placeholder }}
-			<svws-ui-popover v-if="statistics" class="popper--statistics popper--small popper--no-arrow">
-				<template #trigger>
+			<span v-if="statistics" class="cursor-pointer">
+				<svws-ui-tooltip position="right">
 					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
-				</template>
-				<template #content>
-					Relevant für die Statistik
-				</template>
-			</svws-ui-popover>
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
 		</span>
 	</label>
 </template>

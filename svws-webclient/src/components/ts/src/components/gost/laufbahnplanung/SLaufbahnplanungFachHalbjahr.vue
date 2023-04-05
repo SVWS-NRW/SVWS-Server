@@ -4,17 +4,15 @@
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
-			<svws-ui-popover class="popper--danger" v-if="istFachkombiErforderlich" placement="bottom">
-				<template #trigger>
-					<div class="inline-flex items-center">
-						<span>{{ wahl }}&#8203;</span>
-						<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
-					</div>
-				</template>
+			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich" position="bottom">
+				<div class="inline-flex items-center">
+					<span>{{ wahl }}&#8203;</span>
+					<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
+				</div>
 				<template #content>
 					Fachkombination erforderlich
 				</template>
-			</svws-ui-popover>
+			</svws-ui-tooltip>
 			<div class="inline-flex items-center" v-else-if="!moeglich && wahl">
 				<span>{{ wahl }}</span>
 				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />

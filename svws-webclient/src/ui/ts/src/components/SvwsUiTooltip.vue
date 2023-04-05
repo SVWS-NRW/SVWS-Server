@@ -135,7 +135,7 @@
 	.cursor-pointer & {
 		cursor: pointer;
 	}
-	
+
 	.cursor-auto & {
 		cursor: auto;
 	}
@@ -177,7 +177,7 @@
 	}
 
 	&--danger {
-		@apply bg-error-light border border-error/5 text-error shadow-error/10 shadow-md;
+		@apply bg-error text-white border border-error/5 shadow-error/10 shadow-md;
 	}
 }
 </style>
