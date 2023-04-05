@@ -28,7 +28,7 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const kursbezeichnung: ComputedRef<String> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
+	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
 
 	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {

@@ -4,7 +4,7 @@
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
 								<span class="inline-flex items-center gap-1">
@@ -14,7 +14,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title font-mono">
 								<span class="inline-flex items-center gap-1">
@@ -26,12 +26,11 @@
 				</div>
 			</template>
 			<template #body>
-				<template
-					v-for="(kompetenzgruppe, index) in kompetenzgruppen"
+				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen"
 					:key="index">
 					<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin"
-													  :get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
-													  :add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+						:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
+						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
 				</template>
 			</template>
 		</svws-ui-data-table>
@@ -40,7 +39,7 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
+	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;

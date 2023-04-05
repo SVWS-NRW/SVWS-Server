@@ -3,7 +3,7 @@ import { KursDaten, JahrgangsListeEintrag, LehrerListeEintrag, List, Schueler } 
 export interface KursDatenProps {
 		patch: (data : Partial<KursDaten>) => Promise<void>;
 		data: KursDaten;
-		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>;
+		mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		gotoSchueler: (eintrag: Schueler) => Promise<void>,
 	}

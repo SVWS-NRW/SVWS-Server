@@ -18,7 +18,7 @@
 		<div class="input-wrapper">
 			<div class="col-span-2">
 				<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
-									  :item-text="(i: Religion) => i.daten.kuerzel" required />
+					:item-text="(i: Religion) => i.daten.kuerzel" required />
 			</div>
 		</div>
 	</svws-ui-content-card>

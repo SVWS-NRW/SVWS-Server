@@ -11,7 +11,7 @@
 		<!-- TODO Die Methode in Manager auslagern. -->
 		<div class="data-table__td-content">
 			<template v-if="getBenutzerManager().istAdmin()">
-				<i-ri-shield-star-line/>
+				<i-ri-shield-star-line />
 			</template>
 			<template v-else>
 				{{ props.getGruppen4Kompetenz(kompetenz) }}

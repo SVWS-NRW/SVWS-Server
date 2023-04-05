@@ -17,7 +17,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title font-mono">
 								ID

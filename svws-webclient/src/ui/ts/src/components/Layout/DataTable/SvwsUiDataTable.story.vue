@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	import { logEvent } from "histoire/client";
-	import {reactive, ref} from "vue";
+	import {Ref, reactive, ref} from "vue";
 	import type { DataTableColumnSource, DataTableItem, DataTableSortingOrder } from "./types";
 
 	const data = ref([
@@ -67,7 +67,7 @@
 			label: "Wie alt?",
 			sortable: true,
 		} as const,
-	]);
+	]) as Ref<DataTableColumnSource[]>;
 	const columns2 = ref([
 		{
 			key: "name",
@@ -91,7 +91,7 @@
 			key: "actions",
 			label: "",
 		},
-	]);
+	]) as Ref<DataTableColumnSource[]>;
 	const actions = [
 		{ label: "Löschen", action: "delete" },
 		{ label: "Kopieren", action: "copy" },
@@ -196,21 +196,16 @@
 		</Variant>
 		<Variant title="Collapsible">
 			<section class="flex flex-col">
-				<svws-ui-data-table
-					:items="dataCollapsible"
-					collapsible
-					>
-					<template #header>
-						<span></span>
+				<svws-ui-data-table :items="dataCollapsible" collapsible>
+					<template #header >
 					</template>
 					<template #body>
-						<div role="row"
-							 class="data-table__tr data-table__tbody__tr">
+						<div role="row" class="data-table__tr data-table__tbody__tr">
 							<div role="row" class="data-table__tr data-table__tbody__tr">
 								<div role="cell" class="data-table__td">
 									<div class="flex items-center gap-1">
 										<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed">
-											<i-ri-arrow-right-s-line v-if="collapsed"/>
+											<i-ri-arrow-right-s-line v-if="collapsed" />
 											<i-ri-arrow-down-s-line v-else />
 										</svws-ui-button>
 										Collapsed Cell Content

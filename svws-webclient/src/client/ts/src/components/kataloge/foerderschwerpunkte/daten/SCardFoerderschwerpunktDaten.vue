@@ -18,7 +18,7 @@
 		<div class="input-wrapper">
 			<div class="col-span-2">
 				<svws-ui-multi-select title="Statistik-Eintrag" v-model="statistikEintrag" :items="statistikKatalog"
-									  :item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel + ' (' + i.daten.beschreibung + ')'" required statistics />
+					:item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel + ' (' + i.daten.beschreibung + ')'" required statistics />
 			</div>
 		</div>
 	</svws-ui-content-card>

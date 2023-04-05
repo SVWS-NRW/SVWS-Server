@@ -17,7 +17,6 @@
 			<svws-ui-button type="primary" @click="saveEntries()"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-
 </template>
 
 <script setup lang="ts">

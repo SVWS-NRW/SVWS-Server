@@ -28,11 +28,11 @@
 				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein || undefined"
 					@update:model-value="doPatchBemerkungen({ zeugnisAllgemein : String($event) })" resizeable="vertical" :autoresize="true" />
 				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV || undefined"
-										@update:model-value="doPatchBemerkungen({ zeugnisASV : String($event) })" resizeable="vertical" :autoresize="true" />
+					@update:model-value="doPatchBemerkungen({ zeugnisASV : String($event) })" resizeable="vertical" :autoresize="true" />
 				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE || undefined"
-										@update:model-value="doPatchBemerkungen({ zeugnisAUE : String($event) })" resizeable="vertical" :autoresize="true" />
+					@update:model-value="doPatchBemerkungen({ zeugnisAUE : String($event) })" resizeable="vertical" :autoresize="true" />
 				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung || undefined"
-										@update:model-value="doPatchBemerkungen({ versetzungsentscheidung : String($event) })" resizeable="vertical" :autoresize="true" />
+					@update:model-value="doPatchBemerkungen({ versetzungsentscheidung : String($event) })" resizeable="vertical" :autoresize="true" />
 			</div>
 		</div>
 	</svws-ui-content-card>

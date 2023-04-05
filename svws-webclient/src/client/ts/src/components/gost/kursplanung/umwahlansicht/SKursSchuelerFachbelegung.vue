@@ -63,7 +63,7 @@
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	function get_kurs_name(): String {
+	function get_kurs_name(): string {
 		if (kursid.value === undefined)
 			return props.getErgebnismanager().getFach(props.fach.fachID).kuerzelAnzeige + "-" + kursart.value || "?";
 		return props.getErgebnismanager().getOfKursName(kursid.value);

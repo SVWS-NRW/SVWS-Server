@@ -15,15 +15,15 @@
 			</div>
 			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="props.mapLehrer.values()" :item-text="getLehrerText" autocomplete />
 			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="props.mapLehrer.values()"
-								  :item-text="getLehrerText" autocomplete />
+				:item-text="getLehrerText" autocomplete />
 			<div class="mt-4 input-wrapper-3-cols col-span-2">
 				<span class="font-bold col-span-full">Fehlstunden</span>
 				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined"
-									@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
+					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined"
-									@update:model-value="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
+					@update:model-value="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined"
-									@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
+					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</div>
 			<div class="mt-4 col-span-full input-wrapper">
 				<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />

@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card class="pt-8">
-	<span class="opacity-50">Hier wird demnächst die Konflikt-Ansicht der Klausurplanung implementiert.</span>
+		<span class="opacity-50">Hier wird demnächst die Konflikt-Ansicht der Klausurplanung implementiert.</span>
 	</svws-ui-content-card>
 </template>
 

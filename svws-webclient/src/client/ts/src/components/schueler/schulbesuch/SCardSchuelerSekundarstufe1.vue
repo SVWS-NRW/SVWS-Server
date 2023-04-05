@@ -3,15 +3,15 @@
 		<div class="input-wrapper">
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Jahr Wechsel Sek I" :model-value="data.sekIWechsel"
-									@update:model-value="doPatch({ sekIWechsel: Number($event) })" type="text" />
+					@update:model-value="doPatch({ sekIWechsel: Number($event) })" type="text" />
 			</div>
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Erste Schulform Sek I" :model-value="data.sekIErsteSchulform"
-									@update:model-value="doPatch({ sekIErsteSchulform: String($event) })" type="text" />
+					@update:model-value="doPatch({ sekIErsteSchulform: String($event) })" type="text" />
 			</div>
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Jahr Wechsel Sek II" :model-value="data.sekIIWechsel"
-									@update:model-value="doPatch({ sekIIWechsel: Number($event) })" type="text" />
+					@update:model-value="doPatch({ sekIIWechsel: Number($event) })" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>

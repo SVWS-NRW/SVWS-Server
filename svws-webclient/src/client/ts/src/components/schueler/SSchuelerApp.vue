@@ -36,7 +36,7 @@
 
 	const props = defineProps<SchuelerAppProps>();
 
-	const foto: ComputedRef<String | undefined> = computed(() => {
+	const foto: ComputedRef<string | undefined> = computed(() => {
 		return props.stammdaten?.foto ?? undefined;
 	});
 

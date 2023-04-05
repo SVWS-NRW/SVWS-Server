@@ -6,17 +6,17 @@
 			<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="data.vorigeAllgHerkunft"
 				@update:model-value="doPatch({ vorigeAllgHerkunft: String($event) })" type="text" />
 			<svws-ui-text-input placeholder="Entlassen am" :model-value="data.vorigeEntlassdatum"
-								@update:model-value="doPatch({ vorigeEntlassdatum: String($event) })" type="date" />
+				@update:model-value="doPatch({ vorigeEntlassdatum: String($event) })" type="date" />
 			<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.vorigeEntlassjahrgang"
-								@update:model-value="doPatch({ vorigeEntlassjahrgang: String($event) })" type="number" />
+				@update:model-value="doPatch({ vorigeEntlassjahrgang: String($event) })" type="number" />
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Bemerkung" :model-value="data.vorigeBemerkung"
-									@update:model-value="doPatch({ vorigeBemerkung: String($event) })" type="text" />
+					@update:model-value="doPatch({ vorigeBemerkung: String($event) })" type="text" />
 			</div>
 			<svws-ui-text-input placeholder="Entlassgrund" :model-value="data.vorigeEntlassgrundID"
-								@update:model-value="doPatch({ vorigeEntlassgrundID: Number($event) })" type="text" />
+				@update:model-value="doPatch({ vorigeEntlassgrundID: Number($event) })" type="text" />
 			<svws-ui-text-input placeholder="höchster allg.-bild. Abschluss" :model-value="data.vorigeAbschlussartID"
-								@update:model-value="doPatch({ vorigeAbschlussartID: String($event) })" type="text" />
+				@update:model-value="doPatch({ vorigeAbschlussartID: String($event) })" type="text" />
 			<div class="col-span-2">
 				<svws-ui-multi-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" />
 			</div>

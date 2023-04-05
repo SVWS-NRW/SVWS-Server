@@ -11,7 +11,7 @@
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
 								<span class="inline-flex items-center gap-1">
@@ -21,7 +21,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title font-mono">
 								<span class="inline-flex items-center gap-1">
@@ -31,7 +31,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
 								<span class="inline-flex items-center gap-1">
@@ -43,13 +43,12 @@
 				</div>
 			</template>
 			<template #body>
-				<template
-					 v-for="(kompetenzgruppe, index) in kompetenzgruppen"
-					 :key="index">
+				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen"
+					:key="index">
 					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
-												:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
-												:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
-												:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
+						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
+						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
 				</template>
 			</template>
 		</svws-ui-data-table>

@@ -8,13 +8,13 @@
 		"types": [
 			"vite/client",
 			"vue/ref-macros"
-		],
+		]
 	},
 	"include": [
 		"env.d.ts",
 		"vite.config.ts",
 		"src/**/*",
 		"src/**/*.vue",
-		"components.d.ts",
+		"components.d.ts"
 	]
 }

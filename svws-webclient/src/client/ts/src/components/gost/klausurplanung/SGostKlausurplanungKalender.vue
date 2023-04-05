@@ -14,7 +14,7 @@
 			</svws-ui-drop-data>
 			<div class="flex flex-row flex-wrap gap-4 w-full">
 				<calendar-view :display-period-uom="displayPeriodUom" :starting-day-of-week="1" :enable-drag-drop="true" :items="termineMit"
-							   :show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell">
+					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell">
 					<template #header="{ headerProps }">
 						<calendar-view-header :header-props="headerProps" @input="setShowDate" />
 					</template>

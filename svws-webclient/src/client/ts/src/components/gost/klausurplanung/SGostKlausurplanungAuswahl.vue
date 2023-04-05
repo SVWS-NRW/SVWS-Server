@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
-						:items="GostHalbjahr.values()" />
+		:items="GostHalbjahr.values()" />
 	<div class="">
 		<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable />
 	</div>

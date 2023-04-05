@@ -8,7 +8,7 @@
 			<svws-ui-text-input placeholder="Parallelität" v-model="parallelitaet" type="text" />
 			<svws-ui-text-input placeholder="Sortierung" v-model="inputSortierung" type="text" />
 			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge"
-								  :item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
+				:item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -20,7 +20,7 @@
 
 	const props = defineProps<{
 		data: KlassenDaten,
-		mapJahrgaenge: Map<Number, JahrgangsListeEintrag>
+		mapJahrgaenge: Map<number, JahrgangsListeEintrag>
 	}>();
 
 	const emit = defineEmits<{

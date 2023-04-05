@@ -8,10 +8,10 @@
 			<div class="input-wrapper-1-col">
 				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
 				<svws-ui-text-input v-model="name" type="text" placeholder="Login-Name" />
-				<div class="mb-1"/>
+				<div class="mb-1" />
 				<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort" />
 				<svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort wiederholen" />
-				<div class="mb-1"/>
+				<div class="mb-1" />
 			</div>
 		</template>
 

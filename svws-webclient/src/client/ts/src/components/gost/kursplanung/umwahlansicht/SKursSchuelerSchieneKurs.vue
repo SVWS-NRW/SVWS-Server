@@ -76,7 +76,7 @@
 
 	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(() => props.getErgebnismanager().getKursG(props.kurs.id));
 
-	const kurs_name: ComputedRef<String> = computed(() => props.getErgebnismanager().getOfKursName(props.kurs.id))
+	const kurs_name: ComputedRef<string> = computed(() => props.getErgebnismanager().getOfKursName(props.kurs.id))
 
 	const schueler_schriftlich: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(props.kurs.id));
 

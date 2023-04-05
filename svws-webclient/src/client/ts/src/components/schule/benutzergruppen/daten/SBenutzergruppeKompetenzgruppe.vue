@@ -1,12 +1,12 @@
 <template>
 	<div role="row"
-		 class="data-table__tr data-table__tbody__tr">
+		class="data-table__tr data-table__tbody__tr">
 		<div role="row" class="data-table__tr data-table__tbody__tr col-span-full">
 			<div role="cell" class="data-table__td">
 				<div class="flex items-center gap-1">
 					<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
 						<template v-if="hatSubKompetenzen">
-							<i-ri-arrow-right-s-line v-if="collapsed"/>
+							<i-ri-arrow-right-s-line v-if="collapsed" />
 							<i-ri-arrow-down-s-line v-else />
 						</template>
 					</svws-ui-button>
@@ -21,10 +21,9 @@
 			</div>
 		</div>
 		<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}"
-			 v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id"
-		>
+			v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
 			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin"
-										:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
+				:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
 		</div>
 	</div>
 </template>

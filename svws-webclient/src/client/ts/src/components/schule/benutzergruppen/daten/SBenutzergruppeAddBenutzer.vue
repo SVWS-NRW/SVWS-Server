@@ -1,8 +1,7 @@
 <template>
 	<svws-ui-content-card title="Benutzerzuordnung">
 		<div class="flex w-full gap-6 lg:gap-8">
-			<s-benutzer-checkbox-list
-				:list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="true"
+			<s-benutzer-checkbox-list :list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="true"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />

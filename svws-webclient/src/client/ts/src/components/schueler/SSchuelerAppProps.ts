@@ -4,7 +4,7 @@ import { AuswahlChildData } from "../AuswahlChildData";
 export interface SchuelerAppProps {
 	auswahl: SchuelerListeEintrag | undefined;
 	stammdaten: SchuelerStammdaten | undefined;
-	mapKlassen: Map<Number, KlassenListeEintrag>;
+	mapKlassen: Map<number, KlassenListeEintrag>;
 	setTab: (value: AuswahlChildData) => Promise<void>;
 	tab: AuswahlChildData;
 	tabs: AuswahlChildData[];

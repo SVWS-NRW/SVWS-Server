@@ -11,7 +11,7 @@
 			</div>
 			<div class="col-span-2">
 				<svws-ui-text-input placeholder="Art des Abschlusses" :model-value="data.entlassungAbschlussartID"
-									@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
+					@update:model-value="doPatch({ entlassungAbschlussartID: String($event) })" />
 			</div>
 		</div>
 	</svws-ui-content-card>

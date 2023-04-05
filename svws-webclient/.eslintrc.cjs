@@ -9,7 +9,14 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: "latest",
 		tsconfigRootDir: __dirname,
-		project: ["./src/**/ts/tsconfig.json"]
+		project: [
+			"./tsconfig.base.json",
+			"./src/components/ts/tsconfig.json",
+			"./src/core/ts/tsconfig.json",
+			"./src/core-test/ts/tsconfig.json",
+			"./src/client/ts/tsconfig.json",
+			"./src/ui/ts/tsconfig.json",
+		]
 	},
 	rules: {
 		// Standard Regeln

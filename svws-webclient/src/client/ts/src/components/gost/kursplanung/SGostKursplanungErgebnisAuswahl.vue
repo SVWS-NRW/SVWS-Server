@@ -1,7 +1,7 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse.toArray()" :count="selected_ergebnisse.length !== rows_ergebnisse.size()">
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse" :count="selected_ergebnisse.length !== rows_ergebnisse.size()">
 			<template #header(bewertung)>
 				<div style="flex-grow: 10;">
 					<svws-ui-tooltip indicator="help" position="top">
@@ -28,7 +28,7 @@
 							<span class="inline-flex items-center gap-1">
 								{{ getDatenmanager().getOfBewertung1Wert(row.id) }} Regelverletzungen
 								<span v-if="getDatenmanager().getOfBewertung1Wert(row.id) === 0">
-									<i-ri-check-line class="opacity-25"/>
+									<i-ri-check-line class="opacity-25" />
 								</span>
 							</span>
 						</template>
@@ -72,7 +72,7 @@
 				</span>
 				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="flex items-center justify-end pr-1 h-full">
 					<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
-									:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
+						:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
 				</div>
 			</template>
 		</svws-ui-data-table>
