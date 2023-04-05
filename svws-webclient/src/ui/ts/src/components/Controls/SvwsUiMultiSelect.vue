@@ -1,7 +1,8 @@
 <script setup lang="ts">
-	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch } from "vue";
+	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport, Transition } from "vue";
 	import { genId } from "../../utils";
 	import TextInput from "./SvwsUiTextInput.vue";
+	import {useFloating, autoUpdate, flip, offset, shift, size} from "@floating-ui/vue";
 
 	type Item = Record<string, any>;
 
@@ -59,6 +60,7 @@
 
 	// Input element
 	const inputEl = ref<null | typeof TextInput>(null);
+	const inputElTags = ref(null);
 	const hasFocus = ref(false);
 	const searchText = ref("");
 
@@ -233,6 +235,28 @@
 	function removeItem() {
 		selectItem(undefined);
 	}
+
+	/*const reference = ref(null); */
+	const floating = ref(null);
+
+	const {x, y, strategy, placement} = useFloating(
+		props.tags ? inputElTags : inputEl,
+		floating,
+		{
+			placement: 'bottom',
+			middleware: [flip(), shift(), offset(2), size({
+				apply({ rects, elements }) {
+					Object.assign(elements.floating.style, {
+						width: `${rects.reference.width}px`
+					});
+				}
+			})],
+			whileElementsMounted: autoUpdate,
+		}
+	);
+
+	const floatingTop = computed(() => `${y.value ?? 0}px`);
+	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 </script>
 
 <template>
@@ -256,7 +280,7 @@
 					:aria-controls="showList ? listIdPrefix : null"
 					:aria-activedescendant="activeItemIndex > -1 ? `${listIdPrefix}-${activeItemIndex}` : null"
 					@update:model-value="onInput"
-					@click="openListbox"
+					@click="toggleListbox"
 					@focus="onFocus"
 					@blur="onBlur"
 					@keyup.down.prevent
@@ -270,7 +294,7 @@
 					@keydown.space="onSpace"
 					:rounded="rounded" />
 			</div>
-			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}" @click.self="toggleListbox">
+			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}" @click.self="toggleListbox" ref="inputElTags">
 				<div class="tag-list" @click.self="toggleListbox">
 					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
@@ -294,39 +318,45 @@
 					<i-ri-close-line />
 				</svws-ui-icon>
 			</div>
-			<div class="dropdown-icon" @click="showList ? closeListbox() : openListbox()">
+			<div class="dropdown-icon" @click="toggleListbox">
 				<svws-ui-icon>
 					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5" />
 					<i-ri-arrow-down-s-line v-else class="pt-0.5" />
 				</svws-ui-icon>
 			</div>
 		</div>
-		<ul v-show="showList"
-			:id="listIdPrefix"
-			class="multiselect--items-wrapper"
-			role="listbox"
-			@mouseenter="activeItemIndex = -1">
-			<li v-for="(item, index) in filteredList"
-				:id="`${listIdPrefix}-${index}`"
-				:key="index"
-				ref="itemRefs"
-				role="option"
-				class="multiselect--item"
-				:class="{
-					active: activeItemIndex === index,
-					selected: selectedItemList.has(item)
-				}"
-				:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
-				@mousedown.prevent
-				@click="
-					() => {
-						selectItem(item);
-						!tags && closeListbox();
-					}
-				">
-				{{ itemText(item) }}
-			</li>
-		</ul>
+		<Teleport to="body">
+			<div v-show="showList" class="multiselect--items-wrapper" :style="{ position: strategy, top: floatingTop, left: floatingLeft, width: inputWidth }"
+				 ref="floating">
+				<ul
+					:id="listIdPrefix"
+					class="multiselect--items-list"
+					:class="{'multiselect--items-list--tags' : tags}"
+					role="listbox"
+					@mouseenter="activeItemIndex = -1">
+					<li v-for="(item, index) in filteredList"
+						:id="`${listIdPrefix}-${index}`"
+						:key="index"
+						ref="itemRefs"
+						role="option"
+						class="multiselect--item"
+						:class="{
+						active: activeItemIndex === index,
+						selected: selectedItemList.has(item)
+					}"
+						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
+						@mousedown.prevent
+						@click="
+						() => {
+							selectItem(item);
+							!tags && closeListbox();
+						}
+					">
+						{{ itemText(item) }}
+					</li>
+				</ul>
+			</div>
+		</Teleport>
 	</div>
 </template>
 
@@ -434,28 +464,29 @@
 }
 
 .multiselect--items-wrapper {
-	@apply absolute z-30 w-full;
-	@apply rounded-lg border border-light bg-white;
-	@apply mt-0.5 px-2 py-1;
+	@apply absolute z-50 w-full min-w-[11rem];
+	@apply rounded-md border border-black bg-white;
+	@apply shadow-xl shadow-black/25;
+	@apply overflow-hidden;
+}
+
+.multiselect--items-list {
 	@apply overflow-y-auto overflow-x-hidden;
-	@apply shadow-md shadow-black/25;
-	-webkit-overflow-scrolling: touch;
-	max-height: 36.3ex;
+	@apply py-1 px-2;
+	max-height: 40ex;
 
 	.multiselect--item {
-		@apply text-black bg-white rounded-md;
-		@apply text-input;
+		@apply text-black bg-white rounded border border-transparent;
+		@apply text-base;
 		@apply py-2 my-1 px-2;
 
 		&.active {
-			@apply bg-primary bg-opacity-5;
-			@apply ring ring-primary ring-opacity-50;
+			@apply ring ring-primary ring-opacity-25 border-primary;
 		}
 
 		&:hover {
-			@apply bg-light;
 			@apply cursor-pointer;
-			@apply text-black;
+			@apply border-primary text-primary;
 		}
 
 		&.selected {
@@ -463,12 +494,18 @@
 		}
 	}
 
-	.wrapper--tag-list & {
+	&--tags {
 		.multiselect--item.selected {
+			&.active {
+				@apply ring-black/25;
+			}
+
 			&:hover,
 			&.active {
+				@apply border-black text-black bg-transparent;
+
 				&:after {
-					@apply opacity-50;
+					@apply opacity-75 font-normal;
 					content: ' entfernen';
 				}
 			}

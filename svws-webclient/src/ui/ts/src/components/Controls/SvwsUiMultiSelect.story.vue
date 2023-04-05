@@ -26,7 +26,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Controls/ComboBox">
+	<Story title="SVWS UI/Controls/Multiselect">
 		<Variant title="Simple">
 			<div class="demo-wrapper">
 				v-model value: {{ modelValue1 }}
