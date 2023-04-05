@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
+import { Arrays } from '../../../java/util/Arrays';
 import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
@@ -38,7 +39,7 @@ export class BenutzerKompetenz extends JavaObject {
 	/**
 	 * Es werden Rechte zum Ändern der Schüler Individualdaten benötigt.
 	 */
-	public static readonly SCHUELER_INDIVIDUALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHUELER_INDIVIDUALDATEN_AENDERN", 3, new BenutzerKompetenzKatalogEintrag(12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", null));
+	public static readonly SCHUELER_INDIVIDUALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHUELER_INDIVIDUALDATEN_AENDERN", 3, new BenutzerKompetenzKatalogEintrag(12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", Arrays.asList(Schulform.BK)));
 
 	/**
 	 * Es werden Rechte zum Löschen der Schüler Individualdaten benötigt.
