@@ -4,9 +4,7 @@
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
 	"version": "0.6.1-SNAPSHOT",
-  "files": [
-    "dist"
-  ],
+  "files": [ "dist" ],
   "main": "./dist/svws-core.umd.cjs",
   "module": "./dist/svws-core.js",
   "exports": {
@@ -18,10 +16,8 @@
   "type": "module",
   "types": "./dist/index.d.ts",
 	"scripts": {
-		"test": "vitest",
-		"test:run": "vitest run --coverage",
-		"build": "npm run build-lib",
-    "build-lib": "vite build",
+  	"lint": "eslint 'src/**/*.{ts,vue}' --cache --fix",
+		"build": "vite build",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
 	}
 }

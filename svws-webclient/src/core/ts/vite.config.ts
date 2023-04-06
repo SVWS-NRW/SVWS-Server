@@ -10,11 +10,9 @@ export default defineConfig({
 			entry: resolve(__dirname, "src/index.ts"),
 			name: "SvwsCore"
 		},
+		// muss wegen der impliziten `type`-Imports verwendet werden, esbuild funktioniert so nicht
 		rollupOptions: {
-			plugins: [typescript({
-				tsconfig: resolve(__dirname, 'tsconfig.build.json')
-			}
-			)]
+			plugins: [typescript()]
 		}
 	},
 });

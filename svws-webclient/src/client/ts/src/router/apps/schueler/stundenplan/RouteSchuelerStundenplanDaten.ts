@@ -6,7 +6,6 @@ import { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
