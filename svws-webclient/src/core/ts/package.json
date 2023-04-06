@@ -16,7 +16,10 @@
   "type": "module",
   "types": "./dist/index.d.ts",
 	"scripts": {
-  	"lint": "eslint 'src/**/*.{ts,vue}' --cache --fix",
+		"test": "vitest",
+		"test:run": "vitest run --coverage",
+  	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+  	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
 		"build": "vite build",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
 	}
