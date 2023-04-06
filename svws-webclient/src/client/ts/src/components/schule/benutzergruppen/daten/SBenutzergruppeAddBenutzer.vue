@@ -28,20 +28,6 @@
 		goToBenutzer: (b_id: number) => Promise<void>;
 	}>();
 
-	const benutzer_nicht_in_gruppe: ComputedRef<List<BenutzerListeEintrag>> = computed(() => {
-		const liste = props.listBenutzergruppenBenutzer();
-		const benutzerGruppenbenutzer = new Set();
-		for (const l of liste)
-			benutzerGruppenbenutzer.add(l.id)
-		const result = new Vector<BenutzerListeEintrag>();
-		for (const l of props.listBenutzerAlle()){
-			if (!benutzerGruppenbenutzer.has(l.id))
-				result.add(l);
-		}
-		console.log("hallo");
-		return result;
-	});
-
 </script>
 
 <style>

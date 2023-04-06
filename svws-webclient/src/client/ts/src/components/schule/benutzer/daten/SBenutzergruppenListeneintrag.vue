@@ -42,7 +42,7 @@
 	});
 
 	const selected: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.getBenutzerManager().IstInGruppe(props.row.id),
+		get: () => props.getBenutzerManager().istInGruppe(props.row.id),
 		set: (value) => {
 			if (value)
 				void props.addBenutzerToBenutzergruppe(props.row.id);
