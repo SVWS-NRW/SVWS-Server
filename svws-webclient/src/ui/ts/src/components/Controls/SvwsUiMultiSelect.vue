@@ -366,11 +366,11 @@
 	@apply inline-block overflow-visible;
 
 	&--statistics {
-		@apply border-purple;
-		@apply bg-purple bg-opacity-[0.02];
+		@apply border-purple-500;
+		@apply bg-purple-500 bg-opacity-[0.02];
 
 		.multiselect-tags--placeholder {
-			@apply text-purple;
+			@apply text-purple-500;
 		}
 	}
 

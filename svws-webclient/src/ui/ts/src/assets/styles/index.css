@@ -16,59 +16,6 @@
 		--color-error-light: 247, 219, 216; /* #f7dbd8 */
 		--color-success: 182, 230, 92; /* #b6e65c */
 		--color-highlight: 255, 246, 147; /* #fff693 */
-
-		--color-brown: 155, 132, 88; /* #9b8458 */
-		--color-brown-light: 214, 205, 188; /* #d6cdbc */
-		--color-brown-dark: 98, 83, 55; /* #625337 */
-		--color-orange: 253, 179, 78; /* #fdb34e */
-		--color-orange-light: 255, 225, 185; /* #ffe1b9 */
-		--color-orange-dark: 178, 103, 1; /* #b26701 */
-		--color-purple: 180, 114, 237; /* #b472ed */
-		--color-purple-light: 224, 210, 237; /* #e0d2ed */
-		--color-purple-dark: 70, 28, 106; /* #461c6a */
-		--color-blue: 109, 136, 229; /* #6d88e5 */
-		--color-blue-light: 203, 211, 239; /* #cbd3ef */
-		--color-blue-dark: 24, 45, 116; /* #182d74 */
-		--color-green: 137, 237, 202; /* #89edca */
-		--color-green-light: 190, 232, 218; /* #bee8da */
-		--color-green-dark: 15, 93, 66; /* #0f5d42 */
-
-		--popper-theme-background-color: rgb(var(--color-primary));
-		--popper-theme-background-color-hover: var(--popper-theme-background-color);
-		--popper-theme-padding: 0.4em 0.75em 0.45em;
-		--popper-theme-text-color: rgb(var(--color-white));
-		--popper-theme-border-radius: 0.25rem;
-		--popper-theme-border-style: none;
-		--popper-theme-box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-	}
-	.theme-dark {
-		--color-white: 44, 44, 44; /* #2C2C2C */
-		--color-black: 255, 255, 255; /* #ffffff */
-		--color-gray: 102, 102, 102; /* #666666 */
-		--color-primary: 107, 203, 255; /* #6bcbff */
-		--color-light: 36, 50, 59; /* #24323b */
-		--color-dark-20: 66, 85, 97; /* #425561 */
-		--color-dark-80: 200, 208, 214; /* #c8d0d6 */
-		--color-dark: 240, 244, 247; /* #f0f4f7 */
-		--color-error: 179, 84, 84; /* #b35454 */
-		--color-success: 143, 173, 87; /* #8fad57 */
-		--color-highlight: 204, 197, 124; /* #ccc57c */
-
-		--color-brown: 155, 132, 88; /* #9b8458 */
-		--color-brown-light: 214, 205, 188; /* #d6cdbc */
-		--color-brown-dark: 98, 83, 55; /* #625337 */
-		--color-orange: 253, 179, 78; /* #fdb34e */
-		--color-orange-light: 255, 225, 185; /* #ffe1b9 */
-		--color-orange-dark: 178, 103, 1; /* #b26701 */
-		--color-purple: 180, 114, 237; /* #b472ed */
-		--color-purple-light: 224, 210, 237; /* #e0d2ed */
-		--color-purple-dark: 33, 15, 48; /* #210f30 */
-		--color-blue: 109, 136, 229; /* #6d88e5 */
-		--color-blue-light: 203, 211, 239; /* #cbd3ef */
-		--color-blue-dark: 13, 27, 71; /* #0d1b47 */
-		--color-green: 137, 237, 202; /* #89edca */
-		--color-green-light: 190, 232, 218; /* #bee8da */
-		--color-green-dark: 15, 93, 66; /* #0f5d42 */
 	}
 }
 
@@ -78,17 +25,4 @@ html {
 
 .text-sm-bold {
 	@apply uppercase;
-}
-
-.text-caption {
-	@apply text-sm;
-}
-
-.text-body,
-.text-input {
-	@apply text-base;
-}
-
-.popper {
-	@apply z-50;
 }

@@ -12,34 +12,6 @@ module.exports = {
 	layers: ["components", "utilities"],
 	safelist: ["theme-dark"],
 	theme: {
-		fontFamily: {
-			sans: [
-				"ui-sans-serif",
-				"system-ui",
-				"-apple-system",
-				"BlinkMacSystemFont",
-				"Segoe UI",
-				"Roboto",
-				"Helvetica Neue",
-				"Arial",
-				"Noto Sans",
-				"sans-serif",
-				"Apple Color Emoji",
-				"Segoe UI Emoji",
-				"Segoe UI Symbol",
-				"Noto Color Emoji"
-			],
-			mono: [
-				"ui-monospace",
-				"SFMono-Regular",
-				"Menlo",
-				"Monaco",
-				"Consolas",
-				"Liberation Mono",
-				"Courier New",
-				"monospace"
-			]
-		},
 		fontSize: {
 			'base': ['1rem', {
 				lineHeight: '1.33',
@@ -73,14 +45,6 @@ module.exports = {
 				lineHeight: '1',
 				fontWeight: '700',
 			}],
-			caption: ["0.625rem", { lineHeight: "1.5" }], // Deprecated
-			body: ["0.875rem", { lineHeight: "1.5" }], // Deprecated
-			input: ["1rem", { lineHeight: "1.25" }], // Deprecated
-			"headline-5": ["1rem", { lineHeight: "1.25" }], // Deprecated
-			"headline-4": ["1.25rem", { lineHeight: "1.25" }], // Deprecated
-			"headline-3": ["1.5rem", { lineHeight: "1.25" }], // Deprecated
-			"headline-2": ["2.125rem", { lineHeight: "1.2" }], // Deprecated
-			"headline-1": ["3rem", { lineHeight: "1.125" }] // Deprecated
 		},
 		fontWeight: {
 			normal: "400",
@@ -106,7 +70,6 @@ module.exports = {
 				},
 				transparent: "transparent",
 				current: "currentColor",
-
 				white: withOpacity("--color-white"),
 				black: withOpacity("--color-black"),
 				gray: withOpacity("--color-gray"),
@@ -116,25 +79,8 @@ module.exports = {
 				"dark-80": withOpacity("--color-dark-80"),
 				dark: withOpacity("--color-dark"),
 				error: withOpacity("--color-error"),
-				"error-light": withOpacity("--color-error-light"),
 				success: withOpacity("--color-success"),
 				highlight: withOpacity("--color-highlight"),
-
-				brown: withOpacity("--color-brown"),
-				"brown-light": withOpacity("--color-brown-light"),
-				"brown-dark": withOpacity("--color-brown-dark"),
-				orange: withOpacity("--color-orange"),
-				"orange-light": withOpacity("--color-orange-light"),
-				"orange-dark": withOpacity("--color-orange-dark"),
-				purple: withOpacity("--color-purple"),
-				"purple-light": withOpacity("--color-purple-light"),
-				"purple-dark": withOpacity("--color-purple-dark"),
-				blue: withOpacity("--color-blue"),
-				"blue-light": withOpacity("--color-blue-light"),
-				"blue-dark": withOpacity("--color-blue-dark"),
-				green: withOpacity("--color-green"),
-				"green-light": withOpacity("--color-green-light"),
-				"green-dark": withOpacity("--color-green-dark")
 			},
 			opacity: {
 				92: "0.92"

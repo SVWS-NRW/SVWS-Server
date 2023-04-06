@@ -130,7 +130,7 @@
 	@apply rounded border border-black border-opacity-20;
 	@apply h-9 w-full;
 	@apply px-4 py-2;
-	@apply text-input text-black;
+	@apply text-base text-black;
 
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -156,7 +156,7 @@
 	@apply bg-white;
 	@apply pointer-events-none;
 	@apply px-1;
-	@apply text-caption text-gray;
+	@apply text-sm text-gray;
 	@apply transform;
 
 	top: 0;

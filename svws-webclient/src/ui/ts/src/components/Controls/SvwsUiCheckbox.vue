@@ -99,7 +99,7 @@
 	@apply text-gray;
 }
 .checkbox--statistics {
-	@apply text-purple;
+	@apply text-purple-500;
 }
 
 .checkbox--statistics .checkbox--label .icon {

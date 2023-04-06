@@ -207,7 +207,7 @@
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input-filled .text-input--control {
-		@apply border-purple;
+		@apply border-purple-500;
 	}
 
 	.text-input--search {
@@ -325,7 +325,7 @@
 	}
 
 	.text-input--statistics .text-input--control {
-		@apply border-purple;
+		@apply border-purple-500;
 		/*@apply bg-purple/5;*/
 	}
 
@@ -334,7 +334,7 @@
 	}
 
 	.text-input--statistics .text-input--placeholder {
-		@apply font-bold text-purple;
+		@apply font-bold text-purple-500;
 	}
 
 	.text-input-invalid:not(:focus-within) .text-input--placeholder,

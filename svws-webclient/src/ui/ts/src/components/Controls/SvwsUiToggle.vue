@@ -44,7 +44,7 @@
 	@apply cursor-pointer;
 	@apply inline-flex;
 	@apply select-none;
-	@apply text-input;
+	@apply text-base;
 }
 
 .toggle--control {
@@ -59,11 +59,11 @@
 }
 
 .toggle--statistics {
-	@apply text-purple;
+	@apply text-purple-500;
 }
 
 .toggle--statistics .toggle--indicator {
-	@apply border-purple;
+	@apply border-purple-500;
 }
 
 .toggle--indicator:before {
@@ -79,7 +79,7 @@
 }
 
 .toggle--statistics .toggle--indicator:before {
-	@apply bg-purple;
+	@apply bg-purple-500;
 }
 
 .toggle input:checked+.toggle--indicator {
@@ -88,8 +88,8 @@
 }
 
 .toggle.toggle--statistics input:checked+.toggle--indicator {
-	@apply bg-purple;
-	@apply border-purple;
+	@apply bg-purple-500;
+	@apply border-purple-500;
 }
 
 .toggle input:checked+.toggle--indicator:before {

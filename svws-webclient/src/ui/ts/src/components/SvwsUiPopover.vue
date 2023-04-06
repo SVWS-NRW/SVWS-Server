@@ -75,8 +75,8 @@
 	}
 
 	.popper--statistics {
-		--popper-theme-background-color: theme("colors.purple");
-		--popper-theme-background-color-hover: theme("colors.purple");
+		--popper-theme-background-color: theme("colors.purple.500");
+		--popper-theme-background-color-hover: theme("colors.purple.500");
 		--popper-theme-text-color: theme("colors.white");
 	}
 

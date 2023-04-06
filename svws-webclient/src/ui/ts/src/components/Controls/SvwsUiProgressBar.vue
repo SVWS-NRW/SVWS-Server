@@ -32,11 +32,11 @@
 }
 
 .progress-bar--normal {
-	@apply text-input;
+	@apply text-base;
 }
 
 .progress-bar--small {
-	@apply text-caption;
+	@apply text-sm;
 }
 
 .progress-bar--bar {

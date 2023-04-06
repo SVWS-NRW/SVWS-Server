@@ -120,7 +120,7 @@
 }
 
 .sidebar--menu-item--subline {
-	@apply text-caption font-normal;
+	@apply text-sm font-normal;
 }
 
 .sidebar--menu-item--disabled {
