@@ -148,8 +148,8 @@
 			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
-		const input: typeof TextInput = inputEl.value!;
-		void nextTick(() => input?.focus());
+		const el: typeof TextInput = inputEl.value!;
+		void nextTick(() => el?.input.focus());
 	}
 
 	function closeListbox() {
