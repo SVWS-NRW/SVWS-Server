@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotNull;
  * Addressen zur Verfügung
  */
 public class AdressenUtils {
+	private AdressenUtils() {
+		throw new IllegalStateException("Instantiation of " + AdressenUtils.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Teilt eine Strassenangabe bestehend aus dem

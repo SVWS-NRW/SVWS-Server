@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostFachManager {
 
+	private GostFachManager() {
+		throw new IllegalStateException("Instantiation of " + GostFachManager.class.getName() + " not allowed");
+	}
+
 	/**
 	 * Gibt an, ob es sich bei dem Fach um ein Projektkursfach handelt.
 	 *

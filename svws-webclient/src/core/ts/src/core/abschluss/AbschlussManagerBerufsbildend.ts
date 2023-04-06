@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { AbschlussErgebnisBerufsbildend } from '../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
 import { BKAnlageAFaecher } from '../../core/abschluss/bk/a/BKAnlageAFaecher';
@@ -6,8 +7,9 @@ import { BKAnlageAFaecher } from '../../core/abschluss/bk/a/BKAnlageAFaecher';
 export class AbschlussManagerBerufsbildend extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + AbschlussManagerBerufsbildend.class.getName()! + " not allowed")
 	}
 
 	/**

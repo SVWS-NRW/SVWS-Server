@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { GEAbschlussFach } from '../../core/data/abschluss/GEAbschlussFach';
 import { AbschlussErgebnis } from '../../core/data/abschluss/AbschlussErgebnis';
 import { GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher';
@@ -12,8 +13,9 @@ import { HashSet } from '../../java/util/HashSet';
 export class AbschlussManager extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + AbschlussManager.class.getName()! + " not allowed")
 	}
 
 	/**

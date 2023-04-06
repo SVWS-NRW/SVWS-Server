@@ -10,6 +10,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostAbiturjahrUtils {
 
+	private GostAbiturjahrUtils() {
+		throw new IllegalStateException("Instantiation of " + GostAbiturjahrUtils.class.getName() + " not allowed");
+	}
+
 	/**
 	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
 	 * der gymnasialen Oberstufe Abitur gemacht hat, macht oder machen wird. Hierbei wird für die

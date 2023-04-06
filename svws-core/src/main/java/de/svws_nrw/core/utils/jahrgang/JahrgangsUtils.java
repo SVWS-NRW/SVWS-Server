@@ -9,6 +9,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class JahrgangsUtils {
 
+	private JahrgangsUtils() {
+		throw new IllegalStateException("Instantiation of " + JahrgangsUtils.class.getName() + " not allowed");
+	}
+
 	/**
 	 * Bestimmt für die angegebene Schulform, die übergebene Schulgliederung (auch beim Schüler eingetragenen Schulgliederung)
 	 * und den angegebenen Jahrgang die restlichen Jahre an der Schule.

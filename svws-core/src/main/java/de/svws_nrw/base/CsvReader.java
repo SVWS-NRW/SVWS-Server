@@ -24,6 +24,9 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
  * Diese Klasse stellt Hilfsmethoden zum Zugriff auf CSV-Dateien zur Verfügung.
  */
 public class CsvReader {
+	private CsvReader() {
+		throw new IllegalStateException("Instantiation of " + CsvReader.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Diese Methode ermittelt für den angebenen String location ein

@@ -19,6 +19,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class SprachendatenUtils {
 
+	private SprachendatenUtils() {
+		throw new IllegalStateException("Instantiation of " + SprachendatenUtils.class.getName() + " not allowed");
+	}
+
     /**
      * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache existiert.
      *

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { GostStatistikFachwahl } from '../../../core/data/gost/GostStatistikFachwahl';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostStatistikFachwahlHalbjahr } from '../../../core/data/gost/GostStatistikFachwahlHalbjahr';
@@ -6,8 +7,9 @@ import { GostStatistikFachwahlHalbjahr } from '../../../core/data/gost/GostStati
 export class GostStatistikFachwahlManager extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + GostStatistikFachwahlManager.class.getName()! + " not allowed")
 	}
 
 	/**

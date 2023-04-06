@@ -1,12 +1,14 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 
 export class JahrgangsUtils extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + JahrgangsUtils.class.getName()! + " not allowed")
 	}
 
 	/**

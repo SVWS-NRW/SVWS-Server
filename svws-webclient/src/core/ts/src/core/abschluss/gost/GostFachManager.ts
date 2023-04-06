@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -7,8 +8,9 @@ import { JavaString } from '../../../java/lang/JavaString';
 export class GostFachManager extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + GostFachManager.class.getName()! + " not allowed")
 	}
 
 	/**

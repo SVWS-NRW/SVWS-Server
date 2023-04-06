@@ -13,6 +13,10 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GZip {
 
+	private GZip() {
+		throw new IllegalStateException("Instantiation of " + GZip.class.getName() + " not allowed");
+	}
+
 	/**
 	 * Komprimiert die Daten, welche in den Output-Stream schrieben werden mit dem GZip-Verfahren
 	 *

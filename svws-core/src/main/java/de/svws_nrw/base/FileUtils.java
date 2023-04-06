@@ -13,7 +13,9 @@ import java.nio.file.Files;
  * Diese Klasse beinhaltet allgemeine Hilfsmethoden für den Zugriff auf Dateien
  */
 public class FileUtils {
-
+	private FileUtils() {
+		throw new IllegalStateException("Instantiation of " + FileUtils.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Diese Methode liest die angegebene UTF8-kodierte Text-Datei aus und speichert die

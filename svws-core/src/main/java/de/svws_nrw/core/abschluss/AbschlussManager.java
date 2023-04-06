@@ -18,6 +18,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class AbschlussManager {
 
+	private AbschlussManager() {
+		throw new IllegalStateException("Instantiation of " + AbschlussManager.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben

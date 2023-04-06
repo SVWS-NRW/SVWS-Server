@@ -1,11 +1,13 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { Random } from '../../java/util/Random';
 
 export class KursblockungStatic extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + KursblockungStatic.class.getName()! + " not allowed")
 	}
 
 	/**

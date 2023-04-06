@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch */
 public class KursblockungStatic {
 
+	private KursblockungStatic() {
+		throw new IllegalStateException("Instantiation of " + KursblockungStatic.class.getName() + " not allowed");
+	}
+
 	/** Erzeugt ein Array der Größe {@code n}, füllt es mit den Zahlen {@code 0 bis n-1} und permutiert das Array dann
 	 * zufällig.
 	 *

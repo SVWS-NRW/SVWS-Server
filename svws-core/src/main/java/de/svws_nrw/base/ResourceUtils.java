@@ -27,6 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ResourceUtils {
 
+	private ResourceUtils() {
+		throw new IllegalStateException("Instantiation of " + ResourceUtils.class.getName() + " not allowed");
+	}
+
+
 	/** Eine Map für die bereits geöffneten Jar-Dateisysteme */
 	private static HashMap<String, FileSystem> jarFS = new HashMap<>();
 

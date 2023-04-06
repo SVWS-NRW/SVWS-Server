@@ -1,11 +1,13 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { JavaString } from '../../java/lang/JavaString';
 
 export class AdressenUtils extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + AdressenUtils.class.getName()! + " not allowed")
 	}
 
 	/**

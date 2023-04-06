@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostStatistikFachwahlManager {
 
+	private GostStatistikFachwahlManager() {
+		throw new IllegalStateException("Instantiation of " + GostStatistikFachwahlManager.class.getName() + " not allowed");
+	}
+
 	/**
 	 * Aktualisiert die Informationen zu einer Fachwahl in dem angegebenen Halbjahr anhand der übergebenen Fachwahl
 	 *

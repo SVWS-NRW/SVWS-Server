@@ -12,7 +12,9 @@ import jakarta.validation.constraints.NotNull;
  * auch wiederverwendbare Methoden zur Verfügung.
  */
 public class AbschlussManagerBerufsbildend {
-
+	private AbschlussManagerBerufsbildend() {
+		throw new IllegalStateException("Instantiation of " + AbschlussManagerBerufsbildend.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Erzeugt ein Ergebnis der Abschlussberechnung unter Angabe, ob dieser erworben

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
@@ -6,8 +7,9 @@ import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 export class GostAbiturjahrUtils extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + GostAbiturjahrUtils.class.getName()! + " not allowed")
 	}
 
 	/**

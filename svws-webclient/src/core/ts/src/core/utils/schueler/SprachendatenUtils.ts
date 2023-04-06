@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
 import { Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
@@ -11,8 +12,9 @@ import { Comparator } from '../../../java/util/Comparator';
 export class SprachendatenUtils extends JavaObject {
 
 
-	public constructor() {
+	private constructor() {
 		super();
+		throw new IllegalStateException("Instantiation of " + SprachendatenUtils.class.getName()! + " not allowed")
 	}
 
 	/**
