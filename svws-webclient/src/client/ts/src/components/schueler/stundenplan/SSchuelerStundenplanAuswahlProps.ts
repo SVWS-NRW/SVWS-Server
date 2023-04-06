@@ -1,7 +1,7 @@
-import { StundenplanListeEintrag, List } from "@svws-nrw/svws-core";
+import { StundenplanListeEintrag } from "@svws-nrw/svws-core";
 
 export interface SchuelerStundenplanAuswahlProps {
 	stundenplan: StundenplanListeEintrag | undefined;
-	stundenplaene: List<StundenplanListeEintrag>;
-	setStundenplan: (value: StundenplanListeEintrag | undefined) => Promise<void>;
+	mapStundenplaene: Map<number, StundenplanListeEintrag>;
+	gotoStundenplan: (value: StundenplanListeEintrag | undefined) => Promise<void>;
 }
