@@ -1,8 +1,8 @@
 <script setup lang="ts">
-	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport, Transition } from "vue";
+	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
 	import { genId } from "../../utils";
 	import TextInput from "./SvwsUiTextInput.vue";
-	import {useFloating, autoUpdate, flip, offset, shift, size} from "@floating-ui/vue";
+	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 
 	type Item = Record<string, any>;
 
@@ -59,7 +59,7 @@
 	});
 
 	// Input element
-	const inputEl = ref<null | typeof TextInput>(null);
+	const inputEl = ref(null);
 	const inputElTags = ref(null);
 	const hasFocus = ref(false);
 	const searchText = ref("");
@@ -148,7 +148,8 @@
 			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
-		void nextTick(() => inputEl.value?.input.focus());
+		const input: typeof TextInput = inputEl.value!;
+		void nextTick(() => input?.focus());
 	}
 
 	function closeListbox() {
@@ -326,10 +327,9 @@
 			</div>
 		</div>
 		<Teleport to="body">
-			<div v-show="showList" class="multiselect--items-wrapper" :style="{ position: strategy, top: floatingTop, left: floatingLeft, width: inputWidth }"
-				 ref="floating">
-				<ul
-					:id="listIdPrefix"
+			<div v-show="showList" class="multiselect--items-wrapper" :style="{ position: strategy, top: floatingTop, left: floatingLeft }"
+				ref="floating">
+				<ul :id="listIdPrefix"
 					class="multiselect--items-list"
 					:class="{'multiselect--items-list--tags' : tags}"
 					role="listbox"
@@ -341,17 +341,17 @@
 						role="option"
 						class="multiselect--item"
 						:class="{
-						active: activeItemIndex === index,
-						selected: selectedItemList.has(item)
-					}"
+							active: activeItemIndex === index,
+							selected: selectedItemList.has(item)
+						}"
 						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
 						@mousedown.prevent
 						@click="
-						() => {
-							selectItem(item);
-							!tags && closeListbox();
-						}
-					">
+							() => {
+								selectItem(item);
+								!tags && closeListbox();
+							}
+						">
 						{{ itemText(item) }}
 					</li>
 				</ul>
