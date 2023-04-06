@@ -1,8 +1,18 @@
 <script setup lang="ts">
-	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
-	import { genId } from "../../utils";
+	import {
+		type PropType,
+		type ComputedRef,
+		computed,
+		nextTick,
+		ref,
+		shallowReactive,
+		shallowRef,
+		watch,
+		Teleport
+	} from "vue";
+	import {genId} from "../../utils";
 	import type TextInput from "./SvwsUiTextInput.vue";
-	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
+	import {useFloating, autoUpdate, flip, offset, shift, size} from "@floating-ui/vue";
 
 	type Item = Record<string, any>;
 
@@ -214,8 +224,8 @@
 		}
 	}
 
-	function onSpace (e: InputEvent) {
-		if (!props.autocomplete)	{
+	function onSpace(e: InputEvent) {
+		if (!props.autocomplete) {
 			e.preventDefault();
 			if (!showList.value) {
 				openListbox();
@@ -244,7 +254,7 @@
 		{
 			placement: 'bottom',
 			middleware: [flip(), shift(), offset(2), size({
-				apply({ rects, elements }) {
+				apply({rects, elements}) {
 					Object.assign(elements.floating.style, {
 						width: `${rects.reference.width}px`
 					});
@@ -259,7 +269,8 @@
 </script>
 
 <template>
-	<div class="wrapper" :class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList }">
+	<div class="wrapper"
+		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList }">
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
@@ -293,13 +304,14 @@
 					@keydown.space="onSpace"
 					:rounded="rounded" />
 			</div>
-			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}" @click.self="toggleListbox" ref="inputElTags">
+			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}"
+				@click.self="toggleListbox" ref="inputElTags">
 				<div class="tag-list" @click.self="toggleListbox">
 					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
 						<span class="tag-badge">
 							<span>{{ itemText(item) }}</span>
-							<span class="tag-remove ml-1" @click="removeTag(item)">
+							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen">
 								<svws-ui-icon>
 									<i-ri-close-line />
 								</svws-ui-icon>
@@ -319,19 +331,22 @@
 			</div>
 			<div class="dropdown-icon" @click="toggleListbox">
 				<svws-ui-icon>
-					<i-ri-arrow-up-s-line v-if="showList" class="pb-0.5" />
-					<i-ri-arrow-down-s-line v-else class="pt-0.5" />
+					<i-ri-expand-up-down-fill />
 				</svws-ui-icon>
 			</div>
 		</div>
 		<Teleport to="body">
-			<div v-show="showList" class="multiselect--items-wrapper" :style="{ position: strategy, top: floatingTop, left: floatingLeft }"
+			<div v-show="showList" class="multiselect--items-wrapper"
+				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 				ref="floating">
 				<ul :id="listIdPrefix"
 					class="multiselect--items-list"
 					:class="{'multiselect--items-list--tags' : tags}"
 					role="listbox"
 					@mouseenter="activeItemIndex = -1">
+					<span v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
+						Keine Ergebnisse
+					</span>
 					<li v-for="(item, index) in filteredList"
 						:id="`${listIdPrefix}-${index}`"
 						:key="index"
@@ -351,6 +366,7 @@
 							}
 						">
 						{{ itemText(item) }}
+						<i-ri-check-line v-if="selectedItemList.has(item)" class="opacity-50" />
 					</li>
 				</ul>
 			</div>
@@ -382,7 +398,11 @@
 	&.with-value,
 	&:focus-within {
 		@apply border-opacity-100;
+	}
 
+	&.with-open-list,
+	&:focus-within,
+	&:hover {
 		.dropdown-icon {
 			@apply opacity-100;
 		}
@@ -444,16 +464,18 @@
 	}
 
 	.icon {
-		@apply py-0.5;
-		font-size: 1.2em;
+		@apply py-1;
+		@apply rounded;
+		font-size: 1.1em;
 	}
 
 	&:hover .icon {
-		@apply bg-black text-white rounded;
+		@apply bg-black text-white;
 	}
 
 	.multiselect-input-component--disabled & {
 		@apply pointer-events-none;
+		@apply opacity-10 !important;
 	}
 }
 
@@ -463,32 +485,32 @@
 
 .multiselect--items-wrapper {
 	@apply absolute z-50 w-full min-w-[11rem];
-	@apply rounded-md border border-black bg-white;
+	@apply rounded-md border border-black/25 bg-white;
 	@apply shadow-xl shadow-black/25;
 	@apply overflow-hidden;
 }
 
 .multiselect--items-list {
 	@apply overflow-y-auto overflow-x-hidden;
-	@apply py-1 px-2;
+	@apply px-1.5 py-0.5;
 	max-height: 40ex;
 
 	.multiselect--item {
 		@apply text-black bg-white rounded border border-transparent;
 		@apply text-base;
-		@apply py-2 my-1 px-2;
+		@apply py-1 my-1 px-2;
 
 		&.active {
-			@apply ring ring-primary ring-opacity-25 border-primary;
+			@apply ring ring-primary ring-opacity-50 border-primary bg-primary text-white;
 		}
 
 		&:hover {
 			@apply cursor-pointer;
-			@apply border-primary text-primary;
+			@apply bg-primary text-white;
 		}
 
 		&.selected {
-			@apply font-bold text-primary bg-primary bg-opacity-5;
+			@apply font-bold bg-primary text-white flex w-full items-center justify-between gap-1;
 		}
 	}
 
@@ -501,6 +523,10 @@
 			&:hover,
 			&.active {
 				@apply border-black text-black bg-transparent;
+
+				svg {
+					@apply hidden;
+				}
 
 				&:after {
 					@apply opacity-75 font-normal;
@@ -560,8 +586,7 @@
 	@apply inline-block mt-0 cursor-pointer;
 }
 
-.tag-remove .icon:hover,
-.remove-icon:hover .icon {
+.tag-remove .icon:hover {
 	@apply bg-black text-white rounded;
 }
 
@@ -569,8 +594,13 @@
 	@apply absolute p-1 inset-y-0;
 	@apply cursor-pointer;
 	@apply flex items-center justify-center;
-	right: 1.65rem;
-	font-size: 0.8rem;
+	@apply opacity-50;
+	right: 1.5em;
+	font-size: 1em;
+
+	&:hover {
+		@apply opacity-100 text-error;
+	}
 
 	.icon {
 		@apply rounded-full;
