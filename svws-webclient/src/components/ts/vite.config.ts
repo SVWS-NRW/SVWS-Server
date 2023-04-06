@@ -20,8 +20,10 @@ export default defineConfig({
 		Vue(),
 		Components({
 			resolvers: [IconsResolver()],
-			dirs: [ 'src/components', ],
-			globs: ["src/components/**/!(*story.vue)*.vue"],
+			dirs: [
+				'src/components',
+				resolve(__dirname, '../../ui/ts/src/components')
+			],
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		}),
