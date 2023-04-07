@@ -129,7 +129,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 						return null;
 					final GELeistungsdifferenzierteKursart kursart = "E".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.E
 							: "G".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.G : GELeistungsdifferenzierteKursart.Sonstige;
-					final boolean istFremdsprache = fach.IstFremdsprache == null ? false : fach.IstFremdsprache;
+					final boolean istFremdsprache = (fach.IstFremdsprache != null) && fach.IstFremdsprache;
 					final Note note = l.NotenKrz;
 					if (note == null)
 						return null;

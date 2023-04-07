@@ -125,7 +125,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return true, falls sie übereinstimmen und ansonsten false
 	 */
 	public boolean equals(final int revision) {
-		return (this.revision == null) ? false : (this.revision == revision);
+		return (this.revision != null) && (this.revision == revision);
 	}
 
 

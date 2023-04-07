@@ -889,7 +889,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private boolean pruefeVersion(final String tabname, final long version) {
 		final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
-		return (v == null) || (v.Version == null) ? false : v.Version == version;
+		if ((v == null) || (v.Version == null))
+			return false;
+		return v.Version == version;
 	}
 
 }

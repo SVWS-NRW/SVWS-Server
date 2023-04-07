@@ -98,7 +98,7 @@ public final class DataBenutzerliste extends DataManager<Long> {
 		daten.typID = b.TypID;
 		daten.anzeigename = b.AnzeigeName;
 		daten.name = b.Benutzername;
-		daten.istAdmin = b.IstAdmin == null ? false : b.IstAdmin;
+		daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
 		daten.idCredentials = b.credentialID;
 		return daten;
 	};

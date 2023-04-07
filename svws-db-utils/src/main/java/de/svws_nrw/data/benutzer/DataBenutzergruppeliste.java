@@ -91,7 +91,7 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 		final BenutzergruppeListeEintrag daten = new BenutzergruppeListeEintrag();
 		daten.id = b.ID;
 		daten.bezeichnung = b.Bezeichnung;
-		daten.istAdmin = b.IstAdmin == null ? false : b.IstAdmin;
+		daten.istAdmin = (b.IstAdmin != null) && b.IstAdmin;
 		return daten;
 	};
 

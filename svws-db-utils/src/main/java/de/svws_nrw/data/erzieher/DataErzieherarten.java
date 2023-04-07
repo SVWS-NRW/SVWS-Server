@@ -53,7 +53,7 @@ public final class DataErzieherarten extends DataManager<Long> {
     	final List<DTOErzieherart> erzieherarten = conn.queryAll(DTOErzieherart.class);
     	if (erzieherarten == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<Erzieherart> daten = erzieherarten.stream().filter(e -> e.Sichtbar != null ? e.Sichtbar : true).map(dtoMapper).collect(Collectors.toList());
+    	final List<Erzieherart> daten = erzieherarten.stream().filter(e -> (e.Sichtbar != null) ? e.Sichtbar : true).map(dtoMapper).collect(Collectors.toList());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

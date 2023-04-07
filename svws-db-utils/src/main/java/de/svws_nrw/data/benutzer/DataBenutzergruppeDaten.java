@@ -99,7 +99,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         // Bestimme die Benutzergruppe
         final DTOBenutzergruppe benutzergruppe = getDTO(id);
         final BenutzergruppenManager manager = new BenutzergruppenManager(benutzergruppe.ID, benutzergruppe.Bezeichnung);
-        manager.setAdmin(benutzergruppe.IstAdmin == null ? false : benutzergruppe.IstAdmin);
+        manager.setAdmin((benutzergruppe.IstAdmin != null) && benutzergruppe.IstAdmin);
         // Lese die Kompetenzen der Gruppe ein
         final List<Long> kompetenzIDs = conn
                 .queryNamed("DTOBenutzergruppenKompetenz.gruppe_id", benutzergruppe.ID,

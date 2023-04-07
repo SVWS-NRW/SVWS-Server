@@ -136,10 +136,11 @@ public final class DBSchemaStatus {
 			}
 			dto = conn.queryNative(sql, DTODBVersion.class).stream().findFirst().orElse(null);
 		}
-		return new DBSchemaVersion(
-			(dto == null) || (dto.Revision == null) ? null : ((dto.Revision < 0) ? null : dto.Revision),
-			(dto == null) ? true : dto.IsTainted
-		);
+		Long revision = null;
+		if ((dto != null) && (dto.Revision != null) && (dto.Revision >= 0))
+			revision = dto.Revision;
+		final boolean isTainted = (dto == null) || dto.IsTainted;
+		return new DBSchemaVersion(revision, isTainted);
 	}
 
 
@@ -192,7 +193,9 @@ public final class DBSchemaStatus {
 			return false;
 		try (DBEntityManager conn = user.getEntityManager()) {
 			final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
-			return (spalten == null) ? false : (spalten.containsKey(colname.toLowerCase()));
+			if (spalten == null)
+				return false;
+			return spalten.containsKey(colname.toLowerCase());
 		}
 	}
 

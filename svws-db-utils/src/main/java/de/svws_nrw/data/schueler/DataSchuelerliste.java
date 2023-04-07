@@ -48,27 +48,27 @@ public final class DataSchuelerliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		Long abschnitt = this.abschnitt;
-		if (abschnitt == null) {
+		Long tmpAbschnitt = this.abschnitt;
+		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
 				return OperationError.NOT_FOUND.getResponse();
-			abschnitt = schule.Schuljahresabschnitts_ID;
+			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(abschnitt, false);
+		final List<SchuelerListeEintrag> daten = getListeSchueler(tmpAbschnitt, false);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() {
-		Long abschnitt = this.abschnitt;
-		if (abschnitt == null) {
+		Long tmpAbschnitt = this.abschnitt;
+		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 			if (schule == null)
 				return OperationError.NOT_FOUND.getResponse();
-			abschnitt = schule.Schuljahresabschnitts_ID;
+			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
-		final List<SchuelerListeEintrag> daten = getListeSchueler(abschnitt, true);
+		final List<SchuelerListeEintrag> daten = getListeSchueler(tmpAbschnitt, true);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

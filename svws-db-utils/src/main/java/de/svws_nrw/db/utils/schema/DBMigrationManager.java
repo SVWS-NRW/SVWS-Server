@@ -459,27 +459,31 @@ public final class DBMigrationManager {
 			final List<Field> fields = Arrays.asList(dtoClass.getDeclaredFields())
 					.stream().filter(f -> {
 						final var col_annotation = f.getAnnotation(Column.class);
-						return col_annotation == null ? false : spaltenIst.contains(col_annotation.name()) || spaltenIst.contains(col_annotation.name().toUpperCase());
+						if (col_annotation == null)
+							return false;
+						return spaltenIst.contains(col_annotation.name()) || spaltenIst.contains(col_annotation.name().toUpperCase());
 					})
-					.collect(Collectors.toList());
+					.toList();
 			final List<Field> missing_fields = Arrays.asList(dtoClass.getDeclaredFields())
 					.stream().filter(f ->  {
 						final var col_annotation = f.getAnnotation(Column.class);
-					    return col_annotation == null ? false : !spaltenIst.contains(col_annotation.name()) && !spaltenIst.contains(col_annotation.name().toUpperCase());
+						if (col_annotation == null)
+							return false;
+					    return !spaltenIst.contains(col_annotation.name()) && !spaltenIst.contains(col_annotation.name().toUpperCase());
 					})
-					.collect(Collectors.toList());
+					.toList();
 			fields.stream().forEach(f -> f.setAccessible(true));
 			missing_fields.stream().forEach(f -> f.setAccessible(true));
 			String jpql = "SELECT " + fields.stream().map(f -> "e." + f.getName()).collect(Collectors.joining(",")) + " FROM " + dtoClass.getSimpleName() + " e";
-			if (tab.pkSpalten().size() > 0) {
+			if (!tab.pkSpalten().isEmpty()) {
 				final List<SchemaTabelleSpalte> pkSpalten = tab.pkSpalten().stream().filter(col -> spaltenIst.contains(col.name())).collect(Collectors.toList());
-				if (pkSpalten.size() > 0) {
+				if (!pkSpalten.isEmpty()) {
 					jpql += " WHERE " + pkSpalten.stream()
 							.map(col -> "e." + col.javaAttributName() + " IS NOT NULL")
 							.collect(Collectors.joining(" AND "));
 				}
 				if ((filterSchulNummer != null) && spaltenIst.contains("SchulnrEigner")) {
-					jpql += ((pkSpalten.size() > 0) ? " AND " : " WHERE ") +  "(e.SchulnrEigner = " + filterSchulNummer + "";
+					jpql += ((!pkSpalten.isEmpty()) ? " AND " : " WHERE ") +  "(e.SchulnrEigner = " + filterSchulNummer + "";
 					if (!"Users".equals(tab.name()) && (!"Logins".equals(tab.name())))
 						jpql += " OR e.SchulnrEigner = 0";
 					jpql += ")";
