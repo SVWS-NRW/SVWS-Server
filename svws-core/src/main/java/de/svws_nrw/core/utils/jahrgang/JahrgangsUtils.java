@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse stellt Hilfsmethoden in Bezug auf Jahrgänge zur Verfügung.
  */
-public class JahrgangsUtils {
+public final class JahrgangsUtils {
 
 	private JahrgangsUtils() {
 		throw new IllegalStateException("Instantiation of " + JahrgangsUtils.class.getName() + " not allowed");

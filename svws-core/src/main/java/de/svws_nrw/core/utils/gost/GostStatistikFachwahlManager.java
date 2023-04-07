@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klassen bietet Hilfsmethoden für den Zugriff auf Daten des
  * Typs {@link GostStatistikFachwahl}.
  */
-public class GostStatistikFachwahlManager {
+public final class GostStatistikFachwahlManager {
 
 	private GostStatistikFachwahlManager() {
 		throw new IllegalStateException("Instantiation of " + GostStatistikFachwahlManager.class.getName() + " not allowed");

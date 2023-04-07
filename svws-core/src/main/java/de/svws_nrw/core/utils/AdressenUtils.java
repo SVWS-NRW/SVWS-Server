@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
  * Die Klasse stellt Hilfsmethoden rund um die Handhabung von
  * Addressen zur Verfügung
  */
-public class AdressenUtils {
+public final class AdressenUtils {
 	private AdressenUtils() {
 		throw new IllegalStateException("Instantiation of " + AdressenUtils.class.getName() + " not allowed");
 	}

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse bietet statische Helfer-Methoden an.
  *
  * @author Benjamin A. Bartsch */
-public class KursblockungStatic {
+public final class KursblockungStatic {
 
 	private KursblockungStatic() {
 		throw new IllegalStateException("Instantiation of " + KursblockungStatic.class.getName() + " not allowed");

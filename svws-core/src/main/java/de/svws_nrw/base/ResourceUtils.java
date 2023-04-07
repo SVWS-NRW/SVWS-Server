@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Eine Klasse mit Hilfsfunktionen zum Zugriff auf Java-Resourcen
  */
-public class ResourceUtils {
+public final class ResourceUtils {
 
 	private ResourceUtils() {
 		throw new IllegalStateException("Instantiation of " + ResourceUtils.class.getName() + " not allowed");

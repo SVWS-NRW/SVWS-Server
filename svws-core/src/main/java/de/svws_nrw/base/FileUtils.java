@@ -12,7 +12,7 @@ import java.nio.file.Files;
 /**
  * Diese Klasse beinhaltet allgemeine Hilfsmethoden für den Zugriff auf Dateien
  */
-public class FileUtils {
+public final class FileUtils {
 	private FileUtils() {
 		throw new IllegalStateException("Instantiation of " + FileUtils.class.getName() + " not allowed");
 	}

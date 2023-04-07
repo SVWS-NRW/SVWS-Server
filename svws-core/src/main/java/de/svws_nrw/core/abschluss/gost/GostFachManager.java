@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klassen stellt Methoden zum Zugriff auf DTO-Objekte der Klasse
  * {@link GostFach} zur Verfügung.
  */
-public class GostFachManager {
+public final class GostFachManager {
 
 	private GostFachManager() {
 		throw new IllegalStateException("Instantiation of " + GostFachManager.class.getName() + " not allowed");

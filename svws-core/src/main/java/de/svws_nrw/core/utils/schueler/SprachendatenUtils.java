@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt Methoden zur Verfügung um Daten zur Sprachenfolge und den Sprachprüfungen zu
  * bearbeiten und Auswertungen durchzuführen.
  */
-public class SprachendatenUtils {
+public final class SprachendatenUtils {
 
 	private SprachendatenUtils() {
 		throw new IllegalStateException("Instantiation of " + SprachendatenUtils.class.getName() + " not allowed");

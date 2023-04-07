@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse stellt Hilfsmethoden in Bezug auf Abitur-Jahrgänge der gymnasialen Oberstufe zur Verfügung.
  */
-public class GostAbiturjahrUtils {
+public final class GostAbiturjahrUtils {
 
 	private GostAbiturjahrUtils() {
 		throw new IllegalStateException("Instantiation of " + GostAbiturjahrUtils.class.getName() + " not allowed");

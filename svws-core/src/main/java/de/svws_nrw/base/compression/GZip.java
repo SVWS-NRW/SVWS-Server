@@ -11,7 +11,7 @@ import java.util.zip.GZIPOutputStream;
  * Diese Klasse stellt Methoden zum Komprimieren und Dekomprimieren
  * von Daten mithilfe des GZip-Verfahrens zur Verfügung.
  */
-public class GZip {
+public final class GZip {
 
 	private GZip() {
 		throw new IllegalStateException("Instantiation of " + GZip.class.getName() + " not allowed");

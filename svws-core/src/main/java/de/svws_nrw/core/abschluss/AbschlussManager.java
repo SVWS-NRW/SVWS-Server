@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * zur Abschlussberechnung und stellt insbesondere auch wiederverwendbare
  * Methoden zur Verfügung.
  */
-public class AbschlussManager {
+public final class AbschlussManager {
 
 	private AbschlussManager() {
 		throw new IllegalStateException("Instantiation of " + AbschlussManager.class.getName() + " not allowed");
