@@ -32,15 +32,15 @@ public class BenutzerKompetenzKatalogEintrag {
 	public @NotNull String bezeichnung = "";
 
 	/** Die Schulformen. */
-    @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
+    @Schema(description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
     public List<@NotNull Long> nurSchulformen = null;
+
+
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
 	 */
 	public BenutzerKompetenzKatalogEintrag() {
 	}
-
-
 
 
 	/**
@@ -51,25 +51,16 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
 	 */
-	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen) {
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe,
+			final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id;
-		//this.nurSchulformen = schulformen;
 		if (schulformen != null) {
-		  this.nurSchulformen = new Vector<>();
-		  for (final @NotNull Schulform schulform : schulformen)
-	            this.nurSchulformen.add(schulform.daten.id);
+			this.nurSchulformen = new Vector<>();
+			for (final @NotNull Schulform schulform : schulformen)
+				this.nurSchulformen.add(schulform.daten.id);
 		}
 	}
-
-
-
-
-
-
-
-
-
 
 }
