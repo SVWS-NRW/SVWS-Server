@@ -387,11 +387,9 @@ public final class SprachendatenUtils {
         if (sprachendaten == null)
             return false;
         final int anzahlSprachen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
-        if (anzahlSprachen >= 1)
-            return true;
+        return (anzahlSprachen >= 1);
         // Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
         // da Sprachfeststellungsprüfungen nur erste und zweite Sprachen (also Klasse 05 bis 07) ersetzen können.
-        return false;
     }
 
 

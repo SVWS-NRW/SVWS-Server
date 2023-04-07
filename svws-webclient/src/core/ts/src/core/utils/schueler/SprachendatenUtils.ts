@@ -298,9 +298,7 @@ export class SprachendatenUtils extends JavaObject {
 		if (sprachendaten === null)
 			return false;
 		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
-		if (anzahlSprachen >= 1)
-			return true;
-		return false;
+		return (anzahlSprachen >= 1);
 	}
 
 	/**

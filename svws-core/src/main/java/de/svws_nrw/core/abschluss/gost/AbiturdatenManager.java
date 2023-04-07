@@ -443,12 +443,14 @@ public class AbiturdatenManager {
 		if (fachbelegung == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr == null) || (belegungHalbjahr.schriftlich == null)
-				|| ((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
-						&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
-								|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
+		if ((belegungHalbjahr == null) || (belegungHalbjahr.schriftlich == null))
 			return false;
-		return true;
+		switch (schriftlichkeit) {
+			case BELIEBIG: return true;
+			case SCHRIFTLICH: return belegungHalbjahr.schriftlich;
+			case MUENDLICH: return !belegungHalbjahr.schriftlich;
+			default: return false;
+		}
 	}
 
 

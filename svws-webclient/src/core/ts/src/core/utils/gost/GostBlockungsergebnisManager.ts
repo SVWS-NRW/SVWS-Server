@@ -1483,9 +1483,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const text : string = pSubString.toLowerCase();
 		if (JavaString.contains(schueler.nachname.toLowerCase(), text))
 			return true;
-		if (JavaString.contains(schueler.vorname.toLowerCase(), text))
-			return true;
-		return false;
+		return (JavaString.contains(schueler.vorname.toLowerCase(), text));
 	}
 
 	/**

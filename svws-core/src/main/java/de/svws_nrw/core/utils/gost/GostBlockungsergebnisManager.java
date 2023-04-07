@@ -1553,9 +1553,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull String text = pSubString.toLowerCase();
 		if (schueler.nachname.toLowerCase().contains(text))
 			return true;
-		if (schueler.vorname.toLowerCase().contains(text))
-			return true;
-		return false;
+		return (schueler.vorname.toLowerCase().contains(text));
 	}
 
 	/**

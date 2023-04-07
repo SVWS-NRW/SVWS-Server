@@ -80,10 +80,7 @@ export class Variable extends JavaObject {
 			console.log(JSON.stringify("FEHLER: Dieser Fall darf gar nicht passieren."));
 			return true;
 		}
-		if ((this.negation !== null) && (this.negation.statSatFree[0][1] > 0)) {
-			return true;
-		}
-		return false;
+		return ((this.negation !== null) && (this.negation.statSatFree[0][1] > 0));
 	}
 
 	/**

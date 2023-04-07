@@ -89,10 +89,7 @@ public class Variable {
 			return true;
 		}
 		// Negation ist in einer 1-CNF-Klausel --> diese Variable darf nicht TRUE sein.
-		if ((negation != null) && (negation.statSatFree[0][1] > 0)) {
-			return true;
-		}
-		return false;
+		return ((negation != null) && (negation.statSatFree[0][1] > 0));
 	}
 
 	/**
