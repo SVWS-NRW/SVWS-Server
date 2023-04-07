@@ -30,9 +30,9 @@ public class BenutzerKompetenzKatalogEintrag {
 	/** Die Bezeichnung der Benutzerkompetenz. */
 	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example = "Ansehen")
 	public @NotNull String bezeichnung = "";
-	
+
 	/** Die Schulformen. */
-    @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example="Liste")
+    @Schema(required = true, description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
     public List<@NotNull Long> nurSchulformen = null;
 	/**
 	 * Erstellt einen Eintrag mit Standardwerten
@@ -41,8 +41,8 @@ public class BenutzerKompetenzKatalogEintrag {
 	}
 
 
-	
-	
+
+
 	/**
 	 * Erstellt einen Eintrag mit den angegebenen Werten
 	 *
@@ -51,25 +51,25 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
 	 */
-	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen ) {
+	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull String bezeichnung,  final List<@NotNull Schulform> schulformen) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
-		this.gruppe_id = gruppe.daten.id; 
+		this.gruppe_id = gruppe.daten.id;
 		//this.nurSchulformen = schulformen;
-		if(schulformen != null) {
-		  this.nurSchulformen =new Vector<>();
+		if (schulformen != null) {
+		  this.nurSchulformen = new Vector<>();
 		  for (final @NotNull Schulform schulform : schulformen)
 	            this.nurSchulformen.add(schulform.daten.id);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
 }
