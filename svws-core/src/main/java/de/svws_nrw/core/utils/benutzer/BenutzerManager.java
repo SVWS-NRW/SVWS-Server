@@ -355,7 +355,7 @@ public class BenutzerManager {
         this._daten.kompetenzen.removeElement(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz);
         final @NotNull List<@NotNull BenutzergruppeDaten> gruppen = getGruppen(kompetenz);
-        if (gruppen.size() == 0)
+        if (gruppen.isEmpty())
             _setKompetenzenAlle.remove(kompetenz);
     }
 

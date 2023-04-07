@@ -53,7 +53,7 @@ export class AbschlussManager extends JavaObject {
 		const ergebnis : AbschlussErgebnis = new AbschlussErgebnis();
 		ergebnis.abschluss = abschluss === null ? null : abschluss.toString();
 		ergebnis.erworben = false;
-		if ((npFaecher === null) || (npFaecher.size() === 0))
+		if ((npFaecher === null) || (npFaecher.isEmpty()))
 			ergebnis.npFaecher = null;
 		else
 			ergebnis.npFaecher = npFaecher;
@@ -70,7 +70,7 @@ export class AbschlussManager extends JavaObject {
 	 * @return true, falls eine Nachprüfungsmöglichkeit besteht, sonst false
 	 */
 	public static hatNachpruefungsmoeglichkeit(ergebnis : AbschlussErgebnis) : boolean {
-		return (ergebnis.npFaecher !== null) && ergebnis.npFaecher.size() > 0;
+		return (ergebnis.npFaecher !== null) && !ergebnis.npFaecher.isEmpty();
 	}
 
 	/**

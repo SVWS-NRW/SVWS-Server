@@ -152,7 +152,7 @@ export class SprachendatenUtils extends JavaObject {
 				}
 			}
 		}
-		if (belegungen.size() > 0) {
+		if (!belegungen.isEmpty()) {
 			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.getJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.getJahrgangNumerisch(b.belegungVonJahrgang)) };
 			belegungen.sort(comparator);
 		}
@@ -349,7 +349,7 @@ export class SprachendatenUtils extends JavaObject {
 		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
-			if (sprachbelegungen.size() > 0)
+			if (!sprachbelegungen.isEmpty())
 				return sprachbelegungen.get(0).sprache;
 		}
 		return null;
@@ -413,9 +413,8 @@ export class SprachendatenUtils extends JavaObject {
 		const belegungen : Vector<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : Vector<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
-			if (sprachbelegungen.size() > 0) {
+			if (!sprachbelegungen.isEmpty())
 				return sprachbelegungen.get(0).sprache;
-			}
 		}
 		return null;
 	}

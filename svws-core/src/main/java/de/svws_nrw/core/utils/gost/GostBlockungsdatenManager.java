@@ -31,14 +31,12 @@ import jakarta.validation.constraints.NotNull;
 public class GostBlockungsdatenManager {
 
 	/** Ein Comparator für Schienen der Blockung */
-	private static final @NotNull Comparator<@NotNull GostBlockungSchiene> compSchiene = (
-			final @NotNull GostBlockungSchiene a, final @NotNull GostBlockungSchiene b) -> {
-		return Integer.compare(a.nummer, b.nummer);
-	};
+	private static final @NotNull Comparator<@NotNull GostBlockungSchiene> compSchiene =
+			(final @NotNull GostBlockungSchiene a, final @NotNull GostBlockungSchiene b) -> Integer.compare(a.nummer, b.nummer);
 
 	/** Ein Comparator für Regeln der Blockung */
-	private static final @NotNull Comparator<@NotNull GostBlockungRegel> compRegel = (final @NotNull GostBlockungRegel a,
-			final @NotNull GostBlockungRegel b) -> {
+	private static final @NotNull Comparator<@NotNull GostBlockungRegel> compRegel =
+			(final @NotNull GostBlockungRegel a, final @NotNull GostBlockungRegel b) -> {
 		final int result = Integer.compare(a.typ, b.typ);
 		if (result != 0)
 			return result;
@@ -46,8 +44,8 @@ public class GostBlockungsdatenManager {
 	};
 
 	/** Ein Comparator für die Lehrkräfte eines Kurses */
-	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> compLehrkraefte = (
-			final @NotNull GostBlockungKursLehrer a, final @NotNull GostBlockungKursLehrer b) -> {
+	private static final @NotNull Comparator<@NotNull GostBlockungKursLehrer> compLehrkraefte =
+			(final @NotNull GostBlockungKursLehrer a, final @NotNull GostBlockungKursLehrer b) -> {
 		final int result = Integer.compare(a.reihenfolge, b.reihenfolge);
 		if (result != 0)
 			return result;

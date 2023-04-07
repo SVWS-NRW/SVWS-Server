@@ -20,7 +20,7 @@ public class GostFaecherManager {
 	// TODO create a class for a LinkedCollection with HashMap functionalities and refactor this class
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
-	public static @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
+	public static final @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
 		final int va = (a == null) ? Integer.MIN_VALUE : a.sortierung;
 		final int vb = (b == null) ? Integer.MIN_VALUE : b.sortierung;
 		return Integer.compare(va, vb);
@@ -141,7 +141,7 @@ public class GostFaecherManager {
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public boolean isEmpty() {
-		return _faecher.size() <= 0;
+		return _faecher.isEmpty();
 	}
 
 

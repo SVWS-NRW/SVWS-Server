@@ -58,7 +58,7 @@ public final class AbschlussManager {
 		final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
 		ergebnis.abschluss = abschluss == null ? null : abschluss.toString();
 		ergebnis.erworben = false;
-		if ((npFaecher == null) || (npFaecher.size() == 0))
+		if ((npFaecher == null) || (npFaecher.isEmpty()))
 			ergebnis.npFaecher = null;
 		else
 			ergebnis.npFaecher = npFaecher;
@@ -76,7 +76,7 @@ public final class AbschlussManager {
 	 * @return true, falls eine Nachprüfungsmöglichkeit besteht, sonst false
 	 */
 	public static boolean hatNachpruefungsmoeglichkeit(final @NotNull AbschlussErgebnis ergebnis) {
-		return (ergebnis.npFaecher != null) && ergebnis.npFaecher.size() > 0;
+		return (ergebnis.npFaecher != null) && !ergebnis.npFaecher.isEmpty();
 	}
 
 

@@ -256,7 +256,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	private pruefeFG2(faecher : AbschlussFaecherGruppen, logIndent : string, npFaecher : List<GEAbschlussFach>, benoetige3er : number, ignorierenGenutzt : boolean, ausgleichGenutzt : boolean, nachpruefungGenutzt : boolean) : AbschlussErgebnis {
 		const defizite : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceAbschlussMSA.filterDefizite);
 		const mangelhaft : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceAbschlussMSA.filterDefizite1NS);
-		const hat_defizit : boolean = defizite.size() > 0;
+		const hat_defizit : boolean = !defizite.isEmpty();
 		const hat_defizit_sonstige_3er : boolean = faecher.fg2.getFaecherAnzahl(ServiceAbschlussMSA.filterBenoetigte3er) < benoetige3er;
 		if ((!hat_defizit) && (!hat_defizit_sonstige_3er))
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, true);
@@ -339,7 +339,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 				}
 			}
 		}
-		if ((!nachpruefungGenutzt) && (npFaecher.size() > 0))
+		if ((!nachpruefungGenutzt) && (!npFaecher.isEmpty()))
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA, AbschlussManager.getKuerzel(npFaecher));
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 	}

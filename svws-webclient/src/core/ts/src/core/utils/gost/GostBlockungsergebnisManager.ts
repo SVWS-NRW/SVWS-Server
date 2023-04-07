@@ -503,7 +503,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl - 1);
 		const kursmenge : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
 		kursmenge.remove(pKurs);
-		if (kursmenge.size() > 0) {
+		if (!kursmenge.isEmpty()) {
 			const schieneKollisionen : number = this.getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
 			if (schieneKollisionen === 0)
 				throw new DeveloperNotificationException("schieneKollisionen == 0 --> Entfernen unmöglich!")

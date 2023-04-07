@@ -384,7 +384,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.BIL_10);
 
 		// Prüfe, ob kein bilinguales Sachfach gewählt wurde.
-		if ((biliSachfaecher == null) || (biliSachfaecher.size() < 1)) {
+		if ((biliSachfaecher == null) || (biliSachfaecher.isEmpty())) {
 			addFehler(GostBelegungsfehler.BIL_15);
 			return;
 		}
@@ -726,7 +726,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 
 		// Prüfe, ob kein bilinguales Sachfach in der EF gewählt wurde.
 		final List<AbiturFachbelegung> biliSachfaecherEF = manager.filterBelegungen(biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
-		if (biliSachfaecherEF.size() < 1) {
+		if (biliSachfaecherEF.isEmpty()) {
 			addFehler(GostBelegungsfehler.BIL_15);
 			return;
 		}

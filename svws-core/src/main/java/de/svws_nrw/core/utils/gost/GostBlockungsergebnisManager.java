@@ -528,7 +528,7 @@ public class GostBlockungsergebnisManager {
 		kursmenge.remove(pKurs);
 
 		// Kollisionen verringern?
-		if (kursmenge.size() > 0) {
+		if (!kursmenge.isEmpty()) {
 			// Kollisionen der Schiene.
 			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
 			if (schieneKollisionen == 0)

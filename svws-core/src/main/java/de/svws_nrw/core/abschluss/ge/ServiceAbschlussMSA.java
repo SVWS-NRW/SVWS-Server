@@ -305,7 +305,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 		// Prufe, ob weitere Defizite vorliegen
 		final @NotNull List<@NotNull GEAbschlussFach> defizite = faecher.fg2.getFaecher(filterDefizite);
 		final @NotNull List<@NotNull GEAbschlussFach> mangelhaft = faecher.fg2.getFaecher(filterDefizite1NS);
-		final boolean hat_defizit = defizite.size() > 0;
+		final boolean hat_defizit = !defizite.isEmpty();
 		final boolean hat_defizit_sonstige_3er = faecher.fg2.getFaecherAnzahl(filterBenoetigte3er) < benoetige3er;
 
 		if ((!hat_defizit) && (!hat_defizit_sonstige_3er))
@@ -407,7 +407,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 			}
 		}
 
-		if ((!nachpruefungGenutzt) && (npFaecher.size() > 0))
+		if ((!nachpruefungGenutzt) && (!npFaecher.isEmpty()))
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA, AbschlussManager.getKuerzel(npFaecher));
 
 		return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);

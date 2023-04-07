@@ -129,7 +129,7 @@ export class ENMDatenManager extends JavaObject {
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
 	 */
 	public addNoten() : void {
-		if (this.daten.noten.size() > 0)
+		if (!this.daten.noten.isEmpty())
 			return;
 		const noten : Array<Note> = Note.values();
 		for (let i : number = 0; i < noten.length; i++) {
@@ -151,7 +151,7 @@ export class ENMDatenManager extends JavaObject {
 	 *                    zurückgegeben werden
 	 */
 	public addFoerderschwerpunkte(schulform : Schulform) : void {
-		if (this.daten.foerderschwerpunkte.size() > 0)
+		if (!this.daten.foerderschwerpunkte.isEmpty())
 			return;
 		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
 		for (let i : number = 0; i < foerderschwerpunkte.size(); i++) {

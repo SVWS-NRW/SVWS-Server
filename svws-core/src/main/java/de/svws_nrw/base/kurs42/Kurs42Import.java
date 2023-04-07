@@ -106,13 +106,11 @@ public class Kurs42Import {
 	private final HashMap<String, Integer> counterKurse = new HashMap<>();
 
 
-	private static final Function<Kurs42DataSchueler, String> getSchuelerKey = (final Kurs42DataSchueler schueler) -> {
-		return schueler.Name + ";" + schueler.Vorname + ";" + schueler.GebDat + ";" + schueler.Geschlecht;
-	};
+	private static final Function<Kurs42DataSchueler, String> getSchuelerKey =
+			(final Kurs42DataSchueler schueler) -> schueler.Name + ";" + schueler.Vorname + ";" + schueler.GebDat + ";" + schueler.Geschlecht;
 
-	private static final Function<Kurs42DataFachwahlen, String> getSchuelerKeyFW = (final Kurs42DataFachwahlen schuelerFW) -> {
-		return schuelerFW.Name + ";" + schuelerFW.Vorname + ";" + schuelerFW.GebDat + ";" + schuelerFW.Geschlecht;
-	};
+	private static final Function<Kurs42DataFachwahlen, String> getSchuelerKeyFW =
+			(final Kurs42DataFachwahlen schuelerFW) -> schuelerFW.Name + ";" + schuelerFW.Vorname + ";" + schuelerFW.GebDat + ";" + schuelerFW.Geschlecht;
 
 	/**
 	 * Liest die Informationen aus dem Kurs-42-Text-Export unter dem

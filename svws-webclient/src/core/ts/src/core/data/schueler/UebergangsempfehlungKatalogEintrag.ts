@@ -77,7 +77,7 @@ export class UebergangsempfehlungKatalogEintrag extends JavaObject {
 				if (teilweise === null) {
 					this.schluessel += "XX";
 				} else {
-					this.schluessel += teilweise.daten.nummer.toString();
+					this.schluessel += teilweise.daten.nummer;
 				}
 			}
 			this.gueltigVon = gueltigVon;

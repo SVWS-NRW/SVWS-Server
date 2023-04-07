@@ -176,17 +176,17 @@ public class KursblockungDynDaten {
 		if (pInput.getID() < 0)
 			throw new DeveloperNotificationException("GostBlockungsdatenManager.getID() < 0");
 
-		if (pInput.daten().fachwahlen.size() <= 0)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen.size() <= 0");
+		if (pInput.daten().fachwahlen.isEmpty())
+			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen.isEmpty()");
 
-		if (pInput.faecherManager().faecher().size() <= 0)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher().size() <= 0");
+		if (pInput.faecherManager().faecher().isEmpty())
+			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher().isEmpty()");
 
 		if (GostKursart.values().length <= 0)
 			throw new DeveloperNotificationException("GostKursart.values().length <= 0");
 
-		if (pInput.daten().kurse.size() <= 0)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse.size() <= 0");
+		if (pInput.daten().kurse.isEmpty())
+			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse.isEmpty()");
 
 		final int schienenAnzahl = pInput.getSchienenAnzahl();
 		if (schienenAnzahl <= 0)

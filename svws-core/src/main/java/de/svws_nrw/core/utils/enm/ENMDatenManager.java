@@ -113,7 +113,7 @@ public class ENMDatenManager {
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
 	 */
 	public void addNoten() {
-		if (daten.noten.size() > 0)
+		if (!daten.noten.isEmpty())
 			return;
 		final @NotNull Note@NotNull[] noten = Note.values();
     	for (int i = 0; i < noten.length; i++) {
@@ -136,7 +136,7 @@ public class ENMDatenManager {
 	 *                    zurückgegeben werden
 	 */
 	public void addFoerderschwerpunkte(final @NotNull Schulform schulform) {
-		if (daten.foerderschwerpunkte.size() > 0)
+		if (!daten.foerderschwerpunkte.isEmpty())
 			return;
 		final @NotNull List<@NotNull Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
 		for (int i = 0; i < foerderschwerpunkte.size(); i++) {

@@ -193,12 +193,10 @@ public final class SprachendatenUtils {
                 }
             }
         }
-
-        if (belegungen.size() > 0) {
+        if (!belegungen.isEmpty()) {
         	final Comparator<@NotNull Sprachbelegung> comparator = (final @NotNull Sprachbelegung a, final @NotNull Sprachbelegung b) -> Integer.compare(getJahrgangNumerisch(a.belegungVonJahrgang), getJahrgangNumerisch(b.belegungVonJahrgang));
             belegungen.sort(comparator);
         }
-
         return belegungen;
     }
 
@@ -448,7 +446,7 @@ public final class SprachendatenUtils {
         if (belegungen != null) {
             // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus
             final @NotNull Vector<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
-            if (sprachbelegungen.size() > 0)
+            if (!sprachbelegungen.isEmpty())
                 return sprachbelegungen.get(0).sprache;
         }
         return null;
@@ -522,10 +520,8 @@ public final class SprachendatenUtils {
         if (belegungen != null) {
             // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus, die in Klassen 8, 9 oder 10 begonnen wurden.
         	final @NotNull Vector<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
-
-            if (sprachbelegungen.size() > 0) {
+            if (!sprachbelegungen.isEmpty())
                 return sprachbelegungen.get(0).sprache;
-            }
         }
         // Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
         // da Sprachfeststellungsprüfungen nur erste und zweite Sprachen (also Klasse 05 bis 07) ersetzen können.

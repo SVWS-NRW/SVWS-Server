@@ -267,7 +267,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if (!this.manager.pruefeBelegungDurchgehendBelegbar(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.BIL_10);
-		if ((this.biliSachfaecher === null) || (this.biliSachfaecher.size() < 1)) {
+		if ((this.biliSachfaecher === null) || (this.biliSachfaecher.isEmpty())) {
 			this.addFehler(GostBelegungsfehler.BIL_15);
 			return;
 		}
@@ -475,7 +475,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		if ((!this.manager.pruefeBelegungMitSchriftlichkeit(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2) || (!this.manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))))
 			this.addFehler(GostBelegungsfehler.BIL_10);
 		const biliSachfaecherEF : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungen(this.biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
-		if (biliSachfaecherEF.size() < 1) {
+		if (biliSachfaecherEF.isEmpty()) {
 			this.addFehler(GostBelegungsfehler.BIL_15);
 			return;
 		}

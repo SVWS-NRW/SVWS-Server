@@ -14,7 +14,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
 	 */
-	public static comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
+	public static readonly comp : Comparator<GostFach> = { compare : (a: GostFach | null, b: GostFach | null) => {
 		const va : number = (a === null) ? JavaInteger.MIN_VALUE : a.sortierung;
 		const vb : number = (b === null) ? JavaInteger.MIN_VALUE : b.sortierung;
 		return JavaInteger.compare(va, vb);
@@ -141,7 +141,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public isEmpty() : boolean {
-		return this._faecher.size() <= 0;
+		return this._faecher.isEmpty();
 	}
 
 	/**

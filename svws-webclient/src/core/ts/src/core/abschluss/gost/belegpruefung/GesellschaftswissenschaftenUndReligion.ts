@@ -141,10 +141,10 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * @param fachbelegungen   die Fachbelegung für Geschichte oder Sozialwissenschaften
 	 */
 	private pruefeZusatzkurs(fachbelegungen : List<AbiturFachbelegung> | null) : void {
-		if ((fachbelegungen === null) || (fachbelegungen.size() === 0))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
 			return;
 		const fachbelegungenZK : List<AbiturFachbelegung> | null = this.manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
-		if (fachbelegungenZK.size() === 0)
+		if (fachbelegungenZK.isEmpty())
 			return;
 		if (fachbelegungenZK.size() > 1)
 			this.addFehler(GostBelegungsfehler.ZK_13);
@@ -173,7 +173,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * Prüft, ob Geschichte korrekt belegt wurde (mind. von EF.1 bis Q1.2 oder als Zusatzkurs)
 	 */
 	private pruefeBelegungGeschichte() : void {
-		if ((this.geschichte === null) || (this.geschichte.size() <= 0)) {
+		if ((this.geschichte === null) || (this.geschichte.isEmpty())) {
 			this.addFehler(GostBelegungsfehler.GE_10);
 			return;
 		}
@@ -191,7 +191,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	 * Prüft, ob Sozialwissenschaften korrekt belegt wurde (mind. von EF.1 bis Q1.2 oder als Zusatzkurs)
 	 */
 	private pruefeBelegungSozialwissenschaften() : void {
-		if ((this.sozialwissenschaften === null) || (this.sozialwissenschaften.size() <= 0)) {
+		if ((this.sozialwissenschaften === null) || (this.sozialwissenschaften.isEmpty())) {
 			this.addFehler(GostBelegungsfehler.SW_10);
 			return;
 		}

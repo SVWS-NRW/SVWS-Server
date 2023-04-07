@@ -137,9 +137,9 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		final @NotNull List<@NotNull GEAbschlussFach> fg1_defizite = faecher.fg1.getFaecher(filterDefizite);
 		final @NotNull List<@NotNull GEAbschlussFach> fg2_defizite = faecher.fg2.getFaecher(filterDefizite);
 
-		if (fg1_defizite.size() > 0)
+		if (!fg1_defizite.isEmpty())
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(filterDefizite));
-		if (fg2_defizite.size() > 0)
+		if (!fg2_defizite.isEmpty())
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(filterDefizite));
 
 		// Prüfe, ob in FG1 oder FG2 Fächer vorhanden sind, die nicht ausgeglichen werden können und in denen keine Nachprüfung möglich ist
@@ -147,11 +147,11 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		final @NotNull List<@NotNull GEAbschlussFach> npFaecher = new Vector<>();
 		final @NotNull List<@NotNull GEAbschlussFach> fg1_nicht_ausgleichbar = faecher.fg1.getFaecher(filterFG1NichtAusgleichbar);
 		final @NotNull List<@NotNull GEAbschlussFach> fg2_nicht_ausgleichbar = faecher.fg2.getFaecher(filterFG2NichtAusgleichbar);
-		if ((fg1_nicht_ausgleichbar.size() > 0) || (fg2_nicht_ausgleichbar.size() > 0)) {
+		if ((!fg1_nicht_ausgleichbar.isEmpty()) || (!fg2_nicht_ausgleichbar.isEmpty())) {
 			final @NotNull String str_faecher = faecher.getKuerzelListe(filterFG1NichtAusgleichbar, filterFG2NichtAusgleichbar);
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> Defizit(e) in " + str_faecher + " aufgrund zu hoher Abweichungen nicht ausgleichbar.");
 			// Prüfe, ob die Besonderheit vorliegt, dass nur das leistungsdifferenzierte Fach in der FG2 um zwei Notenstufen abweicht -> Nachprüfungsmöglichkeit
-			if ((fg1_nicht_ausgleichbar.size() == 0) && (fg2_nicht_ausgleichbar.size() == 1)
+			if ((fg1_nicht_ausgleichbar.isEmpty()) && (fg2_nicht_ausgleichbar.size() == 1)
 					&& (GELeistungsdifferenzierteKursart.G.hat(fg2_nicht_ausgleichbar.get(0).kursart)) && (fg2_nicht_ausgleichbar.get(0).note == 4)) {
 				// In diesem Fall muss auf jeden Fall im leistungsdifferenzierten Fach der FG2 eine Nachprüfung stattfinden, damit ggf. die Berechtigung über die Ausgleichsregelung möglich werden kann
 				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung muss falls möglich in " + fg2_nicht_ausgleichbar.get(0).kuerzel + " stattfinden!");
@@ -171,10 +171,10 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		if ((fg1_defizite.size() > 2) || ((fg1_defizite.size() == 2) && (wp_defizit == null))) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
-		} else if ((fg1_defizite.size() == 2) && (wp_defizit != null) && (fg1_ausgleichsfaecher.size() == 0)) {
+		} else if ((fg1_defizite.size() == 2) && (wp_defizit != null) && (fg1_ausgleichsfaecher.isEmpty())) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite in FG1 - kein Ausgleich möglich");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
-		} else if ((fg1_defizite.size() == 2) && (wp_defizit != null) && (fg1_ausgleichsfaecher.size() > 0) && (!nachpruefung_genutzt)) {
+		} else if ((fg1_defizite.size() == 2) && (wp_defizit != null) && (!fg1_ausgleichsfaecher.isEmpty()) && (!nachpruefung_genutzt)) {
 			// Ausgleich in dem nicht WP-Fach
 			final GEAbschlussFach defizitFach = faecher.fg1.getFach(filterDefizitNichtWP);
 			if (defizitFach == null)
@@ -195,7 +195,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		}
 
 		// Prüfe, ob ein einzelnes, nicht-WP-Defizit ausgeglichen werden kann
-		if ((fg1_defizite.size() == 1) && (wp_defizit == null) && (fg1_ausgleichsfaecher.size() == 0)) {
+		if ((fg1_defizite.size() == 1) && (wp_defizit == null) && (fg1_ausgleichsfaecher.isEmpty())) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> kein Defizit-Ausgleich in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
@@ -214,7 +214,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		// Prüfe FG2: Ist das WP-Fach das einzige FG1-Defizit, so wird eine Fallunterscheidung nötig - Ausgleich oder Nachprüfung
 		if ((fg1_defizite.size() == 1) && (wp_defizit != null)) {
 			// Prüfe FG2 mit der Option eines Ausgleichsfaches - bestimme ggf. Nachprüfungsmöglichkeiten
-			if ((fg1_ausgleichsfaecher.size() > 0)) {
+			if (!fg1_ausgleichsfaecher.isEmpty()) {
 				// Nutze Ausgleichregelung und prüfe dann FG2 mit Nachprüfungsoption
 				final @NotNull GEAbschlussFach defizitFach = wp_defizit;
 				final @NotNull GEAbschlussFach ausgleichsFach = fg1_ausgleichsfaecher.get(0);

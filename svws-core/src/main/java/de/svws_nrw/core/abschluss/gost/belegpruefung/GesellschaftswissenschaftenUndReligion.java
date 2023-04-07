@@ -188,11 +188,11 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	 */
 	private void pruefeZusatzkurs(final List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		// Prüfe zunächst, ob das Fach überhaupt belegt wurde
-		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
+		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return;
 		// ob die Kursart "Zusatzkurs" überhaupt in einem Halbjahr gewählt wurde
 		final List<@NotNull AbiturFachbelegung> fachbelegungenZK = manager.filterBelegungKursartExistiert(fachbelegungen, GostKursart.ZK);
-		if (fachbelegungenZK.size() == 0)
+		if (fachbelegungenZK.isEmpty())
 			return;
 
 		// Prüfe, ob mehr als eine Belegung des Zusatzkurses vorliegt (z.B. durch eine Zweitbelegung in einer bilingualen Variante des Faches)
@@ -235,7 +235,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	 */
 	private void pruefeBelegungGeschichte() {
 		// Prüfe, ob überhaupt eine Belegung für Geschichte existiert
-		if ((geschichte == null) || (geschichte.size() <= 0)) {
+		if ((geschichte == null) || (geschichte.isEmpty())) {
 			addFehler(GostBelegungsfehler.GE_10);
 			return;
 		}
@@ -261,7 +261,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	 */
 	private void pruefeBelegungSozialwissenschaften() {
 		// Prüfe, ob überhaupt eine Belegung für Sozialwissenschaften existiert
-		if ((sozialwissenschaften == null) || (sozialwissenschaften.size() <= 0)) {
+		if ((sozialwissenschaften == null) || (sozialwissenschaften.isEmpty())) {
 			addFehler(GostBelegungsfehler.SW_10);
 			return;
 		}

@@ -345,7 +345,7 @@ export class BenutzerManager extends JavaObject {
 		this._daten.kompetenzen.removeElement(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
 		const gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
-		if (gruppen.size() === 0)
+		if (gruppen.isEmpty())
 			this._setKompetenzenAlle.remove(kompetenz);
 	}
 

@@ -30,9 +30,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Ein Comparator für Schienen der Blockung
 	 */
-	private static readonly compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => {
-		return JavaInteger.compare(a.nummer, b.nummer);
-	} };
+	private static readonly compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => JavaInteger.compare(a.nummer, b.nummer) };
 
 	/**
 	 * Ein Comparator für Regeln der Blockung
