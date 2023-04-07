@@ -59,7 +59,7 @@ module.exports = {
 		"@typescript-eslint/no-misused-promises": "error",
 		// Bis wir das gefixt haben, vorerst aus
 		"@typescript-eslint/no-non-null-assertion": "off",
-		"@typescript-eslint/consistent-type-imports": "warn"
+		"@typescript-eslint/consistent-type-imports": ["warn"]
 		// END
 	},
 	overrides: [
