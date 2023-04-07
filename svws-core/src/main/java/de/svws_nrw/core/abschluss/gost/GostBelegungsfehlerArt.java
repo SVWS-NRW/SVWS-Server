@@ -45,8 +45,8 @@ public enum GostBelegungsfehlerArt {
 			case "BELEGUNG": return BELEGUNG;
 			case "SCHRIFTLICHKEIT": return SCHRIFTLICHKEIT;
 			case "HINWEIS": return HINWEIS;
+			default: return null;
 		}
-		return null;
 	}
 
 

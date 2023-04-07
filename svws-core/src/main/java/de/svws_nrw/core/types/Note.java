@@ -207,8 +207,8 @@ public enum Note {
 			case 13: return SEHR_GUT_MINUS;
 			case 14: return SEHR_GUT;
 			case 15: return SEHR_GUT_PLUS;
+			default: return KEINE;
 		}
-		return KEINE;
 	}
 
 
@@ -250,8 +250,8 @@ public enum Note {
 			case "NT": return NICHT_TEILGENOMMEN;
 			case "NE": return NICHT_ERTEILT;
 			case "LM": return LEHRERMANGEL;
+			default: return KEINE;
 		}
-		return KEINE;
 	}
 
 
@@ -283,8 +283,8 @@ public enum Note {
 			case "13": return SEHR_GUT_MINUS;
 			case "14": return SEHR_GUT;
 			case "15": return SEHR_GUT_PLUS;
+			default: return KEINE;
 		}
-		return KEINE;
 	}
 
 
@@ -297,15 +297,11 @@ public enum Note {
 		if (notenpunkte == null)
 			return false;
 		switch (notenpunkte) {
-			case 0:
-			case 2:
-			case 5:
-			case 8:
-			case 11:
-			case 14:
+			case 0, 2, 5, 8, 11, 14:
 				return false;
+			default:
+				return true;
 		}
-		return true;
 	}
 
 
@@ -319,30 +315,14 @@ public enum Note {
 		if (notenpunkte == null)
 			return KEINE;
 		switch (notenpunkte) {
-			case 0:
-				return UNGENUEGEND;
-			case 1:
-			case 2:
-			case 3:
-				return MANGELHAFT;
-			case 4:
-			case 5:
-			case 6:
-				return AUSREICHEND;
-			case 7:
-			case 8:
-			case 9:
-				return BEFRIEDIGEND;
-			case 10:
-			case 11:
-			case 12:
-				return GUT;
-			case 13:
-			case 14:
-			case 15:
-				return SEHR_GUT;
+			case 0: return UNGENUEGEND;
+			case 1, 2, 3: return MANGELHAFT;
+			case 4, 5, 6: return AUSREICHEND;
+			case 7, 8, 9: return BEFRIEDIGEND;
+			case 10, 11, 12: return GUT;
+			case 13, 14, 15: return SEHR_GUT;
+			default: return KEINE;
 		}
-		return KEINE;
 	}
 
 
@@ -361,30 +341,13 @@ public enum Note {
 	@JsonIgnore
 	public Integer getNoteSekI() {
 		switch (notenpunkte) {
-			case 15:
-			case 14:
-			case 13:
-				return 1;
-			case 12:
-			case 11:
-			case 10:
-				return 2;
-			case 9:
-			case 8:
-			case 7:
-				return 3;
-			case 6:
-			case 5:
-			case 4:
-				return 4;
-			case 3:
-			case 2:
-			case 1:
-				return 5;
-			case 0:
-				return 6;
-			default:
-				return null;
+			case 15, 14, 13: return 1;
+			case 12, 11, 10: return 2;
+			case 9, 8, 7: return 3;
+			case 6, 5, 4: return 4;
+			case 3, 2, 1: return 5;
+			case 0: return 6;
+			default: return null;
 		}
 	}
 

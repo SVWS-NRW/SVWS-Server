@@ -56,8 +56,8 @@ public enum GostBesondereLernleistung {
 			case "K": return KEINE;
 			case "P": return PROJEKTKURS;
 			case "E": return EXTERNE;
+			default: return KEINE;
 		}
-		return KEINE;
 	}
 
 

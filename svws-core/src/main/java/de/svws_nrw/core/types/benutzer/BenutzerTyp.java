@@ -53,8 +53,8 @@ public enum BenutzerTyp {
 			case 1: return BenutzerTyp.LEHRER;
 			case 2: return BenutzerTyp.SCHUELER;
 			case 3: return BenutzerTyp.ERZIEHER;
+			default: return null;
 		}
-		return null;
 	}
 
 }

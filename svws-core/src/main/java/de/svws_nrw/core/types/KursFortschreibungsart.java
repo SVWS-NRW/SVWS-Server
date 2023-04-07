@@ -77,8 +77,8 @@ public enum KursFortschreibungsart {
 			case 1: return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
 			case 2: return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
 			case 3: return KursFortschreibungsart.KOMPLETT;
+			default: return KursFortschreibungsart.KEINE;
 		}
-		return KursFortschreibungsart.KEINE;
 	}
 
 
@@ -98,8 +98,8 @@ public enum KursFortschreibungsart {
 			case "D": return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_HOCHSCHREIBEN;
 			case "B": return KursFortschreibungsart.NUR_DEFINITION_JAHRGANG_BEIBEHALTEN;
 			case "K": return KursFortschreibungsart.KOMPLETT;
+			default: return KursFortschreibungsart.KEINE;
 		}
-		return KursFortschreibungsart.KEINE;
 	}
 
 

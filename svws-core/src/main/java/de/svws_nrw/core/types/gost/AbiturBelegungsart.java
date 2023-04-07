@@ -53,8 +53,8 @@ public enum AbiturBelegungsart {
 			case "-": return NICHT_BELEGT;
 			case "M": return MUENDLICH;
 			case "S": return SCHRIFTLICH;
+			default: return null;
 		}
-		return null;
 	}
 
 

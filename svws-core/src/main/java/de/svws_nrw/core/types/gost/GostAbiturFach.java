@@ -61,8 +61,8 @@ public enum GostAbiturFach {
 			case 2: return LK2;
 			case 3: return AB3;
 			case 4: return AB4;
+			default: return null;
 		}
-		return null;
 	}
 
 
@@ -81,8 +81,8 @@ public enum GostAbiturFach {
 			case "2": return LK2;
 			case "3": return AB3;
 			case "4": return AB4;
+			default: return null;
 		}
-		return null;
 	}
 
 
@@ -99,8 +99,8 @@ public enum GostAbiturFach {
 			case "LK2": return LK2;
 			case "AB3": return AB3;
 			case "AB4": return AB4;
+			default: return null;
 		}
-		return null;
 	}
 
 

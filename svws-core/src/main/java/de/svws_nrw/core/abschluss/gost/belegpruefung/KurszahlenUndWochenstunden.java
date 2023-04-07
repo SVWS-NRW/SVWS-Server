@@ -170,6 +170,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					case "PJK": stunden = (fachbelegungHalbjahr.wochenstunden == 3) ? 3 : 2; break;
 					case "VTF": stunden = 2; break;
 					case "ZK": stunden = 3; break;
+					default: stunden = 3; break;
 				}
 				final Integer wochenstundenAlt = wochenstunden.get(halbjahr);
 				wochenstunden.put(halbjahr, wochenstundenAlt == null ? stunden : wochenstundenAlt + stunden);

@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+
 /**
  * Diese Klasse dient als DTO für die INI-Datei {@code Blockung.txt} eines Kurs42-Textdatei-Exportes. In dieser
  * Datei lassen sich grundlegende Informationen zu der Blockung auslesen. Ein Großteil der Informationen wird
@@ -69,6 +71,7 @@ public final class Kurs42DataBlockung {
 				}
 				case "Bezeichnung" -> this.Bezeichnung = parts[1];
 				case "Schulnummer" -> this.Schulnummer = parts[1];
+				default -> throw new DeveloperNotificationException("Fehlerhafter Eintrag in der Blockungsdatei.");
 			}
 		}
 	}

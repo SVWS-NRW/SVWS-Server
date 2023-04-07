@@ -23,7 +23,7 @@ public final class AbiturBlockIMarkierPruefung extends Service<Abiturdaten, Bool
 	public Boolean handle(final Abiturdaten abidaten) {
 		if (abidaten == null) {
 			logger.logLn(LogLevel.ERROR, "Der Dienst " + this.getClass().getSimpleName() + " hat keine gültigen Abiturdaten erhalten.");
-			return null;
+			return false;
 		}
 
 		final boolean ergebnis = false;

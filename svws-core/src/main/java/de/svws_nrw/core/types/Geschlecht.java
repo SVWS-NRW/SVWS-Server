@@ -64,8 +64,8 @@ public enum Geschlecht {
 			case 4: return Geschlecht.W;
 			case 5: return Geschlecht.D;
 			case 6: return Geschlecht.X;
+			default: return null;
 		}
-		return null;
 	}
 
 
@@ -92,8 +92,9 @@ public enum Geschlecht {
 				return Geschlecht.D;
 			case "-", "X", "OHNE ANGABE", "OHNE_ANGABE", "OHNE ANGABE IM GEBURTENREGISTER":
 				return Geschlecht.X;
+			default:
+				return Geschlecht.X;
 		}
-		return Geschlecht.X;
 	}
 
 
@@ -106,12 +107,12 @@ public enum Geschlecht {
 	 */
 	public String getAnrede(final int alter) {
 		switch (this.id) {
-			case 3 : return (alter < 18) ? "Lieber" : "Sehr geehrter Herr";
-			case 4 : return (alter < 18) ? "Liebe" : "Sehr geehrte Frau";
-			case 5 : return "Guten Tag";
-			case 6 : return "Guten Tag";
+			case 3: return (alter < 18) ? "Lieber" : "Sehr geehrter Herr";
+			case 4: return (alter < 18) ? "Liebe" : "Sehr geehrte Frau";
+			case 5: return "Guten Tag";
+			case 6: return "Guten Tag";
+			default: return "Guten Tag";
 		}
-		return "Guten Tag";
 	}
 
 

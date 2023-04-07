@@ -51,35 +51,35 @@ public class JahrgangsUtils {
 				case "11": return 3;
 				case "12": return 2;
 				case "13": return 1;
-			}
-		} else {
-			// Angaben für die allgemein bildenden Schulen ohne Gymnasium
-			// TODO nicht darunter fallende Schulformen vorher verarbeiten
-			switch (jahrgang) {
-				// Primarstufe
-				case "E1": return 4;
-				case "E2": return 3;
-				case "E3": return 3;
-				case "03": return 2;
-				case "04": return 1;
-				// Sekundarstufe I inklusive Gesamtschulen
-				case "05": return 6;
-				case "06": return 5;
-				case "07": return 4;
-				case "08": return 3;
-				case "09": return 2;
-				case "10": return 1;
-				// Sekundarstufe II
-				case "EF": return 3;
-				case "Q1": return 2;
-				case "Q2": return 1;
-				// Alte Oberstufenjahrgänge, keine Verwendung bei aktiven SuS an GY und GE seit 2010
-				case "11": return 3;
-				case "12": return 2;
-				case "13": return 1;
+				default: return null;
 			}
 		}
-		return null;
+		// Angaben für die allgemein bildenden Schulen ohne Gymnasium
+		// TODO nicht darunter fallende Schulformen vorher verarbeiten
+		switch (jahrgang) {
+			// Primarstufe
+			case "E1": return 4;
+			case "E2": return 3;
+			case "E3": return 3;
+			case "03": return 2;
+			case "04": return 1;
+			// Sekundarstufe I inklusive Gesamtschulen
+			case "05": return 6;
+			case "06": return 5;
+			case "07": return 4;
+			case "08": return 3;
+			case "09": return 2;
+			case "10": return 1;
+			// Sekundarstufe II
+			case "EF": return 3;
+			case "Q1": return 2;
+			case "Q2": return 1;
+			// Alte Oberstufenjahrgänge, keine Verwendung bei aktiven SuS an GY und GE seit 2010
+			case "11": return 3;
+			case "12": return 2;
+			case "13": return 1;
+			default: return null;
+		}
 	}
 
 }

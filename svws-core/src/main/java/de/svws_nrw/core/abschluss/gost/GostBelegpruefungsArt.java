@@ -49,8 +49,8 @@ public enum GostBelegpruefungsArt {
 		switch (kuerzel) {
 			case "EF.1": return EF1;
 			case "Gesamt": return GESAMT;
+			default: return null;
 		}
-		return null;
 	}
 
 
