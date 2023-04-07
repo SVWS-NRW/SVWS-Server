@@ -502,7 +502,7 @@ export class AbiturdatenManager extends JavaObject {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr === null)
 				continue;
-			const schriftlich : boolean = belegungHalbjahr.schriftlich === null ? false : belegungHalbjahr.schriftlich;
+			const schriftlich : boolean = (belegungHalbjahr.schriftlich !== null) && belegungHalbjahr.schriftlich;
 			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (schriftlich)))))
 				return true;
 		}

@@ -151,7 +151,7 @@ public final class AbschlussManager {
 		fach.bezeichnung = (bezeichnung == null || "".equals(bezeichnung)) ? "---" : bezeichnung;
 		fach.note = note;
 		fach.kursart = kursart.kuerzel;
-		fach.istFremdsprache = istFremdsprache == null ? false : istFremdsprache;
+		fach.istFremdsprache = (istFremdsprache != null) && istFremdsprache;
 		return fach;
 	}
 

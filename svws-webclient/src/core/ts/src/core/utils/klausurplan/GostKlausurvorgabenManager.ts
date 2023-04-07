@@ -56,18 +56,26 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		}
 		listKlausurvorgabenMapQuartalKlausurvorgaben.add(v);
 		let mapKursartFachKlausurvorgabe : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(v.quartal);
-		if (mapKursartFachKlausurvorgabe === null)
-			this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap());
+		if (mapKursartFachKlausurvorgabe === null) {
+			mapKursartFachKlausurvorgabe = new HashMap();
+			this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe);
+		}
 		let mapFachKlausurvorgabe : HashMap<number, GostKlausurvorgabe> | null = mapKursartFachKlausurvorgabe.get(v.kursart);
-		if (mapFachKlausurvorgabe === null)
-			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe = new HashMap());
+		if (mapFachKlausurvorgabe === null) {
+			mapFachKlausurvorgabe = new HashMap();
+			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe);
+		}
 		mapFachKlausurvorgabe.put(v.idFach, v);
 		let mapFachKlausurvorgaben : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(v.kursart);
-		if (mapFachKlausurvorgaben === null)
-			this._mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben = new HashMap());
+		if (mapFachKlausurvorgaben === null) {
+			mapFachKlausurvorgaben = new HashMap();
+			this._mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben);
+		}
 		let listKlausurvorgaben : List<GostKlausurvorgabe> | null = mapFachKlausurvorgaben.get(v.idFach);
-		if (listKlausurvorgaben === null)
-			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector());
+		if (listKlausurvorgaben === null) {
+			listKlausurvorgaben = new Vector();
+			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben);
+		}
 		listKlausurvorgaben.add(v);
 	}
 

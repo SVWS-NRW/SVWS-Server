@@ -138,7 +138,7 @@ export class AbschlussManager extends JavaObject {
 		fach.bezeichnung = (bezeichnung === null || JavaObject.equalsTranspiler("", (bezeichnung))) ? "---" : bezeichnung;
 		fach.note = note;
 		fach.kursart = kursart.kuerzel;
-		fach.istFremdsprache = istFremdsprache === null ? false : istFremdsprache;
+		fach.istFremdsprache = (istFremdsprache !== null) && istFremdsprache;
 		return fach;
 	}
 

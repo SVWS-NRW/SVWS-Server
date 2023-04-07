@@ -163,7 +163,7 @@ public enum GostFachbereich {
 	 */
 	@JsonIgnore
 	public boolean hat(final GostFach fach) {
-		return fach == null ? false : hat(fach.kuerzel);
+		return (fach != null) && hat(fach.kuerzel);
 	}
 
 

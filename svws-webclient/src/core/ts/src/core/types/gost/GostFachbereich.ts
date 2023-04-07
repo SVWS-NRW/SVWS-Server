@@ -212,7 +212,7 @@ export class GostFachbereich extends JavaObject {
 	public hat(__param0 : GostFach | null | string) : boolean {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostFach'))) || (__param0 === null))) {
 			const fach : GostFach | null = cast_de_svws_nrw_core_data_gost_GostFach(__param0);
-			return fach === null ? false : this.hat(fach.kuerzel);
+			return (fach !== null) && this.hat(fach.kuerzel);
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null))) {
 			const kuerzel : string | null = __param0;
 			if (kuerzel === null)

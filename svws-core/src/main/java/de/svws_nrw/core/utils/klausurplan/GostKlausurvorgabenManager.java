@@ -59,22 +59,30 @@ public class GostKlausurvorgabenManager {
 		// Füllen von _mapQuartalKursartFachKlausurvorgabe
 		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull GostKlausurvorgabe>> mapKursartFachKlausurvorgabe = _mapQuartalKursartFachKlausurvorgabe
 				.get(v.quartal);
-		if (mapKursartFachKlausurvorgabe == null)
-			_mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe = new HashMap<>());
+		if (mapKursartFachKlausurvorgabe == null) {
+			mapKursartFachKlausurvorgabe = new HashMap<>();
+			_mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe);
+		}
 		HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> mapFachKlausurvorgabe = mapKursartFachKlausurvorgabe
 				.get(v.kursart);
-		if (mapFachKlausurvorgabe == null)
-			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe = new HashMap<>());
+		if (mapFachKlausurvorgabe == null) {
+			mapFachKlausurvorgabe = new HashMap<>();
+			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe);
+		}
 		mapFachKlausurvorgabe.put(v.idFach, v);
 
 		// Füllen von _mapKursartFachKlausurvorgaben
 		HashMap<@NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> mapFachKlausurvorgaben = _mapKursartFachKlausurvorgaben
 				.get(v.kursart);
-		if (mapFachKlausurvorgaben == null)
-			_mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben = new HashMap<>());
+		if (mapFachKlausurvorgaben == null) {
+			mapFachKlausurvorgaben = new HashMap<>();
+			_mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben);
+		}
 		List<@NotNull GostKlausurvorgabe> listKlausurvorgaben = mapFachKlausurvorgaben.get(v.idFach);
-		if (listKlausurvorgaben == null)
-			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben = new Vector<>());
+		if (listKlausurvorgaben == null) {
+			listKlausurvorgaben = new Vector<>();
+			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben);
+		}
 		listKlausurvorgaben.add(v);
 	}
 

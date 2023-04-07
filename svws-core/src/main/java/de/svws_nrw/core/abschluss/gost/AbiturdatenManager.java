@@ -523,7 +523,7 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
-			final @NotNull Boolean schriftlich = belegungHalbjahr.schriftlich == null ? false : belegungHalbjahr.schriftlich;
+			final boolean schriftlich = (belegungHalbjahr.schriftlich != null) && belegungHalbjahr.schriftlich;
 			if (((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
 					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!schriftlich))
 							|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (schriftlich)))))

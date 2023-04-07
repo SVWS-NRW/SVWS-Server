@@ -117,6 +117,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	/**
 	 * Setzt den zu verwendenden Algorithmus.
 	 * @param pAlgorithmus den zu verwendenden Algorithmus.
+	 * @deprecated
 	 */
 	@Deprecated
 	public void set_algorithmus(final int pAlgorithmus) {
@@ -162,6 +163,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	/**
 	 * Setzt den LK-GK-Modus.
 	 * @param modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
+	 * @deprecated
 	 */
 	@Deprecated
 	public void set_lk_gk_modus(final int modus) {
