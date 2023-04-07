@@ -67,8 +67,10 @@ export class GostBelegpruefungsArt extends JavaObject {
 			case "Gesamt": {
 				return GostBelegpruefungsArt.GESAMT;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	public toString() : string {

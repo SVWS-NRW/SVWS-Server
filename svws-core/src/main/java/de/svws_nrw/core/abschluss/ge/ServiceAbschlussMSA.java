@@ -22,23 +22,23 @@ import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
  */
 public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4)));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5)));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 4)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizite2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls1NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note >= 5)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMehrAls2NS = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 6));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note == 5));
 
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) && "WP".equalsIgnoreCase(f.kuerzel);
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) && "WP".equalsIgnoreCase(f.kuerzel);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizitNichtWP = (final @NotNull GEAbschlussFach f) -> !f.ausgeglichen && (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) && !"WP".equalsIgnoreCase(f.kuerzel);
 
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterBenoetigte3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteBenoetigte3erMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note == 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterBenoetigte3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note <= 3) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefiziteBenoetigte3erMitNPOption = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note == 4) && (GELeistungsdifferenzierteKursart.Sonstige.hat(f.kursart));
 
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4)));
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note < 3);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && ((f.note < 3) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 4)));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterAusgleiche3er = (final @NotNull GEAbschlussFach f) -> !f.ausgleich && (f.note < 3);
 
-	private final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 
 	/**

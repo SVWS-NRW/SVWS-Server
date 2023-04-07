@@ -68,7 +68,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return true, falls die Fächergruppe leer ist, ansonsten false
 	 */
 	public isEmpty() : boolean {
-		return (this.faecher === null) || (this.faecher.isEmpty());
+		return this.faecher.isEmpty();
 	}
 
 	/**

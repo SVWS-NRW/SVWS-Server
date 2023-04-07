@@ -68,63 +68,67 @@ export class JahrgangsUtils extends JavaObject {
 				case "13": {
 					return 1;
 				}
-			}
-		} else {
-			switch (jahrgang) {
-				case "E1": {
-					return 4;
-				}
-				case "E2": {
-					return 3;
-				}
-				case "E3": {
-					return 3;
-				}
-				case "03": {
-					return 2;
-				}
-				case "04": {
-					return 1;
-				}
-				case "05": {
-					return 6;
-				}
-				case "06": {
-					return 5;
-				}
-				case "07": {
-					return 4;
-				}
-				case "08": {
-					return 3;
-				}
-				case "09": {
-					return 2;
-				}
-				case "10": {
-					return 1;
-				}
-				case "EF": {
-					return 3;
-				}
-				case "Q1": {
-					return 2;
-				}
-				case "Q2": {
-					return 1;
-				}
-				case "11": {
-					return 3;
-				}
-				case "12": {
-					return 2;
-				}
-				case "13": {
-					return 1;
+				default: {
+					return null;
 				}
 			}
 		}
-		return null;
+		switch (jahrgang) {
+			case "E1": {
+				return 4;
+			}
+			case "E2": {
+				return 3;
+			}
+			case "E3": {
+				return 3;
+			}
+			case "03": {
+				return 2;
+			}
+			case "04": {
+				return 1;
+			}
+			case "05": {
+				return 6;
+			}
+			case "06": {
+				return 5;
+			}
+			case "07": {
+				return 4;
+			}
+			case "08": {
+				return 3;
+			}
+			case "09": {
+				return 2;
+			}
+			case "10": {
+				return 1;
+			}
+			case "EF": {
+				return 3;
+			}
+			case "Q1": {
+				return 2;
+			}
+			case "Q2": {
+				return 1;
+			}
+			case "11": {
+				return 3;
+			}
+			case "12": {
+				return 2;
+			}
+			case "13": {
+				return 1;
+			}
+			default: {
+				return null;
+			}
+		}
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

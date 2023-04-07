@@ -21,19 +21,19 @@ import jakarta.validation.constraints.NotNull;
 public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @NotNull AbschlussErgebnis> {
 
 	/** Filter für alle nicht ausgeglichenen Defizite */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> f.note > 4 && (!f.ausgeglichen);
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterDefizit = (final @NotNull GEAbschlussFach f) -> f.note > 4 && (!f.ausgeglichen);
 
 	/** Filter für alle mangelhaften Fächer */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterMangelhaft = (final @NotNull GEAbschlussFach f) -> f.note == 5;
 
 	/** Filter für alle ungenügenden Fächer */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterUngenuegend = (final @NotNull GEAbschlussFach f) -> f.note == 6;
 
 	/** Filter für alle Fächer, welche als E-Kurs belegt wurden. */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
-	@NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
+	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
 
 
 	/**
@@ -90,7 +90,7 @@ public class ServiceAbschlussHA9 extends Service<@NotNull GEAbschlussFaecher, @N
 
 		// Ignoriere alle Fremdsprachen ausser Englisch
 		final @NotNull List<@NotNull GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
-		if (weitereFS.size() > 0) {
+		if (!weitereFS.isEmpty()) {
 			for (final GEAbschlussFach fs : weitereFS) {
 				if (fs.bezeichnung == null)
 					continue;

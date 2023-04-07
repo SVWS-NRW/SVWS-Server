@@ -17,23 +17,23 @@ import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFae
 
 export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
-	private readonly filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) };
+	private static readonly filterDefizite : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) };
 
-	private readonly filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 3)) };
+	private static readonly filterDefizite1NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 3)) };
 
-	private readonly filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) };
+	private static readonly filterDefizite2NS : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 5)) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note === 4)) };
 
-	private readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private static readonly filterDefizitWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) && JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
+	private static readonly filterDefizitNichtWP : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 3) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 2)) && !JavaString.equalsIgnoreCase("WP", f.kuerzel) };
 
-	private readonly filterFG1NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
+	private static readonly filterFG1NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 4) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
 
-	private readonly filterFG2NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
+	private static readonly filterFG2NichtAusgleichbar : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (f.note > 5) || ((GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note > 3)) };
 
-	private readonly filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3))) };
+	private static readonly filterAusgleiche : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => !f.ausgleich && ((f.note < 2) || ((!GELeistungsdifferenzierteKursart.G.hat(f.kursart)) && (f.note < 3))) };
 
-	private readonly filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
+	private static readonly filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
 
 
 	public constructor() {
@@ -72,7 +72,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
-		const anzahlEKurse : number = faecher.getFaecherAnzahl(this.filterEKurse);
+		const anzahlEKurse : number = faecher.getFaecherAnzahl(ServiceBerechtigungMSAQ.filterEKurse);
 		if (anzahlEKurse < 3) {
 			this.logger.logLn(LogLevel.DEBUG, "______________________________");
 			this.logger.logLn(LogLevel.INFO, " => kein MSA-Q (FOR-Q) - nicht genügend E-Kurse belegt");
@@ -80,7 +80,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 		} else
 			if (anzahlEKurse > 3) {
 				this.logger.logLn(LogLevel.DEBUG, " - Verbessern der E-Kurs-Noten für die Defizitberechnung, falls mehr als 3 E-Kurse vorhanden sind:");
-				const tmpFaecher : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterEKurse);
+				const tmpFaecher : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterEKurse);
 				for (const f of tmpFaecher) {
 					const note : number = f.note;
 					const note_neu : number = (note === 1) ? 1 : note - 1;
@@ -113,18 +113,18 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	 * @return das Ergebnis der Abschlussberechnung in Bezug die Defizitberechnung
 	 */
 	private pruefeDefizite(faecher : AbschlussFaecherGruppen, logIndent : string) : AbschlussErgebnis {
-		const fg1_defizite : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterDefizite);
-		const fg2_defizite : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite);
+		const fg1_defizite : List<GEAbschlussFach> = faecher.fg1.getFaecher(ServiceBerechtigungMSAQ.filterDefizite);
+		const fg2_defizite : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterDefizite);
 		if (fg1_defizite.size() > 0)
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(this.filterDefizite)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(ServiceBerechtigungMSAQ.filterDefizite)!);
 		if (fg2_defizite.size() > 0)
-			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(this.filterDefizite)!);
+			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(ServiceBerechtigungMSAQ.filterDefizite)!);
 		let nachpruefung_genutzt : boolean = false;
 		const npFaecher : List<GEAbschlussFach> = new Vector();
-		const fg1_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterFG1NichtAusgleichbar);
-		const fg2_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterFG2NichtAusgleichbar);
+		const fg1_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg1.getFaecher(ServiceBerechtigungMSAQ.filterFG1NichtAusgleichbar);
+		const fg2_nicht_ausgleichbar : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterFG2NichtAusgleichbar);
 		if ((fg1_nicht_ausgleichbar.size() > 0) || (fg2_nicht_ausgleichbar.size() > 0)) {
-			const str_faecher : string = faecher.getKuerzelListe(this.filterFG1NichtAusgleichbar, this.filterFG2NichtAusgleichbar);
+			const str_faecher : string = faecher.getKuerzelListe(ServiceBerechtigungMSAQ.filterFG1NichtAusgleichbar, ServiceBerechtigungMSAQ.filterFG2NichtAusgleichbar);
 			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> Defizit(e) in " + str_faecher! + " aufgrund zu hoher Abweichungen nicht ausgleichbar.");
 			if ((fg1_nicht_ausgleichbar.size() === 0) && (fg2_nicht_ausgleichbar.size() === 1) && (GELeistungsdifferenzierteKursart.G.hat(fg2_nicht_ausgleichbar.get(0).kursart)) && (fg2_nicht_ausgleichbar.get(0).note === 4)) {
 				this.logger.logLn(LogLevel.DEBUG, logIndent! + "   -> Nachprüfung muss falls möglich in " + fg2_nicht_ausgleichbar.get(0).kuerzel + " stattfinden!");
@@ -134,8 +134,8 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 			}
 		}
-		const fg1_ausgleichsfaecher : List<GEAbschlussFach> = faecher.fg1.getFaecher(this.filterAusgleiche);
-		const wp_defizit : GEAbschlussFach | null = faecher.fg1.getFach(this.filterDefizitWP);
+		const fg1_ausgleichsfaecher : List<GEAbschlussFach> = faecher.fg1.getFaecher(ServiceBerechtigungMSAQ.filterAusgleiche);
+		const wp_defizit : GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitWP);
 		if ((fg1_defizite.size() > 2) || ((fg1_defizite.size() === 2) && (wp_defizit === null))) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> zu viele Defizite in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
@@ -145,7 +145,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 			} else
 				if ((fg1_defizite.size() === 2) && (wp_defizit !== null) && (fg1_ausgleichsfaecher.size() > 0) && (!nachpruefung_genutzt)) {
-					const defizitFach : GEAbschlussFach | null = faecher.fg1.getFach(this.filterDefizitNichtWP);
+					const defizitFach : GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
 					if (defizitFach === null)
 						throw new NullPointerException()
 					const ausgleichsFach : GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
@@ -165,7 +165,7 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		}
 		if ((fg1_defizite.size() === 1) && (wp_defizit === null)) {
-			const defizitFach : GEAbschlussFach | null = faecher.fg1.getFach(this.filterDefizitNichtWP);
+			const defizitFach : GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
 			if (defizitFach === null)
 				throw new NullPointerException()
 			const ausgleichsFach : GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
@@ -224,9 +224,9 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	 * @return das Ergebnis der Abschlussberechnung in Bezug auf den Stand dieser Detailprüfung
 	 */
 	private pruefeFG2(faecher : AbschlussFaecherGruppen, logIndent : string, npFaecher : List<GEAbschlussFach>, nachpruefungGenutzt : boolean) : AbschlussErgebnis {
-		const ges_ausgleichsfaecher : List<GEAbschlussFach> = faecher.getFaecher(this.filterAusgleiche);
-		const fg2_defizite_1NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite1NS);
-		const fg2_defizite_2NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(this.filterDefizite2NS);
+		const ges_ausgleichsfaecher : List<GEAbschlussFach> = faecher.getFaecher(ServiceBerechtigungMSAQ.filterAusgleiche);
+		const fg2_defizite_1NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterDefizite1NS);
+		const fg2_defizite_2NS : List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterDefizite2NS);
 		const fg2_defizit_anzahl : number = fg2_defizite_1NS.size() + fg2_defizite_2NS.size();
 		if (fg2_defizit_anzahl === 0) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent! + " -> keine Defizite in FG2");

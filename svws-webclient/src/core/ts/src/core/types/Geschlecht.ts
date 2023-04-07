@@ -97,8 +97,10 @@ export class Geschlecht extends JavaObject {
 			case 6: {
 				return Geschlecht.X;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	/**
@@ -136,8 +138,10 @@ export class Geschlecht extends JavaObject {
 			case "OHNE ANGABE IM GEBURTENREGISTER": {
 				return Geschlecht.X;
 			}
+			default: {
+				return Geschlecht.X;
+			}
 		}
-		return Geschlecht.X;
 	}
 
 	/**
@@ -161,8 +165,10 @@ export class Geschlecht extends JavaObject {
 			case 6: {
 				return "Guten Tag";
 			}
+			default: {
+				return "Guten Tag";
+			}
 		}
-		return "Guten Tag";
 	}
 
 	public toString() : string {

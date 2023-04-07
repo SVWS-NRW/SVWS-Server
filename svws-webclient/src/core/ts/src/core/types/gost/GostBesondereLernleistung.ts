@@ -76,8 +76,10 @@ export class GostBesondereLernleistung extends JavaObject {
 			case "E": {
 				return GostBesondereLernleistung.EXTERNE;
 			}
+			default: {
+				return GostBesondereLernleistung.KEINE;
+			}
 		}
-		return GostBesondereLernleistung.KEINE;
 	}
 
 	public toString() : string {

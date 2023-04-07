@@ -81,8 +81,10 @@ export class BenutzerTyp extends JavaObject {
 			case 3: {
 				return BenutzerTyp.ERZIEHER;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	/**

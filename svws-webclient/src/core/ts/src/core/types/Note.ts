@@ -327,8 +327,10 @@ export class Note extends JavaObject {
 			case 15: {
 				return Note.SEHR_GUT_PLUS;
 			}
+			default: {
+				return Note.KEINE;
+			}
 		}
-		return Note.KEINE;
 	}
 
 	/**
@@ -418,8 +420,10 @@ export class Note extends JavaObject {
 			case "LM": {
 				return Note.LEHRERMANGEL;
 			}
+			default: {
+				return Note.KEINE;
+			}
 		}
-		return Note.KEINE;
 	}
 
 	/**
@@ -482,8 +486,10 @@ export class Note extends JavaObject {
 			case "15": {
 				return Note.SEHR_GUT_PLUS;
 			}
+			default: {
+				return Note.KEINE;
+			}
 		}
-		return Note.KEINE;
 	}
 
 	/**
@@ -503,8 +509,10 @@ export class Note extends JavaObject {
 			case 14: {
 				return false;
 			}
+			default: {
+				return true;
+			}
 		}
-		return true;
 	}
 
 	/**
@@ -544,8 +552,10 @@ export class Note extends JavaObject {
 			case 15: {
 				return Note.SEHR_GUT;
 			}
+			default: {
+				return Note.KEINE;
+			}
 		}
-		return Note.KEINE;
 	}
 
 	public toString() : string {

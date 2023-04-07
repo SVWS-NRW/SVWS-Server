@@ -7,6 +7,8 @@ import { SchuelerblockungDynDaten } from '../../core/kursblockung/Schuelerblocku
 
 export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, SchuelerblockungOutput> {
 
+	private static readonly _random : Random | null = new Random();
+
 
 	public constructor() {
 		super();
@@ -14,7 +16,7 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 
 	public handle(pInput : SchuelerblockungInput) : SchuelerblockungOutput {
 		this.logger.modifyIndent(+4);
-		const seed : number = new Random().nextLong();
+		const seed : number = SchuelerblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "SchuelerblockungAlgorithmus.handle(): Seed (" + seed + ") verwendet.");
 		const dynDaten : SchuelerblockungDynDaten = new SchuelerblockungDynDaten(random, pInput);

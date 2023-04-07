@@ -110,8 +110,10 @@ export class KursFortschreibungsart extends JavaObject {
 			case 3: {
 				return KursFortschreibungsart.KOMPLETT;
 			}
+			default: {
+				return KursFortschreibungsart.KEINE;
+			}
 		}
-		return KursFortschreibungsart.KEINE;
 	}
 
 	/**
@@ -138,8 +140,10 @@ export class KursFortschreibungsart extends JavaObject {
 			case "K": {
 				return KursFortschreibungsart.KOMPLETT;
 			}
+			default: {
+				return KursFortschreibungsart.KEINE;
+			}
 		}
-		return KursFortschreibungsart.KEINE;
 	}
 
 	/**

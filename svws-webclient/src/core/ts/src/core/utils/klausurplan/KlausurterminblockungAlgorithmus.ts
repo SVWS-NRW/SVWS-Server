@@ -16,6 +16,8 @@ import { Vector } from '../../../java/util/Vector';
 
 export class KlausurterminblockungAlgorithmus extends JavaObject {
 
+	private static readonly _random : Random | null = new Random();
+
 
 	/**
 	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.
@@ -66,7 +68,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 
 	private static berechne_helper(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
 		const zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.get_max_time_millis();
-		const seed : number = new Random().nextLong();
+		const seed : number = KlausurterminblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
 		const dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
 		const algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy3(random, dynDaten)];

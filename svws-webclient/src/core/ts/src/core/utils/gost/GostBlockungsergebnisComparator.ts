@@ -7,7 +7,7 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 
 
 	/**
-	 *Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}. Zwei
+	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}. Zwei
 	 * Elemente werden nach folgender Priorität sortiert: <br>
 	 * (1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse<br>
 	 * (2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser) <br>

@@ -65,8 +65,10 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 			case "G": {
 				return GELeistungsdifferenzierteKursart.G;
 			}
+			default: {
+				return GELeistungsdifferenzierteKursart.Sonstige;
+			}
 		}
-		return GELeistungsdifferenzierteKursart.Sonstige;
 	}
 
 	/**

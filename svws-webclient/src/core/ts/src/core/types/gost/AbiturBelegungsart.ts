@@ -75,8 +75,10 @@ export class AbiturBelegungsart extends JavaObject {
 			case "S": {
 				return AbiturBelegungsart.SCHRIFTLICH;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	public toString() : string {

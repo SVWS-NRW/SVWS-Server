@@ -68,8 +68,10 @@ export class GostBelegungsfehlerArt extends JavaObject {
 			case "HINWEIS": {
 				return GostBelegungsfehlerArt.HINWEIS;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	public toString() : string {

@@ -20,6 +20,8 @@ import { Vector } from '../../java/util/Vector';
 
 export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, Vector<GostBlockungsergebnisManager>> {
 
+	private static readonly _random : Random | null = new Random();
+
 
 	public constructor() {
 		super();
@@ -27,7 +29,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 
 	public handle(pInput : GostBlockungsdatenManager) : Vector<GostBlockungsergebnisManager> {
 		this.logger.modifyIndent(+4);
-		const seed : number = new Random().nextLong();
+		const seed : number = KursblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
 		this.logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 		const dynDaten : KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, pInput);

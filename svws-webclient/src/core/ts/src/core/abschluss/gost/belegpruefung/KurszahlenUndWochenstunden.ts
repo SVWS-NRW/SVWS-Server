@@ -146,6 +146,10 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						stunden = 3;
 						break;
 					}
+					default: {
+						stunden = 3;
+						break;
+					}
 				}
 				const wochenstundenAlt : number | null = this.wochenstunden.get(halbjahr);
 				this.wochenstunden.put(halbjahr, wochenstundenAlt === null ? stunden : wochenstundenAlt! + stunden);

@@ -91,8 +91,10 @@ export class GostAbiturFach extends JavaObject {
 			case 4: {
 				return GostAbiturFach.AB4;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	/**
@@ -119,8 +121,10 @@ export class GostAbiturFach extends JavaObject {
 			case "4": {
 				return GostAbiturFach.AB4;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	/**
@@ -145,8 +149,10 @@ export class GostAbiturFach extends JavaObject {
 			case "AB4": {
 				return GostAbiturFach.AB4;
 			}
+			default: {
+				return null;
+			}
 		}
-		return null;
 	}
 
 	public toString() : string {
