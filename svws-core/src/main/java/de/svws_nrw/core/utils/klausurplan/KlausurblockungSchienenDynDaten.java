@@ -293,11 +293,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @return ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
 	@NotNull int[] gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert() {
-		final int[] temp = new int[_klausurenAnzahl];
-
-		for (int i = 0; i < _klausurenAnzahl; i++)
-			temp[i] = _klausurenSortiertGrad[i];
-
+		final int[] temp = Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_klausurenAnzahl);
 			if ((i1 - i2) * (i1 - i2) > _klausurenAnzahl)
@@ -318,12 +314,7 @@ public class KlausurblockungSchienenDynDaten {
 	 * @return ein Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
 	@NotNull int[] gibErzeugeKlausurenMitHoeheremGradZuerst() {
-		final int[] temp = new int[_klausurenAnzahl];
-
-		for (int i = 0; i < _klausurenAnzahl; i++)
-			temp[i] = _klausurenSortiertGrad[i];
-
-		return temp;
+		return Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 	}
 
 	/**

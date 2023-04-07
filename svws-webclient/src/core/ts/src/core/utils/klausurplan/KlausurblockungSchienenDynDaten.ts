@@ -288,9 +288,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @return ein leicht permutiertes Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
 	gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert() : Array<number> {
-		const temp : Array<number> | null = Array(this._klausurenAnzahl).fill(0);
-		for (let i : number = 0; i < this._klausurenAnzahl; i++)
-			temp[i] = this._klausurenSortiertGrad[i];
+		const temp : Array<number> | null = Arrays.copyOf(this._klausurenSortiertGrad, this._klausurenAnzahl);
 		for (let i1 : number = 0; i1 < this._klausurenAnzahl; i1++) {
 			const i2 : number = this._random.nextInt(this._klausurenAnzahl);
 			if ((i1 - i2) * (i1 - i2) > this._klausurenAnzahl)
@@ -309,10 +307,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @return ein Array aller Klausurnummern sortiert nach höheren Knotengrad zuerst.
 	 */
 	gibErzeugeKlausurenMitHoeheremGradZuerst() : Array<number> {
-		const temp : Array<number> | null = Array(this._klausurenAnzahl).fill(0);
-		for (let i : number = 0; i < this._klausurenAnzahl; i++)
-			temp[i] = this._klausurenSortiertGrad[i];
-		return temp;
+		return Arrays.copyOf(this._klausurenSortiertGrad, this._klausurenAnzahl);
 	}
 
 	/**
