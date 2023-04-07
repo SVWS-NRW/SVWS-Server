@@ -93,13 +93,13 @@ public class SchuelerblockungDynDaten {
 
 		// Anzahl an Elementen überprüfen.
 
-		final int nFachwahlen = pInput.fachwahlen.size();
-		if (nFachwahlen < 1)
-			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + nFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!");
+		final int tmpNFachwahlen = pInput.fachwahlen.size();
+		if (tmpNFachwahlen < 1)
+			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!");
 
-		final int nSchienen = pInput.schienen;
-		if (nSchienen < 1)
-			throw new DeveloperNotificationException("Die Schienenanzahl (" + nSchienen + ") ist zu gering!");
+		final int tmpNSchienen = pInput.schienen;
+		if (tmpNSchienen < 1)
+			throw new DeveloperNotificationException("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!");
 
 		final int nKurse = pInput.kurse.size();
 		if (nKurse < 1)
@@ -122,12 +122,12 @@ public class SchuelerblockungDynDaten {
 				throw new DeveloperNotificationException("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!");
 			if (kurs.schienen.length <= 0)
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!");
-			if (kurs.schienen.length > nSchienen)
+			if (kurs.schienen.length > tmpNSchienen)
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!");
 			for (final int schiene1 : kurs.schienen) {
 				if (schiene1 < 1)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!");
-				if (schiene1 > nSchienen)
+				if (schiene1 > tmpNSchienen)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!");
 			}
 			if (kurs.istFixiert && kurs.istGesperrt)
@@ -145,7 +145,7 @@ public class SchuelerblockungDynDaten {
 		}
 
 		// Pro Fachwahl auf Doppelfixierungen testen.
-		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
+		for (int iFachwahl = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
 			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size())
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!");
@@ -169,7 +169,7 @@ public class SchuelerblockungDynDaten {
 		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			int gefunden = 0;
 
-			for (int r = 0; r < nFachwahlen; r++) {
+			for (int r = 0; r < tmpNFachwahlen; r++) {
 				final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(r);
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart))
 					gefunden++;

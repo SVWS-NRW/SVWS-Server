@@ -1,11 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { RuntimeException } from '../../../java/lang/RuntimeException';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { HashMap } from '../../../java/util/HashMap';
 import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
 import { List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Vector } from '../../../java/util/Vector';
 import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
 
@@ -65,7 +65,7 @@ export class AbgangsartenManager extends JavaObject {
 			for (const daten of eintrag.historie) {
 				const alt : AbgangsartKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 				if (alt !== null)
-					throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'")
+					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'")
 				this._mapDatenByID.put(daten.id, daten);
 			}
 		}
@@ -181,7 +181,7 @@ export class AbgangsartenManager extends JavaObject {
 	 */
 	public static getAbschlussAllgemeinbildend(abschlussart : AbgangsartKatalogEintrag) : SchulabschlussAllgemeinbildend | null {
 		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2))
-			throw new RuntimeException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
+			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
 		const kuerzelAbschluss : string = abschlussart.kuerzel.length === 1 ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.getByKuerzelStatistik(kuerzelAbschluss);
 	}
@@ -195,7 +195,7 @@ export class AbgangsartenManager extends JavaObject {
 	 */
 	public static getAbschlussBerufsbildend(abschlussart : AbgangsartKatalogEintrag) : SchulabschlussBerufsbildend | null {
 		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2))
-			throw new RuntimeException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
+			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
 		if (abschlussart.kuerzel.length === 1)
 			return null;
 		return SchulabschlussBerufsbildend.getByKuerzelStatistik(abschlussart.kuerzel.substring(0, 1));

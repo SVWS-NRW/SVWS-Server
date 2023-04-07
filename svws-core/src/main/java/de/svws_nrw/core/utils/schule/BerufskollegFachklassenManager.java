@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogIndex;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
@@ -59,7 +60,7 @@ public class BerufskollegFachklassenManager {
 				for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
 					final BerufskollegFachklassenKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
 					if (alt != null)
-						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'");
+						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'");
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}

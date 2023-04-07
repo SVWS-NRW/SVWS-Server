@@ -78,9 +78,11 @@ public final class ResourceUtils {
 	 * @param uri   die URI für das JAR-Dateisystem
 	 *
 	 * @return der Pfad in das JAR-Dateisystem
+	 *
+	 * @throws IOException   falls das JAR-Dateisystem nicht erstellt werden kann
 	 */
 	@SuppressWarnings("resource")
-	private static FileSystem getJARFileSystem(final URI uri) {
+	private static FileSystem getJARFileSystem(final URI uri) throws IOException {
 		final String[] array = uri.toString().split("!");
 		FileSystem fs = jarFS.get(array[0]);
 		if (fs != null)
@@ -92,13 +94,9 @@ public final class ResourceUtils {
 		} catch (@SuppressWarnings("unused") final RuntimeException e) {
 			// try to create a new Filesystem...
 			final Map<String, String> env = new HashMap<>();
-			try {
-				fs = FileSystems.newFileSystem(URI.create(array[0]), env);
-				jarFS.put(array[0], fs);
-				return fs;
-			} catch (final IOException exc) {
-				throw new RuntimeException(exc);
-			}
+			fs = FileSystems.newFileSystem(URI.create(array[0]), env);
+			jarFS.put(array[0], fs);
+			return fs;
 		}
 	}
 
@@ -124,7 +122,7 @@ public final class ResourceUtils {
 			} else {
 				path = Paths.get(uri);
 			}
-		} catch (final URISyntaxException e) {
+		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
 		return path;

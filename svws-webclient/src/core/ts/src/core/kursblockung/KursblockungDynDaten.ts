@@ -614,8 +614,8 @@ export class KursblockungDynDaten extends JavaObject {
 			const list : LinkedCollection<KursblockungDynKurs> | null = mapFachartList.get(nr);
 			if (list === null)
 				throw new DeveloperNotificationException("mapFachartList.get(nr) == null")
-			const kursArr : Array<KursblockungDynKurs> = list.toArray(Array(0).fill(null));
-			this.fachartArr[nr].aktionSetKurse(kursArr);
+			const tmpKursArr : Array<KursblockungDynKurs> = list.toArray(Array(0).fill(null));
+			this.fachartArr[nr].aktionSetKurse(tmpKursArr);
 		}
 	}
 

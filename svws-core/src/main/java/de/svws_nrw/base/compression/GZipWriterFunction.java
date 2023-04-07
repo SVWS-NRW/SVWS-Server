@@ -8,6 +8,7 @@ import java.util.zip.GZIPOutputStream;
  */
 @FunctionalInterface
 public interface GZipWriterFunction {
+
 	/**
 	 * Schreibt Daten in den {@link GZIPOutputStream}.
 	 *
@@ -16,4 +17,5 @@ public interface GZipWriterFunction {
 	 * @throws Exception   eine beliebige Exception, die im Verlauf des Schreibens der Daten geworfen wird
 	 */
 	void write(GZIPOutputStream gzipOut) throws Exception;
+
 }

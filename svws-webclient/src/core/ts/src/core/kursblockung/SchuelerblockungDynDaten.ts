@@ -89,12 +89,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			throw new DeveloperNotificationException("pInput.fachwahlen == NULL")
 		if (pInput.kurse === null)
 			throw new DeveloperNotificationException("pInput.kurse == NULL")
-		const nFachwahlen : number = pInput.fachwahlen.size();
-		if (nFachwahlen < 1)
-			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + nFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!")
-		const nSchienen : number = pInput.schienen;
-		if (nSchienen < 1)
-			throw new DeveloperNotificationException("Die Schienenanzahl (" + nSchienen + ") ist zu gering!")
+		const tmpNFachwahlen : number = pInput.fachwahlen.size();
+		if (tmpNFachwahlen < 1)
+			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!")
+		const tmpNSchienen : number = pInput.schienen;
+		if (tmpNSchienen < 1)
+			throw new DeveloperNotificationException("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!")
 		const nKurse : number = pInput.kurse.size();
 		if (nKurse < 1)
 			throw new DeveloperNotificationException("Die Kursanzahl (" + nKurse + ") ist zu gering!")
@@ -114,12 +114,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				throw new DeveloperNotificationException("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!")
 			if (kurs.schienen.length <= 0)
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!")
-			if (kurs.schienen.length > nSchienen)
+			if (kurs.schienen.length > tmpNSchienen)
 				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!")
 			for (const schiene1 of kurs.schienen) {
 				if (schiene1 < 1)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!")
-				if (schiene1 > nSchienen)
+				if (schiene1 > tmpNSchienen)
 					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!")
 			}
 			if (kurs.istFixiert && kurs.istGesperrt)
@@ -133,7 +133,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			if (fachwahl.kursartID < 0)
 				throw new DeveloperNotificationException("fachwahl.kursartID (" + fachwahl.kursartID + ") ist zu gering!")
 		}
-		for (let iFachwahl : number = 0; iFachwahl < nFachwahlen; iFachwahl++) {
+		for (let iFachwahl : number = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
 			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			if (iFachwahl >= pInput.fachwahlenText.size())
 				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
@@ -152,7 +152,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 		for (const kurs of pInput.kurse) {
 			let gefunden : number = 0;
-			for (let r : number = 0; r < nFachwahlen; r++) {
+			for (let r : number = 0; r < tmpNFachwahlen; r++) {
 				const fachwahl : GostFachwahl = pInput.fachwahlen.get(r);
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart))
 					gefunden++;

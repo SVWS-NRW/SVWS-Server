@@ -192,8 +192,8 @@ public class Kurs42Import {
 			mapKursNameToID.put(k42Kurs.Name, id);
 			if ((k42Kurs.Gesperrt != null) && (k42Kurs.Gesperrt.startsWith("[")) && (k42Kurs.Gesperrt.endsWith("]"))) {
 				try {
-					final String[] schienen = k42Kurs.Gesperrt.substring(1, k42Kurs.Gesperrt.length() - 1).split(",");
-					for (final String schiene : schienen) {
+					final String[] tmpSchienen = k42Kurs.Gesperrt.substring(1, k42Kurs.Gesperrt.length() - 1).split(",");
+					for (final String schiene : tmpSchienen) {
 						final GostBlockungRegel regel = new GostBlockungRegel();
 						regel.id = curRegelID++;
 						regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;

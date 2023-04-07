@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
-import { RuntimeException } from '../../../java/lang/RuntimeException';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
 import { Vector } from '../../../java/util/Vector';
 import { BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
@@ -71,7 +71,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				for (const daten of eintrag.historie) {
 					const alt : BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
 					if (alt !== null)
-						throw new RuntimeException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel! + "'")
+						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel! + "'")
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}

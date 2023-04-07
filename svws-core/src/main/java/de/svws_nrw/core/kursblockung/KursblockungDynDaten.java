@@ -794,8 +794,8 @@ public class KursblockungDynDaten {
 			final LinkedCollection<@NotNull KursblockungDynKurs> list = mapFachartList.get(nr);
 			if (list == null)
 				throw new DeveloperNotificationException("mapFachartList.get(nr) == null");
-			final @NotNull KursblockungDynKurs @NotNull [] kursArr = list.toArray(new KursblockungDynKurs[0]);
-			fachartArr[nr].aktionSetKurse(kursArr);
+			final @NotNull KursblockungDynKurs @NotNull [] tmpKursArr = list.toArray(new KursblockungDynKurs[0]);
+			fachartArr[nr].aktionSetKurse(tmpKursArr);
 		}
 
 	}
