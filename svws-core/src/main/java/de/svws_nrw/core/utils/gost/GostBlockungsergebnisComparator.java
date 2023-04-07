@@ -7,12 +7,15 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisListeneintrag;
 import jakarta.validation.constraints.NotNull;
 
-/** Dieser Klasse dient der GUI dazu, Blockungsergebnisse zu sortieren. <br>
+/**
+ * Dieser Klasse dient der GUI dazu, Blockungsergebnisse zu sortieren. <br>
  * Die GUI erhält von der Datenbank eine Liste von {@link GostBlockungsergebnisListeneintrag}, sobald man auf
- * ein Element der Liste klickt, wird ein {@link GostBlockungsergebnis} Objekt geladen. */
+ * ein Element der Liste klickt, wird ein {@link GostBlockungsergebnis} Objekt geladen.
+ */
 public final class GostBlockungsergebnisComparator implements Comparator<@NotNull GostBlockungsergebnisListeneintrag> {
 
-	/** Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}. Zwei
+	/**
+	 * Erzeugt einen Comparator für zwei Objekte des Typs {@link GostBlockungsergebnisListeneintrag}. Zwei
 	 * Elemente werden nach folgender Priorität sortiert: <br>
 	 * (1) Array an Regelverletzungen (weniger besser) + Anzahl nicht gesetzter Kurse<br>
 	 * (2) Summe nicht zugeordneter Fachwahlen + Summe an Kollisionen (weniger besser) <br>
@@ -21,6 +24,7 @@ public final class GostBlockungsergebnisComparator implements Comparator<@NotNul
 	 * (5) ID von GostBlockungsergebnisListeneintrag (weniger besser) <br>
 	 */
 	public GostBlockungsergebnisComparator() {
+		// empty constructor
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class CommandLineParser {
 
 	/// Gibt an, ob die Kommandozeile bereits in Bezug auf die angegebenen Optionen untersucht wurde
-	private final boolean parsed = false;
+	private boolean parsed = false;
 
 	/// Die Kommandozeilen-Parameter als String-Array
 	private final String[] args;
@@ -59,12 +59,15 @@ public class CommandLineParser {
 				} else {
 					throw new CommandLineException(CommandLineExceptionType.UNKNOWN_OPTION);
 				}
+				if (current == null)
+					throw new CommandLineException(CommandLineExceptionType.UNKNOWN_OPTION);
 				if (current.hasArgument())
 					isArgument = true;
 				else
 					values.put(current.getShortTag(), "");
 			}
 		}
+		parsed = true;
 	}
 
 

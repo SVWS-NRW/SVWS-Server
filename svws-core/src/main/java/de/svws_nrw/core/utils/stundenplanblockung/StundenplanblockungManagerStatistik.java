@@ -12,6 +12,7 @@ public class StundenplanblockungManagerStatistik {
 	 * Erzeugt ein neues Objekt.
 	 */
 	public StundenplanblockungManagerStatistik() {
+		// no implementation
 	}
 
 }

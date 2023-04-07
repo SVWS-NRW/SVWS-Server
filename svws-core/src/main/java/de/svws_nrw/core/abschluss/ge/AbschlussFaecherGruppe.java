@@ -81,7 +81,7 @@ public class AbschlussFaecherGruppe {
 	 * @return true, falls die Fächergruppe leer ist, ansonsten false
 	 */
 	public boolean isEmpty() {
-		return (faecher == null) || (faecher.isEmpty());
+		return faecher.isEmpty();
 	}
 
 

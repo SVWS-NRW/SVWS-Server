@@ -14,6 +14,7 @@ public class StundenplanblockungManagerSchule {
 	 * Erzeugt ein neues Objekt.
 	 */
 	public StundenplanblockungManagerSchule() {
+		// no implementation
 	}
 
 	/**

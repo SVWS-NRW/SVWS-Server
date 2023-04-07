@@ -21,6 +21,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * Konstruktor.
 	 */
 	public HashMap2D() {
+		// no implementation
 	}
 
 	/**

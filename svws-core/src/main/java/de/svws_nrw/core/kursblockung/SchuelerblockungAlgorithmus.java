@@ -17,13 +17,15 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SchuelerblockungAlgorithmus extends Service<@NotNull SchuelerblockungInput, @NotNull SchuelerblockungOutput> {
 
+	private static final Random _random = new Random();
+
 	@Override
 	public @NotNull SchuelerblockungOutput handle(final @NotNull SchuelerblockungInput pInput) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
 		// Random-Objekt mit bestimmten Seed erzeugen.
-		final long seed = new Random().nextLong();
+		final long seed = _random.nextLong();
 		final @NotNull Random random = new Random(seed);
 		logger.log(LogLevel.APP, "SchuelerblockungAlgorithmus.handle(): Seed (" + seed + ") verwendet.");
 

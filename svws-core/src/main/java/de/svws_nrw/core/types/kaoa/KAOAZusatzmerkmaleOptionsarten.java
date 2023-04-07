@@ -50,7 +50,7 @@ public enum KAOAZusatzmerkmaleOptionsarten {
 	public static KAOAZusatzmerkmaleOptionsarten getByKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return KEINE;
-	    for (final @NotNull KAOAZusatzmerkmaleOptionsarten art : KAOAZusatzmerkmaleOptionsarten.values())
+		for (final @NotNull KAOAZusatzmerkmaleOptionsarten art : KAOAZusatzmerkmaleOptionsarten.values())
 			if (kuerzel.equals(art.kuerzel))
 				return art;
 		return null;

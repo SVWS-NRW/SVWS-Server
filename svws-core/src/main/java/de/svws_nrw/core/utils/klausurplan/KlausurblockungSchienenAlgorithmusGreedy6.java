@@ -38,7 +38,7 @@ public final class KlausurblockungSchienenAlgorithmusGreedy6 extends Klausurbloc
 
 			if (_dynDaten.gibIstBesserAlsZustand1())
 				_dynDaten.aktionZustand1Speichern();
-			 else
+			else
 				_dynDaten.aktionZustand1Laden();
 		}
 

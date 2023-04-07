@@ -16,10 +16,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurterminblockungAlgorithmus {
 
+	private static final Random _random = new Random();
+
 	/**
 	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.
 	 */
 	public KlausurterminblockungAlgorithmus() {
+		// no implementation
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class KlausurterminblockungAlgorithmus {
 		final long zeitEndeGesamt = System.currentTimeMillis() + pConfig.get_max_time_millis();
 
 		// Random-Objekt erzeugen
-		final long seed = new Random().nextLong(); // Trick, um den Seed zu kennen.
+		final long seed = _random.nextLong(); // Trick, um den Seed zu kennen.
 		final @NotNull Random random = new Random(seed);
 
 		// Erstellung eines Objektes, welches sich um alle dynamischen Daten während des Blockungsvorgangs kümmert.

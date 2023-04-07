@@ -18,13 +18,15 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch */
 public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
 
+	private static final Random _random = new Random();
+
 	@Override
 	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
 		// Random-Objekt erzeugen (Größter Integer Wert in TypeScript --> 9007199254740991L).
-		final long seed = new Random().nextLong();
+		final long seed = _random.nextLong();
 		final @NotNull Random random = new Random(seed);
 		logger.log(LogLevel.APP, "Erster nextInt() Aufruf liefert " + seed);
 

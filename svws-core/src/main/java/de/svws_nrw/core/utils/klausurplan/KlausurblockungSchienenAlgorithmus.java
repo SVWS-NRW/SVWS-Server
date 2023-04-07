@@ -14,10 +14,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurblockungSchienenAlgorithmus {
 
+	private static final Random _random = new Random();
+
 	/**
 	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.
 	 */
 	public KlausurblockungSchienenAlgorithmus() {
+		// no implementation
 	}
 
 	/**
@@ -31,7 +34,7 @@ public class KlausurblockungSchienenAlgorithmus {
 		final long zeitEndeGesamt = System.currentTimeMillis() + pMaxTimeMillis;
 
 		// Random-Objekt erzeugen
-		final long seed = new Random().nextLong(); // Trick, um den Seed zu kennen.
+		final long seed = _random.nextLong(); // Trick, um den Seed zu kennen.
 		final @NotNull Random random = new Random(seed);
 
 		// Konvertierung: KlausurblockungSchienenInput --> KlausurblockungSchienenDynDaten
