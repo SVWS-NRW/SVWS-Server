@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 
-	import { List, GostBelegpruefungErgebnisFehler, Vector, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
-	import { ComputedRef, computed } from 'vue';
+	import { type List, type GostBelegpruefungErgebnisFehler, Vector, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
+	import { type ComputedRef, computed } from 'vue';
 
 	const props = defineProps<{
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;

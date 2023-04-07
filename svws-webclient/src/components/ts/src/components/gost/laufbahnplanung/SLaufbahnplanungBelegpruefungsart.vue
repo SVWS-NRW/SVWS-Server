@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 	import { GostBelegpruefungsArt } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from 'vue';
+	import { computed, type WritableComputedRef } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue?: GostBelegpruefungsArt;
