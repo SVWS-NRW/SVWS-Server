@@ -31,7 +31,11 @@ import jakarta.persistence.TypedQuery;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu der Laufbahnplanung von Schülern der gymnasialen Oberstufe zur Verfügung.
  */
-public class GostSchuelerLaufbahn {
+public final class GostSchuelerLaufbahn {
+
+	private GostSchuelerLaufbahn() {
+		throw new IllegalStateException("Instantiation of " + GostSchuelerLaufbahn.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für

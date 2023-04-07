@@ -19,8 +19,11 @@ import de.svws_nrw.db.utils.data.Schule;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu Fächern der gymnasialen Oberstufe zur Verfügung.
  */
-public class FaecherGost {
+public final class FaecherGost {
 
+	private FaecherGost() {
+		throw new IllegalStateException("Instantiation of " + FaecherGost.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Diese Methode erstellt ein {@link GostFach}-Objekt mit den Daten aus dem Datenbank-Objekt

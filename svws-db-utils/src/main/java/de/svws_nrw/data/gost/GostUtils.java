@@ -17,7 +17,11 @@ import jakarta.ws.rs.WebApplicationException;
  * zur Verfügung, welche in den Data-Klassen an mehreren Stellen
  * verwendet werden.
  */
-public class GostUtils {
+public final class GostUtils {
+
+	private GostUtils() {
+		throw new IllegalStateException("Instantiation of " + GostUtils.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Prüft, ob es die Schule eine Schulform mit einer Gymnasiale Oberstufe (GOSt) hat.

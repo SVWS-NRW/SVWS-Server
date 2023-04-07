@@ -23,6 +23,7 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -116,7 +117,7 @@ public class GenerateTestdatenLaufbahn {
 				// Prüfe die Schulform
 				final Schulform schulform = Schule.queryCached(conn).getSchulform();
 		    	if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
-		    		throw new RuntimeException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+		    		throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
 		    	final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
 		    	// Files.createDirectories(Paths.get(outPath));

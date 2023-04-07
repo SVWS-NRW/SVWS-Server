@@ -35,7 +35,11 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu dem Abiturbereich von Schülern der gymnasialen Oberstufe zur Verfügung.
  */
-public class GostSchuelerAbitur {
+public final class GostSchuelerAbitur {
+
+	private GostSchuelerAbitur() {
+		throw new IllegalStateException("Instantiation of " + GostSchuelerAbitur.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Ermittelt die für das Abitur relevanten Daten für den Schüler mit der angegebenen

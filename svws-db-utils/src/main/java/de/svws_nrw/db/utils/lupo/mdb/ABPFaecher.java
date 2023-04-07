@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -227,8 +226,7 @@ public final class ABPFaecher {
 	 * @return der Standard-Eintrag für die Tabelle ABPFaecher
 	 */
 	public static Map<String, ABPFaecher> getDefault() {
-		final HashMap<String, ABPFaecher> faecher = new HashMap<>();
-		return faecher;
+		return new HashMap<>();
 	}
 
 
@@ -250,7 +248,7 @@ public final class ABPFaecher {
 		// Filtere alle Fächer, für die keine Fachgruppe definiert ist
 		final List<DTOFach> faecherGefiltert = faecher.stream()
 			.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikFach.daten.kuerzelASD) != null))
-			.collect(Collectors.toList());
+			.toList();
 		for (int i = 0; i < faecherGefiltert.size(); i++) {
 			final DTOFach fach = faecherGefiltert.get(i);
 			final ABPFaecher lupofach = new ABPFaecher();

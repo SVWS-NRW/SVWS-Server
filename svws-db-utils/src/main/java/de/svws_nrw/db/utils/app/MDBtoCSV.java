@@ -1183,14 +1183,13 @@ public class MDBtoCSV {
 			try (Database db = DatabaseBuilder.open(inFile)) {
 				final List<String> tablenames = db.getTableNames().stream().sorted().collect(Collectors.toList());
 				for (final String tablename : tablenames) {
-					if (type == MDBType.SCHULVER) {
-						if (("Kreistabelle".equals(tablename)) || ("öffpriText".equals(tablename)) || ("ortsnamen_tab".equals(tablename))
-								 || ("ortswahl".equals(tablename)) || ("RPTabelle".equals(tablename)) || ("Schulbetrieb".equals(tablename))
-								 || ("Schulformen_alt".equals(tablename)) || ("Schulträger".equals(tablename))
-								 || ("Tabelle1".equals(tablename)) || ("testschulenumsetzer".equals(tablename))
-								 || ("Version_2018".equals(tablename)) || ("WeitereSFdub".equals(tablename)) || ("WeitereSFx".equals(tablename)))
-							continue;
-					}
+					if ((type == MDBType.SCHULVER) && (("Kreistabelle".equals(tablename))
+							|| ("öffpriText".equals(tablename)) || ("ortsnamen_tab".equals(tablename))
+							|| ("ortswahl".equals(tablename)) || ("RPTabelle".equals(tablename)) || ("Schulbetrieb".equals(tablename))
+							|| ("Schulformen_alt".equals(tablename)) || ("Schulträger".equals(tablename))
+							|| ("Tabelle1".equals(tablename)) || ("testschulenumsetzer".equals(tablename))
+							|| ("Version_2018".equals(tablename)) || ("WeitereSFdub".equals(tablename)) || ("WeitereSFx".equals(tablename))))
+						continue;
 					final Path outFile = Paths.get(outDir.toString() + "/" + tablename + ".csv");
 					final Table table = db.getTable(tablename);
 					final String sql = createCSV(table);

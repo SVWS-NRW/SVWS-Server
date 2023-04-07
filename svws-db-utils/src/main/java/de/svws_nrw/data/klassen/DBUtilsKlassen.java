@@ -11,7 +11,11 @@ import jakarta.ws.rs.WebApplicationException;
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
  * zu Klassen in Bezug auf den Datenbank-Zugriff.
  */
-public class DBUtilsKlassen {
+public final class DBUtilsKlassen {
+
+	private DBUtilsKlassen() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsKlassen.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Bestimmt die Klasse mit der angegebenen ID

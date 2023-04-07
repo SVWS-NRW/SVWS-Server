@@ -11,8 +11,11 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 /**
  * Diese Klasse stellt allgemeine Methoden bezüglich eines Datenbank-Benutzer zur Verfügung.
  */
-public class BenutzerUtils {
+public final class BenutzerUtils {
 
+	private BenutzerUtils() {
+		throw new IllegalStateException("Instantiation of " + BenutzerUtils.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Diese Methode liest die Kompetenzen des Benutzers ein und speichert diese Information

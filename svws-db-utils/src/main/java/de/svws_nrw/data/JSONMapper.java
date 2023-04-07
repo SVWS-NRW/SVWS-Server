@@ -25,8 +25,11 @@ import jakarta.ws.rs.core.Response;
  * und umgekehrt. Diese Routinen dienen der RFC 8259-Kompatibiltät, welche von der RestEasy-Implementierung
  * in der Standard-Konfiguration nicht korrekt umgesetzt wird.
  */
-public class JSONMapper {
+public final class JSONMapper {
 
+	private JSONMapper() {
+		throw new IllegalStateException("Instantiation of " + JSONMapper.class.getName() + " not allowed");
+	}
 
 	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
 	public static ObjectMapper mapper = new ObjectMapper();

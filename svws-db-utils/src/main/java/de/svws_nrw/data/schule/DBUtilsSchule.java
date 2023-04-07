@@ -9,7 +9,11 @@ import jakarta.ws.rs.WebApplicationException;
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
  * zu der Schule in Bezug auf den Datenbank-Zugriff.
  */
-public class DBUtilsSchule {
+public final class DBUtilsSchule {
+
+	private DBUtilsSchule() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsSchule.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Ermittelt die Daten der eigenen Schule.

@@ -18,8 +18,11 @@ import jakarta.ws.rs.core.StreamingOutput;
  * Diese Klasse stellt Methoden für den Import und Export von SQLite-Datenbanken
  * zur Vefügung.
  */
-public class DataSQLite {
+public final class DataSQLite {
 
+	private DataSQLite() {
+		throw new IllegalStateException("Instantiation of " + DataSQLite.class.getName() + " not allowed");
+	}
 
     /**
      * Exportiert eine SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert

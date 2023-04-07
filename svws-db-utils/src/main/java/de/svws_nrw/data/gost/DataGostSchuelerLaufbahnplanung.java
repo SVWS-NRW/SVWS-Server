@@ -537,11 +537,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Prüfe, ob Fachbelegungen zu einem Halbjahr hinzugefügt werden sollen, die bereits Leistungsdaten enthalten
 			final GostLaufbahnplanungDatenFachbelegung datei = dateiBelegungen.get(idFach);
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-				if (abidaten.bewertetesHalbjahr[halbjahr.id]) {
-					if (datei.kursart[halbjahr.id] != null) {
-						logger.logLn("Fehler: Das Halbjahr " + halbjahr.kuerzel + " ist in der Datenbank bereits in den Leistungsdaten enthalten. Die Laufbahnplanung kann hier für einen Import keine Fachwahlen ergänzen.");
-						return false;
-					}
+				if ((abidaten.bewertetesHalbjahr[halbjahr.id]) && (datei.kursart[halbjahr.id] != null)) {
+					logger.logLn("Fehler: Das Halbjahr " + halbjahr.kuerzel + " ist in der Datenbank bereits in den Leistungsdaten enthalten. Die Laufbahnplanung kann hier für einen Import keine Fachwahlen ergänzen.");
+					return false;
 				}
 			}
 		}
@@ -549,11 +547,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Prüfe, ob Fachbelegungen aus Halbjahres entfernt werden sollen, die bereits Leistungsdaten enthalten
 			final AbiturFachbelegung db = dbBelegungen.get(idFach);
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-				if (abidaten.bewertetesHalbjahr[halbjahr.id]) {
-					if (db.belegungen[halbjahr.id] != null) {
-						logger.logLn("Fehler: Das Halbjahr " + halbjahr.kuerzel + " ist in der Datenbank bereits in den Leistungsdaten enthalten. Die Laufbahnplanung kann hier für einen Import keine Fachwahlen entfernen.");
-						return false;
-					}
+				if ((abidaten.bewertetesHalbjahr[halbjahr.id]) && (db.belegungen[halbjahr.id] != null)) {
+					logger.logLn("Fehler: Das Halbjahr " + halbjahr.kuerzel + " ist in der Datenbank bereits in den Leistungsdaten enthalten. Die Laufbahnplanung kann hier für einen Import keine Fachwahlen entfernen.");
+					return false;
 				}
 			}
 		}

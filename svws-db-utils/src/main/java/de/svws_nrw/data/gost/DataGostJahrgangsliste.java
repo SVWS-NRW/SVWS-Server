@@ -251,11 +251,10 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							// letzten Eintrag in den Halbjahren
 							try {
 								final int abifachNr = Integer.parseInt(sld.AbiFach);
-								if ((abifachNr > 0) && (abifachNr < 5)) {
-									if ((abifachHalbjahr[abifachNr - 1] == null) || (abifachHalbjahr[abifachNr - 1].id < halbjahr.id)) {
-										abifach[abifachNr - 1] = fachbelegung;
-										abifachHalbjahr[abifachNr - 1] = halbjahr;
-									}
+								if (((abifachNr > 0) && (abifachNr < 5))
+										&& ((abifachHalbjahr[abifachNr - 1] == null) || (abifachHalbjahr[abifachNr - 1].id < halbjahr.id))) {
+									abifach[abifachNr - 1] = fachbelegung;
+									abifachHalbjahr[abifachNr - 1] = halbjahr;
 								}
 							} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 								// kein gültiges Abbiturfach bei dem Lernabschnitt angegeben

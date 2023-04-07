@@ -9,7 +9,11 @@ import jakarta.ws.rs.WebApplicationException;
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
  * zu Jahrgängen in Bezug auf den Datenbank-Zugriff.
  */
-public class DBUtilsJahrgaenge {
+public final class DBUtilsJahrgaenge {
+
+	private DBUtilsJahrgaenge() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsJahrgaenge.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Bestimmt den Jahrgang mit der angegebenen ID

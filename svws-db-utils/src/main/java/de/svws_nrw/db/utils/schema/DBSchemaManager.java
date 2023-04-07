@@ -241,10 +241,8 @@ public final class DBSchemaManager {
 					if ((script == null) || "".equals(script))
 						continue; // should not happen
 					logger.logLn(msqlAll.getKommentar(i));
-					if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
-						if (returnOnError)
-							return false;
-					}
+					if ((conn.executeNativeUpdate(script) == Integer.MIN_VALUE) && (returnOnError))
+						return false;
 				}
 				if ((!msqlAll.runLast(conn, logger)) && returnOnError)
 					return false;
@@ -501,6 +499,8 @@ public final class DBSchemaManager {
 	/**
 	 * Versucht Repariert eine alte Schild2-Datenbank zu reparieren. Dieser Schritt ist
 	 * empfehlenswert vor der Migration zur SVWS-DB.
+	 *
+	 * @deprecated
 	 */
 	@Deprecated
 	public void repairLegacyDB() {

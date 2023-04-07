@@ -18,7 +18,11 @@ import jakarta.ws.rs.WebApplicationException;
  * Diese Klasse beinhaltet wiederverwendbare Hilfsmethoden
  * zu Schüler-Lernabschnittsdaten in Bezug auf den Datenbank-Zugriff.
  */
-public class DBUtilsSchuelerLernabschnittsdaten {
+public final class DBUtilsSchuelerLernabschnittsdaten {
+
+	private DBUtilsSchuelerLernabschnittsdaten() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsSchuelerLernabschnittsdaten.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Erstellt ein neues {@link DTOSchuelerLernabschnittsdaten}-Objekt mit Default-Werten.

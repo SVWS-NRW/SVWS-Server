@@ -27,7 +27,13 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse stellt Methoden für den Import und Export von Kurs 42 - Blockungen
  * zur Vefügung.
  */
-public class DataKurs42 {
+public final class DataKurs42 {
+
+	private DataKurs42() {
+		throw new IllegalStateException("Instantiation of " + DataKurs42.class.getName() + " not allowed");
+	}
+
+	private static final Random _random = new Random();
 
     /**
      * Importiert die in dem Multipart übergebene Datei.
@@ -44,15 +50,14 @@ public class DataKurs42 {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine Zip-Datei aus dem übergebenen Byte-Array
-    	final Random random = new Random();
     	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        final String tmpFilename = conn.getUser().connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
+        final String tmpFilename = conn.getUser().connectionManager.getConfig().getDBSchema() +  "_" + _random.ints(48, 123)  // from 0 to z
           .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
           .limit(40)
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
           .toString() + ".zip";
         logger.logLn("Erstelle eine temporäres Verzechnis mit dem Inhalt der Zip-Datei unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-		final Path path = Paths.get(tmpDirectory + "/" + tmpFilename);
+		final Path path = Paths.get(tmpDirectory).resolve(tmpFilename);
     	try {
     		Files.createDirectories(path);
     		try (ZipInputStream zipInput = new ZipInputStream(new ByteArrayInputStream(multipart.data))) {

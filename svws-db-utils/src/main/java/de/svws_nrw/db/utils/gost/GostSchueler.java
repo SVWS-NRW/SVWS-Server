@@ -32,7 +32,11 @@ import de.svws_nrw.db.utils.data.Schule;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu Schülern der gymnasialen Oberstufe zur Verfügung.
  */
-public class GostSchueler {
+public final class GostSchueler {
+
+	private GostSchueler() {
+		throw new IllegalStateException("Instantiation of " + GostSchueler.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Bestimmt für den übergegebenen Schüler das zugehörige Abiturjahr, sofern sich der Schüler

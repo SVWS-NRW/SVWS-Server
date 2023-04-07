@@ -95,7 +95,7 @@ public final class ABPFachgruppen {
 			     .addColumn(new ColumnBuilder("Aufgabenfeld", DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 			     .addColumn(new ColumnBuilder("Sortierung", DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 			     .toTable(db);
-			for (final ABPFachgruppen fach: zuordnung.values().stream().sorted((fg1, fg2) -> fg1.Fach.compareToIgnoreCase(fg2.Fach)).collect(Collectors.toList())) {
+			for (final ABPFachgruppen fach: zuordnung.values().stream().sorted((fg1, fg2) -> fg1.Fach.compareToIgnoreCase(fg2.Fach)).toList()) {
 				table.addRow(
 					fach.Fach,
 					fach.Bezeichnung,

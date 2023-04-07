@@ -22,6 +22,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -93,7 +94,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			// Prüfe die Schulform
 			final Schulform schulform = lupoMDB.retrieveSchulform();
 			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
-	    		throw new RuntimeException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+	    		throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
 	    	final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
 	    	// Files.createDirectories(Paths.get(outPath));
@@ -104,7 +105,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			// Lese die Fächerdaten aus der Lupo-Datei und generiere die Testdateien - Fasse dabei alle Daten der Datei zu einem Jahrgang zusammen
 			final List<GostFach> gostFaecher = lupoMDB.retrieveGostFaecher();
 			if ((gostFaecher == null) || (gostFaecher.size() == 0))
-				throw new RuntimeException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
+				throw new DeveloperNotificationException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
 			final String strJahrgangID = String.format("%02d", jahrgangID++);
 
 			writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", mapper.writeValueAsString(gostFaecher));

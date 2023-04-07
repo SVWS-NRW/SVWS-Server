@@ -25,8 +25,11 @@ import jakarta.ws.rs.core.StreamingOutput;
  * Diese Klasse stellt Methoden für den Import und Export von LuPO-MDB-Datenbanken
  * zur Vefügung.
  */
-public class DataLupo {
+public final class DataLupo {
 
+	private DataLupo() {
+		throw new IllegalStateException("Instantiation of " + DataLupo.class.getName() + " not allowed");
+	}
 
     /**
      * Importiert die in dem Multipart übergebene Datei.

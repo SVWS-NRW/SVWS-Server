@@ -13,7 +13,11 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * von Schülern zur Verfügung.
  */
-public class Schueler {
+public final class Schueler {
+
+	private Schueler() {
+		throw new IllegalStateException("Instantiation of " + Schueler.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Bestimmt die Sprachbelegungen (Sprachenfolge) und die Sprachprüfungen für den Schüler mit der angegebenen ID aus

@@ -156,16 +156,16 @@ public final class DBRootManager {
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
 		final Benutzer user = this.conn.getUser().connectTo(nameSchema);
-		try (DBEntityManager conn = user.getEntityManager()) {
-			if (conn == null)
+		try (DBEntityManager tmpConn = user.getEntityManager()) {
+			if (tmpConn == null)
 				return false;
 			// Prüfe, ob der Benutzer bereits existiert und erstelle nur einen, wenn keiner existiert
-			final List<String> benutzer = DTOInformationUser.queryNames(conn);
-			if (!benutzer.contains(nameUser) && !createDBUser(conn, nameUser, pwUser, nameSchema))
+			final List<String> benutzer = DTOInformationUser.queryNames(tmpConn);
+			if (!benutzer.contains(nameUser) && !createDBUser(tmpConn, nameUser, pwUser, nameSchema))
 				return false;
 
 			// Gibt dem Benutzer administrative Rechte auf das Schema
-			return grantAdminRights(conn, nameUser, nameSchema);
+			return grantAdminRights(tmpConn, nameUser, nameSchema);
 		}
 	}
 

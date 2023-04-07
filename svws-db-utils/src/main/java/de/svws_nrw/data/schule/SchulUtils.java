@@ -12,7 +12,11 @@ import jakarta.ws.rs.WebApplicationException;
  * zur Verfügung, welche in den Data-Klassen an mehreren Stellen
  * verwendet werden.
  */
-public class SchulUtils {
+public final class SchulUtils {
+
+	private SchulUtils() {
+		throw new IllegalStateException("Instantiation of " + SchulUtils.class.getName() + " not allowed");
+	}
 
 	/**
 	 * Ermittelt den DB-Schuljahresabschnitt anhand der ID.

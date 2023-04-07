@@ -40,7 +40,11 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 /**
  * Diese Klasse stellt Hilfs-Methoden rund um Blockungen der gymnasialen Oberstufe zur Verfügung.
  */
-public class GostBlockungUtils {
+public final class GostBlockungUtils {
+
+	private GostBlockungUtils() {
+		throw new IllegalStateException("Instantiation of " + GostBlockungUtils.class.getName() + " not allowed");
+	}
 
 	/** Funktion zum Bestimmen der nächsten freien ID bei einer Tabelle mit Autoinkrement */
 	private static BiFunction<DBEntityManager, SchemaTabelle, Long> getNextID = (final DBEntityManager conn, final SchemaTabelle tab) -> {

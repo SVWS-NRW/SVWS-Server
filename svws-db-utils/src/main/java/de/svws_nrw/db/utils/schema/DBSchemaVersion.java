@@ -1,5 +1,6 @@
 package de.svws_nrw.db.utils.schema;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 
 /**
  * Diese Klasse repräsentiert eine Schema-Version der SVWS-Datenbank
@@ -42,11 +43,11 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 *
 	 * @return die Revision des Schemas
 	 *
-	 * @throws Exception   tritt aus, wenn das Schema keine gültige Revision hat
+	 * @throws DeveloperNotificationException   tritt auf, wenn das Schema keine gültige Revision hat
 	 */
-	public long getRevision() throws Exception {
+	public long getRevision() throws DeveloperNotificationException {
 	  if (revision == null)
-		  throw new Exception("Das Schema besitzt keine gültige revision");
+		  throw new DeveloperNotificationException("Das Schema besitzt keine gültige Revision");
 	  return revision;
 	}
 

@@ -108,14 +108,13 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		for (final DTOKurs kurs : kurse) {
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgaben(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
-				if (vorgabe != null) {
-					if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
-						final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
-						kursklausuren.add(kursklausur);
-						final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausuren(hj, kursklausur, kurs);
-						schuelerklausuren.addAll(listSk);
-						retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, listSk));
-					}
+				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID)
+						&& mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {
+					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
+					kursklausuren.add(kursklausur);
+					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausuren(hj, kursklausur, kurs);
+					schuelerklausuren.addAll(listSk);
+					retKlausuren.add(DataGostKlausurenKursklausur.dtoMapper.apply(kursklausur, vorgabe, kurs, listSk));
 				}
 			}
 		}
