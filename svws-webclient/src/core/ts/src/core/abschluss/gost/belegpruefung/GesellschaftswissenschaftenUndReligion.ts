@@ -154,15 +154,13 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.ZK_13);
 			const halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 			if (halbjahre.size() === 2) {
-				if (((this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22)))) {
-					if (this.zusatzkursFachbelegungen !== null)
-						this.zusatzkursFachbelegungen.add(fachbelegung);
-				}
+				if ((this.zusatzkursFachbelegungen !== null) && (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21) || this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22)))
+					this.zusatzkursFachbelegungen.add(fachbelegung);
 			} else
 				if (halbjahre.size() > 1) {
 					this.addFehler(GostBelegungsfehler.ZK_12);
 				}
-			if (halbjahre.size() > 0) {
+			if (!halbjahre.isEmpty()) {
 				const prevHalbjahr : GostHalbjahr | null = halbjahre.get(0).previous();
 				if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
 					this.addFehler(GostBelegungsfehler.ZK_10);

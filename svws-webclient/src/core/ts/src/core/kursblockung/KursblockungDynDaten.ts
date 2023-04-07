@@ -677,12 +677,11 @@ export class KursblockungDynDaten extends JavaObject {
 						if (gKurs1.id < gKurs2.id)
 							for (const gLehr1 of gKurs1.lehrer)
 								for (const gLehr2 of gKurs2.lehrer)
-									if (gLehr1.id === gLehr2.id)
-										if ((externBeachten) || (!gLehr1.istExtern)) {
-											const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
-											const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
-											this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-										}
+									if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern))) {
+										const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
+										const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
+										this.statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+									}
 			}
 		}
 		const regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);

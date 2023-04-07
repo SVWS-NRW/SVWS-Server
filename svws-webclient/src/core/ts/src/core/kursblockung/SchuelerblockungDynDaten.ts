@@ -294,9 +294,8 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		const maxSuS : number = JavaInteger.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
 		for (const kurs of pKurse)
-			if (kurs.schienen[0] - 1 === pSchiene)
-				if (kurs.anzahlSuS < maxSuS)
-					best = kurs;
+			if ((kurs.schienen[0] - 1 === pSchiene) && (kurs.anzahlSuS < maxSuS))
+				best = kurs;
 		return best;
 	}
 

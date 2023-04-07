@@ -144,11 +144,8 @@ public final class Heap {
 		int childI = 1;
 		while (childI < _size) {
 			// Wechsel vom linken Kind "childI" zum rechten Kind?
-			if (childI + 1 < _size) {
-				if (_data[childI + 1].isBetterThan(_data[childI])) {
-					childI = childI + 1;
-				}
-			}
+			if ((childI + 1 < _size) && (_data[childI + 1].isBetterThan(_data[childI])))
+				childI = childI + 1;
 			// Wandert das Kind hoch?
 			final @NotNull
 			Variable child = _data[childI];

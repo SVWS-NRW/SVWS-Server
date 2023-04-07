@@ -464,11 +464,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		const benutzt : Array<boolean> | null = Array(this._schienenAnzahl).fill(false);
 		for (let klausurNr2 : number = 0; klausurNr2 < this._klausurenAnzahl; klausurNr2++) {
 			const farbe : number = this._klausurZuSchiene[klausurNr2];
-			if ((farbe >= 0) && (this._verboten[klausurNr][klausurNr2]))
-				if (!benutzt[farbe]) {
-					benutzt[farbe] = true;
-					summe++;
-				}
+			if (((farbe >= 0) && (this._verboten[klausurNr][klausurNr2])) && (!benutzt[farbe])) {
+				benutzt[farbe] = true;
+				summe++;
+			}
 		}
 		return summe;
 	}
@@ -530,9 +529,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	private gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS : LinkedCollection<number>, nr2 : number) : number {
 		let summe : number = 0;
 		for (let nr3 : number = 0; nr3 < this._klausurenAnzahl; nr3++)
-			if ((this._verboten[nr2][nr3]) && (this._klausurZuSchiene[nr3] < 0))
-				if (this.gibIstBenachbart(nr3, setS))
-					summe++;
+			if (((this._verboten[nr2][nr3]) && (this._klausurZuSchiene[nr3] < 0)) && (this.gibIstBenachbart(nr3, setS)))
+				summe++;
 		return summe;
 	}
 
@@ -603,9 +601,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		if (s >= this._schienenAnzahl)
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!")
 		for (let nr2 : number = 0; nr2 < this._klausurenAnzahl; nr2++)
-			if (this._klausurZuSchiene[nr2] === s)
-				if (this._verboten[nr][nr2])
-					return false;
+			if ((this._klausurZuSchiene[nr2] === s) && (this._verboten[nr][nr2]))
+				return false;
 		this._klausurZuSchiene[nr] = s;
 		return true;
 	}

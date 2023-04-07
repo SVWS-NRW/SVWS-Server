@@ -487,16 +487,13 @@ public class KlausurblockungSchienenDynDaten {
 	private int gibNachbarsfarbenDerKlausur(final int klausurNr) {
 		int summe = 0;
 		final boolean[] benutzt = new boolean[_schienenAnzahl];
-
 		for (int klausurNr2 = 0; klausurNr2 < _klausurenAnzahl; klausurNr2++) {
 			final int farbe = _klausurZuSchiene[klausurNr2];
-			if ((farbe >= 0) && (_verboten[klausurNr][klausurNr2]))
-				if (!benutzt[farbe]) {
-					benutzt[farbe] = true;
-					summe++;
-				}
+			if (((farbe >= 0) && (_verboten[klausurNr][klausurNr2])) && (!benutzt[farbe])) {
+				benutzt[farbe] = true;
+				summe++;
+			}
 		}
-
 		return summe;
 	}
 
@@ -572,9 +569,9 @@ public class KlausurblockungSchienenDynDaten {
 		int summe = 0;
 
 		for (int nr3 = 0; nr3 < _klausurenAnzahl; nr3++)
-			if ((_verboten[nr2][nr3]) && (_klausurZuSchiene[nr3] < 0)) // "nr3" ist freier Nachbar von "nr2".
-				if (gibIstBenachbart(nr3, setS)) // "nr3" ist Nachbar von einem Knoten in setS
-					summe++;
+			if (((_verboten[nr2][nr3]) && (_klausurZuSchiene[nr3] < 0)) // "nr3" ist freier Nachbar von "nr2".
+					&& (gibIstBenachbart(nr3, setS))) // "nr3" ist Nachbar von einem Knoten in setS
+				summe++;
 
 		return summe;
 	}
@@ -648,20 +645,14 @@ public class KlausurblockungSchienenDynDaten {
 	 * @return    TRUE, falls die übergebene Klausur in die übergebene Schiene gesetzt werden konnte.
 	 */
 	boolean aktionSetzeKlausurInSchiene(final int nr, final int s) {
-
 		if (s < 0)
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!");
-
 		if (s >= _schienenAnzahl)
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!");
-
 		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
-			if (_klausurZuSchiene[nr2] == s)
-				if (_verboten[nr][nr2])
-					return false;
-
+			if ((_klausurZuSchiene[nr2] == s) && (_verboten[nr][nr2]))
+				return false;
 		_klausurZuSchiene[nr] = s;
-
 		return true;
 	}
 

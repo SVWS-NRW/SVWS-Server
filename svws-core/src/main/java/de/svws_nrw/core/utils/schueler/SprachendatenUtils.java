@@ -363,11 +363,9 @@ public final class SprachendatenUtils {
             if (pruefungen != null) {
                 for (final Sprachpruefung pruefung : pruefungen) {
                     // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-                    if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
-                        // Evtl. doppelte Eintragungen bei Belegung und Prüfung abfangen
-                        if (!belegungen.get(0).sprache.equals(pruefung.sprache))
-                            return true;
-                    }
+                    if ((pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4))
+                        	&& (!belegungen.get(0).sprache.equals(pruefung.sprache))) // Evtl. doppelte Eintragungen bei Belegung und Prüfung abfangen
+                    	return true;
                 }
             }
         }

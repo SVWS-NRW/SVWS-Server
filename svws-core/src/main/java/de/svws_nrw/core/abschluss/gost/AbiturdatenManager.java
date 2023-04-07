@@ -890,8 +890,8 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
-			if (pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
-				if (pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
+			if (pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+				&& pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre))
 					return true;
 		}
 		return false;

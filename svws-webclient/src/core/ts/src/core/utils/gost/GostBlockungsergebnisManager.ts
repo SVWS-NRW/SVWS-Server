@@ -337,9 +337,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 								if (eKurs1.id < eKurs2.id)
 									for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
 										for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
-											if (gLehr1.id === gLehr2.id)
-												if ((externBeachten) || (!gLehr1.istExtern))
-													regelVerletzungen.add(r.id);
+											if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
+												regelVerletzungen.add(r.id);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
@@ -1454,24 +1453,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const menge : Vector<Schueler> = new Vector();
 		for (const schueler of this._parent.getMengeOfSchueler()) {
 			const pSchuelerID : number = schueler.id;
-			if (pKonfliktTyp === 1)
-				if (!this.getOfSchuelerHatKollision(pSchuelerID))
-					continue;
-			if (pKonfliktTyp === 2)
-				if (!this.getOfSchuelerHatNichtwahl(pSchuelerID))
-					continue;
-			if (pKonfliktTyp === 3)
-				if ((!this.getOfSchuelerHatKollision(pSchuelerID)) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID)))
-					continue;
-			if (pSubString.length > 0)
-				if (!this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString))
-					continue;
-			if (pKursID > 0)
-				if (!this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID))
-					continue;
-			if ((pFachID > 0) && (pKursartID > 0))
-				if (!this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID))
-					continue;
+			if ((pKonfliktTyp === 1) && (!this.getOfSchuelerHatKollision(pSchuelerID)))
+				continue;
+			if ((pKonfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID)))
+				continue;
+			if ((pKonfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(pSchuelerID)) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID))))
+				continue;
+			if ((pSubString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString)))
+				continue;
+			if ((pKursID > 0) && (!this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID)))
+				continue;
+			if (((pFachID > 0) && (pKursartID > 0)) && (!this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID)))
+				continue;
 			menge.add(schueler);
 		}
 		return menge;

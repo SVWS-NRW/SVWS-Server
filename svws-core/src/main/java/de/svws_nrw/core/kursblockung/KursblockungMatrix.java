@@ -289,11 +289,8 @@ public class KursblockungMatrix {
 				int fromC = 0;
 				for (int ic = 0; ic < cols; ic++) {
 					final int c = permC[ic]; // zufällige C-Reihenfolge
-					if (!abgearbeitetC[c]) {
-						if ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC])) {
-							fromC = c;
-						}
-					}
+					if ((!abgearbeitetC[c]) && ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC])))
+						fromC = c;
 				}
 				abgearbeitetC[fromC] = true;
 

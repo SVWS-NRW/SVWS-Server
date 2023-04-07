@@ -330,9 +330,8 @@ public class GostBlockungsergebnisManager {
 								if (eKurs1.id < eKurs2.id)
 									for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
 										for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
-											if (gLehr1.id == gLehr2.id)
-												if ((externBeachten) || (!gLehr1.istExtern))
-													regelVerletzungen.add(r.id);
+											if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
+												regelVerletzungen.add(r.id);
 					break;
 				case LEHRKRAEFTE_BEACHTEN: // 10
 					for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
@@ -1521,24 +1520,18 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler()) {
 			final long pSchuelerID = schueler.id;
-			if (pKonfliktTyp == 1)
-				if (!getOfSchuelerHatKollision(pSchuelerID))
-					continue;
-			if (pKonfliktTyp == 2)
-				if (!getOfSchuelerHatNichtwahl(pSchuelerID))
-					continue;
-			if (pKonfliktTyp == 3)
-				if ((!getOfSchuelerHatKollision(pSchuelerID)) && (!getOfSchuelerHatNichtwahl(pSchuelerID)))
-					continue;
-			if (pSubString.length() > 0)
-				if (!getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString))
-					continue;
-			if (pKursID > 0)
-				if (!getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID))
-					continue;
-			if ((pFachID > 0) && (pKursartID > 0))
-				if (!getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID))
-					continue;
+			if ((pKonfliktTyp == 1) && (!getOfSchuelerHatKollision(pSchuelerID)))
+				continue;
+			if ((pKonfliktTyp == 2) && (!getOfSchuelerHatNichtwahl(pSchuelerID)))
+				continue;
+			if ((pKonfliktTyp == 3) && ((!getOfSchuelerHatKollision(pSchuelerID)) && (!getOfSchuelerHatNichtwahl(pSchuelerID))))
+				continue;
+			if ((pSubString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString)))
+				continue;
+			if ((pKursID > 0) && (!getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID)))
+				continue;
+			if (((pFachID > 0) && (pKursartID > 0)) &&  (!getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID)))
+				continue;
 			// Der Schüler entspricht allen Filterkriterien.
 			menge.add(schueler);
 		}

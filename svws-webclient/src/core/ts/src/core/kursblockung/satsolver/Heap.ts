@@ -121,11 +121,8 @@ export class Heap extends JavaObject {
 		let parentI : number = 0;
 		let childI : number = 1;
 		while (childI < this._size) {
-			if (childI + 1 < this._size) {
-				if (this._data[childI + 1].isBetterThan(this._data[childI])) {
-					childI = childI + 1;
-				}
-			}
+			if ((childI + 1 < this._size) && (this._data[childI + 1].isBetterThan(this._data[childI])))
+				childI = childI + 1;
 			const child : Variable = this._data[childI];
 			if (child.isBetterThan(lastV)) {
 				this._data[parentI] = child;

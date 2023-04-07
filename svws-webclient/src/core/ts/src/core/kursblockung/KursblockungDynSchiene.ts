@@ -31,7 +31,7 @@ export class KursblockungDynSchiene extends JavaObject {
 
 
 	/**
-	 *Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
+	 * Im Konstruktor werden die Referenzen übernommen und das HashMap erzeugt.
 	 *
 	 * @param pLogger    Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pNr        Die Nummer der Schiene.
@@ -89,7 +89,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 *Liefert die aktuelle Nummer der Schiene (0-indiziert).
+	 * Liefert die aktuelle Nummer der Schiene (0-indiziert).
 	 *
 	 * @return Die aktuelle Nummer der Schiene (0-indiziert).
 	 */
@@ -98,7 +98,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 *Liefert die aktuelle Anzahl an Kursen in dieser Schiene.
+	 * Liefert die aktuelle Anzahl an Kursen in dieser Schiene.
 	 *
 	 * @return Die aktuelle Anzahl an Kursen in dieser Schiene.
 	 */
@@ -107,23 +107,20 @@ export class KursblockungDynSchiene extends JavaObject {
 	}
 
 	/**
-	 *Debug-Ausgabe. Nur für Testzwecke.
+	 * Debug-Ausgabe. Nur für Testzwecke.
 	 *
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public debug(nurMultikurse : boolean) : void {
 		for (const k of this.kursMap.values()) {
-			if (nurMultikurse) {
-				if (k.gibSchienenAnzahl() < 2) {
-					continue;
-				}
-			}
+			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2))
+				continue;
 			console.log(JSON.stringify("    " + k.toString()! + "\n"));
 		}
 	}
 
 	/**
-	 *Liefert die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium
+	 * Liefert die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium
 	 * für die Blockung verwendet.
 	 *
 	 * @return die Anzahl an Kursen mit gleicher Fachart in dieser Schiene. Diese Anzahl wird als Bewertungskriterium

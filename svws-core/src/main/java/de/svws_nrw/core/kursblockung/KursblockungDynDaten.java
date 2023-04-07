@@ -870,12 +870,11 @@ public class KursblockungDynDaten {
 						if (gKurs1.id < gKurs2.id)
 							for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
 								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
-									if (gLehr1.id == gLehr2.id)
-										if ((externBeachten) || (!gLehr1.istExtern)) {
-											final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
-											final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
-											statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-										}
+									if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern))) {
+										final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
+										final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
+										statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+									}
 			}
 		}
 

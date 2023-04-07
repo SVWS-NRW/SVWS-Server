@@ -354,8 +354,8 @@ public class SchuelerblockungDynDaten {
 		final long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
 		for (final SchuelerblockungInputKurs kurs : pKurse)
-			if (kurs.schienen[0] - 1 == pSchiene) // Es handelt sich nicht um einen Multikurs!
-				if (kurs.anzahlSuS < maxSuS)
+			if ((kurs.schienen[0] - 1 == pSchiene) // Es handelt sich nicht um einen Multikurs!
+				&& (kurs.anzahlSuS < maxSuS))
 					best = kurs;
 		return best;
 	}

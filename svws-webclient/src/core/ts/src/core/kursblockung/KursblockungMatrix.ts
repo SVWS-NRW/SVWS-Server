@@ -256,11 +256,8 @@ export class KursblockungMatrix extends JavaObject {
 				let fromC : number = 0;
 				for (let ic : number = 0; ic < this.cols; ic++) {
 					const c : number = this.permC[ic];
-					if (!this.abgearbeitetC[c]) {
-						if ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC])) {
-							fromC = c;
-						}
-					}
+					if ((!this.abgearbeitetC[c]) && ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC])))
+						fromC = c;
 				}
 				this.abgearbeitetC[fromC] = true;
 				const overR : number = this.c2r[fromC];
