@@ -21,6 +21,10 @@
 		"checkJs": true,
 		"newLine": "lf",
 		"rootDir": ".",
-		"types": ["unplugin-icons/types/vue", "vite/client"]
-	}
+		"types": ["unplugin-icons/types/vue", "vite/client"],
+	},
+	"include": [
+		".eslintrc.cjs",
+		"tailwind.preset.cjs"
+	]
 }

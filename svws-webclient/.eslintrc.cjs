@@ -1,13 +1,17 @@
 module.exports = {
 	root: true,
 	env: { node: true },
+	parser: "vue-eslint-parser",
 	extends: [
 		"plugin:vue/vue3-strongly-recommended",
+		"plugin:@typescript-eslint/recommended",
 		"eslint:recommended",
-		"@vue/typescript/recommended",
 	],
 	parserOptions: {
+		parser: '@typescript-eslint/parser',
+		extraFileExtensions: [".vue"],
 		ecmaVersion: "latest",
+		sourceType: "module",
 		tsconfigRootDir: __dirname,
 		project: [
 			"./tsconfig.base.json",
@@ -28,6 +32,7 @@ module.exports = {
 		"no-trailing-spaces": "error",
 		"max-len": "off", // keine maximale zeilenlänge
 		"vue/max-len": "off", // ebensowenig in .vue files
+		"no-unused-vars": "off",
 
 		// Vue-spezifische Regeln
 		"vue/no-setup-props-destructure": "error", // schützt davor, props unreactiv zu destrukurieren
@@ -41,7 +46,6 @@ module.exports = {
 		"vue/singleline-html-element-content-newline": "off",
 
 		// TypeScript-spezifische Regeln
-		// "@typescript-eslint/no-unused-vars": ["warn", { varsIgnorePattern: "^_" }],
 		"@typescript-eslint/no-inferrable-types": "off", //[ 1, { ignoreParameters: true } ],
 		"@typescript-eslint/ban-types": "error",
 		// BEGIN Für's erste deaktiviert, zu diskutieren
