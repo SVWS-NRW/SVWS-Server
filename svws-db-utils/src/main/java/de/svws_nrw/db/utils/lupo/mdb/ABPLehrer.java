@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -44,7 +44,7 @@ public final class ABPLehrer {
 	 */
 	public static List<ABPLehrer> read(final Database db) {
 		try {
-			final List<ABPLehrer> liste = new Vector<>();
+			final List<ABPLehrer> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_Lehrer");
 			for (final Row r : table) {
 				final ABPLehrer zuordnung = new ABPLehrer();
@@ -99,7 +99,7 @@ public final class ABPLehrer {
 	 * @return der Standard-Eintrag für die Tabelle ABPLehrer
 	 */
 	public static List<ABPLehrer> getDefault() {
-		final List<ABPLehrer> lehrer = new Vector<>();
+		final List<ABPLehrer> lehrer = new ArrayList<>();
 		return lehrer;
 	}
 

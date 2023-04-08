@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -28,7 +28,7 @@ public class HerkunftSonstigeKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann")
-	public @NotNull List<@NotNull String> schulformen = new Vector<>();
+	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Die textuelle Beschreibung der sonstigen Herkunft. */
 	@Schema(description = "die textuelle Beschreibung der sonstigen Herkunft", example = "Herkunft noch unbekannt (nur Gliederung A12, A13)")

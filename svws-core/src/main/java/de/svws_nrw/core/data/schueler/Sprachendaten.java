@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.validation.constraints.NotNull;
@@ -18,9 +18,9 @@ public class Sprachendaten {
 	public long schuelerID;
 
 	/** Die Liste der Sprachbelegungen. */
-	public @NotNull Vector<@NotNull Sprachbelegung> belegungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull Sprachbelegung> belegungen = new ArrayList<>();
 
 	/** Die Liste der Sprachpruefungen. */
-	public @NotNull Vector<@NotNull Sprachpruefung> pruefungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull Sprachpruefung> pruefungen = new ArrayList<>();
 
 }

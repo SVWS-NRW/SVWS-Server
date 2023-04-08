@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.schule;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,6 +24,6 @@ public class BerufskollegFachklassenKatalog {
 
 	/** Die Teilkataloge in Abhängigkeit vom Index der Fachklassen. */
 	@Schema(description = "die Teilkataloge in Abhängigkeit vom Index der Fachklassen")
-	public @NotNull List<@NotNull BerufskollegFachklassenKatalogIndex> indizes = new Vector<>();
+	public @NotNull List<@NotNull BerufskollegFachklassenKatalogIndex> indizes = new ArrayList<>();
 
 }

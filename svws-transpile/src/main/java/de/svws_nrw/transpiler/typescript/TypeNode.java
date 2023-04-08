@@ -250,7 +250,7 @@ public class TypeNode {
 
 
 	/**
-	 * Returns whether the type is a Java collection type (e.g. java.util.Vector).
+	 * Returns whether the type is a Java collection type (e.g. java.util.ArrayList).
 	 *
 	 * @return true if the type is a Java collection type
 	 */

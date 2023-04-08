@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 
@@ -18,7 +18,7 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public fachklassen : List<BerufskollegFachklassenKatalogEintrag> = new Vector();
+	public fachklassen : List<BerufskollegFachklassenKatalogEintrag> = new ArrayList();
 
 
 	public constructor() {

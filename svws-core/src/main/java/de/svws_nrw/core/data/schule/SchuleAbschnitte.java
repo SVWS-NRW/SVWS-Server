@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -26,6 +26,6 @@ public class SchuleAbschnitte {
 
 	/** Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...) */
 	@Schema(description = "Bezeichnungen für die Abschnitte", example = "1. Quartal")
-	public @NotNull Vector<@NotNull String> bezAbschnitte = new Vector<>();
+	public @NotNull ArrayList<@NotNull String> bezAbschnitte = new ArrayList<>();
 
 }

@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.betrieb;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -127,6 +127,6 @@ public class BetriebStammdaten {
 
 	/** Ein Array mit den Ansprechpartnern im Betrieb. */
 	@ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class, description = "Ein Array mit den Ansprechpartnern im Betrieb."))
-	public @NotNull Vector<@NotNull BetriebAnsprechpartner> ansprechpartner = new Vector<>();
+	public @NotNull ArrayList<@NotNull BetriebAnsprechpartner> ansprechpartner = new ArrayList<>();
 
 }

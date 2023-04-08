@@ -4,7 +4,7 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
@@ -29,7 +29,7 @@ public class ApiPathParams {
 	public final HashMap<String, String> importsRequired = new HashMap<>();
 
 	/** Das Mapping zwischen dem Namen eines Pfad-Parameters auf den TS-Typ des Pfad-Parameters */
-	public final Vector<Map.Entry<String, String>> params = new Vector<>();
+	public final ArrayList<Map.Entry<String, String>> params = new ArrayList<>();
 
 	/**
 	 * Erstellt anhand der übergebenen Annotation und mithilfe des übergebenen Transpilers ein

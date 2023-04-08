@@ -2,10 +2,10 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
 
@@ -502,7 +502,7 @@ export class BenutzerKompetenz extends JavaObject {
 	private static getMapGruppenZuordnung() : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
 		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
 			for (const g of BenutzerKompetenzGruppe.values())
-				BenutzerKompetenz._mapGruppenZuordnung.put(g, new Vector());
+				BenutzerKompetenz._mapGruppenZuordnung.put(g, new ArrayList());
 			for (const p of BenutzerKompetenz.values()) {
 				let gruppe : BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
 				if (gruppe === null)
@@ -551,7 +551,7 @@ export class BenutzerKompetenz extends JavaObject {
 	public static getKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
 		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
 		if (liste === null)
-			return new Vector();
+			return new ArrayList();
 		return liste;
 	}
 

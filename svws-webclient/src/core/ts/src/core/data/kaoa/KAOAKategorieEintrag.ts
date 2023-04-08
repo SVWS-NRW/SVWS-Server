@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class KAOAKategorieEintrag extends JavaObject {
 
@@ -23,7 +23,7 @@ export class KAOAKategorieEintrag extends JavaObject {
 	/**
 	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf
 	 */
-	public jahrgaenge : List<string> = new Vector();
+	public jahrgaenge : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

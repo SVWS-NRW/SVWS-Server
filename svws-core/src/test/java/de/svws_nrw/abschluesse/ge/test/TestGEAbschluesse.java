@@ -16,7 +16,7 @@ import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.logger.LogLevel;
 
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +56,7 @@ public class TestGEAbschluesse {
     @DisplayName("Teste Prognose ...")
     Stream<DynamicTest> pruefePrognose() {
         System.out.println("  - Prüfe Abschluss-Prognose für " + notenBilder.size() + " Notenbilder:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         notenBilder.forEach((name, data) -> {
         	tests.add(DynamicTest.dynamicTest(
 				"ID " + name + "",
@@ -89,7 +89,7 @@ public class TestGEAbschluesse {
     @DisplayName("Teste HA 9 ...")
     Stream<DynamicTest> pruefeHA9() {
         System.out.println("  - Prüfe HA9:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         notenBilder.forEach((name, data) -> {
         	if ("09".equals(data.input.jahrgang) || "9".equals(data.input.jahrgang))
 	        	tests.add(DynamicTest.dynamicTest(
@@ -124,7 +124,7 @@ public class TestGEAbschluesse {
     @DisplayName("Teste HA 10 ...")
     Stream<DynamicTest> pruefeHA10() {
         System.out.println("  - Prüfe HA10:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         notenBilder.forEach((name, data) -> {
         	if ("10".equals(data.input.jahrgang))
 	        	tests.add(DynamicTest.dynamicTest(
@@ -158,7 +158,7 @@ public class TestGEAbschluesse {
     @DisplayName("Teste MSA ...")
     Stream<DynamicTest> pruefeMSA() {
         System.out.println("  - Prüfe MSA:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         notenBilder.forEach((name, data) -> {
         	if ("10".equals(data.input.jahrgang))
 	        	tests.add(DynamicTest.dynamicTest(
@@ -192,7 +192,7 @@ public class TestGEAbschluesse {
     @DisplayName("Teste MSA-Q ...")
     Stream<DynamicTest> pruefeMSAQ() {
         System.out.println("  - Prüfe MSA-Q:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         notenBilder.forEach((name, data) -> {
         	if ("10".equals(data.input.jahrgang))
 	        	tests.add(DynamicTest.dynamicTest(

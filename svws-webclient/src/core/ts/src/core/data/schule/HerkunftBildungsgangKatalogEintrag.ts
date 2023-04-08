@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 
@@ -19,7 +19,7 @@ export class HerkunftBildungsgangKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (BK und SB).
 	 */
-	public schulformen : List<string> = new Vector();
+	public schulformen : List<string> = new ArrayList();
 
 	/**
 	 * Die textuelle Beschreibung der sonstigen Herkunft.

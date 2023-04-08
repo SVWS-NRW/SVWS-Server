@@ -1,4 +1,5 @@
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Service } from '../../../core/Service';
 import { JavaString } from '../../../java/lang/JavaString';
 import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
@@ -11,7 +12,6 @@ import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/Schul
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFaecherGruppen';
 
@@ -149,7 +149,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		let ignorieren_genutzt : boolean = false;
 		let ausgleich_genutzt : boolean = false;
 		let nachpruefung_genutzt : boolean = false;
-		const npFaecher : List<GEAbschlussFach> = new Vector();
+		const npFaecher : List<GEAbschlussFach> = new ArrayList();
 		const fg1_defizite : number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussMSA.filterDefizite);
 		const fg2_defizite : number = faecher.fg2.getFaecherAnzahl(ServiceAbschlussMSA.filterDefizite);
 		const fg1_anzahlAusgleiche : number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussMSA.filterAusgleiche);

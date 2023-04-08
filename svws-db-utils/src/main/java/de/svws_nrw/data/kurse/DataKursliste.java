@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,7 +84,7 @@ public final class DataKursliste extends DataManager<Long> {
     			continue;
     		List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
     		if (listSchueler == null) {
-    			listSchueler = new Vector<>();
+    			listSchueler = new ArrayList<>();
     			mapKursSchueler.put(ks.Kurs_ID, listSchueler);
     		}
     		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));

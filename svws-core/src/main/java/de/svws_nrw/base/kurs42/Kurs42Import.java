@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.base.CsvReader;
@@ -56,19 +56,19 @@ public class Kurs42Import {
 	public final GostHalbjahr halbjahr;
 
 	/** Eine Liste der Blockungs-Regeln */
-	public final Vector<GostBlockungRegel> regeln = new Vector<>();
+	public final ArrayList<GostBlockungRegel> regeln = new ArrayList<>();
 
 	/** Eine Liste der Kurse der neuen Blockung */
-	public final Vector<GostBlockungKurs> kurse = new Vector<>();
+	public final ArrayList<GostBlockungKurs> kurse = new ArrayList<>();
 
 	/** Eine Liste der Schienen der neuen Blockung */
-	public final Vector<GostBlockungSchiene> schienen = new Vector<>();
+	public final ArrayList<GostBlockungSchiene> schienen = new ArrayList<>();
 
 	/** Die Kurs-Schienen-Zuordnungen der Blockung */
-	public final Vector<Pair<Long, Long>> zuordnung_kurs_schiene = new Vector<>();
+	public final ArrayList<Pair<Long, Long>> zuordnung_kurs_schiene = new ArrayList<>();
 
 	/** Die Kurs-Schüler-Zuordnungen der Blockung */
-	public final Vector<Pair<Long, Long>> zuordnung_kurs_schueler = new Vector<>();
+	public final ArrayList<Pair<Long, Long>> zuordnung_kurs_schueler = new ArrayList<>();
 
 	/** Eine Map von der DB-ID des Schülers auf das Kurs42-Import-Objekt */
 	private final HashMap<Long, Kurs42DataSchueler> mapSchuelerByID = new HashMap<>();

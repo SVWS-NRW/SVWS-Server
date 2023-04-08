@@ -3,7 +3,7 @@ package de.svws_nrw.core.utils.gost;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -16,16 +16,16 @@ import jakarta.validation.constraints.NotNull;
 public class GostFachwahlManager {
 
 	/** Die Liste mit den einzelnen Fachwahlen */
-	private final @NotNull Vector<@NotNull GostFachwahl> fachwahlen = new Vector<>();
+	private final @NotNull ArrayList<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull GostKursart, @NotNull HashSet<@NotNull Long>>> mapFachKursart = new HashMap<>();
 
 	/** Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostFachwahl>> mapFach = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostFachwahl>> mapFach = new HashMap<>();
 
 	/** Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID */
-	private final @NotNull HashMap<@NotNull Long, @NotNull Vector<@NotNull GostFachwahl>> mapSchueler = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostFachwahl>> mapSchueler = new HashMap<>();
 
 
 	/**
@@ -57,16 +57,16 @@ public class GostFachwahlManager {
 
 		fachwahlen.add(fachwahl);
 
-		Vector<@NotNull GostFachwahl> fwFach = mapFach.get(fachwahl.fachID);
+		ArrayList<@NotNull GostFachwahl> fwFach = mapFach.get(fachwahl.fachID);
 		if (fwFach == null) {
-			fwFach = new Vector<>();
+			fwFach = new ArrayList<>();
 			mapFach.put(fachwahl.fachID, fwFach);
 		}
 		fwFach.add(fachwahl);
 
-		Vector<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(fachwahl.schuelerID);
+		ArrayList<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(fachwahl.schuelerID);
 		if (fwSchueler == null) {
-			fwSchueler = new Vector<>();
+			fwSchueler = new ArrayList<>();
 			mapSchueler.put(fachwahl.schuelerID, fwSchueler);
 		}
 		fwSchueler.add(fachwahl);
@@ -96,8 +96,8 @@ public class GostFachwahlManager {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getFachwahlen(final long idFach) {
-		final Vector<@NotNull GostFachwahl> fwFach = mapSchueler.get(idFach);
-		return (fwFach == null) ? new Vector<>() : fwFach;
+		final ArrayList<@NotNull GostFachwahl> fwFach = mapSchueler.get(idFach);
+		return (fwFach == null) ? new ArrayList<>() : fwFach;
 	}
 
 
@@ -110,8 +110,8 @@ public class GostFachwahlManager {
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getSchuelerFachwahlen(final long idSchueler) {
-		final Vector<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
-		return (fwSchueler == null) ? new Vector<>() : fwSchueler;
+		final ArrayList<@NotNull GostFachwahl> fwSchueler = mapSchueler.get(idSchueler);
+		return (fwSchueler == null) ? new ArrayList<>() : fwSchueler;
 	}
 
 

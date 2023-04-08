@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.healthmarketscience.jackcess.ColumnBuilder;
@@ -57,7 +57,7 @@ public final class ABPKursarten {
 	 */
 	public static List<ABPKursarten> read(final Database db) {
 		try {
-			final List<ABPKursarten> liste = new Vector<>();
+			final List<ABPKursarten> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_Kursarten");
 			for (final Row r : table) {
 				final ABPKursarten zuordnung = new ABPKursarten();
@@ -153,7 +153,7 @@ public final class ABPKursarten {
         lk.Q3 = true;
         lk.Q4 = true;
         lk.Sortierung = 3;
-        final Vector<ABPKursarten> result = new Vector<>();
+        final ArrayList<ABPKursarten> result = new ArrayList<>();
         result.add(gkm);
         result.add(gks);
         result.add(lk);

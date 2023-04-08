@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.healthmarketscience.jackcess.DataType;
@@ -416,11 +416,11 @@ public class LupoMDB {
 			logger.logLn("Vorbereitung...");
 			logger.modifyIndent(2);
 			logger.logLn("  - Erzeuge HashMap mit der Zuordnung der Fächer zum Schüler aus der LuPO-Tabelle...");
-			final HashMap<Integer, Vector<ABPSchuelerFaecher>> tmpSchuelerFaecher = new HashMap<>();
+			final HashMap<Integer, ArrayList<ABPSchuelerFaecher>> tmpSchuelerFaecher = new HashMap<>();
 			for (final ABPSchuelerFaecher abpSchuelerFaecher : schuelerFaecher) {
-				Vector<ABPSchuelerFaecher> sf = tmpSchuelerFaecher.get(abpSchuelerFaecher.Schueler_ID);
+				ArrayList<ABPSchuelerFaecher> sf = tmpSchuelerFaecher.get(abpSchuelerFaecher.Schueler_ID);
 				if (sf == null) {
-					sf = new Vector<>();
+					sf = new ArrayList<>();
 					tmpSchuelerFaecher.put(abpSchuelerFaecher.Schueler_ID, sf);
 				}
 				sf.add(abpSchuelerFaecher);
@@ -504,7 +504,7 @@ public class LupoMDB {
 				conn.persist(lupoSchueler);
 
 				logger.logLn("- Schreibe Fachbezogene Schüler-Daten in die DB... ");
-				final Vector<ABPSchuelerFaecher> abpSFaecher = tmpSchuelerFaecher.get(abpSchueler.ID);
+				final ArrayList<ABPSchuelerFaecher> abpSFaecher = tmpSchuelerFaecher.get(abpSchueler.ID);
 				if (abpSFaecher != null) {
 					logger.modifyIndent(2);
 					for (final ABPSchuelerFaecher abpSFach : abpSFaecher) {
@@ -569,7 +569,7 @@ public class LupoMDB {
 	 * @return die Liste der Fächer der gymnasialen Oberstufe
 	 */
 	public List<GostFach> retrieveGostFaecher() {
-		final Vector<GostFach> result = new Vector<>();
+		final ArrayList<GostFach> result = new ArrayList<>();
 		for (final ABPFaecher lupoFach : faecher.values()) {
 			final GostFach gostFach = new GostFach();
 			gostFach.id = lupoFach.ID;
@@ -623,7 +623,7 @@ public class LupoMDB {
 	 */
 	public List<Abiturdaten> retrieveAbiturdaten() {
 		final HashMap<Long, Abiturdaten> alleAbiturdaten = new HashMap<>();
-		final Vector<Abiturdaten> result = new Vector<>();
+		final ArrayList<Abiturdaten> result = new ArrayList<>();
 		for (final ABPSchueler lupoSchueler : schueler) {
 			final Abiturdaten abidaten = new Abiturdaten();
 			abidaten.schuelerID = lupoSchueler.ID;

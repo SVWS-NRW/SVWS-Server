@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -116,7 +116,7 @@ public class TestGostBelegpruefung {
 	@TestFactory
 	@DisplayName("Teste Belegprüfungsalgorithmus...")
 	Stream<DynamicTest> testBelegpruefung() {
-		final Vector<DynamicTest> tests = new Vector<>();
+		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
 				// Lese GostFaecher
@@ -144,7 +144,7 @@ public class TestGostBelegpruefung {
 							if (log != null) {
 								System.out.println("  Log:");
 							}
-							final Vector<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
+							final ArrayList<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
 							if (fehler.size() > 0) {
 								System.out.println("  Fehlercode:");
 								for (final GostBelegpruefungErgebnisFehler fehlercode : fehler) {
@@ -185,7 +185,7 @@ public class TestGostBelegpruefung {
 							if (log != null) {
 								System.out.println("  Log:");
 							}
-							final Vector<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
+							final ArrayList<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
 							if (fehler.size() > 0) {
 								System.out.println("  Fehlercode:");
 								for (final GostBelegpruefungErgebnisFehler fehlercode : fehler) {

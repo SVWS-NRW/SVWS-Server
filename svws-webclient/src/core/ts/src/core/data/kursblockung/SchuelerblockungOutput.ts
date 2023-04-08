@@ -1,13 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerblockungOutputFachwahlZuKurs } from '../../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class SchuelerblockungOutput extends JavaObject {
 
 	/**
 	 * Alle Fachwahlen-Zuordnungen.
 	 */
-	public fachwahlenZuKurs : Vector<SchuelerblockungOutputFachwahlZuKurs> = new Vector();
+	public fachwahlenZuKurs : ArrayList<SchuelerblockungOutputFachwahlZuKurs> = new ArrayList();
 
 
 	public constructor() {

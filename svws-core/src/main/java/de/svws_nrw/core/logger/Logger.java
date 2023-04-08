@@ -1,6 +1,6 @@
 package de.svws_nrw.core.logger;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 public class Logger {
 
 	/// Ein interner Vektor zum Speichern der Consumer von Log-Informationen.
-	private final @NotNull Vector<@NotNull Consumer<@NotNull LogData>> consumer = new Vector<>();
+	private final @NotNull ArrayList<@NotNull Consumer<@NotNull LogData>> consumer = new ArrayList<>();
 
 	/// Das Standard-Log-Level, welches für neue Log-Informationen genutzt wird.
 	private @NotNull LogLevel defaultLevel = LogLevel.INFO;

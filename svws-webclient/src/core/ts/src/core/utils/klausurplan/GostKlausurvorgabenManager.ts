@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostKlausurvorgabe } from '../../../core/data/gost/klausuren/GostKlausurvorgabe';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
@@ -14,7 +14,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Eine Map quartal -> Liste von GostKlausurvorgaben
 	 */
-	private readonly _mapQuartalKlausurvorgaben : HashMap<number, Vector<GostKlausurvorgabe>> = new HashMap();
+	private readonly _mapQuartalKlausurvorgaben : HashMap<number, ArrayList<GostKlausurvorgabe>> = new HashMap();
 
 	/**
 	 * Eine Map id -> GostKlausurvorgabe
@@ -49,9 +49,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private addVorgabeToInternalMaps(v : GostKlausurvorgabe) : void {
-		let listKlausurvorgabenMapQuartalKlausurvorgaben : Vector<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(v.quartal);
+		let listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(v.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben === null) {
-			listKlausurvorgabenMapQuartalKlausurvorgaben = new Vector();
+			listKlausurvorgabenMapQuartalKlausurvorgaben = new ArrayList();
 			this._mapQuartalKlausurvorgaben.put(v.quartal, listKlausurvorgabenMapQuartalKlausurvorgaben);
 		}
 		listKlausurvorgabenMapQuartalKlausurvorgaben.add(v);
@@ -73,7 +73,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		}
 		let listKlausurvorgaben : List<GostKlausurvorgabe> | null = mapFachKlausurvorgaben.get(v.idFach);
 		if (listKlausurvorgaben === null) {
-			listKlausurvorgaben = new Vector();
+			listKlausurvorgaben = new ArrayList();
 			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben);
 		}
 		listKlausurvorgaben.add(v);
@@ -105,7 +105,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
-		const listKlausurvorgabenMapQuartalKlausurvorgaben : Vector<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
+		const listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben !== null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
 		}
@@ -239,7 +239,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			const kursartAllg : string | null = __param1;
 			const idFach : number = __param2 as number;
 			if (quartal > 0) {
-				const retList : List<GostKlausurvorgabe> | null = new Vector();
+				const retList : List<GostKlausurvorgabe> | null = new ArrayList();
 				const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
 				if (vorgabe !== null)
 					retList.add(vorgabe);
@@ -251,10 +251,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 			const idFach : number = __param1 as number;
 			const map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
 			if (map1 === null)
-				return new Vector();
+				return new ArrayList();
 			const list : List<GostKlausurvorgabe> | null = map1.get(idFach);
 			if (list === null)
-				return new Vector();
+				return new ArrayList();
 			return list;
 		} else throw new Error('invalid method overload');
 	}

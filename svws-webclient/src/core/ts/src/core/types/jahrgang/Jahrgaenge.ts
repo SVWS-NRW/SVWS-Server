@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
 
 export class Jahrgaenge extends JavaObject {
@@ -179,12 +179,12 @@ export class Jahrgaenge extends JavaObject {
 	/**
 	 * Die Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
 	 */
-	private schulformen : Array<Vector<Schulform | null>>;
+	private schulformen : Array<ArrayList<Schulform | null>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen der Jahrgang vorkommt, für die einzelnen Historieneinträge
 	 */
-	private bezeichnungen : Array<Vector<string>>;
+	private bezeichnungen : Array<ArrayList<string>>;
 
 	/**
 	 * Erzeugt einen neuen Jahrgang in der Aufzählung.
@@ -202,8 +202,8 @@ export class Jahrgaenge extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		this.bezeichnungen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector();
-			this.bezeichnungen[i] = new Vector();
+			this.schulformen[i] = new ArrayList();
+			this.bezeichnungen[i] = new ArrayList();
 			for (const bez of historie[i].bezeichnungen) {
 				const sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
 				if (sf !== null)
@@ -301,7 +301,7 @@ export class Jahrgaenge extends JavaObject {
 	 * @return die bei der Schulform zulässigen Jahrgänge
 	 */
 	public static get(schulform : Schulform | null) : List<Jahrgaenge | null> {
-		const result : Vector<Jahrgaenge | null> = new Vector();
+		const result : ArrayList<Jahrgaenge | null> = new ArrayList();
 		if (schulform === null)
 			return result;
 		const jahrgaenge : Array<Jahrgaenge> = Jahrgaenge.values();

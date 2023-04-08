@@ -1,7 +1,7 @@
 package de.svws_nrw.transpiler;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.TypeElement;
@@ -28,7 +28,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	private ExpressionType resultType = null;
 
 	/** a list of the lambda expression parameters type. */
-	private final List<ExpressionType> paramTypes = new Vector<>();
+	private final List<ExpressionType> paramTypes = new ArrayList<>();
 
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeElement}

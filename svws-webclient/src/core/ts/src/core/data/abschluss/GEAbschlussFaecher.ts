@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class GEAbschlussFaecher extends JavaObject {
 
@@ -23,7 +23,7 @@ export class GEAbschlussFaecher extends JavaObject {
 	/**
 	 * Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen.
 	 */
-	public faecher : List<GEAbschlussFach> = new Vector();
+	public faecher : List<GEAbschlussFach> = new ArrayList();
 
 
 	public constructor() {

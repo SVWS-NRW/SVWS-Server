@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { List, GostBelegpruefungErgebnisFehler, Vector, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
+	import { List, GostBelegpruefungErgebnisFehler, ArrayList, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
 	import { ComputedRef, computed } from 'vue';
 
 	const props = defineProps<{
@@ -27,7 +27,7 @@
 	}>();
 
 	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
-		const res = new Vector<GostBelegpruefungErgebnisFehler>();
+		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
 		for (const fehler of props.fehlerliste)
 			if (!!fehler &&
 				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===

@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.core.types.schule.Herkunftsschulnummern;
@@ -26,7 +26,7 @@ public final class DataKatalogHerkunftsschulnummern extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<HerkunftsschulnummerKatalogEintrag> daten = new Vector<>();
+		final ArrayList<HerkunftsschulnummerKatalogEintrag> daten = new ArrayList<>();
 		for (final Herkunftsschulnummern sn : Herkunftsschulnummern.values())
 			daten.addAll(Arrays.asList(sn.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

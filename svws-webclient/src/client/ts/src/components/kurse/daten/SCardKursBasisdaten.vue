@@ -18,7 +18,7 @@
 <script setup lang="ts">
 
 	import { computed, WritableComputedRef } from "vue";
-	import { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core";
+	import { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: KursDaten;
@@ -55,7 +55,7 @@
 			return arr;
 		},
 		set: (value) => {
-			const result: Vector<number> = new Vector();
+			const result: ArrayList<number> = new ArrayList();
 			value.forEach(j => result.add(j.id));
 			doPatch({ idJahrgaenge: result });
 		}

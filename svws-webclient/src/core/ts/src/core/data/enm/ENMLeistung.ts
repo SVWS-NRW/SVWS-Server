@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
-import { Vector } from '../../../java/util/Vector';
 
 export class ENMLeistung extends JavaObject {
 
@@ -88,7 +88,7 @@ export class ENMLeistung extends JavaObject {
 	/**
 	 * Die Teilleistungen, sofern welche vordefiniert sind.
 	 */
-	public teilleistungen : Vector<ENMTeilleistung> = new Vector();
+	public teilleistungen : ArrayList<ENMTeilleistung> = new ArrayList();
 
 
 	public constructor() {

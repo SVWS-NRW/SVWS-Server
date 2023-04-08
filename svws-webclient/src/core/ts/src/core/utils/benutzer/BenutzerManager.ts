@@ -3,9 +3,9 @@ import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompeten
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { BenutzerDaten, cast_de_svws_nrw_core_data_benutzer_BenutzerDaten } from '../../../core/data/benutzer/BenutzerDaten';
-import { Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
 
@@ -31,7 +31,7 @@ export class BenutzerManager extends JavaObject {
 	 *  Benutzer-Gruppen beinhaltet, von denen
 	 *  der Benutzer die Kompetenz erhalten hat.
 	 */
-	private readonly _mapKompetenzenVonGruppe : HashMap<BenutzerKompetenz, Vector<BenutzergruppeDaten>> = new HashMap();
+	private readonly _mapKompetenzenVonGruppe : HashMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new HashMap();
 
 	/**
 	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist.
@@ -105,9 +105,9 @@ export class BenutzerManager extends JavaObject {
 			if (komp === null)
 				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid! + " existiert nicht.")
 			this._setKompetenzenAlle.add(komp);
-			const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+			const gruppen : ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 			if (gruppen === null)
-				throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
+				throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
 			gruppen.add(bgd);
 		}
 	}
@@ -125,12 +125,12 @@ export class BenutzerManager extends JavaObject {
 		for (const kid of bgd.kompetenzen) {
 			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
 			if (komp !== null) {
-				const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
+				const gruppen : ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 				if (gruppen === null)
-					throw new NullPointerException("Vector existiert nicht, müsste aber zuvor initialisiert worden sein.")
+					throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
 				for (let i : number = gruppen.size() - 1; i >= 0; i--)
-					if (gruppen.elementAt(i).id === bgd.id)
-						gruppen.removeElementAt(i);
+					if (gruppen.get(i).id === bgd.id)
+						gruppen.remove(gruppen.get(i));
 				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
 					this._setKompetenzenAlle.remove(komp);
 			}
@@ -154,7 +154,7 @@ export class BenutzerManager extends JavaObject {
 	 */
 	private init() : void {
 		for (const p of BenutzerKompetenz.values())
-			this._mapKompetenzenVonGruppe.put(p, new Vector());
+			this._mapKompetenzenVonGruppe.put(p, new ArrayList());
 	}
 
 	/**
@@ -167,7 +167,7 @@ export class BenutzerManager extends JavaObject {
 	 * @return die Liste der Benutzergruppen-Daten
 	 */
 	public getGruppen(kompetenz : BenutzerKompetenz) : List<BenutzergruppeDaten> {
-		const gruppen : Vector<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
+		const gruppen : ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
 		if (gruppen === null)
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.")
 		return gruppen;
@@ -342,7 +342,7 @@ export class BenutzerManager extends JavaObject {
 	public removeKompetenz(kompetenz : BenutzerKompetenz) : void {
 		if (!this._setKompetenzen.contains(kompetenz))
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.")
-		this._daten.kompetenzen.removeElement(kompetenz.daten.id);
+		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
 		const gruppen : List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
 		if (gruppen.isEmpty())

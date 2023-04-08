@@ -2,7 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.fach.FachKatalogEintrag;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -26,7 +26,7 @@ public final class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<FachKatalogEintrag> daten = new Vector<>();
+		final ArrayList<FachKatalogEintrag> daten = new ArrayList<>();
 		for (final ZulaessigesFach f : ZulaessigesFach.values())
 			daten.addAll(Arrays.asList(f.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

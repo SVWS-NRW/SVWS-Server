@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,7 +68,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 */
 	public Response createKlausuren(final int hj, final int quartal) {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
-		final List<GostKursklausur> retKlausuren = new Vector<>();
+		final List<GostKursklausur> retKlausuren = new ArrayList<>();
 
 		final List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(v -> dtoMapper.apply(v))
@@ -98,8 +98,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<DTOKurs> kurse = conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID) // TODO Quartalsmodus
 				.setParameter("jg", halbjahr.jahrgang).getResultList();
 
-		final List<DTOGostKlausurenKursklausuren> kursklausuren = new Vector<>();
-		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new Vector<>();
+		final List<DTOGostKlausurenKursklausuren> kursklausuren = new ArrayList<>();
+		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
@@ -141,7 +141,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
 				.setParameter("sstatus", SchuelerStatus.AKTIV).setParameter("sgeloescht", false).getResultList();
 
-		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new Vector<>();
+		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new ArrayList<>();
 		for (final DTOSchuelerLernabschnittsdaten lad : lernDaten) {
 			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1L, kursklausur.ID, lad.Schueler_ID));
 		}
@@ -181,7 +181,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	private List<GostKlausurvorgabe> getKlausurvorgaben(final int halbjahr) {
 		final List<DTOGostKlausurenVorgaben> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList();
-		final List<GostKlausurvorgabe> daten = new Vector<>();
+		final List<GostKlausurvorgabe> daten = new ArrayList<>();
 		for (final DTOGostKlausurenVorgaben v : vorgaben)
 			daten.add(dtoMapper.apply(v));
 		return daten;
@@ -350,7 +350,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (vorgabenVorlage == null)
 			throw new NullPointerException();
 		if (vorgabenVorlage.size() > 0) {
-			final Vector<DTOGostKlausurenVorgaben> gostVorgaben = new Vector<>();
+			final ArrayList<DTOGostKlausurenVorgaben> gostVorgaben = new ArrayList<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;

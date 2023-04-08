@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.healthmarketscience.jackcess.Column;
@@ -904,7 +904,7 @@ public class MDBtoCSV {
 		return switch (table.getName()) {
 			case "DBS" -> {
 				final Map<String, ? extends Column> mapCols = cols.stream().collect(Collectors.toMap(c -> c.getName(), c -> c));
-				final List<Column> result = new Vector<>();
+				final List<Column> result = new ArrayList<>();
 				if (mapCols.get("SchulNr") == null)
 					result.add(mapCols.get("Schulnr"));
 				else

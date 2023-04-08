@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { SchulformGliederungJahrgaenge } from '../../../core/data/schule/SchulformGliederungJahrgaenge';
-import { Vector } from '../../../java/util/Vector';
 
 export class AbgangsartKatalogDaten extends JavaObject {
 
@@ -18,7 +18,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	/**
 	 * Die Kombinationen von Schulformen, -gliederungen und Jahrgängen, bei der die Abgangsart zulässig ist.
 	 */
-	public zulaessig : List<SchulformGliederungJahrgaenge> = new Vector();
+	public zulaessig : List<SchulformGliederungJahrgaenge> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerDaten extends JavaObject {
 
@@ -43,12 +43,12 @@ export class BenutzerDaten extends JavaObject {
 	/**
 	 * Die Daten der Benutzergruppen, denen dieser Benutzer zugeordnet ist.
 	 */
-	public gruppen : List<BenutzergruppeDaten> = new Vector();
+	public gruppen : List<BenutzergruppeDaten> = new ArrayList();
 
 	/**
 	 * Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind.
 	 */
-	public kompetenzen : Vector<number> = new Vector();
+	public kompetenzen : ArrayList<number> = new ArrayList();
 
 
 	public constructor() {

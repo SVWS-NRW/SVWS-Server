@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFachwahl;
@@ -91,7 +91,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		if (schueler == null)
 			return null;
 		if (schueler.size() == 0)
-			return new Vector<>();
+			return new ArrayList<>();
 		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
     	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
 		if (fachbelegungen == null)
@@ -191,7 +191,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			return Collections.emptyList();
 
 		// Erstelle die Fachwahl-Objekte
-		final Vector<GostFachwahl> fachwahlen = new Vector<>();
+		final ArrayList<GostFachwahl> fachwahlen = new ArrayList<>();
 		for (final DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
 			final DTOFach fach = faecher.get(fachbelegung.Fach_ID);
 			if (fach == null)

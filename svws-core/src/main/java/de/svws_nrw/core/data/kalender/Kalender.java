@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.kalender;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -44,7 +44,7 @@ public class Kalender {
 	 * eine Liste der Einträge des Kalenders
 	 */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Kalenders", example = "..."))
-	public @NotNull List<@NotNull KalenderEintrag> kalenderEintraege = new Vector<>();
+	public @NotNull List<@NotNull KalenderEintrag> kalenderEintraege = new ArrayList<>();
 
 	/** ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat */
 	@Schema(description = "Schreibrecht des angemeldeten Nutzers", example = "true")

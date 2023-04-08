@@ -3,8 +3,8 @@ import { ENMLeistung } from '../../../core/data/enm/ENMLeistung';
 import { ENMLernabschnitt } from '../../../core/data/enm/ENMLernabschnitt';
 import { ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerkungen';
 import { ENMZP10 } from '../../../core/data/enm/ENMZP10';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
-import { Vector } from '../../../java/util/Vector';
 import { ENMSprachenfolge } from '../../../core/data/enm/ENMSprachenfolge';
 
 export class ENMSchueler extends JavaObject {
@@ -57,7 +57,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Sprachenfolge des Schülers
 	 */
-	public sprachenfolge : Vector<ENMSprachenfolge> = new Vector();
+	public sprachenfolge : ArrayList<ENMSprachenfolge> = new ArrayList();
 
 	/**
 	 * Informationen zum Lernabschnitt des Schülers in der Notendatei
@@ -67,7 +67,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei
 	 */
-	public readonly leistungsdaten : Vector<ENMLeistung> = new Vector();
+	public readonly leistungsdaten : ArrayList<ENMLeistung> = new ArrayList();
 
 	/**
 	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei

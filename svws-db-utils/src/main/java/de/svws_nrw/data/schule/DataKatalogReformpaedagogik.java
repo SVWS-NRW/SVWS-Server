@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.types.schule.Reformpaedagogik;
@@ -32,7 +32,7 @@ public final class DataKatalogReformpaedagogik extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final Vector<ReformpaedagogikKatalogEintrag> daten = new Vector<>();
+        final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
         for (final Reformpaedagogik p : Reformpaedagogik.values())
             daten.addAll(Arrays.asList(p.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -46,7 +46,7 @@ public final class DataKatalogReformpaedagogik extends DataManager<Long> {
     	final var liste = Reformpaedagogik.get(schule.Schulform);
     	if (liste == null)
     		return OperationError.NOT_FOUND.getResponse();
-        final Vector<ReformpaedagogikKatalogEintrag> daten = new Vector<>();
+        final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
         for (final Reformpaedagogik p : liste)
             daten.addAll(Arrays.asList(p.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

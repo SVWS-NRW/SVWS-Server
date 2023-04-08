@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KalenderEintrag } from '../../../core/data/kalender/KalenderEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class Kalender extends JavaObject {
 
@@ -33,7 +33,7 @@ export class Kalender extends JavaObject {
 	/**
 	 *  eine Liste der Einträge des Kalenders
 	 */
-	public kalenderEintraege : List<KalenderEintrag> = new Vector();
+	public kalenderEintraege : List<KalenderEintrag> = new ArrayList();
 
 	/**
 	 * ob der angemeldete Nutzer Schreibrecht auf dem Kalender hat

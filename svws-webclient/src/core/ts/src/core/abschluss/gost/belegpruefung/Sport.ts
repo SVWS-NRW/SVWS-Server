@@ -1,16 +1,16 @@
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { List } from '../../../../java/util/List';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { Vector } from '../../../../java/util/Vector';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Sport extends GostBelegpruefung {
 
-	private sport : List<AbiturFachbelegung> = new Vector();
+	private sport : List<AbiturFachbelegung> = new ArrayList();
 
 
 	/**

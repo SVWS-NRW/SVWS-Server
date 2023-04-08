@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulstufe } from '../../../core/types/schule/Schulstufe';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAAnschlussoptionEintrag extends JavaObject {
@@ -24,12 +24,12 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 	/**
 	 * Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)
 	 */
-	public stufen : List<string> = new Vector();
+	public stufen : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden
 	 */
-	public anzeigeZusatzmerkmal : List<string> = new Vector();
+	public anzeigeZusatzmerkmal : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

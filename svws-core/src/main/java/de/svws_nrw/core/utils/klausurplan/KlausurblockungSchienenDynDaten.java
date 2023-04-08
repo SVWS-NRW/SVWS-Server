@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
@@ -211,9 +211,9 @@ public class KlausurblockungSchienenDynDaten {
 	 */
 	@NotNull List<@NotNull List<@NotNull Long>> gibErzeugeOutput() {
 
-		final @NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
+		final @NotNull List<@NotNull List<@NotNull Long>> out = new ArrayList<>();
 		for (int i = 0; i < _schienenAnzahl; i++) {
-			out.add(new Vector<>());
+			out.add(new ArrayList<>());
 		}
 
 		for (final @NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {

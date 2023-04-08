@@ -2,7 +2,7 @@ package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -24,13 +24,13 @@ import jakarta.validation.constraints.NotNull;
 public final class Projektkurse extends GostBelegpruefung {
 
 	/// Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
-	private Vector<@NotNull AbiturFachbelegung> projektkursBelegung;
+	private ArrayList<@NotNull AbiturFachbelegung> projektkursBelegung;
 
 	/// falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null
 	private AbiturFachbelegung projektkurs;
 
 	/// ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
-	private Vector<@NotNull GostHalbjahr> projektkursHalbjahre;
+	private ArrayList<@NotNull GostHalbjahr> projektkursHalbjahre;
 
 
 	/**
@@ -47,8 +47,8 @@ public final class Projektkurse extends GostBelegpruefung {
 	@Override
 	protected void init() {
 		projektkurs = null;
-		projektkursBelegung = new Vector<>();
-		projektkursHalbjahre = new Vector<>();
+		projektkursBelegung = new ArrayList<>();
+		projektkursHalbjahre = new ArrayList<>();
 
 		// Bestimme die belegten Projektfächer
 		final @NotNull List<@NotNull AbiturFachbelegung> alleFachbelegungen = manager.getFachbelegungen();
@@ -150,7 +150,7 @@ public final class Projektkurse extends GostBelegpruefung {
 				// Speichere den anrechenbaren Projektkurs für spätere Prüfungen
 				projektkurs = fachbelegung;
 				if (projektkursHalbjahre == null)
-					projektkursHalbjahre = new Vector<>();
+					projektkursHalbjahre = new ArrayList<>();
 				projektkursHalbjahre.add(halbjahr);
 				projektkursHalbjahre.add(nextHalbjahr);
 				break;

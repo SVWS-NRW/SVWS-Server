@@ -2,7 +2,7 @@ package de.svws_nrw.davapi.data.repos.bycategory;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
@@ -55,7 +55,7 @@ public final class AdressbuchWithCategoriesRepository implements IAdressbuchRepo
 
 	@Override
 	public List<Adressbuch> getAvailableAdressbuecher(final CollectionRessourceQueryParameters params) {
-		final List<Adressbuch> result = new Vector<>();
+		final List<Adressbuch> result = new ArrayList<>();
 		result.add(createAdressbuch(AdressbuchContactTypes.SCHUELER));
 		result.add(createAdressbuch(AdressbuchContactTypes.LEHRER));
 		result.add(createAdressbuch(AdressbuchContactTypes.ERZIEHER));

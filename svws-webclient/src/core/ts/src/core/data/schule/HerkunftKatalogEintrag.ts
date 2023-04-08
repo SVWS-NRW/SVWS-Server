@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class HerkunftKatalogEintrag extends JavaObject {
 
@@ -17,7 +17,7 @@ export class HerkunftKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Herkunft des Schülers vorkommen kann.
 	 */
-	public schulformen : List<string> = new Vector();
+	public schulformen : List<string> = new ArrayList();
 
 	/**
 	 * Die textuelle Beschreibung der Herkunft.

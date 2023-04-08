@@ -3,9 +3,9 @@ import { StundenplanblockungManagerFach } from '../../../core/utils/stundenplanb
 import { StundenplanblockungManagerRaum } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaum';
 import { StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungManagerKlasse } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasse';
 import { StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
-import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerLerngruppe extends JavaObject {
 
@@ -22,27 +22,27 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	/**
 	 * Die Lehrkräfte der Lerngruppe.
 	 */
-	_menge_le : Vector<StundenplanblockungManagerLehrkraft | null> = new Vector();
+	_menge_le : ArrayList<StundenplanblockungManagerLehrkraft | null> = new ArrayList();
 
 	/**
 	 * Die Klassen der Lerngruppe.
 	 */
-	_menge_kl : Vector<StundenplanblockungManagerKlasse | null> = new Vector();
+	_menge_kl : ArrayList<StundenplanblockungManagerKlasse | null> = new ArrayList();
 
 	/**
 	 * Die Fächer Lerngruppe.
 	 */
-	_menge_fa : Vector<StundenplanblockungManagerFach | null> = new Vector();
+	_menge_fa : ArrayList<StundenplanblockungManagerFach | null> = new ArrayList();
 
 	/**
 	 * Die Räume Lerngruppe.
 	 */
-	_menge_ra : Vector<StundenplanblockungManagerRaum | null> = new Vector();
+	_menge_ra : ArrayList<StundenplanblockungManagerRaum | null> = new ArrayList();
 
 	/**
 	 * Die Kopplungen Lerngruppe.
 	 */
-	_menge_ko : Vector<StundenplanblockungManagerKopplung | null> = new Vector();
+	_menge_ko : ArrayList<StundenplanblockungManagerKopplung | null> = new ArrayList();
 
 
 	/**

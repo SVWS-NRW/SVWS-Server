@@ -9,7 +9,7 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -599,12 +599,12 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubKeySet#toArray()} und {@link AVLMapSubKeySet#toArray(Object[])}. Liefert
-	 * einen {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
+	 * einen {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull Vector<K> bcGetVectorOfKeys() {
-		final Vector<K> v = new Vector<>();
+	@NotNull ArrayList<K> bcGetArrayListOfKeys() {
+		final ArrayList<K> v = new ArrayList<>();
 		final Iterator<K> iter = navigableKeySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -613,12 +613,12 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubCollection#toArray()} und {@link AVLMapSubCollection#toArray(Object[])}.
-	 * Liefert einen {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
+	 * Liefert einen {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
-	@NotNull Vector<V> bcGetVectorOfValues() {
-		final Vector<V> v = new Vector<>();
+	@NotNull ArrayList<V> bcGetArrayListOfValues() {
+		final ArrayList<V> v = new ArrayList<>();
 		final Iterator<V> iter = values().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -627,12 +627,12 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubEntrySet#toArray()} und {@link AVLMapSubEntrySet#toArray(Object[])}. Liefert
-	 * einen {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
+	 * einen {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 */
-	@NotNull Vector<Entry<K, V>> bcGetVectorOfEntries() {
-		final Vector<Entry<K, V>> v = new Vector<>();
+	@NotNull ArrayList<Entry<K, V>> bcGetArrayListOfEntries() {
+		final ArrayList<Entry<K, V>> v = new ArrayList<>();
 		final Iterator<Entry<K, V>> iter = entrySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());

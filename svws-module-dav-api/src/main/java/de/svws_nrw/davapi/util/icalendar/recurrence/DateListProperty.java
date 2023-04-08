@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,7 +23,7 @@ public final class DateListProperty implements IProperty {
 	private final PropertyKeys key;
 
 	/** Liste der Daten */
-	private final List<LocalDate> dateList = new Vector<>();
+	private final List<LocalDate> dateList = new ArrayList<>();
 
 	/**
 	 * Property für eine Liste von Daten, genutzt mit den Keys

@@ -1,7 +1,7 @@
 package de.svws_nrw.db;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -37,7 +37,7 @@ public final class Benutzer {
      * dann einem Datenbankbenutzer administrativ zugewiesen werden. Diese Zuordnung ist in der SVWS-Datenbank
      * gespeichert.
      */
-    private List<BenutzerKompetenz> kompetenzen = new Vector<>();
+    private List<BenutzerKompetenz> kompetenzen = new ArrayList<>();
 
 
 

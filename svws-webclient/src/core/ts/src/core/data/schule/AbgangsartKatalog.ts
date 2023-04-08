@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class AbgangsartKatalog extends JavaObject {
 
@@ -13,7 +13,7 @@ export class AbgangsartKatalog extends JavaObject {
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public eintraege : List<AbgangsartKatalogEintrag> = new Vector();
+	public eintraege : List<AbgangsartKatalogEintrag> = new ArrayList();
 
 
 	public constructor() {

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.base.CsvReader;
@@ -371,7 +371,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		// TODO Kursarten - je nach Schulform - einrichten
 
 		// Einrichten der Jahrgänge - je nach Schulform
-        final Vector<DTOJahrgang> dtoJahrgaenge = new Vector<>();
+        final ArrayList<DTOJahrgang> dtoJahrgaenge = new ArrayList<>();
         final List<Jahrgaenge> jahrgaenge = Jahrgaenge.get(eigeneSchule.Schulform);
         for (int i = 0; i < jahrgaenge.size(); i++) {
         	final Jahrgaenge jg = jahrgaenge.get(i);
@@ -399,7 +399,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         conn.persist(addressart);
 
 		// TODO K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
-        final Vector<DTOBeschaeftigungsart> beschaeftigungsart = new Vector<>();
+        final ArrayList<DTOBeschaeftigungsart> beschaeftigungsart = new ArrayList<>();
         beschaeftigungsart.add(new DTOBeschaeftigungsart(1L, "Ausbildung"));
         beschaeftigungsart.add(new DTOBeschaeftigungsart(2L, "Praktikum"));
         for (int i = 0; i < beschaeftigungsart.size(); i++)
@@ -414,7 +414,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 
 		// K_EinschulgungsArt normal, vorzeitig und zurückgestellt
-        final Vector<DTOEinschulungsart> einschulungsart = new Vector<>();
+        final ArrayList<DTOEinschulungsart> einschulungsart = new ArrayList<>();
         einschulungsart.add(new DTOEinschulungsart(1L, "normal"));
         einschulungsart.add(new DTOEinschulungsart(2L, "vorzeitig"));
         einschulungsart.add(new DTOEinschulungsart(3L, "zurückgestellt"));
@@ -423,7 +423,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         conn.persistRange(einschulungsart, 0, 2);
 
 		// K_Entlassgrund mit "Schulpflicht endet", "Normaler Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
-        final Vector<DTOEntlassarten> entlassart = new Vector<>();
+        final ArrayList<DTOEntlassarten> entlassart = new ArrayList<>();
         entlassart.add(new DTOEntlassarten(1L, "Schulpflicht endet"));
         entlassart.add(new DTOEntlassarten(2L, "Normaler Abschluss"));
         entlassart.add(new DTOEntlassarten(3L, "Ohne Angabe"));
@@ -433,7 +433,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         conn.persistRange(entlassart, 0, 3);
 
         // K_Erzieherart mit den Vorgaben von Schild-NRW befüllen
-		final Vector<DTOErzieherart> erzieherarten = new Vector<>();
+		final ArrayList<DTOErzieherart> erzieherarten = new ArrayList<>();
 		erzieherarten.add(new DTOErzieherart(1L, "Vater"));
         erzieherarten.add(new DTOErzieherart(2L, "Mutter"));
         erzieherarten.add(new DTOErzieherart(3L, "Schüler ist volljährig"));
@@ -446,7 +446,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 
         // K-Ort aus der Default-Daten-Tabelle befüllen
-        final Vector<DTOOrt> dtoOrt = new Vector<>();
+        final ArrayList<DTOOrt> dtoOrt = new ArrayList<>();
         final List<KatalogEintragOrte> katalog = CsvReader.fromResource("daten/csv/Orte.csv", KatalogEintragOrte.class);
         for (int i = 0; i < katalog.size(); i++) {
             final KatalogEintragOrte ort = katalog.get(i);
@@ -457,7 +457,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 
         // K_Religion aus dem Core-Type befüllen
-        final Vector<DTOKonfession> dtoKonfession = new Vector<>();
+        final ArrayList<DTOKonfession> dtoKonfession = new ArrayList<>();
         final Religion[] konfession = Religion.values();
         for (int i = 0; i < konfession.length; i++) {
             final Religion kon = konfession[i];
@@ -471,7 +471,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         // TODO K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
 
         // K_Schwerpunkte befüllen
-        final Vector<DTOSchwerpunkt> schwerpunkte = new Vector<>();
+        final ArrayList<DTOSchwerpunkt> schwerpunkte = new ArrayList<>();
         schwerpunkte.add(new DTOSchwerpunkt(1L, "naturwissenschaftlich-technisch"));
         schwerpunkte.add(new DTOSchwerpunkt(2L, "sozialwissenschaftlich"));
         schwerpunkte.add(new DTOSchwerpunkt(3L, "musisch-künstlerisch"));
@@ -486,7 +486,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         conn.persist(sportbefreiung);
 
         // K_Telefonart mit den Schild-NRW-Vorgaben befüllen
-        final Vector<DTOTelefonArt> telefonArten = new Vector<>();
+        final ArrayList<DTOTelefonArt> telefonArten = new ArrayList<>();
         telefonArten.add(new DTOTelefonArt(1L, "Eltern"));
         telefonArten.add(new DTOTelefonArt(2L, "Mutter"));
         telefonArten.add(new DTOTelefonArt(3L, "Vater"));

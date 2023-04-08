@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import com.sun.source.tree.BlockTree;
@@ -488,7 +487,7 @@ public final class MethodNode {
 		sb.append(methods.get(0).getName());
 
 		// the type parameter list
-		final Vector<TypeParameterTree> typeParams = new Vector<>();
+		final ArrayList<TypeParameterTree> typeParams = new ArrayList<>();
 		for (final MethodNode current : methods)
 			typeParams.addAll(current.method.getTypeParameters());
 		sb.append(methods.get(0).plugin.convertTypeParameters(typeParams, true));

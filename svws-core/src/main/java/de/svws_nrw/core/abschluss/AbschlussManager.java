@@ -2,7 +2,7 @@ package de.svws_nrw.core.abschluss;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFach;
@@ -167,7 +167,7 @@ public final class AbschlussManager {
 	 * @return die Liste mit den Fachkürzeln
 	 */
 	public static @NotNull List<@NotNull String> getKuerzel(final @NotNull List<@NotNull GEAbschlussFach> faecher) {
-		final @NotNull Vector<@NotNull String> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if ((fach == null) || fach.kuerzel == null)

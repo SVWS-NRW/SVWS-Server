@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -44,7 +44,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 	private List<@NotNull AbiturFachbelegung> religion;
 
 	/// Alle Fachbelegungen bei denen Zusatzkurse in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt wurden.
-	private Vector<@NotNull AbiturFachbelegung> zusatzkursFachbelegungen;
+	private ArrayList<@NotNull AbiturFachbelegung> zusatzkursFachbelegungen;
 
 
 
@@ -67,7 +67,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 		philosophie = manager.getFachbelegung(GostFachbereich.PHILOSOPHIE);
 		sonstige_gesellschaftswissenschaften = manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
 		religion = manager.getFachbelegungen(GostFachbereich.RELIGION);
-		zusatzkursFachbelegungen = new Vector<>();
+		zusatzkursFachbelegungen = new ArrayList<>();
 	}
 
 

@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -95,7 +95,7 @@ public final class ABPSchuelerFaecherBasisSicherung {
 	 */
 	public static List<ABPSchuelerFaecherBasisSicherung> read(final Database db) {
 		try {
-			final List<ABPSchuelerFaecherBasisSicherung> liste = new Vector<>();
+			final List<ABPSchuelerFaecherBasisSicherung> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_SchuelerFaecherBasisSicherung");
 			for (final Row r : table) {
 				final ABPSchuelerFaecherBasisSicherung zuordnung = new ABPSchuelerFaecherBasisSicherung();
@@ -202,7 +202,7 @@ public final class ABPSchuelerFaecherBasisSicherung {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFaecherBasisSicherung
 	 */
 	public static List<ABPSchuelerFaecherBasisSicherung> getDefault() {
-		final List<ABPSchuelerFaecherBasisSicherung> faecherBasisSicherung = new Vector<>();
+		final List<ABPSchuelerFaecherBasisSicherung> faecherBasisSicherung = new ArrayList<>();
 		return faecherBasisSicherung;
 	}
 

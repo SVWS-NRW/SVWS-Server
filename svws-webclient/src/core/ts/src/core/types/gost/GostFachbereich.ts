@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap } from '../../../java/util/HashMap';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 
 export class GostFachbereich extends JavaObject {
 
@@ -123,12 +123,12 @@ export class GostFachbereich extends JavaObject {
 	/**
 	 * Eine Liste der Fächern dieses Fachbereichs
 	 */
-	private readonly faecher : Vector<ZulaessigesFach> = new Vector();
+	private readonly faecher : ArrayList<ZulaessigesFach> = new ArrayList();
 
 	/**
 	 * Eine Liste der Fächerkürzel dieses Fachbereichs
 	 */
-	private readonly kuerzel : Vector<string> = new Vector();
+	private readonly kuerzel : ArrayList<string> = new ArrayList();
 
 	/**
 	 * Erstellt einen neuen Fachbereich als Kombination der übergebenen Fachbereiche
@@ -169,7 +169,7 @@ export class GostFachbereich extends JavaObject {
 				for (const fach of fb.faecher) {
 					let listFachbereichByFach : List<GostFachbereich> | null = GostFachbereich._mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach === null) {
-						listFachbereichByFach = new Vector();
+						listFachbereichByFach = new ArrayList();
 						GostFachbereich._mapFachbereichByFach.put(fach, listFachbereichByFach);
 					}
 					listFachbereichByFach.add(fb);
@@ -230,12 +230,12 @@ export class GostFachbereich extends JavaObject {
 	 */
 	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {
 		if (fach === null)
-			return new Vector();
+			return new ArrayList();
 		const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		const bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
 		if (bereiche !== null)
 			return bereiche;
-		return new Vector();
+		return new ArrayList();
 	}
 
 	/**

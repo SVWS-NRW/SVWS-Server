@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { ArrayList } from '../../java/util/ArrayList';
 import { List } from '../../java/util/List';
-import { Vector } from '../../java/util/Vector';
 
 export class SimpleOperationResponse extends JavaObject {
 
@@ -12,7 +12,7 @@ export class SimpleOperationResponse extends JavaObject {
 	/**
 	 * Das Log der Operation.
 	 */
-	public log : List<string | null> = new Vector();
+	public log : List<string | null> = new ArrayList();
 
 
 	public constructor() {

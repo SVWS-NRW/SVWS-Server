@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -70,7 +70,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			return OperationError.NOT_FOUND.getResponse();
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
-		final Vector<GostJahrgang> daten = new Vector<>();
+		final ArrayList<GostJahrgang> daten = new ArrayList<>();
 		List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
 		if (dtos != null) {
 			dtos = dtos.stream().sorted((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).collect(Collectors.toList());
@@ -168,7 +168,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		final List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
 		if (faecher == null)
 			throw new NullPointerException();
-		final Vector<DTOGostJahrgangFaecher> gostFaecher = new Vector<>();
+		final ArrayList<DTOGostJahrgangFaecher> gostFaecher = new ArrayList<>();
 		for (final DTOFach fach : faecher) {
 			if ((fach.Sichtbar == null) || (!fach.Sichtbar))
 				continue;
@@ -185,7 +185,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		if (faecherKombis == null)
 			throw new NullPointerException();
 		if (faecherKombis.size() > 0) {
-			final Vector<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new Vector<>();
+			final ArrayList<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new ArrayList<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;

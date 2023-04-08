@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -29,7 +29,7 @@ public final class DataKatalogVerkehrssprachen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<VerkehrsspracheKatalogEintrag> daten = new Vector<>();
+		final ArrayList<VerkehrsspracheKatalogEintrag> daten = new ArrayList<>();
 		for (final Verkehrssprache sp : Verkehrssprache.values())
 			daten.addAll(Arrays.asList(sp.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.klassen;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -45,10 +45,10 @@ public class KlassenDaten {
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public Vector<@NotNull Long> klassenLeitungen = new Vector<>();
+	public ArrayList<@NotNull Long> klassenLeitungen = new ArrayList<>();
 
 	/** Die Schüler der Klasse. */
-	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
 
 
 	// TODO Weitere Daten

@@ -3,7 +3,7 @@ package de.svws_nrw.davapi.util.icalendar;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -26,7 +26,7 @@ public class VTimezone {
 	/** TZID für EUROPE/BERLIN */
 	public static final String DEFAULT_TZ_BERLIN_EUROPE_STR = "Europe/Berlin";
 	/** Liste der Properties dieses VTIMEZONE-Eintrags */
-	private final List<IProperty> properties = new Vector<>();
+	private final List<IProperty> properties = new ArrayList<>();
 
 	/**
 	 * public default constructor

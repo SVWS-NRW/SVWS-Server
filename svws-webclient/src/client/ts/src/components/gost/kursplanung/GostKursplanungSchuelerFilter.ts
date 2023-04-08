@@ -1,4 +1,4 @@
-import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostKursart, List, SchuelerListeEintrag, Vector } from "@svws-nrw/svws-core";
+import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostKursart, List, SchuelerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
 import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
 
 
@@ -25,7 +25,7 @@ export class GostKursplanungSchuelerFilter {
 	}
 
 	public getKurse() : List<GostBlockungKurs> {
-		return this.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new Vector<GostBlockungKurs>();
+		return this.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new ArrayList<GostBlockungKurs>();
 	}
 
 	public filtered: ComputedRef<Map<number, SchuelerListeEintrag>> = computed(() => {

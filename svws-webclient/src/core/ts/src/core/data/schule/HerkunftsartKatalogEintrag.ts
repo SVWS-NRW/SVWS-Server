@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule/HerkunftsartKatalogEintragBezeichnung';
-import { Vector } from '../../../java/util/Vector';
 
 export class HerkunftsartKatalogEintrag extends JavaObject {
 
@@ -18,7 +18,7 @@ export class HerkunftsartKatalogEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnungen bei den jeweils zulässigen Schulformen.
 	 */
-	public bezeichnungen : List<HerkunftsartKatalogEintragBezeichnung> = new Vector();
+	public bezeichnungen : List<HerkunftsartKatalogEintragBezeichnung> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

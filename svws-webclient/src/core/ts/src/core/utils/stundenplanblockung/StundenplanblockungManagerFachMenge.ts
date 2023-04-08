@@ -2,11 +2,11 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungManagerFach, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerFach } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerFach';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class StundenplanblockungManagerFachMenge extends JavaObject {
 
-	private readonly _menge : Vector<StundenplanblockungManagerFach>;
+	private readonly _menge : ArrayList<StundenplanblockungManagerFach>;
 
 	private readonly _map : HashMap<number, StundenplanblockungManagerFach>;
 
@@ -16,7 +16,7 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	 */
 	public constructor() {
 		super();
-		this._menge = new Vector();
+		this._menge = new ArrayList();
 		this._map = new HashMap();
 	}
 

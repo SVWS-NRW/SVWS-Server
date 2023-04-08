@@ -1,7 +1,7 @@
 import { JavaMap } from './JavaMap';
 import { JavaSet } from './JavaSet';
 import { List } from './List';
-import { Vector } from './Vector';
+import { ArrayList } from './ArrayList';
 
 import { JavaObject } from '../../java/lang/JavaObject';
 
@@ -9,7 +9,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 export class Collections extends JavaObject {
 
 	// TODO Create a new list class for the empty list that is immutable
-	static EMPTY_LIST : List<unknown> = new Vector<unknown>();
+	static EMPTY_LIST : List<unknown> = new ArrayList<unknown>();
 
 	// TODO Create a new list class for the empty list that is immutable
 	static EMPTY_MAP : JavaMap<unknown, unknown>;

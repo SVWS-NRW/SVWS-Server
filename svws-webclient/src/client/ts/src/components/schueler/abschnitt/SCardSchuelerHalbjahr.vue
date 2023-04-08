@@ -68,7 +68,7 @@
 
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, FoerderschwerpunktEintrag, JahrgangsListeEintrag,
 		Klassenart, KlassenListeEintrag, LehrerListeEintrag, List, Note, OrganisationsformKatalogEintrag,
-		SchuelerLernabschnittsdaten, SchuleStammdaten, Schulform, Schulgliederung, Vector, WeiterbildungskollegOrganisationsformen } from "@svws-nrw/svws-core";
+		SchuelerLernabschnittsdaten, SchuleStammdaten, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef, WritableComputedRef } from 'vue';
 
 	const props = defineProps<{
@@ -202,7 +202,7 @@
 		const schulform = Schulform.getByKuerzel(props.schule.schulform);
 		if (schulform === null)
 			throw new Error("Keine gültige Schulform festgelegt");
-		const result = new Vector<OrganisationsformKatalogEintrag>();
+		const result = new ArrayList<OrganisationsformKatalogEintrag>();
 		if (schulform === Schulform.WB) {
 			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
 				result.add(orgform.daten);

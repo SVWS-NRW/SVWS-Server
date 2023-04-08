@@ -3,7 +3,7 @@ package de.svws_nrw.data.gost;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.MediaType;
@@ -83,7 +83,7 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 	public static List<GostBeratungslehrer> getBeratungslehrer(final DBEntityManager conn, final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer) {
 		// TODO Query nur für Lehrer-IDs, die auch in der Liste der Beratungslehrer enthalten ist
 		final Map<Long, DTOLehrer> dtosLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
-		final Vector<GostBeratungslehrer> result = new Vector<>();
+		final ArrayList<GostBeratungslehrer> result = new ArrayList<>();
 		if (dtosBeratungslehrer != null)
 			for (final DTOGostJahrgangBeratungslehrer dto : dtosBeratungslehrer)
 				result.add(getBeratungslehrer(dto, dtosLehrer.get(dto.Lehrer_ID)));

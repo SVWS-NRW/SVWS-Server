@@ -2,7 +2,7 @@ package de.svws_nrw.db.schema;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.db.converter.current.BenutzerTypConverter;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
@@ -20,7 +20,7 @@ public final class DBSchemaViews {
 	private static DBSchemaViews instance;
 
 	/** Eine Liste aller Views */
-	private final Vector<View> allViews = new Vector<>();
+	private final ArrayList<View> allViews = new ArrayList<>();
 
 	/** Eine HashMap mit allen Views, welche den Revisionen der Datenbank zugeordnet sind. */
 	private final @NotNull HashMap<@NotNull Long, List<View>> views = new HashMap<>();
@@ -69,7 +69,7 @@ public final class DBSchemaViews {
 	public List<View> getViewsCreated(final long revision) {
 		List<View> v = views.get(revision);
 		if (v == null) {
-			v = new Vector<>();
+			v = new ArrayList<>();
 			views.put(revision, v);
 		}
 		return v;
@@ -86,7 +86,7 @@ public final class DBSchemaViews {
 	public List<View> getViewsDeprecated(final long revision) {
 		List<View> v = viewsDeprecated.get(revision);
 		if (v == null) {
-			v = new Vector<>();
+			v = new ArrayList<>();
 			viewsDeprecated.put(revision, v);
 		}
 		return v;
@@ -101,7 +101,7 @@ public final class DBSchemaViews {
 	 * @return die Liste der Views, welche in der angegebenen Revision aktiv sind.
 	 */
 	public List<View> getViewsActive(final long revision) {
-		final Vector<View> views = new Vector<>();
+		final ArrayList<View> views = new ArrayList<>();
 		for (final View v : allViews)
 			if ((revision >= v.revision) && ((v.veraltet == null) || (revision < v.veraltet)))
 				views.add(v);

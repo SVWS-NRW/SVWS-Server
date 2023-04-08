@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,9 +53,9 @@ class TestLinkedCollection {
 
 	private static LinkedCollection<Integer> coll;
 	private static LinkedCollection<Integer> coll2;
-	private static Vector<Integer> v2;
-	private static Vector<Integer> v3;
-	private static Vector<Integer> v4;
+	private static ArrayList<Integer> v2;
+	private static ArrayList<Integer> v3;
+	private static ArrayList<Integer> v4;
 
 	private static LinkedCollection<Integer> empty;
 
@@ -78,13 +78,13 @@ class TestLinkedCollection {
 		coll2 = new LinkedCollection<>();
 		for (final Integer value : data2)
 			coll2.add(value);
-		v2 = new Vector<>();
+		v2 = new ArrayList<>();
 		for (final Integer value : data2)
 			v2.add(value);
-		v3 = new Vector<>();
+		v3 = new ArrayList<>();
 		for (final Integer value : data3)
 			v3.add(value);
-		v4 = new Vector<>();
+		v4 = new ArrayList<>();
 		for (final Integer value : data4)
 			v4.add(value);
 		empty = new LinkedCollection<>();

@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class GostBelegpruefungErgebnis extends JavaObject {
 
@@ -13,12 +13,12 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	/**
 	 * eine Liste der Belegungsfehler und Hinweise zur Belegung
 	 */
-	public fehlercodes : Vector<GostBelegpruefungErgebnisFehler> = new Vector();
+	public fehlercodes : ArrayList<GostBelegpruefungErgebnisFehler> = new ArrayList();
 
 	/**
 	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht
 	 */
-	public log : List<string> = new Vector();
+	public log : List<string> = new ArrayList();
 
 
 	public constructor() {

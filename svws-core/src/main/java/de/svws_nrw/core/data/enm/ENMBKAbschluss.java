@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.enm;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -67,6 +67,6 @@ public class ENMBKAbschluss {
 
 	/** Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMBKFach.class, description = "Ein Array mit den Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind."))
-	public @NotNull Vector<@NotNull ENMBKFach> faecher = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMBKFach> faecher = new ArrayList<>();
 
 }

@@ -1,6 +1,6 @@
 package de.svws_nrw.core;
 
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
@@ -18,10 +18,10 @@ public abstract class Service<@NotNull T_IN, @NotNull T_OUT> {
 	protected @NotNull Logger logger = new Logger();
 
 	/** Die Instanz des Consumers von Log-Informationen. In diesem Fall ein einfacher Vektor */
-	protected @NotNull LogConsumerVector log = new LogConsumerVector();
+	protected @NotNull LogConsumerList log = new LogConsumerList();
 
 	/**
-	 * Erstellt einen neuen Service, dessen Logger automatisch in einen Vector loggt.
+	 * Erstellt einen neuen Service, dessen Logger automatisch in einen ArrayList loggt.
 	 */
 	protected Service() {
 		this.logger.addConsumer(log);
@@ -55,7 +55,7 @@ public abstract class Service<@NotNull T_IN, @NotNull T_OUT> {
 	 *
 	 * @return das Log dieses Services
 	 */
-	public @NotNull LogConsumerVector getLog() {
+	public @NotNull LogConsumerList getLog() {
 		return log;
 	}
 

@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schild3.SchildReportingSchuelerleistungsdaten;
@@ -46,7 +46,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
         if (leistungsdaten == null)
             return null;
         if (leistungsdaten.size() == 0)
-        	return new Vector<SchildReportingSchuelerleistungsdaten>();
+        	return new ArrayList<SchildReportingSchuelerleistungsdaten>();
         final List<Long> idFaecher = leistungsdaten.stream().filter(l -> l.Fach_ID != null).map(l -> l.Fach_ID).distinct().toList();
         final Map<Long, DTOFach> mapFaecher = (idFaecher.size() == 0) ? Collections.emptyMap()
         		: conn.queryNamed("DTOFach.id.multiple", idFaecher, DTOFach.class)
@@ -60,7 +60,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
         		: conn.queryNamed("DTOKurs.id.multiple", idKurse, DTOKurs.class)
         			.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
         // Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-        final Vector<SchildReportingSchuelerleistungsdaten> result = new Vector<>();
+        final ArrayList<SchildReportingSchuelerleistungsdaten> result = new ArrayList<>();
         for (final DTOSchuelerLeistungsdaten dto : leistungsdaten) {
         	final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
             if (dtoFach == null)

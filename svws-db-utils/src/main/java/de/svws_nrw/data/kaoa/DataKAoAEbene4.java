@@ -2,7 +2,7 @@ package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOAEbene4Eintrag;
 import de.svws_nrw.core.types.kaoa.KAOAEbene4;
@@ -26,7 +26,7 @@ public final class DataKAoAEbene4 extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KAOAEbene4Eintrag> daten = new Vector<>();
+		final ArrayList<KAOAEbene4Eintrag> daten = new ArrayList<>();
 		for (final KAOAEbene4 e : KAOAEbene4.values())
 			daten.addAll(Arrays.asList(e.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BerufskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_BerufskollegBildungsgangTyp } from '../../../core/types/schule/BerufskollegBildungsgangTyp';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { WeiterbildungskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
-import { Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
@@ -22,7 +22,7 @@ export class HerkunftBildungsgangTypKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen der Bildungsgangstyp als Herkunft vorkommen kann (WB oder BK und SB).
 	 */
-	public schulformen : List<string> = new Vector();
+	public schulformen : List<string> = new ArrayList();
 
 	/**
 	 * Die textuelle Beschreibung des Bildungsgangtyps.

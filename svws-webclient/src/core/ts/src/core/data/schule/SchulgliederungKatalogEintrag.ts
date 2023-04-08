@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { BerufskollegAnlage, cast_de_svws_nrw_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchulgliederungKatalogEintrag extends JavaObject {
 
@@ -26,7 +26,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt.
 	 */
-	public schulformen : List<string> = new Vector();
+	public schulformen : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt.
@@ -66,12 +66,12 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	/**
 	 * Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
-	public bkAbschlussBerufsbildend : List<string> = new Vector();
+	public bkAbschlussBerufsbildend : List<string> = new ArrayList();
 
 	/**
 	 * Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
-	public bkAbschlussAllgemeinbildend : List<string> = new Vector();
+	public bkAbschlussAllgemeinbildend : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

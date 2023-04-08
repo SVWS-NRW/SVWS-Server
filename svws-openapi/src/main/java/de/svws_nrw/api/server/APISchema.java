@@ -3,7 +3,7 @@ package de.svws_nrw.api.server;
 import java.util.List;
 
 import de.svws_nrw.api.OpenAPIApplication;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.schema.DataSQLite;
@@ -99,7 +99,7 @@ public class APISchema {
 
 		// Erzeuge einen Logger für das Update
 		final Logger logger = new Logger();
-		final LogConsumerVector log = new LogConsumerVector();
+		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt

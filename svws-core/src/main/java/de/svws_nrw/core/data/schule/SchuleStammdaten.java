@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -92,6 +92,6 @@ public class SchuleStammdaten {
 
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */
 	@ArraySchema(schema = @Schema(implementation = Schuljahresabschnitt.class))
-	public final @NotNull Vector<@NotNull Schuljahresabschnitt> abschnitte = new Vector<>();
+	public final @NotNull ArrayList<@NotNull Schuljahresabschnitt> abschnitte = new ArrayList<>();
 
 }

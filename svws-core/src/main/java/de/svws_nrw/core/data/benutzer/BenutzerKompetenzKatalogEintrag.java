@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.benutzer;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
@@ -57,7 +57,7 @@ public class BenutzerKompetenzKatalogEintrag {
 		this.bezeichnung = bezeichnung;
 		this.gruppe_id = gruppe.daten.id;
 		if (schulformen != null) {
-			this.nurSchulformen = new Vector<>();
+			this.nurSchulformen = new ArrayList<>();
 			for (final @NotNull Schulform schulform : schulformen)
 				this.nurSchulformen.add(schulform.daten.id);
 		}

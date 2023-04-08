@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -24,10 +24,10 @@ public class GostBelegpruefungErgebnis {
 
 	/** eine Liste der Belegungsfehler und Hinweise zur Belegung */
 	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class, description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
-	public @NotNull Vector<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new Vector<>();
+	public @NotNull ArrayList<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
 
 	/** Ein Log, der den Ablauf der Belegprüfung verdeutlicht */
 	@ArraySchema(schema = @Schema(description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))
-	public @NotNull List<@NotNull String> log = new Vector<>();
+	public @NotNull List<@NotNull String> log = new ArrayList<>();
 
 }

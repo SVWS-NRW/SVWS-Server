@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -14,14 +14,14 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanblockungManagerRaumMenge {
 
-	private final @NotNull Vector<@NotNull StundenplanblockungManagerRaum> _menge;
+	private final @NotNull ArrayList<@NotNull StundenplanblockungManagerRaum> _menge;
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungManagerRaum> _map;
 
 	/**
 	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Räume.
 	 */
 	public StundenplanblockungManagerRaumMenge() {
-		_menge = new Vector<>();
+		_menge = new ArrayList<>();
 		_map = new HashMap<>();
 	}
 
@@ -91,7 +91,7 @@ public class StundenplanblockungManagerRaumMenge {
 	 *
 	 * @return Die Menge aller Räume.
 	 */
-	public Vector<StundenplanblockungManagerRaum> getMenge() {
+	public ArrayList<StundenplanblockungManagerRaum> getMenge() {
 		return _menge;
 	}
 

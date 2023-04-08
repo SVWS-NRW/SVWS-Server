@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -172,7 +172,7 @@ public final class ABPSchuelerFaecher {
 	 */
 	public static List<ABPSchuelerFaecher> read(final Database db) {
 		try {
-			final List<ABPSchuelerFaecher> liste = new Vector<>();
+			final List<ABPSchuelerFaecher> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_SchuelerFaecher");
 			for (final Row r : table) {
 				final ABPSchuelerFaecher zuordnung = new ABPSchuelerFaecher();
@@ -343,7 +343,7 @@ public final class ABPSchuelerFaecher {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFaecher
 	 */
 	public static List<ABPSchuelerFaecher> getDefault() {
-		final List<ABPSchuelerFaecher> faecher = new Vector<>();
+		final List<ABPSchuelerFaecher> faecher = new ArrayList<>();
 		return faecher;
 	}
 
@@ -388,7 +388,7 @@ public final class ABPSchuelerFaecher {
 	public static List<ABPSchuelerFaecher> get(final Map<String, ABPFaecher> faecher, final Map<String, ABPFachgruppen> fachgruppen,
 			                                   final List<DTOSchueler> schuelerListe, final Map<Long, DTOGostSchueler> schuelerLupoInfo,
 			                                   final Map<Long, GostLeistungen> gostInfo) {
-		final List<ABPSchuelerFaecher> liste = new Vector<>();
+		final List<ABPSchuelerFaecher> liste = new ArrayList<>();
 		if (schuelerListe == null)
 			return liste;
 		int j = 1;   // TODO mit Maximum+1 aus DTOGostSchuelerFachbelegungen anfangen...

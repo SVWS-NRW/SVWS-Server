@@ -2,7 +2,7 @@ package de.svws_nrw.data.jahrgaenge;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
@@ -26,7 +26,7 @@ public final class DataKatalogJahrgaenge extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<JahrgangsKatalogEintrag> daten = new Vector<>();
+		final ArrayList<JahrgangsKatalogEintrag> daten = new ArrayList<>();
 		for (final Jahrgaenge jg : Jahrgaenge.values())
 			daten.addAll(Arrays.asList(jg.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

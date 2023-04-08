@@ -1,12 +1,12 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class GostBlockungsergebnisBewertung extends JavaObject {
 
 	/**
 	 * Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten.
 	 */
-	public regelVerletzungen : Vector<number> = new Vector();
+	public regelVerletzungen : ArrayList<number> = new ArrayList();
 
 	/**
 	 * Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden.

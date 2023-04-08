@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.gost.klausuren;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -95,6 +95,6 @@ public class GostKursklausur {
 
 	/** Die Liste der IDs der zugehörigen Schüler. */
 	@Schema(description = "die Liste der IDs der zugehörigen Schüler", example = "[ 5590, 5591, 5592, ... ]")
-	public @NotNull List<@NotNull Long> schuelerIds = new Vector<>();
+	public @NotNull List<@NotNull Long> schuelerIds = new ArrayList<>();
 
 }

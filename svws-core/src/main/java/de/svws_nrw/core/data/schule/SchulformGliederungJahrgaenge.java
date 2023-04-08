@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -28,6 +28,6 @@ public class SchulformGliederungJahrgaenge {
 
 	/** Die Liste der Jahrgänge. */
 	@Schema(description = "die Liste der Jahrgänge")
-	public @NotNull List<@NotNull String> jahrgaenge = new Vector<>();
+	public @NotNull List<@NotNull String> jahrgaenge = new ArrayList<>();
 
 }

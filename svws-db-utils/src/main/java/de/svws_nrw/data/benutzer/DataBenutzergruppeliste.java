@@ -5,7 +5,7 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -62,7 +62,7 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
         final List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
-                ? new Vector<>()
+                ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
 
         // Erstelle die Benutzerliste und sortiere sie

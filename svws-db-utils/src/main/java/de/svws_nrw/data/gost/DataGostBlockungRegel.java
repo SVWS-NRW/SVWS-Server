@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -352,7 +352,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			return Collections.emptyList();
 		final Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = parameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
 		// Erzeuge die Liste der Core-Types
-		final List<GostBlockungRegel> result = new Vector<>();
+		final List<GostBlockungRegel> result = new ArrayList<>();
 		for (final DTOGostBlockungRegel regel : regeln)
 			result.add(dtoMapper.apply(regel, mapParameter.get(regel.ID)));
         return result;

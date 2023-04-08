@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -19,10 +19,10 @@ public class SchuelerLernabschnittNachpruefungsdaten {
 
 	/** Die Kürzel der möglichen Nachprüfungsfächer. */
 	@ArraySchema(schema = @Schema(implementation = String.class, description = "Ein Array mit den Kürzeln der möglichen Nachprüfungsfächer."))
-	public @NotNull Vector<@NotNull String> moegliche = new Vector<>();
+	public @NotNull ArrayList<@NotNull String> moegliche = new ArrayList<>();
 
 	/** Die angesetzten bzw. durchgeführten Nachprüfungen */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittNachpruefung.class, description = "Die angesetzten bzw. durchgeführten Nachprüfungen."))
-	public @NotNull Vector<@NotNull SchuelerLernabschnittNachpruefung> pruefungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerLernabschnittNachpruefung> pruefungen = new ArrayList<>();
 
 }

@@ -1,5 +1,6 @@
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
@@ -9,7 +10,6 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { List } from '../../../../java/util/List';
-import { Vector } from '../../../../java/util/Vector';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
@@ -26,7 +26,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
 	private religion : List<AbiturFachbelegung> | null = null;
 
-	private zusatzkursFachbelegungen : Vector<AbiturFachbelegung> | null = null;
+	private zusatzkursFachbelegungen : ArrayList<AbiturFachbelegung> | null = null;
 
 
 	/**
@@ -46,7 +46,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		this.philosophie = this.manager.getFachbelegung(GostFachbereich.PHILOSOPHIE);
 		this.sonstige_gesellschaftswissenschaften = this.manager.getFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
 		this.religion = this.manager.getFachbelegungen(GostFachbereich.RELIGION);
-		this.zusatzkursFachbelegungen = new Vector();
+		this.zusatzkursFachbelegungen = new ArrayList();
 	}
 
 	protected pruefeEF1() : void {

@@ -2,7 +2,7 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import jakarta.ws.rs.core.MediaType;
@@ -59,9 +59,9 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 *
 	 * @return das Zeitraster
 	 */
-	public Vector<StundenplanZeitraster> getZeitraster() {
+	public ArrayList<StundenplanZeitraster> getZeitraster() {
 		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", this.stundenplanID, DTOStundenplanZeitraster.class);
-		final Vector<StundenplanZeitraster> daten = new Vector<>();
+		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOStundenplanZeitraster z : zeitraster)
 			daten.add(dtoMapper.apply(z));
 		return daten;

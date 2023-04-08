@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
-import { Vector } from '../../../java/util/Vector';
 
 export class GostBlockungsergebnisSchiene extends JavaObject {
 
@@ -12,7 +12,7 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	/**
 	 * Eine Liste der Kurse, welche dieser Schiene zugeordnet sind.
 	 */
-	public readonly kurse : Vector<GostBlockungsergebnisKurs> = new Vector();
+	public readonly kurse : ArrayList<GostBlockungsergebnisKurs> = new ArrayList();
 
 
 	public constructor() {

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -23,7 +23,7 @@ public abstract class GostBelegpruefung {
 	protected final @NotNull GostBelegpruefungsArt pruefungs_art;
 
 	/** Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind. */
-	private final @NotNull Vector<@NotNull GostBelegungsfehler> belegungsfehler = new Vector<>();
+	private final @NotNull ArrayList<@NotNull GostBelegungsfehler> belegungsfehler = new ArrayList<>();
 
 
 	/**
@@ -69,7 +69,7 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return die Belegungsfehler
 	 */
-	public @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehler() {
+	public @NotNull ArrayList<@NotNull GostBelegungsfehler> getBelegungsfehler() {
 		return belegungsfehler;
 	}
 
@@ -115,7 +115,7 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
-	public static boolean istErfolgreich(final @NotNull Vector<@NotNull GostBelegungsfehler> alleFehler) {
+	public static boolean istErfolgreich(final @NotNull ArrayList<@NotNull GostBelegungsfehler> alleFehler) {
 		for (int i = 0; i < alleFehler.size(); i++) {
 			final @NotNull GostBelegungsfehler fehler = alleFehler.get(i);
 			if (!fehler.istInfo())
@@ -133,8 +133,8 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return die Menge der Belegprüfungsfehler
 	 */
-	public static @NotNull Vector<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
-		final @NotNull Vector<@NotNull GostBelegungsfehler> fehler = new Vector<>();
+	public static @NotNull ArrayList<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
+		final @NotNull ArrayList<@NotNull GostBelegungsfehler> fehler = new ArrayList<>();
 		for (int i = 0; i < pruefungen.size(); i++) {
 			final @NotNull GostBelegpruefung pruefung = pruefungen.get(i);
 			fehler.addAll(pruefung.getBelegungsfehler());

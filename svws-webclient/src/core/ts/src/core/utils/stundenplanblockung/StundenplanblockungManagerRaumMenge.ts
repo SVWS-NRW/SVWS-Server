@@ -3,11 +3,11 @@ import { StundenplanblockungManagerRaum, cast_de_svws_nrw_core_utils_stundenplan
 import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
-	private readonly _menge : Vector<StundenplanblockungManagerRaum>;
+	private readonly _menge : ArrayList<StundenplanblockungManagerRaum>;
 
 	private readonly _map : HashMap<number, StundenplanblockungManagerRaum>;
 
@@ -17,7 +17,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 */
 	public constructor() {
 		super();
-		this._menge = new Vector();
+		this._menge = new ArrayList();
 		this._map = new HashMap();
 	}
 
@@ -87,7 +87,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Räume.
 	 */
-	public getMenge() : Vector<StundenplanblockungManagerRaum | null> | null {
+	public getMenge() : ArrayList<StundenplanblockungManagerRaum | null> | null {
 		return this._menge;
 	}
 

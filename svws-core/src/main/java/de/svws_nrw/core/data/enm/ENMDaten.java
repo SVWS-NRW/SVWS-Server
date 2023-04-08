@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.enm;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -68,45 +68,45 @@ public class ENMDaten {
 
 	/** Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool) */
 	@Schema(description = "Ein Array mit den gültigen Katalog-Einträgen für Noten (als Übersicht für das ENM-Client-Tool).")
-	public @NotNull Vector<@NotNull ENMNote> noten = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMNote> noten = new ArrayList<>();
 
 	/** Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool) */
 	@Schema(description = "Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool).")
-	public@NotNull  Vector<@NotNull ENMFoerderschwerpunkt> foerderschwerpunkte = new Vector<>();
+	public@NotNull  ArrayList<@NotNull ENMFoerderschwerpunkt> foerderschwerpunkte = new ArrayList<>();
 
 	/** Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.  */
 	@ArraySchema(schema = @Schema(implementation = ENMJahrgang.class, description = "Ein Array mit den Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind."))
-	public @NotNull Vector<@NotNull ENMJahrgang> jahrgaenge = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMJahrgang> jahrgaenge = new ArrayList<>();
 
 	/** Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.  */
 	@ArraySchema(schema = @Schema(implementation = ENMKlasse.class, description = "Ein Array mit den Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind."))
-	public @NotNull Vector<@NotNull ENMKlasse> klassen = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMKlasse> klassen = new ArrayList<>();
 
 	/** Die Informationen der vordefinierten Floskelgruppen und deren Floskeln. */
 	@ArraySchema(schema = @Schema(implementation = ENMFloskelgruppe.class, description = "Ein Array mit den Informationen der vordefinierten Floskelgruppen und deren Floskeln."))
-	public @NotNull Vector<@NotNull ENMFloskelgruppe> floskelgruppen = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMFloskelgruppe> floskelgruppen = new ArrayList<>();
 
 	/** Die Informationen zu Lehrern, die in der Notendatei vorhanden sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMLehrer.class, description = "Ein Array mit den Informationen zu Lehrern, die in der Notendatei vorhanden sind."))
-	public @NotNull Vector<@NotNull ENMLehrer> lehrer = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMLehrer> lehrer = new ArrayList<>();
 
 	/** Die Informationen zu den Fächern, die in der Notendatei vorhanden sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMFach.class, description = "Ein Array mit den Informationen zu den Fächern, die in der Notendatei vorhanden sind."))
-	public @NotNull Vector<@NotNull ENMFach> faecher = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMFach> faecher = new ArrayList<>();
 
 	// TODO Katalog der Kursarten
 
 	/** Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMTeilleistungsart.class, description = "Ein Array mit den Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind."))
-	public @NotNull Vector<@NotNull ENMTeilleistungsart> teilleistungsarten = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMTeilleistungsart> teilleistungsarten = new ArrayList<>();
 
 	/** Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMLerngruppe.class, description = "Ein Array mit den Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind."))
-	public @NotNull Vector<@NotNull ENMLerngruppe> lerngruppen = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMLerngruppe> lerngruppen = new ArrayList<>();
 
 	/** Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden. */
 	@ArraySchema(schema = @Schema(implementation = ENMSchueler.class, description = "Ein Array mit den Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden."))
-	public @NotNull Vector<@NotNull ENMSchueler> schueler = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMSchueler> schueler = new ArrayList<>();
 
 }
 

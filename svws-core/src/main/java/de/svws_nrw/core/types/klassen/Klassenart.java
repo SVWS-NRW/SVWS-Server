@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
@@ -143,7 +143,7 @@ public enum Klassenart {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
-	private @NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
 
 
 	/**
@@ -156,9 +156,9 @@ public enum Klassenart {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.zulaessig[i] = new Vector<>();
+			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
@@ -228,7 +228,7 @@ public enum Klassenart {
 	 * @return die zulässigen Klassenarten in der angegebenen Schulform
 	 */
 	public static @NotNull List<@NotNull Klassenart> get(final Schulform schulform) {
-		final @NotNull Vector<@NotNull Klassenart> kursarten = new Vector<>();
+		final @NotNull ArrayList<@NotNull Klassenart> kursarten = new ArrayList<>();
 		if (schulform == null)
 			return kursarten;
 		for (final @NotNull Klassenart kursart : Klassenart.values())

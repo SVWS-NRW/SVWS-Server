@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -41,7 +41,7 @@ public class GostBlockungsergebnis {
 	public boolean istVorlage = false;
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
-	public final @NotNull Vector<@NotNull GostBlockungsergebnisSchiene> schienen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostBlockungsergebnisSchiene> schienen = new ArrayList<>();
 
 	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
 	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();

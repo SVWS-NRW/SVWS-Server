@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { KlausurterminblockungAlgorithmusGreedy1 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1';
 import { KlausurterminblockungAlgorithmusGreedy2 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
@@ -12,7 +13,6 @@ import { KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/kl
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class KlausurterminblockungAlgorithmus extends JavaObject {
 
@@ -32,7 +32,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 * @return Eine Liste (Termine) von Listen (KlausurIDs)
 	 */
 	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
-		const out : List<List<number>> = new Vector();
+		const out : List<List<number>> = new ArrayList();
 		switch (pConfig.get_lk_gk_modus()) {
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE: {
 				KlausurterminblockungAlgorithmus.berechne_helper(pInput, pConfig, out);
@@ -59,7 +59,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	private static filter(pInput : List<GostKursklausur>, pLK : boolean) : List<GostKursklausur> {
-		const temp : List<GostKursklausur> = new Vector();
+		const temp : List<GostKursklausur> = new ArrayList();
 		for (const gostKursklausur of pInput)
 			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === pLK)
 				temp.add(gostKursklausur);

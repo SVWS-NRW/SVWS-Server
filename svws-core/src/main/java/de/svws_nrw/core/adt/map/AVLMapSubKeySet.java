@@ -71,12 +71,12 @@ public final class AVLMapSubKeySet<@NotNull K, @NotNull V> implements NavigableS
 
 	@Override
 	public @NotNull Object @NotNull [] toArray() {
-		return _sub.bcGetVectorOfKeys().toArray();
+		return _sub.bcGetArrayListOfKeys().toArray();
 	}
 
 	@Override
 	public <@NotNull T> @NotNull T @NotNull [] toArray(final @NotNull T @NotNull [] a) {
-		return _sub.bcGetVectorOfKeys().toArray(a);
+		return _sub.bcGetArrayListOfKeys().toArray(a);
 	}
 
 	@Override

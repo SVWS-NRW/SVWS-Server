@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.BerufskollegAnlage;
@@ -35,7 +35,7 @@ public class SchulgliederungKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new Vector<>();
+	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. */
 	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example = "false")
@@ -67,11 +67,11 @@ public class SchulgliederungKatalogEintrag {
 
 	/** Gibt eine Liste von berufsbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt den berufsbildenden Abschluss an, der in diesem Bildungsgang erreicht werden kann, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "BS")
-	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new Vector<>();
+	public @NotNull List<@NotNull String> bkAbschlussBerufsbildend = new ArrayList<>();
 
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
-	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new Vector<>();
+	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

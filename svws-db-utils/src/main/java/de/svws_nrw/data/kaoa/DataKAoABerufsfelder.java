@@ -2,7 +2,7 @@ package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOABerufsfeldEintrag;
 import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
@@ -26,7 +26,7 @@ public final class DataKAoABerufsfelder extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KAOABerufsfeldEintrag> daten = new Vector<>();
+		final ArrayList<KAOABerufsfeldEintrag> daten = new ArrayList<>();
 		for (final KAOABerufsfeld b : KAOABerufsfeld.values())
 			daten.addAll(Arrays.asList(b.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -479,7 +479,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    		// Bestimme die Kurslehrer, sofern bereits festgelegt
 	    		DTOGostBlockungKurslehrer kurslehrer = null;
 	    		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", kurs.id, DTOGostBlockungKurslehrer.class);
-	    		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new Vector<>();
+	    		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
 	    		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
 	    			if ((dtoKurslehrer.Reihenfolge != null) && (dtoKurslehrer.Reihenfolge == 1)) {
 	    				kurslehrer = dtoKurslehrer;

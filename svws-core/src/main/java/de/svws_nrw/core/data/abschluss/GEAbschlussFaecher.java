@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.abschluss;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -32,6 +32,6 @@ public class GEAbschlussFaecher {
 
 	/** Eine Liste der einzelnen Fächer, die für die Abschlussberechnung genutzt werden sollen. */
 	@Schema(description = "Die Fachinformationen")
-	public @NotNull List<@NotNull GEAbschlussFach> faecher = new Vector<>();
+	public @NotNull List<@NotNull GEAbschlussFach> faecher = new ArrayList<>();
 
 }

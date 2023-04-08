@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public class StundenplanblockungManagerFach {
 	@NotNull String _kuerzel = "";
 
 	/** Alle Lerngruppen in denen das Fach vertreten ist. */
-	@NotNull Vector<StundenplanblockungManagerLerngruppe> _menge_gr = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr = new ArrayList<>();
 
 	/**
 	 * Erzeugt ein neues Fach.

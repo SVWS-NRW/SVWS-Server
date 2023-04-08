@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public final class Sport extends GostBelegpruefung {
 
 	/// Die Belegungen für das Fach Sport
-	private @NotNull List<@NotNull AbiturFachbelegung> sport = new Vector<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> sport = new ArrayList<>();
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Sport.

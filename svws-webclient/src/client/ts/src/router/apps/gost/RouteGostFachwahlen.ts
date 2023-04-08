@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, GostJahrgang, GostStatistikFachwahl, List, Schulform, Vector } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostJahrgang, GostStatistikFachwahl, List, Schulform, ArrayList } from "@svws-nrw/svws-core";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { api } from "~/router/Api";
@@ -7,7 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataGostFachwahlen  {
 	item: GostJahrgang | undefined = undefined;
-	fachwahlen: List<GostStatistikFachwahl> = new Vector<GostStatistikFachwahl>();
+	fachwahlen: List<GostStatistikFachwahl> = new ArrayList<GostStatistikFachwahl>();
 }
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -61,7 +61,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			return;
 		if (item === undefined) {
 			this.data.item = undefined;
-			this.data.fachwahlen = new Vector<GostStatistikFachwahl>();
+			this.data.fachwahlen = new ArrayList<GostStatistikFachwahl>();
 		} else {
 			this.data.item = item;
 			this.data.fachwahlen = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, this.data.item.abiturjahr || -1);

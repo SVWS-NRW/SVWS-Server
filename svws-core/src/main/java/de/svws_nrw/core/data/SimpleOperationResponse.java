@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -26,6 +26,6 @@ public class SimpleOperationResponse {
 
 	/** Das Log der Operation. */
 	@ArraySchema(schema = @Schema(implementation = String.class))
-	public @NotNull List<String> log = new Vector<>();
+	public @NotNull List<String> log = new ArrayList<>();
 
 }

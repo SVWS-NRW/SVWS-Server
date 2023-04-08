@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.kurse;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -32,7 +32,7 @@ public class KursDaten {
 
 	/** Die IDs der Jahrgänge, denen der Kurs zugeordnet ist */
 	@Schema(description = "die IDs der Jahrgänge, denen der Kurs zugeordnet ist")
-	public @NotNull Vector<@NotNull Long> idJahrgaenge = new Vector<>();
+	public @NotNull ArrayList<@NotNull Long> idJahrgaenge = new ArrayList<>();
 
 	/** Die ID des Faches, dem der Kurs zugeordnet ist */
 	@Schema(description = "die ID des Faches, dem der Kurs zugeordnet ist", example = "815")
@@ -51,7 +51,7 @@ public class KursDaten {
 	public boolean istSichtbar;
 
 	/** Die Schüler des Kurses. */
-	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
 
 
 	// TODO Weitere Daten

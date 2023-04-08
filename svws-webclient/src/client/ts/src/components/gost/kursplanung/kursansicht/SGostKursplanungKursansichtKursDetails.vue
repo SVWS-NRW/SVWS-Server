@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, Vector } from "@svws-nrw/svws-core";
+	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from 'vue';
 
 	const props = defineProps<{
@@ -63,7 +63,7 @@
 		bgColor: string;
 		anzahlSpalten: number;
 		kurs: GostBlockungKurs;
-		kurseMitKursart: Vector<GostBlockungsergebnisKurs>;
+		kurseMitKursart: ArrayList<GostBlockungsergebnisKurs>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.fach;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.RGBFarbe;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -45,7 +45,7 @@ public class FachgruppenKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new Vector<>();
+	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x). */
 	@Schema(description = "ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x)", example = "10")

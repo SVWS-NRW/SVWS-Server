@@ -2,7 +2,7 @@ package de.svws_nrw.core.types.schule;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
@@ -120,10 +120,10 @@ public enum Schulform {
 	/** Die Historie mit den Einträgen der Schulformen */
 	public final @NotNull SchulformKatalogEintrag@NotNull[] historie;
 
-	/** Ein Vector mit allen definierten Schulformen */
+	/** Ein ArrayList mit allen definierten Schulformen */
 	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformen = new HashMap<>();
 
-	/** Ein Vector mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. */
+	/** Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. */
 	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformenNummer = new HashMap<>();
 
 
@@ -203,7 +203,7 @@ public enum Schulform {
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static @NotNull List<@NotNull Schulform> get() {
-		final @NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull Schulform> result = new ArrayList<>();
 		for (final @NotNull Schulform sf : Schulform.values())
 			if ((sf.daten != null) && (sf.daten.nummer != null))
 				result.add(sf);
@@ -216,7 +216,7 @@ public enum Schulform {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static @NotNull List<@NotNull Schulform> getMitGymOb() {
-		final @NotNull Vector<@NotNull Schulform> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull Schulform> result = new ArrayList<>();
 		for (final @NotNull Schulform sf : Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);

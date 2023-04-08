@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.stundenplanblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -18,26 +18,26 @@ public class StundenplanInputSimple {
 
 	/** Alle Lehrkräfte. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleLehrkraft.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleLehrkraft> lehrkraefte = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleLehrkraft> lehrkraefte = new ArrayList<>();
 
 	/** Alle Klassen. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKlasse.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleKlasse> klassen = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleKlasse> klassen = new ArrayList<>();
 
 	/** Alle Fächer. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleFach.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleFach> faecher = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleFach> faecher = new ArrayList<>();
 
 	/** Alle Räume. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleRaum.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleRaum> raeume = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleRaum> raeume = new ArrayList<>();
 
 	/** Alle Kopplungen. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKopplung.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleKopplung> kopplungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleKopplung> kopplungen = new ArrayList<>();
 
 	/** Alle Kurse. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKurs.class))
-	public @NotNull Vector<@NotNull StundenplanInputSimpleKurs> kurse = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanInputSimpleKurs> kurse = new ArrayList<>();
 
 }

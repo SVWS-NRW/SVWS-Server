@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMFloskel, cast_de_svws_nrw_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class ENMFloskelgruppe extends JavaObject {
 
@@ -22,7 +22,7 @@ export class ENMFloskelgruppe extends JavaObject {
 	/**
 	 * Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind.
 	 */
-	public readonly floskeln : Vector<ENMFloskel> = new Vector();
+	public readonly floskeln : ArrayList<ENMFloskel> = new ArrayList();
 
 
 	public constructor() {

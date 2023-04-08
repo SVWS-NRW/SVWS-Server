@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -167,12 +167,12 @@ public class GostFaecherManager {
 
 
 	/**
-	 * Erstellt aus der internen Liste einen Vector mit den Daten
+	 * Erstellt aus der internen Liste einen ArrayList mit den Daten
 	 *
-	 * @return ein Vector mit den Fächern
+	 * @return ein ArrayList mit den Fächern
 	 */
-	public @NotNull Vector<@NotNull GostFach> toVector() {
-		final @NotNull Vector<@NotNull GostFach> result = new Vector<>();
+	public @NotNull ArrayList<@NotNull GostFach> toArrayList() {
+		final @NotNull ArrayList<@NotNull GostFach> result = new ArrayList<>();
 		for (final @NotNull GostFach fach : _faecher)
 			result.add(fach);
 		return result;

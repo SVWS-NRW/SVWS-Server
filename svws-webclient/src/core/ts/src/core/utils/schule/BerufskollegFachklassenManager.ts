@@ -2,10 +2,10 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
-import { Vector } from '../../../java/util/Vector';
 import { BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -24,7 +24,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	/**
 	 * Ein Vektor mit allen Katalog-Einträgen
 	 */
-	private readonly _values : Vector<BerufskollegFachklassenKatalogEintrag> = new Vector();
+	private readonly _values : ArrayList<BerufskollegFachklassenKatalogEintrag> = new ArrayList();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index.

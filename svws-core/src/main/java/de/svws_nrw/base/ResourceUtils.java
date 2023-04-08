@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +49,7 @@ public final class ResourceUtils {
 	 * @return eine List mit den Pfaden der gefundenen Dateien
 	 */
 	private static List<Path> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) {
-		final List<Path> classes = new Vector<>();
+		final List<Path> classes = new ArrayList<>();
 		final Path fullPath = fs.getPath(path + (path.endsWith("/") ? "" : "/") + packagePath);
 		if (!Files.isDirectory(fullPath))
 			return classes;
@@ -140,7 +140,7 @@ public final class ResourceUtils {
 	 * @return eine List mit den Pfaden der gefundenen Dateien
 	 */
 	public static List<Path> getFilesInPackage(final String packageName, final String fileextension) {
-		final List<Path> result = new Vector<>();
+		final List<Path> result = new ArrayList<>();
 		Enumeration<URL> res;
 		try {
 			final String packagePath = packageName.replace(".", "/");

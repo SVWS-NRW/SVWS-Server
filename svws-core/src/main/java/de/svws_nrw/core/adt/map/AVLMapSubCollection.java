@@ -61,12 +61,12 @@ public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collec
 
 	@Override
 	public @NotNull Object[] toArray() {
-		return _sub.bcGetVectorOfValues().toArray();
+		return _sub.bcGetArrayListOfValues().toArray();
 	}
 
 	@Override
 	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
-		return _sub.bcGetVectorOfValues().toArray(a);
+		return _sub.bcGetArrayListOfValues().toArray(a);
 	}
 
 	@Override

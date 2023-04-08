@@ -2,6 +2,7 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
@@ -12,18 +13,17 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { List } from '../../../../java/util/List';
-import { Vector } from '../../../../java/util/Vector';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Fremdsprachen extends GostBelegpruefung {
 
-	private fremdsprachen : List<AbiturFachbelegung> = new Vector();
+	private fremdsprachen : List<AbiturFachbelegung> = new ArrayList();
 
-	private fremdsprachen_neu : List<AbiturFachbelegung> = new Vector();
+	private fremdsprachen_neu : List<AbiturFachbelegung> = new ArrayList();
 
-	private fremdsprachen_fortgefuehrt : List<AbiturFachbelegung> = new Vector();
+	private fremdsprachen_fortgefuehrt : List<AbiturFachbelegung> = new ArrayList();
 
-	private biliSachfaecher : List<AbiturFachbelegung> = new Vector();
+	private biliSachfaecher : List<AbiturFachbelegung> = new ArrayList();
 
 	/**
 	 * Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung

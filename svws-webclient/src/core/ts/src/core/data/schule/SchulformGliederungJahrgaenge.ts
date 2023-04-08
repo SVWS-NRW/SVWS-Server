@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchulformGliederungJahrgaenge extends JavaObject {
 
@@ -17,7 +17,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	/**
 	 * Die Liste der Jahrgänge.
 	 */
-	public jahrgaenge : List<string> = new Vector();
+	public jahrgaenge : List<string> = new ArrayList();
 
 
 	public constructor() {

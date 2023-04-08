@@ -3,7 +3,7 @@ package de.svws_nrw.davapi.util.vcard;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
@@ -59,7 +59,7 @@ public class VCard {
 	/**
 	 * Die Liste der übrigen Properties dieser VCard
 	 */
-	private final List<VCardProperty> properties = new Vector<>();
+	private final List<VCardProperty> properties = new ArrayList<>();
 
 	/**
 	 * der UID String für diese VCard
@@ -69,7 +69,7 @@ public class VCard {
 	/**
 	 * Member dieser VCard (bei Version 4.0 und KIND:GROUP)
 	 */
-	private final List<String> members = new Vector<>();
+	private final List<String> members = new ArrayList<>();
 
 	/**
 	 * Konstruktor für eine VCard mit einem gegebenen Fullname Property Dies erfüllt

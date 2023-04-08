@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
@@ -34,8 +34,8 @@ public class DTOCreator {
 	/** Die Konsole als Ziel der Log-Informationen */
 	private static LogConsumerConsole logConsumerConsole = new LogConsumerConsole();
 
-	/** Ein Vector mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
-	private static Vector<String> allClasses = new Vector<>();
+	/** Ein ArrayList mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
+	private static ArrayList<String> allClasses = new ArrayList<>();
 
 
 	/**

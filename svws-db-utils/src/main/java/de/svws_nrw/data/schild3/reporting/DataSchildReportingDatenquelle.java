@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.base.annotations.SchildReportingDate;
 import de.svws_nrw.base.annotations.SchildReportingMemo;
@@ -147,7 +147,7 @@ public abstract class DataSchildReportingDatenquelle {
         final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
         if (schule == null)
             return OperationError.INTERNAL_SERVER_ERROR.getResponse("Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
-        final Vector<SchildReportingDatenquelle> result = new Vector<>();
+        final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
         for (final var datenquelle : datenquellen.values()) {
             if ((datenquelle.schulformen.size() == 0) || (datenquelle.schulformen.contains(schule.Schulform)))
                 result.add(datenquelle.datenquelle);
@@ -262,7 +262,7 @@ public abstract class DataSchildReportingDatenquelle {
                 if (params.size() == 0)
                     return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
                 // Prüfe, ob alle Parameter vom Typ Long sind
-                final Vector<Long> paramListe = new Vector<>();
+                final ArrayList<Long> paramListe = new ArrayList<>();
                 for (final Object p : params) {
                     if (p instanceof final Long l)
                         paramListe.add(l);
@@ -282,7 +282,7 @@ public abstract class DataSchildReportingDatenquelle {
                 if (params.size() == 0)
                     return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
                 // Prüfe, ob alle Parameter vom Typ Double sind
-                final Vector<Double> paramListe = new Vector<>();
+                final ArrayList<Double> paramListe = new ArrayList<>();
                 for (final Object p : params) {
                     if (p instanceof final Double d)
                         paramListe.add(d);

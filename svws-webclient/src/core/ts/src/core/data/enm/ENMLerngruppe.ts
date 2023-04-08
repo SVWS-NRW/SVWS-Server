@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class ENMLerngruppe extends JavaObject {
 
@@ -41,7 +41,7 @@ export class ENMLerngruppe extends JavaObject {
 	/**
 	 * Die IDs der Lehrer, die der Lerngruppe zugeordnet sind.
 	 */
-	public lehrerID : Vector<number> = new Vector();
+	public lehrerID : ArrayList<number> = new ArrayList();
 
 	/**
 	 * Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.

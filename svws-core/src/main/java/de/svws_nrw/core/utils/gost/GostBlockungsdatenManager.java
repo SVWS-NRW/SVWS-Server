@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -90,13 +90,13 @@ public class GostBlockungsdatenManager {
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_fach_kursart_kursnummer;
 
 	/** Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER). */
-	private final @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_fach_kursart_kursnummer = new Vector<>();
+	private final @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_fach_kursart_kursnummer = new ArrayList<>();
 
 	/** Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER) */
 	private final @NotNull Comparator<@NotNull GostBlockungKurs> _compKurs_kursart_fach_kursnummer;
 
 	/** Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER) */
-	private final @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = new Vector<>();
+	private final @NotNull List<@NotNull GostBlockungKurs> _kurse_sortiert_kursart_fach_kursnummer = new ArrayList<>();
 
 	/** Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART) */
 	private final @NotNull Comparator<@NotNull GostFachwahl> _compFachwahlen;
@@ -861,10 +861,10 @@ public class GostBlockungsdatenManager {
 	 */
 	public void patchOfKursRemoveLehrkraft(final long pKursID, final long pLehrkraftID) throws DeveloperNotificationException {
 		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		final @NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
+		final @NotNull ArrayList<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		for (int i = 0; i < lehrer.size(); i++)
 			if (lehrer.get(i).id == pLehrkraftID) {
-				lehrer.removeElementAt(i);
+				lehrer.remove(lehrer.get(i));
 				return;
 			}
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!");
@@ -1187,7 +1187,7 @@ public class GostBlockungsdatenManager {
 		_daten.schueler.add(pSchueler);
 		_map_id_schueler.put(pSchueler.id, pSchueler);
 		if (!_map_schuelerID_fachwahlen.containsKey(pSchueler.id))
-			_map_schuelerID_fachwahlen.put(pSchueler.id, new Vector<>());
+			_map_schuelerID_fachwahlen.put(pSchueler.id, new ArrayList<>());
 		if (!_map_schulerID_fachID_fachwahl.containsKey(pSchueler.id))
 			_map_schulerID_fachID_fachwahl.put(pSchueler.id, new HashMap<>());
 	}
@@ -1340,7 +1340,7 @@ public class GostBlockungsdatenManager {
 		// _map_schuelerID_fachwahlen
 		List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
 		if (fachwahlenDesSchuelers == null) {
-			fachwahlenDesSchuelers = new Vector<>();
+			fachwahlenDesSchuelers = new ArrayList<>();
 			_map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
 		}
 		fachwahlenDesSchuelers.add(pFachwahl);
@@ -1384,7 +1384,7 @@ public class GostBlockungsdatenManager {
 	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(final long pFachartID) {
 		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(pFachartID);
 		if (fachwahlenDerFachart == null) {
-			fachwahlenDerFachart = new Vector<>();
+			fachwahlenDerFachart = new ArrayList<>();
 			_map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
 		}
 		return fachwahlenDerFachart;

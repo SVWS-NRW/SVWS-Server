@@ -2,7 +2,7 @@ package de.svws_nrw.db.utils.schema;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,7 +72,7 @@ public class DBCoreTypeUpdater {
 	private record CoreTypeTable(String name, long version, Consumer<Logger> updater) { /**/ }
 
 	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable}. */
-	private final Vector<CoreTypeTable> tables = new Vector<>();
+	private final ArrayList<CoreTypeTable> tables = new ArrayList<>();
 
 
 	/**

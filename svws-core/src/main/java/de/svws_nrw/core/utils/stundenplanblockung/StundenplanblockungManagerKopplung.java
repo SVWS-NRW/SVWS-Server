@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public class StundenplanblockungManagerKopplung {
 	private @NotNull String _kuerzel = "";
 
 	/** Alle Lerngruppen der Kopplungen. */
-	private final @NotNull Vector<StundenplanblockungManagerLerngruppe> _lerngruppen = new Vector<>();
+	private final @NotNull ArrayList<StundenplanblockungManagerLerngruppe> _lerngruppen = new ArrayList<>();
 
 	/**
 	 * Erzeugt eine neue Kopplung.

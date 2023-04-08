@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -141,7 +141,7 @@ public enum BilingualeSprache {
 	private static final @NotNull HashMap<@NotNull String, @NotNull BilingualeSprache> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die bilingualen Sprache vorkommt */
-	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
@@ -155,9 +155,9 @@ public enum BilingualeSprache {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector<>();
+			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
@@ -285,7 +285,7 @@ public enum BilingualeSprache {
 	 * @return die bilingualen Sprache in der angegebenen Schulform
 	 */
 	public static @NotNull List<@NotNull BilingualeSprache> get(final Schulform schulform) {
-		final @NotNull Vector<@NotNull BilingualeSprache> faecher = new Vector<>();
+		final @NotNull ArrayList<@NotNull BilingualeSprache> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
 		final @NotNull BilingualeSprache@NotNull[] fachgruppen = BilingualeSprache.values();

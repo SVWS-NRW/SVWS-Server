@@ -2,7 +2,7 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.lehrer.LehrerKatalogAnrechnungsgrundEintrag;
 import de.svws_nrw.core.types.lehrer.LehrerAnrechnungsgrund;
@@ -26,7 +26,7 @@ public final class DataKatalogLehrerAnrechnungsgruende extends DataManager<Long>
 
 	@Override
 	public Response getAll() {
-		final Vector<LehrerKatalogAnrechnungsgrundEintrag> daten = new Vector<>();
+		final ArrayList<LehrerKatalogAnrechnungsgrundEintrag> daten = new ArrayList<>();
 		for (final LehrerAnrechnungsgrund grund : LehrerAnrechnungsgrund.values())
 			daten.addAll(Arrays.asList(grund.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

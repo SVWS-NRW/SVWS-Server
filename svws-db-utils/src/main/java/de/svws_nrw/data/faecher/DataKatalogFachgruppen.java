@@ -2,7 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag;
 import de.svws_nrw.core.types.fach.Fachgruppe;
@@ -32,7 +32,7 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final Vector<FachgruppenKatalogEintrag> daten = new Vector<>();
+        final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
         for (final Fachgruppe gruppe : Fachgruppe.values())
             daten.addAll(Arrays.asList(gruppe.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -46,7 +46,7 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
     	final var gruppen = Fachgruppe.get(schule.Schulform);
     	if (gruppen == null)
     		return OperationError.NOT_FOUND.getResponse();
-        final Vector<FachgruppenKatalogEintrag> daten = new Vector<>();
+        final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
         for (final Fachgruppe gruppe : gruppen)
             daten.addAll(Arrays.asList(gruppe.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

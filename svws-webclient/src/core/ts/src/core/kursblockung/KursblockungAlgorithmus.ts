@@ -6,6 +6,7 @@ import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsda
 import { KursblockungAlgorithmusKSchnellW } from '../../core/kursblockung/KursblockungAlgorithmusKSchnellW';
 import { KursblockungAlgorithmusKMatching } from '../../core/kursblockung/KursblockungAlgorithmusKMatching';
 import { KursblockungAlgorithmusKFachwahlmatrix } from '../../core/kursblockung/KursblockungAlgorithmusKFachwahlmatrix';
+import { ArrayList } from '../../java/util/ArrayList';
 import { Service } from '../../core/Service';
 import { KursblockungAlgorithmusSMatching } from '../../core/kursblockung/KursblockungAlgorithmusSMatching';
 import { KursblockungAlgorithmusKSchuelervorschlag } from '../../core/kursblockung/KursblockungAlgorithmusKSchuelervorschlag';
@@ -16,9 +17,8 @@ import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusSZufaellig } from '../../core/kursblockung/KursblockungAlgorithmusSZufaellig';
 import { KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
-import { Vector } from '../../java/util/Vector';
 
-export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, Vector<GostBlockungsergebnisManager>> {
+export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, ArrayList<GostBlockungsergebnisManager>> {
 
 	private static readonly _random : Random | null = new Random();
 
@@ -27,7 +27,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		super();
 	}
 
-	public handle(pInput : GostBlockungsdatenManager) : Vector<GostBlockungsergebnisManager> {
+	public handle(pInput : GostBlockungsdatenManager) : ArrayList<GostBlockungsergebnisManager> {
 		this.logger.modifyIndent(+4);
 		const seed : number = KursblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
@@ -35,7 +35,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		const dynDaten : KursblockungDynDaten = new KursblockungDynDaten(random, this.logger, pInput);
 		const zeitBedarf : number = dynDaten.gibBlockungszeitMillis();
 		const zeitEndeGesamt : number = System.currentTimeMillis() + zeitBedarf;
-		const kursblockungOutputs : Vector<GostBlockungsergebnisManager> = new Vector();
+		const kursblockungOutputs : ArrayList<GostBlockungsergebnisManager> = new ArrayList();
 		const algorithmenK : Array<KursblockungAlgorithmusK> = [new KursblockungAlgorithmusKSchnellW(random, this.logger, dynDaten), new KursblockungAlgorithmusKFachwahlmatrix(random, this.logger, dynDaten), new KursblockungAlgorithmusKMatching(random, this.logger, dynDaten), new KursblockungAlgorithmusKSchuelervorschlag(random, this.logger, dynDaten), new KursblockungAlgorithmusKOptimiereBest(random, this.logger, dynDaten)];
 		const algorithmenS : Array<KursblockungAlgorithmusS> = [new KursblockungAlgorithmusSSchnellW(random, this.logger, dynDaten), new KursblockungAlgorithmusSZufaellig(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatching(random, this.logger, dynDaten), new KursblockungAlgorithmusSMatchingW(random, this.logger, dynDaten)];
 		let zeitProK : number = 100;
@@ -54,7 +54,7 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 		return kursblockungOutputs;
 	}
 
-	private static verwendeAlgorithmusK(kursblockungAlgorithmusK : KursblockungAlgorithmusK, zeitEndeK : number, dynDaten : KursblockungDynDaten, algorithmenS : Array<KursblockungAlgorithmusS>, outputs : Vector<GostBlockungsergebnisManager>, pInput : GostBlockungsdatenManager) : void {
+	private static verwendeAlgorithmusK(kursblockungAlgorithmusK : KursblockungAlgorithmusK, zeitEndeK : number, dynDaten : KursblockungDynDaten, algorithmenS : Array<KursblockungAlgorithmusS>, outputs : ArrayList<GostBlockungsergebnisManager>, pInput : GostBlockungsdatenManager) : void {
 		kursblockungAlgorithmusK.berechne(zeitEndeK);
 		dynDaten.aktionZustandSpeichernK();
 		for (let iS : number = 0; iS < algorithmenS.length; iS++) {

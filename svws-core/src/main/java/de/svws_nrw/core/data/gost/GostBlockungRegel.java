@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -27,6 +27,6 @@ public class GostBlockungRegel {
 	public int typ = -1;
 
 	/** Eine Liste der Regel-Parameter */
-	public @NotNull Vector<@NotNull Long> parameter = new Vector<>();
+	public @NotNull ArrayList<@NotNull Long> parameter = new ArrayList<>();
 
 }

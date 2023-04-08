@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schild3;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -48,6 +48,6 @@ public class SchildReportingDatenquelle {
     /** Die Liste der JSON-Attribute für diese Datenquelle. */
     @ArraySchema(schema = @Schema(implementation = SchildReportingDatenquelleAttribut.class,
             description = "Die Liste der JSON-Attribute für diese Datenquelle."))
-    public @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute = new Vector<>();
+    public @NotNull List<@NotNull SchildReportingDatenquelleAttribut> attribute = new ArrayList<>();
 
 }

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.fach;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -30,7 +30,7 @@ public class BilingualeSpracheKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist. */
 	@Schema(description = "die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist.")
-	public @NotNull List<@NotNull String> schulformen = new Vector<>();
+	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

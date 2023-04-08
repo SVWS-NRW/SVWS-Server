@@ -62,12 +62,12 @@ public final class AVLMapSubEntrySet<@NotNull K, @NotNull V> implements Set<Map.
 
 	@Override
 	public @NotNull Object[] toArray() {
-		return _sub.bcGetVectorOfEntries().toArray();
+		return _sub.bcGetArrayListOfEntries().toArray();
 	}
 
 	@Override
 	public <@NotNull T> @NotNull T[] toArray(final @NotNull T[] a) {
-		return _sub.bcGetVectorOfEntries().toArray(a);
+		return _sub.bcGetArrayListOfEntries().toArray(a);
 	}
 
 	@Override

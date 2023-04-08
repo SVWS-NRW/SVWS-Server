@@ -2,12 +2,12 @@ package de.svws_nrw.db.schema.app;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogData;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.converter.DBAttributeConverter;
@@ -26,7 +26,7 @@ public final class DTOCreatorTable {
 	private static Logger logger = new Logger();
 
 	/** Enthält alle definierten Objekt dieser Klasse */
-	public static final Vector<DTOCreatorTable> all = new Vector<>();
+	public static final ArrayList<DTOCreatorTable> all = new ArrayList<>();
 
 
 	/** Die Tabelle für die der Java-Code erzeugt werden soll */
@@ -46,7 +46,7 @@ public final class DTOCreatorTable {
 	/**
 	 * Fügt einen Consumer für das Logging beim Erstellen des Java-Quellcodes
 	 * zum Logger hinzu. <br>
-	 * Siehe auch {@link LogConsumerVector} und {@link LogConsumerConsole}.
+	 * Siehe auch {@link LogConsumerList} und {@link LogConsumerConsole}.
 	 *
 	 * @param consumer   der hinzuzufügende Log-Consumer
 	 */

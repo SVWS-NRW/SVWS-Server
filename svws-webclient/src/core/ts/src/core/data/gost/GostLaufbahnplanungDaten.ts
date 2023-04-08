@@ -3,7 +3,7 @@ import { GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { GostLaufbahnplanungDatenSchueler } from '../../../core/data/gost/GostLaufbahnplanungDatenSchueler';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class GostLaufbahnplanungDaten extends JavaObject {
 
@@ -71,22 +71,22 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang
 	 */
-	public readonly beratungslehrer : Vector<GostBeratungslehrer> = new Vector();
+	public readonly beratungslehrer : ArrayList<GostBeratungslehrer> = new ArrayList();
 
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang
 	 */
-	public readonly faecher : Vector<GostFach> = new Vector();
+	public readonly faecher : ArrayList<GostFach> = new ArrayList();
 
 	/**
 	 * Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang
 	 */
-	public readonly fachkombinationen : Vector<GostJahrgangFachkombination> = new Vector();
+	public readonly fachkombinationen : ArrayList<GostJahrgangFachkombination> = new ArrayList();
 
 	/**
 	 * Die Liste der Schüler mit ihren Laufbahnplanungsdaten.
 	 */
-	public readonly schueler : Vector<GostLaufbahnplanungDatenSchueler> = new Vector();
+	public readonly schueler : ArrayList<GostLaufbahnplanungDatenSchueler> = new ArrayList();
 
 
 	public constructor() {

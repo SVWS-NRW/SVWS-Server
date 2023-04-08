@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -70,7 +70,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 		// Analysiere znächst die Java-Dateien mit den API-Methoden
 		final List<ClassTree> allClasses = transpiler.getAllClasses();
 		// Eine HashMap zum zuordnen der einzelnen API-Methoden zu den APIs
-		final HashMap<String, Vector<ApiMethod>> apis = new HashMap<>();
+		final HashMap<String, ArrayList<ApiMethod>> apis = new HashMap<>();
 		for (final ClassTree classTree : allClasses) {
 			// Beachte nur Klassen. Enums und ähnliches können ignoriert werden
 			if (classTree.getKind() != Tree.Kind.CLASS)
@@ -91,9 +91,9 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 					continue;
 				System.out.println("    -> " + classTree.getSimpleName().toString() + "." + apiMethod.name);
 				// Füge die API-Methode zu der entsprechenden API hinzu
-				Vector<ApiMethod> apiMethods = apis.get(apiMethod.api);
+				ArrayList<ApiMethod> apiMethods = apis.get(apiMethod.api);
 				if (apiMethods == null) {
-					apiMethods = new Vector<>();
+					apiMethods = new ArrayList<>();
 					apis.put(apiMethod.api, apiMethods);
 				}
 				apiMethods.add(apiMethod);
@@ -101,13 +101,13 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 		}
 
 		// Schreibe die API in die Typescript-Dateien
-		for (final Map.Entry<String, Vector<ApiMethod>> entry : apis.entrySet()) {
+		for (final Map.Entry<String, ArrayList<ApiMethod>> entry : apis.entrySet()) {
 			// Bestimme den Namen der API und der dazugehörigen API-Klasse
 			final String api = entry.getKey();
 			final String apiClassName = "Api" + api;
 
 			// Sortiere die API-Methoden anhand des Pfades
-			final Vector<ApiMethod> apiMethods = entry.getValue();
+			final ArrayList<ApiMethod> apiMethods = entry.getValue();
 			apiMethods.sort((a, b) -> {
 				final Collator collator = Collator.getInstance(Locale.GERMAN);
 				return collator.compare(a.path, b.path);
@@ -160,7 +160,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 					imports.put(importEntry.getKey(), importEntry.getValue());
 				}
 			}
-			final Vector<Map.Entry<String, String>> allImports = new Vector<>();
+			final ArrayList<Map.Entry<String, String>> allImports = new ArrayList<>();
 			allImports.addAll(imports.entrySet());
 			allImports.sort((a, b) -> {
 				final Collator collator = Collator.getInstance(Locale.GERMAN);

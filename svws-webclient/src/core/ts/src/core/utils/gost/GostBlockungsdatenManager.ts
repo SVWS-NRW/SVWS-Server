@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
@@ -10,7 +11,6 @@ import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostK
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -110,7 +110,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
 	 */
-	private readonly _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new Vector();
+	private readonly _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList();
 
 	/**
 	 * Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER)
@@ -120,7 +120,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER)
 	 */
-	private readonly _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new Vector();
+	private readonly _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new ArrayList();
 
 	/**
 	 * Ein Comparator für die Fachwahlen (SCHÜLERID, FACH, KURSART)
@@ -868,10 +868,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public patchOfKursRemoveLehrkraft(pKursID : number, pLehrkraftID : number) : void {
 		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		const lehrer : Vector<GostBlockungKursLehrer> = kurs.lehrer;
+		const lehrer : ArrayList<GostBlockungKursLehrer> = kurs.lehrer;
 		for (let i : number = 0; i < lehrer.size(); i++)
 			if (lehrer.get(i).id === pLehrkraftID) {
-				lehrer.removeElementAt(i);
+				lehrer.remove(lehrer.get(i));
 				return;
 			}
 		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!")
@@ -1162,7 +1162,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.schueler.add(pSchueler);
 		this._map_id_schueler.put(pSchueler.id, pSchueler);
 		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
-			this._map_schuelerID_fachwahlen.put(pSchueler.id, new Vector());
+			this._map_schuelerID_fachwahlen.put(pSchueler.id, new ArrayList());
 		if (!this._map_schulerID_fachID_fachwahl.containsKey(pSchueler.id))
 			this._map_schulerID_fachID_fachwahl.put(pSchueler.id, new HashMap());
 	}
@@ -1308,7 +1308,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			throw new DeveloperNotificationException("Schüler-ID (" + pFachwahl.schuelerID + "), (Fach-ID" + fachID + ") doppelt!")
 		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
 		if (fachwahlenDesSchuelers === null) {
-			fachwahlenDesSchuelers = new Vector();
+			fachwahlenDesSchuelers = new ArrayList();
 			this._map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
 		}
 		fachwahlenDesSchuelers.add(pFachwahl);
@@ -1348,7 +1348,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
 		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(pFachartID);
 		if (fachwahlenDerFachart === null) {
-			fachwahlenDerFachart = new Vector();
+			fachwahlenDerFachart = new ArrayList();
 			this._map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
 		}
 		return fachwahlenDerFachart;

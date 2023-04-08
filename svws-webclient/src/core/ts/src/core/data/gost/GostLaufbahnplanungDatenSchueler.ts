@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/GostLaufbahnplanungDatenFachbelegung';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {
@@ -38,7 +38,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	/**
 	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
-	public readonly fachbelegungen : Vector<GostLaufbahnplanungDatenFachbelegung> = new Vector();
+	public readonly fachbelegungen : ArrayList<GostLaufbahnplanungDatenFachbelegung> = new ArrayList();
 
 	/**
 	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.

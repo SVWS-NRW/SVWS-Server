@@ -1,7 +1,7 @@
 package de.svws_nrw.core.utils.schule;
 
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
@@ -24,7 +24,7 @@ public class BerufskollegFachklassenManager {
 	private final long _version;
 
 	/** Ein Vektor mit allen Katalog-Einträgen */
-	private final @NotNull Vector<@NotNull BerufskollegFachklassenKatalogEintrag> _values = new Vector<>();
+	private final @NotNull ArrayList<@NotNull BerufskollegFachklassenKatalogEintrag> _values = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf einen Teilkatalog anhand eines Index. */
 	private final @NotNull HashMap<@NotNull Integer, @NotNull BerufskollegFachklassenKatalogIndex> _mapByIndex = new HashMap<>();

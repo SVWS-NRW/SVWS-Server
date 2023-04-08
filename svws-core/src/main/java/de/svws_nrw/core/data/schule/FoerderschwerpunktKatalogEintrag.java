@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -32,7 +32,7 @@ public class FoerderschwerpunktKatalogEintrag {
 
 	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
 	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
-	public @NotNull List<@NotNull String> schulformen = new Vector<>();
+	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem der Förderschwerpunkt einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

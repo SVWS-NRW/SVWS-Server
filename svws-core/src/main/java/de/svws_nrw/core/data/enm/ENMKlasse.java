@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.enm;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -39,6 +39,6 @@ public class ENMKlasse {
 
 	/** Die IDs der zugeordneten Klassenlehrer. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen der IDs der zugeordneten Klassenlehrer."))
-	public @NotNull Vector<@NotNull Long> klassenlehrer = new Vector<>();
+	public @NotNull ArrayList<@NotNull Long> klassenlehrer = new ArrayList<>();
 
 }

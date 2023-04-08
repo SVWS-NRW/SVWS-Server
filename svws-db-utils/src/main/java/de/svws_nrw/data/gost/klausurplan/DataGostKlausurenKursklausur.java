@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,7 +59,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * @return die Liste der Kursklausuren
 	 */
 	private List<GostKursklausur> getKursKlausuren(final int halbjahr) {
-		final List<GostKursklausur> daten = new Vector<>();
+		final List<GostKursklausur> daten = new ArrayList<>();
 
 		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));

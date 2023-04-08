@@ -2,7 +2,7 @@ package de.svws_nrw.transpiler.typescript;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -45,7 +45,7 @@ public final class ApiMethod {
 	public final String docDescription;
 
 	/** Die unterschiedlichen HTTP-Responses, welche beim Aufruf der Methode auftreten können und dokumentiert wurden. */
-	public final Vector<ApiResponse> responses = new Vector<>();
+	public final ArrayList<ApiResponse> responses = new ArrayList<>();
 
 	/** Die HTTP-Response, welche im Erfolgsfall verwendet wird. */
 	public final ApiResponse returnResponse;
@@ -70,7 +70,7 @@ public final class ApiMethod {
 		docDescription = ApiMethod.getDocDescription(transpiler, classTree, method);
 
 		// Response-Objekt erstellen und einen Vektor dieser Response-Objekt hier erzeugen, außerdem Erkennung des Response-Codes für eine erfolgreiche Rückgabe von Informationen
-		final Vector<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
+		final ArrayList<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
 		ApiResponse tmp200 = null;
 		for (final AnnotationTree annotationMethodApiResponse : annotationMethodApiResponses) {
 			final ApiResponse response = new ApiResponse(transpiler, annotationMethodApiResponse);
@@ -432,7 +432,7 @@ public final class ApiMethod {
 					};
 					if (returnResponse.content.isArrayType) {
 						result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-						result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+						result += "\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator();
 						result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 						result += "\t\treturn ret;" + System.lineSeparator();
 					} else {
@@ -458,7 +458,7 @@ public final class ApiMethod {
 				};
 				if (returnResponse.content.isArrayType) {
 					result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-					result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+					result += "\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator();
 					result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 					result += "\t\treturn ret;" + System.lineSeparator();
 				} else {
@@ -486,7 +486,7 @@ public final class ApiMethod {
 				};
 				if (returnResponse.content.isArrayType) {
 					result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-					result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+					result += "\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator();
 					result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 					result += "\t\treturn ret;" + System.lineSeparator();
 				} else {
@@ -544,7 +544,7 @@ public final class ApiMethod {
 					};
 					if (returnResponse.content.isArrayType) {
 						result += "\t\tconst obj = JSON.parse(result);" + System.lineSeparator();
-						result += "\t\tconst ret = new Vector<" + resultDatatype + ">();" + System.lineSeparator();
+						result += "\t\tconst ret = new ArrayList<" + resultDatatype + ">();" + System.lineSeparator();
 						result += "\t\tobj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(" + conversion + "); });" + System.lineSeparator();
 						result += "\t\treturn ret;" + System.lineSeparator();
 					} else {

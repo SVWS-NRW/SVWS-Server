@@ -14,7 +14,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 
 
@@ -39,7 +39,7 @@ public class ResourceUtils {
 	 * @return eine Liste mit den gefundenen Dateien
 	 */
 	private static List<TranspilerResource> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) {
-		final List<TranspilerResource> classes = new Vector<>();
+		final List<TranspilerResource> classes = new ArrayList<>();
 		final Path fullPath = fs.getPath(path + (path.endsWith("/") ? "" : "/") + packagePath);
 		if (!Files.isDirectory(fullPath))
 			return classes;
@@ -103,7 +103,7 @@ public class ResourceUtils {
 	 * @return eine List mit den Pfaden der gefundenen Dateien
 	 */
 	public static List<TranspilerResource> getFilesInPackage(final String packageName, final String fileextension) {
-		final List<TranspilerResource> result = new Vector<>();
+		final List<TranspilerResource> result = new ArrayList<>();
 		Enumeration<URL> res;
 		try {
 			final String packagePath = packageName.replace(".", "/");

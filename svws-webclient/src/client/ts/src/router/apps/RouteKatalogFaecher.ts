@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, FachDaten, FaecherListeEintrag, List, Schulform, Vector } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, FachDaten, FaecherListeEintrag, List, Schulform, ArrayList } from "@svws-nrw/svws-core";
 import { ShallowRef, shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -92,7 +92,7 @@ export class RouteDataKatalogFaecher {
 }
 export class RouteDataKatalogFaecherx {
 	auswahl: ShallowRef<FaecherListeEintrag | undefined> = shallowRef(undefined);
-	listFaecher: List<FaecherListeEintrag> = new Vector();
+	listFaecher: List<FaecherListeEintrag> = new ArrayList();
 	mapFaecher: Map<number, FaecherListeEintrag> = new Map();
 
 	public async ladeListe() {

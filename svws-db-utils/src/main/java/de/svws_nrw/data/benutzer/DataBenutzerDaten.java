@@ -3,7 +3,7 @@ package de.svws_nrw.data.benutzer;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -125,7 +125,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception("Keine Schule angelegt.");
         final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
 
-        final List<BenutzerKompetenz> bks = new Vector<>();
+        final List<BenutzerKompetenz> bks = new ArrayList<>();
         for (final Long kid:kids) {
             bks.add(BenutzerKompetenz.getByID(kid));
         }
@@ -347,13 +347,13 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
         final List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
-                ? new Vector<>()
+                ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
         // Lese die Informationen zu den Kompetenzen ein
         final List<Long> kompetenzIDs = conn.queryNamed("DTOBenutzerKompetenz.benutzer_id", id, DTOBenutzerKompetenz.class)
                 .stream().map(b -> b.Kompetenz_ID).sorted().toList();
         final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.size() == 0)
-                ? new Vector<>()
+                ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs,
                         DTOBenutzergruppenKompetenz.class);
         final Map<Long, List<DTOBenutzergruppenKompetenz>> mapGruppenKompetenzen = gruppenKompetenzen.stream()

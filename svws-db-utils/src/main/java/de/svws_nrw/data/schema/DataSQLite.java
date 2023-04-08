@@ -5,7 +5,7 @@ import java.util.Random;
 import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
@@ -35,7 +35,7 @@ public final class DataSQLite {
      */
     public static Response exportSQLite(final Benutzer user, final String schemaname) {
     	final Logger logger = new Logger();
-    	final LogConsumerVector log = new LogConsumerVector();
+    	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
     	logger.addConsumer(new LogConsumerConsole());
 

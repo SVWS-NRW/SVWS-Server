@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.DisplayName;
@@ -159,7 +159,7 @@ public class GostBlockungsergebnisManagerTest {
 				final HashSet<Long> kuSchienen = mapKuSchiene.get(kursID);
 				if ((kuSchienen.size() < 1) || ((kuSchienen.size() == 1) && (lRandom.nextBoolean()))) {
 					// Hinzufügen
-					final Vector<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
+					final ArrayList<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
 					final GostBlockungsergebnisSchiene schieneNeu = getRandom(schienenAlle, lRandom);
 					out.setKursSchiene(kursID, schieneNeu.id, true);
 					kuSchienen.add(schieneNeu.id);
@@ -291,7 +291,7 @@ public class GostBlockungsergebnisManagerTest {
 		return winner;
 	}
 
-	private static GostBlockungsergebnisSchiene getRandom(final Vector<GostBlockungsergebnisSchiene> vSchienen, final Random rnd) {
+	private static GostBlockungsergebnisSchiene getRandom(final ArrayList<GostBlockungsergebnisSchiene> vSchienen, final Random rnd) {
 		final int i = rnd.nextInt(vSchienen.size());
 		return vSchienen.get(i);
 	}

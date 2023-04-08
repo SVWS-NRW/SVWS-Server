@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerblockungInput extends JavaObject {
 
@@ -13,17 +13,17 @@ export class SchuelerblockungInput extends JavaObject {
 	/**
 	 * Alle Kurse, die zu den Fachwahlen des Schülers passen.
 	 */
-	public kurse : Vector<SchuelerblockungInputKurs> = new Vector();
+	public kurse : ArrayList<SchuelerblockungInputKurs> = new ArrayList();
 
 	/**
 	 * Alle Fachwahlen des Schülers.
 	 */
-	public fachwahlen : Vector<GostFachwahl> = new Vector();
+	public fachwahlen : ArrayList<GostFachwahl> = new ArrayList();
 
 	/**
 	 * Zu jeder Fachwahl eine textuelle Darstellung.
 	 */
-	public fachwahlenText : Vector<string> = new Vector();
+	public fachwahlenText : ArrayList<string> = new ArrayList();
 
 
 	public constructor() {

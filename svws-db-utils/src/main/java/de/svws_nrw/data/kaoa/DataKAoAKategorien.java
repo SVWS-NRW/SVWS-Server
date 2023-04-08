@@ -2,7 +2,7 @@ package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOAKategorieEintrag;
 import de.svws_nrw.core.types.kaoa.KAOAKategorie;
@@ -26,7 +26,7 @@ public final class DataKAoAKategorien extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KAOAKategorieEintrag> daten = new Vector<>();
+		final ArrayList<KAOAKategorieEintrag> daten = new ArrayList<>();
 		for (final KAOAKategorie kategorie : KAOAKategorie.values())
 			daten.addAll(Arrays.asList(kategorie.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

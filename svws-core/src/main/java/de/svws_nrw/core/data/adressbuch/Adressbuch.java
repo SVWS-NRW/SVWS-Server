@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 
@@ -45,6 +45,6 @@ public class Adressbuch {
 	 * eine Liste der Einträge des Adressbuchs
 	 */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Einträge des Adressbuchs", example = "..."))
-	public @NotNull List<@NotNull AdressbuchEintrag> adressbuchEintraege = new Vector<>();
+	public @NotNull List<@NotNull AdressbuchEintrag> adressbuchEintraege = new ArrayList<>();
 
 }

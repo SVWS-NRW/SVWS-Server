@@ -2,7 +2,7 @@ package de.svws_nrw.davapi.util.vcard;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -25,7 +25,7 @@ public final class CategoriesProperty implements VCardProperty {
 	/**
 	 * Liste der Kategorien
 	 */
-	private final List<String> categories = new Vector<>();
+	private final List<String> categories = new ArrayList<>();
 
 	/**
 	 * erstellt ein Category Property mit einer Liste von Kategorien

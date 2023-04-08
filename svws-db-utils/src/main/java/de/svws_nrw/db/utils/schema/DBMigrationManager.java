@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.CsvReader;
@@ -436,7 +436,7 @@ public final class DBMigrationManager {
 		final DBSchemaStatus status = srcManager.getSchemaStatus();
 		if (!status.hasTable(tab.name())) {
 			lastError = "Die Tabelle ist im Quell-Schema nicht definiert.";
-			return new Vector<>();
+			return new ArrayList<>();
 		}
 
 		// Prüfe, ob alle Spalten auch wirklich vorhanden sind...
@@ -493,7 +493,7 @@ public final class DBMigrationManager {
 				final List<Object[]> entities = srcConn.query(jpql, Object[].class).getResultList();
 				final Constructor<?> constructor = dtoClass.getDeclaredConstructor();
 				constructor.setAccessible(true);
-				final Vector<Object> list = new Vector<>();
+				final ArrayList<Object> list = new ArrayList<>();
 				for (final Object[] obj : entities) {
 					final Object entity = constructor.newInstance();
 					int i = 0;

@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.kurse.KursartKatalogEintrag;
@@ -962,7 +962,7 @@ public enum ZulaessigeKursart {
 	private static final @NotNull HashMap<@NotNull String, ZulaessigeKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist */
-	private @NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
 
 
 	/**
@@ -976,9 +976,9 @@ public enum ZulaessigeKursart {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei Felder mit den Schulformen und Schulgliederungen für die Historie
-		this.zulaessig = (@NotNull Vector<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.zulaessig = (@NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.zulaessig[i] = new Vector<>();
+			this.zulaessig[i] = new ArrayList<>();
 			for (final @NotNull SchulformSchulgliederung kuerzelSfSgl : historie[i].zulaessig) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf == null)
@@ -1048,7 +1048,7 @@ public enum ZulaessigeKursart {
 	 * @return die zulässigen Kursarten in der angegebenen Schulform
 	 */
 	public static @NotNull List<ZulaessigeKursart> get(final Schulform schulform) {
-		final @NotNull Vector<ZulaessigeKursart> kursarten = new Vector<>();
+		final @NotNull ArrayList<ZulaessigeKursart> kursarten = new ArrayList<>();
 		if (schulform == null)
 			return kursarten;
 		for (final ZulaessigeKursart kursart : ZulaessigeKursart.values())

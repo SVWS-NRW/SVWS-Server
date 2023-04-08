@@ -1,4 +1,4 @@
-import { GostJahrgang, GostJahrgangsdaten, GostFaecherManager, Vector, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
+import { GostJahrgang, GostJahrgangsdaten, GostFaecherManager, ArrayList, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { RouteParams } from "vue-router";
 import { api } from "~/router/Api";
@@ -26,7 +26,7 @@ export class RouteDataGost {
 		idSchuljahresabschnitt: -1,
 		auswahl: undefined,
 		jahrgangsdaten: undefined,
-		faecherManager: new GostFaecherManager(new Vector()),
+		faecherManager: new GostFaecherManager(new ArrayList()),
 		mapAbiturjahrgaenge: new Map(),
 		mapJahrgaenge: new Map(),
 		mapJahrgaengeOhneAbiJahrgang: new Map(),

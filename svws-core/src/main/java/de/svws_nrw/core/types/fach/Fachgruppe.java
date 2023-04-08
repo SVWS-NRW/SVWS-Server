@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.RGBFarbe;
 import de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag;
@@ -440,7 +440,7 @@ public enum Fachgruppe {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Fachgruppe> _mapByKuerzel = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Fachgruppe vorkommt */
-	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
@@ -454,9 +454,9 @@ public enum Fachgruppe {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector<>();
+			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
@@ -585,7 +585,7 @@ public enum Fachgruppe {
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
 	public static @NotNull List<@NotNull Fachgruppe> get(final Schulform schulform) {
-		final @NotNull Vector<@NotNull Fachgruppe> faecher = new Vector<>();
+		final @NotNull ArrayList<@NotNull Fachgruppe> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
 		final @NotNull Fachgruppe@NotNull[] fachgruppen = Fachgruppe.values();

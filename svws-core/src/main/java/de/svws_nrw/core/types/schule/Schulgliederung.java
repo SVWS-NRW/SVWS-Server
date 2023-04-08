@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -1464,7 +1464,7 @@ public enum Schulgliederung {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Schulgliederung> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Schulgliederung vorkommt */
-	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
@@ -1477,9 +1477,9 @@ public enum Schulgliederung {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector<>();
+			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
@@ -1555,7 +1555,7 @@ public enum Schulgliederung {
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static @NotNull List<@NotNull Schulgliederung> getByBkIndex(final int index) {
-		final @NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull Schulgliederung> result = new ArrayList<>();
 		final @NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();
 		for (int i = 0; i < gliederungen.length; i++) {
 			final @NotNull Schulgliederung gliederung = gliederungen[i];
@@ -1586,7 +1586,7 @@ public enum Schulgliederung {
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static @NotNull List<@NotNull Schulgliederung> get(final Schulform schulform) {
-		final @NotNull Vector<@NotNull Schulgliederung> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull Schulgliederung> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Schulgliederung@NotNull[] gliederungen = Schulgliederung.values();

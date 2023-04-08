@@ -8,9 +8,9 @@
 
 <script setup lang="ts">
 
-	import { GostBelegpruefungErgebnisFehler, GostBelegungsfehlerArt, Vector } from "@svws-nrw/svws-core";
+	import { GostBelegpruefungErgebnisFehler, GostBelegungsfehlerArt, ArrayList } from "@svws-nrw/svws-core";
 
-	const fehlerliste: Vector<GostBelegpruefungErgebnisFehler> = new Vector()
+	const fehlerliste: ArrayList<GostBelegpruefungErgebnisFehler> = new ArrayList()
 	const f1 = new GostBelegpruefungErgebnisFehler();
 	f1.art = GostBelegungsfehlerArt.HINWEIS.kuerzel;
 	f1.beschreibung = "Testfehler 1"

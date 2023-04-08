@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
@@ -9,17 +10,16 @@ import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { List } from '../../../../java/util/List';
-import { Vector } from '../../../../java/util/Vector';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 import { HashSet } from '../../../../java/util/HashSet';
 
 export class Projektkurse extends GostBelegpruefung {
 
-	private projektkursBelegung : Vector<AbiturFachbelegung> | null = null;
+	private projektkursBelegung : ArrayList<AbiturFachbelegung> | null = null;
 
 	private projektkurs : AbiturFachbelegung | null = null;
 
-	private projektkursHalbjahre : Vector<GostHalbjahr> | null = null;
+	private projektkursHalbjahre : ArrayList<GostHalbjahr> | null = null;
 
 
 	/**
@@ -34,8 +34,8 @@ export class Projektkurse extends GostBelegpruefung {
 
 	protected init() : void {
 		this.projektkurs = null;
-		this.projektkursBelegung = new Vector();
-		this.projektkursHalbjahre = new Vector();
+		this.projektkursBelegung = new ArrayList();
+		this.projektkursHalbjahre = new ArrayList();
 		const alleFachbelegungen : List<AbiturFachbelegung> = this.manager.getFachbelegungen();
 		for (let i : number = 0; i < alleFachbelegungen.size(); i++) {
 			const fachbelegung : AbiturFachbelegung | null = alleFachbelegungen.get(i);
@@ -109,7 +109,7 @@ export class Projektkurse extends GostBelegpruefung {
 				}
 				this.projektkurs = fachbelegung;
 				if (this.projektkursHalbjahre === null)
-					this.projektkursHalbjahre = new Vector();
+					this.projektkursHalbjahre = new ArrayList();
 				this.projektkursHalbjahre.add(halbjahr);
 				this.projektkursHalbjahre.add(nextHalbjahr);
 				break;

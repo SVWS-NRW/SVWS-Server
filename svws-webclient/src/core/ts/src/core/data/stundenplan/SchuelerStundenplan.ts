@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerStundenplan extends JavaObject {
 
@@ -24,7 +24,7 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Das Zeitraster des Stundenplans.
 	 */
-	public zeitraster : List<StundenplanZeitraster> = new Vector();
+	public zeitraster : List<StundenplanZeitraster> = new ArrayList();
 
 	/**
 	 * Das Datum, ab dem der Stundenpland gültig ist.
@@ -64,7 +64,7 @@ export class SchuelerStundenplan extends JavaObject {
 	/**
 	 * Der Unterricht des Schülers.
 	 */
-	public unterricht : List<SchuelerStundenplanUnterricht> = new Vector();
+	public unterricht : List<SchuelerStundenplanUnterricht> = new ArrayList();
 
 
 	public constructor() {

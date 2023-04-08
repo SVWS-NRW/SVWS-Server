@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { SchuelerLernabschnittNachpruefungsdaten } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefungsdaten';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuelerLernabschnittBemerkungen } from '../../../core/data/schueler/SchuelerLernabschnittBemerkungen';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchuelerLernabschnittsdaten extends JavaObject {
 
@@ -234,7 +234,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
 	 */
-	public leistungsdaten : Vector<SchuelerLeistungsdaten> = new Vector();
+	public leistungsdaten : ArrayList<SchuelerLeistungsdaten> = new ArrayList();
 
 
 	public constructor() {

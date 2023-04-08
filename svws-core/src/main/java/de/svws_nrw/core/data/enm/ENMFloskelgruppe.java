@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 
@@ -36,6 +36,6 @@ public class ENMFloskelgruppe {
 	/** Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMFloskel.class, description = "Ein Array mit den Informationen "
 			+ "der Floskeln, die dieser Floskelgruppe zugeordnet sind."))
-	public final @NotNull Vector<@NotNull ENMFloskel> floskeln = new Vector<>();
+	public final @NotNull ArrayList<@NotNull ENMFloskel> floskeln = new ArrayList<>();
 
 }

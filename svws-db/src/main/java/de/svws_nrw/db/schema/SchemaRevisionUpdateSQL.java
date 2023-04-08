@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBDriver;
@@ -21,13 +21,13 @@ public class SchemaRevisionUpdateSQL {
 	private final SchemaRevisionen _revision;
 
 	/** Eine Liste mit den erläuternden Kommentaren der SQL-Befehle */
-	private final Vector<String> _kommentare = new Vector<>();
+	private final ArrayList<String> _kommentare = new ArrayList<>();
 
 	/** Eine Liste mit den durch den SQL-Befehl betroffen Tabellen. */
-	private final Vector<SchemaTabelle> _tabellen = new Vector<>();
+	private final ArrayList<SchemaTabelle> _tabellen = new ArrayList<>();
 
 	/** Der Vektor mit den SQL-Befehlen in Bezug aud das jeweilige DBMS */
-	private final LinkedHashMap<DBDriver, Vector<String>> _sql = new LinkedHashMap<>();
+	private final LinkedHashMap<DBDriver, ArrayList<String>> _sql = new LinkedHashMap<>();
 
 
 	/**
@@ -73,7 +73,7 @@ public class SchemaRevisionUpdateSQL {
 	private void add(final DBDriver dbms, final String sql) {
 		var liste = _sql.get(dbms);
 		if (liste == null) {
-			liste = new Vector<>();
+			liste = new ArrayList<>();
 			_sql.put(dbms, liste);
 		}
 		liste.add(sql);

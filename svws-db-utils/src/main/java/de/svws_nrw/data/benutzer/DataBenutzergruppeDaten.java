@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -130,7 +129,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception("Keine Schule angelegt.");
         final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
 
-        final List<BenutzerKompetenz> bks = new Vector<>();
+        final List<BenutzerKompetenz> bks = new ArrayList<>();
         for (final Long kid:kids) {
             bks.add(BenutzerKompetenz.getByID(kid));
         }

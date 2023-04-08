@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -68,18 +68,18 @@ public class GostLaufbahnplanungDaten {
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public final @NotNull Vector<@NotNull GostBeratungslehrer> beratungslehrer = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostBeratungslehrer> beratungslehrer = new ArrayList<>();
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostFach.class))
-	public final @NotNull Vector<@NotNull GostFach> faecher = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostFach> faecher = new ArrayList<>();
 
 	/** Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))
-	public final @NotNull Vector<@NotNull GostJahrgangFachkombination> fachkombinationen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostJahrgangFachkombination> fachkombinationen = new ArrayList<>();
 
 	/** Die Liste der Schüler mit ihren Laufbahnplanungsdaten. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenSchueler.class))
-	public final @NotNull Vector<@NotNull GostLaufbahnplanungDatenSchueler> schueler = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostLaufbahnplanungDatenSchueler> schueler = new ArrayList<>();
 
 }

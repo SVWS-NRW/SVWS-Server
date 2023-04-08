@@ -2,7 +2,7 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.lehrer.LehrerKatalogLeitungsfunktionenEintrag;
 import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
@@ -26,7 +26,7 @@ public final class DataKatalogLehrerLeitungsfunktionen extends DataManager<Long>
 
 	@Override
 	public Response getAll() {
-        final Vector<LehrerKatalogLeitungsfunktionenEintrag> daten = new Vector<>();
+        final ArrayList<LehrerKatalogLeitungsfunktionenEintrag> daten = new ArrayList<>();
         for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values())
             daten.addAll(Arrays.asList(slf.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

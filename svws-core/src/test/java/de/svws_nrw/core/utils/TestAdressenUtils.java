@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -46,7 +46,7 @@ public class TestAdressenUtils {
     @DisplayName("Teste Aufteilung von Strassen in Name, Hausnummer und Zusatz ...")
     Stream<DynamicTest> pruefePrognose() {
         System.out.println("  - Prüfe Aufteilung für " + testdatenSplitStrasse.size() + " Strassen:");
-        final Vector<DynamicTest> tests = new Vector<>();
+        final ArrayList<DynamicTest> tests = new ArrayList<>();
         testdatenSplitStrasse.forEach((data) -> {
         	tests.add(DynamicTest.dynamicTest(
 				"Strasse \"" + data.strasse + "\"",

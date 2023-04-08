@@ -79,7 +79,7 @@ public class ApiContent {
 					throw new TranspilerException("Transpiler Exception: Unhandled annotation type used in Content annotation.");
 				final Map<String, ExpressionTree> arrayArgs = transpiler.getArguments(att);
 				importsRequired.put("List", "java.util");
-				importsRequired.put("Vector", "java.util");
+				importsRequired.put("ArrayList", "java.util");
 				tmpArrayElementType = determineImplementationType(transpiler, arrayArgs);
 				return "List<" + tmpArrayElementType + ">";
 			}

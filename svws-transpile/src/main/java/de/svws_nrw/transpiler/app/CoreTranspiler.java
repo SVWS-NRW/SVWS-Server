@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.shell.CommandLineException;
@@ -112,7 +112,7 @@ public class CoreTranspiler {
 		apiTranspiler.printSourceFiles();
 		apiTranspiler.transpile();
 
-		final Vector<String> outputs = new Vector<>();
+		final ArrayList<String> outputs = new ArrayList<>();
 		outputs.addAll(typescriptPlugin.getOutputFiles());
 		outputs.addAll(apiGeneratorPlugin.getOutputFiles());
 		final String strExports = outputs.stream().sorted()

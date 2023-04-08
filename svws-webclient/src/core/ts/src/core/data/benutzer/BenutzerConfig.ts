@@ -1,18 +1,18 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerConfigElement } from '../../../core/data/benutzer/BenutzerConfigElement';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class BenutzerConfig extends JavaObject {
 
 	/**
 	 * Die Konfiguration, die dem Benutzer zugeordnet ist.
 	 */
-	public user : Vector<BenutzerConfigElement> = new Vector();
+	public user : ArrayList<BenutzerConfigElement> = new ArrayList();
 
 	/**
 	 * Die globale Konfiguration, die auch für den Benutzer gilt.
 	 */
-	public global : Vector<BenutzerConfigElement> = new Vector();
+	public global : ArrayList<BenutzerConfigElement> = new ArrayList();
 
 
 	public constructor() {

@@ -100,7 +100,7 @@ public class Kurs42Converter {
 			if (!mapFachart.containsKey(sFachart))
 				mapFachart.put(sFachart, new LinkedList<>());
 
-			// Neuen Kurs erzeugen. Dem Map und Vector hinzufügen.
+			// Neuen Kurs erzeugen. Dem Map und ArrayList hinzufügen.
 			final GostBlockungKurs gKurs = new GostBlockungKurs();
 			mapFachart.get(sFachart).addLast(gKurs);
 			gKurs.id = mapKurse.size();

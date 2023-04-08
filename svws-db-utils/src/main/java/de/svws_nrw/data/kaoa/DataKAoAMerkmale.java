@@ -2,7 +2,7 @@ package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOAMerkmalEintrag;
 import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
@@ -26,7 +26,7 @@ public final class DataKAoAMerkmale extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KAOAMerkmalEintrag> daten = new Vector<>();
+		final ArrayList<KAOAMerkmalEintrag> daten = new ArrayList<>();
 		for (final KAOAMerkmal m : KAOAMerkmal.values())
 			daten.addAll(Arrays.asList(m.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

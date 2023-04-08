@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanblockungLehrkraft';
 import { StundenplanblockungKopplung } from '../../../core/data/stundenplanblockung/StundenplanblockungKopplung';
 import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
-import { Vector } from '../../../java/util/Vector';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
 export class StundenplanblockungLerngruppe extends JavaObject {
@@ -17,42 +17,42 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public lehrkraefte1 : Vector<StundenplanblockungLehrkraft> = new Vector();
+	public lehrkraefte1 : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind.
 	 */
-	public lehrkraefte2 : Vector<StundenplanblockungLehrkraft> = new Vector();
+	public lehrkraefte2 : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public klassen : Vector<StundenplanblockungKlasse> = new Vector();
+	public klassen : ArrayList<StundenplanblockungKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer, die dieser Lerngruppe zugeordnet sind. In der Regel genau ein Fach.
 	 */
-	public faecher : Vector<StundenplanblockungFach> = new Vector();
+	public faecher : ArrayList<StundenplanblockungFach> = new ArrayList();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe primär in Frage kommen.
 	 */
-	public raeume1 : Vector<StundenplanblockungRaum> = new Vector();
+	public raeume1 : ArrayList<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe sekundär (alternativ) in Frage kommen.
 	 */
-	public raeume2 : Vector<StundenplanblockungRaum> = new Vector();
+	public raeume2 : ArrayList<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public kopplungen : Vector<StundenplanblockungKopplung> = new Vector();
+	public kopplungen : ArrayList<StundenplanblockungKopplung> = new ArrayList();
 
 	/**
 	 * Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public stundenelemente : Vector<StundenplanblockungStundenelement> = new Vector();
+	public stundenelemente : ArrayList<StundenplanblockungStundenelement> = new ArrayList();
 
 
 	public constructor() {

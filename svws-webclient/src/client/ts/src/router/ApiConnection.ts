@@ -1,4 +1,4 @@
-import { ApiSchema, ApiServer, BenutzerDaten, BenutzerKompetenz, DBSchemaListeEintrag, List, SchuleStammdaten, Vector } from "@svws-nrw/svws-core";
+import { ApiSchema, ApiServer, BenutzerDaten, BenutzerKompetenz, DBSchemaListeEintrag, List, SchuleStammdaten, ArrayList } from "@svws-nrw/svws-core";
 import { Ref, ref, ShallowRef, shallowRef } from "vue";
 import { Config } from "~/components/Config";
 
@@ -181,7 +181,7 @@ export class ApiConnection {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 			}
 		}
-		return new Vector<DBSchemaListeEintrag>();
+		return new ArrayList<DBSchemaListeEintrag>();
 	}
 
 	/**

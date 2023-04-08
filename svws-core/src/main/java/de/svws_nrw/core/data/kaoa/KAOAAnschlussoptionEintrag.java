@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.kaoa;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
@@ -33,11 +33,11 @@ public class KAOAAnschlussoptionEintrag {
 
 	/** Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII) */
 	@Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf (SI bzw. SII)")
-	public @NotNull List<@NotNull String> stufen = new Vector<>();
+	public @NotNull List<@NotNull String> stufen = new ArrayList<>();
 
 	/** Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden */
 	@Schema(description = "Gibt an bei welchen Anschlussvereinbarungen SBO10.7 die Optionen angezeigt werden")
-	public @NotNull List<@NotNull String> anzeigeZusatzmerkmal = new Vector<>();
+	public @NotNull List<@NotNull String> anzeigeZusatzmerkmal = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")

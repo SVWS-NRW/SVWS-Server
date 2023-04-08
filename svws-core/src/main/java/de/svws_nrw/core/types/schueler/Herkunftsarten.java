@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
@@ -588,10 +588,10 @@ public enum Herkunftsarten {
 	private static final @NotNull HashMap<@NotNull Long, Herkunftsarten> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull Vector<Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<Schulform> @NotNull[] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private @NotNull Vector<@NotNull String> @NotNull[] bezeichnungen;
+	private @NotNull ArrayList<@NotNull String> @NotNull[] bezeichnungen;
 
 
 	/**
@@ -605,11 +605,11 @@ public enum Herkunftsarten {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
-		this.schulformen = (@NotNull Vector<Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
-		this.bezeichnungen = (@NotNull Vector<@NotNull String> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
+		this.bezeichnungen = (@NotNull ArrayList<@NotNull String> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector<>();
-			this.bezeichnungen[i] = new Vector<>();
+			this.schulformen[i] = new ArrayList<>();
+			this.bezeichnungen[i] = new ArrayList<>();
 			for (final @NotNull HerkunftsartKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
 				final Schulform sf = Schulform.getByKuerzel(bez.schulform);
 				if (sf != null)
@@ -716,7 +716,7 @@ public enum Herkunftsarten {
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
 	public static @NotNull List<Herkunftsarten> get(final Schulform schulform) {
-		final @NotNull Vector<Herkunftsarten> result = new Vector<>();
+		final @NotNull ArrayList<Herkunftsarten> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Herkunftsarten@NotNull[] herkunftsarten = Herkunftsarten.values();

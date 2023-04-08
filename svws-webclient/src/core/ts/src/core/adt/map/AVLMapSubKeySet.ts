@@ -61,10 +61,10 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	 */
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
 		if ((typeof __param0 === "undefined")) {
-			return this._sub.bcGetVectorOfKeys().toArray();
+			return this._sub.bcGetArrayListOfKeys().toArray();
 		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
 			const a : Array<T> = __param0;
-			return this._sub.bcGetVectorOfKeys().toArray(a);
+			return this._sub.bcGetArrayListOfKeys().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
 

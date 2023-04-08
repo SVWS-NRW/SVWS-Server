@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, List, SchuelerLernabschnittListeEintrag, Schulform, Vector } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, List, SchuelerLernabschnittListeEintrag, Schulform, ArrayList } from "@svws-nrw/svws-core";
 import { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteSchueler } from "~/router/apps/RouteSchueler";
@@ -9,7 +9,7 @@ import { RouteNode } from "~/router/RouteNode";
 export class RouteDataSchuelerLeistungen {
 
 	idSchueler: number | undefined;
-	listAbschnitte: List<SchuelerLernabschnittListeEintrag> = new Vector<SchuelerLernabschnittListeEintrag>();
+	listAbschnitte: List<SchuelerLernabschnittListeEintrag> = new ArrayList<SchuelerLernabschnittListeEintrag>();
 
 	public getEntry(idSchuljahresabschnitt: number, wechselNr: number | null) : SchuelerLernabschnittListeEintrag | undefined {
 		for (const current of this.listAbschnitte)

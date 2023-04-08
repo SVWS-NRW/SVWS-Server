@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -857,7 +857,7 @@ public class KursblockungDynDaten {
 		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
 		if (regelnTyp9 != null) {
 			// Sammle zunächst alle potentiellen Kurse
-			final @NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
+			final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
 			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
 				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
@@ -882,7 +882,7 @@ public class KursblockungDynDaten {
 		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp10 = regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10 != null) {
 			// Sammle zunächst alle potentiellen Kurse
-			final @NotNull Vector<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new Vector<>();
+			final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
 			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
 				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);

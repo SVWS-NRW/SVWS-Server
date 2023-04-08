@@ -1,7 +1,7 @@
 package de.svws_nrw.core.kursblockung;
 
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.Service;
 import de.svws_nrw.core.logger.LogLevel;
@@ -16,12 +16,12 @@ import jakarta.validation.constraints.NotNull;
  * wurde.
  *
  * @author Benjamin A. Bartsch */
-public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull Vector<@NotNull GostBlockungsergebnisManager>> {
+public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockungsdatenManager, @NotNull ArrayList<@NotNull GostBlockungsergebnisManager>> {
 
 	private static final Random _random = new Random();
 
 	@Override
-	public @NotNull Vector<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
+	public @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> handle(final @NotNull GostBlockungsdatenManager pInput) {
 		// Logger-Einrückung (relativ +4).
 		logger.modifyIndent(+4);
 
@@ -36,7 +36,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 		final long zeitEndeGesamt = System.currentTimeMillis() + zeitBedarf;
 
 		// Vorbereitung der Rückgabe an die GUI.
-		final @NotNull Vector<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new Vector<>();
+		final @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> kursblockungOutputs = new ArrayList<>();
 
 		final @NotNull KursblockungAlgorithmusK @NotNull [] algorithmenK = new KursblockungAlgorithmusK @NotNull [] {
 			// Alle Algorithmen zur Verteilung von Kursen auf ihre Schienen ...
@@ -88,7 +88,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 
 	private static void verwendeAlgorithmusK(final @NotNull KursblockungAlgorithmusK kursblockungAlgorithmusK, final long zeitEndeK,
 			final @NotNull KursblockungDynDaten dynDaten, final @NotNull KursblockungAlgorithmusS @NotNull [] algorithmenS,
-			final @NotNull Vector<@NotNull GostBlockungsergebnisManager> outputs, final @NotNull GostBlockungsdatenManager pInput) {
+			final @NotNull ArrayList<@NotNull GostBlockungsergebnisManager> outputs, final @NotNull GostBlockungsdatenManager pInput) {
 
 		// Verteilung der Kurse.
 		kursblockungAlgorithmusK.berechne(zeitEndeK);

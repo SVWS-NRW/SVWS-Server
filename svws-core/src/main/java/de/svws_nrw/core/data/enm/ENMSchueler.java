@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.enm;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -57,7 +57,7 @@ public class ENMSchueler {
 
 	/** Die Sprachenfolge des Schülers */
 	@ArraySchema(schema = @Schema(implementation = ENMSprachenfolge.class, description = "Ein Array mit den Informationen zu der Sprachenfolge des Schülers."))
-	public @NotNull Vector<@NotNull ENMSprachenfolge> sprachenfolge = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMSprachenfolge> sprachenfolge = new ArrayList<>();
 
 	/** Informationen zum Lernabschnitt des Schülers in der Notendatei */
 	@Schema(description = "Informationen zum Lernabschnitt des Schülers in der Notendatei.", example = "2")
@@ -66,7 +66,7 @@ public class ENMSchueler {
 	/** Die Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei */
 	@ArraySchema(schema = @Schema(implementation = ENMLeistung.class, description = "Ein Array mit den Informationen "
 			+ "der Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei."))
-	public final @NotNull Vector<@NotNull ENMLeistung> leistungsdaten = new Vector<>();
+	public final @NotNull ArrayList<@NotNull ENMLeistung> leistungsdaten = new ArrayList<>();
 
 	/** Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei */
 	@Schema(description = "Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei.", example = "Bemerkungstext.")

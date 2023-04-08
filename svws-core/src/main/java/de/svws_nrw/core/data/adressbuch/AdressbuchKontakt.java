@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -53,7 +53,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Die Telefonnummern des Kontakts. */
 	@ArraySchema(schema = @Schema(description = "Die Telefonnummern des Kontakts. ", example = "..."))
-	public @NotNull List<@NotNull Telefonnummer> telefonnummern = new Vector<>();
+	public @NotNull List<@NotNull Telefonnummer> telefonnummern = new ArrayList<>();
 
 	/** Die Mailadresse des Kontakts. */
 	@Schema(description = "die Mailadresse des Kontakts", example = "info@schule.de")
@@ -65,7 +65,7 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 
 	/** Die Kategorien dieses Kontakts */
 	@ArraySchema(schema = @Schema(description = "Die Kategorien dieses Kontakts", example = "..."))
-	public List<String> kategorien = new Vector<>();
+	public List<String> kategorien = new ArrayList<>();
 
 	/**
 	 * Die Organisation dieses Kontakts

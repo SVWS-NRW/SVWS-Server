@@ -28,7 +28,7 @@
 <script setup lang="ts">
 
 	import { AbiturdatenManager, Fachgruppe, GostAbiturFach, GostFach, GostFachbereich, GostFaecherManager, GostHalbjahr,
-		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostSchuelerFachwahl, Jahrgaenge, List, Vector, ZulaessigesFach } from "@svws-nrw/svws-core";
+		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostSchuelerFachwahl, Jahrgaenge, List, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -45,8 +45,8 @@
 		manuellerModus: boolean;
 	}>(), {
 		halbjahr: undefined,
-		fachkombiErforderlich: () => new Vector<GostJahrgangFachkombination>(),
-		fachkombiVerboten: () => new Vector<GostJahrgangFachkombination>()
+		fachkombiErforderlich: () => new ArrayList<GostJahrgangFachkombination>(),
+		fachkombiVerboten: () => new ArrayList<GostJahrgangFachkombination>()
 	});
 
 	const emit = defineEmits<{

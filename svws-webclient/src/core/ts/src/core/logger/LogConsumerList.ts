@@ -2,11 +2,11 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData } from '../../core/logger/LogData';
 import { Consumer } from '../../java/util/function/Consumer';
 import { StringBuilder } from '../../java/lang/StringBuilder';
+import { ArrayList } from '../../java/util/ArrayList';
 import { List } from '../../java/util/List';
-import { Vector } from '../../java/util/Vector';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
-export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
+export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 
 	/**
 	 * Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht.
@@ -21,7 +21,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	/**
 	 * Der Vektor mit den gesammelten Log-Informationen.
 	 */
-	private readonly logData : Vector<LogData> = new Vector();
+	private readonly logData : ArrayList<LogData> = new ArrayList();
 
 
 	/**
@@ -59,7 +59,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	 *
 	 * @param log   der anzuhängende Log
 	 */
-	public append(log : LogConsumerVector) : void {
+	public append(log : LogConsumerList) : void {
 		this.logData.addAll(log.logData);
 	}
 
@@ -109,7 +109,7 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 			return this.getStrings("");
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
 			const indent : string = __param0;
-			const result : Vector<string> | null = new Vector();
+			const result : ArrayList<string> | null = new ArrayList();
 			for (let i : number = 0; i < this.logData.size(); i++) {
 				const data : LogData = this.logData.get(i);
 				if (data === null)
@@ -188,11 +188,11 @@ export class LogConsumerVector extends JavaObject implements Consumer<LogData> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerVector'].includes(name);
+		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerList'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_logger_LogConsumerVector(obj : unknown) : LogConsumerVector {
-	return obj as LogConsumerVector;
+export function cast_de_svws_nrw_core_logger_LogConsumerList(obj : unknown) : LogConsumerList {
+	return obj as LogConsumerList;
 }

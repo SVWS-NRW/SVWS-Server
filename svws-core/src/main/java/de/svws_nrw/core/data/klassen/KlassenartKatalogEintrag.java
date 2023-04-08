@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.klassen;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
@@ -36,7 +36,7 @@ public class KlassenartKatalogEintrag {
 
 	/** Die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo die Klassenart zulässig ist.")
-	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
+	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem die Klassenart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

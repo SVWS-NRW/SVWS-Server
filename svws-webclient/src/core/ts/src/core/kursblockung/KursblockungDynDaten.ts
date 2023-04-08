@@ -4,6 +4,7 @@ import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynF
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
+import { ArrayList } from '../../java/util/ArrayList';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
@@ -12,7 +13,6 @@ import { GostKursart } from '../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random } from '../../java/util/Random';
 import { List } from '../../java/util/List';
-import { Vector } from '../../java/util/Vector';
 import { HashSet } from '../../java/util/HashSet';
 import { GostBlockungKurs } from '../../core/data/gost/GostBlockungKurs';
 import { GostFach } from '../../core/data/gost/GostFach';
@@ -666,7 +666,7 @@ export class KursblockungDynDaten extends JavaObject {
 	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
 		const regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
 		if (regelnTyp9 !== null) {
-			const vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
+			const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
 			for (const gKurs of pInput.daten().kurse)
 				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);
@@ -686,7 +686,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 		const regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this.regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
 		if (regelnTyp10 !== null) {
-			const vKurseMitLehrkraft : Vector<GostBlockungKurs> = new Vector();
+			const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
 			for (const gKurs of pInput.daten().kurse)
 				if (!gKurs.lehrer.isEmpty())
 					vKurseMitLehrkraft.add(gKurs);

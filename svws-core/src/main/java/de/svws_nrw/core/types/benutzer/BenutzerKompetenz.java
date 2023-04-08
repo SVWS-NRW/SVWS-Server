@@ -2,7 +2,7 @@ package de.svws_nrw.core.types.benutzer;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
@@ -484,7 +484,7 @@ public enum BenutzerKompetenz {
     private static @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
         if (_mapGruppenZuordnung.size() == 0) {
             for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
-                _mapGruppenZuordnung.put(g, new Vector<>());
+                _mapGruppenZuordnung.put(g, new ArrayList<>());
             for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
                 BenutzerKompetenzGruppe gruppe = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
                 if (gruppe == null)
@@ -535,7 +535,7 @@ public enum BenutzerKompetenz {
 //      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
 //        //Nehme als Schulform GY als Beispiel
 //        Schulform schulform = Schulform.GY;
-//        List<BenutzerKompetenz> bks = new Vector<>();
+//        List<BenutzerKompetenz> bks = new ArrayList<>();
 //        for(Long kid:kids) {
 //            bks.add(BenutzerKompetenz.getByID(kid));
 //        }
@@ -558,7 +558,7 @@ public enum BenutzerKompetenz {
     public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzen(final @NotNull BenutzerKompetenzGruppe gruppe) {
         final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
         if (liste == null)
-            return new Vector<>();
+            return new ArrayList<>();
         return liste;
     }
 

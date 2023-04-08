@@ -2,7 +2,7 @@ package de.svws_nrw.data.klassen;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +26,7 @@ public final class DataKatalogKlassenarten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KlassenartKatalogEintrag> daten = new Vector<>();
+		final ArrayList<KlassenartKatalogEintrag> daten = new ArrayList<>();
 		for (final Klassenart ka : Klassenart.values())
 			daten.addAll(Arrays.asList(ka.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

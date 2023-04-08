@@ -3,11 +3,11 @@ import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanblockungManagerLehrkraft, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
-	private readonly _menge : Vector<StundenplanblockungManagerLehrkraft>;
+	private readonly _menge : ArrayList<StundenplanblockungManagerLehrkraft>;
 
 	private readonly _map : HashMap<number, StundenplanblockungManagerLehrkraft>;
 
@@ -17,7 +17,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 */
 	public constructor() {
 		super();
-		this._menge = new Vector();
+		this._menge = new ArrayList();
 		this._map = new HashMap();
 	}
 
@@ -94,7 +94,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Lehrkräfte.
 	 */
-	public getMenge() : Vector<StundenplanblockungManagerLehrkraft | null> | null {
+	public getMenge() : ArrayList<StundenplanblockungManagerLehrkraft | null> | null {
 		return this._menge;
 	}
 

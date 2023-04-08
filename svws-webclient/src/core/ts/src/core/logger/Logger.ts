@@ -1,12 +1,12 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData, cast_de_svws_nrw_core_logger_LogData } from '../../core/logger/LogData';
 import { Consumer } from '../../java/util/function/Consumer';
-import { Vector } from '../../java/util/Vector';
+import { ArrayList } from '../../java/util/ArrayList';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class Logger extends JavaObject {
 
-	private readonly consumer : Vector<Consumer<LogData>> = new Vector();
+	private readonly consumer : ArrayList<Consumer<LogData>> = new ArrayList();
 
 	private defaultLevel : LogLevel = LogLevel.INFO;
 

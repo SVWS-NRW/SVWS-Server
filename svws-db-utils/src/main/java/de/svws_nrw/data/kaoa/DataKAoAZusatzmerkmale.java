@@ -2,7 +2,7 @@ package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kaoa.KAOAZusatzmerkmalEintrag;
 import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
@@ -26,7 +26,7 @@ public final class DataKAoAZusatzmerkmale extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KAOAZusatzmerkmalEintrag> daten = new Vector<>();
+		final ArrayList<KAOAZusatzmerkmalEintrag> daten = new ArrayList<>();
 		for (final KAOAZusatzmerkmal z : KAOAZusatzmerkmal.values())
 			daten.addAll(Arrays.asList(z.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

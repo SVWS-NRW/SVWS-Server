@@ -1,7 +1,7 @@
 import {
 	BenutzerKompetenz,
 	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, Exception, KatalogEintrag, LehrerListeEintrag, List,
-	SchuelerBetriebsdaten, SchuelerListeEintrag, Schulform, Vector
+	SchuelerBetriebsdaten, SchuelerListeEintrag, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
 import { Ref, ref } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -18,7 +18,7 @@ export class RouteDataSchuelerAdressen {
 	_daten: Ref<BetriebStammdaten | undefined> = ref(undefined);
 	item: SchuelerListeEintrag | undefined = undefined;
 	betrieb: Ref<SchuelerBetriebsdaten | undefined> = ref(undefined);
-	listSchuelerbetriebe : Ref<List<SchuelerBetriebsdaten>> = ref(new Vector());
+	listSchuelerbetriebe : Ref<List<SchuelerBetriebsdaten>> = ref(new ArrayList());
 	mapBeschaeftigungsarten: Map<number, KatalogEintrag> = new Map();
 	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 	mapBetriebe: Map<number, BetriebListeEintrag> = new Map();

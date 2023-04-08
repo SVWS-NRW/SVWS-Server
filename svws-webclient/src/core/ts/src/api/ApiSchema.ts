@@ -1,6 +1,6 @@
 import { BaseApi } from '../api/BaseApi';
+import { ArrayList } from '../java/util/ArrayList';
 import { List } from '../java/util/List';
-import { Vector } from '../java/util/Vector';
 
 export class ApiSchema extends BaseApi {
 
@@ -108,7 +108,7 @@ export class ApiSchema extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
-		const ret = new Vector<string>();
+		const ret = new ArrayList<string>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
 		return ret;
 	}
@@ -137,7 +137,7 @@ export class ApiSchema extends BaseApi {
 			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
-		const ret = new Vector<string>();
+		const ret = new ArrayList<string>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
 		return ret;
 	}

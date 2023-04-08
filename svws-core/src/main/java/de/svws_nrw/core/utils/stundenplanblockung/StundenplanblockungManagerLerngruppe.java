@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,19 +16,19 @@ public class StundenplanblockungManagerLerngruppe {
 	int stunden = 0;
 
 	/** Die Lehrkräfte der Lerngruppe. */
-	@NotNull Vector<StundenplanblockungManagerLehrkraft> _menge_le = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerLehrkraft> _menge_le = new ArrayList<>();
 
 	/** Die Klassen der Lerngruppe. */
-	@NotNull Vector<StundenplanblockungManagerKlasse> _menge_kl = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerKlasse> _menge_kl = new ArrayList<>();
 
 	/** Die Fächer Lerngruppe. */
-	@NotNull Vector<StundenplanblockungManagerFach> _menge_fa = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerFach> _menge_fa = new ArrayList<>();
 
 	/** Die Räume Lerngruppe. */
-	@NotNull Vector<StundenplanblockungManagerRaum> _menge_ra = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerRaum> _menge_ra = new ArrayList<>();
 
 	/** Die Kopplungen Lerngruppe. */
-	@NotNull Vector<StundenplanblockungManagerKopplung> _menge_ko = new Vector<>();
+	@NotNull ArrayList<StundenplanblockungManagerKopplung> _menge_ko = new ArrayList<>();
 
 	/**
 	 * Erzeugt eine neue Lerngruppe mit der übergebenen ID.

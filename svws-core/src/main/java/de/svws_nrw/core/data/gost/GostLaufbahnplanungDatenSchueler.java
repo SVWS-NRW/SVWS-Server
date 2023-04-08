@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -45,7 +45,7 @@ public class GostLaufbahnplanungDatenSchueler {
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenFachbelegung.class, description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
-	public final @NotNull Vector<@NotNull GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostLaufbahnplanungDatenFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
 	@Schema(implementation = Sprachendaten.class, description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")

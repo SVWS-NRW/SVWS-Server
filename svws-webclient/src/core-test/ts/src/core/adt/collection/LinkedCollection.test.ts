@@ -7,7 +7,7 @@ import {
 	ConcurrentModificationException,
 	JavaIterator,
 	NoSuchElementException,
-	Vector
+	ArrayList
 } from "~/index";
 import { TestMaxComparator } from "../../../shared/TestComparator";
 
@@ -72,7 +72,7 @@ const n = {
 let coll: LinkedCollection<Number | String | LehrerListeEintrag>;
 let coll2: LinkedCollection<Number | String | LehrerListeEintrag>;
 let empty: LinkedCollection<Number | String | LehrerListeEintrag>;
-let v2: Vector<Number | String | LehrerListeEintrag>;
+let v2: ArrayList<Number | String | LehrerListeEintrag>;
 
 describe.each([s, n, l])("LinkedCollection mit $name", ({ data, data2 }) => {
     beforeEach(() => {
@@ -84,7 +84,7 @@ describe.each([s, n, l])("LinkedCollection mit $name", ({ data, data2 }) => {
         for (let index = 0; index < data2.length; index++) {
             coll2.add(data2[index]);
         }
-        v2 = new Vector();
+        v2 = new ArrayList();
         for (let index = 0; index < data2.length; index++) {
             v2.add(data2[index]);
         }

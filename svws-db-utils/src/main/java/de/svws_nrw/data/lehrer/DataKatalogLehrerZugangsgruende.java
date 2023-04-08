@@ -2,7 +2,7 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.svws_nrw.core.types.lehrer.LehrerZugangsgrund;
@@ -26,7 +26,7 @@ public final class DataKatalogLehrerZugangsgruende extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<LehrerKatalogZugangsgrundEintrag> daten = new Vector<>();
+		final ArrayList<LehrerKatalogZugangsgrundEintrag> daten = new ArrayList<>();
 		for (final LehrerZugangsgrund art : LehrerZugangsgrund.values())
 			daten.addAll(Arrays.asList(art.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

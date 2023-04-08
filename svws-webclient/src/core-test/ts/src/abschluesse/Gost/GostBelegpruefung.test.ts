@@ -8,7 +8,7 @@ import {
 	GostBelegpruefungErgebnisFehler,
 	GostBelegpruefungsArt,
 	GostFach,
-	Vector
+	ArrayList
 } from "~/index";
 
 
@@ -75,7 +75,7 @@ describe.each(Object.entries(abiturdaten))(
     "Testfälle Jahrgang %s",
     (jahrgang, schueler) => {
         const gost_faecher = jahrgaenge_faecher[jahrgang];
-        const list = new Vector<GostFach>();
+        const list = new ArrayList<GostFach>();
         for (let index = 0; index < gost_faecher.length; index++) {
             list.add(gost_faecher[index]);
         }

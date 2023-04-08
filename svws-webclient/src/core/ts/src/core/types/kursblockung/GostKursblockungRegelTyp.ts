@@ -1,13 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { Collection } from '../../../java/util/Collection';
 import { List } from '../../../java/util/List';
 import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostKursblockungRegelTyp extends JavaObject {
@@ -230,7 +230,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 */
 	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
-		const param : Vector<number> = pRegel.parameter;
+		const param : ArrayList<number> = pRegel.parameter;
 		switch (typ) {
 			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 				return [];

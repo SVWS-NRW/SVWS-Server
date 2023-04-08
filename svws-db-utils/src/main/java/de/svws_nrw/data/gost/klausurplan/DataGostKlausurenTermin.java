@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
@@ -73,7 +73,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	private List<GostKlausurtermin> getKlausurtermine(final int halbjahr) {
 		final List<DTOGostKlausurenTermine> termine = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr = :hj", DTOGostKlausurenTermine.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList();
-		final List<GostKlausurtermin> daten = new Vector<>();
+		final List<GostKlausurtermin> daten = new ArrayList<>();
 		for (final DTOGostKlausurenTermine z : termine)
 			daten.add(dtoMapper.apply(z));
 		return daten;

@@ -2,11 +2,11 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Random } from '../../../java/util/Random';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { HashSet } from '../../../java/util/HashSet';
 
 export class KlausurblockungSchienenDynDaten extends JavaObject {
@@ -219,9 +219,9 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 * @return ein Ausgabe-Objekt: 1. Ebene = Schienen, 2. Ebene = KlausurIDs
 	 */
 	gibErzeugeOutput() : List<List<number>> {
-		const out : List<List<number>> = new Vector();
+		const out : List<List<number>> = new ArrayList();
 		for (let i : number = 0; i < this._schienenAnzahl; i++) {
-			out.add(new Vector());
+			out.add(new ArrayList());
 		}
 		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);

@@ -2,15 +2,15 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungManagerLerngruppe, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
-import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 
 	/**
 	 * Alle Lerngruppen.
 	 */
-	private readonly _menge : Vector<StundenplanblockungManagerLerngruppe>;
+	private readonly _menge : ArrayList<StundenplanblockungManagerLerngruppe>;
 
 	private readonly _map : HashMap<number, StundenplanblockungManagerLerngruppe>;
 
@@ -20,7 +20,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 */
 	public constructor() {
 		super();
-		this._menge = new Vector();
+		this._menge = new ArrayList();
 		this._map = new HashMap();
 	}
 
@@ -88,7 +88,7 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Lerngruppen.
 	 */
-	public getMenge() : Vector<StundenplanblockungManagerLerngruppe | null> | null {
+	public getMenge() : ArrayList<StundenplanblockungManagerLerngruppe | null> | null {
 		return this._menge;
 	}
 

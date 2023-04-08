@@ -2,7 +2,7 @@ package de.svws_nrw.davapi.util.vcard;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Name Property einer VCard.<br>
@@ -48,15 +48,15 @@ public final class NameProperty implements VCardProperty {
 	/**
 	 * Liste von Ehrentiteln/Namensprefixen, bspw. {'Dr.','Dipl.-Ing.'}
 	 */
-	private final List<String> honorificPrefixes = new Vector<>();
+	private final List<String> honorificPrefixes = new ArrayList<>();
 	/**
 	 * Liste von Ehrentiteln/Namenssuffixen, bspw: 'MBA'
 	 */
-	private final List<String> honorificSuffixes = new Vector<>();
+	private final List<String> honorificSuffixes = new ArrayList<>();
 	/**
 	 * Liste weiterer Vornamen
 	 */
-	private final List<String> additionalNames = new Vector<>();
+	private final List<String> additionalNames = new ArrayList<>();
 
 	@Override
 	public String getType() {

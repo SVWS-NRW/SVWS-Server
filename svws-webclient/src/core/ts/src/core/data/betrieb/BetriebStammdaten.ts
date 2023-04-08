@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { BetriebAnsprechpartner } from '../../../core/data/betrieb/BetriebAnsprechpartner';
 
 export class BetriebStammdaten extends JavaObject {
@@ -142,7 +142,7 @@ export class BetriebStammdaten extends JavaObject {
 	/**
 	 * Ein Array mit den Ansprechpartnern im Betrieb.
 	 */
-	public ansprechpartner : Vector<BetriebAnsprechpartner> = new Vector();
+	public ansprechpartner : ArrayList<BetriebAnsprechpartner> = new ArrayList();
 
 
 	public constructor() {

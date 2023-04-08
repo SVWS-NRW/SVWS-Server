@@ -1,4 +1,4 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, SchuelerStatus, Vector } from "@svws-nrw/svws-core";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, SchuelerStatus, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
@@ -267,7 +267,7 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
-		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toVector(), this.mapSchueler)
+		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toArrayList(), this.mapSchueler)
 		api.status.stop();
 		this.setPatchedState({
 			auswahlErgebnis: value,
@@ -616,7 +616,7 @@ export class RouteDataGostKursplanung {
 
 	rechneGostBlockung = async () => {
 		const id = this.auswahlBlockung.id;
-		let liste: List<number> = new Vector();
+		let liste: List<number> = new ArrayList();
 		try {
 			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);

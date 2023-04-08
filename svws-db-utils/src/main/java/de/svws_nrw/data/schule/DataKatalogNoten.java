@@ -1,7 +1,7 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.NotenKatalogEintrag;
 import de.svws_nrw.core.types.Note;
@@ -25,7 +25,7 @@ public final class DataKatalogNoten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<NotenKatalogEintrag> daten = new Vector<>();
+		final ArrayList<NotenKatalogEintrag> daten = new ArrayList<>();
 		for (final Note note : Note.values())
 			daten.add(note.getKatalogEintrag());
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

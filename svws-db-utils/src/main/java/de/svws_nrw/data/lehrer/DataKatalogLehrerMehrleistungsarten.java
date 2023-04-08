@@ -2,7 +2,7 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag;
 import de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt;
@@ -26,7 +26,7 @@ public final class DataKatalogLehrerMehrleistungsarten extends DataManager<Long>
 
 	@Override
 	public Response getAll() {
-		final Vector<LehrerKatalogMehrleistungsartEintrag> daten = new Vector<>();
+		final ArrayList<LehrerKatalogMehrleistungsartEintrag> daten = new ArrayList<>();
 		for (final LehrerMehrleistungArt status : LehrerMehrleistungArt.values())
 			daten.addAll(Arrays.asList(status.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

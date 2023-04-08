@@ -1,5 +1,5 @@
 import { List } from './List';
-import { Vector } from './Vector';
+import { ArrayList } from './ArrayList';
 
 import { JavaObject } from '../../java/lang/JavaObject';
 
@@ -10,7 +10,7 @@ export class Arrays extends JavaObject {
 	public static asList<T>(...args : Array<T>) : List<T>;
 
 	public static asList<T>(...args : Array<T>) : List<T> {
-		const v : Vector<T> = new Vector<T>();
+		const v : ArrayList<T> = new ArrayList<T>();
 		if ((args.length == 1) && Array.isArray(args[0])) {
 			for (const e of args[0])
 				v.add(e);

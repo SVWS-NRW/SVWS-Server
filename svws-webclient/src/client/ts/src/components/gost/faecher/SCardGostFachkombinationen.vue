@@ -35,7 +35,7 @@
 <script setup lang="ts">
 
 	import { computed, ComputedRef } from "vue";
-	import { List, Vector, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core";
+	import { List, ArrayList, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		faecherManager: GostFaecherManager;
@@ -58,7 +58,7 @@
 	});
 
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
-		const result = new Vector<GostJahrgangFachkombination>();
+		const result = new ArrayList<GostJahrgangFachkombination>();
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
 				result.add(kombi);

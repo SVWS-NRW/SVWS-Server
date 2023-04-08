@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.benutzer;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,10 +18,10 @@ public class BenutzerConfig {
 
 	/** Die Konfiguration, die dem Benutzer zugeordnet ist. */
 	@Schema(description = "die Konfiguration, die dem Benutzer zugeordnet ist")
-	public @NotNull Vector<@NotNull BenutzerConfigElement> user = new Vector<>();
+	public @NotNull ArrayList<@NotNull BenutzerConfigElement> user = new ArrayList<>();
 
 	/** Die globale Konfiguration, die auch für den Benutzer gilt. */
 	@Schema(description = "die globale Konfiguration, die auch für den Benutzer gilt")
-	public @NotNull Vector<@NotNull BenutzerConfigElement> global = new Vector<>();
+	public @NotNull ArrayList<@NotNull BenutzerConfigElement> global = new ArrayList<>();
 
 }

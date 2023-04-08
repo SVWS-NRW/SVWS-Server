@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 
@@ -89,6 +89,6 @@ public class ENMLeistung {
 	/** Die Teilleistungen, sofern welche vordefiniert sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMTeilleistung.class, description = "Ein Array mit den Informationen zu den Teilleistungen, "
 			+ "sofern welche vordefiniert sind."))
-	public @NotNull Vector<@NotNull ENMTeilleistung> teilleistungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull ENMTeilleistung> teilleistungen = new ArrayList<>();
 
 }

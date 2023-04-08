@@ -186,7 +186,7 @@ export class BenutzergruppenManager extends JavaObject {
 	public removeKompetenz(kompetenz : BenutzerKompetenz) : void {
 		if (!this._setKompetenzen.contains(kompetenz.daten.id))
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.")
-		this._daten.kompetenzen.removeElement(kompetenz.daten.id);
+		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz.daten.id);
 	}
 

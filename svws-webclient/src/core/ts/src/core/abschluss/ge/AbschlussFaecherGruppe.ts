@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { Predicate } from '../../../java/util/function/Predicate';
@@ -12,7 +12,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	/**
 	 * Eine Liste mit allen Fächern dieser Fachgruppe
 	 */
-	private readonly faecher : Vector<GEAbschlussFach> = new Vector();
+	private readonly faecher : ArrayList<GEAbschlussFach> = new ArrayList();
 
 
 	/**
@@ -98,7 +98,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return die Liste der tatsächlich entfernten Fächer
 	 */
 	public entferneFaecher(filter : Predicate<GEAbschlussFach>) : List<GEAbschlussFach> {
-		const selected : Vector<GEAbschlussFach> = new Vector();
+		const selected : ArrayList<GEAbschlussFach> = new ArrayList();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
 			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
@@ -134,7 +134,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getFaecher(filter : Predicate<GEAbschlussFach>) : List<GEAbschlussFach> {
-		const result : Vector<GEAbschlussFach> = new Vector();
+		const result : ArrayList<GEAbschlussFach> = new ArrayList();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
 			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach))
@@ -168,7 +168,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public getKuerzel(filter : Predicate<GEAbschlussFach>) : List<string> {
-		const result : Vector<string> = new Vector();
+		const result : ArrayList<string> = new ArrayList();
 		for (let i : number = 0; i < this.faecher.size(); i++) {
 			const fach : GEAbschlussFach = this.faecher.get(i);
 			if (filter.test(fach) && (fach.kuerzel !== null))

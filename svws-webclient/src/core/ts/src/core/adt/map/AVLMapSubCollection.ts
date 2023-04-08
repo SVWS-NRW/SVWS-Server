@@ -54,10 +54,10 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 	 */
 	public toArray<T>(__param0? : Array<T | null>) : Array<T | null> | Array<unknown | null> {
 		if ((typeof __param0 === "undefined")) {
-			return this._sub.bcGetVectorOfValues().toArray();
+			return this._sub.bcGetArrayListOfValues().toArray();
 		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
 			const a : Array<T | null> = __param0;
-			return this._sub.bcGetVectorOfValues().toArray(a);
+			return this._sub.bcGetArrayListOfValues().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
 

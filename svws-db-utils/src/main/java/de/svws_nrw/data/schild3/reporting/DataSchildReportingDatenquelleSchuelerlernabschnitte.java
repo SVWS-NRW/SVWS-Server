@@ -3,7 +3,7 @@ package de.svws_nrw.data.schild3.reporting;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schild3.SchildReportingSchuelerlernabschnitt;
@@ -56,7 +56,7 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
                 .queryNamed("DTOJahrgang.id.multiple", idJahrgaenge, DTOJahrgang.class)
                 .stream().collect(Collectors.toMap(j -> j.ID, j -> j));
         // Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-        final Vector<SchildReportingSchuelerlernabschnitt> result = new Vector<>();
+        final ArrayList<SchildReportingSchuelerlernabschnitt> result = new ArrayList<>();
         for (final DTOSchuelerLernabschnittsdaten dto : lernabschnittsdaten) {
             final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
             if (dtoSJA == null)

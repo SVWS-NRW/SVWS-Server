@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,7 +28,7 @@ public final class DataKatalogOrganisationsformen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<OrganisationsformKatalogEintrag> daten = new Vector<>();
+		final ArrayList<OrganisationsformKatalogEintrag> daten = new ArrayList<>();
 		for (final BerufskollegOrganisationsformen eintrag : BerufskollegOrganisationsformen.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
 		for (final WeiterbildungskollegOrganisationsformen eintrag : WeiterbildungskollegOrganisationsformen.values())

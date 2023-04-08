@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.GostFach;
@@ -83,7 +83,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abijahrgang, DTOGostJahrgangFachkombinationen.class);
 		if (kombis == null)
 			return OperationError.NOT_FOUND.getResponse();
-		final Vector<GostJahrgangFachkombination> daten = new Vector<>();
+		final ArrayList<GostJahrgangFachkombination> daten = new ArrayList<>();
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.add(dtoMapper.apply(kombi));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -227,7 +227,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 			final long id = dbID == null ? 1 : dbID.MaxID + 1;
 			// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
 			final GostFaecherManager fachmanager = FaecherGost.getFaecherListeGost(conn, abijahrgang);
-			final Vector<GostFach> faecher = fachmanager.toVector();
+			final ArrayList<GostFach> faecher = fachmanager.toArrayList();
 			if (faecher.size() < 2)
 				throw OperationError.NOT_FOUND.exception("Nicht genügend Fächer für den Abiturjahrgang definiert.");
 			final DTOGostJahrgangFachkombinationen kombi = new DTOGostJahrgangFachkombinationen(id, abijahrgang, faecher.get(0).id, faecher.get(1).id, true, true, true, true, true, true, kombityp, "");

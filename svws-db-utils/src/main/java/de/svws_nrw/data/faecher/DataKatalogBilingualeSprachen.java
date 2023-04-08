@@ -2,7 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.core.types.fach.BilingualeSprache;
@@ -32,7 +32,7 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
+        final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
         for (final BilingualeSprache gruppe : BilingualeSprache.values())
             daten.addAll(Arrays.asList(gruppe.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -46,7 +46,7 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
     	final var sprachen = BilingualeSprache.get(schule.Schulform);
     	if (sprachen == null)
     		return OperationError.NOT_FOUND.getResponse();
-        final Vector<BilingualeSpracheKatalogEintrag> daten = new Vector<>();
+        final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
         for (final BilingualeSprache sprache : sprachen)
             daten.addAll(Arrays.asList(sprache.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

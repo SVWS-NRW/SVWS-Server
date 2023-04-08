@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class SchuleAbschnitte extends JavaObject {
 
@@ -16,7 +16,7 @@ export class SchuleAbschnitte extends JavaObject {
 	/**
 	 * Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...)
 	 */
-	public bezAbschnitte : Vector<string> = new Vector();
+	public bezAbschnitte : ArrayList<string> = new ArrayList();
 
 
 	public constructor() {

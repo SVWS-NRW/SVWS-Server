@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -130,13 +130,13 @@ public class SchuelerSchulbesuchsdaten {
 
 	/** Die Informationen zu den besonderen Merkmalen für die Statistik. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class, description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
-	public @NotNull Vector<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
 
 
 	// **** Informationen zu allen bisher besuchten Schulen (Array)
 
 	/** Die Informationen zu allen bisher besuchten Schulen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class, description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
-	public @NotNull Vector<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
 
 }

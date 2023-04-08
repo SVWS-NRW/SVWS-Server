@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.gost;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -45,6 +45,6 @@ public class GostBlockungKurs {
 	public int anzahlSchienen = 1;
 
 	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
-	public @NotNull Vector<@NotNull GostBlockungKursLehrer> lehrer = new Vector<>();
+	public @NotNull ArrayList<@NotNull GostBlockungKursLehrer> lehrer = new ArrayList<>();
 
 }

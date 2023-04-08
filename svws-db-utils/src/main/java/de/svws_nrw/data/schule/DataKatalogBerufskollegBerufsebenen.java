@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -31,7 +31,7 @@ public final class DataKatalogBerufskollegBerufsebenen extends DataManager<Long>
 
 	@Override
 	public Response getAll() {
-		final Vector<BerufskollegBerufsebeneKatalogEintrag> daten = new Vector<>();
+		final ArrayList<BerufskollegBerufsebeneKatalogEintrag> daten = new ArrayList<>();
 		for (final BerufskollegBerufsebene1 ebenen : BerufskollegBerufsebene1.values())
 			daten.addAll(Arrays.asList(ebenen.historie));
 		for (final BerufskollegBerufsebene2 ebenen : BerufskollegBerufsebene2.values())

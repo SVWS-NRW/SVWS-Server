@@ -3,7 +3,7 @@ package de.svws_nrw.data.schueler;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -86,7 +86,7 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnittIDs, DTOSchuljahresabschnitte.class);
     	final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Konvertiere die Lenabschnitte, ergänze sie um die Klassen- und Schuljahresabschnittsinformationen und füge sie zur Liste hinzu
-    	final Vector<SchuelerLernabschnittListeEintrag> daten = new Vector<>();
+    	final ArrayList<SchuelerLernabschnittListeEintrag> daten = new ArrayList<>();
     	for (final DTOSchuelerLernabschnittsdaten l : abschnitte) {
     		final SchuelerLernabschnittListeEintrag e = dtoMapper.apply(l);
     		final DTOKlassen klasse = mapKlassen.get(e.klassenID);

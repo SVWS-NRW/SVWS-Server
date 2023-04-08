@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -279,7 +279,7 @@ public enum Foerderschwerpunkt {
 	private static final @NotNull HashMap<@NotNull Long, @NotNull Foerderschwerpunkt> _foerderschwerpunkteID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen der Förderschwerpunkt vorkommt */
-	private @NotNull Vector<@NotNull Schulform> @NotNull[] schulformen;
+	private @NotNull ArrayList<@NotNull Schulform> @NotNull[] schulformen;
 
 
 	/**
@@ -293,9 +293,9 @@ public enum Foerderschwerpunkt {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
-		this.schulformen = (@NotNull Vector<@NotNull Schulform> @NotNull[]) Array.newInstance(Vector.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector<>();
+			this.schulformen[i] = new ArrayList<>();
 			for (final @NotNull String kuerzel : historie[i].schulformen) {
 				final Schulform sf = Schulform.getByKuerzel(kuerzel);
 				if (sf != null)
@@ -382,7 +382,7 @@ public enum Foerderschwerpunkt {
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static @NotNull List<@NotNull Foerderschwerpunkt> get(final Schulform schulform) {
-		final @NotNull Vector<@NotNull Foerderschwerpunkt> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull Foerderschwerpunkt> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Foerderschwerpunkt@NotNull[] fs = Foerderschwerpunkt.values();

@@ -2,11 +2,11 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { HashMap } from '../../../java/util/HashMap';
 import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
 import { List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Vector } from '../../../java/util/Vector';
 import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
 
 export class AbgangsartenManager extends JavaObject {
@@ -29,7 +29,7 @@ export class AbgangsartenManager extends JavaObject {
 	/**
 	 * Die kombinierten Daten der beiden Kataloge
 	 */
-	private readonly _alle : Vector<AbgangsartKatalogEintrag> = new Vector();
+	private readonly _alle : ArrayList<AbgangsartKatalogEintrag> = new ArrayList();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels.

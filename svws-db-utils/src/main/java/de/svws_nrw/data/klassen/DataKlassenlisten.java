@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import jakarta.ws.rs.WebApplicationException;
@@ -68,7 +68,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
     			continue;
     		List<Schueler> listSchueler = mapKlassenSchueler.get(sla.Klassen_ID);
     		if (listSchueler == null) {
-    			listSchueler = new Vector<>();
+    			listSchueler = new ArrayList<>();
     			mapKlassenSchueler.put(sla.Klassen_ID, listSchueler);
     		}
     		listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));

@@ -5,9 +5,9 @@ import { AbschlussErgebnis } from '../../core/data/abschluss/AbschlussErgebnis';
 import { GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher';
 import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { StringBuilder } from '../../java/lang/StringBuilder';
+import { ArrayList } from '../../java/util/ArrayList';
 import { List } from '../../java/util/List';
 import { GELeistungsdifferenzierteKursart } from '../../core/types/ge/GELeistungsdifferenzierteKursart';
-import { Vector } from '../../java/util/Vector';
 import { HashSet } from '../../java/util/HashSet';
 
 export class AbschlussManager extends JavaObject {
@@ -150,7 +150,7 @@ export class AbschlussManager extends JavaObject {
 	 * @return die Liste mit den Fachkürzeln
 	 */
 	public static getKuerzel(faecher : List<GEAbschlussFach>) : List<string> {
-		const result : Vector<string> = new Vector();
+		const result : ArrayList<string> = new ArrayList();
 		for (let i : number = 0; i < faecher.size(); i++) {
 			const fach : GEAbschlussFach = faecher.get(i);
 			if ((fach === null) || fach.kuerzel === null)

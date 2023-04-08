@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -31,7 +31,7 @@ public class KlausurterminblockungAlgorithmus {
 	 * @return Eine Liste (Termine) von Listen (KlausurIDs)
 	 */
 	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-		final @NotNull List<@NotNull List<@NotNull Long>> out = new Vector<>();
+		final @NotNull List<@NotNull List<@NotNull Long>> out = new ArrayList<>();
 		switch (pConfig.get_lk_gk_modus()) {
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:
 				berechne_helper(pInput, pConfig, out);
@@ -53,7 +53,7 @@ public class KlausurterminblockungAlgorithmus {
 	}
 
 	private static @NotNull List<@NotNull GostKursklausur> filter(final @NotNull List<@NotNull GostKursklausur> pInput, final boolean pLK) {
-		final @NotNull List<@NotNull GostKursklausur> temp = new Vector<>();
+		final @NotNull List<@NotNull GostKursklausur> temp = new ArrayList<>();
 		for (final GostKursklausur gostKursklausur : pInput)
 			if (gostKursklausur.kursart.equals("LK") == pLK)
 				temp.add(gostKursklausur);

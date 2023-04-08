@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.SQLiteUtils;
@@ -34,10 +34,10 @@ public class View {
     final @NotNull String sql;
 
     /** Eine Liste der Spalten der View*/
-    public final @NotNull Vector<@NotNull ViewSpalte> spalten = new Vector<>();
+    public final @NotNull ArrayList<@NotNull ViewSpalte> spalten = new ArrayList<>();
 
     /** Eine Liste der Spalten, welcher als Primärschlüssel der View geeignet ist */
-    public final @NotNull Vector<@NotNull ViewSpalte> pkSpalten = new Vector<>();
+    public final @NotNull ArrayList<@NotNull ViewSpalte> pkSpalten = new ArrayList<>();
 
 
     /**

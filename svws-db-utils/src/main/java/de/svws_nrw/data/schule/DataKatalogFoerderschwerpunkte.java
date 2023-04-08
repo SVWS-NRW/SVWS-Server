@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +26,7 @@ public final class DataKatalogFoerderschwerpunkte extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<FoerderschwerpunktKatalogEintrag> daten = new Vector<>();
+		final ArrayList<FoerderschwerpunktKatalogEintrag> daten = new ArrayList<>();
 		for (final Foerderschwerpunkt eintrag : Foerderschwerpunkt.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

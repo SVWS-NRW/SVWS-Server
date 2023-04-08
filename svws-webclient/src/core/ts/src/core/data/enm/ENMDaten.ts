@@ -3,12 +3,12 @@ import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
 import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
 import { ENMFach } from '../../../core/data/enm/ENMFach';
 import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
-import { Vector } from '../../../java/util/Vector';
 import { ENMFloskelgruppe } from '../../../core/data/enm/ENMFloskelgruppe';
 
 export class ENMDaten extends JavaObject {
@@ -76,52 +76,52 @@ export class ENMDaten extends JavaObject {
 	/**
 	 * Der Katalog mit den gültigen Einträgen von Noten (als Übersicht für das ENM-Tool)
 	 */
-	public noten : Vector<ENMNote> = new Vector();
+	public noten : ArrayList<ENMNote> = new ArrayList();
 
 	/**
 	 * Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool)
 	 */
-	public foerderschwerpunkte : Vector<ENMFoerderschwerpunkt> = new Vector();
+	public foerderschwerpunkte : ArrayList<ENMFoerderschwerpunkt> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.
 	 */
-	public jahrgaenge : Vector<ENMJahrgang> = new Vector();
+	public jahrgaenge : ArrayList<ENMJahrgang> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den einzelnen Klassen, die in der Notendatei enthalten sind.
 	 */
-	public klassen : Vector<ENMKlasse> = new Vector();
+	public klassen : ArrayList<ENMKlasse> = new ArrayList();
 
 	/**
 	 * Die Informationen der vordefinierten Floskelgruppen und deren Floskeln.
 	 */
-	public floskelgruppen : Vector<ENMFloskelgruppe> = new Vector();
+	public floskelgruppen : ArrayList<ENMFloskelgruppe> = new ArrayList();
 
 	/**
 	 * Die Informationen zu Lehrern, die in der Notendatei vorhanden sind.
 	 */
-	public lehrer : Vector<ENMLehrer> = new Vector();
+	public lehrer : ArrayList<ENMLehrer> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den Fächern, die in der Notendatei vorhanden sind.
 	 */
-	public faecher : Vector<ENMFach> = new Vector();
+	public faecher : ArrayList<ENMFach> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind.
 	 */
-	public teilleistungsarten : Vector<ENMTeilleistungsart> = new Vector();
+	public teilleistungsarten : ArrayList<ENMTeilleistungsart> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den Lerngruppen (Klassen und Kurse), die in der Notendatei vorhanden sind.
 	 */
-	public lerngruppen : Vector<ENMLerngruppe> = new Vector();
+	public lerngruppen : ArrayList<ENMLerngruppe> = new ArrayList();
 
 	/**
 	 * Die Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden.
 	 */
-	public schueler : Vector<ENMSchueler> = new Vector();
+	public schueler : ArrayList<ENMSchueler> = new ArrayList();
 
 
 	public constructor() {

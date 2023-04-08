@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -159,7 +158,7 @@ public final class Transpiler extends AbstractProcessor {
 	 */
 	public void transpile() {
 		System.out.println("Running Transpiler...");
-		final Vector<String> options = new Vector<>();
+		final ArrayList<String> options = new ArrayList<>();
 		options.add("-encoding");
 		options.add("UTF-8");
 		if (classdir != null) {
@@ -853,8 +852,8 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the list of all annotations of the specified type
 	 */
-	public Vector<AnnotationTree> getAnnotationList(final String annotationType, final Tree tree) {
-		final Vector<AnnotationTree> result = new Vector<>();
+	public ArrayList<AnnotationTree> getAnnotationList(final String annotationType, final Tree tree) {
+		final ArrayList<AnnotationTree> result = new ArrayList<>();
 		ModifiersTree mods = null;
 		if (tree instanceof final ClassTree classTree) {
 			mods = classTree.getModifiers();

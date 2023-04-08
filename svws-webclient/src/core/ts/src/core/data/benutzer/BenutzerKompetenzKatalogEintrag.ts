@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe, cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
-import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 
@@ -58,7 +58,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			this.bezeichnung = bezeichnung;
 			this.gruppe_id = gruppe.daten.id;
 			if (schulformen !== null) {
-				this.nurSchulformen = new Vector();
+				this.nurSchulformen = new ArrayList();
 				for (const schulform of schulformen)
 					this.nurSchulformen.add(schulform.daten.id);
 			}

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.fach;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
@@ -82,7 +82,7 @@ public class FachKatalogEintrag {
 
 	/** Die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist. */
 	@Schema(description = "die Informationen zu Schulformen und -gliederungen, wo das Fach zulässig ist.")
-	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new Vector<>();
+	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem die Kursart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

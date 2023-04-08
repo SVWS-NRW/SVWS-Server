@@ -3,7 +3,7 @@ package de.svws_nrw.core.kursblockung;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.kursblockung.SchuelerblockungInput;
@@ -30,7 +30,7 @@ public class SchuelerblockungDynDaten {
 	// Diese Attribute werden einmalig pro Blockung initialisiert.
 	private final int nFachwahlen;
 	private final int nSchienen;
-	private final @NotNull Vector<@NotNull Vector<@NotNull SchuelerblockungInputKurs>> _fachwahlZuKurse;
+	private final @NotNull ArrayList<@NotNull ArrayList<@NotNull SchuelerblockungInputKurs>> _fachwahlZuKurse;
 	private final @NotNull boolean[] _fachwahlZuHatMultikurse;
 	private final @NotNull long[] _fachwahlZuFachID;
 	private final @NotNull int[] _fachwahlZuKursartID;
@@ -59,7 +59,7 @@ public class SchuelerblockungDynDaten {
 		// Datenstrukturen, die nur einmalig initialisiert werden müssen:
 		nFachwahlen = pInput.fachwahlen.size();
 		nSchienen = pInput.schienen;
-		_fachwahlZuKurse = new Vector<>();
+		_fachwahlZuKurse = new ArrayList<>();
 		_fachwahlZuHatMultikurse = new boolean[nFachwahlen];
 		_fachwahlZuFachID = new long[nFachwahlen];
 		_fachwahlZuKursartID = new int[nFachwahlen];
@@ -194,7 +194,7 @@ public class SchuelerblockungDynDaten {
 			_fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 
 			// Kurse dieser Fachwahl sammeln...
-			final Vector<@NotNull SchuelerblockungInputKurs> kurse = new Vector<>();
+			final ArrayList<@NotNull SchuelerblockungInputKurs> kurse = new ArrayList<>();
 			boolean hatFixiertenKurs = false;
 			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
@@ -350,7 +350,7 @@ public class SchuelerblockungDynDaten {
 			}
 	}
 
-	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull Vector<@NotNull SchuelerblockungInputKurs> pKurse, final int pSchiene) {
+	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(final @NotNull ArrayList<@NotNull SchuelerblockungInputKurs> pKurse, final int pSchiene) {
 		final long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
 		for (final SchuelerblockungInputKurs kurs : pKurse)

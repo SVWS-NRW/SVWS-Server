@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -20,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class GostBlockungsergebnisBewertung {
 
 	/** Bewertungskriterium 1a: Array mit den Regel-IDs der {@link GostBlockungRegel} die nicht erfüllt werden konnten. */
-	public @NotNull Vector<@NotNull Long> regelVerletzungen = new Vector<>();
+	public @NotNull ArrayList<@NotNull Long> regelVerletzungen = new ArrayList<>();
 
 	/** Bewertungskriterium 1b: Anzahl aller Kurse, die nicht auf Schienen verteilt wurden. */
 	public int anzahlKurseNichtZugeordnet = 0;

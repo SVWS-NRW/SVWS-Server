@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -55,6 +55,6 @@ public class SchuelerListeEintrag {
 
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public final @NotNull Vector<@NotNull Long> kurse = new Vector<>();
+	public final @NotNull ArrayList<@NotNull Long> kurse = new ArrayList<>();
 
 }

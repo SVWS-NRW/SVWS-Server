@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
@@ -23,7 +23,7 @@ import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -340,7 +340,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
 			daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-			daten.faecher.addAll(gostFaecher.toVector());
+			daten.faecher.addAll(gostFaecher.toArrayList());
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));
 		final GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler();
@@ -559,7 +559,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		alle.addAll(nurDB);
 		alle.addAll(nurDatei);
 		if (alle.size() > 0) {
-			final Vector<DTOGostSchuelerFachbelegungen> fachwahlenGeaendert = new Vector<>();
+			final ArrayList<DTOGostSchuelerFachbelegungen> fachwahlenGeaendert = new ArrayList<>();
 			final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryList("SELECT e FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = ?1 AND e.Fach_ID IN ?2",
 					DTOGostSchuelerFachbelegungen.class, dtoSchueler.ID, alle);
 			final Map<Long, DTOGostSchuelerFachbelegungen> mapFachwahlen = fachwahlen.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
@@ -649,7 +649,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle den Logger
 		final Logger logger = new Logger();
-		final LogConsumerVector log = new LogConsumerVector();
+		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
 		// Importiere die Daten...
@@ -687,7 +687,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle den Logger
 		final Logger logger = new Logger();
-		final LogConsumerVector log = new LogConsumerVector();
+		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		logger.addConsumer(new LogConsumerConsole());
 		// Führe den Import durch und erstelle die Response mit dem Log

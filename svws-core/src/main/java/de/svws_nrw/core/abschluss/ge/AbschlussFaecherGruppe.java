@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.ge;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import de.svws_nrw.core.abschluss.AbschlussManager;
@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
 public class AbschlussFaecherGruppe {
 
 	/** Eine Liste mit allen Fächern dieser Fachgruppe */
-	private final @NotNull Vector<@NotNull GEAbschlussFach> faecher = new Vector<>();
+	private final @NotNull ArrayList<@NotNull GEAbschlussFach> faecher = new ArrayList<>();
 
 
 	/**
@@ -113,7 +113,7 @@ public class AbschlussFaecherGruppe {
 	 * @return die Liste der tatsächlich entfernten Fächer
 	 */
 	public @NotNull List<@NotNull GEAbschlussFach> entferneFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull Vector<@NotNull GEAbschlussFach> selected = new Vector<>();
+		final @NotNull ArrayList<@NotNull GEAbschlussFach> selected = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach))
@@ -151,7 +151,7 @@ public class AbschlussFaecherGruppe {
 	 * @return eine Liste der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public @NotNull List<@NotNull GEAbschlussFach> getFaecher(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull Vector<@NotNull GEAbschlussFach> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull GEAbschlussFach> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach))
@@ -187,7 +187,7 @@ public class AbschlussFaecherGruppe {
 	 * @return eine Liste der Kürzel der Fächer, die dem Filterkriterium entsprechen
 	 */
 	public @NotNull List<@NotNull String> getKuerzel(final @NotNull Predicate<@NotNull GEAbschlussFach> filter) {
-		final @NotNull Vector<@NotNull String> result = new Vector<>();
+		final @NotNull ArrayList<@NotNull String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
 			if (filter.test(fach) && (fach.kuerzel != null))

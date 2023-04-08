@@ -1,6 +1,6 @@
 import { JavaObject } from '../java/lang/JavaObject';
+import { LogConsumerList } from '../core/logger/LogConsumerList';
 import { Logger } from '../core/logger/Logger';
-import { LogConsumerVector } from '../core/logger/LogConsumerVector';
 
 export abstract class Service<T_IN, T_OUT> extends JavaObject {
 
@@ -12,11 +12,11 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 	/**
 	 * Die Instanz des Consumers von Log-Informationen. In diesem Fall ein einfacher Vektor
 	 */
-	protected log : LogConsumerVector = new LogConsumerVector();
+	protected log : LogConsumerList = new LogConsumerList();
 
 
 	/**
-	 * Erstellt einen neuen Service, dessen Logger automatisch in einen Vector loggt.
+	 * Erstellt einen neuen Service, dessen Logger automatisch in einen ArrayList loggt.
 	 */
 	protected constructor() {
 		super();
@@ -48,7 +48,7 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 	 *
 	 * @return das Log dieses Services
 	 */
-	public getLog() : LogConsumerVector {
+	public getLog() : LogConsumerList {
 		return this.log;
 	}
 

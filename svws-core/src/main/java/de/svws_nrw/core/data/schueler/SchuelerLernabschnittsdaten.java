@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -201,6 +201,6 @@ public class SchuelerLernabschnittsdaten {
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class, description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
-	public @NotNull Vector<@NotNull SchuelerLeistungsdaten> leistungsdaten = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
 
 }

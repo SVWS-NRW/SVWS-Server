@@ -712,7 +712,7 @@ public class APIGost {
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.GESAMT);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toArrayList(), GostBelegpruefungsArt.GESAMT);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
@@ -750,7 +750,7 @@ public class APIGost {
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toVector(), GostBelegpruefungsArt.EF1);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toArrayList(), GostBelegpruefungsArt.EF1);
 			return manager.getBelegpruefungErgebnis();
     	}
     }

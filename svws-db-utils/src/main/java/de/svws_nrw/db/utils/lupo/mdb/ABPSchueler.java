@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -166,7 +166,7 @@ public final class ABPSchueler {
 	 */
 	public static List<ABPSchueler> read(final Database db) {
 		try {
-			final List<ABPSchueler> liste = new Vector<>();
+			final List<ABPSchueler> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_Schueler");
 			for (final Row r : table) {
 				final ABPSchueler schueler = new ABPSchueler();
@@ -329,7 +329,7 @@ public final class ABPSchueler {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchueler
 	 */
 	public static List<ABPSchueler> getDefault() {
-		final List<ABPSchueler> schuelerliste = new Vector<>();
+		final List<ABPSchueler> schuelerliste = new ArrayList<>();
 		return schuelerliste;
 	}
 
@@ -349,7 +349,7 @@ public final class ABPSchueler {
 	 * @return die Liste der Einträge für die Tabelle ABP_Schueler
 	 */
 	public static List<ABPSchueler> get(final List<DTOSchueler> schuelerListe, final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte, final Map<Long, DTOKlassen> mapKlassen, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOGostSchueler> schuelerLupoInfo, final Map<Long, GostLeistungen> gostInfo) {
-		final List<ABPSchueler> liste = new Vector<>();
+		final List<ABPSchueler> liste = new ArrayList<>();
 		if (schuelerListe == null)
 			return liste;
 		for (int i = 0; i < schuelerListe.size(); i++) {

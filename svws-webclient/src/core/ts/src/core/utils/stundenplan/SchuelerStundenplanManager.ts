@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { IntegerComparator } from '../../../core/utils/stundenplan/IntegerComparator';
-import { Vector } from '../../../java/util/Vector';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { SchuelerStundenplan } from '../../../core/data/stundenplan/SchuelerStundenplan';
 
@@ -23,12 +23,12 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Eine Map idZeitraster -> Liste von Unterricht
 	 */
-	private readonly _mapZeitrasterUnterricht : HashMap<number, Vector<SchuelerStundenplanUnterricht>> = new HashMap();
+	private readonly _mapZeitrasterUnterricht : HashMap<number, ArrayList<SchuelerStundenplanUnterricht>> = new HashMap();
 
 	/**
 	 * Eine Map wochentyp, idZeitraster -> Liste von Unterricht
 	 */
-	private readonly _mapWocheZeitrasterUnterricht : HashMap<number, HashMap<number, Vector<SchuelerStundenplanUnterricht>>> = new HashMap();
+	private readonly _mapWocheZeitrasterUnterricht : HashMap<number, HashMap<number, ArrayList<SchuelerStundenplanUnterricht>>> = new HashMap();
 
 	/**
 	 * Eine Map idZeitraster -> Zeitraster
@@ -43,12 +43,12 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Eine Map wochentag -> Liste von Zeitrastern
 	 */
-	private readonly _mapWochentagZeitraster : HashMap<number, Vector<StundenplanZeitraster>> = new HashMap();
+	private readonly _mapWochentagZeitraster : HashMap<number, ArrayList<StundenplanZeitraster>> = new HashMap();
 
 	/**
 	 * Eine Map stunde -> Liste von Zeitrastern
 	 */
-	private readonly _mapStundeZeitraster : HashMap<number, Vector<StundenplanZeitraster>> = new HashMap();
+	private readonly _mapStundeZeitraster : HashMap<number, ArrayList<StundenplanZeitraster>> = new HashMap();
 
 	/**
 	 *  Der minimale Wochentag, der in den Stundenplandaten vorkommt, z.B. 1 für
@@ -94,15 +94,15 @@ export class SchuelerStundenplanManager extends JavaObject {
 			if (sz.unterrichtstunde > this.maxStunde)
 				this.maxStunde = sz.unterrichtstunde;
 			this._mapZeitraster.put(sz.id, sz);
-			let listWochentagZeitraster : Vector<StundenplanZeitraster> | null = this._mapWochentagZeitraster.get(sz.wochentag);
+			let listWochentagZeitraster : ArrayList<StundenplanZeitraster> | null = this._mapWochentagZeitraster.get(sz.wochentag);
 			if (listWochentagZeitraster === null) {
-				listWochentagZeitraster = new Vector();
+				listWochentagZeitraster = new ArrayList();
 				this._mapWochentagZeitraster.put(sz.wochentag, listWochentagZeitraster);
 			}
 			listWochentagZeitraster.add(sz);
-			let listStundeZeitraster : Vector<StundenplanZeitraster> | null = this._mapStundeZeitraster.get(sz.unterrichtstunde);
+			let listStundeZeitraster : ArrayList<StundenplanZeitraster> | null = this._mapStundeZeitraster.get(sz.unterrichtstunde);
 			if (listStundeZeitraster === null) {
-				listStundeZeitraster = new Vector();
+				listStundeZeitraster = new ArrayList();
 				this._mapStundeZeitraster.put(sz.unterrichtstunde, listStundeZeitraster);
 			}
 			listStundeZeitraster.add(sz);
@@ -115,20 +115,20 @@ export class SchuelerStundenplanManager extends JavaObject {
 		}
 		for (const ssu of this._daten.unterricht) {
 			this._mapUnterricht.put(ssu.idUnterricht, ssu);
-			let listZeitrasterUnterricht : Vector<SchuelerStundenplanUnterricht> | null = this._mapZeitrasterUnterricht.get(ssu.idZeitraster);
+			let listZeitrasterUnterricht : ArrayList<SchuelerStundenplanUnterricht> | null = this._mapZeitrasterUnterricht.get(ssu.idZeitraster);
 			if (listZeitrasterUnterricht === null) {
-				listZeitrasterUnterricht = new Vector();
+				listZeitrasterUnterricht = new ArrayList();
 				this._mapZeitrasterUnterricht.put(ssu.idZeitraster, listZeitrasterUnterricht);
 			}
 			listZeitrasterUnterricht.add(ssu);
-			let mapZeitrasterUnterricht : HashMap<number, Vector<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(ssu.wochentyp);
+			let mapZeitrasterUnterricht : HashMap<number, ArrayList<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(ssu.wochentyp);
 			if (mapZeitrasterUnterricht === null) {
 				mapZeitrasterUnterricht = new HashMap();
 				this._mapWocheZeitrasterUnterricht.put(ssu.wochentyp, mapZeitrasterUnterricht);
 			}
-			let listWocheZeitrasterUnterricht : Vector<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht.get(ssu.idZeitraster);
+			let listWocheZeitrasterUnterricht : ArrayList<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht.get(ssu.idZeitraster);
 			if (listWocheZeitrasterUnterricht === null) {
-				listWocheZeitrasterUnterricht = new Vector();
+				listWocheZeitrasterUnterricht = new ArrayList();
 				mapZeitrasterUnterricht.put(ssu.idZeitraster, listWocheZeitrasterUnterricht);
 			}
 			listWocheZeitrasterUnterricht.add(ssu);
@@ -246,15 +246,15 @@ export class SchuelerStundenplanManager extends JavaObject {
 			const wochentyp : number = __param0 as number;
 			const idZeitraster : number = __param1 as number;
 			const inklWoche0 : boolean = __param2 as boolean;
-			const mapZeitrasterUnterricht_Wochentyp : HashMap<number, Vector<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(wochentyp);
+			const mapZeitrasterUnterricht_Wochentyp : HashMap<number, ArrayList<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(wochentyp);
 			if (mapZeitrasterUnterricht_Wochentyp === null) {
 				return null;
 			}
 			let retList : List<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht_Wochentyp.get(idZeitraster);
 			if (retList === null)
-				retList = new Vector();
+				retList = new ArrayList();
 			if (wochentyp !== 0 && inklWoche0) {
-				const mapZeitrasterUnterricht_Woche0 : HashMap<number, Vector<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(0);
+				const mapZeitrasterUnterricht_Woche0 : HashMap<number, ArrayList<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(0);
 				if (mapZeitrasterUnterricht_Woche0 === null) {
 					return retList;
 				}
@@ -301,7 +301,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public getZeitrasterByWochentag(wochentag : number) : Vector<StundenplanZeitraster> | null {
+	public getZeitrasterByWochentag(wochentag : number) : ArrayList<StundenplanZeitraster> | null {
 		return this._mapWochentagZeitraster.get(wochentag);
 	}
 
@@ -312,7 +312,7 @@ export class SchuelerStundenplanManager extends JavaObject {
 	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public getZeitrasterByStunde(stunde : number) : Vector<StundenplanZeitraster> | null {
+	public getZeitrasterByStunde(stunde : number) : ArrayList<StundenplanZeitraster> | null {
 		return this._mapStundeZeitraster.get(stunde);
 	}
 
@@ -338,10 +338,10 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Gibt die Wochentypen ohne Typ 0 zurück.
 	 *
-	 * @return die Wochentypen als Vector von Integern
+	 * @return die Wochentypen als ArrayList von Integern
 	 */
-	public getWochentypen() : Vector<number> {
-		const retVec : Vector<number> | null = new Vector(this._mapWocheZeitrasterUnterricht.keySet());
+	public getWochentypen() : ArrayList<number> {
+		const retVec : ArrayList<number> | null = new ArrayList(this._mapWocheZeitrasterUnterricht.keySet());
 		if (!this.isAbWochen()) {
 			return retVec;
 		}

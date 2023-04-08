@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class Adressbuch extends JavaObject {
 
@@ -33,7 +33,7 @@ export class Adressbuch extends JavaObject {
 	/**
 	 *  eine Liste der Einträge des Adressbuchs
 	 */
-	public adressbuchEintraege : List<AdressbuchEintrag> = new Vector();
+	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList();
 
 
 	public constructor() {

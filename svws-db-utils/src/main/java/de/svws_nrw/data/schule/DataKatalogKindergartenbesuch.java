@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.core.types.schule.Kindergartenbesuch;
@@ -26,7 +26,7 @@ public final class DataKatalogKindergartenbesuch extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<KindergartenbesuchKatalogEintrag> daten = new Vector<>();
+		final ArrayList<KindergartenbesuchKatalogEintrag> daten = new ArrayList<>();
 		for (final Kindergartenbesuch eintrag : Kindergartenbesuch.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -22,7 +22,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -298,7 +298,7 @@ public final class SVWSKonfiguration {
 		instanceConfig.dto.dbKonfiguration = new SVWSKonfigurationDatabaseDTO();
 		instanceConfig.dto.dbKonfiguration.dbms = (dbms == null) ? DBDriver.MARIA_DB.toString() : dbms.toString();
 		instanceConfig.dto.dbKonfiguration.location = dbLocation + ":" + dbPort;
-		instanceConfig.dto.dbKonfiguration.schemata = new Vector<>();
+		instanceConfig.dto.dbKonfiguration.schemata = new ArrayList<>();
 		if (!noSchema) {
 			instanceConfig.dto.dbKonfiguration.defaultschema = ((schema == null) || ("".equals(schema))) ? "svwsschema" : schema;
 			final SVWSKonfigurationSchemaDTO schemaConfig = new SVWSKonfigurationSchemaDTO();

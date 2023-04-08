@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -27,7 +27,7 @@ public class HerkunftsartKatalogEintrag {
 
 	/** Die Bezeichnungen bei den jeweils zulässigen Schulformen. */
 	@Schema(description = "die Bezeichnungen bei den jeweils zulässigen Schulformen")
-	public @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen = new Vector<>();
+	public @NotNull List<@NotNull HerkunftsartKatalogEintragBezeichnung> bezeichnungen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr die Herkunftsart ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

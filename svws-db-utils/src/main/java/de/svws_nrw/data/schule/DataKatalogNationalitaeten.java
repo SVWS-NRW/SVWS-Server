@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -29,7 +29,7 @@ public final class DataKatalogNationalitaeten extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<NationalitaetenKatalogEintrag> daten = new Vector<>();
+		final ArrayList<NationalitaetenKatalogEintrag> daten = new ArrayList<>();
 		for (final Nationalitaeten nat : Nationalitaeten.values())
 			daten.addAll(Arrays.asList(nat.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

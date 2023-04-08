@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
@@ -16,7 +16,7 @@ import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -73,7 +73,7 @@ public class APISchemaRoot {
 	 *
 	 * @return das Response-Objekt
 	 */
-	private static SimpleOperationResponse simpleResponse(final boolean success, final LogConsumerVector log) {
+	private static SimpleOperationResponse simpleResponse(final boolean success, final LogConsumerList log) {
 		final SimpleOperationResponse response = new SimpleOperationResponse();
 		response.success = success;
 		response.log = log.getStrings();
@@ -101,7 +101,7 @@ public class APISchemaRoot {
     	try (DBEntityManager conn = user.getEntityManager()) {
 			// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 			final List<String> all = DTOInformationSchema.queryNames(conn);
-			final Vector<SchemaListeEintrag> result = new Vector<>();
+			final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
 			// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
 			for (final String schemaname : all) {
 				final DBSchemaStatus status = DBSchemaStatus.read(user, schemaname);
@@ -256,7 +256,7 @@ public class APISchemaRoot {
     						 @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
-	    	final LogConsumerVector log = new LogConsumerVector();
+	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
 			// TODO move to DBSchemaManager, use DBException and extend logging...
@@ -397,7 +397,7 @@ public class APISchemaRoot {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
-	    	final LogConsumerVector log = new LogConsumerVector();
+	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
 
@@ -469,7 +469,7 @@ public class APISchemaRoot {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
-	    	final LogConsumerVector log = new LogConsumerVector();
+	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
 
@@ -712,7 +712,7 @@ public class APISchemaRoot {
 	private static SimpleOperationResponse migrate2Schema(final String schemaname, final DBDriver srcDbDriver, final MigrateBody dbMigrationInfos, @Context final HttpServletRequest request, final Integer schulnummer) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
-	    	final LogConsumerVector log = new LogConsumerVector();
+	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
 

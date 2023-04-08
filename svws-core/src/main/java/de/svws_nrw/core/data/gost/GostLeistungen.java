@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -49,6 +49,6 @@ public class GostLeistungen {
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Die einzelnen Fachwahlen des Schülers. */
-	public final @NotNull Vector<@NotNull GostLeistungenFachwahl> faecher = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostLeistungenFachwahl> faecher = new ArrayList<>();
 
 }

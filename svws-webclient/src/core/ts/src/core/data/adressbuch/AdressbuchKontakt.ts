@@ -1,7 +1,7 @@
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Telefonnummer } from '../../../core/data/adressbuch/Telefonnummer';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class AdressbuchKontakt extends AdressbuchEintrag {
 
@@ -48,7 +48,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Telefonnummern des Kontakts.
 	 */
-	public telefonnummern : List<Telefonnummer> = new Vector();
+	public telefonnummern : List<Telefonnummer> = new ArrayList();
 
 	/**
 	 * Die Mailadresse des Kontakts.
@@ -63,7 +63,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	/**
 	 * Die Kategorien dieses Kontakts
 	 */
-	public kategorien : List<string | null> | null = new Vector();
+	public kategorien : List<string | null> | null = new ArrayList();
 
 	/**
 	 *  Die Organisation dieses Kontakts

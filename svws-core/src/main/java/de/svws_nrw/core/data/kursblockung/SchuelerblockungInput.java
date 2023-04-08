@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.kursblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
@@ -21,14 +21,14 @@ public class SchuelerblockungInput {
 
 	/** Alle Kurse, die zu den Fachwahlen des Schülers passen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputKurs.class))
-	public @NotNull Vector<@NotNull SchuelerblockungInputKurs> kurse = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerblockungInputKurs> kurse = new ArrayList<>();
 
 	/** Alle Fachwahlen des Schülers. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerblockungInputFachwahl.class))
-	public @NotNull Vector<@NotNull GostFachwahl> fachwahlen = new Vector<>();
+	public @NotNull ArrayList<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Zu jeder Fachwahl eine textuelle Darstellung. */
 	@ArraySchema(schema = @Schema(implementation = String.class))
-	public @NotNull Vector<@NotNull String> fachwahlenText = new Vector<>();
+	public @NotNull ArrayList<@NotNull String> fachwahlenText = new ArrayList<>();
 
 }

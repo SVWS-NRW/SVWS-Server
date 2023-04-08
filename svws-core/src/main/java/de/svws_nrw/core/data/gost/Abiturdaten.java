@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -48,7 +48,7 @@ public class Abiturdaten {
 
 	/** Ein Array mit den Fachbelegungen in der Oberstufe. */
 	@ArraySchema(schema = @Schema(implementation = AbiturFachbelegung.class, description = "Ein Array mit den Fachbelegungen in der Oberstufe."))
-	public final @NotNull Vector<@NotNull AbiturFachbelegung> fachbelegungen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = new ArrayList<>();
 
 	/** Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen. */
 	@Schema(implementation = Sprachendaten.class, description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")

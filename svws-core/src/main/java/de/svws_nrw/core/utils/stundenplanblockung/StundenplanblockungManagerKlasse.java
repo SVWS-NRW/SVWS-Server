@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public class StundenplanblockungManagerKlasse {
 	@NotNull String _kuerzel = "";
 
 	/** Alle Lerngruppen der Klasse. */
-	@NotNull Vector<StundenplanblockungManagerLerngruppe> _menge_gr;
+	@NotNull ArrayList<StundenplanblockungManagerLerngruppe> _menge_gr;
 
 	/**
 	 * Erzeugt eine neue Klasse.
@@ -27,7 +27,7 @@ public class StundenplanblockungManagerKlasse {
 	public StundenplanblockungManagerKlasse(final long pKlasseID, final @NotNull String pKuerzel) {
 		_id = pKlasseID;
 		_kuerzel = pKuerzel;
-		_menge_gr = new Vector<>();
+		_menge_gr = new ArrayList<>();
 	}
 
 	/**

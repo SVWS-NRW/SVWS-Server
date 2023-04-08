@@ -1,7 +1,7 @@
 package de.svws_nrw.core.logger;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import jakarta.validation.constraints.NotNull;
@@ -10,9 +10,9 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse implementiert das Funktionale Interface java.util.function.Consumer
  * für Objekt vom Typ LogData. Die über das Interface empfangeben Log-Daten
- * werden in einem Vektor (java.util.Vector) gesammelt.
+ * werden in einem Vektor (java.util.ArrayList) gesammelt.
  */
-public class LogConsumerVector implements Consumer<@NotNull LogData> {
+public class LogConsumerList implements Consumer<@NotNull LogData> {
 
 	/** Gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht. */
 	public final boolean printTime;
@@ -21,14 +21,14 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	public final boolean printLevel;
 
 	/** Der Vektor mit den gesammelten Log-Informationen. */
-	private final @NotNull Vector<@NotNull LogData> logData = new Vector<>();
+	private final @NotNull ArrayList<@NotNull LogData> logData = new ArrayList<>();
 
 
 	/**
 	 * Erzeugt einen neuen Consumer für Log-Informationen, mit den Standardeinstellungen,
 	 * das weder Zeit noch Log-Level mit ausgegeben werden.
 	 */
-	public LogConsumerVector() {
+	public LogConsumerList() {
 		printTime = false;
 		printLevel = false;
 	}
@@ -40,7 +40,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * @param printTime     gibt an, ob die Zeit beim Loggen ausgegeben wird oder nicht
 	 * @param printLevel    gibt an, ob das Log-Level beim Loggen ausgegeben wird oder nicht
 	 */
-	public LogConsumerVector(final boolean printTime, final boolean printLevel) {
+	public LogConsumerList(final boolean printTime, final boolean printLevel) {
 		this.printTime = printTime;
 		this.printLevel = printLevel;
 	}
@@ -51,7 +51,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 *
 	 * @param log   der anzuhängende Log
 	 */
-	public void append(final @NotNull LogConsumerVector log) {
+	public void append(final @NotNull LogConsumerList log) {
 		logData.addAll(log.logData);
 	}
 
@@ -99,7 +99,7 @@ public class LogConsumerVector implements Consumer<@NotNull LogData> {
 	 * @return die gesammelten Log-Informationen als Liste von Strings
 	 */
 	public List<@NotNull String> getStrings(final @NotNull String indent) {
-		final Vector<@NotNull String> result = new Vector<>();
+		final ArrayList<@NotNull String> result = new ArrayList<>();
 		for (int i = 0; i < logData.size(); i++) {
 			final @NotNull LogData data = logData.get(i);
 			if (data == null)

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -61,7 +61,7 @@ public final class ABPNichtMoeglAbiFachKombi {
 	 */
 	public static List<ABPNichtMoeglAbiFachKombi> read(final Database db) {
 		try {
-			final List<ABPNichtMoeglAbiFachKombi> liste = new Vector<>();
+			final List<ABPNichtMoeglAbiFachKombi> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_NichtMoeglAbiFachKombi");
 			for (final Row r : table) {
 				final ABPNichtMoeglAbiFachKombi zuordnung = new ABPNichtMoeglAbiFachKombi();
@@ -134,7 +134,7 @@ public final class ABPNichtMoeglAbiFachKombi {
 	 * @return die Liste der Einträge für die Tabelle ABP_NichtMoeglAbiFachKombi
 	 */
 	public static List<ABPNichtMoeglAbiFachKombi> get(final List<DTOFaecherNichtMoeglicheKombination> nichtMoeglicheKombinationen, final List<DTOFach> faecher, final Map<Long, DTOFach> faecherMap) {
-		final List<ABPNichtMoeglAbiFachKombi> liste = new Vector<>();
+		final List<ABPNichtMoeglAbiFachKombi> liste = new ArrayList<>();
 		if (nichtMoeglicheKombinationen == null)
 			return liste;
 		for (int i = 0; i < nichtMoeglicheKombinationen.size(); i++) {
@@ -163,7 +163,7 @@ public final class ABPNichtMoeglAbiFachKombi {
 	 * @return der Standard-Eintrag für die Tabelle ABPNichtMoeglAbiFachKombi
 	 */
 	public static List<ABPNichtMoeglAbiFachKombi> getDefault() {
-		final List<ABPNichtMoeglAbiFachKombi> nichtMoeglAbiFachKombi = new Vector<>();
+		final List<ABPNichtMoeglAbiFachKombi> nichtMoeglAbiFachKombi = new ArrayList<>();
 		return nichtMoeglAbiFachKombi;
 	}
 

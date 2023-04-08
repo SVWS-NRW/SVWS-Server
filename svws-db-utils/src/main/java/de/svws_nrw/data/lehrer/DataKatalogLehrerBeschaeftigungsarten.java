@@ -2,7 +2,7 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.lehrer.LehrerKatalogBeschaeftigungsartEintrag;
 import de.svws_nrw.core.types.lehrer.LehrerBeschaeftigungsart;
@@ -27,7 +27,7 @@ public final class DataKatalogLehrerBeschaeftigungsarten extends DataManager<Lon
 
 	@Override
 	public Response getAll() {
-		final Vector<LehrerKatalogBeschaeftigungsartEintrag> daten = new Vector<>();
+		final ArrayList<LehrerKatalogBeschaeftigungsartEintrag> daten = new ArrayList<>();
 		for (final LehrerBeschaeftigungsart art : LehrerBeschaeftigungsart.values())
 			daten.addAll(Arrays.asList(art.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

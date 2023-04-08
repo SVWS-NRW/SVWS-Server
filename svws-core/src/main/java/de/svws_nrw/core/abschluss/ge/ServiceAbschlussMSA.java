@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import de.svws_nrw.core.Service;
@@ -165,7 +165,7 @@ public class ServiceAbschlussMSA extends Service<@NotNull GEAbschlussFaecher, @N
 		boolean ignorieren_genutzt = false;
 		boolean ausgleich_genutzt = false;  // gibt an, ob bereits ein Ausgleich genutzt wurde
 		boolean nachpruefung_genutzt = false;
-		final @NotNull List<@NotNull GEAbschlussFach> npFaecher = new Vector<>();
+		final @NotNull List<@NotNull GEAbschlussFach> npFaecher = new ArrayList<>();
 
 		// Bestimme die Defizite in den beiden Fächergruppen
 		final long fg1_defizite = faecher.fg1.getFaecherAnzahl(filterDefizite);

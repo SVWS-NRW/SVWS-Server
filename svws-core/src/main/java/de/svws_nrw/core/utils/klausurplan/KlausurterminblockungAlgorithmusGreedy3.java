@@ -1,7 +1,7 @@
 package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
@@ -75,7 +75,7 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 		}
 
 		// Wähle eine nächste Klausurgruppe und verteile sie rekursiv.
-		final @NotNull Vector<@NotNull Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
+		final @NotNull ArrayList<@NotNull Integer> gruppe = _dynDaten.gibKlausurgruppeMitMinimalenTerminmoeglichkeiten();
 
 		// 1. Fall: Die Gruppe passt noch in einen vorhandenen Termin.
 		for (int terminNr = 0; terminNr < _dynDaten.gibTerminAnzahl(); terminNr++) {

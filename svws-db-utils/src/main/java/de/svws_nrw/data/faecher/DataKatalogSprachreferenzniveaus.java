@@ -2,7 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
@@ -26,7 +26,7 @@ public final class DataKatalogSprachreferenzniveaus extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-        final Vector<SprachreferenzniveauKatalogEintrag> daten = new Vector<>();
+        final ArrayList<SprachreferenzniveauKatalogEintrag> daten = new ArrayList<>();
         for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values())
             daten.addAll(Arrays.asList(ref.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

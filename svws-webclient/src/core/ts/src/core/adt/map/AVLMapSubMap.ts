@@ -4,6 +4,7 @@ import { JavaSet } from '../../../java/util/JavaSet';
 import { NavigableMap } from '../../../java/util/NavigableMap';
 import { AVLMapSubCollection } from '../../../core/adt/map/AVLMapSubCollection';
 import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { AVLMapSubEntrySetIterator } from '../../../core/adt/map/AVLMapSubEntrySetIterator';
 import { AVLMapSubKeySet } from '../../../core/adt/map/AVLMapSubKeySet';
 import { SortedSet } from '../../../java/util/SortedSet';
@@ -17,7 +18,6 @@ import { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AVLMapSubEntrySet } from '../../../core/adt/map/AVLMapSubEntrySet';
 import { JavaMap, cast_java_util_Map } from '../../../java/util/JavaMap';
-import { Vector } from '../../../java/util/Vector';
 import { AVLMapSubCollectionIterator } from '../../../core/adt/map/AVLMapSubCollectionIterator';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -557,12 +557,12 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubKeySet#toArray()} und {@link AVLMapSubKeySet#toArray(Object[])}. Liefert
-	 * einen {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
+	 * einen {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Schlüssel (Keys) dieser Sub-Map beinhaltet.
 	 */
-	bcGetVectorOfKeys() : Vector<K | null> {
-		const v : Vector<K | null> | null = new Vector();
+	bcGetArrayListOfKeys() : ArrayList<K | null> {
+		const v : ArrayList<K | null> | null = new ArrayList();
 		const iter : JavaIterator<K | null> | null = this.navigableKeySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -571,12 +571,12 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubCollection#toArray()} und {@link AVLMapSubCollection#toArray(Object[])}.
-	 * Liefert einen {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
+	 * Liefert einen {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Werte (Values) dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Werte (Values) dieser Sub-Map beinhaltet.
 	 */
-	bcGetVectorOfValues() : Vector<V | null> {
-		const v : Vector<V | null> | null = new Vector();
+	bcGetArrayListOfValues() : ArrayList<V | null> {
+		const v : ArrayList<V | null> | null = new ArrayList();
 		const iter : JavaIterator<V | null> | null = this.values().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());
@@ -585,12 +585,12 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	/**
 	 * Wird aufgerufen von {@link AVLMapSubEntrySet#toArray()} und {@link AVLMapSubEntrySet#toArray(Object[])}. Liefert
-	 * einen {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
+	 * einen {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 *
-	 * @return Ein {@link Vector} der alle Entries dieser Sub-Map beinhaltet.
+	 * @return Ein {@link ArrayList} der alle Entries dieser Sub-Map beinhaltet.
 	 */
-	bcGetVectorOfEntries() : Vector<JavaMapEntry<K | null, V | null> | null> {
-		const v : Vector<JavaMapEntry<K | null, V | null> | null> | null = new Vector();
+	bcGetArrayListOfEntries() : ArrayList<JavaMapEntry<K | null, V | null> | null> {
+		const v : ArrayList<JavaMapEntry<K | null, V | null> | null> | null = new ArrayList();
 		const iter : JavaIterator<JavaMapEntry<K | null, V | null> | null> | null = this.entrySet().iterator();
 		while (iter.hasNext())
 			v.add(iter.next());

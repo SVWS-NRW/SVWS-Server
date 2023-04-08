@@ -3,11 +3,11 @@ import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klau
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Random } from '../../../java/util/Random';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 
 export class KlausurterminblockungDynDaten extends JavaObject {
@@ -64,12 +64,12 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	/**
 	 * Alle Klausurgruppen.
 	 */
-	private readonly _klausurGruppen : Vector<Vector<number>> = new Vector();
+	private readonly _klausurGruppen : ArrayList<ArrayList<number>> = new ArrayList();
 
 	/**
 	 * Alle Klausurgruppen, sortiert nach ihrem Knotengrad (Anzahl an Nachbarn).
 	 */
-	private readonly _klausurGruppenGrad : Vector<Vector<number>> = new Vector();
+	private readonly _klausurGruppenGrad : ArrayList<ArrayList<number>> = new ArrayList();
 
 
 	/**
@@ -110,27 +110,27 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 			if (klausurNr === null)
 				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
-			const gruppe : Vector<number> = new Vector();
+			const gruppe : ArrayList<number> = new ArrayList();
 			gruppe.add(klausurNr);
 			this._klausurGruppen.add(gruppe);
 		}
 	}
 
 	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausur>) : void {
-		const mapFachZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+		const mapFachZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 			if (klausurNr === null)
 				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
 			const fachID : number = gostKursklausur.idFach;
 			if (fachID < 0) {
-				const gruppe : Vector<number> = new Vector();
+				const gruppe : ArrayList<number> = new ArrayList();
 				gruppe.add(klausurNr);
 				this._klausurGruppen.add(gruppe);
 			} else {
-				let gruppe : Vector<number> | null = mapFachZuKlausurGruppe.get(fachID);
+				let gruppe : ArrayList<number> | null = mapFachZuKlausurGruppe.get(fachID);
 				if (gruppe === null) {
-					gruppe = new Vector();
+					gruppe = new ArrayList();
 					mapFachZuKlausurGruppe.put(fachID, gruppe);
 					this._klausurGruppen.add(gruppe);
 				}
@@ -140,20 +140,20 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausur>) : void {
-		const mapSchieneZuKlausurGruppe : HashMap<number, Vector<number>> = new HashMap();
+		const mapSchieneZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
 			if (klausurNr === null)
 				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
 			const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
 			if (schienenID < 0) {
-				const gruppe : Vector<number> = new Vector();
+				const gruppe : ArrayList<number> = new ArrayList();
 				gruppe.add(klausurNr);
 				this._klausurGruppen.add(gruppe);
 			} else {
-				let gruppe : Vector<number> | null = mapSchieneZuKlausurGruppe.get(schienenID);
+				let gruppe : ArrayList<number> | null = mapSchieneZuKlausurGruppe.get(schienenID);
 				if (gruppe === null) {
-					gruppe = new Vector();
+					gruppe = new ArrayList();
 					mapSchieneZuKlausurGruppe.put(schienenID, gruppe);
 					this._klausurGruppen.add(gruppe);
 				}
@@ -186,8 +186,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._klausurGruppenGrad.addAll(this._klausurGruppen);
 		for (let i : number = 1; i < this._klausurGruppenGrad.size(); i++)
 			for (let j : number = i; j >= 1; j--) {
-				const gruppeR : Vector<number> = this._klausurGruppenGrad.get(j);
-				const gruppeL : Vector<number> = this._klausurGruppenGrad.get(j - 1);
+				const gruppeR : ArrayList<number> = this._klausurGruppenGrad.get(j);
+				const gruppeL : ArrayList<number> = this._klausurGruppenGrad.get(j - 1);
 				const gradR : number = this.gibKnotengrad(gruppeR);
 				const gradL : number = this.gibKnotengrad(gruppeL);
 				if (gradL >= gradR)
@@ -197,7 +197,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			}
 	}
 
-	private gibKnotengrad(pGruppe : Vector<number>) : number {
+	private gibKnotengrad(pGruppe : ArrayList<number>) : number {
 		let grad : number = 0;
 		for (const gruppe of this._klausurGruppen)
 			if (this.gibIstVerboten(pGruppe, gruppe))
@@ -205,7 +205,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		return grad;
 	}
 
-	private gibIstVerboten(pGruppe1 : Vector<number>, pGruppe2 : Vector<number>) : boolean {
+	private gibIstVerboten(pGruppe1 : ArrayList<number>, pGruppe2 : ArrayList<number>) : boolean {
 		for (const klausurNr1 of pGruppe1)
 			for (const klausurNr2 of pGruppe2)
 				if (this._verboten[klausurNr1][klausurNr2])
@@ -323,13 +323,13 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @return die Klausur-Gruppen in zufälliger Reihenfolge.
 	 */
-	private gibKlausurgruppenInZufaelligerReihenfolge() : Vector<Vector<number>> {
-		const temp : Vector<Vector<number>> = new Vector();
+	private gibKlausurgruppenInZufaelligerReihenfolge() : ArrayList<ArrayList<number>> {
+		const temp : ArrayList<ArrayList<number>> = new ArrayList();
 		temp.addAll(this._klausurGruppen);
 		for (let i1 : number = 0; i1 < temp.size(); i1++) {
 			const i2 : number = this._random.nextInt(temp.size());
-			const save1 : Vector<number> = temp.get(i1);
-			const save2 : Vector<number> = temp.get(i2);
+			const save1 : ArrayList<number> = temp.get(i1);
+			const save2 : ArrayList<number> = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -341,16 +341,16 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @return ein leicht permutiertes Array aller Klausurgruppen sortiert nach höheren Knotengrad zuerst.
 	 */
-	gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() : Vector<Vector<number>> {
-		const temp : Vector<Vector<number>> = new Vector();
+	gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert() : ArrayList<ArrayList<number>> {
+		const temp : ArrayList<ArrayList<number>> = new ArrayList();
 		temp.addAll(this._klausurGruppenGrad);
 		const size : number = temp.size();
 		for (let i1 : number = 0; i1 < size; i1++) {
 			const i2 : number = this._random.nextInt(size);
 			if ((i1 - i2) * (i1 - i2) >= size)
 				continue;
-			const save1 : Vector<number> = temp.get(i1);
-			const save2 : Vector<number> = temp.get(i2);
+			const save1 : ArrayList<number> = temp.get(i1);
+			const save2 : ArrayList<number> = temp.get(i2);
 			temp.set(i1, save2);
 			temp.set(i2, save1);
 		}
@@ -362,9 +362,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @return die Klausurgruppe mit der geringsten Anzahl an Terminmöglichkeiten.
 	 */
-	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() : Vector<number> {
+	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten() : ArrayList<number> {
 		let min : number = this._klausurenAnzahl;
-		let gruppeMin : Vector<number> | null = null;
+		let gruppeMin : ArrayList<number> | null = null;
 		for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
 			if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
 				const terminmoeglichekeiten : number = this.gibTerminmoeglichkeiten(gruppe);
@@ -378,7 +378,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		return gruppeMin;
 	}
 
-	private gibTerminmoeglichkeiten(gruppe : Vector<number>) : number {
+	private gibTerminmoeglichkeiten(gruppe : ArrayList<number>) : number {
 		let summe : number = 0;
 		for (let terminNr : number = 0; terminNr < this._terminAnzahl; terminNr++)
 			if (this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
@@ -414,7 +414,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pGruppe die Gruppe aller Klausuren.
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
 	 */
-	private gibIstKlausurgruppeUnverteilt(pGruppe : Vector<number>) : boolean {
+	private gibIstKlausurgruppeUnverteilt(pGruppe : ArrayList<number>) : boolean {
 		for (const klausurNr of pGruppe)
 			if (this._klausurZuTermin[klausurNr] >= 0)
 				return false;
@@ -428,7 +428,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param  pTermin der Termin
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
 	 */
-	aktionSetzeKlausurgruppeInTermin(pGruppe : Vector<number>, pTermin : number) : boolean {
+	aktionSetzeKlausurgruppeInTermin(pGruppe : ArrayList<number>, pTermin : number) : boolean {
 		if (pTermin < 0)
 			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
 		if (pTermin >= this._terminAnzahl)
@@ -448,7 +448,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param  pGruppe die Gruppe aller Klausuren.
 	 * @param  pTermin der Termin
 	 */
-	aktionEntferneKlausurgruppeAusTermin(pGruppe : Vector<number>, pTermin : number) : void {
+	aktionEntferneKlausurgruppeAusTermin(pGruppe : ArrayList<number>, pTermin : number) : void {
 		if (pTermin < 0)
 			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
 		if (pTermin >= this._terminAnzahl)
@@ -465,7 +465,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
-	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : Vector<number>) : void {
+	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe : ArrayList<number>) : void {
 		for (const klausurNr of pGruppe)
 			if (this._klausurZuTermin[klausurNr] >= 0)
 				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!")
@@ -480,7 +480,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen.
 	 */
-	private aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(pGruppe : Vector<number>) : void {
+	private aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(pGruppe : ArrayList<number>) : void {
 		for (const terminNr of this.gibTermineInZufaelligerReihenfolge())
 			if (this.aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
 				return;
@@ -511,9 +511,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return die berechnete Zuordnung als Liste (Termine) von Listen (KlausurIDs).
 	 */
 	gibErzeugeOutput() : List<List<number>> {
-		const out : List<List<number>> = new Vector();
+		const out : List<List<number>> = new ArrayList();
 		for (let i : number = 0; i < this._terminAnzahl; i++)
-			out.add(new Vector());
+			out.add(new ArrayList());
 		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
 			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
 			if (klausurID === null)

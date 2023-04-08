@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { FachgruppenKatalogEintrag } from '../../../core/data/fach/FachgruppenKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { RGBFarbe } from '../../../core/data/RGBFarbe';
 
 export class Fachgruppe extends JavaObject {
@@ -199,7 +199,7 @@ export class Fachgruppe extends JavaObject {
 	/**
 	 * Die Schulformen, bei welchen die Fachgruppe vorkommt
 	 */
-	private schulformen : Array<Vector<Schulform>>;
+	private schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine neue Fachgruppe in der Aufzählung.
@@ -217,7 +217,7 @@ export class Fachgruppe extends JavaObject {
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector();
+			this.schulformen[i] = new ArrayList();
 			for (const kuerzel of historie[i].schulformen) {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
@@ -337,7 +337,7 @@ export class Fachgruppe extends JavaObject {
 	 * @return die Fachgruppen in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<Fachgruppe> {
-		const faecher : Vector<Fachgruppe> = new Vector();
+		const faecher : ArrayList<Fachgruppe> = new ArrayList();
 		if (schulform === null)
 			return faecher;
 		const fachgruppen : Array<Fachgruppe> = Fachgruppe.values();

@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -27,6 +27,6 @@ public class GostLeistungenFachwahl {
 	public boolean istFSNeu = false; // pruefe durch Lesen aus den Leistungsdaten, nur true false keine gültige Belegung in der Sprachenfolge aus den Jahrgaenge vorher vorhanden ist
 
 	/** Die einzelnen Belegungen dieses Faches */
-	public final @NotNull Vector<@NotNull GostLeistungenFachbelegung> belegungen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostLeistungenFachbelegung> belegungen = new ArrayList<>();
 
 }

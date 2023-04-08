@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { Pair } from '../../../core/adt/Pair';
 
 export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
@@ -26,7 +26,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 	/**
 	 * Die Informationen zu Schulformen und -gliederungen, wo die Herkunfts-Schulnummer zulässig ist.
 	 */
-	public zulaessig : List<SchulformSchulgliederung> = new Vector();
+	public zulaessig : List<SchulformSchulgliederung> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr die Herkunfts-Schulnummer einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

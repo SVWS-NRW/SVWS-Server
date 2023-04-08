@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -25,16 +25,16 @@ import jakarta.validation.constraints.NotNull;
 public final class Fremdsprachen extends GostBelegpruefung {
 
 	/// Die Belegungen für alle Fächer der Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen = new Vector<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen = new ArrayList<>();
 
 	/// Die Belegungen für alle neu einsetzenden Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen_neu = new Vector<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen_neu = new ArrayList<>();
 
 	/// Die Belegungen für alle fortgeführten Fremdsprachen
-	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen_fortgefuehrt = new Vector<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> fremdsprachen_fortgefuehrt = new ArrayList<>();
 
 	/// Die Belegungen von bilingualen Sachfächern
-	private @NotNull List<@NotNull AbiturFachbelegung> biliSachfaecher = new Vector<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> biliSachfaecher = new ArrayList<>();
 
 	/** Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
 	 * - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde) */

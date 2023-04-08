@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -38,21 +38,21 @@ public class GostBlockungsdaten {
 	public boolean istAktiv = false;
 
 	/** Die Definition der Schienen */
-	public @NotNull List<@NotNull GostBlockungSchiene> schienen = new Vector<>();
+	public @NotNull List<@NotNull GostBlockungSchiene> schienen = new ArrayList<>();
 
 	/** Die Definition der Regeln */
-	public @NotNull List<@NotNull GostBlockungRegel> regeln = new Vector<>();
+	public @NotNull List<@NotNull GostBlockungRegel> regeln = new ArrayList<>();
 
 	/** Die für die Blockung angelegten Kurse */
-	public @NotNull List<@NotNull GostBlockungKurs> kurse = new Vector<>();
+	public @NotNull List<@NotNull GostBlockungKurs> kurse = new ArrayList<>();
 
 	/** Die SchülerInnen für die Blockung. */
-	public @NotNull List<@NotNull Schueler> schueler = new Vector<>();
+	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
 
 	/** Die Fachwahlen für die Blockung */
-	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new Vector<>();
+	public @NotNull List<@NotNull GostFachwahl> fachwahlen = new ArrayList<>();
 
 	/** Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.  */
-	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new Vector<>();
+	public final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisse = new ArrayList<>();
 
 }

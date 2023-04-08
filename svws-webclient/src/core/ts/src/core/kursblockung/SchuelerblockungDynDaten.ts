@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { SchuelerblockungOutput } from '../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
+import { ArrayList } from '../../java/util/ArrayList';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { JavaInteger } from '../../java/lang/JavaInteger';
@@ -9,7 +10,6 @@ import { SchuelerblockungInput } from '../../core/data/kursblockung/Schuelerbloc
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
 import { Arrays } from '../../java/util/Arrays';
-import { Vector } from '../../java/util/Vector';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -26,7 +26,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private readonly nSchienen : number;
 
-	private readonly _fachwahlZuKurse : Vector<Vector<SchuelerblockungInputKurs>>;
+	private readonly _fachwahlZuKurse : ArrayList<ArrayList<SchuelerblockungInputKurs>>;
 
 	private readonly _fachwahlZuHatMultikurse : Array<boolean>;
 
@@ -64,7 +64,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		this.aktionPruefeEingabedaten(pInput);
 		this.nFachwahlen = pInput.fachwahlen.size();
 		this.nSchienen = pInput.schienen;
-		this._fachwahlZuKurse = new Vector();
+		this._fachwahlZuKurse = new ArrayList();
 		this._fachwahlZuHatMultikurse = Array(this.nFachwahlen).fill(false);
 		this._fachwahlZuFachID = Array(this.nFachwahlen).fill(0);
 		this._fachwahlZuKursartID = Array(this.nFachwahlen).fill(0);
@@ -172,7 +172,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
 			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
-			const kurse : Vector<SchuelerblockungInputKurs> | null = new Vector();
+			const kurse : ArrayList<SchuelerblockungInputKurs> | null = new ArrayList();
 			let hatFixiertenKurs : boolean = false;
 			for (const kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
@@ -290,7 +290,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			}
 	}
 
-	private static gibKleinstenKursInSchiene(pKurse : Vector<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
+	private static gibKleinstenKursInSchiene(pKurse : ArrayList<SchuelerblockungInputKurs>, pSchiene : number) : SchuelerblockungInputKurs | null {
 		const maxSuS : number = JavaInteger.MAX_VALUE;
 		let best : SchuelerblockungInputKurs | null = null;
 		for (const kurs of pKurse)

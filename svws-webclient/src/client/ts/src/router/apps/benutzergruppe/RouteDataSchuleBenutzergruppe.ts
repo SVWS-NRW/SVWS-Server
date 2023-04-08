@@ -1,4 +1,4 @@
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, Vector } from "@svws-nrw/svws-core";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, List, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,11 +17,11 @@ interface RoutStateSchuleBenutzergruppe {
 export class RouteDataSchuleBenutzergruppe {
 	private static _defaultState : RoutStateSchuleBenutzergruppe = {
 		auswahl: undefined,
-		listBenutzergruppe: new Vector(),
+		listBenutzergruppe: new ArrayList(),
 		mapBenutzergruppe: new Map<number, BenutzergruppeListeEintrag>,
 		benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
-		listBenutzerAlle: new Vector(),
-		listBenutzergruppenBenutzer: new Vector(),
+		listBenutzerAlle: new ArrayList(),
+		listBenutzergruppenBenutzer: new ArrayList(),
 		daten: undefined,
 	}
 
@@ -74,10 +74,10 @@ export class RouteDataSchuleBenutzergruppe {
 		if ((benutzerGruppe === undefined) || (this.mapBenutzergruppe.size === 0)) {
 			this.setPatchedDefaultState({
 				auswahl: undefined,
-				listBenutzergruppe: new Vector(),
+				listBenutzergruppe: new ArrayList(),
 				mapBenutzergruppe: new Map(),
 				benutzergruppenManager: new BenutzergruppenManager(new BenutzergruppeDaten()),
-				listBenutzerAlle: new Vector(),
+				listBenutzerAlle: new ArrayList(),
 				daten: undefined,
 
 			})
@@ -230,7 +230,7 @@ export class RouteDataSchuleBenutzergruppe {
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
-		const kid = new Vector<number>();
+		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
 		if (!this.benutzergruppenManager)
 			return false;
@@ -250,7 +250,7 @@ export class RouteDataSchuleBenutzergruppe {
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
 	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
-		const kid = new Vector<number>();
+		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
 		if (!this.benutzergruppenManager)
 			return false;
@@ -270,7 +270,7 @@ export class RouteDataSchuleBenutzergruppe {
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
 	 */
 	 addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
-		const kids  = new Vector<number>();
+		const kids  = new ArrayList<number>();
 		if (!this.benutzergruppenManager)
 			return false;
 		if (!this.benutzergruppenManager.istAdmin()) {
@@ -296,7 +296,7 @@ export class RouteDataSchuleBenutzergruppe {
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
 	 removeBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
-		const kids = new Vector<number>();
+		const kids = new ArrayList<number>();
 		if (!this.benutzergruppenManager)
 			return false;
 		if (!this.benutzergruppenManager.istAdmin()) {
@@ -343,7 +343,7 @@ export class RouteDataSchuleBenutzergruppe {
 	 * Entfernt die ausgewählten Benutzergruppen
 	 */
 	deleteBenutzergruppe_n = async (selectedItems: BenutzergruppeListeEintrag[]) => {
-		const bids = new Vector<number>();
+		const bids = new ArrayList<number>();
 		for ( const b of selectedItems){
 			bids.add(b.id)
 		}
@@ -377,13 +377,13 @@ export class RouteDataSchuleBenutzergruppe {
 	addBenutzerToBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
 		if (!this.benutzergruppenManager)
 			return;
-		const b_ids = new Vector<number>();
+		const b_ids = new ArrayList<number>();
 		b_ids.add(benutzer.id);
 		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema,this.benutzergruppenManager.getID()) as BenutzergruppeDaten;
 		this._state.value.listBenutzergruppenBenutzer.add(benutzer);
 		const temp = this.listBenutzergruppenBenutzer;
 		const liste_benutzer_ids = new Set();
-		const temp_listBenutzerAlle = new Vector<BenutzerListeEintrag>();
+		const temp_listBenutzerAlle = new ArrayList<BenutzerListeEintrag>();
 
 		for(const b of this.listBenutzergruppenBenutzer){
 			liste_benutzer_ids.add(b.id)
@@ -409,7 +409,7 @@ export class RouteDataSchuleBenutzergruppe {
 	removeBenutzerFromBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
 		if (!this.benutzergruppenManager)
 			return;
-		const bg_ids = new Vector<number>();
+		const bg_ids = new ArrayList<number>();
 		bg_ids.add(benutzer.id);
 		const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID()) as BenutzergruppeDaten;
 		this.listBenutzergruppenBenutzer.remove(benutzer);

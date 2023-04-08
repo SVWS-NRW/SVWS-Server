@@ -3,7 +3,7 @@ package de.svws_nrw.data.gost;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
@@ -57,7 +57,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		if (schuelerAbijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
 		if (schuelerAbijahrgang.size() == 0)
-			return new Vector<>();
+			return new ArrayList<>();
 		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.size() == 0))
@@ -73,7 +73,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
 		if (schuelerListe.size() == 0) {
-			final List<SchuelerListeEintrag> daten = new Vector<>();
+			final List<SchuelerListeEintrag> daten = new ArrayList<>();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();

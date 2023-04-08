@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 
 export class GostBlockungsergebnisKurs extends JavaObject {
 
@@ -26,12 +26,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	/**
 	 * Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind.
 	 */
-	public readonly schueler : Vector<number> = new Vector();
+	public readonly schueler : ArrayList<number> = new ArrayList();
 
 	/**
 	 * Die Schienen-IDs, denen der Kurs zugeordnet ist.
 	 */
-	public readonly schienen : Vector<number> = new Vector();
+	public readonly schienen : ArrayList<number> = new ArrayList();
 
 
 	public constructor() {

@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.schule;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AbgangsartKatalogDaten;
@@ -28,7 +28,7 @@ public class AbgangsartenManager {
 	private final long _version;
 
 	/** Die kombinierten Daten der beiden Kataloge */
-	private final @NotNull Vector<@NotNull AbgangsartKatalogEintrag> _alle = new Vector<>();
+	private final @NotNull ArrayList<@NotNull AbgangsartKatalogEintrag> _alle = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf die Abgangsarten anhand des Kürzels. */
 	private final @NotNull HashMap<@NotNull String, @NotNull AbgangsartKatalogEintrag> _mapByKuerzel = new HashMap<>();

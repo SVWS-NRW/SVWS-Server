@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.kaoa;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.kaoa.KAOAKategorie;
@@ -42,7 +42,7 @@ public class KAOAMerkmalEintrag {
 
 	/** Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf */
 	@Schema(description = "die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf")
-	public @NotNull List<@NotNull String> bkAnlagen = new Vector<>();
+	public @NotNull List<@NotNull String> bkAnlagen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")

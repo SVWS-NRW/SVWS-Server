@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach } from '../../../core/data/gost/GostFach';
-import { Vector } from '../../../java/util/Vector';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostLeistungenFachbelegung } from '../../../core/data/gost/GostLeistungenFachbelegung';
 
 export class GostLeistungenFachwahl extends JavaObject {
@@ -23,7 +23,7 @@ export class GostLeistungenFachwahl extends JavaObject {
 	/**
 	 * Die einzelnen Belegungen dieses Faches
 	 */
-	public readonly belegungen : Vector<GostLeistungenFachbelegung> = new Vector();
+	public readonly belegungen : ArrayList<GostLeistungenFachbelegung> = new ArrayList();
 
 
 	public constructor() {

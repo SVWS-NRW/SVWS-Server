@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.Pair;
@@ -41,7 +41,7 @@ public class SchemaTabelle {
 
 
 	/** Die Spalten der Tabelle*/
-	private final Vector<SchemaTabelleSpalte> _spalten = new Vector<>();
+	private final ArrayList<SchemaTabelleSpalte> _spalten = new ArrayList<>();
 
 	/** Eine Map für die Spalten der Tabelle */
 	private final LinkedHashMap<String, SchemaTabelleSpalte> _mapSpalten = new LinkedHashMap<>();
@@ -53,16 +53,16 @@ public class SchemaTabelle {
 	private final LinkedHashSet<SchemaTabelleSpalte> _pkSpalten = new LinkedHashSet<>();
 
 	/** Die Fremdschlüssel dieser Tabelle */
-	private final Vector<SchemaTabelleFremdschluessel> _fremdschluessel = new Vector<>();
+	private final ArrayList<SchemaTabelleFremdschluessel> _fremdschluessel = new ArrayList<>();
 
 	/** Die Indizes dieser Tabelle */
-	private final Vector<SchemaTabelleIndex> _indizes = new Vector<>();
+	private final ArrayList<SchemaTabelleIndex> _indizes = new ArrayList<>();
 
 	/** Die Unqiue-Indizes dieser Tabelle */
-	private final Vector<SchemaTabelleUniqueIndex> _unique = new Vector<>();
+	private final ArrayList<SchemaTabelleUniqueIndex> _unique = new ArrayList<>();
 
 	/** Die Trigger, die dieser Tabelle zugeordnet sind */
-	private final Vector<SchemaTabelleTrigger> _trigger = new Vector<>();
+	private final ArrayList<SchemaTabelleTrigger> _trigger = new ArrayList<>();
 
 	/** Der Core-Type, welcher dieser Tabelle für Update-Prozesse zugeordnet ist. */
 	private SchemaTabelleCoreType _coreType = null;
@@ -344,8 +344,8 @@ public class SchemaTabelle {
 		if (referenziert.length <= 0)
 			throw new RuntimeException("Ein Fremdschlüssel muss mindestens eine fremde Spalte referenzieren.");
 		SchemaTabelle tabReferenziert = null;
-		final Vector<SchemaTabelleSpalte> spalten = new Vector<>();
-		final Vector<SchemaTabelleSpalte> spaltenReferenziert = new Vector<>();
+		final ArrayList<SchemaTabelleSpalte> spalten = new ArrayList<>();
+		final ArrayList<SchemaTabelleSpalte> spaltenReferenziert = new ArrayList<>();
 		for (final Pair<SchemaTabelleSpalte, SchemaTabelleSpalte> ref : referenziert) {
 			if (ref.a.tabelle() != this)
 				throw new RuntimeException("Die Tabelle der ersten Spalte muss diese Tabelle referenzieren.");
@@ -639,7 +639,7 @@ public class SchemaTabelle {
      */
     public String getSQLTrigger(final DBDriver dbms, final long rev, final boolean create) {
     	// Lese die einzelnen Trigger aus
-    	final Vector<String> sqlTrigger = new Vector<>();
+    	final ArrayList<String> sqlTrigger = new ArrayList<>();
     	for (final SchemaTabelleTrigger t : this._trigger) {
     		if (!dbms.equals(t.dbms()))
     			continue;
@@ -733,7 +733,7 @@ public class SchemaTabelle {
 	 * @return das SQL-Skript zum Erstellen oder Entfernen von Triggern für das Auto-Inkrement
 	 */
 	public List<String> getPrimaerschluesselTriggerSQLList(final DBDriver dbms, final long rev, final boolean create) {
-		final Vector<String> result = new Vector<>();
+		final ArrayList<String> result = new ArrayList<>();
 		if ((!this._pkAutoIncrement) || (this._pkSpalten.size() != 1))
 			return result;
 		// DBDriver.MDB wird hier nicht unterstützt !!!

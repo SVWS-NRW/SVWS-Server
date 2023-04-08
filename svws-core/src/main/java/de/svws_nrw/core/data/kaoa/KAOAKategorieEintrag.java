@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.kaoa;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
@@ -33,7 +33,7 @@ public class KAOAKategorieEintrag {
 
 	/** Jahrgangsstufen in denen der Eintrag gemacht werden darf */
 	@Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")
-	public @NotNull List<@NotNull String> jahrgaenge = new Vector<>();
+	public @NotNull List<@NotNull String> jahrgaenge = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2020")

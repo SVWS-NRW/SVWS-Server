@@ -3,10 +3,10 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Collection } from '../../../java/util/Collection';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Vector } from '../../../java/util/Vector';
 import { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
@@ -164,12 +164,12 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
-	 * Erstellt aus der internen Liste einen Vector mit den Daten
+	 * Erstellt aus der internen Liste einen ArrayList mit den Daten
 	 *
-	 * @return ein Vector mit den Fächern
+	 * @return ein ArrayList mit den Fächern
 	 */
-	public toVector() : Vector<GostFach> {
-		const result : Vector<GostFach> = new Vector();
+	public toArrayList() : ArrayList<GostFach> {
+		const result : ArrayList<GostFach> = new ArrayList();
 		for (const fach of this._faecher)
 			result.add(fach);
 		return result;

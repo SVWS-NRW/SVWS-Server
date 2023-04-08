@@ -3,7 +3,7 @@ package de.svws_nrw.core.kursblockung.test;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.DisplayName;
@@ -143,7 +143,7 @@ public class SchuelerblockungTests {
 
 		// Keine Fachwahlen vorhanden?
 		@NotNull
-		final Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
+		final ArrayList<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlen = out.fachwahlenZuKurs;
 		if (fachwahlen == null) {
 			fail("SchuelerblockungOutput.fachwahlenZuKurs == null");
 			return;

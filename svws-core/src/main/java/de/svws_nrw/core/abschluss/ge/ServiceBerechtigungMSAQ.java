@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import de.svws_nrw.core.Service;
@@ -144,7 +144,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 
 		// Prüfe, ob in FG1 oder FG2 Fächer vorhanden sind, die nicht ausgeglichen werden können und in denen keine Nachprüfung möglich ist
 		boolean nachpruefung_genutzt = false;
-		final @NotNull List<@NotNull GEAbschlussFach> npFaecher = new Vector<>();
+		final @NotNull List<@NotNull GEAbschlussFach> npFaecher = new ArrayList<>();
 		final @NotNull List<@NotNull GEAbschlussFach> fg1_nicht_ausgleichbar = faecher.fg1.getFaecher(filterFG1NichtAusgleichbar);
 		final @NotNull List<@NotNull GEAbschlussFach> fg2_nicht_ausgleichbar = faecher.fg2.getFaecher(filterFG2NichtAusgleichbar);
 		if ((!fg1_nicht_ausgleichbar.isEmpty()) || (!fg2_nicht_ausgleichbar.isEmpty())) {

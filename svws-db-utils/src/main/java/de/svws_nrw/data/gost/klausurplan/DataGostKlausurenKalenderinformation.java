@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenKalenderinformation;
@@ -68,7 +68,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	private List<GostKlausurenKalenderinformation> getKalenderinformationen() {
 		final List<DTOGostKlausurenKalenderinformationen> kalInfos = conn
 				.queryAll(DTOGostKlausurenKalenderinformationen.class);
-		final List<GostKlausurenKalenderinformation> daten = new Vector<>();
+		final List<GostKlausurenKalenderinformation> daten = new ArrayList<>();
 		for (final DTOGostKlausurenKalenderinformationen ki : kalInfos)
 			daten.add(dtoMapper.apply(ki));
 		return daten;

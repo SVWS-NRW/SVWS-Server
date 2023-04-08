@@ -2,12 +2,12 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { RGBFarbe } from '../../../core/data/RGBFarbe';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 import { FachKatalogEintrag } from '../../../core/data/fach/FachKatalogEintrag';
 import { Pair } from '../../../core/adt/Pair';
 
@@ -1473,7 +1473,7 @@ export class ZulaessigesFach extends JavaObject {
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist
 	 */
-	private zulaessig : Array<Vector<Pair<Schulform | null, Schulgliederung | null>>>;
+	private zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
 
 	/**
 	 * Erzeugt eine zulässiges Fach in der Aufzählung.
@@ -1490,7 +1490,7 @@ export class ZulaessigesFach extends JavaObject {
 		this.daten = historie[historie.length - 1];
 		this.zulaessig = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.zulaessig[i] = new Vector();
+			this.zulaessig[i] = new ArrayList();
 			for (const kuerzelSfSgl of historie[i].zulaessig) {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzelSfSgl.schulform);
 				if (sf === null)
@@ -1541,7 +1541,7 @@ export class ZulaessigesFach extends JavaObject {
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
 	public static get(schulform : Schulform | null) : List<ZulaessigesFach | null> {
-		const faecher : Vector<ZulaessigesFach | null> = new Vector();
+		const faecher : ArrayList<ZulaessigesFach | null> = new ArrayList();
 		if (schulform === null)
 			return faecher;
 		for (const fach of ZulaessigesFach.values())

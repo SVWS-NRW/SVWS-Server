@@ -3,12 +3,12 @@ import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/Schul
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchulgliederungKatalogEintrag } from '../../../core/data/schule/SchulgliederungKatalogEintrag';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { List } from '../../../java/util/List';
 import { JavaString } from '../../../java/lang/JavaString';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 
 export class Schulgliederung extends JavaObject {
 
@@ -638,7 +638,7 @@ export class Schulgliederung extends JavaObject {
 	/**
 	 * Die Schulformen, bei welchen die Schulgliederung vorkommt
 	 */
-	private schulformen : Array<Vector<Schulform>>;
+	private schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt eine neue Schulgliederung in der Aufzählung.
@@ -655,7 +655,7 @@ export class Schulgliederung extends JavaObject {
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector();
+			this.schulformen[i] = new ArrayList();
 			for (const kuerzel of historie[i].schulformen) {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
@@ -725,7 +725,7 @@ export class Schulgliederung extends JavaObject {
 	 * @return die zugehörigen Schulgliederungen
 	 */
 	public static getByBkIndex(index : number) : List<Schulgliederung> {
-		const result : Vector<Schulgliederung> = new Vector();
+		const result : ArrayList<Schulgliederung> = new ArrayList();
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();
 		for (let i : number = 0; i < gliederungen.length; i++) {
 			const gliederung : Schulgliederung = gliederungen[i];
@@ -752,7 +752,7 @@ export class Schulgliederung extends JavaObject {
 	 * @return die bei der Schulform zulässigen Gliederungen
 	 */
 	public static get(schulform : Schulform | null) : List<Schulgliederung> {
-		const result : Vector<Schulgliederung> = new Vector();
+		const result : ArrayList<Schulgliederung> = new ArrayList();
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Schulgliederung> = Schulgliederung.values();

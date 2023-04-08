@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -131,7 +131,7 @@ public final class ABPSchuldaten {
 		try {
 			String zkGeBeginn;
 			String zkSoWiBeginn;
-			final List<ABPSchuldaten> liste = new Vector<>();
+			final List<ABPSchuldaten> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_Schuldaten");
 			for (final Row r : table) {
 				final ABPSchuldaten zuordnung = new ABPSchuldaten();
@@ -275,7 +275,7 @@ public final class ABPSchuldaten {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuldaten
 	 */
 	public static List<ABPSchuldaten> getDefault() {
-		final List<ABPSchuldaten> schuldaten = new Vector<>();
+		final List<ABPSchuldaten> schuldaten = new ArrayList<>();
 		return schuldaten;
 	}
 
@@ -290,7 +290,7 @@ public final class ABPSchuldaten {
 	 * @return der Eintrag für die Tabelle ABPSchuldaten
 	 */
 	public static List<ABPSchuldaten> get(final Schule schule, final String jahrgang) {
-		final List<ABPSchuldaten> lupoSchuldaten = new Vector<>();
+		final List<ABPSchuldaten> lupoSchuldaten = new ArrayList<>();
 		if (schule == null)
 			return lupoSchuldaten;
 		final var sf = schule.getSchulform();

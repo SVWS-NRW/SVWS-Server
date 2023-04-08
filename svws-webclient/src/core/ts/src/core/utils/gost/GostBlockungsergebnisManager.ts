@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -9,7 +10,6 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -56,9 +56,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_schienenID_kollisionen : HashMap<number, number> = new HashMap();
 
 	/**
-	 * Schienen-ID --> Fachart-ID --> Vector<Kurse> = Alle Kurse in der Schiene mit der Fachart.
+	 * Schienen-ID --> Fachart-ID --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart.
 	 */
-	private readonly _map_schienenID_fachartID_kurse : HashMap<number, HashMap<number, Vector<GostBlockungsergebnisKurs>>> = new HashMap();
+	private readonly _map_schienenID_fachartID_kurse : HashMap<number, HashMap<number, ArrayList<GostBlockungsergebnisKurs>>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Set<GostBlockungsergebnisKurs>
@@ -96,14 +96,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_kursID_schuelerIDs : HashMap<number, HashSet<number>> = new HashMap();
 
 	/**
-	 * Fach-ID --> Vector<GostBlockungsergebnisKurs>
+	 * Fach-ID --> ArrayList<GostBlockungsergebnisKurs>
 	 */
-	private readonly _map_fachID_kurse : HashMap<number, Vector<GostBlockungsergebnisKurs>> = new HashMap();
+	private readonly _map_fachID_kurse : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
-	 * Fachart-ID --> Vector<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart.
+	 * Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart.
 	 */
-	private readonly _map_fachartID_kurse : HashMap<number, Vector<GostBlockungsergebnisKurs>> = new HashMap();
+	private readonly _map_fachartID_kurse : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
 	 * Fachart-ID --> Integer = Kursdifferenz der Fachart.
@@ -206,16 +206,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
 			if (this._map_kursID_schuelerIDs.put(eKurs.id, new HashSet()) !== null)
 				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
-			let fachgruppe : Vector<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
+			let fachgruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
 			if (fachgruppe === null) {
-				fachgruppe = new Vector();
+				fachgruppe = new ArrayList();
 				this._map_fachID_kurse.put(eKurs.fachID, fachgruppe);
 			}
 			fachgruppe.add(eKurs);
 			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			let fachartgruppe : Vector<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(fachartID);
+			let fachartgruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(fachartID);
 			if (fachartgruppe === null) {
-				fachartgruppe = new Vector();
+				fachartgruppe = new ArrayList();
 				this._map_fachartID_kurse.put(fachartID, fachartgruppe);
 				this._map_fachartID_kursdifferenz.put(fachartID, 0);
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
@@ -225,12 +225,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
 			if (!this._map_fachartID_kurse.containsKey(fachartID))
-				this._map_fachartID_kurse.put(fachartID, new Vector());
+				this._map_fachartID_kurse.put(fachartID, new ArrayList());
 		}
 		for (const gSchiene of this._parent.daten().schienen) {
 			this._map_schienenID_fachartID_kurse.put(gSchiene.id, new HashMap());
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
-				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new Vector());
+				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList());
 		}
 		for (const gSchueler of this._parent.daten().schueler) {
 			const eSchuelerID : number = gSchueler.id;
@@ -265,7 +265,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateRegelvalidierung() : void {
-		const regelVerletzungen : Vector<number> = this._ergebnis.bewertung.regelVerletzungen;
+		const regelVerletzungen : ArrayList<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
@@ -406,7 +406,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const schuelerIDsOfKurs : HashSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
 		const mapSFK : HashMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
-		kurs.schueler.removeElement(pSchuelerID);
+		kurs.schueler.remove(pSchuelerID);
 		kurseOfSchueler.remove(kurs);
 		schuelerIDsOfKurs.remove(pSchuelerID);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
@@ -434,7 +434,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		if (schienenOfKurs.contains(schiene))
 			return false;
-		const kursGruppe : Vector<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
+		const kursGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
 		if (kursGruppe === null)
 			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL")
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
@@ -466,17 +466,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		if (!schienenOfKurs.contains(schiene))
 			return false;
-		const kursGruppe : Vector<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
+		const kursGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
 		if (kursGruppe === null)
 			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL")
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kurs.schienen.removeElement(schiene.id);
-		schiene.kurse.removeElement(kurs);
+		kurs.schienen.remove(schiene.id);
+		schiene.kurse.remove(kurs);
 		schienenOfKurs.remove(schiene);
 		for (const schuelerID of kurs.schueler)
 			this.stateSchuelerSchieneEntfernen(schuelerID!, schiene.id, kurs);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kursGruppe.removeElement(kurs);
+		kursGruppe.remove(kurs);
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
 		this.stateRegelvalidierung();
 		return true;
@@ -520,7 +520,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateKursdifferenzUpdate(pFachartID : number) : void {
 		const oldKD : number = this.getOfFachartKursdifferenz(pFachartID);
-		const kurs1 : GostBlockungsergebnisKurs | null = this.getOfFachartKursmenge(pFachartID).firstElement();
+		const kurs1 : GostBlockungsergebnisKurs | null = this.getOfFachartKursmenge(pFachartID).get(0);
 		if (kurs1 === null)
 			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " ohne Kurs!")
 		let min : number = kurs1.schueler.size();
@@ -725,8 +725,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pFachID  Die Datenbank-ID des Faches.
 	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
-	public getOfFachKursmenge(pFachID : number) : Vector<GostBlockungsergebnisKurs> {
-		const kurseOfFach : Vector<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
+	public getOfFachKursmenge(pFachID : number) : ArrayList<GostBlockungsergebnisKurs> {
+		const kurseOfFach : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
 		if (kurseOfFach === null)
 			throw new DeveloperNotificationException("Fach-ID " + pFachID + " unbekannt!")
 		return kurseOfFach;
@@ -742,8 +742,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
-	public getOfFachartKursmenge(pFachartID : number) : Vector<GostBlockungsergebnisKurs> {
-		const fachartGruppe : Vector<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(pFachartID);
+	public getOfFachartKursmenge(pFachartID : number) : ArrayList<GostBlockungsergebnisKurs> {
+		const fachartGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(pFachartID);
 		if (fachartGruppe === null)
 			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!")
 		return fachartGruppe;
@@ -976,7 +976,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const fachwahl of fachwahlenDesSchuelers) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
-			const kurse : Vector<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
+			const kurse : ArrayList<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
 			for (const kurs of kurse) {
 				const inKurs : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
 				inKurs.id = kurs.id;
@@ -1123,7 +1123,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return         Ein Array aller Schienen-Nummern des Kurses.
 	 */
 	public getOfKursSchienenNummern(pKursID : number) : Array<number> {
-		const schienenIDs : Vector<number> = this.getKursE(pKursID).schienen;
+		const schienenIDs : ArrayList<number> = this.getKursE(pKursID).schienen;
 		const a : Array<number> | null = Array(schienenIDs.size()).fill(0);
 		for (let i : number = 0; i < a.length; i++) {
 			const schienenID : number = schienenIDs.get(i).valueOf();
@@ -1375,8 +1375,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
-	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : HashMap<number, Vector<GostBlockungsergebnisKurs>> {
-		const map : HashMap<number, Vector<GostBlockungsergebnisKurs>> | null = this._map_schienenID_fachartID_kurse.get(pSchienenID);
+	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> {
+		const map : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> | null = this._map_schienenID_fachartID_kurse.get(pSchienenID);
 		if (map === null)
 			throw new DeveloperNotificationException("Die Schienen-ID " + pSchienenID + " ist unbekannt!")
 		return map;
@@ -1449,8 +1449,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return eine gefilterte Menge aller Schüler.
 	 */
-	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : Vector<Schueler> {
-		const menge : Vector<Schueler> = new Vector();
+	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : ArrayList<Schueler> {
+		const menge : ArrayList<Schueler> = new ArrayList();
 		for (const schueler of this._parent.getMengeOfSchueler()) {
 			const pSchuelerID : number = schueler.id;
 			if ((pKonfliktTyp === 1) && (!this.getOfSchuelerHatKollision(pSchuelerID)))
@@ -1526,7 +1526,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Die Menge aller Schienen.
 	 */
-	public getMengeAllerSchienen() : Vector<GostBlockungsergebnisSchiene> {
+	public getMengeAllerSchienen() : ArrayList<GostBlockungsergebnisSchiene> {
 		return this._ergebnis.schienen;
 	}
 
@@ -1685,7 +1685,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			throw new DeveloperNotificationException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		for (const schienenID of kurs.schienen)
-			this.getSchieneE(schienenID!).kurse.removeElement(kurs);
+			this.getSchieneE(schienenID!).kurse.remove(kurs);
 		kurs.schienen.clear();
 		this.stateRevalidateEverything();
 	}

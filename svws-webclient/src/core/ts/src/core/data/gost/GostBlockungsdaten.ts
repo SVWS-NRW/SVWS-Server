@@ -3,10 +3,10 @@ import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { List } from '../../../java/util/List';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
-import { Vector } from '../../../java/util/Vector';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostBlockungsdaten extends JavaObject {
@@ -39,32 +39,32 @@ export class GostBlockungsdaten extends JavaObject {
 	/**
 	 * Die Definition der Schienen
 	 */
-	public schienen : List<GostBlockungSchiene> = new Vector();
+	public schienen : List<GostBlockungSchiene> = new ArrayList();
 
 	/**
 	 * Die Definition der Regeln
 	 */
-	public regeln : List<GostBlockungRegel> = new Vector();
+	public regeln : List<GostBlockungRegel> = new ArrayList();
 
 	/**
 	 * Die für die Blockung angelegten Kurse
 	 */
-	public kurse : List<GostBlockungKurs> = new Vector();
+	public kurse : List<GostBlockungKurs> = new ArrayList();
 
 	/**
 	 * Die SchülerInnen für die Blockung.
 	 */
-	public schueler : List<Schueler> = new Vector();
+	public schueler : List<Schueler> = new ArrayList();
 
 	/**
 	 * Die Fachwahlen für die Blockung
 	 */
-	public fachwahlen : List<GostFachwahl> = new Vector();
+	public fachwahlen : List<GostFachwahl> = new ArrayList();
 
 	/**
 	 * Eine Liste der Ergebnisse, die der Blockungsdefinition zugeordnet sind.
 	 */
-	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new Vector();
+	public readonly ergebnisse : List<GostBlockungsergebnisListeneintrag> = new ArrayList();
 
 
 	public constructor() {

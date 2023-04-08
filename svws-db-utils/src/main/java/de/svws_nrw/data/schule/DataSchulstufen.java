@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulstufe;
@@ -26,7 +26,7 @@ public final class DataSchulstufen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<SchulstufeKatalogEintrag> daten = new Vector<>();
+		final ArrayList<SchulstufeKatalogEintrag> daten = new ArrayList<>();
 		for (final Schulstufe schulstufe : Schulstufe.values())
 			daten.addAll(Arrays.asList(schulstufe.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

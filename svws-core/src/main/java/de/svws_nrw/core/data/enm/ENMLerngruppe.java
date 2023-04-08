@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 
@@ -51,7 +51,7 @@ public class ENMLerngruppe {
 	/** Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen zu den "
 			+ "IDs der Lehrer, die der Lerngruppe zugeordnet sind."))
-	public @NotNull Vector<@NotNull Long> lehrerID = new Vector<>();
+	public @NotNull ArrayList<@NotNull Long> lehrerID = new ArrayList<>();
 
 	/** Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. */
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")

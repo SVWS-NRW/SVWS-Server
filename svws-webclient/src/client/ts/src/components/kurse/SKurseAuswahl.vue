@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-	import { Vector } from "@svws-nrw/svws-core";
+	import { ArrayList } from "@svws-nrw/svws-core";
 	import { DataTableColumn } from "@ui";
 	import { Ref, ref, computed } from "vue";
 	import { KurseAuswahlProps } from "./SKurseAuswahlProps";
@@ -52,7 +52,7 @@
 	 *
 	 * @param jahrgaenge   die Liste von Jahrgangs-IDs
 	 */
-	function getJahrgangsKuerzel(jahrgaenge: Vector<number>) : string {
+	function getJahrgangsKuerzel(jahrgaenge: ArrayList<number>) : string {
 		// Prüfe zunächst, ob die Liste der Jahrgänge von dem Kurs einen Jahrgang der Map beinhaltet.
 		let found = false;
 		let result = "";

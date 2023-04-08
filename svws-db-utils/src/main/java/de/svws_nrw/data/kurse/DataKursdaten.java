@@ -2,7 +2,7 @@ package de.svws_nrw.data.kurse;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
@@ -74,7 +74,7 @@ public final class DataKursdaten extends DataManager<Long> {
 		// Bestimme die Schüler des Kurses
 		final List<DTOKursSchueler> listKursSchueler = conn.queryNamed("DTOKursSchueler.kurs_id", daten.id, DTOKursSchueler.class);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-    	final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.size() == 0)) ? new Vector<>()
+    	final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.size() == 0)) ? new ArrayList<>()
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		for (final DTOSchueler dto : listSchueler)
 			daten.schueler.add(DataSchuelerliste.mapToSchueler.apply(dto));

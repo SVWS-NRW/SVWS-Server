@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOAKategorie, cast_de_svws_nrw_core_types_kaoa_KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List, cast_java_util_List } from '../../../java/util/List';
 import { KAOAMerkmaleOptionsarten, cast_de_svws_nrw_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
-import { Vector } from '../../../java/util/Vector';
 
 export class KAOAMerkmalEintrag extends JavaObject {
 
@@ -36,7 +36,7 @@ export class KAOAMerkmalEintrag extends JavaObject {
 	/**
 	 * Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf
 	 */
-	public bkAnlagen : List<string> = new Vector();
+	public bkAnlagen : List<string> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

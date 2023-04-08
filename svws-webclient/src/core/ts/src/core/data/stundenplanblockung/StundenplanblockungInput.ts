@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanblockungLehrkraft';
 import { StundenplanblockungKopplung } from '../../../core/data/stundenplanblockung/StundenplanblockungKopplung';
 import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
 import { StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
-import { Vector } from '../../../java/util/Vector';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
 export class StundenplanblockungInput extends JavaObject {
@@ -12,32 +12,32 @@ export class StundenplanblockungInput extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lehrkraefte : Vector<StundenplanblockungLehrkraft> = new Vector();
+	public lehrkraefte : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public klassen : Vector<StundenplanblockungKlasse> = new Vector();
+	public klassen : ArrayList<StundenplanblockungKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public faecher : Vector<StundenplanblockungFach> = new Vector();
+	public faecher : ArrayList<StundenplanblockungFach> = new ArrayList();
 
 	/**
 	 * Alle Räume, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public raeume : Vector<StundenplanblockungRaum> = new Vector();
+	public raeume : ArrayList<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public kopplungen : Vector<StundenplanblockungKopplung> = new Vector();
+	public kopplungen : ArrayList<StundenplanblockungKopplung> = new ArrayList();
 
 	/**
 	 * Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lerngruppen : Vector<StundenplanblockungLerngruppe> = new Vector();
+	public lerngruppen : ArrayList<StundenplanblockungLerngruppe> = new ArrayList();
 
 
 	public constructor() {

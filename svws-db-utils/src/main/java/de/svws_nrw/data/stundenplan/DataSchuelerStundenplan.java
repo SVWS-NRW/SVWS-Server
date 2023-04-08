@@ -3,7 +3,7 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
@@ -70,9 +70,9 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 					.build();
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
-		final Vector<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
+		final ArrayList<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
 
-		final Vector<SchuelerStundenplanUnterricht> spUnterricht = new Vector<>();
+		final ArrayList<SchuelerStundenplanUnterricht> spUnterricht = new ArrayList<>();
 
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
 				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);

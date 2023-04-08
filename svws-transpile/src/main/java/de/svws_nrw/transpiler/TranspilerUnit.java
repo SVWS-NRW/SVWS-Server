@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -489,7 +488,7 @@ public final class TranspilerUnit {
 	private TypeMirror getIterableTypeArgument(final TypeElement elem) {
 		if ("java.lang.Iterable".equals(elem.getQualifiedName().toString()))
 			return null;
-		final Vector<TypeMirror> superTypes = new Vector<>();
+		final ArrayList<TypeMirror> superTypes = new ArrayList<>();
 		if ((elem.getSuperclass() != null) && (elem.getSuperclass().getKind() != TypeKind.NONE))
 			superTypes.add(elem.getSuperclass());
 		if (elem.getInterfaces() != null)

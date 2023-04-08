@@ -2,10 +2,10 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftsartKatalogEintrag } from '../../../core/data/schule/HerkunftsartKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule/HerkunftsartKatalogEintragBezeichnung';
-import { Vector } from '../../../java/util/Vector';
 
 export class Herkunftsarten extends JavaObject {
 
@@ -214,12 +214,12 @@ export class Herkunftsarten extends JavaObject {
 	/**
 	 * Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private schulformen : Array<Vector<Schulform | null>>;
+	private schulformen : Array<ArrayList<Schulform | null>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private bezeichnungen : Array<Vector<string>>;
+	private bezeichnungen : Array<ArrayList<string>>;
 
 	/**
 	 * Erzeugt eine neue Herkunftsart in der Aufzählung.
@@ -237,8 +237,8 @@ export class Herkunftsarten extends JavaObject {
 		this.schulformen = Array(historie.length).fill(null);
 		this.bezeichnungen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector();
-			this.bezeichnungen[i] = new Vector();
+			this.schulformen[i] = new ArrayList();
+			this.bezeichnungen[i] = new ArrayList();
 			for (const bez of historie[i].bezeichnungen) {
 				const sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
 				if (sf !== null)
@@ -337,7 +337,7 @@ export class Herkunftsarten extends JavaObject {
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
 	public static get(schulform : Schulform | null) : List<Herkunftsarten | null> {
-		const result : Vector<Herkunftsarten | null> = new Vector();
+		const result : ArrayList<Herkunftsarten | null> = new ArrayList();
 		if (schulform === null)
 			return result;
 		const herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();

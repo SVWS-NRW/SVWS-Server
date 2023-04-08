@@ -1,4 +1,4 @@
-import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, List, Vector } from "@svws-nrw/svws-core";
+import { BenutzerDaten, BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, Credentials, List, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -18,10 +18,10 @@ export class RouteDataSchuleBenutzer {
 
 	private static _defaultState : RouteStateSchuleBenutzer = {
 		auswahl: undefined,
-		listBenutzer: new Vector(),
+		listBenutzer: new ArrayList(),
 		mapBenutzer: new Map<number, BenutzerListeEintrag>,
 		benutzerManager: new BenutzerManager(new BenutzerDaten()),
-		listBenutzergruppen: new Vector(),
+		listBenutzergruppen: new ArrayList(),
 		daten: undefined,
 	}
 
@@ -73,10 +73,10 @@ export class RouteDataSchuleBenutzer {
 		if ((benutzer === undefined) || (this.mapBenutzer.size === 0)) {
 			this.setPatchedDefaultState({
 				auswahl: undefined,
-				listBenutzer: new Vector(),
+				listBenutzer: new ArrayList(),
 				mapBenutzer: new Map(),
 				benutzerManager: new BenutzerManager(new BenutzerDaten()),
-				listBenutzergruppen: new Vector(),
+				listBenutzergruppen: new ArrayList(),
 				daten: undefined,
 
 			})
@@ -254,12 +254,12 @@ export class RouteDataSchuleBenutzer {
 		if(bg_id != -1){
 			if (!this.benutzerManager)
 				return;
-			const bg_ids = new Vector<number>();
+			const bg_ids = new ArrayList<number>();
 			bg_ids.add(this.benutzerManager.getID());
 			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
 			this.benutzerManager.addToGruppe(result);
 		}else{
-			const benutzer_id = new Vector<number>();
+			const benutzer_id = new ArrayList<number>();
 			benutzer_id.add(this.benutzerManager?.getID() ?? null);
 			for(const bg of this.listBenutzergruppen){
 				if (!this.benutzerManager?.IstInGruppe(bg.id)) {
@@ -285,7 +285,7 @@ export class RouteDataSchuleBenutzer {
 	removeBenutzerFromBenutzergruppe = async (bg_id: number): Promise<void> => {
 		if (!this.benutzerManager)
 			return;
-		const ids = new Vector<number>();
+		const ids = new ArrayList<number>();
 		ids.add(this.benutzerManager.getID());
 		if (bg_id !== -1) {
 			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id) as BenutzergruppeDaten;
@@ -315,7 +315,7 @@ export class RouteDataSchuleBenutzer {
 	 * @param kompetenz   die hinzuzufügende Kompetenz
 	 */
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
-		const kid = new Vector<number>();
+		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
 		if (!this.benutzerManager)
 			return false;
@@ -335,7 +335,7 @@ export class RouteDataSchuleBenutzer {
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
 	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
-		const kid = new Vector<number>();
+		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
 		if (!this.benutzerManager)
 			return false;
@@ -355,7 +355,7 @@ export class RouteDataSchuleBenutzer {
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
 	 */
 	addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
-		const kids = new Vector<number>();
+		const kids = new ArrayList<number>();
 		if (!this.benutzerManager)
 			return false;
 		if (!this.benutzerManager.istAdmin()) {
@@ -386,7 +386,7 @@ export class RouteDataSchuleBenutzer {
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
 	 removeBenutzerKompetenzGruppe = async(kompetenzgruppe : BenutzerKompetenzGruppe) => {
-		const kids = new Vector<number>();
+		const kids = new ArrayList<number>();
 		if (!this.benutzerManager)
 			return false;
 		if (!this.benutzerManager.istAdmin()) {
@@ -434,7 +434,7 @@ export class RouteDataSchuleBenutzer {
 	 * Entfernt die ausgewählten Benutzer
 	 */
 	deleteBenutzerAllgemein = async (selectedItems: BenutzerListeEintrag[]) => {
-		const bids = new Vector<number>();
+		const bids = new ArrayList<number>();
 		let auswahl_gewaehlt = false;
 		if(this.auswahl !== undefined)
 			auswahl_gewaehlt= selectedItems.includes(this.auswahl);

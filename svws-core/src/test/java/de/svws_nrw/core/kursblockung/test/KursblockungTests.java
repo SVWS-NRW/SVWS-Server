@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.DisplayName;
@@ -210,7 +210,7 @@ public class KursblockungTests {
 		final GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -260,7 +260,7 @@ public class KursblockungTests {
 		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -315,7 +315,7 @@ public class KursblockungTests {
 			regelVerbieteSchuelerInKurs(kbInput, 18, gKurs.id);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -420,7 +420,7 @@ public class KursblockungTests {
 		final GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -469,7 +469,7 @@ public class KursblockungTests {
 		regelFixiereKursInSchiene(kbInput, 17, 1);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -523,7 +523,7 @@ public class KursblockungTests {
 			regelFixiereSchuelerInKurs(kbInput, schuelerID, 0);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -578,7 +578,7 @@ public class KursblockungTests {
 		man.addRegel(regel);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(man);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(man);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
@@ -728,7 +728,7 @@ public class KursblockungTests {
 		final GostBlockungsdatenManager kbInput = erzeugeZufallsdaten(pRandom);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		if (kbOutputs == null)
@@ -929,7 +929,7 @@ public class KursblockungTests {
 		kbInput.setMaxTimeMillis(100);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
-		final Vector<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
+		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";

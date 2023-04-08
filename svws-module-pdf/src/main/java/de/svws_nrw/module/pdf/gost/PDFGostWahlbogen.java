@@ -3,7 +3,7 @@ package de.svws_nrw.module.pdf.gost;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
@@ -201,7 +201,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
 		this.gostFaecher = gostFaecher;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toVector(), GostBelegpruefungsArt.GESAMT);
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
@@ -263,8 +263,8 @@ public final class PDFGostWahlbogen extends PDFCreator {
 			return;
 		}
 		// Unterscheide zwischen Fehler und Informationen
-		final Vector<String> fehler = new Vector<>();
-		final Vector<String> infos = new Vector<>();
+		final ArrayList<String> fehler = new ArrayList<>();
+		final ArrayList<String> infos = new ArrayList<>();
 		for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
 			final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 			if (art == GostBelegungsfehlerArt.HINWEIS) {

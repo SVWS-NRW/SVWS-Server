@@ -10,7 +10,7 @@ import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerConsole;
-import de.svws_nrw.core.logger.LogConsumerVector;
+import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.Benutzer;
@@ -41,7 +41,7 @@ public final class DataLupo {
      */
     public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart) {
     	final Logger logger = new Logger();
-    	final LogConsumerVector log = new LogConsumerVector();
+    	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
     	logger.addConsumer(new LogConsumerConsole());
 
@@ -102,7 +102,7 @@ public final class DataLupo {
      */
     public static Response exportMDB(final Benutzer user, final String jahrgang) {
     	final Logger logger = new Logger();
-    	final LogConsumerVector log = new LogConsumerVector();
+    	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
     	logger.addConsumer(new LogConsumerConsole());
 

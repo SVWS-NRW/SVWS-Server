@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.kursblockung;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -15,6 +15,6 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerblockungOutput {
 
 	/** Alle Fachwahlen-Zuordnungen. */
-	public @NotNull Vector<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new Vector<>();
+	public @NotNull ArrayList<@NotNull SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new ArrayList<>();
 
 }

@@ -32,7 +32,7 @@
 	import { computed, ComputedRef } from "vue";
 	import { AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, GostFaecherManager, GostHalbjahr,
 		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit,
-		GostSchuelerFachwahl, Jahrgaenge, List, Sprachbelegung, SprachendatenUtils, Vector, ZulaessigesFach } from "@svws-nrw/svws-core";
+		GostSchuelerFachwahl, Jahrgaenge, List, Sprachbelegung, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -89,7 +89,7 @@
 	}
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
-		const result = new Vector<GostJahrgangFachkombination>();
+		const result = new ArrayList<GostJahrgangFachkombination>();
 		for (const kombi of props.mapFachkombinationen.values())
 			if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.gostJahrgangsdaten.abiturjahr)
 				result.add(kombi)
@@ -97,7 +97,7 @@
 	});
 
 	const fachkombi_erforderlich: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
-		const result = new Vector<GostJahrgangFachkombination>()
+		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of fachkombis.value)
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ)
 				result.add(kombi);
@@ -105,7 +105,7 @@
 	})
 
 	const fachkombi_verboten: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
-		const result = new Vector<GostJahrgangFachkombination>()
+		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of fachkombis.value)
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ)
 				result.add(kombi);

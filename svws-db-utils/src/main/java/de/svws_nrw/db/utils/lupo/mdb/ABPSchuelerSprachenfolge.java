@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -54,7 +54,7 @@ public final class ABPSchuelerSprachenfolge {
 	 */
 	public static List<ABPSchuelerSprachenfolge> read(final Database db) {
 		try {
-			final List<ABPSchuelerSprachenfolge> liste = new Vector<>();
+			final List<ABPSchuelerSprachenfolge> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_SchuelerSprachenfolge");
 			for (final Row r : table) {
 				final ABPSchuelerSprachenfolge zuordnung = new ABPSchuelerSprachenfolge();
@@ -120,7 +120,7 @@ public final class ABPSchuelerSprachenfolge {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerSprachenfolge
 	 */
 	public static List<ABPSchuelerSprachenfolge> getDefault() {
-		final List<ABPSchuelerSprachenfolge> sprachenfolgen = new Vector<>();
+		final List<ABPSchuelerSprachenfolge> sprachenfolgen = new ArrayList<>();
 		return sprachenfolgen;
 	}
 

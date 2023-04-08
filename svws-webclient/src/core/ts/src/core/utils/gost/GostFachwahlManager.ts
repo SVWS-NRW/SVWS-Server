@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { HashSet } from '../../../java/util/HashSet';
 
@@ -11,7 +11,7 @@ export class GostFachwahlManager extends JavaObject {
 	/**
 	 * Die Liste mit den einzelnen Fachwahlen
 	 */
-	private readonly fachwahlen : Vector<GostFachwahl> = new Vector();
+	private readonly fachwahlen : ArrayList<GostFachwahl> = new ArrayList();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Schüler-IDs zu der FachID und der Kursart
@@ -21,12 +21,12 @@ export class GostFachwahlManager extends JavaObject {
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der FachID
 	 */
-	private readonly mapFach : HashMap<number, Vector<GostFachwahl>> = new HashMap();
+	private readonly mapFach : HashMap<number, ArrayList<GostFachwahl>> = new HashMap();
 
 	/**
 	 * Eine Map, mit einer Zuordnung der Fachwahlen zu der Schüler-ID
 	 */
-	private readonly mapSchueler : HashMap<number, Vector<GostFachwahl>> = new HashMap();
+	private readonly mapSchueler : HashMap<number, ArrayList<GostFachwahl>> = new HashMap();
 
 
 	/**
@@ -64,15 +64,15 @@ export class GostFachwahlManager extends JavaObject {
 		if (fachwahl === null)
 			return;
 		this.fachwahlen.add(fachwahl);
-		let fwFach : Vector<GostFachwahl> | null = this.mapFach.get(fachwahl.fachID);
+		let fwFach : ArrayList<GostFachwahl> | null = this.mapFach.get(fachwahl.fachID);
 		if (fwFach === null) {
-			fwFach = new Vector();
+			fwFach = new ArrayList();
 			this.mapFach.put(fachwahl.fachID, fwFach);
 		}
 		fwFach.add(fachwahl);
-		let fwSchueler : Vector<GostFachwahl> | null = this.mapSchueler.get(fachwahl.schuelerID);
+		let fwSchueler : ArrayList<GostFachwahl> | null = this.mapSchueler.get(fachwahl.schuelerID);
 		if (fwSchueler === null) {
-			fwSchueler = new Vector();
+			fwSchueler = new ArrayList();
 			this.mapSchueler.put(fachwahl.schuelerID, fwSchueler);
 		}
 		fwSchueler.add(fachwahl);
@@ -100,8 +100,8 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return die Liste der Fachwahlen des Faches
 	 */
 	public getFachwahlen(idFach : number) : List<GostFachwahl> {
-		const fwFach : Vector<GostFachwahl> | null = this.mapSchueler.get(idFach);
-		return (fwFach === null) ? new Vector() : fwFach;
+		const fwFach : ArrayList<GostFachwahl> | null = this.mapSchueler.get(idFach);
+		return (fwFach === null) ? new ArrayList() : fwFach;
 	}
 
 	/**
@@ -113,8 +113,8 @@ export class GostFachwahlManager extends JavaObject {
 	 * @return die Liste der Fachwahlen des Schülers
 	 */
 	public getSchuelerFachwahlen(idSchueler : number) : List<GostFachwahl> {
-		const fwSchueler : Vector<GostFachwahl> | null = this.mapSchueler.get(idSchueler);
-		return (fwSchueler === null) ? new Vector() : fwSchueler;
+		const fwSchueler : ArrayList<GostFachwahl> | null = this.mapSchueler.get(idSchueler);
+		return (fwSchueler === null) ? new ArrayList() : fwSchueler;
 	}
 
 	/**

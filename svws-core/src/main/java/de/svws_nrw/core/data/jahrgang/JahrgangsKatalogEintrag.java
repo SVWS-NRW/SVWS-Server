@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.jahrgang;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -27,7 +27,7 @@ public class JahrgangsKatalogEintrag {
 
 	/** Die Jahrgangsbezeichungen bei den zulässigen Schulformen. */
 	@Schema(description = "die Jahrgangsbezeichungen bei den zulässigen Schulformen")
-	public @NotNull List<@NotNull JahrgangsKatalogEintragBezeichnung> bezeichnungen = new Vector<>();
+	public @NotNull List<@NotNull JahrgangsKatalogEintragBezeichnung> bezeichnungen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

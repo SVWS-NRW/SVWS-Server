@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 import { JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
 
 export class JahrgangsKatalogEintrag extends JavaObject {
@@ -18,7 +18,7 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 	/**
 	 * Die Jahrgangsbezeichungen bei den zulässigen Schulformen.
 	 */
-	public bezeichnungen : List<JahrgangsKatalogEintragBezeichnung> = new Vector();
+	public bezeichnungen : List<JahrgangsKatalogEintragBezeichnung> = new ArrayList();
 
 	/**
 	 * Gibt an, in welchem Schuljahr der Jahrgang ergänzt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.

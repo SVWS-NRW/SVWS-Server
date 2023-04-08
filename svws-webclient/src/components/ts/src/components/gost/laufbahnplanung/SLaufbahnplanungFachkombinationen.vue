@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-	import { List, GostJahrgangFachkombination, Vector, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager, AbiturdatenManager, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
+	import { List, GostJahrgangFachkombination, ArrayList, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager, AbiturdatenManager, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -27,7 +27,7 @@
 	}>();
 
 	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
-		const result = new Vector<GostJahrgangFachkombination>()
+		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
@@ -41,7 +41,7 @@
 	}
 
 	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
-		const result = new Vector<GostJahrgangFachkombination>()
+		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {

@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../core/data/schueler/Schueler';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class KlassenListeEintrag extends JavaObject {
 
@@ -38,12 +38,12 @@ export class KlassenListeEintrag extends JavaObject {
 	/**
 	 * Die Liste der IDs der Klassen-Lehrer der Klasse.
 	 */
-	public klassenLehrer : Vector<number> | null = new Vector();
+	public klassenLehrer : ArrayList<number> | null = new ArrayList();
 
 	/**
 	 * Die Schüler der Klasse.
 	 */
-	public schueler : List<Schueler> = new Vector();
+	public schueler : List<Schueler> = new ArrayList();
 
 
 	public constructor() {

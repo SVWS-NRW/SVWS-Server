@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +27,6 @@ public class BerufskollegFachklassenKatalogEintrag {
 
 	/** Die Historie des Katalog-Eintrags. */
 	@Schema(description = "die Historie des Katalog-Eintrags")
-	public @NotNull List<@NotNull BerufskollegFachklassenKatalogDaten> historie = new Vector<>();
+	public @NotNull List<@NotNull BerufskollegFachklassenKatalogDaten> historie = new ArrayList<>();
 
 }

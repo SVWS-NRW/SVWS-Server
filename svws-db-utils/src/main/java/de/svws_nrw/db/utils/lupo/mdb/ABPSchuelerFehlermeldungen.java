@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -51,7 +51,7 @@ public final class ABPSchuelerFehlermeldungen {
 	 */
 	public static List<ABPSchuelerFehlermeldungen> read(final Database db) {
 		try {
-			final List<ABPSchuelerFehlermeldungen> liste = new Vector<>();
+			final List<ABPSchuelerFehlermeldungen> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_SchuelerFehlermeldungen");
 			for (final Row r : table) {
 				final ABPSchuelerFehlermeldungen fehler = new ABPSchuelerFehlermeldungen();
@@ -107,7 +107,7 @@ public final class ABPSchuelerFehlermeldungen {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFehlermeldungen
 	 */
 	public static List<ABPSchuelerFehlermeldungen> getDefault() {
-		final List<ABPSchuelerFehlermeldungen> fehlermeldungen = new Vector<>();
+		final List<ABPSchuelerFehlermeldungen> fehlermeldungen = new ArrayList<>();
 		return fehlermeldungen;
 	}
 

@@ -3,7 +3,7 @@ package de.svws_nrw.core.types.gost;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -93,9 +93,9 @@ public enum GostFachbereich {
 
 
 	/** Eine Liste der Fächern dieses Fachbereichs */
-	private final @NotNull Vector<@NotNull ZulaessigesFach> faecher = new Vector<>();
+	private final @NotNull ArrayList<@NotNull ZulaessigesFach> faecher = new ArrayList<>();
 	/** Eine Liste der Fächerkürzel dieses Fachbereichs */
-	private final @NotNull Vector<@NotNull String> kuerzel = new Vector<>();
+	private final @NotNull ArrayList<@NotNull String> kuerzel = new ArrayList<>();
 
 
 	/**
@@ -133,7 +133,7 @@ public enum GostFachbereich {
 				for (final ZulaessigesFach fach : fb.faecher) {
 					List<@NotNull GostFachbereich> listFachbereichByFach = _mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach == null) {
-						listFachbereichByFach = new Vector<>();
+						listFachbereichByFach = new ArrayList<>();
 						_mapFachbereichByFach.put(fach, listFachbereichByFach);
 					}
 					listFachbereichByFach.add(fb);
@@ -191,12 +191,12 @@ public enum GostFachbereich {
 	 */
 	public static @NotNull List<@NotNull GostFachbereich> getBereiche(final GostFach fach) {
 		if (fach == null)
-			return new Vector<>();
+			return new ArrayList<>();
 		final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		final List<@NotNull GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
 		if (bereiche != null)
 			return bereiche;
-		return new Vector<>();
+		return new ArrayList<>();
 	}
 
 }

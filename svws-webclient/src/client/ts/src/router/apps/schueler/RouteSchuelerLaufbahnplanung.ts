@@ -1,6 +1,6 @@
 import { Abiturdaten, AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFach,
 	GostFaecherManager, GostJahrgang, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten,
-	GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, Vector
+	GostSchuelerFachwahl, List, SchuelerListeEintrag, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -34,7 +34,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
-		listGostFaecher: new Vector(),
+		listGostFaecher: new ArrayList(),
 		mapFachkombinationen: new Map(),
 	}
 

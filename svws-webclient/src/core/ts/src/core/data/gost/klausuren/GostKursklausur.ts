@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { ArrayList } from '../../../../java/util/ArrayList';
 import { List } from '../../../../java/util/List';
-import { Vector } from '../../../../java/util/Vector';
 
 export class GostKursklausur extends JavaObject {
 
@@ -102,7 +102,7 @@ export class GostKursklausur extends JavaObject {
 	/**
 	 * Die Liste der IDs der zugehörigen Schüler.
 	 */
-	public schuelerIds : List<number> = new Vector();
+	public schuelerIds : List<number> = new ArrayList();
 
 
 	public constructor() {

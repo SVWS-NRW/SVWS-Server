@@ -12,7 +12,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -59,7 +59,7 @@ public interface IAdressbuchKontaktRepository {
 		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.id = createSchuelerId(dtoSchueler.ID);
 		k.email = dtoSchueler.Email;
-		final List<Telefonnummer> nummern = (telefonnummern == null) ? new Vector<>() : telefonnummern;
+		final List<Telefonnummer> nummern = (telefonnummern == null) ? new ArrayList<>() : telefonnummern;
 		addStandardTelefonnummer(dtoSchueler.Fax, nummern, "cell");
 		addStandardTelefonnummer(dtoSchueler.Telefon, nummern, "voice");
 		k.telefonnummern.addAll(nummern);

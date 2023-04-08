@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { SchulformKatalogEintrag } from '../../../core/data/schule/SchulformKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class Schulform extends JavaObject {
 
@@ -129,12 +129,12 @@ export class Schulform extends JavaObject {
 	public readonly historie : Array<SchulformKatalogEintrag>;
 
 	/**
-	 * Ein Vector mit allen definierten Schulformen
+	 * Ein ArrayList mit allen definierten Schulformen
 	 */
 	private static readonly _schulformen : HashMap<string, Schulform | null> = new HashMap();
 
 	/**
-	 * Ein Vector mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben.
+	 * Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben.
 	 */
 	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap();
 
@@ -213,7 +213,7 @@ export class Schulform extends JavaObject {
 	 * @return eine {@link List} mit alle "echten" Schulformen
 	 */
 	public static get() : List<Schulform> {
-		const result : Vector<Schulform> = new Vector();
+		const result : ArrayList<Schulform> = new ArrayList();
 		for (const sf of Schulform.values())
 			if ((sf.daten !== null) && (sf.daten.nummer !== null))
 				result.add(sf);
@@ -226,7 +226,7 @@ export class Schulform extends JavaObject {
 	 * @return eine {@link List} mit allen Schulformen, welche eine gymnasiale Oberstufe haben.
 	 */
 	public static getMitGymOb() : List<Schulform> {
-		const result : Vector<Schulform> = new Vector();
+		const result : ArrayList<Schulform> = new ArrayList();
 		for (const sf of Schulform.values())
 			if (sf.daten.hatGymOb)
 				result.add(sf);

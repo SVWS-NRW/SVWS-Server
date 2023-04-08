@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -133,7 +133,7 @@ public class KlausurterminblockungTests {
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
 			@NotNull
-			final List<@NotNull GostKursklausur> input = new Vector<>();
+			final List<@NotNull GostKursklausur> input = new ArrayList<>();
 
 
 			final HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
@@ -177,7 +177,7 @@ public class KlausurterminblockungTests {
 		for (final String stufe : map.keySet()) {
 			// Input-Erzeugen
 			@NotNull
-			final List<@NotNull GostKursklausur> input = new Vector<>();
+			final List<@NotNull GostKursklausur> input = new ArrayList<>();
 
 			final HashMap<Long, GostKursklausur> mapKlausur = new HashMap<>();
 			for (final long schuelerID : map.get(stufe).keySet()) {
@@ -217,7 +217,7 @@ public class KlausurterminblockungTests {
 
 		// Input-Erzeugen
 		@NotNull
-		final List<@NotNull GostKursklausur> input = new Vector<>();
+		final List<@NotNull GostKursklausur> input = new ArrayList<>();
 
 		// Für alle Klausuren ...
 		for (final EsserFormatKlausur klausur : klausuren) {

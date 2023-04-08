@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
-import { Vector } from '../../../java/util/Vector';
 
 export class StundenplanblockungManagerRaum extends JavaObject {
 
@@ -17,7 +17,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 	/**
 	 * Alle Lerngruppen der Räume.
 	 */
-	private _lerngruppen : Vector<StundenplanblockungManagerLerngruppe | null> = new Vector();
+	private _lerngruppen : ArrayList<StundenplanblockungManagerLerngruppe | null> = new ArrayList();
 
 
 	/**
@@ -28,7 +28,7 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 		super();
 		this._id = pRaumID;
 		this._kuerzel = pKuerzel;
-		this._lerngruppen = new Vector();
+		this._lerngruppen = new ArrayList();
 	}
 
 	/**

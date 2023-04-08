@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List, cast_java_util_List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 
@@ -18,7 +18,7 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 	/**
 	 * Die Kürzel der Schulformen, bei welchen die sonstige Herkunft vorkommen kann.
 	 */
-	public schulformen : List<string> = new Vector();
+	public schulformen : List<string> = new ArrayList();
 
 	/**
 	 * Die textuelle Beschreibung der sonstigen Herkunft.

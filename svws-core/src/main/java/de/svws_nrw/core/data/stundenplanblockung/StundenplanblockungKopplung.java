@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.stundenplanblockung;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,6 +29,6 @@ public class StundenplanblockungKopplung {
 
 	/** Alle Stundenelemente, die dieser Kopplung zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
-	public @NotNull Vector<@NotNull StundenplanblockungStundenelement> stundenelemente = new Vector<>();
+	public @NotNull ArrayList<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
 }

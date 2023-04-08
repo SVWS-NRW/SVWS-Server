@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -23,6 +23,6 @@ public class GostBelegpruefungsdaten {
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public @NotNull Vector<@NotNull GostFach> gostFaecher = new Vector<>();
+	public @NotNull ArrayList<@NotNull GostFach> gostFaecher = new ArrayList<>();
 
 }

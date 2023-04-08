@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanInputSimpleKurs } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKurs';
 import { StundenplanInputSimpleLehrkraft } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleLehrkraft';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanInputSimpleFach } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleFach';
 import { StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 import { StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
-import { Vector } from '../../../java/util/Vector';
 import { StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimple extends JavaObject {
@@ -12,32 +12,32 @@ export class StundenplanInputSimple extends JavaObject {
 	/**
 	 * Alle Lehrkräfte.
 	 */
-	public lehrkraefte : Vector<StundenplanInputSimpleLehrkraft> = new Vector();
+	public lehrkraefte : ArrayList<StundenplanInputSimpleLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen.
 	 */
-	public klassen : Vector<StundenplanInputSimpleKlasse> = new Vector();
+	public klassen : ArrayList<StundenplanInputSimpleKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer.
 	 */
-	public faecher : Vector<StundenplanInputSimpleFach> = new Vector();
+	public faecher : ArrayList<StundenplanInputSimpleFach> = new ArrayList();
 
 	/**
 	 * Alle Räume.
 	 */
-	public raeume : Vector<StundenplanInputSimpleRaum> = new Vector();
+	public raeume : ArrayList<StundenplanInputSimpleRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen.
 	 */
-	public kopplungen : Vector<StundenplanInputSimpleKopplung> = new Vector();
+	public kopplungen : ArrayList<StundenplanInputSimpleKopplung> = new ArrayList();
 
 	/**
 	 * Alle Kurse.
 	 */
-	public kurse : Vector<StundenplanInputSimpleKurs> = new Vector();
+	public kurse : ArrayList<StundenplanInputSimpleKurs> = new ArrayList();
 
 
 	public constructor() {

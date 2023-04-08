@@ -2,6 +2,7 @@ import { BaseApi } from '../api/BaseApi';
 import { AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+import { ArrayList } from '../java/util/ArrayList';
 import { BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
 import { BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
 import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
@@ -136,7 +137,6 @@ import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/Sprachrefe
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
-import { Vector } from '../java/util/Vector';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 
 export class ApiServer extends BaseApi {
@@ -209,7 +209,7 @@ export class ApiServer extends BaseApi {
 		const path = "/config/db/schemata";
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<DBSchemaListeEintrag>();
+		const ret = new ArrayList<DBSchemaListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(DBSchemaListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -256,7 +256,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintragOrte>();
+		const ret = new ArrayList<KatalogEintragOrte>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -283,7 +283,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintragOrtsteile>();
+		const ret = new ArrayList<KatalogEintragOrtsteile>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrtsteile.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -310,7 +310,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintragStrassen>();
+		const ret = new ArrayList<KatalogEintragStrassen>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragStrassen.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -337,7 +337,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BenutzerListeEintrag>();
+		const ret = new ArrayList<BenutzerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -594,7 +594,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BenutzerKompetenzKatalogEintrag>();
+		const ret = new ArrayList<BenutzerKompetenzKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerKompetenzKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -620,7 +620,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BenutzerKompetenzGruppenKatalogEintrag>();
+		const ret = new ArrayList<BenutzerKompetenzGruppenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerKompetenzGruppenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -700,7 +700,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BenutzergruppeListeEintrag>();
+		const ret = new ArrayList<BenutzergruppeListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzergruppeListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -780,7 +780,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BenutzerListeEintrag>();
+		const ret = new ArrayList<BenutzerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1049,7 +1049,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BetriebListeEintrag>();
+		const ret = new ArrayList<BetriebListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1135,7 +1135,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerBetriebsdaten>();
+		const ret = new ArrayList<SchuelerBetriebsdaten>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebsdaten.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1164,7 +1164,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BetriebAnsprechpartner>();
+		const ret = new ArrayList<BetriebAnsprechpartner>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1270,7 +1270,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1299,7 +1299,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1354,7 +1354,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1381,7 +1381,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BetriebAnsprechpartner>();
+		const ret = new ArrayList<BetriebAnsprechpartner>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1408,7 +1408,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1668,7 +1668,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ErzieherListeEintrag>();
+		const ret = new ArrayList<ErzieherListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ErzieherListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1748,7 +1748,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Erzieherart>();
+		const ret = new ArrayList<Erzieherart>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Erzieherart.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1775,7 +1775,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FaecherListeEintrag>();
+		const ret = new ArrayList<FaecherListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FaecherListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1856,7 +1856,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FachgruppenKatalogEintrag>();
+		const ret = new ArrayList<FachgruppenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1883,7 +1883,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FachKatalogEintrag>();
+		const ret = new ArrayList<FachKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1910,7 +1910,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BilingualeSpracheKatalogEintrag>();
+		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1964,7 +1964,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BilingualeSpracheKatalogEintrag>();
+		const ret = new ArrayList<BilingualeSpracheKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BilingualeSpracheKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -1991,7 +1991,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SprachpruefungsniveauKatalogEintrag>();
+		const ret = new ArrayList<SprachpruefungsniveauKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SprachpruefungsniveauKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2018,7 +2018,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SprachreferenzniveauKatalogEintrag>();
+		const ret = new ArrayList<SprachreferenzniveauKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SprachreferenzniveauKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2045,7 +2045,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FachgruppenKatalogEintrag>();
+		const ret = new ArrayList<FachgruppenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2182,7 +2182,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostJahrgang>();
+		const ret = new ArrayList<GostJahrgang>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgang.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2321,7 +2321,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostJahrgangFachkombination>();
+		const ret = new ArrayList<GostJahrgangFachkombination>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgangFachkombination.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2381,7 +2381,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostStatistikFachwahl>();
+		const ret = new ArrayList<GostStatistikFachwahl>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostStatistikFachwahl.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2410,7 +2410,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostFach>();
+		const ret = new ArrayList<GostFach>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostFach.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2441,7 +2441,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostFachwahl>();
+		const ret = new ArrayList<GostFachwahl>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostFachwahl.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2470,7 +2470,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerListeEintrag>();
+		const ret = new ArrayList<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2501,7 +2501,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostBlockungListeneintrag>();
+		const ret = new ArrayList<GostBlockungListeneintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungListeneintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -2858,7 +2858,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{zeit\s*(:[^}]+)?}/g, zeit.toString());
 		const result : string = await super.postJSON(path, null);
 		const obj = JSON.parse(result);
-		const ret = new Vector<number>();
+		const ret = new ArrayList<number>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
 		return ret;
 	}
@@ -3585,7 +3585,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostKlausurenKalenderinformation>();
+		const ret = new ArrayList<GostKlausurenKalenderinformation>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurenKalenderinformation.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -3722,7 +3722,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostKursklausur>();
+		const ret = new ArrayList<GostKursklausur>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -3755,7 +3755,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostKursklausur>();
+		const ret = new ArrayList<GostKursklausur>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -3812,7 +3812,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostKlausurtermin>();
+		const ret = new ArrayList<GostKlausurtermin>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurtermin.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -3927,7 +3927,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<GostKlausurvorgabe>();
+		const ret = new ArrayList<GostKlausurvorgabe>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurvorgabe.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4475,7 +4475,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4502,7 +4502,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<JahrgangsListeEintrag>();
+		const ret = new ArrayList<JahrgangsListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4556,7 +4556,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<JahrgangsKatalogEintrag>();
+		const ret = new ArrayList<JahrgangsKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4583,7 +4583,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOAAnschlussoptionEintrag>();
+		const ret = new ArrayList<KAOAAnschlussoptionEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4610,7 +4610,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOABerufsfeldEintrag>();
+		const ret = new ArrayList<KAOABerufsfeldEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4637,7 +4637,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOAEbene4Eintrag>();
+		const ret = new ArrayList<KAOAEbene4Eintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4Eintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4664,7 +4664,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOAKategorieEintrag>();
+		const ret = new ArrayList<KAOAKategorieEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4691,7 +4691,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOAMerkmalEintrag>();
+		const ret = new ArrayList<KAOAMerkmalEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4718,7 +4718,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KAOAZusatzmerkmalEintrag>();
+		const ret = new ArrayList<KAOAZusatzmerkmalEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4774,7 +4774,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KlassenListeEintrag>();
+		const ret = new ArrayList<KlassenListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4801,7 +4801,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KlassenartKatalogEintrag>();
+		const ret = new ArrayList<KlassenartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4828,7 +4828,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KursListeEintrag>();
+		const ret = new ArrayList<KursListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4884,7 +4884,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KursListeEintrag>();
+		const ret = new ArrayList<KursListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4911,7 +4911,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KursartKatalogEintrag>();
+		const ret = new ArrayList<KursartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -4938,7 +4938,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerListeEintrag>();
+		const ret = new ArrayList<LehrerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5071,7 +5071,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogAbgangsgrundEintrag>();
+		const ret = new ArrayList<LehrerKatalogAbgangsgrundEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAbgangsgrundEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5098,7 +5098,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogAnrechnungsgrundEintrag>();
+		const ret = new ArrayList<LehrerKatalogAnrechnungsgrundEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAnrechnungsgrundEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5125,7 +5125,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogBeschaeftigungsartEintrag>();
+		const ret = new ArrayList<LehrerKatalogBeschaeftigungsartEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogBeschaeftigungsartEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5152,7 +5152,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogEinsatzstatusEintrag>();
+		const ret = new ArrayList<LehrerKatalogEinsatzstatusEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogEinsatzstatusEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5179,7 +5179,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogFachrichtungEintrag>();
+		const ret = new ArrayList<LehrerKatalogFachrichtungEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5206,7 +5206,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogFachrichtungAnerkennungEintrag>();
+		const ret = new ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungAnerkennungEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5233,7 +5233,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogLehramtEintrag>();
+		const ret = new ArrayList<LehrerKatalogLehramtEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5260,7 +5260,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogLehramtAnerkennungEintrag>();
+		const ret = new ArrayList<LehrerKatalogLehramtAnerkennungEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtAnerkennungEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5287,7 +5287,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogLehrbefaehigungEintrag>();
+		const ret = new ArrayList<LehrerKatalogLehrbefaehigungEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5314,7 +5314,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogLehrbefaehigungAnerkennungEintrag>();
+		const ret = new ArrayList<LehrerKatalogLehrbefaehigungAnerkennungEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungAnerkennungEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5341,7 +5341,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogMehrleistungsartEintrag>();
+		const ret = new ArrayList<LehrerKatalogMehrleistungsartEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMehrleistungsartEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5368,7 +5368,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogMinderleistungsartEintrag>();
+		const ret = new ArrayList<LehrerKatalogMinderleistungsartEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMinderleistungsartEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5395,7 +5395,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogRechtsverhaeltnisEintrag>();
+		const ret = new ArrayList<LehrerKatalogRechtsverhaeltnisEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogRechtsverhaeltnisEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5422,7 +5422,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogZugangsgrundEintrag>();
+		const ret = new ArrayList<LehrerKatalogZugangsgrundEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogZugangsgrundEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5449,7 +5449,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<LehrerKatalogLeitungsfunktionenEintrag>();
+		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5476,7 +5476,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<OrtKatalogEintrag>();
+		const ret = new ArrayList<OrtKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5503,7 +5503,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<OrtsteilKatalogEintrag>();
+		const ret = new ArrayList<OrtsteilKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5530,7 +5530,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragAbiturInfos>();
+		const ret = new ArrayList<Schild3KatalogEintragAbiturInfos>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragAbiturInfos.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5557,7 +5557,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragDatenart>();
+		const ret = new ArrayList<Schild3KatalogEintragDatenart>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDatenart.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5584,7 +5584,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragDQRNiveaus>();
+		const ret = new ArrayList<Schild3KatalogEintragDQRNiveaus>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragDQRNiveaus.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5611,7 +5611,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragExportCSV>();
+		const ret = new ArrayList<Schild3KatalogEintragExportCSV>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragExportCSV.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5638,7 +5638,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragFilterFehlendeEintraege>();
+		const ret = new ArrayList<Schild3KatalogEintragFilterFehlendeEintraege>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragFilterFehlendeEintraege.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5665,7 +5665,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragLaender>();
+		const ret = new ArrayList<Schild3KatalogEintragLaender>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragLaender.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5692,7 +5692,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragPruefungsordnung>();
+		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnung>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnung.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5719,7 +5719,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragPruefungsordnungOption>();
+		const ret = new ArrayList<Schild3KatalogEintragPruefungsordnungOption>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragPruefungsordnungOption.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5746,7 +5746,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragVersetzungsvermerke>();
+		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5776,7 +5776,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragUnicodeUmwandlung>();
+		const ret = new ArrayList<Schild3KatalogEintragUnicodeUmwandlung>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragUnicodeUmwandlung.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5803,7 +5803,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<Schild3KatalogEintragVersetzungsvermerke>();
+		const ret = new ArrayList<Schild3KatalogEintragVersetzungsvermerke>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Schild3KatalogEintragVersetzungsvermerke.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5861,7 +5861,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerBetriebsdaten>();
+		const ret = new ArrayList<SchuelerBetriebsdaten>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebsdaten.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5890,7 +5890,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BetriebStammdaten>();
+		const ret = new ArrayList<BetriebStammdaten>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebStammdaten.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -5919,7 +5919,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ErzieherStammdaten>();
+		const ret = new ArrayList<ErzieherStammdaten>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ErzieherStammdaten.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6054,7 +6054,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerLernabschnittListeEintrag>();
+		const ret = new ArrayList<SchuelerLernabschnittListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernabschnittListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6189,7 +6189,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerListeEintrag>();
+		const ret = new ArrayList<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6216,7 +6216,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerListeEintrag>();
+		const ret = new ArrayList<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6243,7 +6243,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<HerkunftKatalogEintrag>();
+		const ret = new ArrayList<HerkunftKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6270,7 +6270,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<HerkunftsartKatalogEintrag>();
+		const ret = new ArrayList<HerkunftsartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6297,7 +6297,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<UebergangsempfehlungKatalogEintrag>();
+		const ret = new ArrayList<UebergangsempfehlungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6324,7 +6324,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KatalogEintrag>();
+		const ret = new ArrayList<KatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6428,7 +6428,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<AllgemeineMerkmaleKatalogEintrag>();
+		const ret = new ArrayList<AllgemeineMerkmaleKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AllgemeineMerkmaleKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6455,7 +6455,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BerufskollegAnlageKatalogEintrag>();
+		const ret = new ArrayList<BerufskollegAnlageKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BerufskollegAnlageKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6482,7 +6482,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<BerufskollegBerufsebeneKatalogEintrag>();
+		const ret = new ArrayList<BerufskollegBerufsebeneKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6534,7 +6534,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<EinschulungsartKatalogEintrag>();
+		const ret = new ArrayList<EinschulungsartKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(EinschulungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6561,7 +6561,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FoerderschwerpunktKatalogEintrag>();
+		const ret = new ArrayList<FoerderschwerpunktKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6588,7 +6588,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<HerkunftsschulnummerKatalogEintrag>();
+		const ret = new ArrayList<HerkunftsschulnummerKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftsschulnummerKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6615,7 +6615,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<KindergartenbesuchKatalogEintrag>();
+		const ret = new ArrayList<KindergartenbesuchKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KindergartenbesuchKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6642,7 +6642,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<NationalitaetenKatalogEintrag>();
+		const ret = new ArrayList<NationalitaetenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NationalitaetenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6669,7 +6669,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<NotenKatalogEintrag>();
+		const ret = new ArrayList<NotenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NotenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6696,7 +6696,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<OrganisationsformKatalogEintrag>();
+		const ret = new ArrayList<OrganisationsformKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrganisationsformKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6723,7 +6723,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<PruefungsordnungKatalogEintrag>();
+		const ret = new ArrayList<PruefungsordnungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6750,7 +6750,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ReformpaedagogikKatalogEintrag>();
+		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6804,7 +6804,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ReformpaedagogikKatalogEintrag>();
+		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6831,7 +6831,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ReligionKatalogEintrag>();
+		const ret = new ArrayList<ReligionKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReligionKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6858,7 +6858,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulabschlussAllgemeinbildendKatalogEintrag>();
+		const ret = new ArrayList<SchulabschlussAllgemeinbildendKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulabschlussAllgemeinbildendKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6885,7 +6885,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulabschlussBerufsbildendKatalogEintrag>();
+		const ret = new ArrayList<SchulabschlussBerufsbildendKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulabschlussBerufsbildendKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6912,7 +6912,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulenKatalogEintrag>();
+		const ret = new ArrayList<SchulenKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6939,7 +6939,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulformKatalogEintrag>();
+		const ret = new ArrayList<SchulformKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulformKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6966,7 +6966,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulgliederungKatalogEintrag>();
+		const ret = new ArrayList<SchulgliederungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -6993,7 +6993,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchulstufeKatalogEintrag>();
+		const ret = new ArrayList<SchulstufeKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulstufeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7020,7 +7020,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchultraegerKatalogEintrag>();
+		const ret = new ArrayList<SchultraegerKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchultraegerKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7047,7 +7047,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<VerkehrsspracheKatalogEintrag>();
+		const ret = new ArrayList<VerkehrsspracheKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7101,7 +7101,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<FoerderschwerpunktEintrag>();
+		const ret = new ArrayList<FoerderschwerpunktEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FoerderschwerpunktEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7228,7 +7228,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<ReligionEintrag>();
+		const ret = new ArrayList<ReligionEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReligionEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7337,7 +7337,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<SchuelerstatusKatalogEintrag>();
+		const ret = new ArrayList<SchuelerstatusKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerstatusKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7444,7 +7444,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<StundenplanZeitraster>();
+		const ret = new ArrayList<StundenplanZeitraster>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7473,7 +7473,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<StundenplanListeEintrag>();
+		const ret = new ArrayList<StundenplanListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
@@ -7502,7 +7502,7 @@ export class ApiServer extends BaseApi {
 			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new Vector<StundenplanListeEintrag>();
+		const ret = new ArrayList<StundenplanListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}

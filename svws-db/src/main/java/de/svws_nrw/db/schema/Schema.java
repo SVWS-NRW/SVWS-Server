@@ -2,7 +2,7 @@ package de.svws_nrw.db.schema;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgAdrAnsprechpartner;
@@ -908,7 +908,7 @@ public class Schema {
      * @return eine Liste mit den SQL-Befehlen
      */
     public static final List<String> getCreateBenutzerSQL(final long rev) {
-    	final Vector<String> result = new Vector<>();
+    	final ArrayList<String> result = new ArrayList<>();
     	if (rev == 0) {
     		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
     			 	 + "(1,'Administrator','Admin','1;2;3','$');");

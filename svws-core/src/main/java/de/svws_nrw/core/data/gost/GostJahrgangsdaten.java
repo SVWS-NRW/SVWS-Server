@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -66,5 +66,5 @@ public class GostJahrgangsdaten {
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public final @NotNull Vector<@NotNull GostBeratungslehrer> beratungslehrer = new Vector<>();
+	public final @NotNull ArrayList<@NotNull GostBeratungslehrer> beratungslehrer = new ArrayList<>();
 }

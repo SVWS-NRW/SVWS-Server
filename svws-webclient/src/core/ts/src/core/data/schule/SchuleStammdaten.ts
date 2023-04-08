@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuleAbschnitte } from '../../../core/data/schule/SchuleAbschnitte';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchuleStammdaten extends JavaObject {
 
@@ -98,7 +98,7 @@ export class SchuleStammdaten extends JavaObject {
 	/**
 	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
 	 */
-	public readonly abschnitte : Vector<Schuljahresabschnitt> = new Vector();
+	public readonly abschnitte : ArrayList<Schuljahresabschnitt> = new ArrayList();
 
 
 	public constructor() {

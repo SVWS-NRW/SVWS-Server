@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchildReportingDatenquelleAttribut } from '../../../core/data/schild3/SchildReportingDatenquelleAttribut';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class SchildReportingDatenquelle extends JavaObject {
 
@@ -43,7 +43,7 @@ export class SchildReportingDatenquelle extends JavaObject {
 	/**
 	 * Die Liste der JSON-Attribute für diese Datenquelle.
 	 */
-	public attribute : List<SchildReportingDatenquelleAttribut> = new Vector();
+	public attribute : List<SchildReportingDatenquelleAttribut> = new ArrayList();
 
 
 	public constructor() {

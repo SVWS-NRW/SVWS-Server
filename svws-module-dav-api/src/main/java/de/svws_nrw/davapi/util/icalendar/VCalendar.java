@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.data.kalender.KalenderEintrag;
 import jakarta.validation.constraints.NotNull;
@@ -48,7 +48,7 @@ public class VCalendar {
 	/** der maximale Endzeitpunkt aller Events in diesem VCalendar */
 	private Instant maxEnd;
 	/** die Liste der VEVENTS in diesem VCalendar */
-	private final List<VEvent> events = new Vector<>();
+	private final List<VEvent> events = new ArrayList<>();
 	/**
 	 * der typ des VCalendars - RFC schreibt vor, dass es neben der VTIMEZONE
 	 * Definition nur einen Typ je VCALENDAR geben darf

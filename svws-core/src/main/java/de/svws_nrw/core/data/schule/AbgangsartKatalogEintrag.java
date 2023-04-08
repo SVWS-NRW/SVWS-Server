@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -23,6 +23,6 @@ public class AbgangsartKatalogEintrag {
 
 	/** Die Historie des Katalog-Eintrags. */
 	@Schema(description = "die Historie des Katalog-Eintrags")
-	public @NotNull List<@NotNull AbgangsartKatalogDaten> historie = new Vector<>();
+	public @NotNull List<@NotNull AbgangsartKatalogDaten> historie = new ArrayList<>();
 
 }

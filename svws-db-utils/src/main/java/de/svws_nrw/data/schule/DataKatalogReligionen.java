@@ -2,7 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -26,7 +26,7 @@ public final class DataKatalogReligionen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final Vector<ReligionKatalogEintrag> daten = new Vector<>();
+		final ArrayList<ReligionKatalogEintrag> daten = new ArrayList<>();
 		for (final Religion eintrag : Religion.values())
 			daten.addAll(Arrays.asList(eintrag.historie));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

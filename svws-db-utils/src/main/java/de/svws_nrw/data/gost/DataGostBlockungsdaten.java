@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -427,7 +427,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 	private static synchronized List<Long> schreibeErgebnisse(final DBEntityManager conn, final long id, final List<GostBlockungsergebnisManager> outputs) {
 		try {
-			final Vector<Long> ergebnisse = new Vector<>();
+			final ArrayList<Long> ergebnisse = new ArrayList<>();
 			conn.transactionBegin();
 			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
@@ -477,7 +477,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
 
-		Vector<GostBlockungsergebnisManager> outputs;
+		ArrayList<GostBlockungsergebnisManager> outputs;
 
 		try {
 			outputs = algo.handle(manager);
@@ -908,7 +908,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final int kursNummer = strKursnummer.length == 0 ? 1
 						: "".equals(strKursnummer[strKursnummer.length - 1]) ? 1
 						: Integer.parseInt(strKursnummer[strKursnummer.length - 1]);
-				final Vector<Long> schienen = new Vector<>();
+				final ArrayList<Long> schienen = new ArrayList<>();
 				if (kurs.Schienen != null) {
 					final String[] strSchienen = kurs.Schienen.split(",");
 					for (final String strSchiene : strSchienen) {

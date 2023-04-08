@@ -2,7 +2,7 @@ package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -32,7 +32,7 @@ public final class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		final List<BenutzerKompetenzGruppenKatalogEintrag> daten = new Vector<>();
+		final List<BenutzerKompetenzGruppenKatalogEintrag> daten = new ArrayList<>();
 		for (final BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values())
 			daten.add(k.daten);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

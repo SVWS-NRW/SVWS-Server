@@ -1,11 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { FoerderschwerpunktKatalogEintrag } from '../../../core/data/schule/FoerderschwerpunktKatalogEintrag';
 import { JavaString } from '../../../java/lang/JavaString';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 
 export class Foerderschwerpunkt extends JavaObject {
 
@@ -129,7 +129,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	/**
 	 * Die Schulformen, bei welchen der Förderschwerpunkt vorkommt
 	 */
-	private schulformen : Array<Vector<Schulform>>;
+	private schulformen : Array<ArrayList<Schulform>>;
 
 	/**
 	 * Erzeugt einen neuen Förderschwerpunkt in der Aufzählung.
@@ -146,7 +146,7 @@ export class Foerderschwerpunkt extends JavaObject {
 		this.daten = historie[historie.length - 1];
 		this.schulformen = Array(historie.length).fill(null);
 		for (let i : number = 0; i < historie.length; i++) {
-			this.schulformen[i] = new Vector();
+			this.schulformen[i] = new ArrayList();
 			for (const kuerzel of historie[i].schulformen) {
 				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
 				if (sf !== null)
@@ -222,7 +222,7 @@ export class Foerderschwerpunkt extends JavaObject {
 	 * @return die bei der Schulform zulässigen Förderschwerpunkte
 	 */
 	public static get(schulform : Schulform | null) : List<Foerderschwerpunkt> {
-		const result : Vector<Foerderschwerpunkt> = new Vector();
+		const result : ArrayList<Foerderschwerpunkt> = new ArrayList();
 		if (schulform === null)
 			return result;
 		const fs : Array<Foerderschwerpunkt> = Foerderschwerpunkt.values();

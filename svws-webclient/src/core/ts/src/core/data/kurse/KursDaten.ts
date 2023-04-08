@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../core/data/schueler/Schueler';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { Vector } from '../../../java/util/Vector';
 
 export class KursDaten extends JavaObject {
 
@@ -23,7 +23,7 @@ export class KursDaten extends JavaObject {
 	/**
 	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist
 	 */
-	public idJahrgaenge : Vector<number> = new Vector();
+	public idJahrgaenge : ArrayList<number> = new ArrayList();
 
 	/**
 	 * Die ID des Faches, dem der Kurs zugeordnet ist
@@ -48,7 +48,7 @@ export class KursDaten extends JavaObject {
 	/**
 	 * Die Schüler des Kurses.
 	 */
-	public schueler : List<Schueler> = new Vector();
+	public schueler : List<Schueler> = new ArrayList();
 
 
 	public constructor() {

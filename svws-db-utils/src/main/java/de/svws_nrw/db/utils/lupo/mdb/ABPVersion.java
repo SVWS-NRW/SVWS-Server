@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
@@ -31,7 +31,7 @@ public final class ABPVersion {
 	 */
 	public static List<ABPVersion> read(final Database db) {
 		try {
-			final List<ABPVersion> liste = new Vector<>();
+			final List<ABPVersion> liste = new ArrayList<>();
 			final Table table = db.getTable("ABP_Version");
 			for (final Row r : table) {
 				final ABPVersion version = new ABPVersion();
@@ -73,7 +73,7 @@ public final class ABPVersion {
 	 * @return der Standard-Eintrag für die Tabelle ABPVersion
 	 */
 	public static List<ABPVersion> getDefault() {
-		final List<ABPVersion> versionen = new Vector<>();
+		final List<ABPVersion> versionen = new ArrayList<>();
 		versionen.add(new ABPVersion());
 		return versionen;
 	}

@@ -185,7 +185,7 @@ public class BenutzergruppenManager {
     public void removeKompetenz(final @NotNull BenutzerKompetenz kompetenz) throws IllegalArgumentException {
         if (!_setKompetenzen.contains(kompetenz.daten.id))
             throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.");
-        this._daten.kompetenzen.removeElement(kompetenz.daten.id);
+        this._daten.kompetenzen.remove(kompetenz.daten.id);
         _setKompetenzen.remove(kompetenz.daten.id);
     }
 

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.data.stundenplan;
 
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -31,7 +31,7 @@ public class SchuelerStundenplan {
 
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
-	public @NotNull List<@NotNull StundenplanZeitraster> zeitraster = new Vector<>();
+	public @NotNull List<@NotNull StundenplanZeitraster> zeitraster = new ArrayList<>();
 
 	/** Das Datum, ab dem der Stundenpland gültig ist. */
 	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example = "1.1.1899")
@@ -63,6 +63,6 @@ public class SchuelerStundenplan {
 
 	/** Der Unterricht des Schülers. */
 	@Schema(description = "der Unterricht des Schülers")
-	public @NotNull List<@NotNull SchuelerStundenplanUnterricht> unterricht = new Vector<>();
+	public @NotNull List<@NotNull SchuelerStundenplanUnterricht> unterricht = new ArrayList<>();
 
 }

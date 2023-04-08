@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -81,7 +81,7 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId,
 			final CollectionRessourceQueryParameters params) {
 		if (!params.includeRessources || !user.pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-			return new Vector<>();
+			return new ArrayList<>();
 		}
 		final List<DTOSchueler> filteredDtoSchuelers = conn.queryNamed("DTOSchueler.all", DTOSchueler.class).getResultStream()
 				.filter(SCHUELER_FILTER).toList();
@@ -138,7 +138,7 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 			List<Telefonnummer> telefonnummern = telefonnummerBySchuelerId.get(dto.Schueler_ID);
 
 			if (telefonnummern == null) {
-				telefonnummern = new Vector<>();
+				telefonnummern = new ArrayList<>();
 				telefonnummerBySchuelerId.put(dto.Schueler_ID, telefonnummern);
 			}
 			final Telefonnummer tel = new Telefonnummer();

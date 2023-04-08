@@ -3,7 +3,7 @@ package de.svws_nrw.davapi.util.icalendar;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Diese Klasse repräsentiert ein VEVENT innerhalb eines {@link VCalendar}
@@ -20,7 +20,7 @@ public class VEvent {
 	/** der Endzeitpunkt des Events */
 	private Instant dtEnd;
 	/** die Properties dieses Events */
-	private final List<IProperty> properties = new Vector<>();
+	private final List<IProperty> properties = new ArrayList<>();
 
 	/**
 	 * empty default constructor

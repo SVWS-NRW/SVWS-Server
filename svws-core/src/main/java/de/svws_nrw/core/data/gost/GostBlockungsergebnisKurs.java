@@ -1,6 +1,6 @@
 package de.svws_nrw.core.data.gost;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -32,8 +32,8 @@ public class GostBlockungsergebnisKurs {
 	public int anzahlSchienen = -1;
 
 	/** Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind. */
-	public final @NotNull Vector<@NotNull Long> schueler = new Vector<>();
+	public final @NotNull ArrayList<@NotNull Long> schueler = new ArrayList<>();
 
 	/** Die Schienen-IDs, denen der Kurs zugeordnet ist. */
-	public final @NotNull Vector<@NotNull Long> schienen = new Vector<>();
+	public final @NotNull ArrayList<@NotNull Long> schienen = new ArrayList<>();
 }

@@ -80,7 +80,7 @@
 <script setup lang="ts">
 
 	import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
-	import { DBSchemaListeEintrag, List, Vector } from "@svws-nrw/svws-core";
+	import { DBSchemaListeEintrag, List, ArrayList } from "@svws-nrw/svws-core";
 	import { version } from '../../version';
 
 	const errors: Ref<Error[]> = ref([]);
@@ -106,7 +106,7 @@
 
 	const connection_failed: Ref<boolean> = ref(false);
 
-	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new Vector());
+	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new ArrayList());
 
 	const inputHostname: WritableComputedRef<string> = computed({
 		get: () => props.hostname,
