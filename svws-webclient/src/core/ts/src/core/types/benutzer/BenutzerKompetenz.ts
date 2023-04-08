@@ -5,7 +5,7 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
-import { Arrays } from '../../../java/util/Arrays';
+import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
 
@@ -553,6 +553,27 @@ export class BenutzerKompetenz extends JavaObject {
 		if (liste === null)
 			return new ArrayList();
 		return liste;
+	}
+
+	/**
+	 * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
+	 * zugeordnet sind und die übergebene Schulform besitzen.
+	 *
+	 * @param gruppe   die Benutzerkompetenz-Gruppe
+	 * @param schulform   die Schulform
+	 *
+	 * @return die Liste der Benutzerkompetenzen
+	 */
+	public static getKompetenzenMitSchulform(gruppe : BenutzerKompetenzGruppe, schulform : Schulform) : List<BenutzerKompetenz> {
+		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
+		const l : List<BenutzerKompetenz> | null = new Vector();
+		for (const bk of liste) {
+			if (bk.hatSchulform(schulform))
+				l.add(bk);
+		}
+		if (liste === null)
+			return new Vector();
+		return l;
 	}
 
 	/**

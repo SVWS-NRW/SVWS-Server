@@ -1,10 +1,10 @@
 package de.svws_nrw.core.types.benutzer;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
@@ -29,8 +29,7 @@ public enum BenutzerKompetenz {
 
     /** Es werden Rechte zum Ändern der Schüler Individualdaten benötigt. */
     SCHUELER_INDIVIDUALDATEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
-    	12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", null
-    )),
+    	12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", null)),
 
     /** Es werden Rechte zum Löschen der Schüler Individualdaten benötigt. */
     SCHUELER_INDIVIDUALDATEN_LOESCHEN(new BenutzerKompetenzKatalogEintrag(
@@ -560,6 +559,28 @@ public enum BenutzerKompetenz {
         if (liste == null)
             return new ArrayList<>();
         return liste;
+    }
+
+    /**
+     * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
+     * zugeordnet sind und die übergebene Schulform besitzen.
+     *
+     * @param gruppe   die Benutzerkompetenz-Gruppe
+     * @param schulform   die Schulform
+     *
+     * @return die Liste der Benutzerkompetenzen
+     */
+    public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzenMitSchulform(final @NotNull BenutzerKompetenzGruppe gruppe,
+            final @NotNull Schulform schulform) {
+        final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
+        final List<@NotNull BenutzerKompetenz> l = new Vector<>();
+        for (final BenutzerKompetenz bk: liste) {
+            if (bk.hatSchulform(schulform))
+                l.add(bk);
+        }
+        if (liste == null)
+            return new Vector<>();
+        return l;
     }
 
 }

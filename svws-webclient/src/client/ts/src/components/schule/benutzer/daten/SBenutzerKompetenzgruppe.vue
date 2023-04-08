@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}"
-			v-for="kompetenz in BenutzerKompetenz.getKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
+			v-for="kompetenz in BenutzerKompetenz.getKompetenzenMitSchulform(kompetenzgruppe,api.schulform)" :key="kompetenz.daten.id">
 			<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager"
 				:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
 		</div>
@@ -37,6 +37,7 @@
 
 	import { BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core";
 	import { ref, Ref, computed, WritableComputedRef } from "vue";
+	import { api } from "~/router/Api";
 
 	const props = defineProps<{
 		kompetenzgruppe: BenutzerKompetenzGruppe;
@@ -50,7 +51,7 @@
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const hatSubKompetenzen: WritableComputedRef<number> = computed(() => BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe).size());
+	const hatSubKompetenzen: WritableComputedRef<number> = computed(() => BenutzerKompetenz.getKompetenzenMitSchulform(props.kompetenzgruppe,api.schulform).size());
 
 	const selected: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzerManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),

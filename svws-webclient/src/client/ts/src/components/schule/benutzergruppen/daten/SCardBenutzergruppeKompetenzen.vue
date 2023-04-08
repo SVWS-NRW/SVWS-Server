@@ -41,6 +41,7 @@
 
 	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
+	import { api } from "~/router/Api";
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;
 		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
@@ -51,7 +52,7 @@
 
 	const istAdmin: ComputedRef<boolean> = computed(() => props.getBenutzergruppenManager().istAdmin());
 
-	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
+	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0 && BenutzerKompetenz.getKompetenzenMitSchulform(gr, api.schulform).size() > 0));
 
 </script>
 
