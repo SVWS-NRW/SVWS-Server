@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
 @DisplayName("Diese Klasse testet die Klasse KlausurblockungSchienenAlgorithmus")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class KlausurterminblockungTests {
+class KlausurterminblockungTests {
 
 	private static final long BLOCKUNGS_ZEIT = 1000 * 1;
 

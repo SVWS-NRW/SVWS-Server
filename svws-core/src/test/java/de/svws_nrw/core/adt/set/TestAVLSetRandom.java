@@ -17,7 +17,7 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
  *
  * @author Benjamin A. Bartsch
  */
-public class TestAVLSetRandom {
+class TestAVLSetRandom {
 	private final int MAX_VALUE = 1000;
 	private final int ROUNDS = MAX_VALUE * MAX_VALUE;
 	private final Random RANDOM = new Random(1);

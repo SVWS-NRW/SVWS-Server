@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.schule.Schulform;
  * Diese Klasse enthält die Testroutinen für den Core-Type Schulform.
  */
 @DisplayName("Teste den Core-Type Schulform")
-public class TestCoreTypeSchulform {
+class TestCoreTypeSchulform {
 
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type Schulform aus.

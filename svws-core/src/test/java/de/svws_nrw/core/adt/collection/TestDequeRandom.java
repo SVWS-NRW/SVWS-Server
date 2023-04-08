@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Benjamin A. Bartsch
  */
-public class TestDequeRandom {
+class TestDequeRandom {
 
 	private final int _MAX_VALUE = 100;
 	private final int _ROUNDS = 100000;

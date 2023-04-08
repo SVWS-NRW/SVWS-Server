@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
  * Diese Klasse enthält die Testroutinen für Core-Type Schulgliederung.
  */
 @DisplayName("Teste den Core-Type Schulgliederung")
-public class TestCoreTypeSchulgliederung {
+class TestCoreTypeSchulgliederung {
 
     /**
      * Prüft, ob die Schulformen mindestens eine Schulgliederungen haben.

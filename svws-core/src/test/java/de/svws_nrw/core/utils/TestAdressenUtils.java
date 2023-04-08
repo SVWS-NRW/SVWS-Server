@@ -18,7 +18,7 @@ import de.svws_nrw.base.CsvReader;
  * Diese Klasse enthält die Testroutinen für die Klasse {@link AdressenUtils}
  */
 @DisplayName("Teste de.svws_nrw.core.utils.TestAdressenUtils")
-public class TestAdressenUtils {
+class TestAdressenUtils {
 
 	/** Testdaten für das Testen des Aufteilens von Strasseninformationen in Name, Hausnummer und Zusatz */
 	static List<TestdatenSplitStrasse> testdatenSplitStrasse;

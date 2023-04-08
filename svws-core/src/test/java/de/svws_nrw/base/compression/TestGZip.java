@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Diese Klasse prüft die Methoden der {@link GZip}-Klasse.
  */
-public class TestGZip {
+class TestGZip {
 
 	/**
 	 * Tests für das Komprimieren und Dekomprimieren von Strings mit dem GZip-Verfahren

@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt;
  * Diese Klasse enthält die Testroutinen für den Core-Type LehrerMinderleistungArt.
  */
 @DisplayName("Teste den Core-Type LehrerMinderleistungArt")
-public class TestCoreTypeLehrerMinderleistungArt {
+class TestCoreTypeLehrerMinderleistungArt {
 
     /**
      * Führt grundlegende Tests zu dem Core-Type LehrerMinderleistungArt aus.

@@ -31,7 +31,7 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
  */
 @DisplayName("Testet den {@link GostBlockungsergebnisManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class GostBlockungsergebnisManagerTest {
+class GostBlockungsergebnisManagerTest {
 
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";

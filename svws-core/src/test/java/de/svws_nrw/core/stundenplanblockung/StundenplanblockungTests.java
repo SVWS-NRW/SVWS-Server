@@ -21,7 +21,7 @@ import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaum
  */
 @DisplayName("Diese Klasse testet den {@link StundenplanblockungManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class StundenplanblockungTests {
+class StundenplanblockungTests {
 
 	private static final long _SEED = 1L;
 	private static final int _ANZAHL_MANAGER_TESTS = 2;
@@ -38,7 +38,7 @@ public class StundenplanblockungTests {
 	 */
 	@DisplayName("testManagerRandom")
 	@Test
-	public void testManagerRandom() {
+	void testManagerRandom() {
 		final Random lRandom = new Random(_SEED);
 		for (int i = 0; i < _ANZAHL_MANAGER_TESTS; i++)
 			subTestManagerZufaellig(lRandom);

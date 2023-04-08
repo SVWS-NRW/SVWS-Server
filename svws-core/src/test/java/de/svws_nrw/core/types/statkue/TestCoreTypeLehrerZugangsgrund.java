@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.lehrer.LehrerZugangsgrund;
  * Diese Klasse enthält die Testroutinen für den Core-Type LehrerZugangsgrund.
  */
 @DisplayName("Teste den Core-Type LehrerZugangsgrund")
-public class TestCoreTypeLehrerZugangsgrund {
+class TestCoreTypeLehrerZugangsgrund {
 
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type LehrerZugangsgrund aus.

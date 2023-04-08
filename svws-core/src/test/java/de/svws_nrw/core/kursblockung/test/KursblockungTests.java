@@ -36,7 +36,7 @@ import jakarta.validation.constraints.NotNull;
 /** Diese Klasse testet <b>alle</b> relevanten Methoden, die für die Kursblockung benötigt werden. */
 @DisplayName("Testet alle relevanten Kursblockungsalgorithmen.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class KursblockungTests {
+class KursblockungTests {
 
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";

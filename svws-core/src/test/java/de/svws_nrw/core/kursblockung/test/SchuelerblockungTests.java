@@ -28,7 +28,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @DisplayName("Diese Klasse testet den {@link SchuelerblockungAlgorithmus}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class SchuelerblockungTests {
+class SchuelerblockungTests {
 
 	private static final long _SEED = 1L;
 	private static final int _ANZAHL_AN_ZUFALLSTESTS = 1000;

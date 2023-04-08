@@ -16,7 +16,7 @@ import de.svws_nrw.core.kursblockung.KursblockungMatrix;
  */
 @DisplayName("Diese Klasse testet {@link KursblockungMatrix}")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class MatrixTests {
+class MatrixTests {
 
 	private static final long _SEED = 1L;
 

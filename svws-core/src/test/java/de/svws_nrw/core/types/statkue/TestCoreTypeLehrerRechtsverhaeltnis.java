@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.lehrer.LehrerRechtsverhaeltnis;
  * Diese Klasse enthält die Testroutinen für den Core-Type LehrerRechtsverhaeltnis.
  */
 @DisplayName("Teste den Core-Type LehrerRechtsverhaeltnis")
-public class TestCoreTypeLehrerRechtsverhaeltnis {
+class TestCoreTypeLehrerRechtsverhaeltnis {
 
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type LehrerRechtsverhaeltnis aus.

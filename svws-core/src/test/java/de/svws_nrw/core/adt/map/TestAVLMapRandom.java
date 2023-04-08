@@ -23,7 +23,7 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
  *
  * @author Benjamin A. Bartsch
  */
-public class TestAVLMapRandom {
+class TestAVLMapRandom {
 	private final int MAX_VALUE = 500;
 	private final int ROUNDS = MAX_VALUE * MAX_VALUE;
 	private final Random RANDOM = new Random(1);

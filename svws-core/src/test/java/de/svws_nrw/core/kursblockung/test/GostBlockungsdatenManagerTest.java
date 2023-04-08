@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @DisplayName("Testet den {@link GostBlockungsdatenManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class GostBlockungsdatenManagerTest {
+class GostBlockungsdatenManagerTest {
 
 	/**
 	 * Testet 001.

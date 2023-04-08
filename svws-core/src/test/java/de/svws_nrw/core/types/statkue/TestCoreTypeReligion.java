@@ -12,7 +12,7 @@ import de.svws_nrw.core.types.schule.Religion;
  * Diese Klasse enthält die Testroutinen für den Core-Type Religion.
  */
 @DisplayName("Teste den Core-Type Religion")
-public class TestCoreTypeReligion {
+class TestCoreTypeReligion {
 
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type Religion aus.

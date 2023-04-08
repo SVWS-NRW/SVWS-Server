@@ -15,7 +15,7 @@ import de.svws_nrw.core.kursblockung.satsolver.SatSolverWrapper;
 /** Diese Klasse testet den SAT-Solver, indem verschiedene Formeln deren Lösbarkeit bekannt ist, an den SAT-Solver
  * geschickt werden. */
 @DisplayName("SAT-Solver-Test.")
-public class KursblockungSatSolverTest {
+class KursblockungSatSolverTest {
 
 	/** Erzeugt eine leere Formel und überprüft, ob die Formel lösbar bzw. {@link SatSolverA#RESULT_SATISFIABLE} ist. */
 	@Test

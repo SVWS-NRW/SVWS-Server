@@ -10,15 +10,15 @@ import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
  * Testklasse für den SchuljahresabschnittsManager
  *
  */
-public class SchuljahresAbschnittsManagerTest {
+class SchuljahresAbschnittsManagerTest {
 
-	private SchuljahresAbschnittsManager manager0;
-	private SchuljahresAbschnittsManager manager1;
-	private SchuljahresAbschnittsManager manager2;
-	private SchuljahresAbschnittsManager manager3;
-	private SchuljahresAbschnittsManager manager4;
-	private SchuljahresAbschnittsManager manager5;
-	private Schuljahresabschnitt abschnitt;
+	private final SchuljahresAbschnittsManager manager0;
+	private final SchuljahresAbschnittsManager manager1;
+	private final SchuljahresAbschnittsManager manager2;
+	private final SchuljahresAbschnittsManager manager3;
+	private final SchuljahresAbschnittsManager manager4;
+	private final SchuljahresAbschnittsManager manager5;
+	private final Schuljahresabschnitt abschnitt;
 
 	/**
 	 * Konstruktor für die Testklasse, initialisiert den Schuljahresabschnitt und
@@ -41,7 +41,7 @@ public class SchuljahresAbschnittsManagerTest {
 	 * {@link SchuljahresAbschnittsManager#getSchuljahresAbschnittAsString()}
 	 */
 	@Test
-	public void testGetSchuljahresAbschnittAsString() {
+	void testGetSchuljahresAbschnittAsString() {
 		assertEquals("2022", manager0.getSchuljahresAbschnittAsString());
 		assertEquals("2022", manager1.getSchuljahresAbschnittAsString());
 		assertEquals("S1 2022", manager2.getSchuljahresAbschnittAsString());

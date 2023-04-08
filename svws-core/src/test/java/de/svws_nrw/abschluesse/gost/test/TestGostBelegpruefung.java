@@ -29,7 +29,7 @@ import de.svws_nrw.core.data.gost.GostFach;
  * für das Abitur in der gymnasialen Oberstufe.
  */
 @DisplayName("Teste den Belegprüfungsalgorithmus für das Abitur in der gymnasialen Oberstufe")
-public class TestGostBelegpruefung {
+class TestGostBelegpruefung {
 
 	/** Eine Map mit den Jahrgängen der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, List<GostFach>> testGostJahrgaengeFaecher = new HashMap<>();

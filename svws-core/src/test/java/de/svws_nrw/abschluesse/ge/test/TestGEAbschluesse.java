@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Gesamtschule.
  */
 @DisplayName("Teste Abschlussberechnung für die Gesamtschule")
-public class TestGEAbschluesse {
+class TestGEAbschluesse {
 
 	/** Eine MAP mit den Testfällen aus den zugeörigen JSON-Dateien */
     static Map<String, GEAbschlussTestfall> notenBilder;
