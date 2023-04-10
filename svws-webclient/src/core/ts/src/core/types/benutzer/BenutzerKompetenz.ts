@@ -5,6 +5,7 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
+import { Arrays } from '../../../java/util/Arrays';
 import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
