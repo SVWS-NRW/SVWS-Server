@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal ref="modal" size="small" class="hidden">
 		<template #modalTitle>Blockungsergebnis aktivieren</template>
 		<template #modalDescription>
 			Soll {{ blockungsname }} aktiviert werden?

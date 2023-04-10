@@ -120,12 +120,6 @@
 		@apply px-3;
 	}
 
-	.secondary-menu--content .v-table tr:not(.table--row-indent) th:first-child:not(.column--checkbox),
-	.secondary-menu--content .v-table tr:not(.table--row-indent) td:first-child:not(.column--checkbox),
-	.secondary-menu--content .v-table tr.table--row-indent {
-		@apply pl-6;
-	}
-
 	@media (min-width: 2000px) {
 		.secondary-menu--headline,
 		.secondary-menu--header,

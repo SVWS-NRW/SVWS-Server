@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal ref="modal" size="small" class="hidden">
 		<template #modalTitle>Blockungsergebnis hochschreiben</template>
 		<template #modalContent>
 			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>

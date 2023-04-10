@@ -1,16 +1,31 @@
 <template>
 	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
-		<tr class="text-left" :style="{ 'background-color': bgColor }" :key="kursart.id">
-			<td colspan="3">
-				{{ fach.kuerzel }}-{{ kursart.kuerzel }}
-			</td>
-			<td class="text-center cursor-pointer hover:bg-yellow-200" colspan="1" @click="toggle_active_fachwahl">
+		<div role="row"
+			class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColor }" :key="kursart.id">
+			<div role="cell" class="data-table__td">
+				<span title="Fach">{{ fach.kuerzel }}</span><span class="opacity-50">–</span><span title="Kursart">{{ kursart.kuerzel }}</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center">
+				<span class="opacity-25">–</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center">
+				<span class="opacity-25">–</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
-			</td>
-			<td :colspan="schienen.size()+2">
-				<svws-ui-button class="" type="secondary" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">Kurs hinzufügen</svws-ui-button>
-			</td>
-		</tr>
+				<i-ri-filter-line class="invisible absolute right-0 group-hover:visible opacity-25" />
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center">
+				<span class="opacity-25">–</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + schienen.size()}">
+				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">
+					Kurs hinzufügen
+					<i-ri-add-circle-line />
+				</svws-ui-button>
+			</div>
+			<div role="cell" class="data-table__td" />
+		</div>
 	</template>
 	<template v-else>
 		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"

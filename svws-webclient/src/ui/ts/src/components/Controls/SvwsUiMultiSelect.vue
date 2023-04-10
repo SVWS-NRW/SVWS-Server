@@ -446,6 +446,12 @@
 			@apply outline-none;
 		}
 	}
+
+	.data-table & {
+		.text-input-component {
+			@apply pl-1;
+		}
+	}
 }
 
 .wrapper {
@@ -476,6 +482,15 @@
 	.multiselect-input-component--disabled & {
 		@apply pointer-events-none;
 		@apply opacity-10 !important;
+	}
+
+	.data-table & {
+		@apply p-0;
+
+		.icon {
+			@apply rounded-none;
+			font-size: 0.9em;
+		}
 	}
 }
 
@@ -591,11 +606,11 @@
 }
 
 .remove-icon {
-	@apply absolute p-1 inset-y-0;
+	@apply absolute inset-y-0;
 	@apply cursor-pointer;
 	@apply flex items-center justify-center;
 	@apply opacity-50;
-	right: 1.5em;
+	right: 1.4em;
 	font-size: 1em;
 
 	&:hover {

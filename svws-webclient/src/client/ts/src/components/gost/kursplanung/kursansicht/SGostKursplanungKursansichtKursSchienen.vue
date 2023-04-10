@@ -2,9 +2,10 @@
 	<template v-if="!blockungAktiv">
 		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
 			v-slot="{ active }"
-			class="text-center"
-			:class="{'bg-yellow-200': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene)}"
-			tag="td"
+			class="data-table__td data-table__td__no-padding data-table__td__align-center"
+			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id}"
+			tag="div"
+			role="cell"
 			:drop-allowed="is_drop_zone(schiene)"
 			@drop="drop_aendere_kursschiene($event, schiene)">
 			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
@@ -14,7 +15,6 @@
 				class="select-none leading-5"
 				:draggable="true"
 				:class="{'schiene-gesperrt': schiene_gesperrt(schiene)}"
-				:style="{ 'background-color': schiene_gesperrt(schiene) ? '' : bgColor}"
 				@drag-start="drag_started"
 				@drag-end="drag_ended">
 				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : istFixiert(schiene) ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
@@ -26,19 +26,20 @@
 				</svws-ui-badge>
 			</svws-ui-drag-data>
 			<template v-else>
-				<div class="cursor-pointer" @click="sperren_regel_toggle(schiene)"
-					:class="{'bg-green-400': active && is_drop_zone(schiene),
+				<div class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle(schiene)"
+					:class="{'bg-white': active && is_drop_zone(schiene),
 						'schiene-gesperrt': schiene_gesperrt(schiene)}">
+					<div v-if="active && is_drop_zone(schiene)" class="absolute inset-1 border-2 border-dashed border-black/25" />
 					<svws-ui-icon>
-						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block text-red-500" />
-						<i-ri-forbid-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 hover:opacity-25" />
+						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block" />
+						<i-ri-forbid-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
 					</svws-ui-icon>
 				</div>
 			</template>
 		</svws-ui-drop-data>
 	</template>
 	<template v-else>
-		<td v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="text-center leading-5 select-none">
+		<div role="cell" v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="data-table__td data-table__td__align-center">
 			<svws-ui-badge v-if="kurs_schiene_zugeordnet(schiene)"
 				size="tiny" :type="selected_kurs ? 'primary' : 'highlight'" class="cursor-pointer"
 				@click="toggle_active_kurs">
@@ -50,7 +51,7 @@
 					<i-ri-forbid-fill class="inline-block text-red-500" />
 				</svws-ui-icon>
 			</svws-ui-badge>
-		</td>
+		</div>
 	</template>
 	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
 		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" :add-regel="addRegel" />

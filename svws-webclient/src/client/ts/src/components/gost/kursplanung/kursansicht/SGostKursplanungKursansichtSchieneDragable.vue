@@ -1,17 +1,15 @@
 <template>
-	<svws-ui-drop-data class="text-center" :class="{'bg-yellow-200': is_drop_zone }"
-		tag="td" :drop-allowed="is_drop_zone"
+	<svws-ui-drop-data class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black" :class="{'bg-primary/5 text-primary hover:text-primary': is_drop_zone }"
+		tag="div" :drop-allowed="is_drop_zone"
 		@drop="openModal">
 		<svws-ui-drag-data :key="schiene.id"
 			tag="div"
 			:data="{schiene}"
-			class="select-none cursor-grab"
+			class="select-none cursor-grab text-center"
 			:draggable="true"
 			@drag-start="drag_started"
 			@drag-end="emit('dnd', undefined)">
-			<svws-ui-icon>
-				<i-ri-lock-unlock-line class="inline-block" />
-			</svws-ui-icon>
+			<i-ri-lock-unlock-line class="inline-block" />
 		</svws-ui-drag-data>
 	</svws-ui-drop-data>
 	<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" v-model="isModalOpen_RegelSchienen" :von="von" :bis="bis" />

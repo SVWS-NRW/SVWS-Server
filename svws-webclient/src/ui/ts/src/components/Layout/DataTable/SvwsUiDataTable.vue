@@ -345,6 +345,10 @@
 		padding: 0.1rem 0.5rem 0.1rem;
 		line-height: 1;
 
+		&__no-padding {
+			@apply p-0;
+		}
+
 		&:last-child {
 			@apply border-r-0;
 		}
@@ -492,6 +496,13 @@
 			min-width: 1rem;
 			line-height: 1.25;
 			width: auto;
+		}
+
+		&__tr__compact {
+			.data-table__th,
+			.data-table__td {
+				@apply h-[1.9rem];
+			}
 		}
 	}
 

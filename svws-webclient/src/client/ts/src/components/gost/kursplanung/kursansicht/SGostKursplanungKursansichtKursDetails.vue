@@ -1,5 +1,5 @@
 <template>
-	<tr :style="{ 'background-color': bgColor }" class="table--row-kursdetail relative z-10">
+	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
 		<td :colspan="anzahlSpalten" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
@@ -43,7 +43,7 @@
 				</div>
 			</div>
 		</td>
-	</tr>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +51,7 @@
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
+	import { GostBlockungSchiene } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -101,7 +102,8 @@
 <style lang="postcss">
 
 	.table--row-kursdetail {
-		box-shadow: inset 0 -2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+		@apply relative z-10 border-b-2 border-black/25;
+		box-shadow: inset 0 -2px 6px 0 rgba(0, 0, 0, 0.05), inset 0 1px 6px 0 rgba(0, 0, 0, 0.1);
 	}
 
 </style>

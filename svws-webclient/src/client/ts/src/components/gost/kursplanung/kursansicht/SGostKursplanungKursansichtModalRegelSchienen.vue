@@ -1,14 +1,15 @@
 <template>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal ref="modal" size="small" class="hidden">
 		<template #modalTitle>Regel erstellen</template>
-		<template #modalDescription>
-			<div class="flex gap-1 mb-2">
-				<parameter-kursart v-model="kursart" class="mx-1" /> <div class="whitespace-nowrap pt-1">von Schiene {{ von.nummer }} bis Schiene {{ bis.nummer }}</div>
+		<template #modalContent>
+			<div class="flex flex-col gap-1">
+				<parameter-kursart v-model="kursart" />
+				<span class="mt-1">von Schiene {{ von.nummer }} bis Schiene {{ bis.nummer }}</span>
 			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)">sperren</svws-ui-button>
-				<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">alleine</svws-ui-button>
-			</div>
+		</template>
+		<template #modalActions>
+			<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)">Sperren</svws-ui-button>
+			<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">Alleine</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

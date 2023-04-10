@@ -1,6 +1,5 @@
 <template>
 	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
-		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10" />
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline cursor-auto">
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
@@ -21,101 +20,112 @@
 					<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="secondary" @click="openModal()">Aktivieren</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-aktivieren-modal>
 				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="primary" @click="openModal()">Hochschreiben</svws-ui-button>
+					<svws-ui-button type="secondary" @click="openModal()">Hochschreiben</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+				<slot name="triggerRegeln" />
 			</div>
 		</div>
-		<div class="v-table--container">
-			<table class="v-table--complex table--highlight-rows table-auto w-full">
-				<thead>
-					<tr>
-						<th colspan="5">
-							Schiene
-						</th>
-						<th v-for="s in schienen" :key="s.id" class="text-center">
-							<div v-if="allow_regeln" class="flex justify-center">
-								<template v-if="s.id === edit_schienenname">
-									<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
-										@blur="edit_schienenname=undefined"
-										@keyup.enter="edit_schienenname=undefined"
-										@keyup.escape="edit_schienenname=undefined"
-										@update:model-value="patch_schiene(s, $event.toString())" />
-								</template>
-								<template v-else>
-									<span class="px-3 underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
-								</template>
-								<svws-ui-icon v-if="allow_del_schiene(s)" class="text-red-500 cursor-pointer" @click="del_schiene(s)"><i-ri-delete-bin-2-line /></svws-ui-icon>
-							</div>
-							<template v-else>{{ s.nummer }}</template>
-						</th>
-						<template v-if="allow_regeln">
-							<th rowspan="4" @click="add_schiene" title="Schiene hinzufügen" class="p-2">
-								<div class="p-2 cursor-pointer rounded bg-primary text-white">+</div>
-							</th>
-							<th rowspan="4" class="hidden" />
-						</template>
-					</tr>
-					<tr>
-						<th colspan="5">
-							Schülerzahl
-						</th>
-						<!-- Schülerzahlen -->
-						<th v-for="s in schienen" :key="s.id" class="text-center">
-							{{ getAnzahlSchuelerSchiene(s.id) }}
-						</th>
-					</tr>
-					<tr>
-						<th colspan="5">
-							Kollisionen
-						</th>
-						<!-- Kollisionen -->
-						<th v-for="s in schienen" :key="s.id" class="text-center">
-							{{ getAnzahlKollisionenSchiene(s.id) }}
-						</th>
-					</tr>
-					<tr>
-						<th class="text-center cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
-							<div class="flex gap-1">Kurs<svws-ui-icon><i-ri-arrow-up-down-line /></svws-ui-icon></div>
-						</th>
-						<th>Lehrer</th>
-						<th class="text-center">Koop</th>
-						<th class="text-center">FW</th>
-						<th class="text-center">Diff</th>
-						<!--Schienen-->
-						<template v-if="allow_regeln">
-							<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" :drag-and-drop-data="dragAndDropData" @dnd="dragAndDropData=$event" />
-						</template>
-						<th v-else :colspan="schienen.size()" class="text-center normal-case font-normal text-black/50">Regeln können nicht in Ergebnissen erstellt werden</th>
-					</tr>
-				</thead>
-				<tbody>
-					<template v-if="sort_by==='fach_id'">
-						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
-							<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
-									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-									:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+		<svws-ui-data-table :items="GostKursart.values()"
+			:columns="cols">
+			<template #header>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th col-span-5 data-table__th__align-left">
+						<span>Schiene</span>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
+						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-auto">
+							<template v-if="s.id === edit_schienenname">
+								<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
+									@blur="edit_schienenname=undefined"
+									@keyup.enter="edit_schienenname=undefined"
+									@keyup.escape="edit_schienenname=undefined"
+									@update:model-value="patch_schiene(s, $event.toString())" />
 							</template>
-						</template>
+							<template v-else>
+								<span class="underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
+							</template>
+							<svws-ui-icon v-if="allow_del_schiene(s)" class="opacity-25 hover:opacity-100 hover:text-error cursor-pointer -mr-2" @click="del_schiene(s)"><i-ri-delete-bin-line /></svws-ui-icon>
+						</div>
+						<template v-else>{{ s.nummer }}</template>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<svws-ui-button type="icon" size="small" v-if="allow_regeln" @click="add_schiene" title="Schiene hinzufügen" class="ml-1 w-6 h-6 p-0.5">
+							<i-ri-add-line />
+						</svws-ui-button>
+					</div>
+				</div>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th col-span-5 data-table__th__align-left">
+						Schülerzahl
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
+						{{ getAnzahlSchuelerSchiene(s.id) }}
+					</div>
+					<div role="columnheader" class="data-table__th" />
+				</div>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th col-span-5 data-table__th__align-left">
+						Kollisionen
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
+						{{ getAnzahlKollisionenSchiene(s.id) }}
+					</div>
+					<div role="columnheader" class="data-table__th" />
+				</div>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'">
+						<div class="flex gap-1">Kurs<i-ri-arrow-up-down-line /></div>
+					</div>
+					<div role="columnheader" class="data-table__th data-table__thead__th">Lehrer</div>
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">Koop</div>
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">FW</div>
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">Diff</div>
+					<!--Schienen-->
+					<template v-if="allow_regeln">
+						<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" :drag-and-drop-data="dragAndDropData" @dnd="dragAndDropData=$event" />
 					</template>
-					<template v-else>
+					<div v-else role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center normal-case font-normal text-black/50" :style="{'gridColumn': 'span ' + schienen.size()}">
+						<span class="inline-flex items-center gap-1"><i-ri-information-line />Regeln können in diesem Ergebnis nicht erstellt werden.</span>
+					</div>
+					<div role="columnheader" class="data-table__th" />
+				</div>
+			</template>
+
+			<template #body>
+				<template v-if="sort_by==='fach_id'">
+					<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-							<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
-								<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
-									:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-									:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
-									:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-									:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-									:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
-							</template>
+							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
+								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
 						</template>
 					</template>
-				</tbody>
-			</table>
-		</div>
+				</template>
+				<template v-else>
+					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
+						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
+							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
+								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+						</template>
+					</template>
+				</template>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -127,6 +137,7 @@
 	import { computed, ref } from "vue";
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -177,6 +188,23 @@
 
 	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
 
+	function calculateColumns(): DataTableColumn[] {
+		const cols: Array<DataTableColumn> = [{ key: "kurs", label: "Kurs", span: 2, fixedWidth: 8 },
+			{ key: "lehrer", label: "Lehrer" },
+			{ key: "koop", label: "Kooperation", align: 'center' },
+			{ key: "FW", label: "Fachwahl", align: 'center' },
+			{ key: "Diff", label: "Diff", align: 'center' }];
+
+		for (let i = 0; i < schienen.value.size(); i++) {
+			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3, align: 'center' });
+		}
+
+		cols.push({ key: "actions", label: "Actions", fixedWidth: 2.5, align: 'center' });
+		return cols;
+	}
+
+	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
+
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;
 	}
@@ -196,10 +224,12 @@
 	}
 
 	async function add_schiene() {
+		// TODO: Update cols value mit neuer Anzahl von Schienen
 		return await props.addSchiene();
 	}
 
 	async function del_schiene(schiene: GostBlockungSchiene) {
+		// TODO: Update cols value mit neuer Anzahl von Schienen
 		return await props.removeSchiene(schiene);
 	}
 </script>

@@ -1,6 +1,7 @@
 <template>
-	<tr :style="{ 'background-color': bgColor }">
-		<td>
+	<div role="row"
+		class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td">
 			<div class="flex gap-1">
 				<template v-if="kurs.id === edit_name">
 					{{ kursbezeichnung }}-
@@ -11,8 +12,8 @@
 						{{ kursbezeichnung }}</span>
 				</template>
 			</div>
-		</td>
-		<td class="text-center cell--has-multiselect">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__no-padding">
 			<template v-if="allowRegeln">
 				<svws-ui-multi-select :model-value="kurslehrer" @update:model-value="setKurslehrer($event as LehrerListeEintrag | undefined)" class="w-20" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="mapLehrer" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
@@ -20,37 +21,43 @@
 			<template v-else>
 				{{ kurslehrer?.kuerzel }}
 			</template>
-		</td>
-		<td class="text-center">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center">
 			<svws-ui-checkbox headless v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
 			<svws-ui-icon v-else class="inline-block opacity-50">
 				<i-ri-check-line v-if="kurs.istKoopKurs" />
 				<i-ri-close-line v-else />
 			</svws-ui-icon>
-		</td>
+		</div>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<td class="text-center blockung--kursdifferenz cursor-pointer hover:bg-yellow-200" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)" @click="toggle_active_fachwahl">
+			<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl">
 				{{ kursdifferenz[2] }}
-			</td>
-			<td class="text-center blockung--kursdifferenz" :rowspan="kursdifferenz[0] + (kursdetail_anzeige ? 1:0)">
+				<i-ri-filter-line class="invisible absolute right-0 group-hover:visible opacity-25" />
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz">
 				{{ kursdifferenz[1] }}
-			</td>
+			</div>
 		</template>
-		<template v-if="!kurs_blockungsergebnis">
-			<td />
+		<template v-else>
+			<div role="cell" class="data-table__td data-table__td__align-center">
+				<span class="opacity-25">–</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center">
+				<span class="opacity-25">–</span>
+			</div>
 		</template>
 		<s-gost-kursplanung-kursansicht-kurs-schienen :blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color="bgColor"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
 		<template v-if="allowRegeln">
-			<td class="cursor-pointer text-center hover:opacity-100" :class="{'opacity-100' : kursdetail_anzeige, 'opacity-25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
+			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black" :class="{'text-black' : kursdetail_anzeige, 'text-black/25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
 				<div class="inline-block">
 					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
 					<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
 				</div>
-			</td>
+			</div>
 		</template>
-	</tr>
+	</div>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
 	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
