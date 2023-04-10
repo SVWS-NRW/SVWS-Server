@@ -212,6 +212,11 @@ export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schi
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { SchildReportingDatenquelle } from './core/data/schild3/SchildReportingDatenquelle';
 export { SchildReportingDatenquelleAttribut } from './core/data/schild3/SchildReportingDatenquelleAttribut';
+export { SchildReportingSchuelerGOStLaufbahnplanungFachwahlen } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungFachwahlen';
+export { SchildReportingSchuelerGOStLaufbahnplanungFehler } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungFehler';
+export { SchildReportingSchuelerGOStLaufbahnplanungGrunddaten } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungGrunddaten';
+export { SchildReportingSchuelerGOStLaufbahnplanungHinweise } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungHinweise';
+export { SchildReportingSchuelerGOStLaufbahnplanungSummen } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungSummen';
 export { SchildReportingSchuelerleistungsdaten } from './core/data/schild3/SchildReportingSchuelerleistungsdaten';
 export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';

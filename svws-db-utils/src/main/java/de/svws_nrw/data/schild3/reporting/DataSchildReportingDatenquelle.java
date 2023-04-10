@@ -331,6 +331,11 @@ public abstract class DataSchildReportingDatenquelle {
             datenquellen = new LinkedHashMap<>();
             new DataSchildReportingDatenquelleSchuelerlernabschnitte();
             new DataSchildReportingDatenquelleSchuelerleistungsdaten();
+			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten();
+			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen();
+			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen();
+			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
+			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
         }
         return datenquellen;
     }
