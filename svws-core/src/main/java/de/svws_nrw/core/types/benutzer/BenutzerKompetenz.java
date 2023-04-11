@@ -521,30 +521,6 @@ public enum BenutzerKompetenz {
       return true;
     }
 
-//    /**
-//     * Überprüft für die Schulform die zulässigkeit der Kompetenzen, die einem Benutzer oder einer Gruppe hinzugefügt bzw. entzogen werden.
-//     *
-//     * @param kids die IDs der Kompetenzen
-//     *
-//     * @return true, wenn alle Kompetenzen zulässig sind, sonst false
-//     *
-//     */
-//    public static boolean istKompetenzZulaessig( List<Long> kids) throws WebApplicationException{
-//      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-//        //Nehme als Schulform GY als Beispiel
-//        Schulform schulform = Schulform.GY;
-//        List<BenutzerKompetenz> bks = new ArrayList<>();
-//        for(Long kid:kids) {
-//            bks.add(BenutzerKompetenz.getByID(kid));
-//        }
-//
-//        for(BenutzerKompetenz bk : bks) {
-//            if(bk.hatSchulform(schulform))
-//                //TODO mit eigenem OperationError arbeiten, jedoch funktioniert der Import nicht.
-//                throw new WebApplicationException( Response.Status.BAD_REQUEST);
-//        }
-//        return true;
-//    }
     /**
      * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
      * zugeordnet sind.
