@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { EinschulungsartKatalogEintrag } from '../../../core/data/schule/EinschulungsartKatalogEintrag';
 
-export class Einschulungsart extends JavaObject {
+export class Einschulungsart extends JavaObject implements JavaEnum<Einschulungsart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -115,7 +116,7 @@ export class Einschulungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -124,7 +125,7 @@ export class Einschulungsart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -193,7 +194,7 @@ export class Einschulungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Einschulungsart'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Einschulungsart', 'java.lang.Enum'].includes(name);
 	}
 
 }

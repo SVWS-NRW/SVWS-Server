@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
@@ -6,7 +7,7 @@ import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { Arrays } from '../../../java/util/Arrays';
 import { Pair } from '../../../core/adt/Pair';
 
-export class Herkunftsschulnummern extends JavaObject {
+export class Herkunftsschulnummern extends JavaObject implements JavaEnum<Herkunftsschulnummern> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -192,7 +193,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -201,7 +202,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -270,7 +271,7 @@ export class Herkunftsschulnummern extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern', 'java.lang.Enum'].includes(name);
 	}
 
 }

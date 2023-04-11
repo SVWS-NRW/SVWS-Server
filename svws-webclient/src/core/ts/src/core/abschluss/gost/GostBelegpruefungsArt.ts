@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostBelegpruefungsArt extends JavaObject {
+export class GostBelegpruefungsArt extends JavaObject implements JavaEnum<GostBelegpruefungsArt> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -82,7 +83,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -91,7 +92,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -151,7 +152,7 @@ export class GostBelegpruefungsArt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt', 'java.lang.Enum'].includes(name);
 	}
 
 }

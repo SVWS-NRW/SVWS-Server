@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
@@ -7,7 +8,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { Arrays } from '../../../java/util/Arrays';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
-export class GostKursart extends JavaObject {
+export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -323,7 +324,7 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -332,7 +333,7 @@ export class GostKursart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -392,7 +393,7 @@ export class GostKursart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostKursart'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostKursart', 'java.lang.Enum'].includes(name);
 	}
 
 }

@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Comparable } from '../../../java/lang/Comparable';
 import { HashMap } from '../../../java/util/HashMap';
@@ -6,7 +7,7 @@ import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
-export class GostHalbjahr extends JavaObject {
+export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -440,7 +441,7 @@ export class GostHalbjahr extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -449,7 +450,7 @@ export class GostHalbjahr extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -518,7 +519,7 @@ export class GostHalbjahr extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Comparable'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Comparable', 'java.lang.Enum'].includes(name);
 	}
 
 }

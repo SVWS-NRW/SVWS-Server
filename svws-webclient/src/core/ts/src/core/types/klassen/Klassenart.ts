@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlassenartKatalogEintrag } from '../../../core/data/klassen/KlassenartKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -8,7 +9,7 @@ import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { Pair } from '../../../core/adt/Pair';
 
-export class Klassenart extends JavaObject {
+export class Klassenart extends JavaObject implements JavaEnum<Klassenart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -213,7 +214,7 @@ export class Klassenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -222,7 +223,7 @@ export class Klassenart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -291,7 +292,7 @@ export class Klassenart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.klassen.Klassenart'].includes(name);
+		return ['de.svws_nrw.core.types.klassen.Klassenart', 'java.lang.Enum'].includes(name);
 	}
 
 }

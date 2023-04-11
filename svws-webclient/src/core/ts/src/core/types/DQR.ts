@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 
-export class DQR extends JavaObject {
+export class DQR extends JavaObject implements JavaEnum<DQR> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -85,7 +86,7 @@ export class DQR extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -94,7 +95,7 @@ export class DQR extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -163,7 +164,7 @@ export class DQR extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.DQR'].includes(name);
+		return ['de.svws_nrw.core.types.DQR', 'java.lang.Enum'].includes(name);
 	}
 
 }

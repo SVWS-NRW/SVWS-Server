@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostAbiturFach extends JavaObject {
+export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFach> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -164,7 +165,7 @@ export class GostAbiturFach extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -173,7 +174,7 @@ export class GostAbiturFach extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -233,7 +234,7 @@ export class GostAbiturFach extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostAbiturFach'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostAbiturFach', 'java.lang.Enum'].includes(name);
 	}
 
 }

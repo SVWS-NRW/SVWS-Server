@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { ReligionKatalogEintrag } from '../../../core/data/schule/ReligionKatalogEintrag';
 
-export class Religion extends JavaObject {
+export class Religion extends JavaObject implements JavaEnum<Religion> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -140,7 +141,7 @@ export class Religion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -149,7 +150,7 @@ export class Religion extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -218,7 +219,7 @@ export class Religion extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Religion'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Religion', 'java.lang.Enum'].includes(name);
 	}
 
 }

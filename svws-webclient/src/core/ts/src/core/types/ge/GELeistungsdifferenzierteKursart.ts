@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GELeistungsdifferenzierteKursart extends JavaObject {
+export class GELeistungsdifferenzierteKursart extends JavaObject implements JavaEnum<GELeistungsdifferenzierteKursart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -96,7 +97,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -105,7 +106,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -165,7 +166,7 @@ export class GELeistungsdifferenzierteKursart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart'].includes(name);
+		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart', 'java.lang.Enum'].includes(name);
 	}
 
 }

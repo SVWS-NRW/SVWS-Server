@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogMehrleistungsartEintrag } from '../../../core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
 
-export class LehrerMehrleistungArt extends JavaObject {
+export class LehrerMehrleistungArt extends JavaObject implements JavaEnum<LehrerMehrleistungArt> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -139,7 +140,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -148,7 +149,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -217,7 +218,7 @@ export class LehrerMehrleistungArt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt', 'java.lang.Enum'].includes(name);
 	}
 
 }

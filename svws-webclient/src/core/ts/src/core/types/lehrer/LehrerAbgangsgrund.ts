@@ -1,7 +1,8 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerKatalogAbgangsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';
 
-export class LehrerAbgangsgrund extends JavaObject {
+export class LehrerAbgangsgrund extends JavaObject implements JavaEnum<LehrerAbgangsgrund> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -129,7 +130,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -138,7 +139,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -207,7 +208,7 @@ export class LehrerAbgangsgrund extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund', 'java.lang.Enum'].includes(name);
 	}
 
 }

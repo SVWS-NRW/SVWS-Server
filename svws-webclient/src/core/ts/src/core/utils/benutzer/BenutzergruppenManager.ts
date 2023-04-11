@@ -46,7 +46,7 @@ export class BenutzergruppenManager extends JavaObject {
 			this._daten.id = id;
 			this._daten.bezeichnung = bezeichnung;
 			this._daten.istAdmin = false;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten')))) && (typeof __param1 === "undefined")) {
 			const pDaten : BenutzergruppeDaten = cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten(__param0);
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {

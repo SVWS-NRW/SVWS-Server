@@ -342,6 +342,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				((type instanceof final ExpressionClassType classType) && ("Entry".equals(classType.toString())) && ("java.util.Map".equals(classType.getPackageName()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
 			case "Set" ->
 				((type instanceof final ExpressionClassType classType) && ("Set".equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
+			case "Function" ->
+				((type instanceof final ExpressionClassType classType) && ("Function".equals(classType.toString()))) ? getImportName(classType.toString(), classType.getPackageName()) : null;
 			default -> null;
 		};
 		if (result != null)
@@ -1574,7 +1576,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		String result = getIndent() + "isTranspiledInstanceOf(name : string): boolean {" + System.lineSeparator();
 		indentC++;
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
-		final String strInstanceOfTypes = unit.superTypes.stream().collect(Collectors.joining("', '", "'", "'"));
+		String strInstanceOfTypes = unit.superTypes.stream().collect(Collectors.joining("', '", "'", "'"));
+		if (node.getKind() == Kind.ENUM)
+			strInstanceOfTypes += ", 'java.lang.Enum'";
 		result += getIndent() + "return [" + strInstanceOfTypes + "].includes(name);" + System.lineSeparator();
 		indentC--;
 		result += getIndent() + "}" + System.lineSeparator();
@@ -2104,7 +2108,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append("export ");
 		sb.append("class ");
 		sb.append(node.getSimpleName());
-		sb.append(" extends JavaObject {");
+		sb.append(" extends JavaObject implements JavaEnum<");
+		sb.append(node.getSimpleName());
+		sb.append("> {");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -2177,7 +2183,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append(" *").append(System.lineSeparator());
 		sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
 		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private name() : string {").append(System.lineSeparator());
+		sb.append(getIndent()).append("public name() : string {").append(System.lineSeparator());
 		sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
 		sb.append(getIndent()).append("}").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -2187,7 +2193,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append(" *").append(System.lineSeparator());
 		sb.append(getIndent()).append(" * @returns the ordinal value").append(System.lineSeparator());
 		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private ordinal() : number {").append(System.lineSeparator());
+		sb.append(getIndent()).append("public ordinal() : number {").append(System.lineSeparator());
 		sb.append(getIndent()).append("\treturn this.__ordinal;").append(System.lineSeparator());
 		sb.append(getIndent()).append("}").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -2292,6 +2298,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		return switch (packageName) {
 			case "java.lang" -> switch (className) {
 				case "Object" -> "JavaObject";
+				case "Enum" -> "JavaEnum";
 				case "Boolean" -> "JavaBoolean";
 				case "Byte" -> "JavaByte";
 				case "Short" -> "JavaShort";
@@ -2312,6 +2319,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case "Entry" -> "JavaMapEntry";
 				default -> className;
 			};
+			case "java.util.function" -> switch (className) {
+				case "Function" -> "JavaFunction";
+				default -> className;
+			};
 			default -> className;
 		};
 	}
@@ -2329,6 +2340,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public static String getImportPackageName(final String className, final String packageName) {
 		return switch (packageName) {
 			case "java.lang" -> switch (className) {
+				case "Enum" -> "java.lang";
 				case "Object" -> "java.lang";
 				default -> packageName;
 			};
@@ -2363,6 +2375,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final List<Map.Entry<String, String>> entries = unit.imports.entrySet().stream().collect(Collectors.toList());
 		if (!unit.imports.containsKey("Object"))
 			entries.add(0, new AbstractMap.SimpleEntry<>("Object", "java.lang"));
+		if ((unit.isEnum()) && (!unit.imports.containsKey("Enum")))
+			entries.add(0, new AbstractMap.SimpleEntry<>("Enum", "java.lang"));
 		String result = "";
 		for (final Map.Entry<String, String> entry : entries) {
 			final String key = entry.getKey();

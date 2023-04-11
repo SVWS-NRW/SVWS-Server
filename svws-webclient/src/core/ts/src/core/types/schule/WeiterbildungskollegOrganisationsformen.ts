@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { OrganisationsformKatalogEintrag } from '../../../core/data/schule/OrganisationsformKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class WeiterbildungskollegOrganisationsformen extends JavaObject {
+export class WeiterbildungskollegOrganisationsformen extends JavaObject implements JavaEnum<WeiterbildungskollegOrganisationsformen> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -97,7 +98,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -106,7 +107,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -175,7 +176,7 @@ export class WeiterbildungskollegOrganisationsformen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen'].includes(name);
+		return ['de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen', 'java.lang.Enum'].includes(name);
 	}
 
 }

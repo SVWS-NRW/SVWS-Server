@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 
-export class BenutzerKompetenzGruppe extends JavaObject {
+export class BenutzerKompetenzGruppe extends JavaObject implements JavaEnum<BenutzerKompetenzGruppe> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -189,7 +190,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -198,7 +199,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -267,7 +268,7 @@ export class BenutzerKompetenzGruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe', 'java.lang.Enum'].includes(name);
 	}
 
 }

@@ -52,7 +52,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	private readonly _comparatorNatural : Comparator<K> = { compare : (key1: K, key2: K) => {
 		if ((key1 === null) || (key2 === null))
 			throw new NullPointerException()
-		if (!((((key1 instanceof JavaObject) && (key1.isTranspiledInstanceOf('java.lang.Comparable')))) && (((key2 instanceof JavaObject) && (key2.isTranspiledInstanceOf('java.lang.Comparable'))))))
+		if (!((((key1 instanceof JavaObject) && ((key1 as JavaObject).isTranspiledInstanceOf('java.lang.Comparable')))) && (((key2 instanceof JavaObject) && ((key2 as JavaObject).isTranspiledInstanceOf('java.lang.Comparable'))))))
 			throw new ClassCastException()
 		const k1 : Comparable<K> = cast_java_lang_Comparable(key1);
 		return k1.compareTo(key2);
@@ -100,7 +100,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 		} else if (((typeof __param0 !== "undefined") && ((typeof __param0 !== 'undefined') && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null))) {
 			const comparator : Comparator<K> = cast_java_util_Comparator(__param0);
 			this._comparator = comparator;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.SortedMap'))) || (__param0 === null))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.SortedMap'))) || (__param0 === null))) {
 			const map : SortedMap<K, V> = cast_java_util_SortedMap(__param0);
 			this._comparator = cast_java_util_Comparator(map.comparator());
 			this._sub.putAll(map);
@@ -487,7 +487,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das übergebene Entry in dieser Datenstruktur existiert.
 	 */
 	bcContainsEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry')))))
+		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		const e : JavaMapEntry<K, V> = cast_java_util_Map_Entry(o);
 		const node : AVLMapNode<K, V> | null = this._nodeGetOrNull(e.getKey(), iv);
@@ -574,7 +574,7 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	 * @return TRUE, falls das Entry in der Datenstruktur existierte und somit entfernt wurde.
 	 */
 	bcRemoveEntry(o : unknown, iv : AVLMapIntervall<K>) : boolean {
-		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map.Entry')))))
+		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return false;
 		if (!this.bcContainsEntry(o, iv))
 			return false;

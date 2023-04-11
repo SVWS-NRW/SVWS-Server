@@ -1,9 +1,10 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftBildungsgangKatalogEintrag } from '../../../core/data/schule/HerkunftBildungsgangKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 
-export class HerkunftBildungsgang extends JavaObject {
+export class HerkunftBildungsgang extends JavaObject implements JavaEnum<HerkunftBildungsgang> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -291,7 +292,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -300,7 +301,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -369,7 +370,7 @@ export class HerkunftBildungsgang extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgang'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgang', 'java.lang.Enum'].includes(name);
 	}
 
 }

@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostKursblockungRegelParameterTyp extends JavaObject {
+export class GostKursblockungRegelParameterTyp extends JavaObject implements JavaEnum<GostKursblockungRegelParameterTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -52,7 +53,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -61,7 +62,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -130,7 +131,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp'].includes(name);
+		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

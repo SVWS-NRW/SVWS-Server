@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungRegel, cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
 import { StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';
@@ -9,7 +10,7 @@ import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
-export class StundenplanblockungRegelTyp extends JavaObject {
+export class StundenplanblockungRegelTyp extends JavaObject implements JavaEnum<StundenplanblockungRegelTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -195,7 +196,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -204,7 +205,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -273,7 +274,7 @@ export class StundenplanblockungRegelTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { BildungsgangTypKatalogEintrag } from '../../../core/data/schule/BildungsgangTypKatalogEintrag';
 
-export class BerufskollegBildungsgangTyp extends JavaObject {
+export class BerufskollegBildungsgangTyp extends JavaObject implements JavaEnum<BerufskollegBildungsgangTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -110,7 +111,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -119,7 +120,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -188,7 +189,7 @@ export class BerufskollegBildungsgangTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.BerufskollegBildungsgangTyp'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegBildungsgangTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

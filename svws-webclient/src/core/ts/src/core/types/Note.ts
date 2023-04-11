@@ -1,7 +1,8 @@
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { NotenKatalogEintrag } from '../../core/data/schule/NotenKatalogEintrag';
 
-export class Note extends JavaObject {
+export class Note extends JavaObject implements JavaEnum<Note> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -619,7 +620,7 @@ export class Note extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -628,7 +629,7 @@ export class Note extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -688,7 +689,7 @@ export class Note extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.Note'].includes(name);
+		return ['de.svws_nrw.core.types.Note', 'java.lang.Enum'].includes(name);
 	}
 
 }

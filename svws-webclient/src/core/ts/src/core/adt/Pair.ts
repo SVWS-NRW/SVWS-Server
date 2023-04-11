@@ -32,7 +32,7 @@ export class Pair<A, B> extends JavaObject {
 	public equals(o : unknown | null) : boolean {
 		if (o === null)
 			return false;
-		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.svws_nrw.core.adt.Pair')))))
+		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.Pair')))))
 			return false;
 		const e : Pair<unknown, unknown> | null = cast_de_svws_nrw_core_adt_Pair(o);
 		const a_equals : boolean = JavaObject.equalsTranspiler(this.a, (e.a));

@@ -70,7 +70,7 @@ export class BenutzerManager extends JavaObject {
 			this._daten = new BenutzerDaten();
 			this._daten.id = id;
 			this._daten.istAdmin = false;
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzerDaten'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.benutzer.BenutzerDaten'))))) {
 			const pDaten : BenutzerDaten = cast_de_svws_nrw_core_data_benutzer_BenutzerDaten(__param0);
 			this.init();
 			this._daten = pDaten;

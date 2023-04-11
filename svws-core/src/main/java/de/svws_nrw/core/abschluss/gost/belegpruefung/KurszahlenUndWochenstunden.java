@@ -1,12 +1,12 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
-import java.util.HashMap;
 import java.util.List;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -23,22 +23,22 @@ import jakarta.validation.constraints.NotNull;
 public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private HashMap<@NotNull GostHalbjahr, @NotNull HashMap<@NotNull GostKursart, @NotNull Integer>> kurszahlen;
+	private ArrayMap<@NotNull GostHalbjahr, @NotNull ArrayMap<@NotNull GostKursart, @NotNull Integer>> kurszahlen;
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenGrundkurse;
+	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenGrundkurse;
 
 	/// Die Kurszahlen der einzelnen Halbjahre
-	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenLeistungskurse;
+	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenLeistungskurse;
 
 	/// Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre
-	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenAnrechenbar;
+	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> kurszahlenAnrechenbar;
 
 	/// Die Kurszahlen der Einführungsphase
-	private HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenEinfuehrungsphase;
+	private ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenEinfuehrungsphase;
 
 	/// Die Kurszahlen der Qualifikationsphase
-	private HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenQualifikationsphase;
+	private ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenQualifikationsphase;
 
 	/// Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen)
 	private int blockIAnzahlGrundkurse;
@@ -53,7 +53,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	private int blockIAnzahlAnrechenbar;
 
 	/// Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr
-	private HashMap<@NotNull GostHalbjahr, @NotNull Integer> wochenstunden;
+	private ArrayMap<@NotNull GostHalbjahr, @NotNull Integer> wochenstunden;
 
 	/// Die Anzahl der WochenStunden in der Einführungsphase
 	private int wochenstundenEinfuehrungsphase;
@@ -76,17 +76,17 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		kurszahlen = new HashMap<>();
-		kurszahlenGrundkurse = new HashMap<>();
-		kurszahlenLeistungskurse = new HashMap<>();
-		kurszahlenAnrechenbar = new HashMap<>();
-		kurszahlenEinfuehrungsphase = new HashMap<>();
-		kurszahlenQualifikationsphase = new HashMap<>();
+		kurszahlen = new ArrayMap<>(GostHalbjahr.values());
+		kurszahlenGrundkurse = new ArrayMap<>(GostHalbjahr.values());
+		kurszahlenLeistungskurse = new ArrayMap<>(GostHalbjahr.values());
+		kurszahlenAnrechenbar = new ArrayMap<>(GostHalbjahr.values());
+		kurszahlenEinfuehrungsphase = new ArrayMap<>(GostKursart.values());
+		kurszahlenQualifikationsphase = new ArrayMap<>(GostKursart.values());
 		blockIAnzahlGrundkurse = 0;
 		anzahlLKFaecher = 0;
 		blockIAnzahlLeistungskurse = 0;
 		blockIAnzahlAnrechenbar = 0;
-		wochenstunden = new HashMap<>();
+		wochenstunden = new ArrayMap<>(GostHalbjahr.values());
 		wochenstundenEinfuehrungsphase = 0;
 		wochenstundenQualifikationsphase = 0;
 		final @NotNull Projektkurse projektkurse = ((@NotNull Projektkurse) pruefungen_vorher[0]);
@@ -94,7 +94,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		final @NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-			final @NotNull HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = new HashMap<>();
+			final @NotNull ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 			kurszahlen.put(halbjahr, kurszahlenHalbjahr);
 			for (final GostKursart kursart : kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);
@@ -127,14 +127,14 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
 					continue;
-					final GostKursart kursart = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
+				final GostKursart kursart = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
 				if (kursart == null)  // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
 					continue;
 
 				// Für das Halbjahr
-				HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
+				ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 				if (kurszahlenHalbjahr == null)
-					kurszahlenHalbjahr = new HashMap<>();
+					kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 				final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
 				kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
 
@@ -319,7 +319,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	private void pruefeVertiefungskurseEF() {
 		if (kurszahlenEinfuehrungsphase == null)
 			throw new NullPointerException();
-			final Integer kurszahlEF_VTF = kurszahlenEinfuehrungsphase.get(GostKursart.VTF);
+		final Integer kurszahlEF_VTF = kurszahlenEinfuehrungsphase.get(GostKursart.VTF);
 		if ((kurszahlEF_VTF != null) && (kurszahlEF_VTF > 4))
 			addFehler(GostBelegungsfehler.VF_10);
 	}
@@ -383,7 +383,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	public int getKurszahlen(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart) {
 		if (kurszahlen == null)
 			return 0;
-		final HashMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
+		final ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
 		if (kurszahlenHalbjahr == null)
 			return 0;
 		final Integer kurszahl = kurszahlenHalbjahr.get(kursart);

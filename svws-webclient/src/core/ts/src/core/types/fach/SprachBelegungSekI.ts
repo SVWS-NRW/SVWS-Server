@@ -1,7 +1,8 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaString } from '../../../java/lang/JavaString';
 
-export class SprachBelegungSekI extends JavaObject {
+export class SprachBelegungSekI extends JavaObject implements JavaEnum<SprachBelegungSekI> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -99,7 +100,7 @@ export class SprachBelegungSekI extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -108,7 +109,7 @@ export class SprachBelegungSekI extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -177,7 +178,7 @@ export class SprachBelegungSekI extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI'].includes(name);
+		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Enum'].includes(name);
 	}
 
 }

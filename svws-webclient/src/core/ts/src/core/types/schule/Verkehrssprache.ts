@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { VerkehrsspracheKatalogEintrag } from '../../../core/data/schule/VerkehrsspracheKatalogEintrag';
 
-export class Verkehrssprache extends JavaObject {
+export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrssprache> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -2467,7 +2468,7 @@ export class Verkehrssprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -2476,7 +2477,7 @@ export class Verkehrssprache extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -2545,7 +2546,7 @@ export class Verkehrssprache extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Verkehrssprache'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Verkehrssprache', 'java.lang.Enum'].includes(name);
 	}
 
 }

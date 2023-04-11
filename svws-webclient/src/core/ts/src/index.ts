@@ -54,6 +54,14 @@ export { AVLMapSubEntrySetIterator } from './core/adt/map/AVLMapSubEntrySetItera
 export { AVLMapSubKeySet } from './core/adt/map/AVLMapSubKeySet';
 export { AVLMapSubKeySetIterator } from './core/adt/map/AVLMapSubKeySetIterator';
 export { AVLMapSubMap } from './core/adt/map/AVLMapSubMap';
+export { ArrayMap } from './core/adt/map/ArrayMap';
+export { ArrayMapCollection } from './core/adt/map/ArrayMapCollection';
+export { ArrayMapCollectionIterator } from './core/adt/map/ArrayMapCollectionIterator';
+export { ArrayMapEntry } from './core/adt/map/ArrayMapEntry';
+export { ArrayMapEntrySet } from './core/adt/map/ArrayMapEntrySet';
+export { ArrayMapEntrySetIterator } from './core/adt/map/ArrayMapEntrySetIterator';
+export { ArrayMapKeySet } from './core/adt/map/ArrayMapKeySet';
+export { ArrayMapKeySetIterator } from './core/adt/map/ArrayMapKeySetIterator';
 export { HashMap2D } from './core/adt/map/HashMap2D';
 export { AVLSet } from './core/adt/set/AVLSet';
 export { MinHeap } from './core/adt/tree/MinHeap';
@@ -504,6 +512,7 @@ export { IndexOutOfBoundsException } from './java/lang/IndexOutOfBoundsException
 export { JavaBoolean } from './java/lang/JavaBoolean';
 export { JavaByte } from './java/lang/JavaByte';
 export { JavaDouble } from './java/lang/JavaDouble';
+export { JavaEnum } from './java/lang/JavaEnum';
 export { JavaFloat } from './java/lang/JavaFloat';
 export { JavaInteger } from './java/lang/JavaInteger';
 export { JavaIterable } from './java/lang/JavaIterable';
@@ -555,4 +564,5 @@ export { SortedSet } from './java/util/SortedSet';
 export { Vector } from './java/util/Vector';
 export { VectorEnumerator } from './java/util/VectorEnumerator';
 export { Consumer } from './java/util/function/Consumer';
+export { JavaFunction } from './java/util/function/JavaFunction';
 export { Predicate } from './java/util/function/Predicate';

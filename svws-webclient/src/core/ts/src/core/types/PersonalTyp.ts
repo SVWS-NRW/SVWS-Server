@@ -1,7 +1,8 @@
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { HashMap } from '../../java/util/HashMap';
 
-export class PersonalTyp extends JavaObject {
+export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -161,7 +162,7 @@ export class PersonalTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -170,7 +171,7 @@ export class PersonalTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -230,7 +231,7 @@ export class PersonalTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.PersonalTyp'].includes(name);
+		return ['de.svws_nrw.core.types.PersonalTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

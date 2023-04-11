@@ -63,7 +63,7 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	public equals(o : unknown) : boolean {
 		if (o as unknown === this as unknown)
 			return true;
-		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('java.util.Map')))))
+		if (!(((o instanceof JavaObject) && ((o as JavaObject).isTranspiledInstanceOf('java.util.Map')))))
 			return false;
 		const mapO : JavaMap<unknown, unknown> | null = cast_java_util_Map(o);
 		if (mapO.size() !== this.size())

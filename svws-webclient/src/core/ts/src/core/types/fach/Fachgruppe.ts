@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
@@ -7,7 +8,7 @@ import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { RGBFarbe } from '../../../core/data/RGBFarbe';
 
-export class Fachgruppe extends JavaObject {
+export class Fachgruppe extends JavaObject implements JavaEnum<Fachgruppe> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -354,7 +355,7 @@ export class Fachgruppe extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -363,7 +364,7 @@ export class Fachgruppe extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -432,7 +433,7 @@ export class Fachgruppe extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.Fachgruppe'].includes(name);
+		return ['de.svws_nrw.core.types.fach.Fachgruppe', 'java.lang.Enum'].includes(name);
 	}
 
 }

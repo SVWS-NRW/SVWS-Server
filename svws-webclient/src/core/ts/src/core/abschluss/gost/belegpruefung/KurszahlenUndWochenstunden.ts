@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
-import { HashMap } from '../../../../java/util/HashMap';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { ArrayMap } from '../../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
@@ -16,17 +16,17 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
-	private kurszahlen : HashMap<GostHalbjahr, HashMap<GostKursart, number>> | null = null;
+	private kurszahlen : ArrayMap<GostHalbjahr, ArrayMap<GostKursart, number>> | null = null;
 
-	private kurszahlenGrundkurse : HashMap<GostHalbjahr, number> | null = null;
+	private kurszahlenGrundkurse : ArrayMap<GostHalbjahr, number> | null = null;
 
-	private kurszahlenLeistungskurse : HashMap<GostHalbjahr, number> | null = null;
+	private kurszahlenLeistungskurse : ArrayMap<GostHalbjahr, number> | null = null;
 
-	private kurszahlenAnrechenbar : HashMap<GostHalbjahr, number> | null = null;
+	private kurszahlenAnrechenbar : ArrayMap<GostHalbjahr, number> | null = null;
 
-	private kurszahlenEinfuehrungsphase : HashMap<GostKursart, number> | null = null;
+	private kurszahlenEinfuehrungsphase : ArrayMap<GostKursart, number> | null = null;
 
-	private kurszahlenQualifikationsphase : HashMap<GostKursart, number> | null = null;
+	private kurszahlenQualifikationsphase : ArrayMap<GostKursart, number> | null = null;
 
 	private blockIAnzahlGrundkurse : number = 0;
 
@@ -36,7 +36,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 	private blockIAnzahlAnrechenbar : number = 0;
 
-	private wochenstunden : HashMap<GostHalbjahr, number> | null = null;
+	private wochenstunden : ArrayMap<GostHalbjahr, number> | null = null;
 
 	private wochenstundenEinfuehrungsphase : number = 0;
 
@@ -55,23 +55,23 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.kurszahlen = new HashMap();
-		this.kurszahlenGrundkurse = new HashMap();
-		this.kurszahlenLeistungskurse = new HashMap();
-		this.kurszahlenAnrechenbar = new HashMap();
-		this.kurszahlenEinfuehrungsphase = new HashMap();
-		this.kurszahlenQualifikationsphase = new HashMap();
+		this.kurszahlen = new ArrayMap(GostHalbjahr.values());
+		this.kurszahlenGrundkurse = new ArrayMap(GostHalbjahr.values());
+		this.kurszahlenLeistungskurse = new ArrayMap(GostHalbjahr.values());
+		this.kurszahlenAnrechenbar = new ArrayMap(GostHalbjahr.values());
+		this.kurszahlenEinfuehrungsphase = new ArrayMap(GostKursart.values());
+		this.kurszahlenQualifikationsphase = new ArrayMap(GostKursart.values());
 		this.blockIAnzahlGrundkurse = 0;
 		this.anzahlLKFaecher = 0;
 		this.blockIAnzahlLeistungskurse = 0;
 		this.blockIAnzahlAnrechenbar = 0;
-		this.wochenstunden = new HashMap();
+		this.wochenstunden = new ArrayMap(GostHalbjahr.values());
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
 		const projektkurse : Projektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
 		const kursarten : Array<GostKursart> = GostKursart.values();
 		for (const halbjahr of GostHalbjahr.values()) {
-			const kurszahlenHalbjahr : HashMap<GostKursart, number> = new HashMap();
+			const kurszahlenHalbjahr : ArrayMap<GostKursart, number> = new ArrayMap(GostKursart.values());
 			this.kurszahlen.put(halbjahr, kurszahlenHalbjahr);
 			for (const kursart of kursarten)
 				kurszahlenHalbjahr.put(kursart, 0);
@@ -100,9 +100,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				const kursart : GostKursart | null = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
 				if (kursart === null)
 					continue;
-				let kurszahlenHalbjahr : HashMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
+				let kurszahlenHalbjahr : ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
 				if (kurszahlenHalbjahr === null)
-					kurszahlenHalbjahr = new HashMap();
+					kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
 				const kurszahlAlt : number | null = kurszahlenHalbjahr.get(kursart);
 				kurszahlenHalbjahr.put(kursart, kurszahlAlt === null ? 1 : kurszahlAlt! + 1);
 				if ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr)))))) {
@@ -339,7 +339,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	public getKurszahlen(halbjahr : GostHalbjahr, kursart : GostKursart) : number {
 		if (this.kurszahlen === null)
 			return 0;
-		const kurszahlenHalbjahr : HashMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
+		const kurszahlenHalbjahr : ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
 		if (kurszahlenHalbjahr === null)
 			return 0;
 		const kurszahl : number | null = kurszahlenHalbjahr.get(kursart);

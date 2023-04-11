@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegungsfehlerArt } from '../../../core/abschluss/gost/GostBelegungsfehlerArt';
 
-export class GostBelegungsfehler extends JavaObject {
+export class GostBelegungsfehler extends JavaObject implements JavaEnum<GostBelegungsfehler> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -592,7 +593,7 @@ export class GostBelegungsfehler extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -601,7 +602,7 @@ export class GostBelegungsfehler extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -661,7 +662,7 @@ export class GostBelegungsfehler extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler', 'java.lang.Enum'].includes(name);
 	}
 
 }

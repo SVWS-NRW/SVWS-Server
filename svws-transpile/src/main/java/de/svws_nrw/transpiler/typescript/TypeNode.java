@@ -487,7 +487,7 @@ public class TypeNode {
 					return "((" + obj + " instanceof Object) || ((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "'))))";
 				}
 				// Otherwise we can check for a complete Java-object...
-				return "((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "')))";
+				return "((" + obj + " instanceof JavaObject) && ((" + obj + " as JavaObject).isTranspiledInstanceOf('" + classType.getFullQualifiedName() + "')))";
 			}
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());
 		}
@@ -563,6 +563,7 @@ public class TypeNode {
 					case "java.lang.String", "java.lang.Boolean", "java.lang.Byte", "java.lang.Short",
 						"java.lang.Integer", "java.lang.Long", "java.lang.Float", "java.lang.Double" -> identifier;
 					case "java.lang.Object" -> "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+					case "java.lang.Enum" -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 				};
 			}
@@ -577,6 +578,9 @@ public class TypeNode {
 			if (type instanceof final ExpressionClassType classType) {
 				if ("java.lang.String".equals(classType.getFullQualifiedName()))
 					return identifier;
+				if ("java.lang.Enum".equals(classType.getFullQualifiedName())) {
+					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
+				}
 				if ("java.lang.Object".equals(classType.getFullQualifiedName())) {
 					return "(" + identifier + " instanceof JavaObject) ? cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ") : " + identifier;
 				}

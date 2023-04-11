@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogLeitungsfunktionenEintrag } from '../../../core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
 
-export class LehrerLeitungsfunktion extends JavaObject {
+export class LehrerLeitungsfunktion extends JavaObject implements JavaEnum<LehrerLeitungsfunktion> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -125,7 +126,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -134,7 +135,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -203,7 +204,7 @@ export class LehrerLeitungsfunktion extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion', 'java.lang.Enum'].includes(name);
 	}
 
 }

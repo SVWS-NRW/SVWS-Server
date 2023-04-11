@@ -201,6 +201,16 @@ public final class TranspilerUnit {
 
 
 	/**
+	 * Returns whether the class is an enum class or not.
+	 *
+	 * @return true if the class is an enum class and false otherwise
+	 */
+	public boolean isEnum() {
+		return this.classTree.getKind() == Kind.ENUM;
+	}
+
+
+	/**
 	 * Returns the class name of this transpiler unit
 	 *
 	 * @return the class name
@@ -247,6 +257,7 @@ public final class TranspilerUnit {
 		switch (name) {
 			case "Comparable", "Cloneable", "Override", "System",
 				"Object",
+				"Enum",
 				"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
 				"Math", "String", "StringBuilder",
 				"ArrayIndexOutOfBoundsException",
@@ -621,7 +632,7 @@ public final class TranspilerUnit {
 
 		// check in imports for nested classes
 		final Entry<String, String> importsEntry = importsSuper.entrySet().stream()
-			.filter(e -> e.getKey().endsWith(nodeName))
+			.filter(e -> e.getKey().endsWith("." + nodeName))
 			.max((a, b) -> Integer.compare(a.getKey().length(), b.getKey().length()))
 			.orElse(null);
 		if (importsEntry != null)

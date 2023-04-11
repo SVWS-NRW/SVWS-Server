@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -7,7 +8,7 @@ import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class BenutzerKompetenz extends JavaObject {
+export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKompetenz> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -581,7 +582,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -590,7 +591,7 @@ export class BenutzerKompetenz extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -659,7 +660,7 @@ export class BenutzerKompetenz extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz', 'java.lang.Enum'].includes(name);
 	}
 
 }

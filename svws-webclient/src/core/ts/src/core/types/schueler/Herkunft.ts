@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftKatalogEintrag } from '../../../core/data/schule/HerkunftKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -6,7 +7,7 @@ import { HerkunftSchulform, cast_de_svws_nrw_core_types_schueler_HerkunftSchulfo
 import { HerkunftBildungsgangsTyp, cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgangsTyp } from '../../../core/types/schueler/HerkunftBildungsgangsTyp';
 import { HerkunftSonstige, cast_de_svws_nrw_core_types_schueler_HerkunftSonstige } from '../../../core/types/schueler/HerkunftSonstige';
 
-export class Herkunft extends JavaObject {
+export class Herkunft extends JavaObject implements JavaEnum<Herkunft> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -431,28 +432,28 @@ export class Herkunft extends JavaObject {
 		this.__ordinal = ordinal;
 		Herkunft.all_values_by_ordinal.push(this);
 		Herkunft.all_values_by_name.set(name, this);
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSonstige'))))) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSonstige'))))) {
 			const h : HerkunftSonstige = cast_de_svws_nrw_core_types_schueler_HerkunftSonstige(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 1000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgang'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgang'))))) {
 			const h : HerkunftBildungsgang = cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgang(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 2000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'))))) {
 			const h : HerkunftBildungsgangsTyp = cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgangsTyp(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 3000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSchulform'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSchulform'))))) {
 			const h : HerkunftSchulform = cast_de_svws_nrw_core_types_schueler_HerkunftSchulform(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
@@ -495,7 +496,7 @@ export class Herkunft extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -504,7 +505,7 @@ export class Herkunft extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -573,7 +574,7 @@ export class Herkunft extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Herkunft'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Herkunft', 'java.lang.Enum'].includes(name);
 	}
 
 }

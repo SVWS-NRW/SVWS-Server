@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 
-export class LogLevel extends JavaObject {
+export class LogLevel extends JavaObject implements JavaEnum<LogLevel> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -69,7 +70,7 @@ export class LogLevel extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -78,7 +79,7 @@ export class LogLevel extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -147,7 +148,7 @@ export class LogLevel extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.logger.LogLevel'].includes(name);
+		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum'].includes(name);
 	}
 
 }

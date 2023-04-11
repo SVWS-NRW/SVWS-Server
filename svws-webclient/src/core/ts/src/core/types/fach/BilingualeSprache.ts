@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BilingualeSpracheKatalogEintrag } from '../../../core/data/fach/BilingualeSpracheKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -7,7 +8,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class BilingualeSprache extends JavaObject {
+export class BilingualeSprache extends JavaObject implements JavaEnum<BilingualeSprache> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -243,7 +244,7 @@ export class BilingualeSprache extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -252,7 +253,7 @@ export class BilingualeSprache extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -321,7 +322,7 @@ export class BilingualeSprache extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.BilingualeSprache'].includes(name);
+		return ['de.svws_nrw.core.types.fach.BilingualeSprache', 'java.lang.Enum'].includes(name);
 	}
 
 }

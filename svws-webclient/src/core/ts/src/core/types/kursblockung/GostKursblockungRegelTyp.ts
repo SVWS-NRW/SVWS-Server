@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { HashMap } from '../../../java/util/HashMap';
@@ -10,7 +11,7 @@ import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
-export class GostKursblockungRegelTyp extends JavaObject {
+export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<GostKursblockungRegelTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -269,7 +270,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -278,7 +279,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -347,7 +348,7 @@ export class GostKursblockungRegelTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp'].includes(name);
+		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

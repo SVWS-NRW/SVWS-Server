@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { BerufskollegBildungsgangTyp } from '../../../core/types/schule/BerufskollegBildungsgangTyp';
 import { HerkunftBildungsgangTypKatalogEintrag } from '../../../core/data/schule/HerkunftBildungsgangTypKatalogEintrag';
 import { WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
 
-export class HerkunftBildungsgangsTyp extends JavaObject {
+export class HerkunftBildungsgangsTyp extends JavaObject implements JavaEnum<HerkunftBildungsgangsTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -127,7 +128,7 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -136,7 +137,7 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -205,7 +206,7 @@ export class HerkunftBildungsgangsTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

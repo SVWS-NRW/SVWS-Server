@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { HashMap } from '../../../java/util/HashMap';
 import { KAOAKategorieEintrag } from '../../../core/data/kaoa/KAOAKategorieEintrag';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class KAOAKategorie extends JavaObject {
+export class KAOAKategorie extends JavaObject implements JavaEnum<KAOAKategorie> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -156,7 +157,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -165,7 +166,7 @@ export class KAOAKategorie extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -234,7 +235,7 @@ export class KAOAKategorie extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAKategorie'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAKategorie', 'java.lang.Enum'].includes(name);
 	}
 
 }

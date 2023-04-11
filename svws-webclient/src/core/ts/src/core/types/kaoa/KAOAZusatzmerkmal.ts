@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOAZusatzmerkmalEintrag } from '../../../core/data/kaoa/KAOAZusatzmerkmalEintrag';
 import { KAOAZusatzmerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAZusatzmerkmaleOptionsarten';
 import { HashMap } from '../../../java/util/HashMap';
 import { KAOAMerkmal } from '../../../core/types/kaoa/KAOAMerkmal';
 
-export class KAOAZusatzmerkmal extends JavaObject {
+export class KAOAZusatzmerkmal extends JavaObject implements JavaEnum<KAOAZusatzmerkmal> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -696,7 +697,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -705,7 +706,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -774,7 +775,7 @@ export class KAOAZusatzmerkmal extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal', 'java.lang.Enum'].includes(name);
 	}
 
 }

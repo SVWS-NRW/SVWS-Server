@@ -1,9 +1,10 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { UebergangsempfehlungKatalogEintrag } from '../../../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
 
-export class Uebergangsempfehlung extends JavaObject {
+export class Uebergangsempfehlung extends JavaObject implements JavaEnum<Uebergangsempfehlung> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -115,7 +116,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -124,7 +125,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -193,7 +194,7 @@ export class Uebergangsempfehlung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Uebergangsempfehlung'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Uebergangsempfehlung', 'java.lang.Enum'].includes(name);
 	}
 
 }

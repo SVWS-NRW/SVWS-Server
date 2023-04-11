@@ -125,7 +125,7 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'log'
 	 */
 	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			const data : LogData = cast_de_svws_nrw_core_logger_LogData(__param0);
 			for (let i : number = 0; i < this.consumer.size(); i++) {
 				const c : Consumer<LogData> = this.consumer.get(i);
@@ -133,12 +133,12 @@ export class Logger extends JavaObject {
 					continue;
 				c.accept(data);
 			}
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : number = __param1 as number;
 			const text : string = __param2;
 			this.log(new LogData(level, indent, false, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const text : string = __param1;
 			this.log(level, this.indent, text);
@@ -193,12 +193,12 @@ export class Logger extends JavaObject {
 	 * Implementation for method overloads of 'logLn'
 	 */
 	public logLn(__param0 : LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && (typeof __param2 === "string"))) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : number = __param1 as number;
 			const text : string = __param2;
 			this.log(new LogData(level, indent, true, text));
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string")) && (typeof __param2 === "undefined")) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const text : string = __param1;
 			this.logLn(level, this.indent, text);

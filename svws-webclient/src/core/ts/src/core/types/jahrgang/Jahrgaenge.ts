@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
@@ -7,7 +8,7 @@ import { JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKa
 import { Arrays } from '../../../java/util/Arrays';
 import { JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';
 
-export class Jahrgaenge extends JavaObject {
+export class Jahrgaenge extends JavaObject implements JavaEnum<Jahrgaenge> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -372,7 +373,7 @@ export class Jahrgaenge extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -381,7 +382,7 @@ export class Jahrgaenge extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -450,7 +451,7 @@ export class Jahrgaenge extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.jahrgang.Jahrgaenge'].includes(name);
+		return ['de.svws_nrw.core.types.jahrgang.Jahrgaenge', 'java.lang.Enum'].includes(name);
 	}
 
 }

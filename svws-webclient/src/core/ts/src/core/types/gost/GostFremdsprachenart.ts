@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostFremdsprachenart extends JavaObject {
+export class GostFremdsprachenart extends JavaObject implements JavaEnum<GostFremdsprachenart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -60,7 +61,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -69,7 +70,7 @@ export class GostFremdsprachenart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -138,7 +139,7 @@ export class GostFremdsprachenart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart', 'java.lang.Enum'].includes(name);
 	}
 
 }

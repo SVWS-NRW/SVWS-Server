@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogAnrechnungsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
 
-export class LehrerAnrechnungsgrund extends JavaObject {
+export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<LehrerAnrechnungsgrund> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -518,7 +519,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -527,7 +528,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -596,7 +597,7 @@ export class LehrerAnrechnungsgrund extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerAnrechnungsgrund'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerAnrechnungsgrund', 'java.lang.Enum'].includes(name);
 	}
 
 }

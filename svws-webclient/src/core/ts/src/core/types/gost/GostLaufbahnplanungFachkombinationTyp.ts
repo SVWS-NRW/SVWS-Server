@@ -1,7 +1,8 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
-export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
+export class GostLaufbahnplanungFachkombinationTyp extends JavaObject implements JavaEnum<GostLaufbahnplanungFachkombinationTyp> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -74,7 +75,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -83,7 +84,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -152,7 +153,7 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp', 'java.lang.Enum'].includes(name);
 	}
 
 }

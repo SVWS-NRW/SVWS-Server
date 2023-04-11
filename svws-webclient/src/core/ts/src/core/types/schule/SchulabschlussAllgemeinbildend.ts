@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../../../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 
-export class SchulabschlussAllgemeinbildend extends JavaObject {
+export class SchulabschlussAllgemeinbildend extends JavaObject implements JavaEnum<SchulabschlussAllgemeinbildend> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -224,7 +225,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -233,7 +234,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -302,7 +303,7 @@ export class SchulabschlussAllgemeinbildend extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend'].includes(name);
+		return ['de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend', 'java.lang.Enum'].includes(name);
 	}
 
 }

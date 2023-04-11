@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ReformpaedagogikKatalogEintrag } from '../../../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -6,7 +7,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class Reformpaedagogik extends JavaObject {
+export class Reformpaedagogik extends JavaObject implements JavaEnum<Reformpaedagogik> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -231,7 +232,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -240,7 +241,7 @@ export class Reformpaedagogik extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -309,7 +310,7 @@ export class Reformpaedagogik extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Reformpaedagogik'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Reformpaedagogik', 'java.lang.Enum'].includes(name);
 	}
 
 }

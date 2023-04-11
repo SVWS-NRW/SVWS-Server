@@ -50,7 +50,7 @@ export class GostFaecherManager extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
 			const faecher : List<GostFach> = cast_java_util_List(__param0);
 			this.addAll(faecher);
 		} else throw new Error('invalid method overload');

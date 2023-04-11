@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerKatalogMinderleistungsartEintrag } from '../../../core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 
-export class LehrerMinderleistungArt extends JavaObject {
+export class LehrerMinderleistungArt extends JavaObject implements JavaEnum<LehrerMinderleistungArt> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -199,7 +200,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -208,7 +209,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -277,7 +278,7 @@ export class LehrerMinderleistungArt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt', 'java.lang.Enum'].includes(name);
 	}
 
 }

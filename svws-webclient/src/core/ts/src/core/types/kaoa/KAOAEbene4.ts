@@ -1,9 +1,10 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { KAOAEbene4Eintrag } from '../../../core/data/kaoa/KAOAEbene4Eintrag';
 import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
-export class KAOAEbene4 extends JavaObject {
+export class KAOAEbene4 extends JavaObject implements JavaEnum<KAOAEbene4> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -230,7 +231,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -239,7 +240,7 @@ export class KAOAEbene4 extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -308,7 +309,7 @@ export class KAOAEbene4 extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAEbene4'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAEbene4', 'java.lang.Enum'].includes(name);
 	}
 
 }

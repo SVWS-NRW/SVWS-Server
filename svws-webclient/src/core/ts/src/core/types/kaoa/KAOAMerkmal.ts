@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { KAOAKategorie } from '../../../core/types/kaoa/KAOAKategorie';
@@ -6,7 +7,7 @@ import { KAOAMerkmalEintrag } from '../../../core/data/kaoa/KAOAMerkmalEintrag';
 import { KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class KAOAMerkmal extends JavaObject {
+export class KAOAMerkmal extends JavaObject implements JavaEnum<KAOAMerkmal> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -288,7 +289,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -297,7 +298,7 @@ export class KAOAMerkmal extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -366,7 +367,7 @@ export class KAOAMerkmal extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmal'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmal', 'java.lang.Enum'].includes(name);
 	}
 
 }

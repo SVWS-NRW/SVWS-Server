@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostBesondereLernleistung extends JavaObject {
+export class GostBesondereLernleistung extends JavaObject implements JavaEnum<GostBesondereLernleistung> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -104,7 +105,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -113,7 +114,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -173,7 +174,7 @@ export class GostBesondereLernleistung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung', 'java.lang.Enum'].includes(name);
 	}
 
 }

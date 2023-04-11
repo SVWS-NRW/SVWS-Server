@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { PruefungsordnungKatalogEintrag } from '../../../core/data/schule/PruefungsordnungKatalogEintrag';
 
-export class Pruefungsordnung extends JavaObject {
+export class Pruefungsordnung extends JavaObject implements JavaEnum<Pruefungsordnung> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -118,7 +119,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -127,7 +128,7 @@ export class Pruefungsordnung extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -196,7 +197,7 @@ export class Pruefungsordnung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Pruefungsordnung'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Pruefungsordnung', 'java.lang.Enum'].includes(name);
 	}
 
 }

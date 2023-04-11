@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 
-export class KursFortschreibungsart extends JavaObject {
+export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursFortschreibungsart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -166,7 +167,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -175,7 +176,7 @@ export class KursFortschreibungsart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -244,7 +245,7 @@ export class KursFortschreibungsart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.KursFortschreibungsart'].includes(name);
+		return ['de.svws_nrw.core.types.KursFortschreibungsart', 'java.lang.Enum'].includes(name);
 	}
 
 }

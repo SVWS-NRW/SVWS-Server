@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftsartKatalogEintrag } from '../../../core/data/schule/HerkunftsartKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -7,7 +8,7 @@ import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 
-export class Herkunftsarten extends JavaObject {
+export class Herkunftsarten extends JavaObject implements JavaEnum<Herkunftsarten> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -395,7 +396,7 @@ export class Herkunftsarten extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -404,7 +405,7 @@ export class Herkunftsarten extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -473,7 +474,7 @@ export class Herkunftsarten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Herkunftsarten'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Herkunftsarten', 'java.lang.Enum'].includes(name);
 	}
 
 }

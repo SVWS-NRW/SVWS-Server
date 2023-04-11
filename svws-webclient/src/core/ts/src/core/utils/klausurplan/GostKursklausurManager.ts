@@ -83,7 +83,7 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public constructor(__param0 : List<GostKursklausur>, __param1? : List<GostKlausurtermin>) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
 			const klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
 			const termine : List<GostKlausurtermin> = cast_java_util_List(__param1);
 			this._klausuren = klausuren;
@@ -91,7 +91,7 @@ export class GostKursklausurManager extends JavaObject {
 			for (const t of termine) {
 				this.addTermin(t);
 			}
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
 			const klausuren : List<GostKursklausur> = cast_java_util_List(__param0);
 			this._klausuren = klausuren;
 			this.helpKonstruktor();
@@ -492,7 +492,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Implementation for method overloads of 'gibKonfliktTerminKursklausur'
 	 */
 	public gibKonfliktTerminKursklausur(__param0 : GostKlausurtermin | number, __param1 : GostKursklausur | number) : List<number> {
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
 			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurtermin(__param0);
 			const klausur : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur.idTermin === termin.id) {
@@ -576,7 +576,7 @@ export class GostKursklausurManager extends JavaObject {
 				return new ArrayList();
 			}
 			return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKursklausur'))))) {
 			const klausur1 : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param0);
 			const klausur2 : GostKursklausur = cast_de_svws_nrw_core_data_gost_klausuren_GostKursklausur(__param1);
 			if (klausur1 as unknown === klausur2 as unknown) {

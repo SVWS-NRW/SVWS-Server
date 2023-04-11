@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { KursartKatalogEintrag } from '../../../core/data/kurse/KursartKatalogEintrag';
@@ -8,7 +9,7 @@ import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { Pair } from '../../../core/adt/Pair';
 
-export class ZulaessigeKursart extends JavaObject {
+export class ZulaessigeKursart extends JavaObject implements JavaEnum<ZulaessigeKursart> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -538,7 +539,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -547,7 +548,7 @@ export class ZulaessigeKursart extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -616,7 +617,7 @@ export class ZulaessigeKursart extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kurse.ZulaessigeKursart'].includes(name);
+		return ['de.svws_nrw.core.types.kurse.ZulaessigeKursart', 'java.lang.Enum'].includes(name);
 	}
 
 }

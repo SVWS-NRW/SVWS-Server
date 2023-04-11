@@ -165,7 +165,7 @@ export class SatSolverWrapper extends SatSolverA {
 			const pArray : Array<number> = __param0;
 			const amount : number = __param1 as number;
 			this.c_exactly_GENERIC(SatSolverWrapper.toList(pArray), amount);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
 			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			const pAmount : number = __param1 as number;
 			const list : LinkedCollection<number> = new LinkedCollection(pList);

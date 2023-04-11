@@ -1,3 +1,4 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulstufe } from '../../../core/types/schule/Schulstufe';
 import { HashMap } from '../../../java/util/HashMap';
@@ -5,7 +6,7 @@ import { KAOAAnschlussoptionEintrag } from '../../../core/data/kaoa/KAOAAnschlus
 import { Arrays } from '../../../java/util/Arrays';
 import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
-export class KAOAAnschlussoptionen extends JavaObject {
+export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAnschlussoptionen> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -297,7 +298,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -306,7 +307,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -375,7 +376,7 @@ export class KAOAAnschlussoptionen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen', 'java.lang.Enum'].includes(name);
 	}
 
 }

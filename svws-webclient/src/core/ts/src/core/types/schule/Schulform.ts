@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { SchulformKatalogEintrag } from '../../../core/data/schule/SchulformKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 
-export class Schulform extends JavaObject {
+export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -238,7 +239,7 @@ export class Schulform extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -247,7 +248,7 @@ export class Schulform extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -316,7 +317,7 @@ export class Schulform extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Schulform'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Schulform', 'java.lang.Enum'].includes(name);
 	}
 
 }

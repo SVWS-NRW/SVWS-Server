@@ -35,7 +35,7 @@ export class SchulformSchulgliederung extends JavaObject {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			// empty block
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param1 === null))) {
 			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
 			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param1);
 			this.schulform = schulform.daten.kuerzel;

@@ -166,10 +166,10 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	public getText(__param0? : LogLevel, __param1? : string) : string {
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			return this.getText(LogLevel.INFO, "");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && (typeof __param1 === "undefined")) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && (typeof __param1 === "undefined")) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			return this.getText(level, "");
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((typeof __param1 !== "undefined") && (typeof __param1 === "string"))) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : string = __param1;
 			const sb : StringBuilder | null = new StringBuilder();

@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { KindergartenbesuchKatalogEintrag } from '../../../core/data/schule/KindergartenbesuchKatalogEintrag';
 
-export class Kindergartenbesuch extends JavaObject {
+export class Kindergartenbesuch extends JavaObject implements JavaEnum<Kindergartenbesuch> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -109,7 +110,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -118,7 +119,7 @@ export class Kindergartenbesuch extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -187,7 +188,7 @@ export class Kindergartenbesuch extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Kindergartenbesuch'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Kindergartenbesuch', 'java.lang.Enum'].includes(name);
 	}
 
 }

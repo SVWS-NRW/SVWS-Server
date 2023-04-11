@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SprachpruefungsniveauKatalogEintrag } from '../../../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 
-export class Sprachpruefungniveau extends JavaObject {
+export class Sprachpruefungniveau extends JavaObject implements JavaEnum<Sprachpruefungniveau> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -140,7 +141,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -149,7 +150,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -218,7 +219,7 @@ export class Sprachpruefungniveau extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau'].includes(name);
+		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau', 'java.lang.Enum'].includes(name);
 	}
 
 }

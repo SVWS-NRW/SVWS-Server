@@ -1,6 +1,7 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class GostSchriftlichkeit extends JavaObject {
+export class GostSchriftlichkeit extends JavaObject implements JavaEnum<GostSchriftlichkeit> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -48,7 +49,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -57,7 +58,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -126,7 +127,7 @@ export class GostSchriftlichkeit extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostSchriftlichkeit'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostSchriftlichkeit', 'java.lang.Enum'].includes(name);
 	}
 
 }

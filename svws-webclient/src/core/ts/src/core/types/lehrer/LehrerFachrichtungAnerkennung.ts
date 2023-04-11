@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogFachrichtungAnerkennungEintrag } from '../../../core/data/lehrer/LehrerKatalogFachrichtungAnerkennungEintrag';
 
-export class LehrerFachrichtungAnerkennung extends JavaObject {
+export class LehrerFachrichtungAnerkennung extends JavaObject implements JavaEnum<LehrerFachrichtungAnerkennung> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -129,7 +130,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -138,7 +139,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -207,7 +208,7 @@ export class LehrerFachrichtungAnerkennung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung', 'java.lang.Enum'].includes(name);
 	}
 
 }

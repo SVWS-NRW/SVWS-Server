@@ -1,10 +1,11 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { AllgemeineMerkmaleKatalogEintrag } from '../../../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
 
-export class AllgemeineMerkmale extends JavaObject {
+export class AllgemeineMerkmale extends JavaObject implements JavaEnum<AllgemeineMerkmale> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -192,7 +193,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -201,7 +202,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -270,7 +271,7 @@ export class AllgemeineMerkmale extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale'].includes(name);
+		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale', 'java.lang.Enum'].includes(name);
 	}
 
 }

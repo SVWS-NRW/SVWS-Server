@@ -1,8 +1,9 @@
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogLehramtEintrag } from '../../../core/data/lehrer/LehrerKatalogLehramtEintrag';
 
-export class LehrerLehramt extends JavaObject {
+export class LehrerLehramt extends JavaObject implements JavaEnum<LehrerLehramt> {
 
 	/** the name of the enumeration value */
 	private readonly __name : string;
@@ -339,7 +340,7 @@ export class LehrerLehramt extends JavaObject {
 	 *
 	 * @returns the name
 	 */
-	private name() : string {
+	public name() : string {
 		return this.__name;
 	}
 
@@ -348,7 +349,7 @@ export class LehrerLehramt extends JavaObject {
 	 *
 	 * @returns the ordinal value
 	 */
-	private ordinal() : number {
+	public ordinal() : number {
 		return this.__ordinal;
 	}
 
@@ -417,7 +418,7 @@ export class LehrerLehramt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerLehramt'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLehramt', 'java.lang.Enum'].includes(name);
 	}
 
 }
