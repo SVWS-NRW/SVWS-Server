@@ -33,6 +33,7 @@ module.exports = {
 		"max-len": "off", // keine maximale zeilenlänge
 		"vue/max-len": "off", // ebensowenig in .vue files
 		"no-unused-vars": "off",
+		"no-dupe-class-members": "off",
 
 		// Vue-spezifische Regeln
 		"vue/no-setup-props-destructure": "error", // schützt davor, props unreactiv zu destrukurieren
