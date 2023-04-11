@@ -6,7 +6,6 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
-import { Vector } from '../../../java/util/Vector';
 
 export class BenutzerKompetenz extends JavaObject {
 
@@ -566,14 +565,14 @@ export class BenutzerKompetenz extends JavaObject {
 	 * @return die Liste der Benutzerkompetenzen
 	 */
 	public static getKompetenzenMitSchulform(gruppe : BenutzerKompetenzGruppe, schulform : Schulform) : List<BenutzerKompetenz> {
+		const l : List<BenutzerKompetenz> | null = new ArrayList();
 		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
-		const l : List<BenutzerKompetenz> | null = new Vector();
+		if (liste === null)
+			return l;
 		for (const bk of liste) {
 			if (bk.hatSchulform(schulform))
 				l.add(bk);
 		}
-		if (liste === null)
-			return new Vector();
 		return l;
 	}
 

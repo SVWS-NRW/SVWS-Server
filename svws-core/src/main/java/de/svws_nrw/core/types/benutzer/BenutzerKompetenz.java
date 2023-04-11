@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
@@ -572,14 +571,14 @@ public enum BenutzerKompetenz {
      */
     public static @NotNull List<@NotNull BenutzerKompetenz> getKompetenzenMitSchulform(final @NotNull BenutzerKompetenzGruppe gruppe,
             final @NotNull Schulform schulform) {
+        final List<@NotNull BenutzerKompetenz> l = new ArrayList<>();
         final List<@NotNull BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
-        final List<@NotNull BenutzerKompetenz> l = new Vector<>();
+        if (liste == null)
+        	return l;
         for (final BenutzerKompetenz bk: liste) {
             if (bk.hatSchulform(schulform))
                 l.add(bk);
         }
-        if (liste == null)
-            return new Vector<>();
         return l;
     }
 
