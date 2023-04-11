@@ -10,7 +10,7 @@ export class GostFachManager extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Instantiation of " + GostFachManager.class.getName()! + " not allowed")
+		throw new IllegalStateException("Instantiation not allowed")
 	}
 
 	/**

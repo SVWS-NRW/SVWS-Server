@@ -7,8 +7,9 @@ import jakarta.validation.constraints.NotNull;
  * Addressen zur Verfügung
  */
 public final class AdressenUtils {
+
 	private AdressenUtils() {
-		throw new IllegalStateException("Instantiation of " + AdressenUtils.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

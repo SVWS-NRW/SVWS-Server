@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public final class ResourceUtils {
 
 	private ResourceUtils() {
-		throw new IllegalStateException("Instantiation of " + ResourceUtils.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 

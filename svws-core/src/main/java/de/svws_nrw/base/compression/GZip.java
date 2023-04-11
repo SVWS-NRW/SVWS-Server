@@ -14,7 +14,7 @@ import java.util.zip.GZIPOutputStream;
 public final class GZip {
 
 	private GZip() {
-		throw new IllegalStateException("Instantiation of " + GZip.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

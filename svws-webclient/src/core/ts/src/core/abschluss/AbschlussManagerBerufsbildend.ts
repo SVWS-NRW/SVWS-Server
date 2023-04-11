@@ -9,7 +9,7 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 
 	private constructor() {
 		super();
-		throw new IllegalStateException("Instantiation of " + AbschlussManagerBerufsbildend.class.getName()! + " not allowed")
+		throw new IllegalStateException("Instantiation not allowed")
 	}
 
 	/**

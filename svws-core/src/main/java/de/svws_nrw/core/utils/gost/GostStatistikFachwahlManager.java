@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 public final class GostStatistikFachwahlManager {
 
 	private GostStatistikFachwahlManager() {
-		throw new IllegalStateException("Instantiation of " + GostStatistikFachwahlManager.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

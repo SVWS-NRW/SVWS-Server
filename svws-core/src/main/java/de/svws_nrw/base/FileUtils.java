@@ -14,7 +14,7 @@ import java.nio.file.Files;
  */
 public final class FileUtils {
 	private FileUtils() {
-		throw new IllegalStateException("Instantiation of " + FileUtils.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public final class SprachendatenUtils {
 
 	private SprachendatenUtils() {
-		throw new IllegalStateException("Instantiation of " + SprachendatenUtils.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
     /**

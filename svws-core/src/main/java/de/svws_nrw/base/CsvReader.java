@@ -25,7 +25,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
  */
 public final class CsvReader {
 	private CsvReader() {
-		throw new IllegalStateException("Instantiation of " + CsvReader.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

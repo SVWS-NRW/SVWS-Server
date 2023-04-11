@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
 public final class AbschlussManager {
 
 	private AbschlussManager() {
-		throw new IllegalStateException("Instantiation of " + AbschlussManager.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

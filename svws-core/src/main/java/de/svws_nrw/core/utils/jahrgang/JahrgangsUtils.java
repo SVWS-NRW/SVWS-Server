@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 public final class JahrgangsUtils {
 
 	private JahrgangsUtils() {
-		throw new IllegalStateException("Instantiation of " + JahrgangsUtils.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**

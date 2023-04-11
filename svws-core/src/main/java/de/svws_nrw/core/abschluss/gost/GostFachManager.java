@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 public final class GostFachManager {
 
 	private GostFachManager() {
-		throw new IllegalStateException("Instantiation of " + GostFachManager.class.getName() + " not allowed");
+		throw new IllegalStateException("Instantiation not allowed");
 	}
 
 	/**
