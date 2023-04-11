@@ -175,7 +175,7 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 */
 	public SchuelerKAoADaten createBySchuelerID(final Long schuelerid, final SchuelerKAoADaten daten) {
 		this.validate(schuelerid, daten);
-		final boolean success = this.persist(DTOSchuelerKAoADaten.class, id -> {
+		final boolean success = conn.persistNewWithAutoInkrement(DTOSchuelerKAoADaten.class, id -> {
 			daten.id = id;
 			return getDtoSchuelerKAoADaten(daten);
 		});
@@ -250,33 +250,6 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 */
 	public DTOSchuelerKAoADaten getByID(final Long id) {
 		return this.conn.queryByKey(DTOSchuelerKAoADaten.class, id);
-	}
-
-
-	/**
-	 * Generische Methode zum speichern von Daten
-	 *
-	 * @param t       Typ der zu speichernden Daten
-	 * @param idApply methode die die ID im Objekt übernimmt
-	 * @param <T>     erwarteter Rückgabetyp
-	 *
-	 * @return Rückgabetyp
-	 */
-
-	private <T> boolean persist(final Class<T> t, final LongFunction<T> idApply) {
-		final String tableName = t.getAnnotation(Table.class).name();
-		conn.transactionBegin();
-		final DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, tableName);
-		final long nextID = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
-		final T daten = idApply.apply(nextID);
-		this.conn.transactionPersist(daten);
-
-		if (!this.conn.transactionCommit()) {
-			this.conn.transactionRollback();
-			return false;
-		}
-
-		return true;
 	}
 
 	/**

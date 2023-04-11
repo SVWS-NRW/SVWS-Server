@@ -10,12 +10,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.Query;
 import jakarta.persistence.RollbackException;
+import jakarta.persistence.Table;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
 
@@ -795,6 +799,38 @@ public final class DBEntityManager implements AutoCloseable {
 		if (entries.isEmpty())
 			return null;
 		return entries.get(0);
+	}
+
+	/**
+	 * Generische Methode zum speichern von Daten
+	 *
+	 * @param t       Typ der zu speichernden Daten
+	 * @param idApplicator methode die die ID im Objekt übernimmt
+	 * @param <T>     erwarteter Rückgabetyp
+	 *
+	 * @return Rückgabetyp
+	 */
+
+	public  <T> boolean persistNewWithAutoInkrement(final Class<T> t, final LongFunction<T> idApplicator) {
+		final String tableName = t.getAnnotation(Table.class).name();
+		this.transactionBegin();
+
+		Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
+		String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
+		String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
+		Query q = em.createNativeQuery("SELECT "+col_MaxID+" FROM "+tableAutoInkrementeName+" WHERE nametabelle = ?tableName");
+		q.setParameter("tableName",tableName);
+		Long currentID = (Long) q.getSingleResult();
+		final long nextID = currentID == null ? 1 : currentID + 1;
+		final T daten = idApplicator.apply(nextID);
+		this.transactionPersist(daten);
+
+		if (!this.transactionCommit()) {
+			this.transactionRollback();
+			return false;
+		}
+
+		return true;
 	}
 
 }
