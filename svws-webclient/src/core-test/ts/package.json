@@ -5,14 +5,7 @@
 	"license": "BSD-3-Clause",
 	"version": "0.6.1-SNAPSHOT",
   "files": [ "dist" ],
-  "main": "./dist/svws-core.umd.cjs",
-  "module": "./dist/svws-core.js",
-  "exports": {
-    ".": {
-      "import": "./dist/svws-core.js",
-      "require": "./dist/svws-core.umd.cjs"
-    }
-  },
+  "main": "./dist/index.js",
   "type": "module",
   "types": "./dist/index.d.ts",
 	"scripts": {
@@ -20,7 +13,7 @@
 		"test:run": "vitest run --coverage",
   	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
   	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
-		"build": "vite build",
+		"build": "tsc",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
 	}
 }
