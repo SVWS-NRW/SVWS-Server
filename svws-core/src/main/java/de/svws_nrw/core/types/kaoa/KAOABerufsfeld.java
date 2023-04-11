@@ -153,7 +153,7 @@ public enum KAOABerufsfeld {
 	 *
 	 * @return das Berufsfeld oder null, falls die ID ungültig ist
 	 */
-	public static KAOABerufsfeld getByID(final long id) {
+	public static KAOABerufsfeld getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 

@@ -170,7 +170,7 @@ export class KAOABerufsfeld extends JavaObject implements JavaEnum<KAOABerufsfel
 	 *
 	 * @return das Berufsfeld oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : number) : KAOABerufsfeld | null {
+	public static getByID(id : number | null) : KAOABerufsfeld | null {
 		return KAOABerufsfeld.getMapStatusByID().get(id);
 	}
 

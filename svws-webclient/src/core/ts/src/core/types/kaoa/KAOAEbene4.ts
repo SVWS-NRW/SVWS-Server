@@ -211,7 +211,7 @@ export class KAOAEbene4 extends JavaObject implements JavaEnum<KAOAEbene4> {
 	 *
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls die ID ungültig ist
 	 */
-	public static getByID(id : number) : KAOAEbene4 | null {
+	public static getByID(id : number | null) : KAOAEbene4 | null {
 		return KAOAEbene4.getMapStatusByID().get(id);
 	}
 

@@ -193,7 +193,7 @@ public enum KAOAEbene4 {
 	 *
 	 * @return der Eintrag der SBO Ebene 4 oder null, falls die ID ungültig ist
 	 */
-	public static KAOAEbene4 getByID(final long id) {
+	public static KAOAEbene4 getByID(final Long id) {
 		return getMapStatusByID().get(id);
 	}
 
