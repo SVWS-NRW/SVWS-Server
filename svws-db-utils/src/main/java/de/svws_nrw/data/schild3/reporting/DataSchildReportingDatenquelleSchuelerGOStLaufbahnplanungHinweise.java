@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Hinweise in der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise extends DataSchildReportingDatenquelle {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungHinweise
@@ -36,23 +36,23 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise e
     }
 
 	@Override
-    List<? extends Object> getDatenInteger(DBEntityManager conn, List<Long> params) {
+    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        Map<Long, DTOSchueler> schueler = conn
+        final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (Long schuelerID : params) {
+		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
 				throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		ArrayList<SchildReportingSchuelerGOStLaufbahnplanungHinweise> result = new ArrayList<>();
-		for(Long schuelerID : params) {
+		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungHinweise> result = new ArrayList<>();
+		for (final Long schuelerID : params) {
 			// GOSt-Daten des Schülers
-			DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
-			Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
+			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
 
 			if ((gostSchueler != null) && (abidaten.abiturjahr > 0)) {
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fehler in die Ergebnisliste eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.
@@ -62,22 +62,22 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise e
 				// Da unter Umständen durch Migration und Importe alter Daten aus Schild und LuPO die GOSt-Fächer nicht mit den Fachwahlen übereinstimmen könnten,
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
-					GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
-					AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
+					final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
 
-					GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
+					final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
 					if (ergebnis.fehlercodes.size() > 0) {
-						for (GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
-							GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
+						for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
+							final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 							if (art == GostBelegungsfehlerArt.HINWEIS) {
-								SchildReportingSchuelerGOStLaufbahnplanungHinweise laufbahnplanungHinweis = new SchildReportingSchuelerGOStLaufbahnplanungHinweise();
+								final SchildReportingSchuelerGOStLaufbahnplanungHinweise laufbahnplanungHinweis = new SchildReportingSchuelerGOStLaufbahnplanungHinweise();
 								laufbahnplanungHinweis.schuelerID = schuelerID;
 								laufbahnplanungHinweis.belegungshinweis = f.beschreibung;
 								result.add(laufbahnplanungHinweis);
 							}
 						}
 					}
-				} catch (Exception ex) {
+				} catch (final Exception ex) {
 					throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Daten zur Laufbahn und zum Abitur des Schülers mit der ID " + schuelerID + " und die Einstellungen zu den Fächern der Oberstufe des Abiturjahrgangs " + abidaten.abiturjahr + " sind vermutlich inkonsistent. Folgender Fehler ist aufgetreten: " + ex.getMessage());
 				}
 			}

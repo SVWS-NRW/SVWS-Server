@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Grunddaten der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten extends DataSchildReportingDatenquelle {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungGrunddaten
@@ -36,13 +36,13 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten
     }
 
 	@Override
-    List<? extends Object> getDatenInteger(DBEntityManager conn, List<Long> params) {
+    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        Map<Long, DTOSchueler> schueler = conn
+        final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (Long schuelerID : params) {
+		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
 				throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
 		}
@@ -52,43 +52,43 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten
 		// Damit kann später die aktuelle Jahrgangsstufe des Schülers und das Beratungshalbjahr bestimmt werden.
 
 		// 1. Infos der eigenen Schule bestimmen
-		DTOEigeneSchule eigeneschule = conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class).getResultList().get(0);
+		final DTOEigeneSchule eigeneschule = conn.queryNamed("DTOEigeneSchule.all", DTOEigeneSchule.class).getResultList().get(0);
 
 		// 2. Schuljahresabschnitt der eigenen Schule bestimmen
-		DTOSchuljahresabschnitte aktuellerSchulabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, eigeneschule.Schuljahresabschnitts_ID);
+		final DTOSchuljahresabschnitte aktuellerSchulabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, eigeneschule.Schuljahresabschnitts_ID);
 		if (aktuellerSchulabschnitt == null)
 			throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schuljahresabschnitt mit der ID " + eigeneschule.Schuljahresabschnitts_ID.toString() + " existiert nicht.");
 
 		// 3. Aktuelles und folgendes Halbjahr ermitteln
-		int aktuellesHalbjahr = aktuellerSchulabschnitt.Abschnitt;
-		int folgeHalbjahr = (aktuellesHalbjahr % 2) + 1;
+		final int aktuellesHalbjahr = aktuellerSchulabschnitt.Abschnitt;
+		final int folgeHalbjahr = (aktuellesHalbjahr % 2) + 1;
 
 		// 4. Jahrgänge der eigenen Schule bestimmen
-		Map<Long, DTOJahrgang> jahrgaenge = conn
+		final Map<Long, DTOJahrgang> jahrgaenge = conn
 			.queryNamed("DTOJahrgang.all", DTOJahrgang.class).getResultList()
 			.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		// 5. JahrgangsID zur SchuelerID ablegen
-		Map<Long, Long> schuelerJahrgangID =	conn
+		final Map<Long, Long> schuelerJahrgangID =	conn
 			.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, params, eigeneschule.Schuljahresabschnitts_ID)
 			.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.Jahrgang_ID));
 
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren und die Maps mit den Grunddaten angelegt wurden
-		ArrayList<SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> result = new ArrayList<>();
-		for(Long schuelerID : params) {
-			SchildReportingSchuelerGOStLaufbahnplanungGrunddaten laufbahnplanungGrunddaten = new SchildReportingSchuelerGOStLaufbahnplanungGrunddaten();
+		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> result = new ArrayList<>();
+		for (final Long schuelerID : params) {
+			final SchildReportingSchuelerGOStLaufbahnplanungGrunddaten laufbahnplanungGrunddaten = new SchildReportingSchuelerGOStLaufbahnplanungGrunddaten();
 			laufbahnplanungGrunddaten.schuelerID = schuelerID;
 
 			// GOSt-Daten des Schülers und dessen Abiturdaten und Jahrgangsdaten ermitteln
-			DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
-			Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
+			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
 			DTOGostJahrgangsdaten jahrgangsdaten = null;
 			if (abidaten.abiturjahr > 0) {
 				jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 			}
 
-			if ( (gostSchueler == null) || (abidaten.abiturjahr <= 0) || (jahrgangsdaten == null)) {
+			if ((gostSchueler == null) || (abidaten.abiturjahr <= 0) || (jahrgangsdaten == null)) {
 				// Zum Schüler wurden keine GOST-Daten oder Abiturdaten gefunden.
 				// Gebe daher leere Daten zurück. So wird die Datenquelle auch gefüllt, wenn bei Anfragen zu mehreren Schülern die Daten von nur einem Schüler nicht existiert.
 				// Alternativ wäre der vollständige Abbruch: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.");
@@ -100,22 +100,19 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten
 				laufbahnplanungGrunddaten.ruecklaufdatum = "";
 				laufbahnplanungGrunddaten.beratungsdatum = "";
 				laufbahnplanungGrunddaten.kommentar = "";
-			}
-			else {
+			} else {
 				laufbahnplanungGrunddaten.abiturjahr = abidaten.abiturjahr;
 				laufbahnplanungGrunddaten.beratungsbogentext = jahrgangsdaten.TextBeratungsbogen;
 
 				if (folgeHalbjahr == 2) {
 					laufbahnplanungGrunddaten.beratungshalbjahr = jahrgaenge.get(schuelerJahrgangID.get(schuelerID)).ASDJahrgang + ".2";
-				}
-				else if (folgeHalbjahr == 1) {
-					DTOJahrgang aktuellerJahrgang = jahrgaenge.get(schuelerJahrgangID.get(schuelerID));
+				} else if (folgeHalbjahr == 1) {
+					final DTOJahrgang aktuellerJahrgang = jahrgaenge.get(schuelerJahrgangID.get(schuelerID));
 					if (aktuellerJahrgang.Folgejahrgang_ID != null)
 						laufbahnplanungGrunddaten.beratungshalbjahr = jahrgaenge.get(aktuellerJahrgang.Folgejahrgang_ID).ASDJahrgang + ".1";
 					else
 						laufbahnplanungGrunddaten.beratungshalbjahr = jahrgaenge.get(schuelerJahrgangID.get(schuelerID)).ASDJahrgang + ".2";
-				}
-				else
+				} else
 					laufbahnplanungGrunddaten.beratungshalbjahr = "";
 
 				List<DTOLehrer> beratungslehrerdaten = null;
@@ -124,16 +121,16 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten
 					beratungslehrerdaten = conn.queryNamed("DTOLehrer.id", gostSchueler.Beratungslehrer_ID, DTOLehrer.class);
 				}
 				if (beratungslehrerdaten != null) {
-					DTOLehrer lehrer = beratungslehrerdaten.get(0);
+					final DTOLehrer lehrer = beratungslehrerdaten.get(0);
 					laufbahnplanungGrunddaten.beratungslehrkraft = lehrer.Vorname + " " + lehrer.Nachname;
 				}
 				// Beratungslehrkräfte der Stufe bestimmen aus den Daten der Jahrgangsstufe
-				List<DTOGostJahrgangBeratungslehrer> beratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
+				final List<DTOGostJahrgangBeratungslehrer> beratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
 				if (beratungslehrer != null) {
 					beratungslehrerdaten = conn.queryNamed("DTOLehrer.id.multiple", beratungslehrer.stream().map(l -> l.Lehrer_ID).toList(), DTOLehrer.class);
 				}
 				if (beratungslehrerdaten != null) {
-					for (DTOLehrer lehrer : beratungslehrerdaten) {
+					for (final DTOLehrer lehrer : beratungslehrerdaten) {
 						laufbahnplanungGrunddaten.beratungslehrkraefte = laufbahnplanungGrunddaten.beratungslehrkraefte + lehrer.Vorname + " " + lehrer.Nachname + "; ";
 					}
 					if (laufbahnplanungGrunddaten.beratungslehrkraefte.length() >= 2)

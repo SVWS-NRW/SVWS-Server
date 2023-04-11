@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Fachwahlen eines Schülers in der Laufbahnplanung für die gymnasiale Oberstufe
  */
-public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen extends DataSchildReportingDatenquelle {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungFachwahlen
@@ -41,50 +41,50 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen
     }
 
 	@Override
-    List<? extends Object> getDatenInteger(DBEntityManager conn, List<Long> params) {
+    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        Map<Long, DTOSchueler> schueler = conn
+        final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (Long schuelerID : params) {
+		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
 				throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
 		}
 
 		// Map für die GostFaecherManager der Abiturjahrgänge, damit diese nur einmal geladen werden müssen.
-		Map<Integer, GostFaecherManager> jahrgangGostFaecher = new HashMap<>();
+		final Map<Integer, GostFaecherManager> jahrgangGostFaecher = new HashMap<>();
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		ArrayList<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> result = new ArrayList<>();
-		for(Long schuelerID : params) {
+		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> result = new ArrayList<>();
+		for (final Long schuelerID : params) {
 			// GOSt-Daten des Schülers und Abiturdaten zur Schueler_ID ermitteln
-			DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
-			Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
+			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
 
 			if ((gostSchueler != null) && (abidaten.abiturjahr > 0)) {
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fächer in den Ergebnisvektor eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.
 				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.");
 
 				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgang, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
-				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)){
+				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)) {
 					jahrgangGostFaecher.put(abidaten.abiturjahr, FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr));
 				}
 
 				// Erzeuge eine Map Fach-ID → AbiturFachbelegung aus den AbiturDaten
-				Map<Long, AbiturFachbelegung> belegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
+				final Map<Long, AbiturFachbelegung> belegungen = abidaten.fachbelegungen.stream().collect(Collectors.toMap(b -> b.fachID, b -> b));
 				// Erzeuge eine Map einstelliges Sprachkürzel → Sprachbelegung aus den AbiturDaten
-				Map<String, Sprachbelegung> sprachbelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
+				final Map<String, Sprachbelegung> sprachbelegungen = abidaten.sprachendaten.belegungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 				// Erzeuge eine Map einstelliges Sprachkürzel → Sprachpruefung aus den AbiturDaten
-				Map<String, Sprachpruefung> sprachpruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
+				final Map<String, Sprachpruefung> sprachpruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 
 				// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
-				for (GostFach fach : jahrgangGostFaecher.get(abidaten.abiturjahr).faecher()) {
-					SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach = new SchildReportingSchuelerGOStLaufbahnplanungFachwahlen();
+				for (final GostFach fach : jahrgangGostFaecher.get(abidaten.abiturjahr).faecher()) {
+					final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach = new SchildReportingSchuelerGOStLaufbahnplanungFachwahlen();
 					laufbahnplanungFach.schuelerID = schuelerID;
 
 					// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-					AbiturFachbelegung belegung = belegungen.get(fach.id);
+					final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
 					laufbahnplanungFach.kuerzel = fach.kuerzelAnzeige;
 					laufbahnplanungFach.bezeichnung = fach.bezeichnung;
@@ -93,19 +93,19 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen
 					laufbahnplanungFach.positionFremdsprachenfolge = "";
 
 					if (fach.istFremdsprache) {
-						ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+						final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 
 						// Verhindern, dass Pseudofächer der Statistik hier als zulässiges Fach verwendet werden.
 						if (!(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"))) {
-							Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-							Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+							final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
+							final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
 
 							if (sprachbelegung != null) {
 								if ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
 									// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
-									if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty() ||
-										((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0)) ||
-										((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0))) {
+									if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty()
+											|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+											|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0))) {
 										laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
 										laufbahnplanungFach.jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
 										laufbahnplanungFach.positionFremdsprachenfolge = sprachbelegung.reihenfolge.toString();
@@ -171,17 +171,15 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen
 	 *
 	 * @return String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
-	private String eintragFachbelegung(AbiturFachbelegungHalbjahr belegungHj) {
+	private String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
 		if (belegungHj == null)
 			return "";
 
-		GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
+		final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
 		if (kursart == GostKursart.GK) {
 			if (belegungHj.schriftlich != null)
 				return belegungHj.schriftlich ? "S" : "M";
-			else {
-				return "";
-			}
+			return "";
 		}
 		if (kursart == GostKursart.LK) {
 			return "LK";

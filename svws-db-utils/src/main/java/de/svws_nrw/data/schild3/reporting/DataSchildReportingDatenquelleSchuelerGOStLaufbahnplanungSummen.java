@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Kurs- und Wochenstundensummen der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungSummen
@@ -33,26 +33,26 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen ext
     }
 
 	@Override
-    List<? extends Object> getDatenInteger(DBEntityManager conn, List<Long> params) {
+    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
-        Map<Long, DTOSchueler> schueler = conn
+        final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
                 .stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (Long schuelerID : params) {
+		for (final Long schuelerID : params) {
 			if (schueler.get(schuelerID) == null)
 				throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString() + " existiert nicht.");
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		ArrayList<SchildReportingSchuelerGOStLaufbahnplanungSummen> result = new ArrayList<>();
-		for(Long schuelerID : params) {
-			SchildReportingSchuelerGOStLaufbahnplanungSummen laufbahnplanungSummen = new SchildReportingSchuelerGOStLaufbahnplanungSummen();
+		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungSummen> result = new ArrayList<>();
+		for (final Long schuelerID : params) {
+			final SchildReportingSchuelerGOStLaufbahnplanungSummen laufbahnplanungSummen = new SchildReportingSchuelerGOStLaufbahnplanungSummen();
 			laufbahnplanungSummen.schuelerID = schuelerID;
 
 			// Abiturdaten und Abiturjahrgangsdaten zur Schueler_ID ermitteln
-			Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
-			DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
+			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 
 			if ((abidaten.abiturjahr <= 0) || (jahrgangsdaten == null)) {
 				// Zum Schüler wurden keine Abiturdaten gefunden oder die Jahrgangsdaten zum Abiturjahrgang existieren nicht.
@@ -78,17 +78,16 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen ext
 				laufbahnplanungSummen.wochenstundenDurchschnittEF = 0;
 				laufbahnplanungSummen.wochenstundenDurchschnittQPh = 0;
 				laufbahnplanungSummen.wochenstundenGesamt = 0;
-			}
-			else {
+			} else {
 				// Abiturdatenmanager für weitere Angaben erzeugen
 				// Da unter Umständen durch Migration und Importe alter Daten aus Schild und LuPO die GOSt-Fächer nicht mit den Fachwahlen übereinstimmen könnten,
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
-					GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
-					AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
+					final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
 
-					int[] kurse = abiManager.getAnrechenbareKurse();
-					int[] wstd = abiManager.getWochenstunden();
+					final int[] kurse = abiManager.getAnrechenbareKurse();
+					final int[] wstd = abiManager.getWochenstunden();
 
 					laufbahnplanungSummen.kursanzahlEF1 = kurse[0];
 					laufbahnplanungSummen.kursanzahlEF2 = kurse[1];
@@ -108,8 +107,8 @@ public class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen ext
 
 					laufbahnplanungSummen.wochenstundenDurchschnittEF = (laufbahnplanungSummen.wochenstundenEF1 + laufbahnplanungSummen.wochenstundenEF2) / 2.0;
 					laufbahnplanungSummen.wochenstundenDurchschnittQPh = (laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12 + laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 4.00;
-					laufbahnplanungSummen.wochenstundenGesamt = (laufbahnplanungSummen.wochenstundenEF1 + laufbahnplanungSummen.wochenstundenEF2 + laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12 + laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 2.0;}
-				catch (Exception ex) {
+					laufbahnplanungSummen.wochenstundenGesamt = (laufbahnplanungSummen.wochenstundenEF1 + laufbahnplanungSummen.wochenstundenEF2 + laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12 + laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 2.0;
+				} catch (final Exception ex) {
 					throw OperationError.INTERNAL_SERVER_ERROR.exception("Die Daten zur Laufbahn und zum Abitur des Schülers mit der ID " + schuelerID + " und die Einstellungen zu den Fächern der Oberstufe des Abiturjahrgangs " + abidaten.abiturjahr + " sind vermutlich inkonsistent. Folgender Fehler ist aufgetreten: " + ex.getMessage());
 				}
 			}
