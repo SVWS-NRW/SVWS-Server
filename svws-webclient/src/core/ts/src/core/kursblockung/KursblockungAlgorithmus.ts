@@ -20,7 +20,7 @@ import { KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAl
 
 export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, ArrayList<GostBlockungsergebnisManager>> {
 
-	private static readonly _random : Random | null = new Random();
+	private static readonly _random : Random = new Random();
 
 
 	public constructor() {

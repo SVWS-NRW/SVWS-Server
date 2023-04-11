@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurterminblockungAlgorithmus {
 
-	private static final Random _random = new Random();
+	private static final @NotNull Random _random = new Random();
 
 	/**
 	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.

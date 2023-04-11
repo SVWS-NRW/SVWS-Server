@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SchuelerblockungAlgorithmus extends Service<@NotNull SchuelerblockungInput, @NotNull SchuelerblockungOutput> {
 
-	private static final Random _random = new Random();
+	private static final @NotNull Random _random = new Random();
 
 	@Override
 	public @NotNull SchuelerblockungOutput handle(final @NotNull SchuelerblockungInput pInput) {

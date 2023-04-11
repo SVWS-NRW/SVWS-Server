@@ -7,7 +7,7 @@ import { SchuelerblockungDynDaten } from '../../core/kursblockung/Schuelerblocku
 
 export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, SchuelerblockungOutput> {
 
-	private static readonly _random : Random | null = new Random();
+	private static readonly _random : Random = new Random();
 
 
 	public constructor() {

@@ -17,7 +17,7 @@ import { List } from '../../../java/util/List';
 
 export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 
-	private static readonly _random : Random | null = new Random();
+	private static readonly _random : Random = new Random();
 
 
 	/**
