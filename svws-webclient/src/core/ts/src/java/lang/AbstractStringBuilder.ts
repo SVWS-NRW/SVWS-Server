@@ -52,10 +52,12 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 
 
 	public ensureCapacity(minimumCapacity : number) : void {
+		// Not necessary for TypeScript environments
 	}
 
 
 	public trimToSize() : void {
+		// Not necessary for TypeScript environments
 	}
 
 
@@ -64,7 +66,6 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 			throw new StringIndexOutOfBoundsException(newLength);
 		if (this.value.length > newLength) {
 			this.value = this.value.slice(0, newLength);
-			return;
 		}
 	}
 
@@ -87,7 +88,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 
 
 	public codePointBefore(index : number) : number {
-		return this.codePointAt(index);
+		return this.codePointAt(index - 1);
 	}
 
 
@@ -205,6 +206,7 @@ export class AbstractStringBuilder extends JavaObject implements Appendable, Cha
 		let str = "";
 		for (let i = this.value.length - 1; i >= 0; i--)
 			str = str.concat(this.value.charAt(i));
+		this.value = str;
 		return this;
 	}
 
