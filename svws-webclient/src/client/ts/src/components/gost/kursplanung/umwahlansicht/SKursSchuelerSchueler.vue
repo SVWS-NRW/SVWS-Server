@@ -4,7 +4,7 @@
 			<span>
 				{{ `${schueler.nachname}, ${schueler.vorname}` }}
 			</span>
-			<div class="flex items-center cursor-pointer">
+			<div class="flex items-center gap-1 cursor-pointer">
 				<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" class="normal-case" :short="true">
 					{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}
 				</svws-ui-badge>

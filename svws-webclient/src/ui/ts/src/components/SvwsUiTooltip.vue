@@ -143,6 +143,10 @@
 	&--triggered {
 		svg {
 			@apply text-primary;
+
+			.text-error & {
+				color: inherit;
+			}
 		}
 	}
 

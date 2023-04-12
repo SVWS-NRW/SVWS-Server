@@ -1,5 +1,5 @@
 <template>
-	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex content-start">
+	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex flex-col gap-x-8 gap-y-16 3xl:flex-row content-start">
 		<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
@@ -9,39 +9,35 @@
 			:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :ergebnis-hochschreiben="ergebnisHochschreiben"
 			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs">
 			<template #triggerRegeln>
-				<svws-ui-button @click="onToggle">
+				<svws-ui-button @click="onToggle" :disabled="!allow_regeln">
 					<i-ri-settings3-line />
 					<span>Regeln zur Blockung</span>
+					<template #badge v-if="regelzahl">
+						{{ regelzahl }}
+					</template>
 				</svws-ui-button>
 			</template>
 		</s-card-gost-kursansicht>
-		<section class="content-card--wrapper flex gap-16" style="flex: 2 1 60%;">
-			<!--rounded-xl px-4 shadow-dark-20 shadow-sm border border-dark-20 border-opacity-60-->
-			<div class="w-1/4 min-w-[19rem]">
+		<section class="content-card--wrapper flex gap-8 min-w-[50%]">
+			<div class="min-w-[21rem] w-[21rem]">
 				<router-view name="gost_kursplanung_schueler_auswahl" />
 			</div>
-			<div class="w-3/4">
+			<div class="flex-grow">
 				<router-view />
 			</div>
 		</section>
-		<div v-if="allow_regeln" class="app-layout--main-sidebar" :class="{ 'app-layout--main-sidebar--collapsed': collapsed }">
-			<div class="app-layout--main-sidebar--container">
-				<div class="app-layout--main-sidebar--trigger" @click="onToggle">
-					<div class="sidebar-trigger--text">
-						<svws-ui-button type="icon" class="mr-1 p-[0.1em]" v-if="!collapsed">
-							<svws-ui-icon> <i-ri-close-line /> </svws-ui-icon>
-						</svws-ui-button>
-						<svws-ui-icon v-if="collapsed" class="mr-2"> <i-ri-equalizer-line /> </svws-ui-icon>
+		<Teleport to=".app-layout--main">
+			<aside class="app-layout--aside max-w-2xl h-auto" v-if="allow_regeln && !collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
+				<div class="app-layout--aside-container relative">
+					<h2 class="text-headline flex justify-between py-7 px-7 3xl:px-8">
 						<span>Regeln zur Blockung</span>
-					</div>
-					<div v-if="collapsed" class="app-layout--main-sidebar--trigger-count"> {{ regelzahl }} </div>
-				</div>
-				<div class="app-layout--main-sidebar--content">
-					<s-card-gost-regelansicht v-if="!collapsed" :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
+						<i-ri-close-line @click="onToggle" class="opacity-25 hover:opacity-100 cursor-pointer" />
+					</h2>
+					<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
 						:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" />
 				</div>
-			</div>
-		</div>
+			</aside>
+		</Teleport>
 	</div>
 	<div v-else>
 		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf

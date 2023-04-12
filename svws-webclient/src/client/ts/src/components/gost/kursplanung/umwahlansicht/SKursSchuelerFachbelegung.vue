@@ -1,15 +1,22 @@
 <template>
-	<tr :class="{ 'bg-red-400': (belegung === undefined) }">
-		<svws-ui-drag-data :key="kursid" tag="td" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
+	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-bold': (belegung === undefined) }">
+		<svws-ui-drag-data :key="kursid" tag="div" role="cell" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
-			class="select-none" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-grab' : (belegung === undefined) }"
+			class="select-none data-table__td" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-grab' : (belegung === undefined) }"
 			:style="style">
-			<div class="flex justify-between">
-				<span> {{ get_kurs_name() }} </span>
-				<svws-ui-icon v-if="!belegung"> <i-ri-forbid-2-line /> </svws-ui-icon>
+			<div class="flex items-center justify-between gap-1 w-full">
+				<span>{{ get_kurs_name() }}</span>
+				<div class="flex items-center gap-1 cursor-pointer">
+					<svws-ui-tooltip v-if="!belegung">
+						<i-ri-forbid-2-line />
+						<template #content>
+							<span>Nichtverteilt</span>
+						</template>
+					</svws-ui-tooltip>
+				</div>
 			</div>
 		</svws-ui-drag-data>
-	</tr>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -1,39 +1,58 @@
 <template>
-	<svws-ui-content-card v-if="schueler" :title="'Kurszuordnungen für ' + schueler?.vorname + ' ' + schueler?.nachname" class="sticky top-0">
+	<svws-ui-content-card v-if="schueler" :title="'Kurszuordnungen für ' + schueler?.vorname + ' ' + schueler?.nachname" class="w-full min-w-[40rem] sticky top-0">
 		<template #actions>
 			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()">
 				Zur Laufbahnplanung
 			</svws-ui-button>
 		</template>
-		<div class="flex gap-4">
-			<svws-ui-drop-data v-slot="{ active }" class="w-1/6" @drop="drop_entferne_kurszuordnung">
-				<div :class="{ 'border-2 border-dashed border-red-700': active }">
-					<div class="">
-						<table class="v-table--complex table-fixed">
-							<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
-								:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
-						</table>
-						<template v-if="!blockung_aktiv">
-							<div class="flex items-center justify-center" :class="{'bg-red-400 text-white': active}">
-								<i-ri-delete-bin-2-line class="m-2 text-4xl" :class="{ 'text-red-700': is_dragging }" />
-							</div>
-							<div class="flex items-center justify-center">
-								<svws-ui-button size="small" class="m-2" @click="auto_verteilen" :disabled="apiStatus.pending">Automatisch verteilen</svws-ui-button>
-							</div>
-						</template>
+		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
+			<div class="w-1/6 min-w-[9rem]">
+				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
+					<div class="border-2 border-transparent -m-[2px]" :class="{ 'border-dashed border-error': active }">
+						<div class="">
+							<svws-ui-data-table v-model="fachbelegungen"
+								:items="undefined"
+								:no-data="false">
+								<template #body>
+									<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
+										:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+								</template>
+							</svws-ui-data-table>
+							<template v-if="!blockung_aktiv">
+								<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
+									<div v-if="active" class="flex gap-2 items-center w-full h-full">
+										<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
+										<span>Entfernen</span>
+									</div>
+									<div v-else class="flex gap-2 items-center w-full h-full">
+										<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
+									</div>
+								</div>
+							</template>
+						</div>
 					</div>
-				</div>
-			</svws-ui-drop-data>
-			<div class="flex-grow">
-				<div class="v-table--container">
-					<table class="v-table--complex">
-						<s-kurs-schueler-schiene v-for="schiene in schienen" :key="schiene.id" :schiene="schiene" :selected="schueler"
-							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
-							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
-					</table>
-				</div>
+				</svws-ui-drop-data>
+				<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
 			</div>
+			<div class="flex-grow">
+				<svws-ui-data-table v-model="schienen"
+					:items="undefined">
+					<template #body>
+						<div role="row"
+							class="data-table__tr data-table__tbody__tr"
+							v-for="(schiene, index) in schienen"
+							:key="index">
+							<s-kurs-schueler-schiene :schiene="schiene" :selected="schueler"
+								:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+								:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
+								:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+						</div>
+					</template>
+				</svws-ui-data-table>
+			</div>
+		</div>
+		<div v-else class="opacity-50">
+			Keine Fachbelegungen vorhanden.
 		</div>
 	</svws-ui-content-card>
 </template>

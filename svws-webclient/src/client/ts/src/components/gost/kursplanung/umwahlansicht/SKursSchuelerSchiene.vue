@@ -1,17 +1,17 @@
 <template>
-	<tr :class="{ 'bg-error': schiene_hat_kollisionen }">
-		<td class="border-r-2 border-black/25">
+	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'bg-error': schiene_hat_kollisionen }">
+		<div role="cell" class="data-table__td">
 			<div class="flex flex-col py-1">
 				<span class="font-bold">{{ schiene_g?.bezeichnung }}</span>
 				<span class="text-sm">{{ schiene.kurse.size() }} Kurse</span>
 				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
 			</div>
-		</td>
+		</div>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:api-status="apiStatus" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
 			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="emit('dnd', $event)" />
-	</tr>
+	</div>
 </template>
 
 <script setup lang="ts">

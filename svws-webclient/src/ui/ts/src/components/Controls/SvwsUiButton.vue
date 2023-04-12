@@ -44,6 +44,9 @@
 			<i-ri-delete-bin-line class="icon--line" />
 			<i-ri-delete-bin-fill class="icon--fill" />
 		</svws-ui-icon>
+		<span v-if="$slots.badge" class="button--badge">
+			<slot name="badge" />
+		</span>
 	</button>
 </template>
 
@@ -51,7 +54,7 @@
 .button,
 .cv-wrapper .cv-header button {
 	@apply rounded-md border;
-	@apply select-none;
+	@apply select-none relative;
 	@apply text-button font-bold;
 	@apply flex items-center;
 	gap: 0.25em;
@@ -259,5 +262,17 @@
 .button--big {
 	padding-top: 0.64em;
 	padding-bottom: 0.64em;
+}
+
+.button--badge {
+	@apply absolute top-0 left-[100%];
+	@apply font-bold text-primary;
+	@apply bg-light rounded-full shadow border border-white;
+	@apply flex items-center justify-center;
+	@apply pointer-events-none;
+	@apply -mt-1.5 -ml-3;
+	@apply px-1.5;
+	@apply h-4;
+	font-size: 0.8rem;
 }
 </style>

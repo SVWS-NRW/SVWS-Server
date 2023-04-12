@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card style="flex: 1 0 40%; height: auto;">
+	<svws-ui-content-card class="flex-grow" style="height: auto;">
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline cursor-auto">
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
@@ -51,8 +51,8 @@
 						<template v-else>{{ s.nummer }}</template>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<svws-ui-button type="icon" size="small" v-if="allow_regeln" @click="add_schiene" title="Schiene hinzufügen" class="ml-1 w-6 h-6 p-0.5">
+						class="data-table__th data-table__thead__th data-table__th__align-center" v-if="allow_regeln">
+						<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen" class="ml-1 w-6 h-6 p-0.5">
 							<i-ri-add-line />
 						</svws-ui-button>
 					</div>
@@ -66,7 +66,7 @@
 						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
 						{{ getAnzahlSchuelerSchiene(s.id) }}
 					</div>
-					<div role="columnheader" class="data-table__th" />
+					<div role="columnheader" class="data-table__th" v-if="allow_regeln" />
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
@@ -77,7 +77,7 @@
 						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
 						{{ getAnzahlKollisionenSchiene(s.id) }}
 					</div>
-					<div role="columnheader" class="data-table__th" />
+					<div role="columnheader" class="data-table__th" v-if="allow_regeln" />
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
@@ -95,7 +95,7 @@
 					<div v-else role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center normal-case font-normal text-black/50" :style="{'gridColumn': 'span ' + schienen.size()}">
 						<span class="inline-flex items-center gap-1"><i-ri-information-line />Regeln können in diesem Ergebnis nicht erstellt werden.</span>
 					</div>
-					<div role="columnheader" class="data-table__th" />
+					<div role="columnheader" class="data-table__th" v-if="allow_regeln" />
 				</div>
 			</template>
 
@@ -189,17 +189,19 @@
 	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
 
 	function calculateColumns(): DataTableColumn[] {
-		const cols: Array<DataTableColumn> = [{ key: "kurs", label: "Kurs", span: 2, fixedWidth: 8 },
+		const cols: Array<DataTableColumn> = [{ key: "kurs", label: "Kurs", span: 2, minWidth: 8 },
 			{ key: "lehrer", label: "Lehrer" },
 			{ key: "koop", label: "Kooperation", align: 'center' },
 			{ key: "FW", label: "Fachwahl", align: 'center' },
 			{ key: "Diff", label: "Diff", align: 'center' }];
 
 		for (let i = 0; i < schienen.value.size(); i++) {
-			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3, align: 'center' });
+			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), minWidth: 3, align: 'center' });
 		}
 
-		cols.push({ key: "actions", label: "Actions", fixedWidth: 2.5, align: 'center' });
+		if (allow_regeln.value) {
+			cols.push({ key: "actions", label: "Actions", fixedWidth: 2.5, align: 'center' });
+		}
 		return cols;
 	}
 

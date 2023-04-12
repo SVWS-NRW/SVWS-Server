@@ -20,6 +20,7 @@ export const buildTableColumn = (source: DataTableColumnSource, initialIndex: nu
 		sortable: input.sortable || false,
 		span: input.span || 1,
 		fixedWidth: input.fixedWidth || 0,
+		minWidth: input.minWidth || 0,
 		align: input.align || 'left',
 	}
 }
@@ -39,7 +40,7 @@ export default function useColumns(props: UseColumnProps) {
 	const gridTemplateColumns = computed(() => {
 		return columnsComputed.value.map(column =>
 			`minmax(${
-				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : '4rem'
+				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : (column.minWidth ? (column.minWidth + (typeof column.minWidth === "number" ? 'rem' : '')) : '4rem')
 			}, ${
 				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
 			})`

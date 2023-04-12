@@ -1,8 +1,10 @@
 <template>
-	<div>
-		<div class="flex justify-between items-center" :class="{'mb-2' : hatRegel}">
-			<h5 class="text-sm font-bold leading-loose pr-4 py-1">{{ regel_typ.bezeichnung }}</h5>
-			<svws-ui-checkbox v-model="hatRegel" />
+	<div class="px-7 3xl:px-8">
+		<div class="flex justify-between gap-4">
+			<span class="text-headline-sm inline-flex items-center gap-1">
+				{{ regel_typ.bezeichnung }}
+			</span>
+			<svws-ui-toggle v-model="hatRegel" />
 		</div>
 	</div>
 </template>

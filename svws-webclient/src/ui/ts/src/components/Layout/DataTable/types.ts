@@ -9,6 +9,7 @@ export type DataTableColumn = {
   sortable?: boolean
   span?: number
   fixedWidth?: string | number
+  minWidth?: string | number
   align?: 'left' | 'center' | 'right'
 }
 
@@ -24,6 +25,7 @@ export interface DataTableColumnInternal {
   sortable: boolean
   span: number
   fixedWidth: string | number
+  minWidth: string | number
   align: 'left' | 'center' | 'right'
 }
 

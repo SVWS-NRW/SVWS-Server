@@ -1,6 +1,6 @@
 <template>
 	<div v-if="bezeichnung_abiturjahr" class="flex h-full flex-row">
-		<div class="flex w-full flex-col">
+		<div class="flex w-full flex-col gostAppHeader">
 			<svws-ui-header>
 				<span class="inline-block mr-3">{{ bezeichnung_abiturjahr }}</span>
 				<br>
@@ -39,7 +39,4 @@
 	@apply h-px;
 }
 
-.router--gost-kursplanung .content-card--blockungsuebersicht {
-	@apply gap-x-16;
-}
 </style>

@@ -1,13 +1,15 @@
 <template>
 	<svws-ui-content-card>
 		<svws-ui-data-table :model-value="filtered" v-model:clicked="selected" clickable :items="undefined"
-			:filter="true" :filter-open="true" :filter-reverse="true" :filter-hide="false"
+			:filter="true" :filter-reverse="true"
 			:no-data="schuelerFilter.filtered.value.size <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
 			<template #search>
-				<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
+				<div class="mb-1 3xl:mb-0.5">
+					<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
+				</div>
 			</template>
 			<template #filter>
-				<svws-ui-radio-group class="radio--row">
+				<svws-ui-radio-group class="radio--row col-span-full">
 					<svws-ui-radio-option v-model="kurs_filter_toggle" :value="!kurs_filter_toggle" name="Filter" label="Kursfilter" :force-checked="kurs_filter_toggle ?? false">
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
@@ -15,15 +17,15 @@
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
 				</svws-ui-radio-group>
-				<div class="input-wrapper-1-col" v-if="kurs_filter_toggle">
+				<div class="input-wrapper-1-col col-span-full" v-if="kurs_filter_toggle">
 					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</div>
-				<div class="input-wrapper" v-if="fach_filter_toggle">
+				<div class="input-wrapper col-span-full" v-if="fach_filter_toggle">
 					<svws-ui-multi-select v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
 					<svws-ui-multi-select v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</div>
-				<svws-ui-radio-group class="radio--row mt-4">
+				<svws-ui-radio-group class="radio--row mt-4 col-span-full">
 					<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
 						<i-ri-alert-line />
