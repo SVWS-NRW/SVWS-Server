@@ -861,7 +861,7 @@ public class GostBlockungsdatenManager {
 	 */
 	public void patchOfKursRemoveLehrkraft(final long pKursID, final long pLehrkraftID) throws DeveloperNotificationException {
 		final @NotNull GostBlockungKurs kurs = getKurs(pKursID);
-		final @NotNull ArrayList<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
+		final @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = kurs.lehrer;
 		for (int i = 0; i < lehrer.size(); i++)
 			if (lehrer.get(i).id == pLehrkraftID) {
 				lehrer.remove(lehrer.get(i));

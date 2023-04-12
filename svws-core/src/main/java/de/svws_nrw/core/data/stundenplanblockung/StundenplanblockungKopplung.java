@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.stundenplanblockung;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Kopplung bei {@link StundenplanblockungInput}. <br>
@@ -29,6 +29,6 @@ public class StundenplanblockungKopplung {
 
 	/** Alle Stundenelemente, die dieser Kopplung zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
 }

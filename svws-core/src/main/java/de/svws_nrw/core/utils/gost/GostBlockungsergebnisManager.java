@@ -264,7 +264,7 @@ public class GostBlockungsergebnisManager {
 
 	private void stateRegelvalidierung() {
 		// Clear
-		final @NotNull ArrayList<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
+		final @NotNull List<@NotNull Long> regelVerletzungen = _ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 
 		for (final @NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
@@ -1184,7 +1184,7 @@ public class GostBlockungsergebnisManager {
 	 * @return         Ein Array aller Schienen-Nummern des Kurses.
 	 */
 	public @NotNull int[] getOfKursSchienenNummern(final long pKursID) {
-		final @NotNull ArrayList<@NotNull Long> schienenIDs = getKursE(pKursID).schienen;
+		final @NotNull List<@NotNull Long> schienenIDs = getKursE(pKursID).schienen;
 		final int[] a = new int[schienenIDs.size()];
 		for (int i = 0; i < a.length; i++) {
 			final long schienenID = schienenIDs.get(i);

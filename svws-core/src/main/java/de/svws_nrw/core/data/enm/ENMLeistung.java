@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.enm;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Leistungsdaten
@@ -89,6 +89,6 @@ public class ENMLeistung {
 	/** Die Teilleistungen, sofern welche vordefiniert sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMTeilleistung.class, description = "Ein Array mit den Informationen zu den Teilleistungen, "
 			+ "sofern welche vordefiniert sind."))
-	public @NotNull ArrayList<@NotNull ENMTeilleistung> teilleistungen = new ArrayList<>();
+	public @NotNull List<@NotNull ENMTeilleistung> teilleistungen = new ArrayList<>();
 
 }

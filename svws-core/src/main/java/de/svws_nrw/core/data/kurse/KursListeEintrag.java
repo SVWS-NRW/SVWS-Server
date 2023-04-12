@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.kurse;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -32,7 +32,7 @@ public class KursListeEintrag {
 
 	/** Die IDs der Jahrgänge, denen der Kurs zugeordnet ist */
 	@Schema(description = "die IDs der Jahrgänge, denen der Kurs zugeordnet ist")
-	public @NotNull ArrayList<@NotNull Long> idJahrgaenge = new ArrayList<>();
+	public @NotNull List<@NotNull Long> idJahrgaenge = new ArrayList<>();
 
 	/** Die ID des Faches, dem der Kurs zugeordnet ist */
 	@Schema(description = "die ID des Faches, dem der Kurs zugeordnet ist", example = "815")

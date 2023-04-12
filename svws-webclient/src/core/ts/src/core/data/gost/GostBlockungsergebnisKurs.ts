@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class GostBlockungsergebnisKurs extends JavaObject {
 
@@ -26,12 +27,12 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	/**
 	 * Eine Liste Schüler-IDs, welche diesem Kurs zugeordnet sind.
 	 */
-	public readonly schueler : ArrayList<number> = new ArrayList();
+	public readonly schueler : List<number> = new ArrayList();
 
 	/**
 	 * Die Schienen-IDs, denen der Kurs zugeordnet ist.
 	 */
-	public readonly schienen : ArrayList<number> = new ArrayList();
+	public readonly schienen : List<number> = new ArrayList();
 
 
 	public constructor() {

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class BenutzergruppeDaten extends JavaObject {
 
@@ -21,7 +22,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	/**
 	 * Die IDs der Kompetenzen, die speziell dieser Benutzergruppe zugeordnet sind.
 	 */
-	public kompetenzen : ArrayList<number> = new ArrayList();
+	public kompetenzen : List<number> = new ArrayList();
 
 
 	public constructor() {

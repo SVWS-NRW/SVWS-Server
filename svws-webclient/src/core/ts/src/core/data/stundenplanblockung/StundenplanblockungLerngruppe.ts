@@ -4,6 +4,7 @@ import { StundenplanblockungKopplung } from '../../../core/data/stundenplanblock
 import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
+import { List } from '../../../java/util/List';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
@@ -17,42 +18,42 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public lehrkraefte1 : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte1 : List<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind.
 	 */
-	public lehrkraefte2 : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte2 : List<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public klassen : ArrayList<StundenplanblockungKlasse> = new ArrayList();
+	public klassen : List<StundenplanblockungKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer, die dieser Lerngruppe zugeordnet sind. In der Regel genau ein Fach.
 	 */
-	public faecher : ArrayList<StundenplanblockungFach> = new ArrayList();
+	public faecher : List<StundenplanblockungFach> = new ArrayList();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe primär in Frage kommen.
 	 */
-	public raeume1 : ArrayList<StundenplanblockungRaum> = new ArrayList();
+	public raeume1 : List<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Räume, die für diese Lerngruppe sekundär (alternativ) in Frage kommen.
 	 */
-	public raeume2 : ArrayList<StundenplanblockungRaum> = new ArrayList();
+	public raeume2 : List<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public kopplungen : ArrayList<StundenplanblockungKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList();
 
 	/**
 	 * Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind.
 	 */
-	public stundenelemente : ArrayList<StundenplanblockungStundenelement> = new ArrayList();
+	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList();
 
 
 	public constructor() {

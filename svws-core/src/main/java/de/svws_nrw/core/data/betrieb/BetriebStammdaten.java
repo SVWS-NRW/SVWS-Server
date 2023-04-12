@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.betrieb;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -127,6 +128,6 @@ public class BetriebStammdaten {
 
 	/** Ein Array mit den Ansprechpartnern im Betrieb. */
 	@ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class, description = "Ein Array mit den Ansprechpartnern im Betrieb."))
-	public @NotNull ArrayList<@NotNull BetriebAnsprechpartner> ansprechpartner = new ArrayList<>();
+	public @NotNull List<@NotNull BetriebAnsprechpartner> ansprechpartner = new ArrayList<>();
 
 }

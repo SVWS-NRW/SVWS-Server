@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.stundenplanblockung;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die grundlegende Struktur von JSON-Daten für eine Lerngruppe bei {@link StundenplanblockungInput}. <br>
@@ -31,34 +31,34 @@ public class StundenplanblockungLerngruppe {
 
 	/** Alle Lehrkräfte, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLehrkraft.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungLehrkraft> lehrkraefte1 = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungLehrkraft> lehrkraefte1 = new ArrayList<>();
 
 	/** Alle Lehrkräfte, die dieser Lerngruppe hospitierend zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLehrkraft.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungLehrkraft> lehrkraefte2 = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungLehrkraft> lehrkraefte2 = new ArrayList<>();
 
 	/** Alle Klassen, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKlasse.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungKlasse> klassen = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungKlasse> klassen = new ArrayList<>();
 
 	/** Alle Fächer, die dieser Lerngruppe zugeordnet sind. In der Regel genau ein Fach.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungFach.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungFach> faecher = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungFach> faecher = new ArrayList<>();
 
 	/** Alle Räume, die für diese Lerngruppe primär in Frage kommen.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungRaum> raeume1 = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungRaum> raeume1 = new ArrayList<>();
 
 	/** Alle Räume, die für diese Lerngruppe sekundär (alternativ) in Frage kommen.*/
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungRaum> raeume2 = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungRaum> raeume2 = new ArrayList<>();
 
 	/** Alle Kopplungen, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKopplung.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungKopplung> kopplungen = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungKopplung> kopplungen = new ArrayList<>();
 
 	/** Alle Stundenelemente, die dieser Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
 }

@@ -5,6 +5,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanInputSimpleFach } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleFach';
 import { StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 import { StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
+import { List } from '../../../java/util/List';
 import { StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimple extends JavaObject {
@@ -12,32 +13,32 @@ export class StundenplanInputSimple extends JavaObject {
 	/**
 	 * Alle Lehrkräfte.
 	 */
-	public lehrkraefte : ArrayList<StundenplanInputSimpleLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen.
 	 */
-	public klassen : ArrayList<StundenplanInputSimpleKlasse> = new ArrayList();
+	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer.
 	 */
-	public faecher : ArrayList<StundenplanInputSimpleFach> = new ArrayList();
+	public faecher : List<StundenplanInputSimpleFach> = new ArrayList();
 
 	/**
 	 * Alle Räume.
 	 */
-	public raeume : ArrayList<StundenplanInputSimpleRaum> = new ArrayList();
+	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen.
 	 */
-	public kopplungen : ArrayList<StundenplanInputSimpleKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList();
 
 	/**
 	 * Alle Kurse.
 	 */
-	public kurse : ArrayList<StundenplanInputSimpleKurs> = new ArrayList();
+	public kurse : List<StundenplanInputSimpleKurs> = new ArrayList();
 
 
 	public constructor() {

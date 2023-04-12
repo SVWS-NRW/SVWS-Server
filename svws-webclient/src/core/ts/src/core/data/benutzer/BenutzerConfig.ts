@@ -1,18 +1,19 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerConfigElement } from '../../../core/data/benutzer/BenutzerConfigElement';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class BenutzerConfig extends JavaObject {
 
 	/**
 	 * Die Konfiguration, die dem Benutzer zugeordnet ist.
 	 */
-	public user : ArrayList<BenutzerConfigElement> = new ArrayList();
+	public user : List<BenutzerConfigElement> = new ArrayList();
 
 	/**
 	 * Die globale Konfiguration, die auch für den Benutzer gilt.
 	 */
-	public global : ArrayList<BenutzerConfigElement> = new ArrayList();
+	public global : List<BenutzerConfigElement> = new ArrayList();
 
 
 	public constructor() {

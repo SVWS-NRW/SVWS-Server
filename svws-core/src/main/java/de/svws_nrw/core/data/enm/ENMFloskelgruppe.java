@@ -1,14 +1,14 @@
 package de.svws_nrw.core.data.enm;
 
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Floskelgruppen
@@ -36,6 +36,6 @@ public class ENMFloskelgruppe {
 	/** Die Liste der Floskeln, die dieser Floskelgruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMFloskel.class, description = "Ein Array mit den Informationen "
 			+ "der Floskeln, die dieser Floskelgruppe zugeordnet sind."))
-	public final @NotNull ArrayList<@NotNull ENMFloskel> floskeln = new ArrayList<>();
+	public final @NotNull List<@NotNull ENMFloskel> floskeln = new ArrayList<>();
 
 }

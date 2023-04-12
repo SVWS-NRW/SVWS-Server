@@ -1,14 +1,14 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.ArrayList;
-
-import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse ist die Core-DTO für ein Ergebnis einer Kursblockung
@@ -41,7 +41,7 @@ public class GostBlockungsergebnis {
 	public boolean istVorlage = false;
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */
-	public final @NotNull ArrayList<@NotNull GostBlockungsergebnisSchiene> schienen = new ArrayList<>();
+	public final @NotNull List<@NotNull GostBlockungsergebnisSchiene> schienen = new ArrayList<>();
 
 	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
 	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();

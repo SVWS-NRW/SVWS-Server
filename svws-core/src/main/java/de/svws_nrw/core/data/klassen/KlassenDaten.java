@@ -45,7 +45,7 @@ public class KlassenDaten {
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public ArrayList<@NotNull Long> klassenLeitungen = new ArrayList<>();
+	public @NotNull List<@NotNull Long> klassenLeitungen = new ArrayList<>();
 
 	/** Die Schüler der Klasse. */
 	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();

@@ -152,13 +152,13 @@ export class AbiturdatenManager extends JavaObject {
 		this.mapFachbereiche.clear();
 		for (const fachbereich of GostFachbereich.values())
 			this.mapFachbereiche.put(fachbereich, new ArrayList());
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of fachbelegungen) {
 			if (this.zaehleBelegung(fachbelegung) > 0) {
 				const fach : GostFach | null = this.getFach(fachbelegung);
 				const fachbereiche : List<GostFachbereich> = GostFachbereich.getBereiche(fach);
 				for (const fachbereich of fachbereiche) {
-					const listFachbelegungen : ArrayList<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
+					const listFachbelegungen : List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen === null)
 						continue;
 					listFachbelegungen.add(fachbelegung);
@@ -1015,7 +1015,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public hatDoppelteFachbelegungInHalbjahr(halbjahr : GostHalbjahr) : boolean {
 		const set : HashSet<string> = new HashSet();
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if (fach === null)
@@ -1067,7 +1067,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public getFachbelegungByID(fachID : number) : AbiturFachbelegung | null {
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if ((fach !== null) && (fachID === fach.id))
@@ -1086,7 +1086,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getFachbelegungByKuerzel(kuerzel : string | null) : AbiturFachbelegung | null {
 		if ((kuerzel === null) || (JavaObject.equalsTranspiler("", (kuerzel))))
 			return null;
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if ((fach !== null) && (JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel))))
@@ -1122,8 +1122,8 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste der Fachbelegungen
 	 */
 	public getFachbelegungenBilingual() : List<AbiturFachbelegung> {
-		const result : ArrayList<AbiturFachbelegung> = new ArrayList();
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const result : List<AbiturFachbelegung> = new ArrayList();
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			if (this.zaehleBelegung(fb) <= 0)
 				continue;
@@ -1358,10 +1358,10 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den Fachbelegungen
 	 */
 	public getFachbelegungByFachkuerzel(kuerzel : string | null) : List<AbiturFachbelegung> {
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = new ArrayList();
+		const fachbelegungen : List<AbiturFachbelegung> = new ArrayList();
 		if (kuerzel === null)
 			return fachbelegungen;
-		const tmpFachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const tmpFachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of tmpFachbelegungen) {
 			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
 			if ((fach === null) || (!JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel))))
@@ -1396,7 +1396,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getSprachbelegung(sprache : string | null) : AbiturFachbelegung | null {
 		if (sprache === null)
 			return null;
-		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
+		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
 			if ((fach === null) || (!GostFachManager.istFremdsprachenfach(fach, sprache)))

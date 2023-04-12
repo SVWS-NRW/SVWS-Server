@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { SchuelerLernabschnittNachpruefung, cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittNachpruefung } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefung';
 
 export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
@@ -7,12 +8,12 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	/**
 	 * Die Kürzel der möglichen Nachprüfungsfächer.
 	 */
-	public moegliche : ArrayList<string> = new ArrayList();
+	public moegliche : List<string> = new ArrayList();
 
 	/**
 	 * Die angesetzten bzw. durchgeführten Nachprüfungen
 	 */
-	public pruefungen : ArrayList<SchuelerLernabschnittNachpruefung> = new ArrayList();
+	public pruefungen : List<SchuelerLernabschnittNachpruefung> = new ArrayList();
 
 
 	public constructor() {

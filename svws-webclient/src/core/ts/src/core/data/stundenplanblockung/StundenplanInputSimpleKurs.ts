@@ -4,6 +4,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanInputSimpleFach } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleFach';
 import { StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 import { StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
+import { List } from '../../../java/util/List';
 import { StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimpleKurs extends JavaObject {
@@ -11,27 +12,27 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	/**
 	 * 0 bis n Lehrkräfte werden dem Kurs zugeordnet.
 	 */
-	public lehrkraefte : ArrayList<StundenplanInputSimpleLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanInputSimpleLehrkraft> = new ArrayList();
 
 	/**
 	 * 0 bis n Klassen werden dem Kurs zugeordnet.
 	 */
-	public klassen : ArrayList<StundenplanInputSimpleKlasse> = new ArrayList();
+	public klassen : List<StundenplanInputSimpleKlasse> = new ArrayList();
 
 	/**
 	 * 0 oder 1 Fach wird dem Kurs zugeordnet.
 	 */
-	public faecher : ArrayList<StundenplanInputSimpleFach> = new ArrayList();
+	public faecher : List<StundenplanInputSimpleFach> = new ArrayList();
 
 	/**
 	 * 0 bis n potentielle Räume, von denen 0 oder 1 Raum dem Kurs zugeordnet wird.
 	 */
-	public raeume : ArrayList<StundenplanInputSimpleRaum> = new ArrayList();
+	public raeume : List<StundenplanInputSimpleRaum> = new ArrayList();
 
 	/**
 	 * 0 oder 1 Kopplung wird dem Kurs zugeordnet.
 	 */
-	public kopplungen : ArrayList<StundenplanInputSimpleKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanInputSimpleKopplung> = new ArrayList();
 
 	/**
 	 * Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden.

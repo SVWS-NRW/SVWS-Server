@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
 
 export class GostBlockungsergebnis extends JavaObject {
@@ -41,7 +42,7 @@ export class GostBlockungsergebnis extends JavaObject {
 	/**
 	 * Eine Liste der Schienen, welche zugeordnete Kurse beinhalten.
 	 */
-	public readonly schienen : ArrayList<GostBlockungsergebnisSchiene> = new ArrayList();
+	public readonly schienen : List<GostBlockungsergebnisSchiene> = new ArrayList();
 
 	/**
 	 * Die Informationen zur aktuellen Bewertung des Blockungsergebnisses

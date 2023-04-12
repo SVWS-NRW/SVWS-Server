@@ -56,54 +56,54 @@ public class Kurs42Import {
 	public final GostHalbjahr halbjahr;
 
 	/** Eine Liste der Blockungs-Regeln */
-	public final ArrayList<GostBlockungRegel> regeln = new ArrayList<>();
+	public final List<GostBlockungRegel> regeln = new ArrayList<>();
 
 	/** Eine Liste der Kurse der neuen Blockung */
-	public final ArrayList<GostBlockungKurs> kurse = new ArrayList<>();
+	public final List<GostBlockungKurs> kurse = new ArrayList<>();
 
 	/** Eine Liste der Schienen der neuen Blockung */
-	public final ArrayList<GostBlockungSchiene> schienen = new ArrayList<>();
+	public final List<GostBlockungSchiene> schienen = new ArrayList<>();
 
 	/** Die Kurs-Schienen-Zuordnungen der Blockung */
-	public final ArrayList<Pair<Long, Long>> zuordnung_kurs_schiene = new ArrayList<>();
+	public final List<Pair<Long, Long>> zuordnung_kurs_schiene = new ArrayList<>();
 
 	/** Die Kurs-Schüler-Zuordnungen der Blockung */
-	public final ArrayList<Pair<Long, Long>> zuordnung_kurs_schueler = new ArrayList<>();
+	public final List<Pair<Long, Long>> zuordnung_kurs_schueler = new ArrayList<>();
 
 	/** Eine Map von der DB-ID des Schülers auf das Kurs42-Import-Objekt */
-	private final HashMap<Long, Kurs42DataSchueler> mapSchuelerByID = new HashMap<>();
+	private final Map<Long, Kurs42DataSchueler> mapSchuelerByID = new HashMap<>();
 
 	/** Eine Map von dem Unique-Schlüssel des Kurs42-Schülers auf das Kurs42-Import-Objekt */
-	private final HashMap<String, Kurs42DataSchueler> mapSchuelerByKey = new HashMap<>();
+	private final Map<String, Kurs42DataSchueler> mapSchuelerByKey = new HashMap<>();
 
 	/** Eine Map von dem Unique-Schlüssel des Kurs42-Schülers auf die DB-ID */
-	private final HashMap<String, Long> mapSchuelerKeyToID = new HashMap<>();
+	private final Map<String, Long> mapSchuelerKeyToID = new HashMap<>();
 
 	/** Eine Map von der DB-ID des Kurs42-Schülers auf den Unique-Schlüssel  */
-	private final HashMap<Long, String> mapSchuelerIDToKey = new HashMap<>();
+	private final Map<Long, String> mapSchuelerIDToKey = new HashMap<>();
 
 	/** Eine Map von dem Fach-Kürzel zu der ID des Faches */
-	private final HashMap<String, Long> mapFachKuerzelToID = new HashMap<>();
+	private final Map<String, Long> mapFachKuerzelToID = new HashMap<>();
 
 	/** Eine Map von der Kurs-ID der neuen Blockung auf das Kurs42-Import-Objekt */
-	private final HashMap<Long, Kurs42DataKurse> mapKursByID = new HashMap<>();
+	private final Map<Long, Kurs42DataKurse> mapKursByID = new HashMap<>();
 
 	/** Eine Map von dem Namen des Kurses auf das Kurs42-Import-Objekt */
-	private final HashMap<String, Kurs42DataKurse> mapKursByName = new HashMap<>();
+	private final Map<String, Kurs42DataKurse> mapKursByName = new HashMap<>();
 
 	/** Eine Map von der Kurs-ID der neuen Blockung auf den Namen des Kurses */
-	private final HashMap<String, Long> mapKursNameToID = new HashMap<>();
+	private final Map<String, Long> mapKursNameToID = new HashMap<>();
 
 	/** Eine Map von der Schienen-ID der neuen Blockung auf das Kurs42-Import-Objekt */
-	private final HashMap<Long, Kurs42DataSchienen> mapSchieneByID = new HashMap<>();
+	private final Map<Long, Kurs42DataSchienen> mapSchieneByID = new HashMap<>();
 
 	/** Eine Map von der Schienen-Nummer auf die Schienen ID der neuen Blockung */
-	private final HashMap<Integer, Long> mapSchieneNrToID = new HashMap<>();
+	private final Map<Integer, Long> mapSchieneNrToID = new HashMap<>();
 
 	/** Eine Map von der Schienen-ID der neuen Blockung auf den Namen der Schienen */
-	private final HashMap<Long, String> mapSchieneIDToName = new HashMap<>();
+	private final Map<Long, String> mapSchieneIDToName = new HashMap<>();
 
-	private final HashMap<String, Integer> counterKurse = new HashMap<>();
+	private final Map<String, Integer> counterKurse = new HashMap<>();
 
 
 	private static final Function<Kurs42DataSchueler, String> getSchuelerKey =

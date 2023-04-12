@@ -48,7 +48,7 @@ export class BenutzerDaten extends JavaObject {
 	/**
 	 * Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind.
 	 */
-	public kompetenzen : ArrayList<number> = new ArrayList();
+	public kompetenzen : List<number> = new ArrayList();
 
 
 	public constructor() {

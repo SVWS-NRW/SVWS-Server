@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class ENMKlasse extends JavaObject {
 
@@ -31,7 +32,7 @@ export class ENMKlasse extends JavaObject {
 	/**
 	 * Die IDs der zugeordneten Klassenlehrer.
 	 */
-	public klassenlehrer : ArrayList<number> = new ArrayList();
+	public klassenlehrer : List<number> = new ArrayList();
 
 
 	public constructor() {

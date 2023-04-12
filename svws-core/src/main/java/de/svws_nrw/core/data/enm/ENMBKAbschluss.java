@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.enm;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu Abschlüssen
@@ -67,6 +68,6 @@ public class ENMBKAbschluss {
 
 	/** Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = ENMBKFach.class, description = "Ein Array mit den Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind."))
-	public @NotNull ArrayList<@NotNull ENMBKFach> faecher = new ArrayList<>();
+	public @NotNull List<@NotNull ENMBKFach> faecher = new ArrayList<>();
 
 }

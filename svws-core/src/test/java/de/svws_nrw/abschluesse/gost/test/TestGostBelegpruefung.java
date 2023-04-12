@@ -144,7 +144,7 @@ class TestGostBelegpruefung {
 							if (log != null) {
 								System.out.println("  Log:");
 							}
-							final ArrayList<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
+							final List<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
 							if (fehler.size() > 0) {
 								System.out.println("  Fehlercode:");
 								for (final GostBelegpruefungErgebnisFehler fehlercode : fehler) {
@@ -185,7 +185,7 @@ class TestGostBelegpruefung {
 							if (log != null) {
 								System.out.println("  Log:");
 							}
-							final ArrayList<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
+							final List<GostBelegpruefungErgebnisFehler> fehler = ergebnis.fehlercodes;
 							if (fehler.size() > 0) {
 								System.out.println("  Fehlercode:");
 								for (final GostBelegpruefungErgebnisFehler fehlercode : fehler) {

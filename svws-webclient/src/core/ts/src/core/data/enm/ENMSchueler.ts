@@ -4,6 +4,7 @@ import { ENMLernabschnitt } from '../../../core/data/enm/ENMLernabschnitt';
 import { ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerkungen';
 import { ENMZP10 } from '../../../core/data/enm/ENMZP10';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
 import { ENMSprachenfolge } from '../../../core/data/enm/ENMSprachenfolge';
 
@@ -57,7 +58,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Sprachenfolge des Schülers
 	 */
-	public sprachenfolge : ArrayList<ENMSprachenfolge> = new ArrayList();
+	public sprachenfolge : List<ENMSprachenfolge> = new ArrayList();
 
 	/**
 	 * Informationen zum Lernabschnitt des Schülers in der Notendatei
@@ -67,7 +68,7 @@ export class ENMSchueler extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in dem Lernabschnitt der Notendatei
 	 */
-	public readonly leistungsdaten : ArrayList<ENMLeistung> = new ArrayList();
+	public leistungsdaten : List<ENMLeistung> = new ArrayList();
 
 	/**
 	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei

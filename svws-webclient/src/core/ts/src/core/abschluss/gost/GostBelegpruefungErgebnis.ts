@@ -13,7 +13,7 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	/**
 	 * eine Liste der Belegungsfehler und Hinweise zur Belegung
 	 */
-	public fehlercodes : ArrayList<GostBelegpruefungErgebnisFehler> = new ArrayList();
+	public fehlercodes : List<GostBelegpruefungErgebnisFehler> = new ArrayList();
 
 	/**
 	 * Ein Log, der den Ablauf der Belegprüfung verdeutlicht

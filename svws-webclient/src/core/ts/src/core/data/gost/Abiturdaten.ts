@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
+import { List } from '../../../java/util/List';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class Abiturdaten extends JavaObject {
@@ -29,7 +30,7 @@ export class Abiturdaten extends JavaObject {
 	/**
 	 * Ein Array mit den Fachbelegungen in der Oberstufe.
 	 */
-	public readonly fachbelegungen : ArrayList<AbiturFachbelegung> = new ArrayList();
+	public readonly fachbelegungen : List<AbiturFachbelegung> = new ArrayList();
 
 	/**
 	 * Die Sprachendaten des Schülers mit Informationen zu Sprachbelegungen (Sprachenfolge) und zu Sprachprüfungen.

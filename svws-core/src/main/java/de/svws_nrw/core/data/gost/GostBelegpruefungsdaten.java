@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -23,6 +24,6 @@ public class GostBelegpruefungsdaten {
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public @NotNull ArrayList<@NotNull GostFach> gostFaecher = new ArrayList<>();
+	public @NotNull List<@NotNull GostFach> gostFaecher = new ArrayList<>();
 
 }

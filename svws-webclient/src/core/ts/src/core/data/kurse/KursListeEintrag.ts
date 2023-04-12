@@ -23,7 +23,7 @@ export class KursListeEintrag extends JavaObject {
 	/**
 	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist
 	 */
-	public idJahrgaenge : ArrayList<number> = new ArrayList();
+	public idJahrgaenge : List<number> = new ArrayList();
 
 	/**
 	 * Die ID des Faches, dem der Kurs zugeordnet ist

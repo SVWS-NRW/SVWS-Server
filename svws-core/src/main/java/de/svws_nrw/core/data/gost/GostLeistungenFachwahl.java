@@ -1,11 +1,12 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -27,6 +28,6 @@ public class GostLeistungenFachwahl {
 	public boolean istFSNeu = false; // pruefe durch Lesen aus den Leistungsdaten, nur true false keine gültige Belegung in der Sprachenfolge aus den Jahrgaenge vorher vorhanden ist
 
 	/** Die einzelnen Belegungen dieses Faches */
-	public final @NotNull ArrayList<@NotNull GostLeistungenFachbelegung> belegungen = new ArrayList<>();
+	public final @NotNull List<@NotNull GostLeistungenFachbelegung> belegungen = new ArrayList<>();
 
 }

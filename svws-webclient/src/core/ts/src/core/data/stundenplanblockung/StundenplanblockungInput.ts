@@ -5,6 +5,7 @@ import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockun
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
 import { StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
+import { List } from '../../../java/util/List';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
 export class StundenplanblockungInput extends JavaObject {
@@ -12,32 +13,32 @@ export class StundenplanblockungInput extends JavaObject {
 	/**
 	 * Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lehrkraefte : ArrayList<StundenplanblockungLehrkraft> = new ArrayList();
+	public lehrkraefte : List<StundenplanblockungLehrkraft> = new ArrayList();
 
 	/**
 	 * Alle Klassen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public klassen : ArrayList<StundenplanblockungKlasse> = new ArrayList();
+	public klassen : List<StundenplanblockungKlasse> = new ArrayList();
 
 	/**
 	 * Alle Fächer, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public faecher : ArrayList<StundenplanblockungFach> = new ArrayList();
+	public faecher : List<StundenplanblockungFach> = new ArrayList();
 
 	/**
 	 * Alle Räume, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public raeume : ArrayList<StundenplanblockungRaum> = new ArrayList();
+	public raeume : List<StundenplanblockungRaum> = new ArrayList();
 
 	/**
 	 * Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public kopplungen : ArrayList<StundenplanblockungKopplung> = new ArrayList();
+	public kopplungen : List<StundenplanblockungKopplung> = new ArrayList();
 
 	/**
 	 * Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind.
 	 */
-	public lerngruppen : ArrayList<StundenplanblockungLerngruppe> = new ArrayList();
+	public lerngruppen : List<StundenplanblockungLerngruppe> = new ArrayList();
 
 
 	public constructor() {

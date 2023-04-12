@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
+import { List } from '../../../java/util/List';
 
 export class Sprachendaten extends JavaObject {
 
@@ -13,12 +14,12 @@ export class Sprachendaten extends JavaObject {
 	/**
 	 * Die Liste der Sprachbelegungen.
 	 */
-	public belegungen : ArrayList<Sprachbelegung> = new ArrayList();
+	public belegungen : List<Sprachbelegung> = new ArrayList();
 
 	/**
 	 * Die Liste der Sprachpruefungen.
 	 */
-	public pruefungen : ArrayList<Sprachpruefung> = new ArrayList();
+	public pruefungen : List<Sprachpruefung> = new ArrayList();
 
 
 	public constructor() {

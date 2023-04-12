@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class StundenplanblockungRegel extends JavaObject {
 
@@ -16,7 +17,7 @@ export class StundenplanblockungRegel extends JavaObject {
 	/**
 	 * Eine Liste der Regel-Parameter
 	 */
-	public parameter : ArrayList<number> = new ArrayList();
+	public parameter : List<number> = new ArrayList();
 
 
 	public constructor() {

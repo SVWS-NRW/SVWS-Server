@@ -1,13 +1,13 @@
 package de.svws_nrw.core.abschluss.gost;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -24,7 +24,7 @@ public class GostBelegpruefungErgebnis {
 
 	/** eine Liste der Belegungsfehler und Hinweise zur Belegung */
 	@ArraySchema(schema = @Schema(implementation = GostBelegpruefungErgebnisFehler.class, description = "eine Liste der Belegungsfehler und Hinweise zur Belegung."))
-	public @NotNull ArrayList<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
+	public @NotNull List<@NotNull GostBelegpruefungErgebnisFehler> fehlercodes = new ArrayList<>();
 
 	/** Ein Log, der den Ablauf der Belegprüfung verdeutlicht */
 	@ArraySchema(schema = @Schema(description = "der Log der Belegprüfung.", example = "Ein Log, der den Ablauf der Belegprüfung verdeutlicht"))

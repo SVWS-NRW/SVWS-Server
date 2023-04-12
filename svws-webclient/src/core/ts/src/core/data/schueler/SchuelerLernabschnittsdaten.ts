@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { SchuelerLernabschnittNachpruefungsdaten } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefungsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { SchuelerLernabschnittBemerkungen } from '../../../core/data/schueler/SchuelerLernabschnittBemerkungen';
 
 export class SchuelerLernabschnittsdaten extends JavaObject {
@@ -234,7 +235,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	/**
 	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
 	 */
-	public leistungsdaten : ArrayList<SchuelerLeistungsdaten> = new ArrayList();
+	public leistungsdaten : List<SchuelerLeistungsdaten> = new ArrayList();
 
 
 	public constructor() {

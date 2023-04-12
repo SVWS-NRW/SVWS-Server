@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
+import { List } from '../../../java/util/List';
 
 export class GostBlockungKurs extends JavaObject {
 
@@ -47,7 +48,7 @@ export class GostBlockungKurs extends JavaObject {
 	/**
 	 * Die Lehrer, die diesem Kurs bereits fest zugeordnet sind.
 	 */
-	public lehrer : ArrayList<GostBlockungKursLehrer> = new ArrayList();
+	public lehrer : List<GostBlockungKursLehrer> = new ArrayList();
 
 
 	public constructor() {

@@ -1,14 +1,14 @@
 package de.svws_nrw.core.data.klassen;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -45,7 +45,7 @@ public class KlassenListeEintrag {
 
 	/** Die Liste der IDs der Klassen-Lehrer der Klasse. */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public ArrayList<@NotNull Long> klassenLehrer = new ArrayList<>();
+	public @NotNull List<@NotNull Long> klassenLehrer = new ArrayList<>();
 
 	/** Die Schüler der Klasse. */
 	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();

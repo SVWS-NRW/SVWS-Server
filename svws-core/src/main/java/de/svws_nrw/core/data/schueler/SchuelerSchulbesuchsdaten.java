@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.schueler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -130,13 +131,13 @@ public class SchuelerSchulbesuchsdaten {
 
 	/** Die Informationen zu den besonderen Merkmalen für die Statistik. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class, description = "Ein Array mit den Informationen zu den besonderen Merkmalen für die Statistik."))
-	public @NotNull ArrayList<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
+	public @NotNull List<@NotNull SchuelerSchulbesuchMerkmal> merkmale = new ArrayList<>();
 
 
 	// **** Informationen zu allen bisher besuchten Schulen (Array)
 
 	/** Die Informationen zu allen bisher besuchten Schulen. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerSchulbesuchSchule.class, description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
-	public @NotNull ArrayList<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
+	public @NotNull List<@NotNull SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
 
 }

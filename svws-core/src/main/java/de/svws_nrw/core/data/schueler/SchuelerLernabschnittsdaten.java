@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.schueler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Die Klasse liefert die allgemeinen Angaben zu dem Lernabschnitt eines Schülers zurück.
@@ -201,6 +202,6 @@ public class SchuelerLernabschnittsdaten {
 
 	/** Die Leistungsdaten des Schülers in diesem Lernabschnitt. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class, description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
-	public @NotNull ArrayList<@NotNull SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
+	public @NotNull List<@NotNull SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
 
 }

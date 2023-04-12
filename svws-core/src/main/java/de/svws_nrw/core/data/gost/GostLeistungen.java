@@ -1,14 +1,15 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -49,6 +50,6 @@ public class GostLeistungen {
 	public final @NotNull boolean[] bewertetesHalbjahr = new boolean[6];
 
 	/** Die einzelnen Fachwahlen des Schülers. */
-	public final @NotNull ArrayList<@NotNull GostLeistungenFachwahl> faecher = new ArrayList<>();
+	public final @NotNull List<@NotNull GostLeistungenFachwahl> faecher = new ArrayList<>();
 
 }

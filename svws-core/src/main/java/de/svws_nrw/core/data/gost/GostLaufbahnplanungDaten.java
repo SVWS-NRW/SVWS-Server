@@ -1,6 +1,7 @@
 package de.svws_nrw.core.data.gost;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -68,18 +69,18 @@ public class GostLaufbahnplanungDaten {
 
 	/** Die Liste der Beratungslehrer für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
-	public final @NotNull ArrayList<@NotNull GostBeratungslehrer> beratungslehrer = new ArrayList<>();
+	public final @NotNull List<@NotNull GostBeratungslehrer> beratungslehrer = new ArrayList<>();
 
 	/** Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostFach.class))
-	public final @NotNull ArrayList<@NotNull GostFach> faecher = new ArrayList<>();
+	public final @NotNull List<@NotNull GostFach> faecher = new ArrayList<>();
 
 	/** Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang */
 	@ArraySchema(schema = @Schema(implementation = GostJahrgangFachkombination.class))
-	public final @NotNull ArrayList<@NotNull GostJahrgangFachkombination> fachkombinationen = new ArrayList<>();
+	public final @NotNull List<@NotNull GostJahrgangFachkombination> fachkombinationen = new ArrayList<>();
 
 	/** Die Liste der Schüler mit ihren Laufbahnplanungsdaten. */
 	@ArraySchema(schema = @Schema(implementation = GostLaufbahnplanungDatenSchueler.class))
-	public final @NotNull ArrayList<@NotNull GostLaufbahnplanungDatenSchueler> schueler = new ArrayList<>();
+	public final @NotNull List<@NotNull GostLaufbahnplanungDatenSchueler> schueler = new ArrayList<>();
 
 }

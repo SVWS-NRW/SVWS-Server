@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBeratungslehrer } from '../../../core/data/gost/GostBeratungslehrer';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class GostJahrgangsdaten extends JavaObject {
 
@@ -63,7 +64,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang der gymnasialen Oberstufe
 	 */
-	public readonly beratungslehrer : ArrayList<GostBeratungslehrer> = new ArrayList();
+	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList();
 
 
 	public constructor() {

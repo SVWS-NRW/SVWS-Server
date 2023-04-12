@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.schueler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -55,6 +56,6 @@ public class SchuelerListeEintrag {
 
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
-	public final @NotNull ArrayList<@NotNull Long> kurse = new ArrayList<>();
+	public final @NotNull List<@NotNull Long> kurse = new ArrayList<>();
 
 }

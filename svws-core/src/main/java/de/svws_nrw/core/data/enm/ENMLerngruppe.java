@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.enm;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu Lerngruppen
@@ -51,7 +51,7 @@ public class ENMLerngruppe {
 	/** Die IDs der Lehrer, die der Lerngruppe zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen zu den "
 			+ "IDs der Lehrer, die der Lerngruppe zugeordnet sind."))
-	public @NotNull ArrayList<@NotNull Long> lehrerID = new ArrayList<>();
+	public @NotNull List<@NotNull Long> lehrerID = new ArrayList<>();
 
 	/** Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt. */
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")

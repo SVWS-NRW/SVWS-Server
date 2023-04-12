@@ -1,11 +1,11 @@
 package de.svws_nrw.core.abschluss.gost;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -151,13 +151,13 @@ public class AbiturdatenManager {
 			mapFachbereiche.put(fachbereich, new ArrayList<>());
 
 		// Durchwandere alle belegten Fächer und weise diese den Fachbereichen zu
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			if (zaehleBelegung(fachbelegung) > 0) { // Filtere ggf. leere Belegungen
 				final GostFach fach = getFach(fachbelegung);
 				final @NotNull List<@NotNull GostFachbereich> fachbereiche = GostFachbereich.getBereiche(fach);
 				for (final @NotNull GostFachbereich fachbereich : fachbereiche) {
-					final ArrayList<@NotNull AbiturFachbelegung> listFachbelegungen = mapFachbereiche.get(fachbereich);
+					final List<@NotNull AbiturFachbelegung> listFachbelegungen = mapFachbereiche.get(fachbereich);
 					if (listFachbelegungen == null)
 						continue;
 					listFachbelegungen.add(fachbelegung);
@@ -1063,7 +1063,7 @@ public class AbiturdatenManager {
 	 */
 	public boolean hatDoppelteFachbelegungInHalbjahr(final @NotNull GostHalbjahr halbjahr) {
 		final @NotNull HashSet<@NotNull String> set = new HashSet<>();
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
 			if (fach == null)
@@ -1119,7 +1119,7 @@ public class AbiturdatenManager {
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public AbiturFachbelegung getFachbelegungByID(final long fachID) {
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
 			if ((fach != null) && (fachID == fach.id))
@@ -1139,7 +1139,7 @@ public class AbiturdatenManager {
 	public AbiturFachbelegung getFachbelegungByKuerzel(final String kuerzel) {
 		if ((kuerzel == null) || ("".equals(kuerzel)))
 			return null;
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
 			if ((fach != null) && (kuerzel.equals(fach.kuerzel)))
@@ -1177,8 +1177,8 @@ public class AbiturdatenManager {
 	 * @return eine Liste der Fachbelegungen
 	 */
 	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungenBilingual() {
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> result = new ArrayList<>();
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> result = new ArrayList<>();
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			if (zaehleBelegung(fb) <= 0)
 				continue;
@@ -1430,10 +1430,10 @@ public class AbiturdatenManager {
 	 * @return eine Liste mit den Fachbelegungen
 	 */
 	public @NotNull List<@NotNull AbiturFachbelegung> getFachbelegungByFachkuerzel(final String kuerzel) {
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = new ArrayList<>();
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = new ArrayList<>();
 		if (kuerzel == null)
 			return fachbelegungen;
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> tmpFachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> tmpFachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fachbelegung : tmpFachbelegungen) {
 			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
 			if ((fach == null) || (!kuerzel.equals(fach.kuerzel)))
@@ -1473,7 +1473,7 @@ public class AbiturdatenManager {
 	public AbiturFachbelegung getSprachbelegung(final String sprache) {
 		if (sprache == null)
 			return null;
-		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
 			if ((fach == null) || (!GostFachManager.istFremdsprachenfach(fach, sprache)))

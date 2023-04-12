@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMBKFach } from '../../../core/data/enm/ENMBKFach';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class ENMBKAbschluss extends JavaObject {
 
@@ -67,7 +68,7 @@ export class ENMBKAbschluss extends JavaObject {
 	/**
 	 * Die Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind.
 	 */
-	public faecher : ArrayList<ENMBKFach> = new ArrayList();
+	public faecher : List<ENMBKFach> = new ArrayList();
 
 
 	public constructor() {

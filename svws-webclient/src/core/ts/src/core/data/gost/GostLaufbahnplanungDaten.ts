@@ -4,6 +4,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { GostLaufbahnplanungDatenSchueler } from '../../../core/data/gost/GostLaufbahnplanungDatenSchueler';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class GostLaufbahnplanungDaten extends JavaObject {
 
@@ -71,22 +72,22 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	/**
 	 * Die Liste der Beratungslehrer für diesen Jahrgang
 	 */
-	public readonly beratungslehrer : ArrayList<GostBeratungslehrer> = new ArrayList();
+	public readonly beratungslehrer : List<GostBeratungslehrer> = new ArrayList();
 
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe für diesen Jahrgang
 	 */
-	public readonly faecher : ArrayList<GostFach> = new ArrayList();
+	public readonly faecher : List<GostFach> = new ArrayList();
 
 	/**
 	 * Die Liste der notwendigen und der unzulässigen Kursart-spezifischen Fach-Kombinationen für diesen Jahrgang
 	 */
-	public readonly fachkombinationen : ArrayList<GostJahrgangFachkombination> = new ArrayList();
+	public readonly fachkombinationen : List<GostJahrgangFachkombination> = new ArrayList();
 
 	/**
 	 * Die Liste der Schüler mit ihren Laufbahnplanungsdaten.
 	 */
-	public readonly schueler : ArrayList<GostLaufbahnplanungDatenSchueler> = new ArrayList();
+	public readonly schueler : List<GostLaufbahnplanungDatenSchueler> = new ArrayList();
 
 
 	public constructor() {

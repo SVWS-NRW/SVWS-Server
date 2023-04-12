@@ -1,12 +1,13 @@
 package de.svws_nrw.core.data.enm;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse spezifiziert die Struktur von JSON-Daten zu den Klasse der
@@ -39,6 +40,6 @@ public class ENMKlasse {
 
 	/** Die IDs der zugeordneten Klassenlehrer. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den Informationen der IDs der zugeordneten Klassenlehrer."))
-	public @NotNull ArrayList<@NotNull Long> klassenlehrer = new ArrayList<>();
+	public @NotNull List<@NotNull Long> klassenlehrer = new ArrayList<>();
 
 }

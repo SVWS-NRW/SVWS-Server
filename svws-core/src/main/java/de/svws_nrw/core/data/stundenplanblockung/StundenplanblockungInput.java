@@ -1,6 +1,7 @@
 package de.svws_nrw.core.data.stundenplanblockung;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,26 +21,26 @@ public class StundenplanblockungInput {
 
 	/** Alle Lehrkräfte, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLehrkraft.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungLehrkraft> lehrkraefte = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungLehrkraft> lehrkraefte = new ArrayList<>();
 
 	/** Alle Klassen, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKlasse.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungKlasse> klassen = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungKlasse> klassen = new ArrayList<>();
 
 	/** Alle Fächer, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungFach.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungFach> faecher = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungFach> faecher = new ArrayList<>();
 
 	/** Alle Räume, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungRaum.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungRaum> raeume = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungRaum> raeume = new ArrayList<>();
 
 	/** Alle Kopplungen, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungKopplung.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungKopplung> kopplungen = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungKopplung> kopplungen = new ArrayList<>();
 
 	/** Alle Lerngruppen, die an der Stundenplanberechnung beteiligt sind. */
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungLerngruppe.class))
-	public @NotNull ArrayList<@NotNull StundenplanblockungLerngruppe> lerngruppen = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanblockungLerngruppe> lerngruppen = new ArrayList<>();
 
 }

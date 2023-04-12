@@ -38,7 +38,7 @@ export class KlassenListeEintrag extends JavaObject {
 	/**
 	 * Die Liste der IDs der Klassen-Lehrer der Klasse.
 	 */
-	public klassenLehrer : ArrayList<number> | null = new ArrayList();
+	public klassenLehrer : List<number> = new ArrayList();
 
 	/**
 	 * Die Schüler der Klasse.

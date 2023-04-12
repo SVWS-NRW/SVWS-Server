@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import jakarta.validation.constraints.NotNull;
@@ -240,7 +239,7 @@ public enum GostKursblockungRegelTyp {
 	 */
 	public static long[] getNeueParameterBeiSchienenLoeschung(final @NotNull GostBlockungRegel pRegel, final int pSchienenNr) {
 		final @NotNull GostKursblockungRegelTyp typ = fromTyp(pRegel.typ);
-		final @NotNull ArrayList<@NotNull Long> param = pRegel.parameter;
+		final @NotNull List<@NotNull Long> param = pRegel.parameter;
 		switch (typ) {
 			case LEHRKRAEFTE_BEACHTEN: // 10
 				return new long[] {};   // Keine Veränderung bei 0 Parametern.

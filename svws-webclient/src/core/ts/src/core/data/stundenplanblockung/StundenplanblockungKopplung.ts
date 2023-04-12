@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 
 export class StundenplanblockungKopplung extends JavaObject {
@@ -17,7 +18,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	/**
 	 * Alle Stundenelemente, die dieser Kopplung zugeordnet sind.
 	 */
-	public stundenelemente : ArrayList<StundenplanblockungStundenelement> = new ArrayList();
+	public stundenelemente : List<StundenplanblockungStundenelement> = new ArrayList();
 
 
 	public constructor() {

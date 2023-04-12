@@ -1,8 +1,7 @@
 package de.svws_nrw.core.data.gost;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -10,6 +9,7 @@ import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.gost.GostKursart;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse repräsentiert einen Kurs in einer Blockung der gymnasialen Oberstufe.
@@ -45,6 +45,6 @@ public class GostBlockungKurs {
 	public int anzahlSchienen = 1;
 
 	/** Die Lehrer, die diesem Kurs bereits fest zugeordnet sind. */
-	public @NotNull ArrayList<@NotNull GostBlockungKursLehrer> lehrer = new ArrayList<>();
+	public @NotNull List<@NotNull GostBlockungKursLehrer> lehrer = new ArrayList<>();
 
 }

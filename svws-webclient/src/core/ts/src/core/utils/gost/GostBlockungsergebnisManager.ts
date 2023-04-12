@@ -266,7 +266,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateRegelvalidierung() : void {
-		const regelVerletzungen : ArrayList<number> = this._ergebnis.bewertung.regelVerletzungen;
+		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
@@ -1125,7 +1125,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return         Ein Array aller Schienen-Nummern des Kurses.
 	 */
 	public getOfKursSchienenNummern(pKursID : number) : Array<number> {
-		const schienenIDs : ArrayList<number> = this.getKursE(pKursID).schienen;
+		const schienenIDs : List<number> = this.getKursE(pKursID).schienen;
 		const a : Array<number> | null = Array(schienenIDs.size()).fill(0);
 		for (let i : number = 0; i < a.length; i++) {
 			const schienenID : number = schienenIDs.get(i).valueOf();

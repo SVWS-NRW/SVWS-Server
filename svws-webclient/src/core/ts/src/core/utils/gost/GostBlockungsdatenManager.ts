@@ -868,7 +868,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public patchOfKursRemoveLehrkraft(pKursID : number, pLehrkraftID : number) : void {
 		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		const lehrer : ArrayList<GostBlockungKursLehrer> = kurs.lehrer;
+		const lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (let i : number = 0; i < lehrer.size(); i++)
 			if (lehrer.get(i).id === pLehrkraftID) {
 				lehrer.remove(lehrer.get(i));

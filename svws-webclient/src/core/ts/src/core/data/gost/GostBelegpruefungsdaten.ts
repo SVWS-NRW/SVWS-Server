@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 
 export class GostBelegpruefungsdaten extends JavaObject {
@@ -13,7 +14,7 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen
 	 */
-	public gostFaecher : ArrayList<GostFach> = new ArrayList();
+	public gostFaecher : List<GostFach> = new ArrayList();
 
 
 	public constructor() {

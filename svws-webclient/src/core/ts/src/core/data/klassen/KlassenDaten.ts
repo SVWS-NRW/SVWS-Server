@@ -38,7 +38,7 @@ export class KlassenDaten extends JavaObject {
 	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
 	 */
-	public klassenLeitungen : ArrayList<number> | null = new ArrayList();
+	public klassenLeitungen : List<number> = new ArrayList();
 
 	/**
 	 * Die Schüler der Klasse.

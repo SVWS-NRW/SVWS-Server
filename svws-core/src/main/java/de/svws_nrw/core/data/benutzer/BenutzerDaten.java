@@ -1,12 +1,12 @@
 package de.svws_nrw.core.data.benutzer;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -51,7 +51,7 @@ public class BenutzerDaten {
 
 	/** Die Kompetenzen, die speziell diesem Benutzer zugeordnet sind. */
 	@Schema(description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
-	public @NotNull ArrayList<@NotNull Long> kompetenzen = new ArrayList<>();
+	public @NotNull List<@NotNull Long> kompetenzen = new ArrayList<>();
 
 
 }

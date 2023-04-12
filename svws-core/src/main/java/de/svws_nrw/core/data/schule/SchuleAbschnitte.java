@@ -1,11 +1,12 @@
 package de.svws_nrw.core.data.schule;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -26,6 +27,6 @@ public class SchuleAbschnitte {
 
 	/** Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...) */
 	@Schema(description = "Bezeichnungen für die Abschnitte", example = "1. Quartal")
-	public @NotNull ArrayList<@NotNull String> bezAbschnitte = new ArrayList<>();
+	public @NotNull List<@NotNull String> bezAbschnitte = new ArrayList<>();
 
 }

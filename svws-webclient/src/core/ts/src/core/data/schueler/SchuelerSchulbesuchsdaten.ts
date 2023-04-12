@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerSchulbesuchSchule } from '../../../core/data/schueler/SchuelerSchulbesuchSchule';
 import { SchuelerSchulbesuchMerkmal } from '../../../core/data/schueler/SchuelerSchulbesuchMerkmal';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 
@@ -123,12 +124,12 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	/**
 	 * Die Informationen zu den besonderen Merkmalen für die Statistik.
 	 */
-	public merkmale : ArrayList<SchuelerSchulbesuchMerkmal> = new ArrayList();
+	public merkmale : List<SchuelerSchulbesuchMerkmal> = new ArrayList();
 
 	/**
 	 * Die Informationen zu allen bisher besuchten Schulen.
 	 */
-	public alleSchulen : ArrayList<SchuelerSchulbesuchSchule> = new ArrayList();
+	public alleSchulen : List<SchuelerSchulbesuchSchule> = new ArrayList();
 
 
 	public constructor() {
