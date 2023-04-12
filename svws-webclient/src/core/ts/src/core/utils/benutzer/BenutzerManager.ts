@@ -1,11 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
+import { BenutzerDaten, cast_de_svws_nrw_core_data_benutzer_BenutzerDaten } from '../../../core/data/benutzer/BenutzerDaten';
+import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
-import { BenutzerDaten, cast_de_svws_nrw_core_data_benutzer_BenutzerDaten } from '../../../core/data/benutzer/BenutzerDaten';
+import { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
 
@@ -31,7 +33,7 @@ export class BenutzerManager extends JavaObject {
 	 *  Benutzer-Gruppen beinhaltet, von denen
 	 *  der Benutzer die Kompetenz erhalten hat.
 	 */
-	private readonly _mapKompetenzenVonGruppe : HashMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new HashMap();
+	private readonly _mapKompetenzenVonGruppe : JavaMap<BenutzerKompetenz, ArrayList<BenutzergruppeDaten>> = new ArrayMap(BenutzerKompetenz.values());
 
 	/**
 	 * Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist.

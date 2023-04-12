@@ -19,9 +19,11 @@ import { GostFach } from '../../core/data/gost/GostFach';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
+import { ArrayMap } from '../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { GostBlockungSchiene } from '../../core/data/gost/GostBlockungSchiene';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { JavaMap } from '../../java/util/JavaMap';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
 export class KursblockungDynDaten extends JavaObject {
@@ -39,7 +41,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert.
 	 */
-	private readonly regelMap : HashMap<GostKursblockungRegelTyp, LinkedCollection<GostBlockungRegel>>;
+	private readonly regelMap : JavaMap<GostKursblockungRegelTyp, LinkedCollection<GostBlockungRegel>>;
 
 	/**
 	 * Die maximale Blockungszeit in Millisekunden.
@@ -104,7 +106,7 @@ export class KursblockungDynDaten extends JavaObject {
 		super();
 		this._random = pRandom;
 		this.logger = pLogger;
-		this.regelMap = new HashMap();
+		this.regelMap = new ArrayMap(GostKursblockungRegelTyp.values());
 		this.maxTimeMillis = pInput.getMaxTimeMillis();
 		this.schienenArr = Array(0).fill(null);
 		this.kursArr = Array(0).fill(null);

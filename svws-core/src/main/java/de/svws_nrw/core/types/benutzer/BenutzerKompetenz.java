@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
@@ -446,8 +449,8 @@ public enum BenutzerKompetenz {
 	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> _mapID = new HashMap<>();
 
-	/** Eine HashMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe*/
-	private static final @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> _mapGruppenZuordnung = new HashMap<>();
+	/** Eine ArrayMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe*/
+	private static final @NotNull ArrayMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> _mapGruppenZuordnung = new ArrayMap<>(BenutzerKompetenzGruppe.values());
 
 
 	/**
@@ -479,7 +482,7 @@ public enum BenutzerKompetenz {
      *
      * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
      */
-    private static @NotNull HashMap<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
+    private static @NotNull Map<@NotNull BenutzerKompetenzGruppe, @NotNull List<@NotNull BenutzerKompetenz>> getMapGruppenZuordnung() {
         if (_mapGruppenZuordnung.size() == 0) {
             for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
                 _mapGruppenZuordnung.put(g, new ArrayList<>());

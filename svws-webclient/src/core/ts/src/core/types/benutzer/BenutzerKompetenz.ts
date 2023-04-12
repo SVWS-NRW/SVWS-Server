@@ -4,9 +4,11 @@ import { BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/Ben
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKompetenz> {
 
@@ -463,9 +465,9 @@ export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKo
 	private static readonly _mapID : HashMap<number, BenutzerKompetenz> = new HashMap();
 
 	/**
-	 * Eine HashMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe
+	 * Eine ArrayMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe
 	 */
-	private static readonly _mapGruppenZuordnung : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> = new HashMap();
+	private static readonly _mapGruppenZuordnung : ArrayMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> = new ArrayMap(BenutzerKompetenzGruppe.values());
 
 	/**
 	 * Erzeugt eine neue Benutzerkompetenz für die Aufzählung.
@@ -500,7 +502,7 @@ export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKo
 	 *
 	 * @return die Map von den Benutzerkompetenzen-Gruppen auf die zugehörigen Benutzerkompetenzen
 	 */
-	private static getMapGruppenZuordnung() : HashMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
+	private static getMapGruppenZuordnung() : JavaMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
 		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
 			for (const g of BenutzerKompetenzGruppe.values())
 				BenutzerKompetenz._mapGruppenZuordnung.put(g, new ArrayList());

@@ -3,7 +3,9 @@ package de.svws_nrw.core.types.gost;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -50,7 +52,7 @@ public enum GostKursart {
 	private static final @NotNull HashMap<@NotNull String, @NotNull GostKursart> _mapKuerzel = new HashMap<>();
 
 	/** Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart */
-	private static final @NotNull HashMap<@NotNull ZulaessigeKursart, @NotNull GostKursart> _mapZulKursart = new HashMap<>();
+	private static final @NotNull Map<@NotNull ZulaessigeKursart, @NotNull GostKursart> _mapZulKursart = new ArrayMap<>(ZulaessigeKursart.values());
 
 	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe*/
 	public final @NotNull int id;
@@ -121,7 +123,7 @@ public enum GostKursart {
 	 *
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
-	private static @NotNull HashMap<@NotNull ZulaessigeKursart, @NotNull GostKursart> getMapByZulKursart() {
+	private static @NotNull Map<@NotNull ZulaessigeKursart, @NotNull GostKursart> getMapByZulKursart() {
 		if (_mapZulKursart.size() == 0)
 			for (final @NotNull GostKursart k : GostKursart.values())
 				for (final @NotNull ZulaessigeKursart zulKursart : k.kursarten)

@@ -1,11 +1,13 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { List } from '../../../java/util/List';
 import { ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays } from '../../../java/util/Arrays';
+import { JavaMap } from '../../../java/util/JavaMap';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
@@ -57,7 +59,7 @@ export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
 	/**
 	 * Die Zuordnung der Kursarten zu der jeweiligen zulässigen Kursart
 	 */
-	private static readonly _mapZulKursart : HashMap<ZulaessigeKursart, GostKursart> = new HashMap();
+	private static readonly _mapZulKursart : JavaMap<ZulaessigeKursart, GostKursart> = new ArrayMap(ZulaessigeKursart.values());
 
 	/**
 	 * Die eindeutige ID der Kursart der Gymnasialen Oberstufe
@@ -148,7 +150,7 @@ export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
 	 *
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
-	private static getMapByZulKursart() : HashMap<ZulaessigeKursart, GostKursart> {
+	private static getMapByZulKursart() : JavaMap<ZulaessigeKursart, GostKursart> {
 		if (GostKursart._mapZulKursart.size() === 0)
 			for (const k of GostKursart.values())
 				for (const zulKursart of k.kursarten)

@@ -1,6 +1,5 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -8,6 +7,7 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class AbiFaecher extends GostBelegpruefung {
 
-	/// Eine HashMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind
-	private HashMap<@NotNull GostAbiturFach, @NotNull AbiturFachbelegung> mapAbiturFachbelegungen;
+	/// Eine ArrayMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind
+	private ArrayMap<@NotNull GostAbiturFach, @NotNull AbiturFachbelegung> mapAbiturFachbelegungen;
 
 	/// Die Anzahl der belegten Abitur-Fächer (sollten 4 sein)
 	private int anzahlAbiFaecher;
@@ -60,7 +60,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		mapAbiturFachbelegungen = new HashMap<>();
+		mapAbiturFachbelegungen = new ArrayMap<>(GostAbiturFach.values());
 		anzahlAbiFaecher = 0;
 		anzahlDeutschMatheFremdsprache = 0;
 		anzahlFremdsprachen = 0;

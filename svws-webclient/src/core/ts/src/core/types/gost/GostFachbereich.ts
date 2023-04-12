@@ -1,11 +1,12 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { HashMap } from '../../../java/util/HashMap';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbereich> {
 
@@ -119,7 +120,7 @@ export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbere
 	/**
 	 * Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet.
 	 */
-	private static readonly _mapFachbereichByFach : HashMap<ZulaessigesFach, List<GostFachbereich>> = new HashMap();
+	private static readonly _mapFachbereichByFach : JavaMap<ZulaessigesFach, List<GostFachbereich>> = new ArrayMap(ZulaessigesFach.values());
 
 	/**
 	 * Eine Liste der Fächern dieses Fachbereichs
@@ -164,7 +165,7 @@ export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbere
 	 *
 	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
 	 */
-	private static getMapFachbereichByFach() : HashMap<ZulaessigesFach, List<GostFachbereich>> {
+	private static getMapFachbereichByFach() : JavaMap<ZulaessigesFach, List<GostFachbereich>> {
 		if (GostFachbereich._mapFachbereichByFach.size() === 0) {
 			for (const fb of GostFachbereich.values()) {
 				for (const fach of fb.faecher) {

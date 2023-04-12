@@ -1,8 +1,8 @@
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
-import { HashMap } from '../../../../java/util/HashMap';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { ArrayMap } from '../../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
@@ -14,7 +14,7 @@ import { HashSet } from '../../../../java/util/HashSet';
 
 export class AbiFaecher extends GostBelegpruefung {
 
-	private mapAbiturFachbelegungen : HashMap<GostAbiturFach, AbiturFachbelegung> | null = null;
+	private mapAbiturFachbelegungen : ArrayMap<GostAbiturFach, AbiturFachbelegung> | null = null;
 
 	private anzahlAbiFaecher : number = 0;
 
@@ -42,7 +42,7 @@ export class AbiFaecher extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.mapAbiturFachbelegungen = new HashMap();
+		this.mapAbiturFachbelegungen = new ArrayMap(GostAbiturFach.values());
 		this.anzahlAbiFaecher = 0;
 		this.anzahlDeutschMatheFremdsprache = 0;
 		this.anzahlFremdsprachen = 0;

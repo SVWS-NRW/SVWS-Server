@@ -28,6 +28,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/LiterarischKuenstlerisch';
 import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../core/abschluss/gost/GostBelegpruefung';
 import { GostFachManager } from '../../../core/abschluss/gost/GostFachManager';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
@@ -58,7 +59,7 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht
 	 */
-	private readonly mapFachbereiche : HashMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new HashMap();
+	private readonly mapFachbereiche : ArrayMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
 
 	/**
 	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung

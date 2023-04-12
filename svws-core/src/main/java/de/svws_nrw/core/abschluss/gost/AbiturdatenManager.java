@@ -21,6 +21,7 @@ import de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Sport;
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -53,7 +54,7 @@ public class AbiturdatenManager {
 	private final @NotNull GostBelegpruefungsArt pruefungsArt;
 
 	/** Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht */
-	private final @NotNull HashMap<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche = new HashMap<>();
+	private final @NotNull ArrayMap<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche = new ArrayMap<>(GostFachbereich.values());
 
 
 	/** Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung */

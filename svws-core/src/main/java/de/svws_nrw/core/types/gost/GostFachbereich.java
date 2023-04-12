@@ -1,12 +1,13 @@
 package de.svws_nrw.core.types.gost;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import jakarta.validation.constraints.NotNull;
@@ -89,7 +90,7 @@ public enum GostFachbereich {
 	SPORT(null, ZulaessigesFach.SP);
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
-	private static final @NotNull HashMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach = new HashMap<>();
+	private static final @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> _mapFachbereichByFach = new ArrayMap<>(ZulaessigesFach.values());
 
 
 	/** Eine Liste der Fächern dieses Fachbereichs */
@@ -127,7 +128,7 @@ public enum GostFachbereich {
 	 *
 	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
 	 */
-	private static @NotNull HashMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> getMapFachbereichByFach() {
+	private static @NotNull Map<@NotNull ZulaessigesFach, @NotNull List<@NotNull GostFachbereich>> getMapFachbereichByFach() {
 		if (_mapFachbereichByFach.size() == 0) {
 			for (final @NotNull GostFachbereich fb : GostFachbereich.values()) {
 				for (final ZulaessigesFach fach : fb.faecher) {

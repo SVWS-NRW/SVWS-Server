@@ -3,8 +3,10 @@ package de.svws_nrw.core.utils.benutzer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -31,7 +33,7 @@ public class BenutzerManager {
      * Benutzer-Gruppen beinhaltet, von denen
      * der Benutzer die Kompetenz erhalten hat.
      */
-    private final @NotNull HashMap<@NotNull BenutzerKompetenz, @NotNull ArrayList<@NotNull BenutzergruppeDaten>> _mapKompetenzenVonGruppe = new HashMap<>();
+    private final @NotNull Map<@NotNull BenutzerKompetenz, @NotNull ArrayList<@NotNull BenutzergruppeDaten>> _mapKompetenzenVonGruppe = new ArrayMap<>(BenutzerKompetenz.values());
 
     /** Die Menge an Kompetenzen, die diesem Benutzer direkt zugeordnet ist. */
     private final @NotNull HashSet<@NotNull BenutzerKompetenz> _setKompetenzen = new HashSet<>();

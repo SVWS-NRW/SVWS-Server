@@ -3,10 +3,12 @@ package de.svws_nrw.core.kursblockung;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
+import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -37,7 +39,7 @@ public class KursblockungDynDaten {
 	private final @NotNull Logger logger;
 
 	/** Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert. */
-	private final @NotNull HashMap<@NotNull GostKursblockungRegelTyp, @NotNull LinkedCollection<@NotNull GostBlockungRegel>> regelMap;
+	private final @NotNull Map<@NotNull GostKursblockungRegelTyp, @NotNull LinkedCollection<@NotNull GostBlockungRegel>> regelMap;
 
 	/** Die maximale Blockungszeit in Millisekunden. */
 	private final long maxTimeMillis;
@@ -80,7 +82,7 @@ public class KursblockungDynDaten {
 	public KursblockungDynDaten(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull GostBlockungsdatenManager pInput) {
 		_random = pRandom;
 		logger = pLogger;
-		regelMap = new HashMap<>();
+		regelMap = new ArrayMap<>(GostKursblockungRegelTyp.values());
 		maxTimeMillis = pInput.getMaxTimeMillis();
 
 		schienenArr = new KursblockungDynSchiene[0];
