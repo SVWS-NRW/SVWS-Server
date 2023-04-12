@@ -4,21 +4,18 @@ import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerRaumMenge extends JavaObject {
 
-	private readonly _menge : ArrayList<StundenplanblockungManagerRaum>;
+	private readonly _menge : List<StundenplanblockungManagerRaum> = new ArrayList();
 
-	private readonly _map : HashMap<number, StundenplanblockungManagerRaum>;
+	private readonly _map : JavaMap<number, StundenplanblockungManagerRaum> = new HashMap();
 
 
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Räume.
-	 */
 	public constructor() {
 		super();
-		this._menge = new ArrayList();
-		this._map = new HashMap();
 	}
 
 	/**
@@ -87,7 +84,7 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Räume.
 	 */
-	public getMenge() : ArrayList<StundenplanblockungManagerRaum | null> | null {
+	public getMenge() : List<StundenplanblockungManagerRaum | null> | null {
 		return this._menge;
 	}
 

@@ -4,21 +4,18 @@ import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanblockungManagerLehrkraft, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 
-	private readonly _menge : ArrayList<StundenplanblockungManagerLehrkraft>;
+	private readonly _menge : List<StundenplanblockungManagerLehrkraft> = new ArrayList();
 
-	private readonly _map : HashMap<number, StundenplanblockungManagerLehrkraft>;
+	private readonly _map : JavaMap<number, StundenplanblockungManagerLehrkraft> = new HashMap();
 
 
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Lehrkräfte.
-	 */
 	public constructor() {
 		super();
-		this._menge = new ArrayList();
-		this._map = new HashMap();
 	}
 
 	/**
@@ -94,7 +91,7 @@ export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Lehrkräfte.
 	 */
-	public getMenge() : ArrayList<StundenplanblockungManagerLehrkraft | null> | null {
+	public getMenge() : List<StundenplanblockungManagerLehrkraft | null> | null {
 		return this._menge;
 	}
 

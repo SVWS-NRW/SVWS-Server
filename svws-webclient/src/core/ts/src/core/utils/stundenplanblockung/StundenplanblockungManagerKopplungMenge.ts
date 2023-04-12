@@ -3,22 +3,19 @@ import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { List } from '../../../java/util/List';
 import { StundenplanblockungManagerKopplung, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 
-	private readonly _menge : ArrayList<StundenplanblockungManagerKopplung>;
+	private readonly _menge : List<StundenplanblockungManagerKopplung> = new ArrayList();
 
-	private readonly _map : HashMap<number, StundenplanblockungManagerKopplung>;
+	private readonly _map : JavaMap<number, StundenplanblockungManagerKopplung> = new HashMap();
 
 
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Kopplungen.
-	 */
 	public constructor() {
 		super();
-		this._menge = new ArrayList();
-		this._map = new HashMap();
 	}
 
 	/**
@@ -94,7 +91,7 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Kopplungen.
 	 */
-	public getMenge() : ArrayList<StundenplanblockungManagerKopplung | null> | null {
+	public getMenge() : List<StundenplanblockungManagerKopplung | null> | null {
 		return this._menge;
 	}
 

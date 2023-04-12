@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -13,16 +15,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanblockungManagerKlasseMenge {
 
-	private final @NotNull ArrayList<@NotNull StundenplanblockungManagerKlasse> _menge;
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungManagerKlasse> _map;
-
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Klassen.
-	 */
-	public StundenplanblockungManagerKlasseMenge() {
-		_menge = new ArrayList<>();
-		_map = new HashMap<>();
-	}
+	private final @NotNull List<@NotNull StundenplanblockungManagerKlasse> _menge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanblockungManagerKlasse> _map = new HashMap<>();
 
 	/**
 	 * Fügt die Klasse hinzu. <br>
@@ -96,7 +90,7 @@ public class StundenplanblockungManagerKlasseMenge {
 	 *
 	 * @return Die Menge aller Klassen.
 	 */
-	public ArrayList<StundenplanblockungManagerKlasse> getMenge() {
+	public List<StundenplanblockungManagerKlasse> getMenge() {
 		return _menge;
 	}
 

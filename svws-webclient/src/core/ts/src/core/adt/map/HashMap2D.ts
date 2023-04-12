@@ -1,10 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class HashMap2D<K1, K2, V> extends JavaObject {
 
-	private readonly _map : HashMap<K1, HashMap<K2, V | null>> = new HashMap();
+	private readonly _map : JavaMap<K1, JavaMap<K2, V | null>> = new HashMap();
 
 
 	/**
@@ -23,7 +24,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public put(key1 : K1, key2 : K2, value : V | null) : void {
-		let map2 : HashMap<K2, V | null> | null = this._map.get(key1);
+		let map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
 		if (map2 === null) {
 			map2 = new HashMap();
 			this._map.put(key1, map2);
@@ -41,7 +42,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public getOrException(key1 : K1, key2 : K2) : V | null {
-		const map2 : HashMap<K2, V | null> = this.getSubMapOrException(key1);
+		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new NullPointerException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		return map2.get(key2);
@@ -70,8 +71,8 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 * @param key1 Der 1. Schlüssel des Paares(key1, key2).
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public getSubMapOrException(key1 : K1) : HashMap<K2, V | null> {
-		const map2 : HashMap<K2, V | null> | null = this._map.get(key1);
+	public getSubMapOrException(key1 : K1) : JavaMap<K2, V | null> {
+		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
 		if (map2 === null)
 			throw new NullPointerException("Pfad (key1=" + key1 + ") ungültig!")
 		return map2;

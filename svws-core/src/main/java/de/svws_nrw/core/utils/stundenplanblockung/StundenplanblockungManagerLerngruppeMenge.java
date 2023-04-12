@@ -1,8 +1,10 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
-import java.util.HashMap;
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLerngruppe;
 import jakarta.validation.constraints.NotNull;
@@ -14,16 +16,8 @@ import jakarta.validation.constraints.NotNull;
 public class StundenplanblockungManagerLerngruppeMenge {
 
 	/** Alle Lerngruppen. */
-	private final @NotNull ArrayList<@NotNull StundenplanblockungManagerLerngruppe> _menge;
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungManagerLerngruppe> _map;
-
-	/**
-	 * Erzeugt eine neue Menge an Lerngruppen.
-	 */
-	public StundenplanblockungManagerLerngruppeMenge() {
-		_menge = new ArrayList<>();
-		_map = new HashMap<>();
-	}
+	private final @NotNull List<@NotNull StundenplanblockungManagerLerngruppe> _menge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanblockungManagerLerngruppe> _map = new HashMap<>();
 
 	/**
 	 * Liefert die zuvor erzeugte Lerngruppe. <br>
@@ -89,7 +83,7 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 *
 	 * @return Die Menge aller Lerngruppen.
 	 */
-	public ArrayList<StundenplanblockungManagerLerngruppe> getMenge() {
+	public List<StundenplanblockungManagerLerngruppe> getMenge() {
 		return _menge;
 	}
 

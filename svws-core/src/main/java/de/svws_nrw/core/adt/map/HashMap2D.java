@@ -1,6 +1,7 @@
 package de.svws_nrw.core.adt.map;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -15,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 
-	private final @NotNull HashMap<@NotNull K1, @NotNull HashMap<@NotNull K2, V>> _map = new HashMap<>();
+	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, V>> _map = new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -33,7 +34,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final V value) {
-		HashMap<@NotNull K2, V> map2 = _map.get(key1);
+		Map<@NotNull K2, V> map2 = _map.get(key1);
 		if (map2 == null) {
 			map2 = new HashMap<>();
 			_map.put(key1, map2);
@@ -51,7 +52,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws NullPointerException {
-		final @NotNull HashMap<@NotNull K2, V> map2 = getSubMapOrException(key1);
+		final @NotNull Map<@NotNull K2, V> map2 = getSubMapOrException(key1);
 		if (!map2.containsKey(key2))
 			throw new NullPointerException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		return map2.get(key2);
@@ -80,8 +81,8 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 * @param key1 Der 1. Schlüssel des Paares(key1, key2).
 	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public @NotNull HashMap<@NotNull K2, V> getSubMapOrException(final @NotNull K1 key1) {
-		final HashMap<@NotNull K2, V> map2 = _map.get(key1);
+	public @NotNull Map<@NotNull K2, V> getSubMapOrException(final @NotNull K1 key1) {
+		final Map<@NotNull K2, V> map2 = _map.get(key1);
 		if (map2 == null)
 			throw new NullPointerException("Pfad (key1=" + key1 + ") ungültig!");
 		return map2;

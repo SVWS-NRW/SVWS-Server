@@ -4,21 +4,18 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungManagerKlasse, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKlasse } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasse';
+import { List } from '../../../java/util/List';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 
-	private readonly _menge : ArrayList<StundenplanblockungManagerKlasse>;
+	private readonly _menge : List<StundenplanblockungManagerKlasse> = new ArrayList();
 
-	private readonly _map : HashMap<number, StundenplanblockungManagerKlasse>;
+	private readonly _map : JavaMap<number, StundenplanblockungManagerKlasse> = new HashMap();
 
 
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Klassen.
-	 */
 	public constructor() {
 		super();
-		this._menge = new ArrayList();
-		this._map = new HashMap();
 	}
 
 	/**
@@ -93,7 +90,7 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 *
 	 * @return Die Menge aller Klassen.
 	 */
-	public getMenge() : ArrayList<StundenplanblockungManagerKlasse | null> | null {
+	public getMenge() : List<StundenplanblockungManagerKlasse | null> | null {
 		return this._menge;
 	}
 

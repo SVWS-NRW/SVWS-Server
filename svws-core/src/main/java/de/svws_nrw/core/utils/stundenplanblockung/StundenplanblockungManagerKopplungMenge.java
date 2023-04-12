@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils.stundenplanblockung;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -12,16 +14,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanblockungManagerKopplungMenge {
 
-	private final @NotNull ArrayList<@NotNull StundenplanblockungManagerKopplung> _menge;
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanblockungManagerKopplung> _map;
-
-	/**
-	 * Erzeugt eine neues Objekt zur Verwaltung der Menge aller Kopplungen.
-	 */
-	public StundenplanblockungManagerKopplungMenge() {
-		_menge = new ArrayList<>();
-		_map = new HashMap<>();
-	}
+	private final @NotNull List<@NotNull StundenplanblockungManagerKopplung> _menge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanblockungManagerKopplung> _map = new HashMap<>();
 
 	/**
 	 * Fügt die Kopplung hinzu. <br>
@@ -96,7 +90,7 @@ public class StundenplanblockungManagerKopplungMenge {
 	 *
 	 * @return Die Menge aller Kopplungen.
 	 */
-	public ArrayList<StundenplanblockungManagerKopplung> getMenge() {
+	public List<StundenplanblockungManagerKopplung> getMenge() {
 		return _menge;
 	}
 
