@@ -1,7 +1,8 @@
-import { BenutzerKompetenz, List, SchuelerLernabschnittListeEintrag, Schulform, ArrayList } from "@svws-nrw/svws-core";
-import { RouteLocationRaw, RouteParams } from "vue-router";
+import type { List, SchuelerLernabschnittListeEintrag} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";

@@ -6,8 +6,10 @@
 
 <script setup lang="ts">
 
-	import { FaecherListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten, ZulaessigesFach } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
+	import type { FaecherListeEintrag } from "@svws-nrw/svws-core";
+	import { ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		fach: number,

@@ -1,34 +1,88 @@
-import { BenutzerKompetenz, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, Schulform } from "@svws-nrw/svws-core";
-import { ref, Ref, ShallowRef, shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
-import { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
+import type { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { shallowRef } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
+import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
 import { api } from "~/router/Api";
-import { routeSchuelerLeistungen, RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
+import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
+import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
+interface RouteStateSchuelerLeistungenDaten {
+	auswahl: SchuelerLernabschnittListeEintrag | undefined;
+	daten: SchuelerLernabschnittsdaten | undefined;
+	mapFaecher: Map<number, FaecherListeEintrag>;
+	mapLehrer: Map<number, LehrerListeEintrag>;
+}
+
 export class RouteDataSchuelerLeistungenDaten {
 
-	auswahl: SchuelerLernabschnittListeEintrag | undefined = undefined;
-	daten: Ref<SchuelerLernabschnittsdaten | undefined> = ref(undefined);
-	mapFaecher: ShallowRef<Map<number, FaecherListeEintrag>> = shallowRef(new Map());
-	mapLehrer: ShallowRef<Map<number, LehrerListeEintrag>> = shallowRef(new Map());
-
-	public async onSelect(item?: SchuelerLernabschnittListeEintrag) {
-		if (((item === undefined) && (this.daten.value === undefined)) || ((this.daten.value !== undefined) && (this.daten.value.id === item?.id)))
-			return;
-		this.auswahl = item;
-		this.daten.value = (item?.id === undefined) ? undefined : await api.server.getSchuelerLernabschnittsdatenByID(api.schema, item.id);
+	private static _defaultState: RouteStateSchuelerLeistungenDaten = {
+		auswahl: undefined,
+		daten: undefined,
+		mapFaecher: new Map(),
+		mapLehrer: new Map(),
 	}
 
-	setLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
+	private _state = shallowRef(RouteDataSchuelerLeistungenDaten._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateSchuelerLeistungenDaten>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerLeistungenDaten._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateSchuelerLeistungenDaten>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	get auswahl(): SchuelerLernabschnittListeEintrag {
+		if (this._state.value.auswahl === undefined)
+			throw new Error("Unerwarteter Fehler: Lernabschnittseintrag nicht festgelegt, es können keine Informationen zu den Leistungsdaten abgerufen oder eingegeben werden.");
+		return this._state.value.auswahl;
+	}
+
+	get daten(): SchuelerLernabschnittsdaten {
+		if (this._state.value.daten === undefined)
+			throw new Error("Unerwarteter Fehler: Leistungsdaten nicht initialisiert");
+		return this._state.value.daten;
+	}
+	get mapFaecher(): Map<number, FaecherListeEintrag> {
+		return this._state.value.mapFaecher;
+	}
+
+	get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
+	}
+
+	public async ladeListe() {
+		const listFaecher = await	api.server.getFaecher(api.schema);
+		const mapFaecher = new Map<number, FaecherListeEintrag>();
+		for (const f of listFaecher)
+			mapFaecher.set(f.id, f);
+		const listLehrer = await api.server.getLehrer(api.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		this.setPatchedDefaultState({ mapFaecher, mapLehrer });
+	}
+
+	public async setEintrag(lernabschnitt: SchuelerLernabschnittListeEintrag | undefined) {
+		if (lernabschnitt === undefined)
+			return;
+		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, lernabschnitt.id);
+		this.setPatchedState({ auswahl: lernabschnitt, daten });
+	}
+
+	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
 		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, abschnitt: value?.schuljahresabschnitt, wechselNr: value?.wechselNr || undefined } });
 	}
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
-		if (this.daten.value === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO await api.server.patchSchuelerLeistungsdaten(data, api.schema, id);
 	}
 
@@ -48,39 +102,23 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 		];
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		return (to_params.id !== undefined);
-	}
-
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if (to_params.id === undefined)
-			return false;
-		// Laden des Fächerkatalogs
-		const listFaecher = await	api.server.getFaecher(api.schema);
-		const mapFaecher = new Map<number, FaecherListeEintrag>();
-		for (const f of listFaecher)
-			mapFaecher.set(f.id, f);
-		this.data.mapFaecher.value = mapFaecher;
-		// Laden des LehrerKatalogs
-		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		this.data.mapLehrer.value = mapLehrer;
+		await this.data.ladeListe();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined)
 			return false;
-		const id = parseInt(to_params.id as string);
+		const id = parseInt(to_params.id);
 		if (to_params.abschnitt === undefined) {
-			await this.data.onSelect(undefined);
 			return routeSchuelerLeistungen.getRoute(id);
 		} else {
-			const abschnitt = parseInt(to_params.abschnitt as string);
-			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr as string);
-			const entry = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
-			await this.data.onSelect(entry);
+			const abschnitt = parseInt(to_params.abschnitt);
+			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
+			const eintrag = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
+			await this.data.setEintrag(eintrag);
 		}
 	}
 
@@ -92,15 +130,15 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 		return {
 			lernabschnitt: this.data.auswahl,
 			lernabschnitte: routeSchuelerLeistungen.data.listAbschnitte,
-			setLernabschnitt: this.data.setLernabschnitt
+			gotoLernabschnitt: this.data.gotoLernabschnitt
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLeistungenDatenProps {
 		return {
-			data: this.data.daten.value,
-			mapFaecher: this.data.mapFaecher.value,
-			mapLehrer: this.data.mapLehrer.value,
+			data: this.data.daten,
+			mapFaecher: this.data.mapFaecher,
+			mapLehrer: this.data.mapLehrer,
 			patchLeistung: this.data.patchLeistung
 		};
 	}

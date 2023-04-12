@@ -1,11 +1,13 @@
-import { BenutzerKompetenz, SchuelerStundenplanManager, Schulform, StundenplanListeEintrag } from "@svws-nrw/svws-core";
+import type { StundenplanListeEintrag } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, SchuelerStundenplanManager, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
-import { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
+import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
+import type { RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
+import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 

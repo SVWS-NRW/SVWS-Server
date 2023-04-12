@@ -1,6 +1,5 @@
 <template>
 	<template v-if="visible">
-		<!-- TODO v-model="selected" - siehe auch unten-->
 		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
@@ -17,9 +16,10 @@
 
 <script setup lang="ts">
 
-	import { DataTableColumn } from "@ui";
-	import { computed, ComputedRef } from "vue";
-	import { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
+	import type { DataTableColumn } from "@ui";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
 

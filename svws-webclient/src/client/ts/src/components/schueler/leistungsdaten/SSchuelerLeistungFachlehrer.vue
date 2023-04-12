@@ -7,8 +7,9 @@
 
 <script setup lang="ts">
 
-	import { LehrerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
+	import type { LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		fachlehrer: number | null,
