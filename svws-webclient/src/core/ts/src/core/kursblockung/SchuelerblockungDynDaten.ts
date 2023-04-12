@@ -253,7 +253,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					if (!this._aktuellGesperrteSchiene[schiene]) {
 						const kurs : SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs !== null)
-							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
+							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS as number;
 					}
 		const r2c : Array<number> = this._aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)

@@ -200,7 +200,7 @@ class StundenplanblockungTests {
 	 */
 	@DisplayName("testEchteDaten1")
 	@Test
-	public void testEchteDaten1() {
+	void testEchteDaten1() {
 		final StundenplanblockungManager man = new StundenplanblockungManager();
 
 		// Alle Lehrkräfte hinzufügen.

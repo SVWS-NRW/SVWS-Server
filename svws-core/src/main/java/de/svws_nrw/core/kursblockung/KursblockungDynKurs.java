@@ -171,7 +171,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser. */
 	public long gibGewichtetesMatchingBewertung() {
-		return schuelerAnz * schuelerAnz;
+		return schuelerAnz * (long) schuelerAnz;
 		/*
 		 * // Alle Kurse in sortierter Reihenfolge (am Anfang kleinere Kurse)
 		 *

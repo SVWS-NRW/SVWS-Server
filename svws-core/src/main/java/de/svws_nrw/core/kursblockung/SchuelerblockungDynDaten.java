@@ -296,7 +296,7 @@ public class SchuelerblockungDynDaten {
 					if (!_aktuellGesperrteSchiene[schiene]) {
 						final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs != null)
-							data[iFachwahl][schiene] = kurs.anzahlSuS * kurs.anzahlSuS;
+							data[iFachwahl][schiene] = kurs.anzahlSuS * (long) kurs.anzahlSuS;
 					}
 
 		// Matching berechnen lassen.

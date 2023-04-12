@@ -381,7 +381,7 @@ export class KursblockungMatrix extends JavaObject {
 	}
 
 	/**
-	 *Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
+	 * Füllt die Matrix mit ganzzahligen zufälligen Zahlenwerten aus dem Intervall {@code [von;bis]}.
 	 *
 	 * @param von Der kleinstmögliche zufällige Wert (inklusive).
 	 * @param bis Der größtmögliche zufällige Wert (inklusive).
@@ -389,7 +389,7 @@ export class KursblockungMatrix extends JavaObject {
 	public fuelleMitZufallszahlenVonBis(von : number, bis : number) : void {
 		for (let r : number = 0; r < this.rows; r++) {
 			for (let c : number = 0; c < this.cols; c++) {
-				this.matrix[r][c] = this._random.nextInt(bis - von + 1) + von;
+				this.matrix[r][c] = this._random.nextLong(bis - von + 1) + von;
 			}
 		}
 	}

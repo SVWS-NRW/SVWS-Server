@@ -117,7 +117,7 @@ public final class KursblockungAlgorithmus extends Service<@NotNull GostBlockung
 		}
 
 		// Aktuellen Stand der Blockung speichern.
-		final @NotNull GostBlockungsergebnisManager out = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1);
+		final @NotNull GostBlockungsergebnisManager out = dynDaten.gibErzeugtesKursblockungOutput(pInput, outputs.size() + 1L);
 		outputs.add(out);
 	}
 

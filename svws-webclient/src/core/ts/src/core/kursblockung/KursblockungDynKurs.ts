@@ -206,7 +206,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser.
 	 */
 	public gibGewichtetesMatchingBewertung() : number {
-		return this.schuelerAnz * this.schuelerAnz;
+		return this.schuelerAnz * this.schuelerAnz as number;
 	}
 
 	/**
