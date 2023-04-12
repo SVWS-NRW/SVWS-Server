@@ -61,7 +61,7 @@
 <script setup lang="ts">
 
 	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
+		GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef, Ref, ref } from "vue";
 	import { lehrer_filter } from "~/helfer";
 	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
@@ -163,7 +163,7 @@
 		props.hatErgebnis ? props.getErgebnismanager().getKursE(props.kurs.id) : undefined
 	);
 
-	const kurseMitKursart: ComputedRef<ArrayList<GostBlockungsergebnisKurs>> = computed(() => {
+	const kurseMitKursart: ComputedRef<List<GostBlockungsergebnisKurs>> = computed(() => {
 		const fachart = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
 	});

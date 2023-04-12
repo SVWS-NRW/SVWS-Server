@@ -340,7 +340,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
 			daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-			daten.faecher.addAll(gostFaecher.toArrayList());
+			daten.faecher.addAll(gostFaecher.toList());
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));
 		final GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler();

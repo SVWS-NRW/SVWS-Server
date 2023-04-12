@@ -223,7 +223,7 @@
 		}
 	}
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toArrayList());
+	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager.toList());
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager.getAnrechenbareKurse());
 

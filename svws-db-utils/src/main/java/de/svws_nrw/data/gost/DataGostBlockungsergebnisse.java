@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -529,7 +528,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege die Leistungsdaten an
 	    	for (final Schueler schueler : datenManager.daten().schueler) {
 	    		// Bestimme die Kurse, in welche der Schüler gesetzt wurde
-	    		final HashSet<GostBlockungsergebnisKurs> kursMenge = ergebnisManager.getOfSchuelerKursmenge(schueler.id);
+	    		final Set<GostBlockungsergebnisKurs> kursMenge = ergebnisManager.getOfSchuelerKursmenge(schueler.id);
 	    		for (final GostBlockungsergebnisKurs kurszuordnung : kursMenge) {
 	    			final GostBlockungKurs kurs = datenManager.getKurs(kurszuordnung.id);
 	    			final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);

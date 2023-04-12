@@ -168,8 +168,8 @@ export class GostFaecherManager extends JavaObject {
 	 *
 	 * @return ein ArrayList mit den Fächern
 	 */
-	public toArrayList() : ArrayList<GostFach> {
-		const result : ArrayList<GostFach> = new ArrayList();
+	public toList() : List<GostFach> {
+		const result : List<GostFach> = new ArrayList();
 		for (const fach of this._faecher)
 			result.add(fach);
 		return result;

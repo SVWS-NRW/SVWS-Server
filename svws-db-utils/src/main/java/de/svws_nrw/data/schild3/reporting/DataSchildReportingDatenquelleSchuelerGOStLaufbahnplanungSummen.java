@@ -84,7 +84,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
 					final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
-					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
 
 					final int[] kurse = abiManager.getAnrechenbareKurse();
 					final int[] wstd = abiManager.getWochenstunden();

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -48,20 +49,20 @@ public class AbiturdatenManager {
 	private final @NotNull Abiturdaten abidaten;
 
 	/** Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang */
-	private final @NotNull HashMap<@NotNull Long, @NotNull GostFach> gostFaecher;
+	private final @NotNull Map<@NotNull Long, @NotNull GostFach> gostFaecher;
 
 	/** Die Art der durchzuführenden Belegprüfung */
 	private final @NotNull GostBelegpruefungsArt pruefungsArt;
 
 	/** Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht */
-	private final @NotNull ArrayMap<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche = new ArrayMap<>(GostFachbereich.values());
+	private final @NotNull Map<@NotNull GostFachbereich, @NotNull ArrayList<@NotNull AbiturFachbelegung>> mapFachbereiche = new ArrayMap<>(GostFachbereich.values());
 
 
 	/** Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung */
-	private @NotNull ArrayList<@NotNull GostBelegpruefung> belegpruefungen = new ArrayList<>();
+	private @NotNull List<@NotNull GostBelegpruefung> belegpruefungen = new ArrayList<>();
 
 	/** Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind. */
-	private @NotNull ArrayList<@NotNull GostBelegungsfehler> belegpruefungsfehler = new ArrayList<>();
+	private @NotNull List<@NotNull GostBelegungsfehler> belegpruefungsfehler = new ArrayList<>();
 
 	/** Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht. */
 	private boolean belegpruefungErfolgreich = false;
@@ -96,7 +97,7 @@ public class AbiturdatenManager {
 	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
-	public @NotNull ArrayList<@NotNull GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungsArt) {
+	public @NotNull List<@NotNull GostBelegpruefung> getPruefungen(final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		final @NotNull ArrayList<@NotNull GostBelegpruefung> pruefungen = new ArrayList<>();
 		pruefungen.add(new Deutsch(this, pruefungsArt));
 		final @NotNull Fremdsprachen pruefungFremdsprachen = new Fremdsprachen(this, pruefungsArt);
@@ -1494,7 +1495,7 @@ public class AbiturdatenManager {
 	 *
 	 * @return eine Liste der Halbjahre in den das Fach mit einer der Kursarten belegt wurde
 	 */
-	public @NotNull ArrayList<@NotNull GostHalbjahr> getHalbjahreKursart(final AbiturFachbelegung fachbelegung, final GostKursart... kursarten) {
+	public @NotNull List<@NotNull GostHalbjahr> getHalbjahreKursart(final AbiturFachbelegung fachbelegung, final GostKursart... kursarten) {
 		final @NotNull ArrayList<@NotNull GostHalbjahr> halbjahre = new ArrayList<>();
 		if (fachbelegung != null) {
 			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {

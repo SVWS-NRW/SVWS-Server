@@ -438,13 +438,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				conn.transactionPersist(erg);
 
 				// Kurse <--> Schüler
-				final HashMap<Long, HashSet<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
+				final Map<Long, Set<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
 				for (final long kursID : map_KursID_SchuelerIDs.keySet())
 					for (final long schuelerID : map_KursID_SchuelerIDs.get(kursID))
 						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, kursID, schuelerID));
 
 				// Kurse <--> Schienen
-				final HashMap<Long, HashSet<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
+				final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
 				for (final long kursID : map_KursID_SchienenIDs.keySet())
 					for (@NotNull final GostBlockungsergebnisSchiene schiene : map_KursID_SchienenIDs.get(kursID))
 						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kursID, schiene.id));

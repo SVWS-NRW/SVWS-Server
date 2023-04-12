@@ -201,7 +201,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
 		this.gostFaecher = gostFaecher;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
@@ -275,14 +275,14 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		}
 		// Gibt die Fehler-Bemerkungen zur Laufbahn aus
 		StringBuilder sb = new StringBuilder();
-		if (fehler.size() > 0) {
+		if (!fehler.isEmpty()) {
 			sb.append("<p>Bemerkungen der Schule:</p>");
 			ul(sb, fehler);
 		}
 		bodyData.put("BELEGUNGSFEHLER", sb.toString());
 		// Gib die Informationen zur Laufbahn aus
 		sb = new StringBuilder();
-		if (infos.size() > 0) {
+		if (!infos.isEmpty()) {
 			sb.append("<p>Sonstige Hinweise zur Gesamtlaufbahn:</p>");
 			ul(sb, infos);
 		}
@@ -386,7 +386,6 @@ public final class PDFGostWahlbogen extends PDFCreator {
 			return;
 		}
 		sb.append("<td>ZK</td>");
-		return;
 	}
 
 

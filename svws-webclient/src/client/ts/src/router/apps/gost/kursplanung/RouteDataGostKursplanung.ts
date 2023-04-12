@@ -267,7 +267,7 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
 		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
-		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toArrayList(), this.mapSchueler)
+		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.toList(), this.mapSchueler)
 		api.status.stop();
 		this.setPatchedState({
 			auswahlErgebnis: value,

@@ -23,7 +23,7 @@ public abstract class GostBelegpruefung {
 	protected final @NotNull GostBelegpruefungsArt pruefungs_art;
 
 	/** Ein Set von Belegungsfehlern, die bei der Gesamtprüfung entstanden sind. */
-	private final @NotNull ArrayList<@NotNull GostBelegungsfehler> belegungsfehler = new ArrayList<>();
+	private final @NotNull List<@NotNull GostBelegungsfehler> belegungsfehler = new ArrayList<>();
 
 
 	/**
@@ -69,7 +69,7 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return die Belegungsfehler
 	 */
-	public @NotNull ArrayList<@NotNull GostBelegungsfehler> getBelegungsfehler() {
+	public @NotNull List<@NotNull GostBelegungsfehler> getBelegungsfehler() {
 		return belegungsfehler;
 	}
 
@@ -115,7 +115,7 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return true, falls kein "echter" Belegprüfungsfehler aufgetreten ist, sonst false
 	 */
-	public static boolean istErfolgreich(final @NotNull ArrayList<@NotNull GostBelegungsfehler> alleFehler) {
+	public static boolean istErfolgreich(final @NotNull List<@NotNull GostBelegungsfehler> alleFehler) {
 		for (int i = 0; i < alleFehler.size(); i++) {
 			final @NotNull GostBelegungsfehler fehler = alleFehler.get(i);
 			if (!fehler.istInfo())
@@ -133,7 +133,7 @@ public abstract class GostBelegpruefung {
 	 *
 	 * @return die Menge der Belegprüfungsfehler
 	 */
-	public static @NotNull ArrayList<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
+	public static @NotNull List<@NotNull GostBelegungsfehler> getBelegungsfehlerAlle(final @NotNull List<@NotNull GostBelegpruefung> pruefungen) {
 		final @NotNull ArrayList<@NotNull GostBelegungsfehler> fehler = new ArrayList<>();
 		for (int i = 0; i < pruefungen.size(); i++) {
 			final @NotNull GostBelegpruefung pruefung = pruefungen.get(i);

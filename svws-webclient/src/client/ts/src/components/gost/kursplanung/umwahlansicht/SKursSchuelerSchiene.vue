@@ -17,7 +17,7 @@
 <script setup lang="ts">
 
 	import { GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostBlockungsergebnisSchiene, SchuelerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
+		GostBlockungsergebnisSchiene, SchuelerListeEintrag, List } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
 	import { ApiStatus } from "~/components/ApiStatus";
 
@@ -48,6 +48,6 @@
 		return props.getErgebnismanager().getOfSchieneSchuelermengeMitKollisionen(props.schiene.id).contains(props.selected.id);
 	});
 
-	const getSchieneKurse: ComputedRef<ArrayList<GostBlockungsergebnisKurs>> = computed(()=> props.schiene.kurse)
+	const getSchieneKurse: ComputedRef<List<GostBlockungsergebnisKurs>> = computed(()=> props.schiene.kurse)
 
 </script>

@@ -156,9 +156,9 @@ public class GenerateTestdatenLaufbahn {
 					final GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
 					System.out.println("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.EF1);
+					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toList(), GostBelegpruefungsArt.EF1);
 					final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-					manager = new AbiturdatenManager(abiturdaten, gostFaecher.toArrayList(), GostBelegpruefungsArt.GESAMT);
+					manager = new AbiturdatenManager(abiturdaten, gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
 					final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));

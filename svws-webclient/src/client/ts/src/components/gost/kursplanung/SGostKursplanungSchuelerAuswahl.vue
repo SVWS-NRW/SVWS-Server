@@ -1,26 +1,18 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-data-table v-model="schuelerFilter.filtered"
-							v-model:clicked="selected"
-							clickable
-							:items="undefined"
-							:filter="true"
-							:filter-open="true"
-							:filter-reverse="true"
-							:filter-hide="false"
-							:no-data="schuelerFilter.filtered.value.size <= 0"
-							no-data-html="Keine Schüler zu diesem Filter gefunden."
-		>
+		<svws-ui-data-table v-model="schuelerFilter.filtered" v-model:clicked="selected" clickable :items="undefined"
+			:filter="true" :filter-open="true" :filter-reverse="true" :filter-hide="false"
+			:no-data="schuelerFilter.filtered.value.size <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
 			<template #search>
 				<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
 			</template>
 			<template #filter>
 				<svws-ui-radio-group class="radio--row">
 					<svws-ui-radio-option v-model="kurs_filter_toggle" :value="!kurs_filter_toggle" name="Filter" label="Kursfilter" :force-checked="kurs_filter_toggle ?? false">
-						<i-ri-filter-line/>
+						<i-ri-filter-line />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="fach_filter_toggle" :value="!fach_filter_toggle" name="FilterFa" label="Fachfilter" :force-checked="fach_filter_toggle ?? false">
-						<i-ri-filter-line/>
+						<i-ri-filter-line />
 					</svws-ui-radio-option>
 				</svws-ui-radio-group>
 				<div class="input-wrapper-1-col" v-if="kurs_filter_toggle">
@@ -28,7 +20,7 @@
 										  :item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''"/>
 				</div>
 				<div class="input-wrapper" v-if="fach_filter_toggle">
-					<svws-ui-multi-select v-model="fach" :items="faecherManager.toArrayList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
+					<svws-ui-multi-select v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
 					<svws-ui-multi-select v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</div>
 				<svws-ui-radio-group class="radio--row mt-4">
@@ -57,14 +49,9 @@
 				</div>
 			</template>
 			<template #body>
-				<div role="row"
-					 class="data-table__tr data-table__tbody__tr"
-					 :class="{'data-table__tr--clicked': selected === s}"
-					 v-for="(s, index) in schuelerFilter.filtered.value.values()"
-					 @click="selected = s"
-					 :key="index">
-					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s"
-											  :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
+				<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr--clicked': selected === s}"
+					v-for="(s, index) in schuelerFilter.filtered.value.values()" @click="selected = s" :key="index">
+					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
 				</div>
 			</template>
 		</svws-ui-data-table>
@@ -85,7 +72,7 @@
 
 	const fach: WritableComputedRef<GostFach|undefined> = computed({
 		get: () => {
-			for (const fach of props.faecherManager.toArrayList())
+			for (const fach of props.faecherManager.toList())
 				if (fach.id === props.schuelerFilter.fach.value)
 					return fach;
 			return undefined

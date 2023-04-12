@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.DisplayName;
@@ -159,7 +159,7 @@ class GostBlockungsergebnisManagerTest {
 				final HashSet<Long> kuSchienen = mapKuSchiene.get(kursID);
 				if ((kuSchienen.size() < 1) || ((kuSchienen.size() == 1) && (lRandom.nextBoolean()))) {
 					// Hinzufügen
-					final ArrayList<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
+					final List<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
 					final GostBlockungsergebnisSchiene schieneNeu = getRandom(schienenAlle, lRandom);
 					out.setKursSchiene(kursID, schieneNeu.id, true);
 					kuSchienen.add(schieneNeu.id);
@@ -291,7 +291,7 @@ class GostBlockungsergebnisManagerTest {
 		return winner;
 	}
 
-	private static GostBlockungsergebnisSchiene getRandom(final ArrayList<GostBlockungsergebnisSchiene> vSchienen, final Random rnd) {
+	private static GostBlockungsergebnisSchiene getRandom(final List<GostBlockungsergebnisSchiene> vSchienen, final Random rnd) {
 		final int i = rnd.nextInt(vSchienen.size());
 		return vSchienen.get(i);
 	}

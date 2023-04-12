@@ -38,6 +38,7 @@ import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class AbiturdatenManager extends JavaObject {
 
@@ -49,7 +50,7 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang
 	 */
-	private readonly gostFaecher : HashMap<number, GostFach>;
+	private readonly gostFaecher : JavaMap<number, GostFach>;
 
 	/**
 	 * Die Art der durchzuführenden Belegprüfung
@@ -59,17 +60,17 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen über den Fachbereich ermöglicht
 	 */
-	private readonly mapFachbereiche : ArrayMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
+	private readonly mapFachbereiche : JavaMap<GostFachbereich, ArrayList<AbiturFachbelegung>> = new ArrayMap(GostFachbereich.values());
 
 	/**
 	 * Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung
 	 */
-	private belegpruefungen : ArrayList<GostBelegpruefung> = new ArrayList();
+	private belegpruefungen : List<GostBelegpruefung> = new ArrayList();
 
 	/**
 	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
 	 */
-	private belegpruefungsfehler : ArrayList<GostBelegungsfehler> = new ArrayList();
+	private belegpruefungsfehler : List<GostBelegungsfehler> = new ArrayList();
 
 	/**
 	 * Gibt an, ob die Belegprüfung insgesamt erfolgreich war oder nicht.
@@ -105,7 +106,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
-	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : ArrayList<GostBelegpruefung> {
+	public getPruefungen(pruefungsArt : GostBelegpruefungsArt) : List<GostBelegpruefung> {
 		const pruefungen : ArrayList<GostBelegpruefung> = new ArrayList();
 		pruefungen.add(new Deutsch(this, pruefungsArt));
 		const pruefungFremdsprachen : Fremdsprachen = new Fremdsprachen(this, pruefungsArt);
@@ -1416,7 +1417,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return eine Liste der Halbjahre in den das Fach mit einer der Kursarten belegt wurde
 	 */
-	public getHalbjahreKursart(fachbelegung : AbiturFachbelegung | null, ...kursarten : Array<GostKursart>) : ArrayList<GostHalbjahr> {
+	public getHalbjahreKursart(fachbelegung : AbiturFachbelegung | null, ...kursarten : Array<GostKursart>) : List<GostHalbjahr> {
 		const halbjahre : ArrayList<GostHalbjahr> = new ArrayList();
 		if (fachbelegung !== null) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {

@@ -1,17 +1,18 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
+import { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import { List } from '../../../java/util/List';
-import { HashSet } from '../../../java/util/HashSet';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
+import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
@@ -22,6 +23,7 @@ import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungserg
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { Arrays } from '../../../java/util/Arrays';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostBlockungsergebnisManager extends JavaObject {
 
@@ -38,77 +40,77 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Schienen-Nummer --> GostBlockungsergebnisSchiene
 	 */
-	private readonly _map_schienenNr_schiene : HashMap<number, GostBlockungsergebnisSchiene> = new HashMap();
+	private readonly _map_schienenNr_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap();
 
 	/**
 	 * Schienen-ID --> GostBlockungSchiene
 	 */
-	private readonly _map_schienenID_schiene : HashMap<number, GostBlockungsergebnisSchiene> = new HashMap();
+	private readonly _map_schienenID_schiene : JavaMap<number, GostBlockungsergebnisSchiene> = new HashMap();
 
 	/**
 	 * Schienen-ID --> Integer = Anzahl SuS
 	 */
-	private readonly _map_schienenID_schuelerAnzahl : HashMap<number, number> = new HashMap();
+	private readonly _map_schienenID_schuelerAnzahl : JavaMap<number, number> = new HashMap();
 
 	/**
 	 * Schienen-ID --> Anzahl Kollisionen
 	 */
-	private readonly _map_schienenID_kollisionen : HashMap<number, number> = new HashMap();
+	private readonly _map_schienenID_kollisionen : JavaMap<number, number> = new HashMap();
 
 	/**
 	 * Schienen-ID --> Fachart-ID --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart.
 	 */
-	private readonly _map_schienenID_fachartID_kurse : HashMap<number, HashMap<number, ArrayList<GostBlockungsergebnisKurs>>> = new HashMap();
+	private readonly _map_schienenID_fachartID_kurse : JavaMap<number, JavaMap<number, List<GostBlockungsergebnisKurs>>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Set<GostBlockungsergebnisKurs>
 	 */
-	private readonly _map_schuelerID_kurse : HashMap<number, HashSet<GostBlockungsergebnisKurs>> = new HashMap();
+	private readonly _map_schuelerID_kurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Integer (Kollisionen)
 	 */
-	private readonly _map_schuelerID_kollisionen : HashMap<number, number> = new HashMap();
+	private readonly _map_schuelerID_kollisionen : JavaMap<number, number> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Fach-ID --> GostBlockungsergebnisKurs
 	 */
-	private readonly _map_schuelerID_fachID_kurs : HashMap<number, HashMap<number, GostBlockungsergebnisKurs | null>> = new HashMap();
+	private readonly _map_schuelerID_fachID_kurs : JavaMap<number, JavaMap<number, GostBlockungsergebnisKurs | null>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.
 	 */
-	private readonly _map_schuelerID_schienenID_kurse : HashMap<number, HashMap<number, HashSet<GostBlockungsergebnisKurs>>> = new HashMap();
+	private readonly _map_schuelerID_schienenID_kurse : JavaMap<number, JavaMap<number, JavaSet<GostBlockungsergebnisKurs>>> = new HashMap();
 
 	/**
 	 * Kurs-ID --> Set<GostBlockungsergebnisSchiene>
 	 */
-	private readonly _map_kursID_schienen : HashMap<number, HashSet<GostBlockungsergebnisSchiene>> = new HashMap();
+	private readonly _map_kursID_schienen : JavaMap<number, JavaSet<GostBlockungsergebnisSchiene>> = new HashMap();
 
 	/**
 	 * Kurs-ID --> GostBlockungsergebnisKurs
 	 */
-	private readonly _map_kursID_kurs : HashMap<number, GostBlockungsergebnisKurs> = new HashMap();
+	private readonly _map_kursID_kurs : JavaMap<number, GostBlockungsergebnisKurs> = new HashMap();
 
 	/**
 	 * Kurs-ID --> Set<SchuelerID>
 	 */
-	private readonly _map_kursID_schuelerIDs : HashMap<number, HashSet<number>> = new HashMap();
+	private readonly _map_kursID_schuelerIDs : JavaMap<number, JavaSet<number>> = new HashMap();
 
 	/**
 	 * Fach-ID --> ArrayList<GostBlockungsergebnisKurs>
 	 */
-	private readonly _map_fachID_kurse : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> = new HashMap();
+	private readonly _map_fachID_kurse : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
 	 * Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart.
 	 */
-	private readonly _map_fachartID_kurse : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> = new HashMap();
+	private readonly _map_fachartID_kurse : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
 	 * Fachart-ID --> Integer = Kursdifferenz der Fachart.
 	 */
-	private readonly _map_fachartID_kursdifferenz : HashMap<number, number> = new HashMap();
+	private readonly _map_fachartID_kursdifferenz : JavaMap<number, number> = new HashMap();
 
 
 	/**
@@ -202,25 +204,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (this._map_kursID_kurs.put(eKurs.id, eKurs) !== null)
 				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
-			if (this._map_kursID_schienen.put(eKurs.id, new HashSet()) !== null)
+			if (this._map_kursID_schienen.put(eKurs.id, new HashSet<GostBlockungsergebnisSchiene>()) !== null)
 				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
-			if (this._map_kursID_schuelerIDs.put(eKurs.id, new HashSet()) !== null)
+			if (this._map_kursID_schuelerIDs.put(eKurs.id, new HashSet<number>()) !== null)
 				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
-			let fachgruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
-			if (fachgruppe === null) {
-				fachgruppe = new ArrayList();
-				this._map_fachID_kurse.put(eKurs.fachID, fachgruppe);
-			}
-			fachgruppe.add(eKurs);
+			if (!this._map_fachID_kurse.containsKey(eKurs.fachID))
+				this._map_fachID_kurse.put(eKurs.fachID, new ArrayList());
+			const fachgruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
+			if (fachgruppe !== null)
+				fachgruppe.add(eKurs);
 			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			let fachartgruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(fachartID);
-			if (fachartgruppe === null) {
-				fachartgruppe = new ArrayList();
-				this._map_fachartID_kurse.put(fachartID, fachartgruppe);
+			if (!this._map_fachartID_kurse.containsKey(fachartID)) {
+				this._map_fachartID_kurse.put(fachartID, new ArrayList());
 				this._map_fachartID_kursdifferenz.put(fachartID, 0);
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
 			}
-			fachartgruppe.add(eKurs);
+			const fachartgruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(fachartID);
+			if (fachartgruppe !== null)
+				fachartgruppe.add(eKurs);
 		}
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
@@ -234,7 +235,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const gSchueler of this._parent.daten().schueler) {
 			const eSchuelerID : number = gSchueler.id;
-			if (this._map_schuelerID_kurse.put(eSchuelerID, new HashSet()) !== null)
+			if (this._map_schuelerID_kurse.put(eSchuelerID, new HashSet<GostBlockungsergebnisKurs>()) !== null)
 				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID! + " doppelt!")
 			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null)
 				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID! + " doppelt!")
@@ -242,7 +243,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gSchueler of this._parent.daten().schueler)
 			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
-			const mapFachKurs : HashMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
+			const mapFachKurs : JavaMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
 			if (mapFachKurs === null)
 				throw new DeveloperNotificationException("Schüler " + gFachwahl.schuelerID + " hat eine Fachwahl ist aber unbekannt!")
 			if (mapFachKurs.put(gFachwahl.fachID, null) !== null)
@@ -251,7 +252,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const gSchueler of this._parent.daten().schueler) {
 			this._map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap());
 			for (const gSchiene of this._parent.daten().schienen)
-				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet());
+				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet<GostBlockungsergebnisKurs>());
 		}
 		const kursBearbeitet : HashSet<number> | null = new HashSet();
 		for (const schieneOld of pOld.schienen)
@@ -316,8 +317,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
-					const set1 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!)
-					const set2 : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!)
+					const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!)
+					const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!)
 					if (set1.size() < set2.size()) {
 						for (const schiene1 of set1)
 							if (!set2.contains(schiene1))
@@ -373,9 +374,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fachID : number = kurs.fachID;
 		if (this.getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) !== null)
 			return false;
-		const kurseOfSchueler : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
-		const schuelerIDsOfKurs : HashSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
-		const mapSFK : HashMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
+		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
+		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
+		const mapSFK : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		kurs.schueler.add(pSchuelerID);
 		kurseOfSchueler.add(kurs);
@@ -402,9 +403,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fachID : number = kurs.fachID;
 		if (this.getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) as unknown !== kurs as unknown)
 			return false;
-		const kurseOfSchueler : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
-		const schuelerIDsOfKurs : HashSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
-		const mapSFK : HashMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
+		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
+		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
+		const mapSFK : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		kurs.schueler.remove(pSchuelerID);
 		kurseOfSchueler.remove(kurs);
@@ -429,12 +430,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursSchieneHinzufuegen(pKursID : number, pSchienenID : number) : boolean {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(pSchienenID);
-		const schienenOfKurs : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
+		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
 		const fachID : number = kurs.fachID;
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		if (schienenOfKurs.contains(schiene))
 			return false;
-		const kursGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
+		const kursGruppe : List<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
 		if (kursGruppe === null)
 			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL")
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
@@ -461,12 +462,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursSchieneEntfernen(pKursID : number, pSchienenID : number) : boolean {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(pSchienenID);
-		const schienenOfKurs : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
+		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
 		const fachID : number = kurs.fachID;
 		const fachartID : number = GostKursart.getFachartID(fachID, kurs.kursart);
 		if (!schienenOfKurs.contains(schiene))
 			return false;
-		const kursGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
+		const kursGruppe : List<GostBlockungsergebnisKurs> | null = this.getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
 		if (kursGruppe === null)
 			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL")
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
@@ -485,7 +486,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateSchuelerSchieneHinzufuegen(pSchuelerID : number, pSchienenID : number, pKurs : GostBlockungsergebnisKurs) : void {
 		const schieneSchuelerzahl : number = this.getOfSchieneAnzahlSchueler(pSchienenID);
 		this._map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl + 1);
-		const kursmenge : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
+		const kursmenge : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
 		kursmenge.add(pKurs);
 		if (kursmenge.size() > 1) {
 			const schieneKollisionen : number = this.getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
@@ -501,7 +502,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (schieneSchuelerzahl === 0)
 			throw new DeveloperNotificationException("schieneSchuelerzahl == 0 --> Entfernen unmöglich!")
 		this._map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl - 1);
-		const kursmenge : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
+		const kursmenge : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
 		kursmenge.remove(pKurs);
 		if (!kursmenge.isEmpty()) {
 			const schieneKollisionen : number = this.getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
@@ -537,13 +538,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursdifferenzen : Array<number> | null = this._ergebnis.bewertung.kursdifferenzHistogramm;
 		kursdifferenzen[oldKD]--;
 		kursdifferenzen[newKD]++;
-		if (oldKD === this._ergebnis.bewertung.kursdifferenzMax)
+		if (oldKD === this._ergebnis.bewertung.kursdifferenzMax) {
 			if (newKD > oldKD) {
 				this._ergebnis.bewertung.kursdifferenzMax = newKD;
 			} else {
 				if (kursdifferenzen[oldKD] === 0)
 					this._ergebnis.bewertung.kursdifferenzMax = newKD;
 			}
+		}
 	}
 
 	/**
@@ -725,8 +727,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pFachID  Die Datenbank-ID des Faches.
 	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
-	public getOfFachKursmenge(pFachID : number) : ArrayList<GostBlockungsergebnisKurs> {
-		const kurseOfFach : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
+	public getOfFachKursmenge(pFachID : number) : List<GostBlockungsergebnisKurs> {
+		const kurseOfFach : List<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
 		if (kurseOfFach === null)
 			throw new DeveloperNotificationException("Fach-ID " + pFachID + " unbekannt!")
 		return kurseOfFach;
@@ -742,8 +744,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
-	public getOfFachartKursmenge(pFachartID : number) : ArrayList<GostBlockungsergebnisKurs> {
-		const fachartGruppe : ArrayList<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(pFachartID);
+	public getOfFachartKursmenge(pFachartID : number) : List<GostBlockungsergebnisKurs> {
+		const fachartGruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(pFachartID);
 		if (fachartGruppe === null)
 			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!")
 		return fachartGruppe;
@@ -797,8 +799,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
-	public getOfSchuelerKursmenge(pSchuelerID : number) : HashSet<GostBlockungsergebnisKurs> {
-		const kursIDs : HashSet<GostBlockungsergebnisKurs> | null = this._map_schuelerID_kurse.get(pSchuelerID);
+	public getOfSchuelerKursmenge(pSchuelerID : number) : JavaSet<GostBlockungsergebnisKurs> {
+		const kursIDs : JavaSet<GostBlockungsergebnisKurs> | null = this._map_schuelerID_kurse.get(pSchuelerID);
 		if (kursIDs === null)
 			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
 		return kursIDs;
@@ -810,8 +812,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
-	public getOfSchuelerKursmengeMitKollisionen(pSchuelerID : number) : HashSet<GostBlockungsergebnisKurs> {
-		const mapSchieneKurse : HashMap<number, HashSet<GostBlockungsergebnisKurs>> = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID);
+	public getOfSchuelerKursmengeMitKollisionen(pSchuelerID : number) : JavaSet<GostBlockungsergebnisKurs> {
+		const mapSchieneKurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID);
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
 		for (const kurseDerSchiene of mapSchieneKurse.values())
 			if (kurseDerSchiene.size() > 1)
@@ -837,7 +839,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return             TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public getOfSchuelerHatNichtwahl(pSchuelerID : number) : boolean {
-		const map : HashMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
+		const map : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
 		for (const fachID of map.keySet())
 			if (map.get(fachID) === null)
 				return true;
@@ -885,8 +887,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 */
-	public getOfSchuelerFachIDKursMap(pSchuelerID : number) : HashMap<number, GostBlockungsergebnisKurs | null> {
-		const mapFachKurs : HashMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(pSchuelerID);
+	public getOfSchuelerFachIDKursMap(pSchuelerID : number) : JavaMap<number, GostBlockungsergebnisKurs | null> {
+		const mapFachKurs : JavaMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(pSchuelerID);
 		if (mapFachKurs === null)
 			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
 		return mapFachKurs;
@@ -898,8 +900,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
 	 * @return Die Map des Schülers, die der Schiene die Kurse des Schülers zuordnet.
 	 */
-	public getOfSchuelerSchienenKursmengeMap(pSchuelerID : number) : HashMap<number, HashSet<GostBlockungsergebnisKurs>> {
-		const mapSchuelerKurse : HashMap<number, HashSet<GostBlockungsergebnisKurs>> | null = this._map_schuelerID_schienenID_kurse.get(pSchuelerID);
+	public getOfSchuelerSchienenKursmengeMap(pSchuelerID : number) : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> {
+		const mapSchuelerKurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> | null = this._map_schuelerID_schienenID_kurse.get(pSchuelerID);
 		if (mapSchuelerKurse === null)
 			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
 		return mapSchuelerKurse;
@@ -912,8 +914,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Kursmenge des Schülers in der Schiene.
 	 */
-	public getOfSchuelerOfSchieneKursmenge(pSchuelerID : number, pSchienenID : number) : HashSet<GostBlockungsergebnisKurs> {
-		const kursmenge : HashSet<GostBlockungsergebnisKurs> | null = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID).get(pSchienenID);
+	public getOfSchuelerOfSchieneKursmenge(pSchuelerID : number, pSchienenID : number) : JavaSet<GostBlockungsergebnisKurs> {
+		const kursmenge : JavaSet<GostBlockungsergebnisKurs> | null = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID).get(pSchienenID);
 		if (kursmenge === null)
 			throw new DeveloperNotificationException("Schüler-ID=" + pSchuelerID + ", Schienen-ID=" + pSchienenID + " unbekannt!")
 		return kursmenge;
@@ -955,7 +957,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerOfKursIstZugeordnet(pSchuelerID : number, pKursID : number) : boolean {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
-		const kurseOfSchueler : HashSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
+		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
 		return kurseOfSchueler.contains(kurs);
 	}
 
@@ -976,7 +978,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const fachwahl of fachwahlenDesSchuelers) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
-			const kurse : ArrayList<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
+			const kurse : List<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(fachartID);
 			for (const kurs of kurse) {
 				const inKurs : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
 				inKurs.id = kurs.id;
@@ -1085,7 +1087,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfKursOfSchieneIstZugeordnet(pKursID : number, pSchienenID : number) : boolean {
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(pSchienenID);
-		const schienenOfKurs : HashSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
+		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
 		return schienenOfKurs.contains(schiene);
 	}
 
@@ -1096,8 +1098,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind.
 	 */
-	public getOfKursSchuelerIDmenge(pKursID : number) : HashSet<number> {
-		const schuelerIDs : HashSet<number> | null = this._map_kursID_schuelerIDs.get(pKursID);
+	public getOfKursSchuelerIDmenge(pKursID : number) : JavaSet<number> {
+		const schuelerIDs : JavaSet<number> | null = this._map_kursID_schuelerIDs.get(pKursID);
 		if (schuelerIDs === null)
 			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!")
 		return schuelerIDs;
@@ -1109,8 +1111,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Schienenmenge des Kurses.
 	 */
-	public getOfKursSchienenmenge(pKursID : number) : HashSet<GostBlockungsergebnisSchiene> {
-		const schienenOfKurs : HashSet<GostBlockungsergebnisSchiene> | null = this._map_kursID_schienen.get(pKursID);
+	public getOfKursSchienenmenge(pKursID : number) : JavaSet<GostBlockungsergebnisSchiene> {
+		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> | null = this._map_kursID_schienen.get(pKursID);
 		if (schienenOfKurs === null)
 			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!")
 		return schienenOfKurs;
@@ -1218,7 +1220,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pKursID Die Datenbank-ID des Kurses.
 	 * @return Die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 */
-	public getOfKursSchuelermengeMitKollisionen(pKursID : number) : HashSet<number> {
+	public getOfKursSchuelermengeMitKollisionen(pKursID : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schiene of this.getOfKursSchienenmenge(pKursID))
 			for (const schuelerID of this.getKursE(pKursID).schueler)
@@ -1333,7 +1335,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
-	public getOfSchieneSchuelermengeMitKollisionen(pSchienenID : number) : HashSet<number> {
+	public getOfSchieneSchuelermengeMitKollisionen(pSchienenID : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, pSchienenID).size() > 1)
@@ -1361,7 +1363,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
-	public getOfSchieneKursmengeMitKollisionen(pSchienenID : number) : HashSet<GostBlockungsergebnisKurs> {
+	public getOfSchieneKursmengeMitKollisionen(pSchienenID : number) : JavaSet<GostBlockungsergebnisKurs> {
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
 		for (const kurs of this.getSchieneE(pSchienenID).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
@@ -1375,8 +1377,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param pSchienenID Die Datenbank-ID der Schiene.
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
-	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> {
-		const map : HashMap<number, ArrayList<GostBlockungsergebnisKurs>> | null = this._map_schienenID_fachartID_kurse.get(pSchienenID);
+	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : JavaMap<number, List<GostBlockungsergebnisKurs>> {
+		const map : JavaMap<number, List<GostBlockungsergebnisKurs>> | null = this._map_schienenID_fachartID_kurse.get(pSchienenID);
 		if (map === null)
 			throw new DeveloperNotificationException("Die Schienen-ID " + pSchienenID + " ist unbekannt!")
 		return map;
@@ -1399,7 +1401,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 */
-	public getMappingKursIDSchuelerIDs() : HashMap<number, HashSet<number>> {
+	public getMappingKursIDSchuelerIDs() : JavaMap<number, JavaSet<number>> {
 		return this._map_kursID_schuelerIDs;
 	}
 
@@ -1408,7 +1410,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schienenmenge zuordnet.
 	 */
-	public getMappingKursIDSchienenmenge() : HashMap<number, HashSet<GostBlockungsergebnisSchiene>> {
+	public getMappingKursIDSchienenmenge() : JavaMap<number, JavaSet<GostBlockungsergebnisSchiene>> {
 		return this._map_kursID_schienen;
 	}
 
@@ -1417,7 +1419,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision.
 	 */
-	public getMengeDerSchuelerMitKollisionen() : HashSet<number> {
+	public getMengeDerSchuelerMitKollisionen() : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerHatKollision(schuelerID!))
@@ -1430,7 +1432,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
 	 */
-	public getMengeDerSchuelerMitKollisionenOderNichtwahlen() : HashSet<number> {
+	public getMengeDerSchuelerMitKollisionenOderNichtwahlen() : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schuelerID of this._map_schuelerID_kollisionen.keySet())
 			if (this.getOfSchuelerHatKollision(schuelerID!) || this.getOfSchuelerHatNichtwahl(schuelerID!))
@@ -1449,8 +1451,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return eine gefilterte Menge aller Schüler.
 	 */
-	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : ArrayList<Schueler> {
-		const menge : ArrayList<Schueler> = new ArrayList();
+	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : List<Schueler> {
+		const menge : List<Schueler> = new ArrayList();
 		for (const schueler of this._parent.getMengeOfSchueler()) {
 			const pSchuelerID : number = schueler.id;
 			if ((pKonfliktTyp === 1) && (!this.getOfSchuelerHatKollision(pSchuelerID)))
@@ -1500,7 +1502,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Eine Menge aller Kurse mit mindestens einer Kollision.
 	 */
-	public getMengeDerKurseMitKollisionen() : HashSet<GostBlockungsergebnisKurs> {
+	public getMengeDerKurseMitKollisionen() : JavaSet<GostBlockungsergebnisKurs> {
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
 		for (const kurs of this._map_kursID_kurs.values())
 			if (this.getOfKursHatKollision(kurs.id))
@@ -1513,7 +1515,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Eine Menge aller Schienen mit mindestens einer Kollision.
 	 */
-	public getMengeDerSchienenMitKollisionen() : HashSet<GostBlockungsergebnisSchiene> {
+	public getMengeDerSchienenMitKollisionen() : JavaSet<GostBlockungsergebnisSchiene> {
 		const set : HashSet<GostBlockungsergebnisSchiene> = new HashSet();
 		for (const schiene of this._map_schienenID_schiene.values())
 			if (this.getOfSchieneHatKollision(schiene.id))
@@ -1526,7 +1528,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return Die Menge aller Schienen.
 	 */
-	public getMengeAllerSchienen() : ArrayList<GostBlockungsergebnisSchiene> {
+	public getMengeAllerSchienen() : List<GostBlockungsergebnisSchiene> {
 		return this._ergebnis.schienen;
 	}
 

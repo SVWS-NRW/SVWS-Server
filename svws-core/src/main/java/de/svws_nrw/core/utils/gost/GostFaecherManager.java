@@ -171,8 +171,8 @@ public class GostFaecherManager {
 	 *
 	 * @return ein ArrayList mit den Fächern
 	 */
-	public @NotNull ArrayList<@NotNull GostFach> toArrayList() {
-		final @NotNull ArrayList<@NotNull GostFach> result = new ArrayList<>();
+	public @NotNull List<@NotNull GostFach> toList() {
+		final @NotNull List<@NotNull GostFach> result = new ArrayList<>();
 		for (final @NotNull GostFach fach : _faecher)
 			result.add(fach);
 		return result;

@@ -227,7 +227,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 			final long id = dbID == null ? 1 : dbID.MaxID + 1;
 			// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
 			final GostFaecherManager fachmanager = FaecherGost.getFaecherListeGost(conn, abijahrgang);
-			final ArrayList<GostFach> faecher = fachmanager.toArrayList();
+			final List<GostFach> faecher = fachmanager.toList();
 			if (faecher.size() < 2)
 				throw OperationError.NOT_FOUND.exception("Nicht genügend Fächer für den Abiturjahrgang definiert.");
 			final DTOGostJahrgangFachkombinationen kombi = new DTOGostJahrgangFachkombinationen(id, abijahrgang, faecher.get(0).id, faecher.get(1).id, true, true, true, true, true, true, kombityp, "");
