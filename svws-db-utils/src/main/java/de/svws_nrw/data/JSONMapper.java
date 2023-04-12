@@ -261,10 +261,11 @@ public final class JSONMapper {
 	 * @param obj          das zu konvertierende Objekt
 	 * @param nullable     gibt an, ob das Ergebnis auch null sein darf oder nicht
 	 * @param allowEmpty   gibt an, ob auch leere Strings erlaubt sind oder nicht
+	 * @param maxLength    die maximal erlaubte Länge des Strings, null falls keine Begrenzung vorliegt
 	 *
 	 * @return das konvertierte Long-Objekt
 	 */
-	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty) {
+	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer maxLength) {
 		if (obj == null) {
 			if (nullable)
 				return null;
@@ -274,7 +275,10 @@ public final class JSONMapper {
 			throw new WebApplicationException("Es wurde ein String erwartet, aber keiner übergeben.", Response.Status.BAD_REQUEST);
 		if ("".equals(obj) && !allowEmpty)
 			throw new WebApplicationException("Ein leerer String ist hier nicht erlaubt.", Response.Status.BAD_REQUEST);
-		return (String) obj;
+		final String result = (String) obj;
+		if ((maxLength != null) && (result.length() > maxLength))
+			throw new WebApplicationException("Die Länge des Strings ist auf " + maxLength + " Zeichen limitiert.", Response.Status.BAD_REQUEST);
+		return result;
 	}
 
 

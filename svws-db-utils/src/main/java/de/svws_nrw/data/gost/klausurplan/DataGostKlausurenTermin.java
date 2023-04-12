@@ -14,6 +14,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -118,10 +119,10 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 						if ((patch_quartal != termin.Quartal))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false);
-					case "bezeichnung" -> termin.Bezeichnung = JSONMapper.convertToString(value, true, false);
-					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false);
-					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false);
+					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge());
+					case "bezeichnung" -> termin.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge());
+					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false, null);
+					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false, null);
 
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}

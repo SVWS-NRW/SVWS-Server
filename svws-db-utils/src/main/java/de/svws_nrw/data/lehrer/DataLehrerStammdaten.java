@@ -19,6 +19,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -111,7 +112,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 								throw OperationError.BAD_REQUEST.exception();
 						}
 		    			case "foto" -> {
-		    		    	final String strData = JSONMapper.convertToString(value, true, true);
+		    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
     	        			DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
     	        			if (lehrerFoto == null)
     	        				lehrerFoto = new DTOLehrerFoto(id);
@@ -121,27 +122,27 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
     	        	    	lehrerFoto.FotoBase64 = strData;
     	        	    	conn.transactionPersist(lehrerFoto);
 		    			}
-		    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false);
+		    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge());
 		    			case "personalTyp" -> {
-			        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false));
+			        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false, null));
 			        		if (p == null)
 			        			throw OperationError.CONFLICT.exception();
 			            	lehrer.PersonTyp = p;
 		    			}
-		    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true);
-		    			case "titel" -> lehrer.Titel = JSONMapper.convertToString(value, true, true);
-		    			case "amtsbezeichnung" -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true);
-		    			case "nachname" -> lehrer.Nachname = JSONMapper.convertToString(value, false, false);
-		    			case "vorname" -> lehrer.Vorname = JSONMapper.convertToString(value, false, false);
+		    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge());
+		    			case "titel" -> lehrer.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge());
+		    			case "amtsbezeichnung" -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Amtsbezeichnung.datenlaenge());
+		    			case "nachname" -> lehrer.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge());
+		    			case "vorname" -> lehrer.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge());
 		    			case "geschlecht" -> {
 		    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 		    				if (geschlecht == null)
 		    					throw OperationError.CONFLICT.exception();
 		    				lehrer.Geschlecht = geschlecht;
 		    			}
-		    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false);
+		    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
 		    			case "staatsangehoerigkeitID" -> {
-		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
 	    						lehrer.staatsangehoerigkeit = null;
 	    					} else {
@@ -153,19 +154,19 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 		    			}
 
 		    			// Wohnort und Kontaktdaten
-		    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true);
+		    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge());
+		    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge());
+		    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge());
 		    			case "wohnortID" -> {
 		    				setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
 		    			}
 		    			case "ortsteilID" -> {
 		    				setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			}
-		    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true);
-		    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true);
-		    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true);
-		    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true);
+		    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge());
+		    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
+		    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
+		    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
 
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}

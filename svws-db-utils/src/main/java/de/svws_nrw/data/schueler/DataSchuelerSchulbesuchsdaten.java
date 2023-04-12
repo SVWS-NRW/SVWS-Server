@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -137,12 +138,12 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 						}
 
 		    			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
-		    			case "vorigeSchulnummer" -> schueler.LSSchulNr = JSONMapper.convertToString(value, true, true);
+		    			case "vorigeSchulnummer" -> schueler.LSSchulNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSSchulNr.datenlaenge());
 		    			case "vorigeAllgHerkunft" -> { /* TODO zur Zeit noch nicht implementiert */ }
-		    			case "vorigeEntlassdatum" -> schueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true);
-		    			case "vorigeEntlassjahrgang" -> schueler.LSJahrgang = JSONMapper.convertToString(value, true, true);    // TODO Katalog ...
-		    			case "vorigeArtLetzteVersetzung" -> schueler.LSVersetzung = JSONMapper.convertToString(value, true, true);
-		    			case "vorigeBemerkung" -> schueler.LSBemerkung = JSONMapper.convertToString(value, true, true);
+		    			case "vorigeEntlassdatum" -> schueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null);
+		    			case "vorigeEntlassjahrgang" -> schueler.LSJahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
+		    			case "vorigeArtLetzteVersetzung" -> schueler.LSVersetzung = JSONMapper.convertToString(value, true, true, null); // TODO Katalog
+		    			case "vorigeBemerkung" -> schueler.LSBemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_LSBemerkung.datenlaenge());
 		    			case "vorigeEntlassgrundID" -> {
 		    				final Long vorigeEntlassgrundID = JSONMapper.convertToLong(value, true);
 		    				if (vorigeEntlassgrundID == null) {
@@ -154,11 +155,11 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 		    					schueler.LSEntlassgrund = tmpVorigeEntlassgrund.Bezeichnung;
 		    				}
 		    			}
-		    			case "vorigeAbschlussartID" -> schueler.LSEntlassArt = JSONMapper.convertToString(value, true, true);   // TODO Katalog ...
+		    			case "vorigeAbschlussartID" -> schueler.LSEntlassArt = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
 
 		    			// Informationen zu der Entlassung von der eigenen Schule
-		    			case "entlassungDatum" -> schueler.Entlassdatum = JSONMapper.convertToString(value, true, true);
-		    			case "entlassungJahrgang" -> schueler.Entlassjahrgang = JSONMapper.convertToString(value, true, true);    // TODO Katalog ...
+		    			case "entlassungDatum" -> schueler.Entlassdatum = JSONMapper.convertToString(value, true, true, null);
+		    			case "entlassungJahrgang" -> schueler.Entlassjahrgang = JSONMapper.convertToString(value, true, true, null);    // TODO Katalog ...
 		    			case "entlassungGrundID" -> {
 		    				final Long entlassungGrundID = JSONMapper.convertToLong(value, true);
 		    				if (entlassungGrundID == null) {
@@ -170,22 +171,22 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 		    					schueler.Entlassgrund = tmpEntlassungGrund.Bezeichnung;
 		    				}
 		    			}
-		    			case "entlassungAbschlussartID" -> schueler.Entlassart = JSONMapper.convertToString(value, true, true);   // TODO Katalog ...
+		    			case "entlassungAbschlussartID" -> schueler.Entlassart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog ...
 
 		    			// Informationen zu der aufnehmenden Schule nach einem Wechsel zu einer anderen Schule
-		    			case "aufnehmdendSchulnummer" -> schueler.SchulwechselNr = JSONMapper.convertToString(value, true, true);
-		    			case "aufnehmdendWechseldatum" -> schueler.Schulwechseldatum = JSONMapper.convertToString(value, true, true);
+		    			case "aufnehmdendSchulnummer" -> schueler.SchulwechselNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulwechselNr.datenlaenge());
+		    			case "aufnehmdendWechseldatum" -> schueler.Schulwechseldatum = JSONMapper.convertToString(value, true, true, null);
 		    			case "aufnehmdendBestaetigt" -> schueler.WechselBestaetigt = JSONMapper.convertToBoolean(value, true);
 
 		    			// Informationen zu der besuchten Grundschule
 		    			case "grundschuleEinschulungsjahr" -> schueler.Einschulungsjahr = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
 		    			case "grundschuleEinschulungsartID" -> schueler.Einschulungsart_ID = JSONMapper.convertToLong(value, true);   // TODO Katalog ...
 		    			case "grundschuleJahreEingangsphase" -> schueler.EPJahre = JSONMapper.convertToInteger(value, true);   // TODO Auswahl auf 2 und 3 beschränken?
-		    			case "grundschuleUebergangsempfehlungID" -> schueler.Uebergangsempfehlung_JG5 = JSONMapper.convertToString(value, true, false);   // TODO Katalog statkue_schueleruebergangsempfehlung5jg
+		    			case "grundschuleUebergangsempfehlungID" -> schueler.Uebergangsempfehlung_JG5 = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog statkue_schueleruebergangsempfehlung5jg
 
 		    			// Informationen zu dem Besuch der Sekundarstufe I
 		    			case "sekIWechsel" -> schueler.JahrWechsel_SI = JSONMapper.convertToInteger(value, true);  // TODO Überprüfung des Jahres
-		    			case "sekIErsteSchulform" -> schueler.ErsteSchulform_SI = JSONMapper.convertToString(value, true, false);   // TODO Katalog ...
+		    			case "sekIErsteSchulform" -> schueler.ErsteSchulform_SI = JSONMapper.convertToString(value, true, false, null);   // TODO Katalog ...
 		    			case "sekIIWechsel" -> schueler.JahrWechsel_SII = JSONMapper.convertToInteger(value, true); // TODO Überprüfung des Jahres
 
 		    			// Informationen zu besonderen Merkmalen für die Statistik

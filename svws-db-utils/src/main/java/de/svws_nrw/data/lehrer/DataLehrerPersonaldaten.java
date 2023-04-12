@@ -14,6 +14,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -97,23 +98,23 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 								throw OperationError.BAD_REQUEST.exception();
 						}
 
-		    			case "identNrTeil1" -> lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true);
-		    			case "identNrTeil2SerNr" -> lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true);
-		    			case "personalaktennummer" -> lehrer.PANr = JSONMapper.convertToString(value, true, true);
-		    			case "lbvPersonalnummer" -> lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true);
-		    			case "lbvVerguetungsschluessel" -> lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true);
+		    			case "identNrTeil1" -> lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
+		    			case "identNrTeil2SerNr" -> lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_SerNr.datenlaenge());
+		    			case "personalaktennummer" -> lehrer.PANr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_PANr.datenlaenge());
+		    			case "lbvPersonalnummer" -> lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_LBVNr.datenlaenge());
+		    			case "lbvVerguetungsschluessel" -> lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_VSchluessel.datenlaenge());
 
-		    			case "zugangsdatum" -> lehrer.DatumZugang = JSONMapper.convertToString(value, true, true);
-		    			case "zugangsgrund" -> lehrer.GrundZugang = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
-		    			case "abgangsdatum" -> lehrer.DatumAbgang = JSONMapper.convertToString(value, true, true);
-		    			case "abgangsgrund" -> lehrer.GrundAbgang = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
+		    			case "zugangsdatum" -> lehrer.DatumZugang = JSONMapper.convertToString(value, true, true, null);
+		    			case "zugangsgrund" -> lehrer.GrundZugang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+		    			case "abgangsdatum" -> lehrer.DatumAbgang = JSONMapper.convertToString(value, true, true, null);
+		    			case "abgangsgrund" -> lehrer.GrundAbgang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
 
 		    			case "pflichtstundensoll" -> lehrer.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
-		    			case "rechtsverhaeltnis" -> lehrer.Rechtsverhaeltnis = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
-		    			case "beschaeftigungsart" -> lehrer.Beschaeftigungsart = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
-		    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true);   // TODO Katalog prüfen ...
+		    			case "rechtsverhaeltnis" -> lehrer.Rechtsverhaeltnis = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+		    			case "beschaeftigungsart" -> lehrer.Beschaeftigungsart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+		    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
 
-		    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false);
+		    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_K_Lehrer.col_StammschulNr.datenlaenge());
 
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}

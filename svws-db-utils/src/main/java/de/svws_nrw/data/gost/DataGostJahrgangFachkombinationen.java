@@ -131,7 +131,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		    		    		throw OperationError.CONFLICT.exception();
 		    			}
 		    			case "kursart1" -> {
-		    				kombi.Kursart1 = JSONMapper.convertToString(value, true, false);
+		    				kombi.Kursart1 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart1.datenlaenge());
 		    				if (kombi.Kursart1 == null) {
 		    					final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart1);
 		    					if (kursart == null)
@@ -139,7 +139,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		    				}
 		    			}
 		    			case "kursart2" -> {
-		    				kombi.Kursart2 = JSONMapper.convertToString(value, true, false);
+		    				kombi.Kursart2 = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Kursart2.datenlaenge());
 		    				if (kombi.Kursart2 == null) {
 		    					final GostKursart kursart = GostKursart.fromKuerzel(kombi.Kursart2);
 		    					if (kursart == null)
@@ -157,7 +157,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		    			}
 		    			case "typ" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "hinweistext" -> {
-		    				kombi.Hinweistext = JSONMapper.convertToString(value, false, true);
+		    				kombi.Hinweistext = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Hinweistext.datenlaenge());
 		    			}
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}

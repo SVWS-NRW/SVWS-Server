@@ -37,6 +37,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchulformen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.data.Schule;
 import jakarta.ws.rs.WebApplicationException;
@@ -171,20 +172,20 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		    		switch (key) {
 		    			case "schulNr" -> throw OperationError.BAD_REQUEST.exception();
 		    			case "schulform" -> throw OperationError.BAD_REQUEST.exception();
-		    			case "bezeichnung1" -> schule.Bezeichnung1 = JSONMapper.convertToString(value, true, true);
-		    			case "bezeichnung2" -> schule.Bezeichnung2 = JSONMapper.convertToString(value, true, true);
-		    			case "bezeichnung3" -> schule.Bezeichnung3 = JSONMapper.convertToString(value, true, true);
-		    			case "strassenname" -> schule.Strassenname = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummer" -> schule.HausNr = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummerZusatz" -> schule.HausNrZusatz = JSONMapper.convertToString(value, true, true);
+		    			case "bezeichnung1" -> schule.Bezeichnung1 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung1.datenlaenge());
+		    			case "bezeichnung2" -> schule.Bezeichnung2 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung2.datenlaenge());
+		    			case "bezeichnung3" -> schule.Bezeichnung3 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung3.datenlaenge());
+		    			case "strassenname" -> schule.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Strassenname.datenlaenge());
+		    			case "hausnummer" -> schule.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNr.datenlaenge());
+		    			case "hausnummerZusatz" -> schule.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNrZusatz.datenlaenge());
 
-		    			case "plz" -> schule.PLZ = JSONMapper.convertToString(value, true, true); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
-		    			case "ort" -> schule.Ort = JSONMapper.convertToString(value, true, true); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
+		    			case "plz" -> schule.PLZ = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_PLZ.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
+		    			case "ort" -> schule.Ort = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Ort.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
 
-		    			case "telefon" -> schule.Telefon = JSONMapper.convertToString(value, true, true);
-		    			case "fax" -> schule.Fax = JSONMapper.convertToString(value, true, true);
-		    			case "email" -> schule.Email = JSONMapper.convertToString(value, true, true);
-		    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true);
+		    			case "telefon" -> schule.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Telefon.datenlaenge());
+		    			case "fax" -> schule.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Fax.datenlaenge());
+		    			case "email" -> schule.Email = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Email.datenlaenge());
+		    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_WebAdresse.datenlaenge());
 
 		    			case "idSchuljahresabschnitt" -> schule.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false); // TODO ID des Schuljahresabschnittes überprüfen
 		    			case "anzJGS_Jahr" -> schule.AnzJGS_Jahr = JSONMapper.convertToInteger(value, false); // TODO Abschnitt überprüfen
@@ -200,7 +201,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		    					schule.AnzahlAbschnitte = anzahlAbschnitte;
 		    				}
 		    				if (mapAbschnitte.containsKey("abschnittBez"))
-		    					schule.AbschnittBez = JSONMapper.convertToString(mapAbschnitte.get("abschnittBez"), true, true);
+		    					schule.AbschnittBez = JSONMapper.convertToString(mapAbschnitte.get("abschnittBez"), true, true, Schema.tab_EigeneSchule.col_BezAbschnitt1.datenlaenge());
 		    				if (mapAbschnitte.containsKey("bezAbschnitte")) {
 		    					final List<?> bezAbschnitte = (List<?>) mapAbschnitte.get("bezAbschnitte");
 		    					if (bezAbschnitte.size() != schule.AnzahlAbschnitte)

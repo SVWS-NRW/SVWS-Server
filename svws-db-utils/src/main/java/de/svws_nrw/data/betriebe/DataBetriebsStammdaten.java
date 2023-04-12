@@ -18,6 +18,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -121,11 +122,11 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 								betrieb.adressArt = adressartID;
 							}
 						}
-						case "name1" -> betrieb.name1 = JSONMapper.convertToString(value, true, true);
-						case "name2" -> betrieb.name2 = JSONMapper.convertToString(value, true, true);
-						case "strassenname" -> betrieb.strassenname = JSONMapper.convertToString(value, true, true);
-						case "hausnr" -> betrieb.hausnr = JSONMapper.convertToString(value, true, true);
-						case "hausnrzusatz" -> betrieb.hausnrzusatz = JSONMapper.convertToString(value, true, true);
+						case "name1" -> betrieb.name1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrName1.datenlaenge());
+						case "name2" -> betrieb.name2 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrName2.datenlaenge());
+						case "strassenname" -> betrieb.strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrStrassenname.datenlaenge());
+						case "hausnr" -> betrieb.hausnr = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrHausNr.datenlaenge());
+						case "hausnrzusatz" -> betrieb.hausnrzusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrHausNrZusatz.datenlaenge());
 						case "ort_id" -> {
 							final Long ort_id = JSONMapper.convertToLong(value, true);
 							if (ort_id == null) {
@@ -137,24 +138,24 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 							}
 							betrieb.ort_id = JSONMapper.convertToLong(value, true);
 						}
-						case "telefon1" -> betrieb.telefon1 = JSONMapper.convertToString(value, true, true);
-						case "telefon2" -> betrieb.telefon2 = JSONMapper.convertToString(value, true, true);
-						case "fax" -> betrieb.fax = JSONMapper.convertToString(value, true, true);
-						case "email" -> betrieb.email = JSONMapper.convertToString(value, true, true);
-						case "bemerkungen" -> betrieb.bemerkungen = JSONMapper.convertToString(value, true, true);
+						case "telefon1" -> betrieb.telefon1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon1.datenlaenge());
+						case "telefon2" -> betrieb.telefon2 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon2.datenlaenge());
+						case "fax" -> betrieb.fax = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrFax.datenlaenge());
+						case "email" -> betrieb.email = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrEmail.datenlaenge());
+						case "bemerkungen" -> betrieb.bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrBemerkungen.datenlaenge());
 						case "sortierung" -> betrieb.sortierung = JSONMapper.convertToInteger(value, true);
 						case "ausbildungsbetrieb" -> betrieb.ausbildungsbetrieb = JSONMapper.convertToBoolean(value, true);
 						case "bietetPraktika" -> betrieb.bietetPraktika = JSONMapper.convertToBoolean(value, true);
-						case "branche" -> betrieb.branche = JSONMapper.convertToString(value, true, true);
-						case "zusatz1" -> betrieb.zusatz1 = JSONMapper.convertToString(value, true, true);
-						case "zusatz2" -> betrieb.zusatz2 = JSONMapper.convertToString(value, true, true);
+						case "branche" -> betrieb.branche = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrBranche.datenlaenge());
+						case "zusatz1" -> betrieb.zusatz1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrZusatz1.datenlaenge());
+						case "zusatz2" -> betrieb.zusatz2 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrZusatz2.datenlaenge());
 						case "Sichtbar" -> betrieb.Sichtbar = JSONMapper.convertToBoolean(value, true);
 						case "Aenderbar" -> betrieb.Aenderbar = JSONMapper.convertToBoolean(value, true);
 						case "Massnahmentraeger" -> betrieb.Massnahmentraeger = JSONMapper.convertToBoolean(value, true);
 						case "BelehrungISG" -> betrieb.BelehrungISG = JSONMapper.convertToBoolean(value, true);
-						case "GU_ID" -> betrieb.GU_ID = JSONMapper.convertToString(value, true, true);
+						case "GU_ID" -> betrieb.GU_ID = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_GU_ID.datenlaenge());
 						case "ErwFuehrungszeugnis" -> betrieb.ErwFuehrungszeugnis = JSONMapper.convertToBoolean(value, true);
-						case "ExtID" -> betrieb.ExtID = JSONMapper.convertToString(value, true, true);
+						case "ExtID" -> betrieb.ExtID = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_ExtID.datenlaenge());
 
 						default -> throw OperationError.BAD_REQUEST.exception();
 

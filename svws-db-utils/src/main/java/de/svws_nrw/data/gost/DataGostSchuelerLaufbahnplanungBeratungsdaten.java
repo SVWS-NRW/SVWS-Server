@@ -10,6 +10,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -79,9 +80,9 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 		    				}
 		    				gostSchueler.Beratungslehrer_ID = beratungslehrerID;
 		    			}
-		    			case "beratungsdatum" -> gostSchueler.DatumBeratung = JSONMapper.convertToString(value, true, false);
-		    			case "kommentar" -> gostSchueler.Kommentar = JSONMapper.convertToString(value, true, true);
-		    			case "ruecklaufdatum" -> gostSchueler.DatumRuecklauf = JSONMapper.convertToString(value, true, false);
+		    			case "beratungsdatum" -> gostSchueler.DatumBeratung = JSONMapper.convertToString(value, true, false, null);
+		    			case "kommentar" -> gostSchueler.Kommentar = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Schueler.col_Kommentar.datenlaenge());
+		    			case "ruecklaufdatum" -> gostSchueler.DatumRuecklauf = JSONMapper.convertToString(value, true, false, null);
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}
 		    	}

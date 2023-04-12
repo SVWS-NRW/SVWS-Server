@@ -21,6 +21,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -123,7 +124,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "istKoopKurs" -> kurs.IstKoopKurs = JSONMapper.convertToBoolean(value, false);
-	    			case "suffix" -> kurs.BezeichnungSuffix = JSONMapper.convertToString(value, false, true);
+	    			case "suffix" -> kurs.BezeichnungSuffix = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Blockung_Kurse.col_BezeichnungSuffix.datenlaenge());
 	    			case "anzahlSchienen" -> {
 	    			    final int schienenAnzahl = JSONMapper.convertToInteger(value, false);
 	    			    if (schienenAnzahl > kurs.Schienenanzahl) {

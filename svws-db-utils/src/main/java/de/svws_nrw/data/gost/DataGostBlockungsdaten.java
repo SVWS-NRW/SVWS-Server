@@ -52,6 +52,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
@@ -259,7 +260,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false);
+					case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
 					case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
 					// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
 					default -> throw OperationError.BAD_REQUEST.exception();

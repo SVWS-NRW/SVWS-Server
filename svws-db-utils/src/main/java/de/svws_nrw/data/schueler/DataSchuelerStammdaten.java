@@ -23,6 +23,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -152,7 +153,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 								throw OperationError.BAD_REQUEST.exception();
 						}
 		    			case "foto" -> {
-		    		    	final String strData = JSONMapper.convertToString(value, true, true);
+		    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
     	        			DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
     	        			if (schuelerFoto == null)
 	    	        			schuelerFoto = new DTOSchuelerFoto(id);
@@ -162,38 +163,38 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
     	        	    	schuelerFoto.FotoBase64 = strData;
     	        	    	conn.transactionPersist(schuelerFoto);
 		    			}
-		    			case "nachname" -> schueler.Nachname = JSONMapper.convertToString(value, false, false);
-		    			case "zusatzNachname" -> schueler.ZusatzNachname = JSONMapper.convertToString(value, false, true);
-		    			case "vorname" -> schueler.Vorname = JSONMapper.convertToString(value, false, false);
-		    			case "alleVornamen" -> schueler.AlleVornamen = JSONMapper.convertToString(value, false, true);
+		    			case "nachname" -> schueler.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge());
+		    			case "zusatzNachname" -> schueler.ZusatzNachname = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_ZusatzNachname.datenlaenge());
+		    			case "vorname" -> schueler.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge());
+		    			case "alleVornamen" -> schueler.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge());
 		    			case "geschlecht" -> {
 		    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
 		    				if (geschlecht == null)
 		    					throw OperationError.CONFLICT.exception();
 		    				schueler.Geschlecht = geschlecht;
 		    			}
-		    			case "geburtsdatum" -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false);
-		    			case "geburtsort" -> schueler.Geburtsort = JSONMapper.convertToString(value, false, true);
-		    			case "geburtsname" -> schueler.Geburtsname = JSONMapper.convertToString(value, false, true);
+		    			case "geburtsdatum" -> schueler.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);
+		    			case "geburtsort" -> schueler.Geburtsort = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Geburtsort.datenlaenge());
+		    			case "geburtsname" -> schueler.Geburtsname = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Geburtsname.datenlaenge());
 
 		    			// Wohnort und Kontaktdaten
-		    			case "strassenname" -> schueler.Strassenname = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummer" -> schueler.HausNr = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummerZusatz" -> schueler.HausNrZusatz = JSONMapper.convertToString(value, true, true);
+		    			case "strassenname" -> schueler.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Strassenname.datenlaenge());
+		    			case "hausnummer" -> schueler.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge());
+		    			case "hausnummerZusatz" -> schueler.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge());
 		    			case "wohnortID" -> {
 		    				setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")));
 		    			}
 		    			case "ortsteilID" -> {
 		    				setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			}
-		    			case "telefon" -> schueler.Telefon = JSONMapper.convertToString(value, true, true);
-		    			case "telefonMobil" -> schueler.Fax = JSONMapper.convertToString(value, true, true);
-		    			case "emailPrivat" -> schueler.Email = JSONMapper.convertToString(value, true, true);
-		    			case "emailSchule" -> schueler.SchulEmail = JSONMapper.convertToString(value, true, true);
+		    			case "telefon" -> schueler.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge());
+		    			case "telefonMobil" -> schueler.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge());
+		    			case "emailPrivat" -> schueler.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge());
+		    			case "emailSchule" -> schueler.SchulEmail = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_SchulEmail.datenlaenge());
 
 		    			// Daten zur Staatsangehörigkeit und zur Religion
 		    			case "staatsangehoerigkeitID" -> {
-		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
 	    						schueler.StaatKrz = null;
 	    					} else {
@@ -204,7 +205,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	    					}
 		    			}
 		    			case "staatsangehoerigkeit2ID" -> {
-		    		    	final String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true, null);
 		    		    	if ((staatsangehoerigkeit2ID == null) || ("".equals(staatsangehoerigkeit2ID))) {
 	    						schueler.StaatKrz2 = null;
 	    					} else {
@@ -224,13 +225,13 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	    					schueler.Religion_ID = religionID;
 		    			}
 		    			case "druckeKonfessionAufZeugnisse" -> schueler.KonfDruck = JSONMapper.convertToBoolean(value, false);
-		    			case "religionabmeldung" -> schueler.Religionsabmeldung = JSONMapper.convertToString(value, true, true);
-		    			case "religionanmeldung" -> schueler.Religionsanmeldung = JSONMapper.convertToString(value, true, true);
+		    			case "religionabmeldung" -> schueler.Religionsabmeldung = JSONMapper.convertToString(value, true, true, null);
+		    			case "religionanmeldung" -> schueler.Religionsanmeldung = JSONMapper.convertToString(value, true, true, null);
 
 		    			// Daten zum Migrationshintergrund
 		    			case "hatMigrationshintergrund" -> schueler.Migrationshintergrund = JSONMapper.convertToBoolean(value, false);
 		    			case "zuzugsjahr" -> {
-		    		    	final String text = JSONMapper.convertToString(value, true, true);
+		    		    	final String text = JSONMapper.convertToString(value, true, true, null);
 		    		    	Integer jahr = null;
 		    		    	if ((text != null) && (!"".equals(text))) {
 		    		        	try {
@@ -244,28 +245,28 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		    				schueler.JahrZuzug = jahr;
 		    			}
 		    			case "geburtsland" -> {
-		    				final String strData = JSONMapper.convertToString(value, true, true);
+		    				final String strData = JSONMapper.convertToString(value, true, true, null);
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.GeburtslandSchueler = nat;
 		    			}
 		    			case "verkehrspracheFamilie" -> {
-		    				final String strData = JSONMapper.convertToString(value, true, true);
+		    				final String strData = JSONMapper.convertToString(value, true, true, null);
 		    				final Verkehrssprache vs = Verkehrssprache.getByKuerzelAuto(strData);
 		    				if (vs == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.VerkehrsspracheFamilie = vs;
 		    			}
 		    			case "geburtslandVater" -> {
-		    				final String strData = JSONMapper.convertToString(value, true, true);
+		    				final String strData = JSONMapper.convertToString(value, true, true, null);
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
 		    				schueler.GeburtslandVater = nat;
 		    			}
 		    			case "geburtslandMutter" -> {
-		    				final String strData = JSONMapper.convertToString(value, true, true);
+		    				final String strData = JSONMapper.convertToString(value, true, true, null);
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(strData);
 	    			    	if (nat == null)
 	    			    		throw OperationError.NOT_FOUND.exception();
@@ -337,10 +338,10 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	    					}
 		    			}
 		    			case "anmeldedatum" -> {
-		    				schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false);
+		    				schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false, null);
 		    			}
 		    			case "aufnahmedatum" -> {
-		    				final String aufnahmedatum = JSONMapper.convertToString(value, true, true);
+		    				final String aufnahmedatum = JSONMapper.convertToString(value, true, true, null);
 		    				schueler.Aufnahmedatum = "".equals(aufnahmedatum) ? null : aufnahmedatum;
 		    			}
 		    			case "istVolljaehrig" -> schueler.Volljaehrig = JSONMapper.convertToBoolean(value, false);
@@ -353,7 +354,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		    			case "istDuplikat" -> schueler.Duplikat = JSONMapper.convertToBoolean(value, false);
 
 		    			// Bemerkungen
-		    			case "bemerkungen" -> schueler.Bemerkungen = JSONMapper.convertToString(value, true, true);
+		    			case "bemerkungen" -> schueler.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Bemerkungen.datenlaenge());
 
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}

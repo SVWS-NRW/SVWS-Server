@@ -13,6 +13,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKalenderinformationen;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -98,12 +99,12 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false);
-					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false);
-					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false);
-					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false);
-					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false);
-					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false);
+					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge());
+					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge());
+					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false, null);
+					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false, null);
+					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false, null);
+					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false, null);
 					case "istSperrtermin" -> kalInfo.IstSperrtermin = JSONMapper.convertToBoolean(value, false);
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
@@ -154,12 +155,12 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 					case "id" -> {
 						throw OperationError.BAD_REQUEST.exception();
 					}
-					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false);
-					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false);
-					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false);
-					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false);
-					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false);
-					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false);
+					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge());
+					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge());
+					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false, null);
+					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false, null);
+					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false, null);
+					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false, null);
 					case "istSperrtermin" -> kalInfo.IstSperrtermin = JSONMapper.convertToBoolean(value, false);
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}

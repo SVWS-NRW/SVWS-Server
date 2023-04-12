@@ -18,6 +18,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 /**
@@ -107,14 +108,14 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 								ansprechpartner.Adresse_ID = betrieb.ID;
 							}
 						}
-						case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true);
-						case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true);
-						case "name" -> ansprechpartner.Name = JSONMapper.convertToString(value, true, true);
-						case "vorname" -> ansprechpartner.Vorname = JSONMapper.convertToString(value, true, true);
-						case "email" -> ansprechpartner.Email = JSONMapper.convertToString(value, true, true);
-						case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true);
-						case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true);
-						case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true);
+						case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Titel.datenlaenge());
+						case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge());
+						case "name" -> ansprechpartner.Name = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Name.datenlaenge());
+						case "vorname" -> ansprechpartner.Vorname = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Vorname.datenlaenge());
+						case "email" -> ansprechpartner.Email = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Email.datenlaenge());
+						case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Telefon.datenlaenge());
+						case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Abteilung.datenlaenge());
+						case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_GU_ID.datenlaenge());
 						default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}
@@ -170,14 +171,14 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 							if (bid.longValue() != betrieb_id.longValue())
 								throw OperationError.BAD_REQUEST.exception("Betrieb_ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 						}
-						case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true);
-						case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true);
-						case "name" -> ansprechpartner.Name = JSONMapper.convertToString(value, true, true);
-						case "vorname" -> ansprechpartner.Vorname = JSONMapper.convertToString(value, true, true);
-						case "email" -> ansprechpartner.Email = JSONMapper.convertToString(value, true, true);
-						case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true);
-						case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true);
-						case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true);
+						case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Titel.datenlaenge());
+						case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge());
+						case "name" -> ansprechpartner.Name = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Name.datenlaenge());
+						case "vorname" -> ansprechpartner.Vorname = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Vorname.datenlaenge());
+						case "email" -> ansprechpartner.Email = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Email.datenlaenge());
+						case "telefon" -> ansprechpartner.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Telefon.datenlaenge());
+						case "abteilung" -> ansprechpartner.Abteilung = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Abteilung.datenlaenge());
+						case "GU_ID" -> ansprechpartner.GU_ID = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_GU_ID.datenlaenge());
 						default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}

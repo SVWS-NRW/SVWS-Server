@@ -21,6 +21,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -486,7 +487,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                             if (create_id != null && create_id != -1)
                                 throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
                         }
-                        case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true);
+                        case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
                         case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
                         case "kompetenzen" -> System.out.println("//TODO Kompetenzen bei Benutzergruppe-Inputstream Create");
                         default -> throw OperationError.BAD_REQUEST.exception();

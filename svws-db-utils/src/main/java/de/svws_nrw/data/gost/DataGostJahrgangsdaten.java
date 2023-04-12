@@ -18,6 +18,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -157,11 +158,11 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     				case "jahrgang" -> throw OperationError.BAD_REQUEST.exception();
     				case "bezeichnung" -> throw OperationError.BAD_REQUEST.exception();
     				case "istAbgeschlossen" -> throw OperationError.BAD_REQUEST.exception();
-    				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true);
-    				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true);
+    				case "textBeratungsbogen" -> jahrgangsdaten.TextBeratungsbogen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextBeratungsbogen.datenlaenge());
+    				case "textMailversand" -> jahrgangsdaten.TextMailversand = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Jahrgangsdaten.col_TextMailversand.datenlaenge());
     				case "hatZusatzkursGE" -> jahrgangsdaten.ZusatzkursGEVorhanden = JSONMapper.convertToBoolean(value, false);
     				case "beginnZusatzkursGE" -> {
-    					final String tmp = JSONMapper.convertToString(value, false, false);
+    					final String tmp = JSONMapper.convertToString(value, false, false, null);
     					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
     					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
     						throw OperationError.BAD_REQUEST.exception();
@@ -169,7 +170,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     				}
     				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
     				case "beginnZusatzkursSW" -> {
-    					final String tmp = JSONMapper.convertToString(value, false, false);
+    					final String tmp = JSONMapper.convertToString(value, false, false, null);
     					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
     					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
     						throw OperationError.BAD_REQUEST.exception();

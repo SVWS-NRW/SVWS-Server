@@ -22,6 +22,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 /**
@@ -138,9 +139,9 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 								s_betrieb.Vertragsart_ID = art_id;
 							}
 						}
-						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true);
-						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true);
-						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true);
+						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
+						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
+						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
 						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
 						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
 						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
@@ -289,9 +290,9 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 								s_betrieb.Vertragsart_ID = art_id;
 							}
 						}
-						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true);
-						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true);
-						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true);
+						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
+						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
+						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
 						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
 						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
 						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);

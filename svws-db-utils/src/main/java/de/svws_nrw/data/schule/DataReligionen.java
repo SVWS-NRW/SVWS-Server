@@ -19,6 +19,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 /**
@@ -94,9 +95,9 @@ public final class DataReligionen extends DataManager<Long> {
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
-						case "kuerzel" -> reli.StatistikKrz = JSONMapper.convertToString(value, true, true);
-                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true);
-                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true);
+						case "kuerzel" -> reli.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge()); // TODO Katalog prüfen
+                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
 						case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
 						case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
 						case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
@@ -144,15 +145,15 @@ public final class DataReligionen extends DataManager<Long> {
 								throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
 						}
 						case "kuerzel" -> {
-							reli.StatistikKrz = JSONMapper.convertToString(value, true, true);
+							reli.StatistikKrz = JSONMapper.convertToString(value, true, true, null);
 							if (reli.StatistikKrz != null) {
 								final ReligionKatalogEintrag rke = Religion.getByKuerzel(reli.StatistikKrz).daten;
 								if (rke == null)
 									throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Küruel " + reli.StatistikKrz + " existiert in der amtlichen Statistik nicht.");
 							}
 						}
-                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true);
-                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true);
+                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
 						case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
 						case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
 						case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);

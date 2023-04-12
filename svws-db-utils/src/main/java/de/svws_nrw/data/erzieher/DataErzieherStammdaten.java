@@ -19,6 +19,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -167,50 +168,50 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	    					}
                         }
                         case "titel" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Titel1.datenlaenge());
                             if (nr == 1)
                                 erzieher.Titel1 = tmp;
                             else
                                 erzieher.Titel2 = tmp;
                         }
                         case "anrede" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Anrede1.datenlaenge());
                             if (nr == 1)
                                 erzieher.Anrede1 = tmp;
                             else
                                 erzieher.Anrede2 = tmp;
                         }
                         case "nachname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Name1.datenlaenge());
                             if (nr == 1)
                                 erzieher.Name1 = tmp;
                             else
                                 erzieher.Name2 = tmp;
                         }
                         case "zusatzNachname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Erz1ZusatzNachname.datenlaenge());
                             if (nr == 1)
                                 erzieher.Erz1ZusatzNachname = tmp;
                             else
                                 erzieher.Erz2ZusatzNachname = tmp;
                         }
                         case "vorname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Vorname1.datenlaenge());
                             if (nr == 1)
                                 erzieher.Vorname1 = tmp;
                             else
                                 erzieher.Vorname2 = tmp;
                         }
                         case "eMail" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true);
+                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzEmail.datenlaenge());
                             if (nr == 1)
                                 erzieher.ErzEmail = tmp;
                             else
                                 erzieher.ErzEmail2 = tmp;
                         }
-                        case "strassenname" -> erzieher.ErzStrassenname = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true);
-		    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true);
+                        case "strassenname" -> erzieher.ErzStrassenname = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzStrassenname.datenlaenge());
+		    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNr.datenlaenge());
+		    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNrZusatz.datenlaenge());
 		    			case "wohnortID" -> {
 		    				setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
 		    			}
@@ -219,7 +220,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		    			}
 
 		    			case "staatsangehoerigkeitID" -> {
-		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true);
+		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
                                 if (nr == 1)
 	    						    erzieher.Erz1StaatKrz = null;
@@ -236,7 +237,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	    					}
 		    			}
                         case "erhaeltAnschreiben" -> erzieher.ErzAnschreiben = JSONMapper.convertToBoolean(value, true);
-                        case "bemerkungen" -> erzieher.Bemerkungen = JSONMapper.convertToString(value, true, true);
+                        case "bemerkungen" -> erzieher.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Bemerkungen.datenlaenge());
                         default -> throw OperationError.BAD_REQUEST.exception();
                     }
                 }

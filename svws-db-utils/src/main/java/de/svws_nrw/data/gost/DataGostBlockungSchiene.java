@@ -22,6 +22,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -104,7 +105,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-	    			case "bezeichnung" -> schiene.Bezeichnung = JSONMapper.convertToString(value, false, false);
+	    			case "bezeichnung" -> schiene.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung_Schienen.col_Bezeichnung.datenlaenge());
 	    			case "wochenstunden" -> {
 	    				schiene.Wochenstunden = JSONMapper.convertToInteger(value, false);
 	    				if ((schiene.Wochenstunden < 1) || (schiene.Wochenstunden > 40))

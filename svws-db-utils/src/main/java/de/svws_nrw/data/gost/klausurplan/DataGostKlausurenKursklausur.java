@@ -206,7 +206,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 						}
 						kursklausur.Termin_ID = newTermin;
 					}
-					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToString(value, true, false);
+					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToString(value, true, false, null);
 
 					// TODO Was ist mit anderen Attributen, falls sie im InputStream vorkommen?
 

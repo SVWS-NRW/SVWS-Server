@@ -19,6 +19,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
 /**
@@ -104,7 +105,7 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
 								throw OperationError.BAD_REQUEST.exception();
 						}
-                        case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true);
+                        case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Adressart.col_Bezeichnung.datenlaenge());
 						case "istSichtbar" -> art.Sichtbar = JSONMapper.convertToBoolean(value, true);
 						case "istAenderbar" -> art.Aenderbar = JSONMapper.convertToBoolean(value, true);
                        	default -> throw OperationError.BAD_REQUEST.exception();

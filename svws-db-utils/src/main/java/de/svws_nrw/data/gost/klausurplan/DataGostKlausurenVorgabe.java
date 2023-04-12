@@ -26,6 +26,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -223,13 +224,13 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 					}
 					case "quartal" -> vorgabe.Quartal = JSONMapper.convertToInteger(value, false);
 					case "idFach" -> vorgabe.Fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursart" -> vorgabe.Kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false));
+					case "kursart" -> vorgabe.Kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false, null)); // TODO check value -> error: BAD_REQUEST
 					case "dauer" -> vorgabe.Dauer = JSONMapper.convertToInteger(value, false);
 					case "auswahlzeit" -> vorgabe.Auswahlzeit = JSONMapper.convertToInteger(value, false);
 					case "istMdlPruefung" -> vorgabe.IstMdlPruefung = JSONMapper.convertToBoolean(value, false);
 					case "istAudioNotwendig" -> vorgabe.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "istVideoNotwendig" -> vorgabe.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "bemerkungVorgabe" -> vorgabe.Bemerkungen = JSONMapper.convertToString(value, true, true);
+					case "bemerkungVorgabe" -> vorgabe.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge());
 
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
@@ -290,13 +291,13 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 					case "halbjahr" -> halbjahr = GostHalbjahr.fromID(JSONMapper.convertToInteger(value, false));
 					case "quartal" -> quartal = JSONMapper.convertToInteger(value, false);
 					case "idFach" -> fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursart" -> kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false));
+					case "kursart" -> kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false, null)); // TODO check value -> error: BAD_REQUEST
 					case "dauer" -> dauer = JSONMapper.convertToInteger(value, false);
 					case "auswahlzeit" -> auswahlzeit = JSONMapper.convertToInteger(value, false);
 					case "istMdlPruefung" -> istMdlPruefung = JSONMapper.convertToBoolean(value, false);
 					case "istAudioNotwendig" -> istAudioNotwendig = JSONMapper.convertToBoolean(value, false);
 					case "istVideoNotwendig" -> istVideoNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true);
+					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge());
 					case "idVorgabe" -> { /* do nothing */ }
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
