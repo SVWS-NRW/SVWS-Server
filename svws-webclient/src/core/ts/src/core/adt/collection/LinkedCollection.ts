@@ -287,7 +287,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public equals(obj : unknown | null) : boolean {
-		if ((obj === null) || (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('java.util.Collection'))))))
+		if (obj === null)
+			return false;
+		if (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('java.util.Collection')))))
 			return false;
 		const other : Collection<unknown> = cast_java_util_Collection(obj);
 		if (this._size !== other.size())

@@ -28,10 +28,8 @@ export class Sport extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiertEinzeln(this.sport, GostHalbjahr.EF1))) {
+		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiertEinzeln(this.sport, GostHalbjahr.EF1)))
 			this.addFehler(GostBelegungsfehler.SP_10);
-			return;
-		}
 	}
 
 	protected pruefeGesamt() : void {

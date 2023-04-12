@@ -53,25 +53,17 @@ public final class Kurs42DataBlockung {
 			final String[] parts = line.split("=");
 			if (parts.length != 2)
 				continue;
-			switch (parts[0]) {
-				case "Jahrgang" -> this.Jahrgang = parts[1];
-				case "Jahr" -> {
-					try {
-						this.Jahr = Integer.parseInt(parts[1]);
-					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-						continue;
-					}
+			try {
+				switch (parts[0]) {
+					case "Jahrgang" -> this.Jahrgang = parts[1];
+					case "Jahr" -> this.Jahr = Integer.parseInt(parts[1]);
+					case "Abschnitt" -> this.Abschnitt = Integer.parseInt(parts[1]);
+					case "Bezeichnung" -> this.Bezeichnung = parts[1];
+					case "Schulnummer" -> this.Schulnummer = parts[1];
+					default -> throw new DeveloperNotificationException("Fehlerhafter Eintrag in der Blockungsdatei.");
 				}
-				case "Abschnitt" -> {
-					try {
-						this.Abschnitt = Integer.parseInt(parts[1]);
-					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-						continue;
-					}
-				}
-				case "Bezeichnung" -> this.Bezeichnung = parts[1];
-				case "Schulnummer" -> this.Schulnummer = parts[1];
-				default -> throw new DeveloperNotificationException("Fehlerhafter Eintrag in der Blockungsdatei.");
+			} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+				// invalid number format - do nothing and read next line
 			}
 		}
 	}

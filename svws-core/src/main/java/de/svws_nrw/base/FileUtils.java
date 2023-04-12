@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 /**
@@ -33,8 +34,7 @@ public final class FileUtils {
 			while ((length = istream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			istream.close();
-			return result.toString("UTF-8");
+			return result.toString(StandardCharsets.UTF_8);
 		} catch (@SuppressWarnings("unused") NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -76,7 +76,6 @@ public final class FileUtils {
 			while ((length = istream.read(buffer)) != -1) {
 				result.write(buffer, 0, length);
 			}
-			istream.close();
 			return result.toByteArray();
 		} catch (@SuppressWarnings("unused") NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
 			return null;
@@ -120,7 +119,6 @@ public final class FileUtils {
 			while ((bytes_read = istream.read(buf)) > -1) {
 				ostream.write(buf, 0, bytes_read);
 			}
-			istream.close();
 		}
 		Files.delete(file.toPath());
 	}
@@ -158,7 +156,6 @@ public final class FileUtils {
 			while ((bytes_read = istream.read(buf)) > -1) {
 				ostream.write(buf, 0, bytes_read);
 			}
-			istream.close();
 		}
 	}
 

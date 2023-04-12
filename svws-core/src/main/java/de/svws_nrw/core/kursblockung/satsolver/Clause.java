@@ -114,4 +114,16 @@ public final class Clause implements Comparable<@NotNull Clause> {
 		return 0;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj instanceof Clause)
+			return compareTo((Clause) obj) == 0;
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }

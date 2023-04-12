@@ -43,10 +43,8 @@ public final class Sport extends GostBelegpruefung {
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob Sport in EF.1 belegt wurde
-		if ((sport == null) || (!manager.pruefeBelegungExistiertEinzeln(sport, GostHalbjahr.EF1))) {
+		if ((sport == null) || (!manager.pruefeBelegungExistiertEinzeln(sport, GostHalbjahr.EF1)))
 			addFehler(GostBelegungsfehler.SP_10);
-			return;
-		}
 	}
 
 

@@ -393,7 +393,6 @@ public final class SatSolver3 extends SatSolverA {
 			backtrackB[index] = true;
 			unitpropagation(varP);
 			index++;
-			continue;
 		}
 
 		// SAT or UNSAT?
@@ -465,9 +464,7 @@ public final class SatSolver3 extends SatSolverA {
 					unitpropagation(varP);
 					count1++;
 					changed = true;
-					continue;
 				}
-
 			}
 		}
 		// System.out.println("SIMPLIFICATION: 1-CNF = " + count1);

@@ -1,5 +1,5 @@
-import { JavaObject } from '../../java/lang/JavaObject';
 import { Comparable } from '../../java/lang/Comparable';
+import { JavaObject } from '../../java/lang/JavaObject';
 import { Arrays } from '../../java/util/Arrays';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { System } from '../../java/lang/System';
@@ -108,6 +108,18 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 		const indentChars : Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');
 		return indentChars.join("") + this.text!;
+	}
+
+	public hashCode() : number {
+		return super.hashCode();
+	}
+
+	public equals(obj : unknown | null) : boolean {
+		if (obj === null)
+			return false;
+		if (((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData'))))
+			return this.compareTo(cast_de_svws_nrw_core_logger_LogData(obj)) === 0;
+		return super.equals((obj));
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

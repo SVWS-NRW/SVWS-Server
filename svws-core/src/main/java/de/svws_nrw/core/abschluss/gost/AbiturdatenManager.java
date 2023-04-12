@@ -147,7 +147,7 @@ public class AbiturdatenManager {
 		// Leere die HashMap und erstelle neue Vektoren für die Zuordnung von Abitur-Fachbelegungen
 		mapFachbereiche.clear();
 		for (final @NotNull GostFachbereich fachbereich : GostFachbereich.values())
-			mapFachbereiche.put(fachbereich, new ArrayList<@NotNull AbiturFachbelegung>());
+			mapFachbereiche.put(fachbereich, new ArrayList<>());
 
 		// Durchwandere alle belegten Fächer und weise diese den Fachbereichen zu
 		final @NotNull ArrayList<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;

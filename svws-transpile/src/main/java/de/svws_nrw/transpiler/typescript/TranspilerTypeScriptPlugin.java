@@ -1345,11 +1345,15 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			// replace all hashCode invocations
 			if ("hashCode".equals(ms.getIdentifier().toString())) {
 				final String expression = convertExpression(ms.getExpression());
+				if ("super".equals(expression))
+					return "super.hashCode()";
 				return "JavaObject.getTranspilerHashCode(" + expression + ")";
 			}
 			// replace all equals invocations
 			if ("equals".equals(ms.getIdentifier().toString())) {
 				final String expression = convertExpression(ms.getExpression());
+				if ("super".equals(expression))
+					return "super.equals(" + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
 				return "JavaObject.equalsTranspiler(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, false) + ")";
 			}
 			// TODO replace Long, Integer, Short, Byte, Float and Double methods...

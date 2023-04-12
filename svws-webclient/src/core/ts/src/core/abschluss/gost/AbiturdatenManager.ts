@@ -150,7 +150,7 @@ export class AbiturdatenManager extends JavaObject {
 	private initMapFachbereiche() : void {
 		this.mapFachbereiche.clear();
 		for (const fachbereich of GostFachbereich.values())
-			this.mapFachbereiche.put(fachbereich, new ArrayList<AbiturFachbelegung>());
+			this.mapFachbereiche.put(fachbereich, new ArrayList());
 		const fachbelegungen : ArrayList<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of fachbelegungen) {
 			if (this.zaehleBelegung(fachbelegung) > 0) {

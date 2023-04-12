@@ -7,8 +7,8 @@ package de.svws_nrw.core.utils.stundenplanblockung;
  */
 public class StundenplanblockungManagerSchule {
 
-	private final int _tage_pro_woche = 5; // DEFAULT
-	private final int _stunden_pro_tag = 9; // DEFAULT
+	private static final int _tage_pro_woche = 5; // DEFAULT
+	private static final int _stunden_pro_tag = 9; // DEFAULT
 
 	/**
 	 * Erzeugt ein neues Objekt.

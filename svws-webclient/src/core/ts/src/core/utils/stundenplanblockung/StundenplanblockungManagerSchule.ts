@@ -2,9 +2,9 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 
 export class StundenplanblockungManagerSchule extends JavaObject {
 
-	private readonly _tage_pro_woche : number = 5;
+	private static readonly _tage_pro_woche : number = 5;
 
-	private readonly _stunden_pro_tag : number = 9;
+	private static readonly _stunden_pro_tag : number = 9;
 
 
 	/**
@@ -21,7 +21,7 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 	 * @return Die Anzahl an Unterrichtstagen in der Woche.
 	 */
 	public get_tage_pro_woche() : number {
-		return this._tage_pro_woche;
+		return StundenplanblockungManagerSchule._tage_pro_woche;
 	}
 
 	/**
@@ -29,7 +29,7 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 	 * @return Die maximale Anzahl an Stunden pro Tag.
 	 */
 	public get_stunden_pro_tag() : number {
-		return this._stunden_pro_tag;
+		return StundenplanblockungManagerSchule._stunden_pro_tag;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

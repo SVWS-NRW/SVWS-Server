@@ -303,7 +303,9 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 
 	@Override
 	public boolean equals(final Object obj) {
-		if ((obj == null) || (!(obj instanceof Collection)))
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Collection))
 			return false;
 		final @NotNull Collection<?> other = (@NotNull Collection<?>) obj;
 		if (this._size != other.size())

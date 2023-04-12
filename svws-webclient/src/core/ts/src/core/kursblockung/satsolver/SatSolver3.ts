@@ -294,7 +294,6 @@ export class SatSolver3 extends SatSolverA {
 			backtrackB[index] = true;
 			this.unitpropagation(varP);
 			index++;
-			continue;
 		}
 		return this.heap.isEmpty() ? SatSolverA.RESULT_SATISFIABLE : SatSolverA.RESULT_UNSATISFIABLE;
 	}
@@ -355,7 +354,6 @@ export class SatSolver3 extends SatSolverA {
 					this.unitpropagation(varP);
 					count1++;
 					changed = true;
-					continue;
 				}
 			}
 		}

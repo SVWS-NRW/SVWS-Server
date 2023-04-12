@@ -66,6 +66,16 @@ public final class ExpressionClassType extends ExpressionType {
 	}
 
 
+
+	/**
+	 * Creates a new expression class type instance for the unknown super class.
+	 *
+	 * @return the new expression class type instance
+	 */
+	public static ExpressionClassType getExpressionSuperClassType() {
+		return new ExpressionClassType(Kind.CLASS, "super", "");
+	}
+
 	/**
 	 * Creates a new expression class type instance from the specified {@link TypeMirror}
 	 *

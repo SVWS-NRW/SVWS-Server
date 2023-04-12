@@ -1,10 +1,10 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { Comparable } from '../../../java/lang/Comparable';
 import { Variable, cast_de_svws_nrw_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaIterator } from '../../../java/util/JavaIterator';
+import { JavaObject } from '../../../java/lang/JavaObject';
 
 export class Clause extends JavaObject implements Comparable<Clause> {
 
@@ -114,6 +114,16 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 				return cmp;
 		}
 		return 0;
+	}
+
+	public equals(obj : unknown | null) : boolean {
+		if (((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.kursblockung.satsolver.Clause'))))
+			return this.compareTo(cast_de_svws_nrw_core_kursblockung_satsolver_Clause(obj)) === 0;
+		return super.equals((obj));
+	}
+
+	public hashCode() : number {
+		return super.hashCode();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  * um Log-Daten anhand des Zeitstempels zu vergleichen und damit einen Sortierung zu
  * erlauben.
  */
-public class LogData implements Comparable<LogData> {
+public final class LogData implements Comparable<LogData> {
 
 	/// der Zeitstempel der Log-Information
 	private final long time;
@@ -128,6 +128,22 @@ public class LogData implements Comparable<LogData> {
 		final char[] indentChars = new char[indent];
 		Arrays.fill(indentChars, ' ');
 		return new String(indentChars) + text;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null)
+			return false;
+		if (obj instanceof LogData)
+			return compareTo((LogData) obj) == 0;
+		return super.equals(obj);
 	}
 
 }

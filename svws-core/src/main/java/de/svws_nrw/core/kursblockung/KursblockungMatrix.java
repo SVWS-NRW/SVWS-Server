@@ -431,7 +431,7 @@ public class KursblockungMatrix {
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
-				matrix[r][c] = _random.nextLong(bis - von + 1) + von;
+				matrix[r][c] = _random.nextLong(bis - von + 1L) + von;
 			}
 		}
 	}
