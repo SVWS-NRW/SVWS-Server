@@ -37,7 +37,7 @@ public abstract class KursblockungAlgorithmusS {
 	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param dynDaten Die aktuellen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusS(final @NotNull Random pRandom, final @NotNull Logger logger,
+	protected KursblockungAlgorithmusS(final @NotNull Random pRandom, final @NotNull Logger logger,
 			final @NotNull KursblockungDynDaten dynDaten) {
 		_random = pRandom;
 		this.logger = logger;

@@ -23,7 +23,7 @@ public abstract class KlausurblockungSchienenAlgorithmusAbstract {
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
-	public KlausurblockungSchienenAlgorithmusAbstract(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
+	protected KlausurblockungSchienenAlgorithmusAbstract(final @NotNull Random pRandom, final @NotNull KlausurblockungSchienenDynDaten pDynDaten) {
 		_random = pRandom;
 		_dynDaten = pDynDaten;
 	}

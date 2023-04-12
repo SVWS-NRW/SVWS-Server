@@ -29,7 +29,7 @@ export abstract class KursblockungAlgorithmusK extends JavaObject {
 	 * @param pLogger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
-	public constructor(pRandom : Random, pLogger : Logger, pDynDaten : KursblockungDynDaten) {
+	protected constructor(pRandom : Random, pLogger : Logger, pDynDaten : KursblockungDynDaten) {
 		super();
 		this._random = pRandom;
 		this.logger = pLogger;

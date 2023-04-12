@@ -29,7 +29,7 @@ export abstract class KursblockungAlgorithmusS extends JavaObject {
 	 * @param logger   Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param dynDaten Die aktuellen Blockungsdaten.
 	 */
-	public constructor(pRandom : Random, logger : Logger, dynDaten : KursblockungDynDaten) {
+	protected constructor(pRandom : Random, logger : Logger, dynDaten : KursblockungDynDaten) {
 		super();
 		this._random = pRandom;
 		this.logger = logger;

@@ -21,7 +21,7 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
 	 */
-	public constructor(pRandom : Random, pDynDaten : KlausurblockungSchienenDynDaten) {
+	protected constructor(pRandom : Random, pDynDaten : KlausurblockungSchienenDynDaten) {
 		super();
 		this._random = pRandom;
 		this._dynDaten = pDynDaten;
