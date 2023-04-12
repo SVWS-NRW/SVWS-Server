@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.stundenplan;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
@@ -19,25 +20,25 @@ public class SchuelerStundenplanManager {
 	private final @NotNull SchuelerStundenplan _daten;
 
 	/** Eine Map idUnterricht -> SchuelerStundenplanUnterricht */
-	private final @NotNull HashMap<@NotNull Long, @NotNull SchuelerStundenplanUnterricht> _mapUnterricht = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull SchuelerStundenplanUnterricht> _mapUnterricht = new HashMap<>();
 
 	/** Eine Map idZeitraster -> Liste von Unterricht */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull SchuelerStundenplanUnterricht>> _mapZeitrasterUnterricht = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> _mapZeitrasterUnterricht = new HashMap<>();
 
 	/** Eine Map wochentyp, idZeitraster -> Liste von Unterricht */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull SchuelerStundenplanUnterricht>>> _mapWocheZeitrasterUnterricht = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>>> _mapWocheZeitrasterUnterricht = new HashMap<>();
 
 	/** Eine Map idZeitraster -> Zeitraster */
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _mapZeitraster = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanZeitraster> _mapZeitraster = new HashMap<>();
 
 	/** Eine Map wochentag, stunde -> Zeitraster */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull Integer, @NotNull StundenplanZeitraster>> _mapWochentagStundeZeitraster = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull Integer, @NotNull StundenplanZeitraster>> _mapWochentagStundeZeitraster = new HashMap<>();
 
 	/** Eine Map wochentag -> Liste von Zeitrastern */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull ArrayList<@NotNull StundenplanZeitraster>> _mapWochentagZeitraster = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _mapWochentagZeitraster = new HashMap<>();
 
 	/** Eine Map stunde -> Liste von Zeitrastern */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull ArrayList<@NotNull StundenplanZeitraster>> _mapStundeZeitraster = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _mapStundeZeitraster = new HashMap<>();
 
 	/**
 	 * Der minimale Wochentag, der in den Stundenplandaten vorkommt, z.B. 1 für
@@ -165,8 +166,8 @@ public class SchuelerStundenplanManager {
 	 */
 	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
 		final long idZeitraster, final boolean inklWoche0) {
-		final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp = _mapWocheZeitrasterUnterricht
-			.get(wochentyp);
+		final Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp
+			= _mapWocheZeitrasterUnterricht.get(wochentyp);
 		if (mapZeitrasterUnterricht_Wochentyp == null) {
 			// TODO Exceptionhandling?
 			return null;
@@ -176,14 +177,14 @@ public class SchuelerStundenplanManager {
 		if (retList == null)
 			retList = new ArrayList<>();
 		if (wochentyp != 0 && inklWoche0) {
-			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Woche0 = _mapWocheZeitrasterUnterricht
-				.get(0);
+			final Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Woche0
+				= _mapWocheZeitrasterUnterricht.get(0);
 			if (mapZeitrasterUnterricht_Woche0 == null) {
 				// TODO Exceptionhandling?
 				return retList;
 			}
-			final List<@NotNull SchuelerStundenplanUnterricht> listUnterricht_Woche0 = mapZeitrasterUnterricht_Woche0
-					.get(idZeitraster);
+			final List<@NotNull SchuelerStundenplanUnterricht> listUnterricht_Woche0
+				= mapZeitrasterUnterricht_Woche0.get(idZeitraster);
 			if (listUnterricht_Woche0 == null) {
 				// TODO Exceptionhandling?
 				return retList;
@@ -212,7 +213,7 @@ public class SchuelerStundenplanManager {
 	 * @return das Zeitraster-Objekt
 	 */
 	public StundenplanZeitraster getZeitrasterByWochentagStunde(final int wochentag, final int stunde) {
-		final HashMap<@NotNull Integer, @NotNull StundenplanZeitraster> map = _mapWochentagStundeZeitraster.get(wochentag);
+		final Map<@NotNull Integer, @NotNull StundenplanZeitraster> map = _mapWochentagStundeZeitraster.get(wochentag);
 		if (map == null) {
 			// TODO Exceptionhandling
 			return null;
@@ -227,7 +228,7 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public ArrayList<@NotNull StundenplanZeitraster> getZeitrasterByWochentag(final int wochentag) {
+	public List<@NotNull StundenplanZeitraster> getZeitrasterByWochentag(final int wochentag) {
 		return _mapWochentagZeitraster.get(wochentag);
 	}
 
@@ -238,7 +239,7 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return Liste von Zeitraster-Objekten
 	 */
-	public ArrayList<@NotNull StundenplanZeitraster> getZeitrasterByStunde(final int stunde) {
+	public List<@NotNull StundenplanZeitraster> getZeitrasterByStunde(final int stunde) {
 		return _mapStundeZeitraster.get(stunde);
 	}
 
@@ -262,22 +263,21 @@ public class SchuelerStundenplanManager {
 
 			_mapZeitraster.put(sz.id, sz);
 
-			ArrayList<@NotNull StundenplanZeitraster> listWochentagZeitraster = _mapWochentagZeitraster.get(sz.wochentag);
+			List<@NotNull StundenplanZeitraster> listWochentagZeitraster = _mapWochentagZeitraster.get(sz.wochentag);
 			if (listWochentagZeitraster == null) {
 				listWochentagZeitraster = new ArrayList<>();
 				_mapWochentagZeitraster.put(sz.wochentag, listWochentagZeitraster);
 			}
 			listWochentagZeitraster.add(sz);
 
-			ArrayList<@NotNull StundenplanZeitraster> listStundeZeitraster = _mapStundeZeitraster.get(sz.unterrichtstunde);
+			List<@NotNull StundenplanZeitraster> listStundeZeitraster = _mapStundeZeitraster.get(sz.unterrichtstunde);
 			if (listStundeZeitraster == null) {
 				listStundeZeitraster = new ArrayList<>();
 				_mapStundeZeitraster.put(sz.unterrichtstunde, listStundeZeitraster);
 			}
 			listStundeZeitraster.add(sz);
 
-			HashMap<@NotNull Integer, @NotNull StundenplanZeitraster> mapStundeUnterricht = _mapWochentagStundeZeitraster
-					.get(sz.wochentag);
+			Map<@NotNull Integer, @NotNull StundenplanZeitraster> mapStundeUnterricht = _mapWochentagStundeZeitraster.get(sz.wochentag);
 			if (mapStundeUnterricht == null) {
 				mapStundeUnterricht = new HashMap<>();
 				_mapWochentagStundeZeitraster.put(sz.wochentag, mapStundeUnterricht);
@@ -287,22 +287,20 @@ public class SchuelerStundenplanManager {
 
 		for (final SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
 			_mapUnterricht.put(ssu.idUnterricht, ssu);
-			ArrayList<@NotNull SchuelerStundenplanUnterricht> listZeitrasterUnterricht = _mapZeitrasterUnterricht
-					.get(ssu.idZeitraster);
+			List<@NotNull SchuelerStundenplanUnterricht> listZeitrasterUnterricht = _mapZeitrasterUnterricht.get(ssu.idZeitraster);
 			if (listZeitrasterUnterricht == null) {
 				listZeitrasterUnterricht = new ArrayList<>();
 				_mapZeitrasterUnterricht.put(ssu.idZeitraster, listZeitrasterUnterricht);
 			}
 			listZeitrasterUnterricht.add(ssu);
 
-			HashMap<@NotNull Long, @NotNull ArrayList<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht = _mapWocheZeitrasterUnterricht
-					.get(ssu.wochentyp);
+			Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht
+				= _mapWocheZeitrasterUnterricht.get(ssu.wochentyp);
 			if (mapZeitrasterUnterricht == null) {
 				mapZeitrasterUnterricht = new HashMap<>();
 				_mapWocheZeitrasterUnterricht.put(ssu.wochentyp, mapZeitrasterUnterricht);
 			}
-			ArrayList<@NotNull SchuelerStundenplanUnterricht> listWocheZeitrasterUnterricht = mapZeitrasterUnterricht
-					.get(ssu.idZeitraster);
+			List<@NotNull SchuelerStundenplanUnterricht> listWocheZeitrasterUnterricht = mapZeitrasterUnterricht.get(ssu.idZeitraster);
 			if (listWocheZeitrasterUnterricht == null) {
 				listWocheZeitrasterUnterricht = new ArrayList<>();
 				mapZeitrasterUnterricht.put(ssu.idZeitraster, listWocheZeitrasterUnterricht);
@@ -350,11 +348,10 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return die Wochentypen als ArrayList von Integern
 	 */
-	public @NotNull ArrayList<@NotNull Integer> getWochentypen() {
-		final ArrayList<@NotNull Integer> retVec = new ArrayList<>(_mapWocheZeitrasterUnterricht.keySet());
-		if (!isAbWochen()) {
+	public @NotNull List<@NotNull Integer> getWochentypen() {
+		final List<@NotNull Integer> retVec = new ArrayList<>(_mapWocheZeitrasterUnterricht.keySet());
+		if (!isAbWochen())
 			return retVec;
-		}
 		retVec.sort(new IntegerComparator());
 		retVec.remove(0);
 		return retVec;
