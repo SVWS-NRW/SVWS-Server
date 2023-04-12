@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.LongFunction;
 
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.types.kaoa.KAOAAnschlussoptionen;
@@ -18,9 +17,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerKAoADaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.persistence.Table;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 

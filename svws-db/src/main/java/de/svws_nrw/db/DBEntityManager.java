@@ -815,12 +815,12 @@ public final class DBEntityManager implements AutoCloseable {
 		final String tableName = t.getAnnotation(Table.class).name();
 		this.transactionBegin();
 
-		Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
-		String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
-		String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
-		Query q = em.createNativeQuery("SELECT "+col_MaxID+" FROM "+tableAutoInkrementeName+" WHERE nametabelle = ?tableName");
-		q.setParameter("tableName",tableName);
-		Long currentID = (Long) q.getSingleResult();
+		final Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
+		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
+		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
+		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");
+		q.setParameter("tableName", tableName);
+		final Long currentID = (Long) q.getSingleResult();
 		final long nextID = currentID == null ? 1 : currentID + 1;
 		final T daten = idApplicator.apply(nextID);
 		this.transactionPersist(daten);
