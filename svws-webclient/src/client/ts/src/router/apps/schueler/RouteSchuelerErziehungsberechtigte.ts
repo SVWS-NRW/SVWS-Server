@@ -1,7 +1,6 @@
 import type { Erzieherart, ErzieherStammdaten, List} from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import type { Ref } from "vue";
-import { ref } from "vue";
+import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
 import { api } from "~/router/Api";
@@ -11,38 +10,62 @@ import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 
+interface RouteStateDataSchuelerErziehungsberechtigte {
+	daten: List<ErzieherStammdaten> | undefined;
+	idSchueler: number | undefined;
+	mapErzieherarten: Map<number, Erzieherart>;
+}
+
 export class RouteDataSchuelerErziehungsberechtigte {
 
-	idSchueler: number | undefined = undefined;
-	_daten: Ref<List<ErzieherStammdaten> | undefined> = ref(undefined);
-	_mapErzieherarten: Ref<Map<number, Erzieherart>> = ref(new Map());
+	private static _defaultState: RouteStateDataSchuelerErziehungsberechtigte = {
+		daten: undefined,
+		idSchueler: undefined,
+		mapErzieherarten: new Map(),
+	}
+
+	private _state = shallowRef(RouteDataSchuelerErziehungsberechtigte._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerErziehungsberechtigte>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerErziehungsberechtigte._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerErziehungsberechtigte>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	get daten(): List<ErzieherStammdaten> {
+		if (this._state.value.daten === undefined)
+			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		return this._state.value.daten;
+	}
+
+	public async setEintrag(idSchueler?: number) {
+		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
+			return;
+		const daten = await api.server.getSchuelerErzieher(api.schema, idSchueler);
+		this.setPatchedState({idSchueler, daten});
+	}
 
 	public get mapErzieherarten() : Map<number, Erzieherart> {
-		if (this._mapErzieherarten.value.size === 0)
-			throw new Error("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte. ");
-		return this._mapErzieherarten.value;
+		if (this._state.value.mapErzieherarten.size === 0)
+			throw new Error("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
+		return this._state.value.mapErzieherarten;
 	}
 
-	public get daten(): List<ErzieherStammdaten> {
-		if (this._daten.value === undefined)
-			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
-		return this._daten.value;
-	}
-
-	public get visible(): boolean {
-		return !(routeSchuelerErziehungsberechtigte.hidden()) && (this._daten.value !== undefined);
-	}
-
-	public async onSelect(idSchueler?: number) {
-		if (((idSchueler === undefined) && (this.idSchueler === undefined)) || ((this.idSchueler !== undefined) && (this.idSchueler === idSchueler)))
-			return;
-		this.idSchueler = idSchueler;
-		this._daten.value = (idSchueler === undefined) ? undefined : await api.server.getSchuelerErzieher(api.schema, idSchueler);
+	public async ladeListe() {
+		const listErzieherarten = await api.server.getErzieherArten(api.schema);
+		const mapErzieherarten = new Map<number, Erzieherart>();
+		for (const e of listErzieherarten)
+			mapErzieherarten.set(e.id, e);
+		this.setPatchedDefaultState({ mapErzieherarten })
 	}
 
 	patch = async (data : Partial<ErzieherStammdaten>, id: number) => {
-		if (this._daten.value === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchErzieherStammdaten(data, api.schema, id);
 	}
 
@@ -57,24 +80,14 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		const listErzieherarten = await api.server.getErzieherArten(api.schema);
-		const mapErzieherarten = new Map<number, Erzieherart>();
-		for (const e of listErzieherarten)
-			mapErzieherarten.set(e.id, e);
-		this.data._mapErzieherarten.value = mapErzieherarten;
+		await this.data.ladeListe();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.parent.data.mapSchueler.get(id)?.id);
-		}
+		const id = to_params.id === undefined ? undefined : parseInt(to_params.id);
+		await this.data.setEintrag(id);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
