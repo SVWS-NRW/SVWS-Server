@@ -1,16 +1,16 @@
 <script setup lang='ts'>
+	import type { WritableComputedRef} from 'vue';
 	import { computed } from 'vue';
-	import {formatDate} from "@vueuse/core";
 
 	const props = withDefaults(defineProps<{
 		name?: string;
 		label?: string;
-		value?: string;
+		value?: string | boolean;
 		disabled?: boolean;
 		statistics?: boolean;
 		icon?: boolean;
 		iconType?: string;
-		modelValue?: string;
+		modelValue?: string | boolean;
 		forceChecked?: boolean;
 	}>(), {
 		name: '',
@@ -25,16 +25,12 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', value: string): void,
+		(e: 'update:modelValue', value: string | boolean): void,
 	}>();
 
-	const checked = computed({
-		get() {
-			return props.modelValue;
-		},
-		set(value: string) {
-			emit('update:modelValue', value);
-		}
+	const checked: WritableComputedRef<boolean | string> = computed({
+		get: () => props.modelValue,
+		set: (value) => emit('update:modelValue', value)
 	})
 </script>
 

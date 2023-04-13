@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-data-table v-model="schuelerFilter.filtered" v-model:clicked="selected" clickable :items="undefined"
+		<svws-ui-data-table :model-value="filtered" v-model:clicked="selected" clickable :items="undefined"
 			:filter="true" :filter-open="true" :filter-reverse="true" :filter-hide="false"
 			:no-data="schuelerFilter.filtered.value.size <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
 			<template #search>
@@ -82,7 +82,7 @@
 		set: (value) => props.schuelerFilter.fach.value = value?.id
 	})
 
-	// const filtered = props.schuelerFilter.filtered;
+	const filtered = computed(()=> [...props.schuelerFilter.filtered.value.values()]);
 
 	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = computed({
 		get: () => props.schueler,
