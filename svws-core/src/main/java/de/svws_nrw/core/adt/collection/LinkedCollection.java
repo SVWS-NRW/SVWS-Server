@@ -581,7 +581,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 
 	@Override
 	public @NotNull E removeFirst() {
-		final E value = this.poll();
+		final E value = this.pollFirst();
 		if (value == null)
 			throw new NoSuchElementException();
 		return value;

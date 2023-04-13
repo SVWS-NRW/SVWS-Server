@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -1273,6 +1274,27 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Bestimmt die Menge der unterschiedlichen Statistik-Fächer in der angegebenen Fachbelegungen.
+	 *
+	 * @param fachbelegungen   die Fachbelegungen
+	 *
+	 * @return die Menge der Statistik-Fächer
+	 */
+	private @NotNull Set<ZulaessigesFach> getMengeStatistikFaecher(final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen) {
+		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
+		for (final AbiturFachbelegung fb : fachbelegungen) {
+			final GostFach fach = gostFaecher.get(fb.fachID);
+			if (fach == null)
+				continue;
+			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			if (zulFach != ZulaessigesFach.DEFAULT)
+				faecher.add(zulFach);
+		}
+		return faecher;
+	}
+
+
+	/**
 	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen
 	 * Halbjahren belegt sind. Dabei werden Fachbelegungen, welche dem gleichem Statistik-Fach
 	 * zuzuordnen sind zusammengefasst. Dies ist bei der Abwahl von bilingualen Sachfächern
@@ -1286,15 +1308,7 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
-		for (final AbiturFachbelegung fb : fachbelegungen) {
-			final GostFach fach = gostFaecher.get(fb.fachID);
-			if (fach == null)
-				continue;
-			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach != ZulaessigesFach.DEFAULT)
-				faecher.add(zulFach);
-		}
+		final @NotNull Set<ZulaessigesFach> faecher = getMengeStatistikFaecher(fachbelegungen);
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
 		for (final ZulaessigesFach zulFach : faecher) {
@@ -1337,15 +1351,7 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
-		for (final AbiturFachbelegung fb : fachbelegungen) {
-			final GostFach fach = gostFaecher.get(fb.fachID);
-			if (fach == null)
-				continue;
-			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach != ZulaessigesFach.DEFAULT)
-				faecher.add(zulFach);
-		}
+		final @NotNull Set<ZulaessigesFach> faecher = getMengeStatistikFaecher(fachbelegungen);
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
 		for (final ZulaessigesFach zulFach : faecher) {

@@ -39,6 +39,9 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 	/** Filter zur Bestimmung aller Fremdsprachen, die nicht als E-Kurs belegt wurden. */
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterWeitereFremdsprachen = (final @NotNull GEAbschlussFach f) -> (!"E".equals(f.kuerzel) && (f.istFremdsprache != null) && (f.istFremdsprache));
 
+	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
+	private static final @NotNull String LOG_SEPERATOR = "______________________________";
+
 
 	/**
 	 * Führt die Abschlussberechnung anhand der übergebenen Abschlussfächer durch
@@ -55,14 +58,14 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 
 		// Prüfe, ob genügend leistungsdifferenzierte Kurse vorkommen
 		if ((input.faecher == null) || (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input))) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht genügend leistungsdiffernzierte Fächer gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 
 		// Prüfe, ob Fächerkürzel mehrfach zur Abschlussprüfung übergeben wurden
 		if (!AbschlussManager.pruefeKuerzelDuplikate(input)) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
@@ -79,14 +82,14 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 
 		// Prüfe, ob alle nötigen Fächer in der FG1 vorhanden sind
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M", "LBNW", "LBAL"))) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht alle nötigen Leistungen für die Fächergruppe 1 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 
 		// Prüfe, ob Fächer in der Fächergruppe II vorhanden sind
 		if (faecher.fg2.isEmpty()) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
@@ -120,7 +123,7 @@ public class ServiceAbschlussHA10 extends Service<@NotNull GEAbschlussFaecher, @
 		// Prüfe anhand der Defizite, ob ein Abschluss erworben wurde
 		final @NotNull AbschlussErgebnis abschlussergebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.INFO, " => HA 10: APO-SI §41 (1)");
 		} else if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
 			logger.logLn(LogLevel.INFO, " => kein HA10 - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));

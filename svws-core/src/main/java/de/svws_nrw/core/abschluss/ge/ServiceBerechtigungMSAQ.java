@@ -37,6 +37,8 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 
 	private static final @NotNull Predicate<@NotNull GEAbschlussFach> filterEKurse = (final @NotNull GEAbschlussFach f) -> (GELeistungsdifferenzierteKursart.E.hat(f.kursart));
 
+	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
+	private static final @NotNull String LOG_SEPERATOR = "______________________________";
 
 
 
@@ -55,14 +57,14 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 
 		// Prüfe, ob genügend leistungsdifferenzierte Kurse vorkommen
 		if ((input.faecher == null) || (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input))) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht genügend leistungsdifferenzierte Fächer gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 
 		// Prüfe, ob Fächerkürzel mehrfach zur Abschlussprüfung übergeben wurden
 		if (!AbschlussManager.pruefeKuerzelDuplikate(input)) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
@@ -72,14 +74,14 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 
 		// Prüfe, ob alle nötigen Fächer in der FG1 vorhanden sind
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M", "E", "WP"))) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht alle nötigen Leistungen für die Fächergruppe 1 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 
 		// Prüfe, ob Fächer in der Fächergruppe II vorhanden sind
 		if (faecher.fg2.isEmpty()) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
@@ -87,7 +89,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		// Prüfe ob mindestens drei E-Kurse vorhanden sind.
 		final long anzahlEKurse = faecher.getFaecherAnzahl(filterEKurse);
 		if (anzahlEKurse < 3) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.INFO, " => kein MSA-Q (FOR-Q) - nicht genügend E-Kurse belegt");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA_Q, false);
 		} else if (anzahlEKurse > 3) {
@@ -111,7 +113,7 @@ public class ServiceBerechtigungMSAQ extends Service<@NotNull GEAbschlussFaecher
 		// Prüfe anhand der Defizite, ob ein Abschluss erworben wurde
 		final @NotNull AbschlussErgebnis abschlussergebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
-			logger.logLn(LogLevel.DEBUG, "______________________________");
+			logger.logLn(LogLevel.DEBUG, LOG_SEPERATOR);
 			logger.logLn(LogLevel.INFO, " => MSA-Q (FOR-Q): APO-SI §43 (4)");
 		} else if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
 			logger.logLn(LogLevel.INFO, " => kein MSA-Q (FOR-Q) - Nachprüfungsmöglichkeite(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));

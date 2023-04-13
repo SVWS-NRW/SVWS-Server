@@ -528,7 +528,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public removeFirst() : E {
-		const value : E | null = this.poll();
+		const value : E | null = this.pollFirst();
 		if (value === null)
 			throw new NoSuchElementException()
 		return value;

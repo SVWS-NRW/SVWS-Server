@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
 import { Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
+import { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
@@ -1211,6 +1212,26 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Bestimmt die Menge der unterschiedlichen Statistik-Fächer in der angegebenen Fachbelegungen.
+	 *
+	 * @param fachbelegungen   die Fachbelegungen
+	 *
+	 * @return die Menge der Statistik-Fächer
+	 */
+	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach | null> {
+		const faecher : HashSet<ZulaessigesFach | null> = new HashSet();
+		for (const fb of fachbelegungen) {
+			const fach : GostFach | null = this.gostFaecher.get(fb.fachID);
+			if (fach === null)
+				continue;
+			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			if (zulFach as unknown !== ZulaessigesFach.DEFAULT as unknown)
+				faecher.add(zulFach);
+		}
+		return faecher;
+	}
+
+	/**
 	 * Diese Methode zählt die Anzahl der angegebenen Fachbelegungen, welche in allen
 	 * Halbjahren belegt sind. Dabei werden Fachbelegungen, welche dem gleichem Statistik-Fach
 	 * zuzuordnen sind zusammengefasst. Dies ist bei der Abwahl von bilingualen Sachfächern
@@ -1223,15 +1244,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : HashSet<ZulaessigesFach | null> = new HashSet();
-		for (const fb of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fb.fachID);
-			if (fach === null)
-				continue;
-			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach as unknown !== ZulaessigesFach.DEFAULT as unknown)
-				faecher.add(zulFach);
-		}
+		const faecher : JavaSet<ZulaessigesFach | null> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;
@@ -1271,15 +1284,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : HashSet<ZulaessigesFach | null> = new HashSet();
-		for (const fb of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fb.fachID);
-			if (fach === null)
-				continue;
-			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach as unknown !== ZulaessigesFach.DEFAULT as unknown)
-				faecher.add(zulFach);
-		}
+		const faecher : JavaSet<ZulaessigesFach | null> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;

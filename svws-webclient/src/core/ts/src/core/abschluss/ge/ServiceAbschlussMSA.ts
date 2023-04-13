@@ -43,6 +43,11 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 
 	private static readonly filterEKurse : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (GELeistungsdifferenzierteKursart.E.hat(f.kursart)) };
 
+	/**
+	 * Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird.
+	 */
+	private static readonly LOG_SEPERATOR : string = "______________________________";
+
 
 	public constructor() {
 		super();
@@ -72,29 +77,29 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		this.logger.logLn(LogLevel.INFO, "Prüfe MSA:");
 		this.logger.logLn(LogLevel.DEBUG, "==========");
 		if ((input.faecher === null) || (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input))) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht genügend leistungsdiffernzierte Fächer gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		if (!AbschlussManager.pruefeKuerzelDuplikate(input)) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		const faecher : AbschlussFaecherGruppen = ServiceAbschlussMSA.getFaechergruppen(input.faecher);
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M", "E", "WP"))) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht alle nötigen Leistungen für die Fächergruppe 1 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		if (faecher.fg2.isEmpty()) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		const anzahlEKurse : number = faecher.getFaecherAnzahl(ServiceAbschlussMSA.filterEKurse);
 		if (anzahlEKurse < 2) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.INFO, " => kein MSA (FOR) - nicht genügend E-Kurse belegt");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 		} else
@@ -126,7 +131,7 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 		this.logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString()!);
 		const abschlussergebnis : AbschlussErgebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussMSA.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.INFO, " => MSA (FOR): APO-SI §42 (3)");
 		} else
 			if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {

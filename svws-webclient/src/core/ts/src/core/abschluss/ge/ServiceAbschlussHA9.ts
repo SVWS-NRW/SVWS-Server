@@ -40,6 +40,11 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	 */
 	private static readonly filterWeitereFremdsprachen : Predicate<GEAbschlussFach> = { test : (f: GEAbschlussFach) => (!JavaObject.equalsTranspiler("E", (f.kuerzel)) && (f.istFremdsprache !== null) && (f.istFremdsprache)) };
 
+	/**
+	 * Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird.
+	 */
+	private static readonly LOG_SEPERATOR : string = "______________________________";
+
 
 	public constructor() {
 		super();
@@ -61,23 +66,23 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 		this.logger.logLn(LogLevel.INFO, "Prüfe HA9:");
 		this.logger.logLn(LogLevel.DEBUG, "==========");
 		if ((input.faecher === null) || (!AbschlussManager.pruefeHat4LeistungsdifferenzierteFaecher(input))) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht genügend leistungsdiffernzierte Fächer gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		if (!AbschlussManager.pruefeKuerzelDuplikate(input)) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden Fächer mit dem gleichen Kürzel zur Abschlussprüfung übergeben. Dies ist nicht zulässig.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		const faecher : AbschlussFaecherGruppen = new AbschlussFaecherGruppen(new AbschlussFaecherGruppe(input.faecher, Arrays.asList("D", "M"), null), new AbschlussFaecherGruppe(input.faecher, null, Arrays.asList("D", "M", "LBNW", "LBAL")));
 		if (!faecher.fg1.istVollstaendig(Arrays.asList("D", "M"))) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Es wurden nicht alle nötigen Leistungen für die Fächergruppe 1 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
 		if (faecher.fg2.isEmpty()) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.DEBUG, " => Fehler: Keine Leistungen für die Fächergruppe 2 gefunden.");
 			return AbschlussManager.getErgebnis(null, false);
 		}
@@ -103,7 +108,7 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 		this.logger.logLn(LogLevel.DEBUG, " -> FG2: Fächer " + faecher.fg2.toString()!);
 		const abschlussergebnis : AbschlussErgebnis = this.pruefeDefizite(faecher, "");
 		if (abschlussergebnis.erworben) {
-			this.logger.logLn(LogLevel.DEBUG, "______________________________");
+			this.logger.logLn(LogLevel.DEBUG, ServiceAbschlussHA9.LOG_SEPERATOR);
 			this.logger.logLn(LogLevel.INFO, " => HA 9: APO-SI §40 (3)");
 		} else
 			if (AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)) {
