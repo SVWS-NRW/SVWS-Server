@@ -1,22 +1,22 @@
 <template>
-	<tr>
-		<td class="text-left select-text" :style="{ 'background-color': bgColor }">
+	<div role="row" class="data-table__tr data-table__tbody__tr">
+		<div role="cell" class="data-table__td select-text" :style="{ 'background-color': bgColor }">
 			{{ fach.kuerzelAnzeige }}
-		</td>
-		<td class="text-left select-all" :style="{ 'background-color': bgColor }">
+		</div>
+		<div role="cell" class="data-table__td select-all" :style="{ 'background-color': bgColor }">
 			{{ fach.bezeichnung }}
-		</td>
-		<td class="text-center" :style="{ 'background-color': bgColor }">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :style="{ 'background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
-		</td>
-		<td :class="[ 'text-center' ]" :style="{ 'background-color': bgColorIfLanguage }">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :style="{ 'background-color': bgColorIfLanguage }">
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeNr === 0 ? "-" : sprachenfolgeNr }}
 			</template>
-		</td>
-		<td :class="[ 'text-center' ]" :style="{ 'background-color': bgColorIfLanguage }">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :style="{ 'background-color': bgColorIfLanguage }">
 			{{ sprachenfolgeJahrgang }}
-		</td>
+		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 			<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
 				:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="istBewertet(halbjahr)"
@@ -24,7 +24,7 @@
 		</template>
 		<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
 			:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="istBewertet(GostHalbjahr.Q22)" @update:wahl="onUpdateWahl" />
-	</tr>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -54,7 +54,7 @@
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : 'rgba(160,160,160,1)');
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : 'rgb(var(--color-light))');
 
 	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager.getFachbelegungByID(props.fach.id));
 

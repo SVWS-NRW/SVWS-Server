@@ -1,5 +1,5 @@
 <template>
-	<td :class="[ 'min-w-[3rem] text-center', { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
+	<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
 		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
@@ -22,7 +22,7 @@
 		<template v-else>
 			{{ wahl }}
 		</template>
-	</td>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -97,7 +97,7 @@
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgba(160,160,160,1)';
+			return 'rgb(var(--color-light))';
 		return ((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
@@ -105,7 +105,7 @@
 
 	const bgColorTransparent: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgba(160,160,160,0.8)';
+			return 'rgb(var(--color-light))';
 		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.6)
 	});
 

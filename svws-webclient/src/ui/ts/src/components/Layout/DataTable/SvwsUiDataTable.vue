@@ -389,6 +389,10 @@
 		&__row-actions {
 			@apply justify-center text-center;
 
+			.data-table__th-wrapper {
+				@apply justify-center text-center;
+			}
+
 			.text-input--headless {
 				@apply text-center;
 			}

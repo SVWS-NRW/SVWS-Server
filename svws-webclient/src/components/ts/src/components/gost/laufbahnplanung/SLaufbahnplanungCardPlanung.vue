@@ -15,173 +15,237 @@
 			<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
 			<s-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </s-modal-hilfe>
 		</div>
-		<div class="sticky h-8 -mt-8 -top-8 bg-white z-10" />
-		<div class="v-table--container">
-			<table class="v-table--complex table-auto w-full">
-				<thead :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
-					<tr>
-						<th class="text-center" colspan="3"> Fach </th>
-						<th class="text-center" colspan="2"> Sprachen </th>
-						<th class="text-center" colspan="2"> EF </th>
-						<th class="text-center" colspan="4"> Qualifikationsphase </th>
-						<th class="text-center" rowspan="2"> Abitur-<br>fach </th>
-					</tr>
-					<tr>
-						<th class="text-center"> Kürzel </th>
-						<th class="text-center"> Bezeichnung </th>
-						<th class="text-center" title="Wochenstunden">WStd.</th>
-						<th class="text-center">Folge</th>
-						<th class="text-center">ab Jg</th>
-						<th class="text-center">EF.1</th>
-						<th class="text-center">EF.2</th>
-						<th class="text-center">Q1.1</th>
-						<th class="text-center">Q1.2</th>
-						<th class="text-center">Q2.1</th>
-						<th class="text-center">Q2.2</th>
-					</tr>
-				</thead>
-				<tbody>
-					<template v-for="row in rows" :key="row.id">
-						<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-							:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
-					</template>
-				</tbody>
-				<tfoot>
-					<tr>
-						<th class="text-center" colspan="5" />
-						<th class="text-center">EF.1</th>
-						<th class="text-center">EF.2</th>
-						<th class="text-center">Q1.1</th>
-						<th class="text-center">Q1.2</th>
-						<th class="text-center">Q2.1</th>
-						<th class="text-center">Q2.2</th>
-						<th class="text-center" />
-					</tr>
-					<tr>
-						<th class="text-right" colspan="5"> Anzahl Kurse </th>
-						<td v-for="(jahrgang, i) in kurszahlen" :key="i"
-							class="text-center cell--padding-sm"
+		<svws-ui-data-table :items="faechermanager.toList()"
+			:columns="cols">
+			<template #header>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Fach
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Sprachen
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								EF
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Qualifikationsphase
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center" />
+				</div>
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Kürzel
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-left">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Bezeichnung
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center" title="Wochenstunden">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								WStd.
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Folge
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								ab Jg
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								EF.1
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								EF.2
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Q1.1
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Q1.2
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Q2.1
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Q2.2
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Abiturfach
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+			<template #body>
+				<template v-for="row in rows" :key="row.id">
+					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
+						:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+				</template>
+			</template>
+			<template #footer>
+				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Anzahl Kurse </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-yellow-400': jahrgang < 10,
-								'bg-green-300': jahrgang > 9,
+								'bg-green-300': jahrgang > 9 && jahrgang < 12,
 								'bg-green-600': jahrgang > 11
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-yellow-400': jahrgang < 10,
-									'bg-green-300': jahrgang > 9 && jahrgang < 12,
-									'bg-green-600': jahrgang > 11
-								}">
-								{{ jahrgang }}
-							</span>
-							<!--
-							<i-ri-checkbox-circle-fill class="text-green-700" v-if="jahrgang > 11" />
-							<i-ri-checkbox-circle-line class="text-green-300" v-else-if="jahrgang > 9" />
-							<i-ri-error-warning-line class="text-yellow-400" v-else-if="jahrgang < 10" />
-							-->
-						</td>
-						<td class="text-center cell--padding-sm"
+							{{ jahrgang }}
+						</span>
+						<!--
+						<i-ri-checkbox-circle-fill class="text-green-700" v-if="jahrgang > 11" />
+						<i-ri-checkbox-circle-line class="text-green-300" v-else-if="jahrgang > 9" />
+						<i-ri-error-warning-line class="text-yellow-400" v-else-if="jahrgang < 10" />
+						-->
+					</div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-red-400': kurse_summe < 30,
 								'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
 								'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
 								'bg-green-600': kurse_summe > 36
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-red-400': kurse_summe < 30,
-									'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
-									'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
-									'bg-green-600': kurse_summe > 36
-								}">
-								{{ kurse_summe }}
-							</span>
-							<!--
-							<i-ri-checkbox-circle-fill class="text-green-700" v-if="kurse_summe > 36" />
-							<i-ri-checkbox-circle-line class="text-green-300" v-else-if="kurse_summe > 32 && kurse_summe < 37" />
-							<i-ri-error-warning-line class="text-yellow-400" v-else-if="kurse_summe >= 31 && kurse_summe <= 32" />
-							<i-ri-error-warning-fill class="text-red-400" v-else-if="kurse_summe < 30" />
-							-->
-						</td>
-					</tr>
-					<tr>
-						<th class="text-right" colspan="5"> Wochenstunden </th>
-						<td v-for="(jahrgang, i) in wochenstunden" :key="i"
-							class="text-center cell--padding-sm"
+							{{ kurse_summe }}
+						</span>
+						<!--
+						<i-ri-checkbox-circle-fill class="text-green-700" v-if="kurse_summe > 36" />
+						<i-ri-checkbox-circle-line class="text-green-300" v-else-if="kurse_summe > 32 && kurse_summe < 37" />
+						<i-ri-error-warning-line class="text-yellow-400" v-else-if="kurse_summe >= 31 && kurse_summe <= 32" />
+						<i-ri-error-warning-fill class="text-red-400" v-else-if="kurse_summe < 30" />
+						-->
+					</div>
+				</div>
+				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Wochenstunden </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in wochenstunden" :key="i">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-red-400': jahrgang < 30,
 								'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
 								'bg-green-300': jahrgang > 32 && jahrgang < 37,
 								'bg-green-600': jahrgang > 36
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-red-400': jahrgang < 30,
-									'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
-									'bg-green-300': jahrgang > 32 && jahrgang < 37,
-									'bg-green-600': jahrgang > 36
-								}">
-								{{ jahrgang }}
-							</span>
-						</td>
-						<td class="text-center cell--padding-sm"
+							{{ jahrgang }}
+						</span>
+					</div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-red-400': wst_summe < 100,
 								'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
 								'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
 								'bg-green-600': wst_summe > 108
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-red-400': wst_summe < 100,
-									'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
-									'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
-									'bg-green-600': wst_summe > 108
-								}">
-								{{ wst_summe }}
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<th class="text-right" colspan="5"> Durchschnitt </th>
-						<td colspan="2"
-							class="text-center cell--padding-sm"
+							{{ wst_summe }}
+						</span>
+					</div>
+				</div>
+				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Durchschnitt </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-2">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-red-400': wst_d_ef < 34,
 								'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
 								'bg-green-600': wst_d_ef >= 37
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-red-400': wst_d_ef < 34,
-									'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
-									'bg-green-600': wst_d_ef >= 37
-								}">
-								{{ wst_d_ef }}
-							</span>
-						</td>
-						<td colspan="4"
-							class="text-center cell--padding-sm"
+							{{ wst_d_ef }}
+						</span>
+					</div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-4">
+						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-red-400': wst_d_q < 34,
 								'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
 								'bg-green-600': wst_d_q >= 37
 							}">
-							<span class="inline-block py-0.5 px-1.5 rounded w-full h-full"
-								:class="{
-									'bg-red-400': wst_d_q < 34,
-									'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
-									'bg-green-600': wst_d_q >= 37
-								}">
-								{{ wst_d_q }}
-							</span>
-						</td>
-						<td class="" />
-					</tr>
-				</tfoot>
-			</table>
-		</div>
-		<div class="sticky h-8 -mb-8 -bottom-8 bg-white z-10" />
+							{{ wst_d_q }}
+						</span>
+					</div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" />
+				</div>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -192,7 +256,9 @@
 
 	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core";
 	import {
-		GostHalbjahr } from "@svws-nrw/svws-core";
+		GostHalbjahr, GostKursart
+	} from "@svws-nrw/svws-core";
+	import type {DataTableColumn} from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -271,6 +337,25 @@
 		URL.revokeObjectURL(link.href);
 	}
 
-
+	const cols: Array<DataTableColumn> = [
+		{ key: "kuerzel", label: "Kürzel", align: 'center'},
+		{ key: "bezeichnung", label: "Bezeichnung", align: 'center', span: 3, minWidth: 12 },
+		{ key: "wstd", label: "WStd.", align: 'center' },
+		{ key: "folge", label: "Folge", align: 'center' },
+		{ key: "ab_jg", label: "ab Jg", align: 'center'},
+		{ key: "ef1", label: "EF.1" },
+		{ key: "ef2", label: "EF.2", align: 'center' },
+		{ key: "q1_1", label: "Q1.1", align: 'center' },
+		{ key: "q1_2", label: "Q1.2", align: 'center' },
+		{ key: "q2_1", label: "Q2.1", align: 'center'},
+		{ key: "q2_2", label: "Q2.2", align: 'center'},
+		{ key: "abiturfach", label: "Abiturfach", align: 'center'}
+	];
 
 </script>
+
+<style scoped lang="postcss">
+.col-laufbahnplanung-ergebnis {
+	padding: 0.175rem;
+}
+</style>
