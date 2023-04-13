@@ -1,5 +1,6 @@
 package de.svws_nrw.core.logger;
 
+import java.io.PrintStream;
 import java.util.function.Consumer;
 
 import jakarta.validation.constraints.NotNull;
@@ -54,11 +55,12 @@ public class LogConsumerConsole implements Consumer<@NotNull LogData> {
 		final String s = (printTime ? t.getTime() + " " : "")
 				+ (printLevel ? t.getLevel() + " " : "")
 				+ t.getText();
+		final PrintStream console = System.out;
 		if (t.isNewLine())
-			System.out.println(s);
+			console.println(s);
 		else
-			System.out.print(s);
-		System.out.flush();
+			console.print(s);
+		console.flush();
 	}
 
 }
