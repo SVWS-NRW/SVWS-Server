@@ -1,11 +1,6 @@
-import type {
-	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List,
-	SchuelerBetriebsdaten, SchuelerListeEintrag} from "@svws-nrw/svws-core";
-import {
-	BenutzerKompetenz, Exception, Schulform, ArrayList
-} from "@svws-nrw/svws-core";
-import type { Ref} from "vue";
-import { ref } from "vue";
+import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
 import { api } from "~/router/Api";
@@ -16,88 +11,145 @@ import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 
+interface RouteStateDataSchuelerAdressen {
+	daten: BetriebStammdaten | undefined;
+	idSchueler: number | undefined;
+	betrieb: SchuelerBetriebsdaten | undefined;
+	listSchuelerbetriebe : List<SchuelerBetriebsdaten>;
+	mapBeschaeftigungsarten: Map<number, KatalogEintrag>;
+	mapLehrer: Map<number, LehrerListeEintrag>;
+	mapBetriebe: Map<number, BetriebListeEintrag>;
+	listAnsprechpartner: List<BetriebAnsprechpartner>;
+	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
+}
 export class RouteDataSchuelerAdressen {
 
-	_daten: Ref<BetriebStammdaten | undefined> = ref(undefined);
-	item: SchuelerListeEintrag | undefined = undefined;
-	betrieb: Ref<SchuelerBetriebsdaten | undefined> = ref(undefined);
-	listSchuelerbetriebe : Ref<List<SchuelerBetriebsdaten>> = ref(new ArrayList());
-	mapBeschaeftigungsarten: Map<number, KatalogEintrag> = new Map();
-	mapLehrer: Map<number, LehrerListeEintrag> = new Map();
-	mapBetriebe: Map<number, BetriebListeEintrag> = new Map();
-	mapAnsprechpartner: Ref<Map<number, BetriebAnsprechpartner>> = ref(new Map());
+	private static _defaultState: RouteStateDataSchuelerAdressen = {
+		daten: undefined,
+		idSchueler: undefined,
+		betrieb: undefined,
+		listSchuelerbetriebe : new ArrayList(),
+		mapBeschaeftigungsarten: new Map(),
+		mapLehrer: new Map(),
+		mapBetriebe: new Map(),
+		listAnsprechpartner: new ArrayList(),
+		mapAnsprechpartner: new Map(),
+	}
 
-	public async onSelect(item?: SchuelerListeEintrag) {
-		if (item === this.item)
+	private _state = shallowRef(RouteDataSchuelerAdressen._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerAdressen>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerAdressen._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerAdressen>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	get daten(): BetriebStammdaten | undefined {
+		return this._state.value.daten;
+	}
+
+	get listSchuelerbetriebe(): List<SchuelerBetriebsdaten> {
+		return this._state.value.listSchuelerbetriebe;
+	}
+
+	get mapBeschaeftigungsarten(): Map<number, KatalogEintrag> {
+		return this._state.value.mapBeschaeftigungsarten;
+	}
+
+	get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
+	}
+
+	get mapBetriebe(): Map<number, BetriebListeEintrag> {
+		return this._state.value.mapBetriebe;
+	}
+
+	get listAnsprechpartner(): List<BetriebAnsprechpartner> {
+		return this._state.value.listAnsprechpartner;
+	}
+
+	get mapAnsprechpartner(): Map<number, BetriebAnsprechpartner> {
+		return this._state.value.mapAnsprechpartner;
+	}
+
+	get betrieb(): SchuelerBetriebsdaten | undefined {
+		return this._state.value.betrieb;
+	}
+
+	public async ladeListe() {
+		const listBeschaeftigungsarten = await api.server.getKatalogBeschaeftigungsart(api.schema);
+		const mapBeschaeftigungsarten = new Map<number, KatalogEintrag>();
+		for (const ba of listBeschaeftigungsarten)
+			mapBeschaeftigungsarten.set(ba.id, ba);
+		const listLehrer = await api.server.getLehrer(api.schema);
+		const mapLehrer = new Map<number, LehrerListeEintrag>();
+		for (const l of listLehrer)
+			mapLehrer.set(l.id, l);
+		const listBetriebe = await api.server.getBetriebe(api.schema);
+		const mapBetriebe = new Map<number, BetriebListeEintrag>();
+		for (const b of listBetriebe)
+			mapBetriebe.set(b.id, b);
+		const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema);
+		this.setPatchedDefaultState({mapBeschaeftigungsarten, mapLehrer, mapBetriebe, listAnsprechpartner});
+	}
+
+	public async setSchueler(idSchueler?: number) {
+		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
 			return;
-		if (item === undefined) {
-			this.item = undefined;
-			this._daten.value = undefined;
-		} else {
-			this.item = item;
-			this.listSchuelerbetriebe.value = await api.server.getSchuelerBetriebe(api.schema, item.id);
-			await this.setSchuelerBetrieb((this.listSchuelerbetriebe.value.size() > 0) ? this.listSchuelerbetriebe.value.get(0) : undefined);
-		}
+		const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, idSchueler);
+		this.setPatchedState({idSchueler, listSchuelerbetriebe});
 	}
 
-	public async ladeAnsprechpartner(betrieb_id : number) {
-		// Lade die Liste der Ansprechpartner eines Betriebs als Katalog, der nur lesend genutzt wird
-		const ansprechpartner = await api.server.getBetriebAnsprechpartner(api.schema);
-		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
-		for (const a of ansprechpartner)
-			if (a.betrieb_id === betrieb_id) // TODO API-Aufruf mit Betriebs-ID, so dass nur die Ansprechpartner des konkreten Betriebs geladen werden und hier nicht gefiltert werden muss
-				mapAnsprechpartner.set(a.id, a);
-		this.mapAnsprechpartner.value = mapAnsprechpartner;
-	}
-
-	setSchuelerBetrieb = async (betrieb : SchuelerBetriebsdaten | undefined) => {
-		if (betrieb === undefined) {
-			this._daten.value = undefined;
-			this.mapAnsprechpartner.value = new Map();
-		} else {
-			this._daten.value = await api.server.getBetriebStammdaten(api.schema, betrieb.betrieb_id);
-			await this.ladeAnsprechpartner(betrieb.betrieb_id);
+	public setSchuelerBetrieb = async (betriebsdaten?: SchuelerBetriebsdaten) => {
+		let betrieb, daten;
+		const mapAnsprechpartner = new Map();
+		if (this.listSchuelerbetriebe.size() > 0) {
+			betrieb = betriebsdaten || this.listSchuelerbetriebe.get(0);
+			daten = await api.server.getBetriebStammdaten(api.schema, betrieb.betrieb_id);
+			console.log(betrieb, this.listAnsprechpartner)
+			for (const a of this.listAnsprechpartner)
+				if (a.betrieb_id === betrieb.betrieb_id)
+					mapAnsprechpartner.set(a.id, a);
 		}
-		this.betrieb.value = betrieb;
+		this.setPatchedState({daten, betrieb, mapAnsprechpartner});
 	}
 
 	patchBetrieb = async (data : Partial<BetriebStammdaten>, id : number) => {
-		if (this._daten.value === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchBetriebStammdaten(data, api.schema, id);
 	}
 
 	patchSchuelerBetriebsdaten = async (data : Partial<SchuelerBetriebsdaten>, id : number) => {
-		if (this.listSchuelerbetriebe.value === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		if (data.betrieb_id !== undefined) {
-			// TODO neuladen der Ansprechpartner
-		}
 		await api.server.patchSchuelerBetriebsdaten(data, api.schema, id);
 	}
 
 	patchAnsprechpartner = async (data : Partial<BetriebAnsprechpartner>, id : number) => {
-		if ((this.mapAnsprechpartner.value.size === 0) || (this.mapAnsprechpartner.value.get(id) === undefined))
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchBetriebanpsrechpartnerdaten(data, api.schema, id);
 	}
 
 	createAnsprechpartner = async (data: BetriebAnsprechpartner) => {
-		if ((this._daten.value === undefined) || (this._daten.value.id !== data.betrieb_id))
-			throw new Error("Für das Erstellen eines Ansprechpartners von einem Betrieb muss eine gültige ID des Betriebes angegeben sein.");
-		await api.server.createBetriebansprechpartner(data, api.schema, this._daten.value.id);
-		await this.ladeAnsprechpartner(data.betrieb_id);
+		if (this.daten === undefined)
+			throw new Error("Es ist kein gültiger Betrieb für das Anlegen eines Ansprechpartners ausgewählt.")
+		const ansprechpartner = await api.server.createBetriebansprechpartner(data, api.schema, this.daten.id);
+		const listAnsprechpartner = this.listAnsprechpartner;
+		listAnsprechpartner.add(ansprechpartner);
+		const mapAnsprechpartner = this.mapAnsprechpartner;
+		mapAnsprechpartner.set(ansprechpartner.id, ansprechpartner);
+		this.setPatchedState({listAnsprechpartner, mapAnsprechpartner})
 	}
 
 	createSchuelerBetriebsdaten = async (data: SchuelerBetriebsdaten) => {
-		if ((data.schueler_id === undefined) || (data.betrieb_id === undefined))
-			throw new Error("Für das Zuweisen eines Betriebs zu einem Schüler müssen die Schüler- und die Betriebs-ID angegeben werden.");
-		await api.server.createSchuelerbetrieb(data, api.schema, data.schueler_id, data.betrieb_id);
-		// Lade die Liste der Schülerbetriebe neu
-		this.listSchuelerbetriebe.value = await api.server.getSchuelerBetriebe(api.schema, data.schueler_id);
-		await this.setSchuelerBetrieb((this.listSchuelerbetriebe.value.size() > 0) ? this.listSchuelerbetriebe.value.get(0) : undefined);
+		const betrieb = await api.server.createSchuelerbetrieb(data, api.schema, data.schueler_id, data.betrieb_id);
+		const listSchuelerbetriebe = this.listSchuelerbetriebe;
+		listSchuelerbetriebe.add(betrieb);
+		const mapAnsprechpartner = new Map();
+		this.setPatchedState({listSchuelerbetriebe, mapAnsprechpartner})
 	}
-
 }
 
 export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
@@ -109,39 +161,15 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		if (to_params.id === undefined)
-			return false;
-		// Lade den Katalog der Beschäftigungsarten
-		const beschaeftigungsarten = await api.server.getKatalogBeschaeftigungsart(api.schema);
-		const mapBeschaeftigungsarten = new Map<number, KatalogEintrag>();
-		for (const ba of beschaeftigungsarten)
-			mapBeschaeftigungsarten.set(ba.id, ba);
-		this.data.mapBeschaeftigungsarten = mapBeschaeftigungsarten;
-		// Lade die Liste der Lehrer als Katalog, der nur lesend genutzt wird
-		const lehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of lehrer)
-			mapLehrer.set(l.id, l);
-		this.data.mapLehrer = mapLehrer;
-		// Lade die Liste der Betriebe als Katalog, der nur lesend genutzt wird
-		const betriebe = await api.server.getBetriebe(api.schema);
-		const mapBetriebe = new Map<number, BetriebListeEintrag>();
-		for (const b of betriebe)
-			mapBetriebe.set(b.id, b);
-		this.data.mapBetriebe = mapBetriebe;
+		await this.data.ladeListe();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.parent.data.mapSchueler.get(id));
-		}
+		const id = to_params.id === undefined ? undefined : parseInt(to_params.id);
+		await this.data.setSchueler(id);
+		await this.data.setSchuelerBetrieb();
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -159,13 +187,13 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			idSchueler: routeSchueler.data.stammdaten.id,
-			listSchuelerbetriebe: this.data.listSchuelerbetriebe.value,
-			betrieb: this.data.betrieb.value,
-			betriebsStammdaten: this.data._daten.value,
+			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
+			betrieb: this.data.betrieb,
+			betriebsStammdaten: this.data.daten,
 			mapBeschaeftigungsarten: this.data.mapBeschaeftigungsarten,
 			mapLehrer: this.data.mapLehrer,
 			mapBetriebe: this.data.mapBetriebe,
-			mapAnsprechpartner: this.data.mapAnsprechpartner.value
+			mapAnsprechpartner: this.data.mapAnsprechpartner,
 		};
 	}
 
