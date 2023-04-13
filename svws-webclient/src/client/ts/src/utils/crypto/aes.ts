@@ -1,5 +1,5 @@
 import { ArrayIndexOutOfBoundsException } from "@svws-nrw/svws-core";
-import { AESAlgo } from "./aesAlgo";
+import type { AESAlgo } from "./aesAlgo";
 import { AESException } from "./aesException";
 
 /**

@@ -1,5 +1,5 @@
-import { KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface KurseAppProps {
 		auswahl: KursListeEintrag | undefined;

@@ -10,8 +10,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { GostStammdatenProps } from "./SGostStammdatenProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { GostStammdatenProps } from "./SGostStammdatenProps";
 
 	const props = defineProps<GostStammdatenProps>();
 

@@ -27,8 +27,9 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { BenutzergruppeListeEintrag, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
 		row: BenutzergruppeListeEintrag;

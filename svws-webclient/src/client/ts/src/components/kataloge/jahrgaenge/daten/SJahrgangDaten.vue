@@ -8,7 +8,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { JahrgangDatenProps } from "./SJahrgangDatenProps";
+	import type { JahrgangDatenProps } from "./SJahrgangDatenProps";
 
 	const props = defineProps<JahrgangDatenProps>();
 

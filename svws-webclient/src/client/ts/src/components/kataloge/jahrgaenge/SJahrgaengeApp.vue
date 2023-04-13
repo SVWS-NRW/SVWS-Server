@@ -23,8 +23,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { JahrgaengeAppProps } from "./SJahrgaengeAppProps";
 
 	const props = defineProps<JahrgaengeAppProps>();
 

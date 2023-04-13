@@ -15,8 +15,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostBlockungSchiene, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
-	import { Ref, ref, ShallowRef, shallowRef, watch } from "vue";
+	import type { GostBlockungSchiene} from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { Ref, ShallowRef} from "vue";
+	import { ref, shallowRef, watch } from "vue";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;

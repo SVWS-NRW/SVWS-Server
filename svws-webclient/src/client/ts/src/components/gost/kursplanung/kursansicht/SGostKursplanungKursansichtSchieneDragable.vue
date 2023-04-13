@@ -19,8 +19,9 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostBlockungSchiene } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ref, Ref } from "vue";
+	import type { GostBlockungRegel, GostBlockungSchiene } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref } from "vue";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;

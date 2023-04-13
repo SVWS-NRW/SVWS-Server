@@ -1,13 +1,14 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
-import { computed, WritableComputedRef } from "vue";
+import type { WritableComputedRef } from "vue";
+import { computed } from "vue";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteApp } from "~/router/RouteApp";
+import type { RouteApp } from "~/router/RouteApp";
 import { RouteDataSchuleBenutzergruppe } from "../benutzergruppe/RouteDataSchuleBenutzergruppe";
-import { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
+import type { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
 import { RouteManager } from "~/router/RouteManager";
-import { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
+import type { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
 
 const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBenutzergruppeApp.vue")

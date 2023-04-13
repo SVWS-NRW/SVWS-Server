@@ -1,5 +1,5 @@
-import { Schuljahresabschnitt } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface KatalogeAuswahlProps {
 	abschnitte: Map<number, Schuljahresabschnitt>;

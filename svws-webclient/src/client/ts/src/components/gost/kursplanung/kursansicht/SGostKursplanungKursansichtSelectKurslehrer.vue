@@ -17,8 +17,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostKursblockungRegelTyp, LehrerListeEintrag } from "@svws-nrw/svws-core";
-	import { ComputedRef, computed, Ref, ref } from 'vue';
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager} from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref} from 'vue';
+	import { computed, ref } from 'vue';
 	import { lehrer_filter } from '~/helfer';
 
 	const props = defineProps<{

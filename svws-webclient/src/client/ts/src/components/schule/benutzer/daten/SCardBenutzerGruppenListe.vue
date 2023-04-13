@@ -50,8 +50,9 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeListeEintrag, BenutzerManager, List } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { BenutzergruppeListeEintrag, BenutzerManager, List } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		listBenutzergruppen: List<BenutzergruppeListeEintrag>;

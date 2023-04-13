@@ -1,8 +1,9 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchuleDatenaustausch, routeSchuleDatenaustausch } from "../schule/RouteSchuleDatenaustausch";
-import { SchuleDatenaustauschLaufbahnplanungProps } from "~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanungProps";
+import type { RouteSchuleDatenaustausch} from "../schule/RouteSchuleDatenaustausch";
+import { routeSchuleDatenaustausch } from "../schule/RouteSchuleDatenaustausch";
+import type { SchuleDatenaustauschLaufbahnplanungProps } from "~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanungProps";
 
 const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue");
 

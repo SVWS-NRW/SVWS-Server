@@ -18,8 +18,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
 		GostBelegpruefungsArt, Sprachendaten, GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{

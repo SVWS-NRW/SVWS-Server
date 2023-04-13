@@ -8,7 +8,7 @@
 
 	import { computed } from 'vue';
 	import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
-	import { SchuelerKAoAProps } from './SSchuelerKaoaProps';
+	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
 
 	const props = defineProps<SchuelerKAoAProps>();
 	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)

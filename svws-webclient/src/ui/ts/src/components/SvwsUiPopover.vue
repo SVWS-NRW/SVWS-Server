@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 	import Popper from "vue3-popper";
-	import { Placement } from "../types";
+	import type { Placement } from "../types";
 
 	const props = withDefaults(defineProps<{
 		placement?: Placement;

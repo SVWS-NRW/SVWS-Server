@@ -1,16 +1,17 @@
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import type { RouteApp } from "~/router/RouteApp";
+import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "../RouteManager";
-import { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
-import { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
+import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
 import { api } from "../Api";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 
 const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue")

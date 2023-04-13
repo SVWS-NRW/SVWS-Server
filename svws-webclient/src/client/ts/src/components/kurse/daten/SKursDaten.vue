@@ -9,7 +9,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { KursDatenProps } from "./SKursDatenProps";
+	import type { KursDatenProps } from "./SKursDatenProps";
 
 	const props = defineProps<KursDatenProps>();
 

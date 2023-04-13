@@ -14,31 +14,31 @@
 						<div class="cursor-pointer flex items-center gap-1">
 							<svws-ui-tooltip
 								v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0">
-								<i-ri-information-line/>
+								<i-ri-information-line />
 								<template #content>
 									Bemerkung: {{ value.rowData.bemerkungVorgabe }}
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-if="value.rowData.auswahlzeit > 0">
-								<i-ri-time-line/>
+								<i-ri-time-line />
 								<template #content>
 									Auswahlzeit: {{ value.rowData.auswahlzeit }} Minuten
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-if="value.rowData.istMdlPruefung">
-								<i-ri-chat-1-line/>
+								<i-ri-chat-1-line />
 								<template #content>
 									Mündliche Prüfung
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-if="value.rowData.istAudioNotwendig">
-								<i-ri-headphone-line/>
+								<i-ri-headphone-line />
 								<template #content>
 									Inkl. Audioteil
 								</template>
 							</svws-ui-tooltip>
 							<svws-ui-tooltip v-if="value.rowData.istVideoNotwendig">
-								<i-ri-vidicon-line/>
+								<i-ri-vidicon-line />
 								<template #content>
 									Inkl. Videoteil
 								</template>
@@ -51,7 +51,7 @@
 		<div class="w-1/4" v-if="activeVorgabe.idVorgabe >= 0">
 			<svws-ui-content-card title="Klausurvorgabe" class="w-full pt-8">
 				<template #actions>
-					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line/>Löschen</svws-ui-button>
+					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 				</template>
 				<div class="flex flex-col gap-4">
 					<div class="input-wrapper-1-col">
@@ -100,10 +100,11 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausurManager, GostKursklausur, List, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, KursListeEintrag, SchuelerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostKlausurvorgabe, GostFach } from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostFach } from "@svws-nrw/svws-core";
+	import { GostKursklausur, List, GostKlausurtermin, KursListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe } from "@svws-nrw/svws-core";
 	import { DataTableItem } from '@ui';
-	import { computed, ref, ComputedRef, WritableComputedRef } from 'vue';
-	import type { Ref } from 'vue'
+	import { computed, ref, ComputedRef } from 'vue';
+	import type { Ref , WritableComputedRef } from 'vue'
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten | undefined;

@@ -17,7 +17,7 @@
 				</svws-ui-radio-group>
 				<div class="input-wrapper-1-col" v-if="kurs_filter_toggle">
 					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
-										  :item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''"/>
+						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</div>
 				<div class="input-wrapper" v-if="fach_filter_toggle">
 					<svws-ui-multi-select v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
@@ -39,7 +39,7 @@
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="columnheader"
-						 class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
 								Schülerauswahl
@@ -60,9 +60,11 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostFach, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
-	import { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
+	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+	import { GostKursart } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 

@@ -14,8 +14,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { GostJahrgangFachkombination, GostFach, GostFaecherManager, GostKursart, GostHalbjahr, LinkedCollection } from "@svws-nrw/svws-core";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection } from "@svws-nrw/svws-core";
+	import { GostKursart, GostHalbjahr } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		faecherManager: GostFaecherManager;

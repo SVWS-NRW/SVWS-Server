@@ -1,5 +1,5 @@
-import { LehrerStammdaten } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { LehrerStammdaten } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface LehrerAppProps {
 	stammdaten: LehrerStammdaten | undefined;

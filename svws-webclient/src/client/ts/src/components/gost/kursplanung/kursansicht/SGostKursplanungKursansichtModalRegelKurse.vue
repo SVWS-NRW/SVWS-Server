@@ -16,8 +16,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungRegel, GostBlockungsdatenManager, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
-	import { Ref, ref, watch } from 'vue';
+	import type { GostBlockungsdatenManager} from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { Ref} from 'vue';
+	import { ref, watch } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

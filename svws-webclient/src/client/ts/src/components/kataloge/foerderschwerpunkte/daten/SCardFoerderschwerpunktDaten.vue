@@ -26,9 +26,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
-	import { Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@svws-nrw/svws-core";
+	import type { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core";
+	import { Foerderschwerpunkt } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: FoerderschwerpunktEintrag

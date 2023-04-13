@@ -1,8 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteGost} from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { GostStammdatenProps } from "~/components/gost/stammdaten/SGostStammdatenProps";
+import type { GostStammdatenProps } from "~/components/gost/stammdaten/SGostStammdatenProps";
 
 const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdaten.vue");
 

@@ -14,7 +14,7 @@
 <script setup lang="ts">
 
 	import { RouterView } from "vue-router";
-	import { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
+	import type { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
 	import {ref} from "vue";
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();

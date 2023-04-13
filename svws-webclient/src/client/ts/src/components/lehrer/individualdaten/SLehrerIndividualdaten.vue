@@ -9,7 +9,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
+	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 

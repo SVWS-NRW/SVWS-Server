@@ -1,6 +1,7 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { routeKatalogFoerderschwerpunkte, RouteKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { RouteNode } from "~/router/RouteNode";
 
 const SFoerderschwerpunktDaten = () => import("~/components/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");

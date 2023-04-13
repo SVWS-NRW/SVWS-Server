@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 
-	import { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
+	import type { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
 
 	const props = defineProps<KatalogeAuswahlProps>();
 

@@ -29,8 +29,8 @@
 
 <script setup lang="ts">
 
-	import { DataTableColumn } from "@ui";
-	import { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
+	import type { DataTableColumn } from "@ui";
+	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 
 	const props = defineProps<ReligionenAuswahlProps>();
 

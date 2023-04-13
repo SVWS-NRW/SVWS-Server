@@ -25,8 +25,10 @@
 
 <script setup lang="ts">
 
-	import { Nationalitaeten, Verkehrssprache, SchuelerStammdaten } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import { Nationalitaeten, Verkehrssprache } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/helfer";
 

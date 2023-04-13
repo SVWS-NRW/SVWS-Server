@@ -23,8 +23,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { KurseAppProps } from "./SKurseAppProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { KurseAppProps } from "./SKurseAppProps";
 
 	const props = defineProps<KurseAppProps>();
 

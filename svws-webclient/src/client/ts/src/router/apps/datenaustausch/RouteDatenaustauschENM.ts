@@ -1,8 +1,9 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchuleDatenaustausch, routeSchuleDatenaustausch } from "../schule/RouteSchuleDatenaustausch";
+import type { RouteSchuleDatenaustausch} from "../schule/RouteSchuleDatenaustausch";
+import { routeSchuleDatenaustausch } from "../schule/RouteSchuleDatenaustausch";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENM.vue");
 

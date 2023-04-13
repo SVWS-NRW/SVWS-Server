@@ -18,7 +18,8 @@
 
 <script setup lang="ts">
 
-	import { List, GostJahrgangFachkombination, ArrayList, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager, AbiturdatenManager, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
+	import type { List, GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
+	import { ArrayList, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;

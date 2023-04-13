@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 
-	import { BenutzerProps } from './SBenutzerProps';
+	import type { BenutzerProps } from './SBenutzerProps';
 
 	const props = defineProps<BenutzerProps>();
 

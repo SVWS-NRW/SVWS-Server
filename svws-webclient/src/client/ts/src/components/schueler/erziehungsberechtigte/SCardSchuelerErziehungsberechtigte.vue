@@ -59,8 +59,10 @@
 
 <script setup lang="ts">
 
-	import { Erzieherart, ErzieherStammdaten, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import type { Erzieherart, ErzieherStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+	import { Nationalitaeten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed, ComputedRef } from "vue";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort,
 		orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 

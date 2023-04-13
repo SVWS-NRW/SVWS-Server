@@ -5,8 +5,9 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungSchiene } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { GostBlockungSchiene } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostBlockungSchiene;

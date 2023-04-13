@@ -60,11 +60,13 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostKursart, GostKursblockungRegelTyp, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel,
+		GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref } from "vue";
 	import { lehrer_filter } from "~/helfer";
-	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-	import { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
+	import type { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
 
 	const props = defineProps<SchuelerStundenplanAuswahlProps>();
 

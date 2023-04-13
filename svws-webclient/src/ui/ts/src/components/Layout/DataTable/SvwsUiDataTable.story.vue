@@ -1,6 +1,7 @@
 <script setup lang="ts">
 	import { logEvent } from "histoire/client";
-	import {Ref, reactive, ref} from "vue";
+	import type {Ref} from "vue";
+	import { reactive, ref} from "vue";
 	import type { DataTableColumnSource, DataTableItem, DataTableSortingOrder } from "./types";
 
 	const data = ref([

@@ -15,8 +15,9 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { JahrgangsListeEintrag, KlassenDaten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { JahrgangsListeEintrag, KlassenDaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: KlassenDaten,

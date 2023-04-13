@@ -40,8 +40,9 @@
 
 <script setup lang="ts">
 
-	import { KlassenListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from 'vue';
+	import type { KlassenListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from 'vue';
+	import { computed } from 'vue';
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;

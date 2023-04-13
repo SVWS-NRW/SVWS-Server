@@ -1,5 +1,5 @@
-import { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List } from "@svws-nrw/svws-core";
-import { ApiStatus } from "~/components/ApiStatus";
+import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List } from "@svws-nrw/svws-core";
+import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {
 	setHalbjahr: (value: GostHalbjahr) => Promise<void>;

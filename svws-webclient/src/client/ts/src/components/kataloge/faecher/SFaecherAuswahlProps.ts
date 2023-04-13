@@ -1,4 +1,4 @@
-import { FaecherListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { FaecherListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface FaecherAuswahlProps {
 	auswahl: FaecherListeEintrag | undefined;

@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
+	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	// TODO import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();

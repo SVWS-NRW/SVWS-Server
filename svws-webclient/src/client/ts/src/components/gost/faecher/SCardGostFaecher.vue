@@ -42,9 +42,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
-	import { Fachgruppe, GostFach, GostFaecherManager, LinkedCollection, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { GostFach, GostFaecherManager, LinkedCollection} from "@svws-nrw/svws-core";
+	import { Fachgruppe, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		faecherManager: GostFaecherManager;

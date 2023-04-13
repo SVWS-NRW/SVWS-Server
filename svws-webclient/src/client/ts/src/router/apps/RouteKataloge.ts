@@ -1,13 +1,14 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
-import { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import type { RouteApp } from "~/router/RouteApp";
+import { routeApp } from "~/router/RouteApp";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";

@@ -22,10 +22,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, WritableComputedRef } from "vue";
+	import type { WritableComputedRef } from "vue";
+	import { computed, ref } from "vue";
 	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	import { AdressenUtils, OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import { AdressenUtils } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: SchuelerStammdaten;

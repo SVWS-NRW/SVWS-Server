@@ -38,9 +38,11 @@
 
 <script setup lang="ts">
 
-	import {GostBlockungsergebnisManager, SchuelerListeEintrag, SchuelerStatus} from "@svws-nrw/svws-core";
-	import {ComputedRef, computed} from "vue";
-	import {GostKursplanungSchuelerFilter} from "../GostKursplanungSchuelerFilter";
+	import type {GostBlockungsergebnisManager, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+	import { SchuelerStatus} from "@svws-nrw/svws-core";
+	import type {ComputedRef} from "vue";
+	import { computed} from "vue";
+	import type {GostKursplanungSchuelerFilter} from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getErgebnismanager: () => GostBlockungsergebnisManager;

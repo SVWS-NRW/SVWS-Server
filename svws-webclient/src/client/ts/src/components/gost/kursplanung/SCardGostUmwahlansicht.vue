@@ -40,9 +40,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref } from "vue";
+	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 

@@ -21,8 +21,9 @@
 </template>
 
 <script setup lang="ts">
-	import { BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import type { BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;

@@ -6,9 +6,9 @@
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
 					{{ blockungsname }}
 					<template #icon>
-						<i-ri-error-warning-line v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="ml-1 w-6 h-6"/>
-						<i-ri-pushpin-line v-if="blockungsergebnis_aktiv" class="ml-1 w-6 h-6"/>
-						<span v-else/>
+						<i-ri-error-warning-line v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="ml-1 w-6 h-6" />
+						<i-ri-pushpin-line v-if="blockungsergebnis_aktiv" class="ml-1 w-6 h-6" />
+						<span v-else />
 					</template>
 					<template #content>
 						<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
@@ -121,10 +121,12 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostKursart, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ref, Ref, WritableComputedRef } from "vue";
-	import { Config } from "~/components/Config";
-	import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
+	import { GostKursart } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import { computed, ref } from "vue";
+	import type { Config } from "~/components/Config";
+	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

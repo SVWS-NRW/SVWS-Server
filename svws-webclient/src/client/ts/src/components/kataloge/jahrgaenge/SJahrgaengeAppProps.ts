@@ -1,5 +1,5 @@
-import { JahrgangsListeEintrag } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { JahrgangsListeEintrag } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface JahrgaengeAppProps {
 	auswahl: JahrgangsListeEintrag | undefined;

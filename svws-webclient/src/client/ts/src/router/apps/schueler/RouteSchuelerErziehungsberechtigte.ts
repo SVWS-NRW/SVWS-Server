@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, Erzieherart, ErzieherStammdaten, List, Schulform } from "@svws-nrw/svws-core";
-import { ref, Ref } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+import type { Erzieherart, ErzieherStammdaten, List} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { Ref } from "vue";
+import { ref } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
 import { api } from "~/router/Api";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 

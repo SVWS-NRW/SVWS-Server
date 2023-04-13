@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import { SchuleDatenaustauschAuswahlProps } from './SSchuleDatenaustauschAuswahlProps';
+	import type { SchuleDatenaustauschAuswahlProps } from './SSchuleDatenaustauschAuswahlProps';
 
 	const props = defineProps<SchuleDatenaustauschAuswahlProps>();
 

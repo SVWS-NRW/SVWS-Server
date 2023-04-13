@@ -18,9 +18,10 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from "@svws-nrw/svws-core";
-	import { DataTableItem } from "@ui";
-	import { computed, ComputedRef } from 'vue';
-	import { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
+	import type { DataTableItem } from "@ui";
+	import type { ComputedRef } from 'vue';
+	import { computed } from 'vue';
+	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 

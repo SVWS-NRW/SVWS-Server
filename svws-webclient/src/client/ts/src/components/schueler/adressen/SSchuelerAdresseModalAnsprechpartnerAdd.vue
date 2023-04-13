@@ -24,8 +24,10 @@
 
 <script setup lang="ts">
 
-	import { BetriebAnsprechpartner, BetriebStammdaten } from "@svws-nrw/svws-core";
-	import { Ref, ref } from 'vue';
+	import type { BetriebStammdaten } from "@svws-nrw/svws-core";
+	import { BetriebAnsprechpartner } from "@svws-nrw/svws-core";
+	import type { Ref} from 'vue';
+	import { ref } from 'vue';
 
 	const props = defineProps<{
 		betriebsStammdaten: BetriebStammdaten;

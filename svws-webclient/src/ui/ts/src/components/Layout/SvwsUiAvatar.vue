@@ -43,7 +43,7 @@
 			</span>
 
 			<svws-ui-button type="icon" @click="toggleUpload" v-if="src && src.split('data:image/png;base64, /').length > 1" tabindex="0"
-							title="Bild löschen">
+				title="Bild löschen">
 				<i-ri-delete-bin-line />
 			</svws-ui-button>
 			<svws-ui-button type="icon" @click="toggleUpload" v-if="upload && !uploadedImage && src.split('data:image/png;base64, /').length < 2" tabindex="0"

@@ -4,8 +4,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostFach, GostKursart } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { GostBlockungKurs, GostFach} from "@svws-nrw/svws-core";
+	import { GostKursart } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostBlockungKurs;

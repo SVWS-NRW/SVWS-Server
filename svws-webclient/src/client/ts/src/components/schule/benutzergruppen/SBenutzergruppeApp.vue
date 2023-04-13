@@ -20,10 +20,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-	import { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
+	import type { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
 
 	const props = defineProps<BenutzergruppeAppProps>();
 

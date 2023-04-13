@@ -25,9 +25,10 @@
 
 <script setup lang="ts">
 
-	import { LehrerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
-	import { KlassenAppProps } from "./SKlassenAppProps";
+	import type { LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { KlassenAppProps } from "./SKlassenAppProps";
 
 	const props = defineProps<KlassenAppProps>();
 

@@ -1,10 +1,11 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
-import { BenutzerAuswahlProps } from "~/components/schule/benutzer/SBenutzerAuswahlProps";
+import type { WritableComputedRef } from "vue";
+import { computed } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import type { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
+import type { BenutzerAuswahlProps } from "~/components/schule/benutzer/SBenutzerAuswahlProps";
 import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
-import { RouteApp } from "~/router/RouteApp";
+import type { RouteApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";

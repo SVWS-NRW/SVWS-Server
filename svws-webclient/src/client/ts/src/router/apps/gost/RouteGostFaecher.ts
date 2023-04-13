@@ -1,9 +1,12 @@
-import { BenutzerKompetenz, GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, Schulform } from "@svws-nrw/svws-core";
-import { Ref, ref } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
+import type { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { Ref} from "vue";
+import { ref } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { api } from "~/router/Api";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import type { RouteGost} from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataGostFaecher  {

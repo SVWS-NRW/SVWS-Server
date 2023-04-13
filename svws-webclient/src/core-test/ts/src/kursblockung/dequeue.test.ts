@@ -185,8 +185,8 @@ describe("TestDequeRandom", () => {
 							if (d1.size() != 0) {
 								expect(d1.removeFirst()).toBe(d2.removeFirst());
 							} else {
-									expect(() => d1.removeFirst()).toThrow( NoSuchElementException)
-									expect(() => d2.removeFirst()).toThrow( NoSuchElementException);
+								expect(() => d1.removeFirst()).toThrow( NoSuchElementException)
+								expect(() => d2.removeFirst()).toThrow( NoSuchElementException);
 							}
 						});
 						break;
@@ -196,8 +196,8 @@ describe("TestDequeRandom", () => {
 							if (d1.size() != 0) {
 								expect(d1.removeLast()).toBe(d2.removeLast());
 							} else {
-									expect(() => d1.removeLast()).toThrow(NoSuchElementException);
-									expect(() => d2.removeLast()).toThrow(NoSuchElementException);
+								expect(() => d1.removeLast()).toThrow(NoSuchElementException);
+								expect(() => d2.removeLast()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
@@ -262,8 +262,8 @@ describe("TestDequeRandom", () => {
 								const i2 = d2.pop();
 								expect(i1).toBe(i2);
 							} else {
-									expect(() => d1.pop()).toThrow(NoSuchElementException);
-									expect(() => d1.pop()).toThrow(NoSuchElementException);
+								expect(() => d1.pop()).toThrow(NoSuchElementException);
+								expect(() => d1.pop()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
@@ -344,8 +344,8 @@ describe("TestDequeRandom", () => {
 								const i2 = d2.remove();
 								expect(i1).toBe(i2);
 							} else {
-									expect(() => d1.remove()).toThrow(NoSuchElementException);
-									expect(() => d2.remove()).toThrow(NoSuchElementException);
+								expect(() => d1.remove()).toThrow(NoSuchElementException);
+								expect(() => d2.remove()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
@@ -399,8 +399,8 @@ describe("TestDequeRandom", () => {
 								const i2 = d1.element();
 								expect(i1).toBe(i2);
 							} else {
-									expect(() => d1.element()).toThrow(NoSuchElementException);
-									expect(() => d2.element()).toThrow(NoSuchElementException);
+								expect(() => d1.element()).toThrow(NoSuchElementException);
+								expect(() => d2.element()).toThrow(NoSuchElementException);
 							}
 						});
 						break;

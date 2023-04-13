@@ -24,12 +24,13 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, Ref, ref, ShallowRef, WritableComputedRef } from "vue";
+	import type { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref, ShallowRef, WritableComputedRef } from "vue";
 	import { router } from "~/router/RouteManager";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-	import { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
+	import type { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();
 

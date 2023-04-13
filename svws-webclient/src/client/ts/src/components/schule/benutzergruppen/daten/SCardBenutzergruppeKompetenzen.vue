@@ -39,8 +39,10 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
+	import type { BenutzergruppenManager} from "@svws-nrw/svws-core";
+	import { BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 	import { api } from "~/router/Api";
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;

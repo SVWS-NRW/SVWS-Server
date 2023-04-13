@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { Size, Type } from '../../types';
+	import type { Size, Type } from '../../types';
 
 	const props = withDefaults(defineProps<{
 		type?: Type;
@@ -34,17 +34,17 @@
 	</template>
 	<template v-else>
 		<span class="badge" :class="{
-				'badge--primary': type === 'primary',
-				'badge--success': type === 'success',
-				'badge--error': type === 'error',
-				'badge--highlight': type === 'highlight',
-				'badge--light': type === 'light',
-				'badge--lg': size === 'big',
-				'badge--normal': size === 'normal',
-				'badge--short': short,
-			}">
-				<slot />
-			</span>
+			'badge--primary': type === 'primary',
+			'badge--success': type === 'success',
+			'badge--error': type === 'error',
+			'badge--highlight': type === 'highlight',
+			'badge--light': type === 'light',
+			'badge--lg': size === 'big',
+			'badge--normal': size === 'normal',
+			'badge--short': short,
+		}">
+			<slot />
+		</span>
 	</template>
 </template>
 

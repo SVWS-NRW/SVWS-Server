@@ -32,8 +32,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;

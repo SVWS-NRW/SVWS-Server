@@ -23,8 +23,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 

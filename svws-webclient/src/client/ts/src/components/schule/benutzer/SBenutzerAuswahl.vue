@@ -24,11 +24,13 @@
 
 <script setup lang="ts">
 
-	import { BenutzerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, Ref, ref } from "vue";
+	import type { BenutzerListeEintrag} from "@svws-nrw/svws-core";
+	import { List } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref } from "vue";
 	import { routeSchule } from "~/router/apps/RouteSchule";
 	import { router } from "~/router/RouteManager";
-	import { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
+	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
 
 	const selectedItems: Ref<BenutzerListeEintrag[]> = ref([]);
 

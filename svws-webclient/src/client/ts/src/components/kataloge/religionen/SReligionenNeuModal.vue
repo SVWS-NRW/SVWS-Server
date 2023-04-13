@@ -21,7 +21,8 @@
 
 <script setup lang="ts">
 	import { Religion, ReligionEintrag } from '@svws-nrw/svws-core';
-	import { computed, ComputedRef, reactive, ref } from 'vue';
+	import type { ComputedRef} from 'vue';
+	import { computed, reactive, ref } from 'vue';
 
 	const props = defineProps<{
 

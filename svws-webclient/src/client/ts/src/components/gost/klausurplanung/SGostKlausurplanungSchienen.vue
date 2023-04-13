@@ -101,9 +101,10 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin, KlausurblockungSchienenAlgorithmus, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
+	import type { GostKursklausur, GostKlausurtermin} from "@svws-nrw/svws-core";
+	import { KlausurblockungSchienenAlgorithmus, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
 	import { computed, Ref, ref } from 'vue';
-	import { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
+	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
 	const modal = ref<any>(null);
 

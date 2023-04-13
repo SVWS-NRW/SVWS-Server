@@ -1,5 +1,5 @@
-import { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchuelerAppProps {
 	auswahl: SchuelerListeEintrag | undefined;

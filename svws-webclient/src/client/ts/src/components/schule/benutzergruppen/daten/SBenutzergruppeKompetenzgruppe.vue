@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div role="cell" class="data-table__td text-black/50">
-				{{kompetenzgruppe.daten.id}}
+				{{ kompetenzgruppe.daten.id }}
 			</div>
 		</div>
 		<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}"
@@ -30,8 +30,10 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core";
-	import { ref, Ref, computed,WritableComputedRef } from "vue";
+	import type { BenutzergruppenManager, BenutzerKompetenzGruppe} from "@svws-nrw/svws-core";
+	import { BenutzergruppeDaten, BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { Ref,WritableComputedRef } from "vue";
+	import { ref, computed } from "vue";
 	import { api } from "~/router/Api";
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;

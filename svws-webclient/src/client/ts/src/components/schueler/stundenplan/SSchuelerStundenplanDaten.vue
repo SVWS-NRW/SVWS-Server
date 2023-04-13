@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuelerStundenplanDatenProps } from "./SSchuelerStundenplanDatenProps";
+	import type { SchuelerStundenplanDatenProps } from "./SSchuelerStundenplanDatenProps";
 
 	const props = defineProps<SchuelerStundenplanDatenProps>();
 

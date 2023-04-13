@@ -26,10 +26,12 @@
 </template>
 
 <script setup lang="ts">
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostKursblockungRegelTyp,
-		List, SchuelerListeEintrag, ZulaessigesFach } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
-	import { ApiStatus } from "~/components/ApiStatus";
+	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
+		List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { ApiStatus } from "~/components/ApiStatus";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 

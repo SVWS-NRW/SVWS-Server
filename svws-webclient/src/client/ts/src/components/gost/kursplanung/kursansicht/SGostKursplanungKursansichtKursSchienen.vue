@@ -58,9 +58,11 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, GostKursblockungRegelTyp, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ref, Ref } from "vue";
-	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import type { GostBlockungKurs, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, List } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref } from "vue";
+	import { computed, ref } from "vue";
+	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

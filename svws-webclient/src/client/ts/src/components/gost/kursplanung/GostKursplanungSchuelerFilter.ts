@@ -1,5 +1,7 @@
-import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, GostKursart, List, SchuelerListeEintrag, ArrayList } from "@svws-nrw/svws-core";
-import { computed, ComputedRef, Ref, ref, WritableComputedRef } from "vue";
+import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import { GostKursart, ArrayList } from "@svws-nrw/svws-core";
+import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+import { computed, ref } from "vue";
 
 
 export class GostKursplanungSchuelerFilter {

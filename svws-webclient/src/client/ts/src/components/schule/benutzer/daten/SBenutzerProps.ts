@@ -1,4 +1,5 @@
-import { BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerListeEintrag, BenutzerManager, List } from "@svws-nrw/svws-core";
+import type { BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager, List } from "@svws-nrw/svws-core";
+import { BenutzerListeEintrag } from "@svws-nrw/svws-core";
 import { ShallowRef } from "vue";
 
 export interface BenutzerProps{

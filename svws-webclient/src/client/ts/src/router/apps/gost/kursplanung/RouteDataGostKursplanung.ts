@@ -1,6 +1,7 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, SchuelerStatus, ArrayList } from "@svws-nrw/svws-core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { ApiPendingData } from "~/components/ApiStatus";
+import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

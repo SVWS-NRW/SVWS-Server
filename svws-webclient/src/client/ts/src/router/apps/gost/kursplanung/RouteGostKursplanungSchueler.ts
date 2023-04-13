@@ -1,14 +1,15 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteGostKursplanung, routeGostKursplanung } from "../RouteGostKursplanung";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteGostKursplanung} from "../RouteGostKursplanung";
+import { routeGostKursplanung } from "../RouteGostKursplanung";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 import { api } from "~/router/Api";
-import { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
-import { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
+import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
+import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");

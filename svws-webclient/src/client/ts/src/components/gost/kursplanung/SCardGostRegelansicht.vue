@@ -33,8 +33,9 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, SchuelerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ShallowRef, shallowRef, WritableComputedRef } from 'vue';
+	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
+	import { computed, shallowRef } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

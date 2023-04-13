@@ -5,8 +5,9 @@
 	</div>
 </template>
 <script setup lang="ts">
-	import {SchuleStammdaten} from "@svws-nrw/svws-core";
-	import {computed, ComputedRef} from "vue";
+	import type {SchuleStammdaten} from "@svws-nrw/svws-core";
+	import type { ComputedRef} from "vue";
+	import {computed} from "vue";
 
 	const props = defineProps<{
 		schule: SchuleStammdaten;

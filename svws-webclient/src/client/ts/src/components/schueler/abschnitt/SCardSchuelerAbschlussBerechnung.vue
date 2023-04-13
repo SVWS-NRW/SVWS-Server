@@ -8,8 +8,9 @@
 
 <script setup lang="ts">
 
-	import { SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from 'vue';
+	import type { SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from 'vue';
+	import { computed } from 'vue';
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;

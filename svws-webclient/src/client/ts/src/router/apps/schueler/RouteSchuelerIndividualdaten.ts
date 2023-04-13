@@ -1,10 +1,12 @@
-import { BenutzerKompetenz, FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
+import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "../RouteSchueler";
+import type { RouteSchueler} from "../RouteSchueler";
+import { routeSchueler } from "../RouteSchueler";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
@@ -66,7 +68,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 		if (this.parent === undefined)
 			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
-			await this.onSelect(undefined);
+			await this.onSelect();
 		} else {
 			const id = parseInt(to_params.id);
 			await this.onSelect(this.parent.data.mapSchueler.get(id));

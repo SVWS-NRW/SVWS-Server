@@ -24,8 +24,9 @@
 </template>
 
 <script lang="ts" setup>
-	import { computed, onMounted, onUnmounted, onUpdated, ref, WritableComputedRef } from 'vue';
-	import { RouteRecordRaw } from "vue-router";
+	import type { WritableComputedRef } from 'vue';
+	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import type { RouteRecordRaw } from "vue-router";
 
 	const props = defineProps<{
 		routes: RouteRecordRaw[]

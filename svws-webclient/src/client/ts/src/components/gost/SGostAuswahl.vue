@@ -6,18 +6,18 @@
 		</template>
 		<template #content>
 			<div class="flex flex-col gap-12">
-			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
-				<template #cell(abiturjahr)="{ value }">
-					{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
-					<svws-ui-spinner :spinning="(pending && value.abiturjahr === auswahl?.abiturjahr)" />
-				</template>
-				<template #footerActions>
-					<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang" :add-abiturjahrgang="addAbiturjahrgang">
-						<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen"> <i-ri-add-line /> </svws-ui-button>
-					</s-gost-auswahl-abiturjahrgang-modal>
-				</template>
-			</svws-ui-data-table>
-			<router-view name="gost_child_auswahl" />
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
+					<template #cell(abiturjahr)="{ value }">
+						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
+						<svws-ui-spinner :spinning="(pending && value.abiturjahr === auswahl?.abiturjahr)" />
+					</template>
+					<template #footerActions>
+						<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang" :add-abiturjahrgang="addAbiturjahrgang">
+							<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						</s-gost-auswahl-abiturjahrgang-modal>
+					</template>
+				</svws-ui-data-table>
+				<router-view name="gost_child_auswahl" />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -25,10 +25,11 @@
 
 <script setup lang="ts">
 
-	import { GostJahrgang } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@ui";
-	import { computed, ComputedRef } from "vue";
-	import { GostAuswahlProps } from "./SGostAuswahlProps";
+	import type { GostJahrgang } from "@svws-nrw/svws-core";
+	import type { DataTableColumn } from "@ui";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 
 	const props = defineProps<GostAuswahlProps>();
 

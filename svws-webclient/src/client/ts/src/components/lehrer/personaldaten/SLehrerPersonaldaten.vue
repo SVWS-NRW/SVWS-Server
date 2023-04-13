@@ -10,7 +10,7 @@
 <script setup lang="ts">
 	import { computed } from 'vue';
 	import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
-	import { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
+	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 

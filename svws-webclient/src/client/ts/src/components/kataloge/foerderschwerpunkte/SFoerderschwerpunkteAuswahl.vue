@@ -21,7 +21,7 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
+	import type { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 

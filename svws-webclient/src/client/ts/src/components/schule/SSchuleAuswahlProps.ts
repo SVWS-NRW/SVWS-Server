@@ -1,4 +1,4 @@
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchuleAuswahlProps {
 	setChild: (value: AuswahlChildData) => Promise<void>;

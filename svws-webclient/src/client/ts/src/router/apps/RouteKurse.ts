@@ -1,13 +1,15 @@
-import { BenutzerKompetenz, JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, List, Schueler, Schulform } from "@svws-nrw/svws-core";
+import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, List, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
-import { KurseAppProps } from "~/components/kurse/SKurseAppProps";
-import { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { KurseAppProps } from "~/components/kurse/SKurseAppProps";
+import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
-import { routeApp, RouteApp } from "../RouteApp";
+import type { RouteApp } from "../RouteApp";
+import { routeApp } from "../RouteApp";
 import { RouteManager } from "../RouteManager";
 import { routeSchueler } from "./RouteSchueler";
 

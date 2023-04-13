@@ -24,10 +24,12 @@
 
 <script setup lang="ts">
 
-	import { LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core";
+	import type { LehrerListeEintrag} from "@svws-nrw/svws-core";
+	import { PersonalTyp } from "@svws-nrw/svws-core";
 	import type { DataTableColumn } from "@ui";
-	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref } from "vue";
+	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
 

@@ -10,7 +10,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { KlassenDatenProps } from "./SKlassenDatenProps";
+	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
 

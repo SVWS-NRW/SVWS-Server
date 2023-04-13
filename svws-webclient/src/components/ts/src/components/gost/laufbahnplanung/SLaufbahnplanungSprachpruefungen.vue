@@ -30,7 +30,8 @@
 
 <script setup lang="ts">
 
-	import { Sprachendaten, Sprachpruefungniveau } from "@svws-nrw/svws-core";
+	import type { Sprachendaten} from "@svws-nrw/svws-core";
+	import { Sprachpruefungniveau } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		sprachendaten: Sprachendaten;

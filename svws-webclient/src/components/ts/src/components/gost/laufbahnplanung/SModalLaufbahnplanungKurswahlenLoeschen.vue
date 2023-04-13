@@ -18,7 +18,8 @@
 
 <script setup lang="ts">
 
-	import { Ref, ref } from 'vue';
+	import type { Ref} from 'vue';
+	import { ref } from 'vue';
 
 	const modal: Ref<any> = ref(null);
 

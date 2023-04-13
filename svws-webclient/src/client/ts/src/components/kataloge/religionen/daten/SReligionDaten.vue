@@ -8,7 +8,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { ReligionDatenProps } from "./SReligionDatenProps";
+	import type { ReligionDatenProps } from "./SReligionDatenProps";
 
 	const props = defineProps<ReligionDatenProps>();
 

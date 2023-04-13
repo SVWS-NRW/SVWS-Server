@@ -25,8 +25,9 @@
 
 <script setup lang="ts">
 
-	import { BenutzerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { BenutzerListeEintrag, List } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 	const props = defineProps<{
 		listBenutzer: () => List<BenutzerListeEintrag>;
 		title : string;

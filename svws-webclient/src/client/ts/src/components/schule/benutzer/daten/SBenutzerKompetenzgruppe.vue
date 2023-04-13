@@ -35,8 +35,10 @@
 
 <script setup lang="ts">
 
-	import { BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core";
-	import { ref, Ref, computed, WritableComputedRef } from "vue";
+	import type { BenutzerKompetenzGruppe, BenutzerManager } from "@svws-nrw/svws-core";
+	import { BenutzerKompetenz } from "@svws-nrw/svws-core";
+	import type { Ref, WritableComputedRef } from "vue";
+	import { ref, computed } from "vue";
 	import { api } from "~/router/Api";
 
 	const props = defineProps<{

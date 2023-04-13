@@ -1,13 +1,13 @@
 import { shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteApp } from "~/router/RouteApp";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteApp } from "~/router/RouteApp";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "../RouteNode";
 import { RouteManager } from "../RouteManager";
-import { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";
 
 interface RouteStateSchule {

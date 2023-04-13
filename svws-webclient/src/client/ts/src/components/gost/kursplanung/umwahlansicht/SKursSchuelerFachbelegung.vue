@@ -14,9 +14,11 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostFach, GostFachwahl, GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
+	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
+		GostFach, GostFachwahl} from "@svws-nrw/svws-core";
+	import { GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 

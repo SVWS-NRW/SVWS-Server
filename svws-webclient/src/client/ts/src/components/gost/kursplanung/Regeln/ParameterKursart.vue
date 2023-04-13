@@ -5,7 +5,8 @@
 <script setup lang="ts">
 
 	import { GostKursart } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostKursart;

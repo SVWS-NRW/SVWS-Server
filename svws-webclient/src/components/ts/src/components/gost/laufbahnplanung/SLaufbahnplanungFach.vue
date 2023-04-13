@@ -29,10 +29,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { AbiturdatenManager, AbiturFachbelegung, AbiturFachbelegungHalbjahr, Fachgruppe, GostFach, GostFaecherManager, GostHalbjahr,
-		GostJahrgangFachkombination, GostJahrgangsdaten, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit,
-		GostSchuelerFachwahl, Jahrgaenge, List, Sprachbelegung, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { AbiturdatenManager, AbiturFachbelegung, GostFach, GostFaecherManager,
+		GostJahrgangFachkombination, GostJahrgangsdaten,
+		GostSchuelerFachwahl, List, Sprachbelegung} from "@svws-nrw/svws-core";
+	import { AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit, Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;

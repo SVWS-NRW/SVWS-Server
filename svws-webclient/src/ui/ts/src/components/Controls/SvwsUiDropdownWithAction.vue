@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 	import { Menu as MenuHeadless, MenuButton, MenuItems } from "@headlessui/vue";
-	import { DropdownType } from "../../types";
+	import type { DropdownType } from "../../types";
 
 	const props = withDefaults(defineProps<{
 		type?: DropdownType;

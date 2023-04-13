@@ -16,8 +16,9 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, LehrerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, ref, Ref } from 'vue';
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

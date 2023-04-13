@@ -1,13 +1,14 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchule, RouteSchule } from "../RouteSchule";
+import type { RouteSchule } from "../RouteSchule";
+import { routeSchule } from "../RouteSchule";
 import { routeSchuleDatenaustauschKurs42 } from "../datenaustausch/RouteDatenaustauschKurs42";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "../datenaustausch/RouteDatenaustauschLupo";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { shallowRef } from "vue";
 import { RouteManager } from "~/router/RouteManager";
 import { AES } from "~/utils/crypto/aes";

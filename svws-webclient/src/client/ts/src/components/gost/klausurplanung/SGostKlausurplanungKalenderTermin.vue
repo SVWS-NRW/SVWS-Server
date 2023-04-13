@@ -12,7 +12,8 @@
 </template>
 
 <script setup lang="ts">
-	import { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, GostKursklausur, List } from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin} from "@svws-nrw/svws-core";
+	import { GostKursklausur, List } from "@svws-nrw/svws-core";
 	import { computed } from "vue";
 
 	const props = defineProps<{

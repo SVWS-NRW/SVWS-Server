@@ -1,4 +1,4 @@
-import { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";

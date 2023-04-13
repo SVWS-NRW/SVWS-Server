@@ -18,8 +18,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { GostAppProps } from "./SGostAppProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { GostAppProps } from "./SGostAppProps";
 
 	const props = defineProps<GostAppProps>();
 

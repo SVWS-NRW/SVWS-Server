@@ -1,13 +1,16 @@
+import type {
+	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List,
+	SchuelerBetriebsdaten, SchuelerListeEintrag} from "@svws-nrw/svws-core";
 import {
-	BenutzerKompetenz,
-	BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, Exception, KatalogEintrag, LehrerListeEintrag, List,
-	SchuelerBetriebsdaten, SchuelerListeEintrag, Schulform, ArrayList
+	BenutzerKompetenz, Exception, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
-import { Ref, ref } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
+import type { Ref} from "vue";
+import { ref } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
 import { api } from "~/router/Api";
-import { routeSchueler, RouteSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 

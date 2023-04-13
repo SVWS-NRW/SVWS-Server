@@ -1,4 +1,5 @@
-import { BenutzerListeEintrag, List } from "@svws-nrw/svws-core";
+import type { BenutzerListeEintrag} from "@svws-nrw/svws-core";
+import { List } from "@svws-nrw/svws-core";
 export interface BenutzerAuswahlProps {
     auswahl: () => BenutzerListeEintrag | undefined;
 	mapBenutzer: Map<number, BenutzerListeEintrag>;

@@ -22,8 +22,9 @@
 
 <script setup lang="ts">
 
-	import { FachDaten } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { FachDaten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		data: FachDaten;

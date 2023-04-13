@@ -1,4 +1,4 @@
-import { GostJahrgang, List, GostStatistikFachwahl } from "@svws-nrw/svws-core";
+import type { GostJahrgang, List, GostStatistikFachwahl } from "@svws-nrw/svws-core";
 
 export interface GostFachwahlenProps {
 	jahrgang: GostJahrgang;

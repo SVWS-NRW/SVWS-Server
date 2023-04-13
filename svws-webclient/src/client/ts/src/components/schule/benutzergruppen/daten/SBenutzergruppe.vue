@@ -20,8 +20,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef} from "vue";
-	import { BenutzergruppeProps } from "./SBenutzergruppeProps";
+	import type { ComputedRef} from "vue";
+	import { computed} from "vue";
+	import type { BenutzergruppeProps } from "./SBenutzergruppeProps";
 
 	const props = defineProps<BenutzergruppeProps>();
 

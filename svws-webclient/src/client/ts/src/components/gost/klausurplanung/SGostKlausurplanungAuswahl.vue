@@ -9,8 +9,8 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from '@ui';
-	import { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
+	import type { DataTableColumn } from '@ui';
+	import type { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();
 

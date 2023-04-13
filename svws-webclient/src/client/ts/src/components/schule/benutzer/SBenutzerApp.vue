@@ -23,10 +23,11 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-	import { BenutzerAppProps } from "./SBenutzerAppProps";
+	import type { BenutzerAppProps } from "./SBenutzerAppProps";
 
 	const props = defineProps<BenutzerAppProps>();
 

@@ -8,7 +8,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { FachDatenProps } from "./SFachDatenProps";
+	import type { FachDatenProps } from "./SFachDatenProps";
 
 	const props = defineProps<FachDatenProps>();
 

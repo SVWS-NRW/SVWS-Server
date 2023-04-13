@@ -1,4 +1,8 @@
 import { describe, test, expect } from "vitest";
+import type {
+	LehrerListeEintrag,
+	List
+} from "~/index";
 import {
 	ApiServer,
 	BetriebListeEintrag,
@@ -6,9 +10,7 @@ import {
 	Erzieherart,
 	ErzieherListeEintrag,
 	FaecherListeEintrag,
-	GostFach,
-	LehrerListeEintrag,
-	List
+	GostFach
 } from "~/index";
 
 const username = "Admin";

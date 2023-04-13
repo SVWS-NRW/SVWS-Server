@@ -16,7 +16,8 @@
 
 <script setup lang="ts">
 
-	import { BenutzergruppeDaten, BenutzerListeEintrag, List, ArrayList } from "@svws-nrw/svws-core";
+	import type { BenutzerListeEintrag, List} from "@svws-nrw/svws-core";
+	import { BenutzergruppeDaten, ArrayList } from "@svws-nrw/svws-core";
 	import { computed, ComputedRef } from "vue";
 
 	const props = defineProps<{

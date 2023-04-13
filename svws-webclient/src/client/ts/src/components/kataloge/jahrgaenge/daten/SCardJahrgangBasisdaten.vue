@@ -25,8 +25,10 @@
 
 <script setup lang="ts">
 
-	import { JahrgangsDaten, JahrgangsListeEintrag, List } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import type { JahrgangsDaten, JahrgangsListeEintrag} from "@svws-nrw/svws-core";
+	import { List } from "@svws-nrw/svws-core";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		data: JahrgangsDaten,

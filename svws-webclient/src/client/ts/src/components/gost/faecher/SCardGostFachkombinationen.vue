@@ -34,8 +34,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { List, ArrayList, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostFaecherManager } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@svws-nrw/svws-core";
+	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		faecherManager: GostFaecherManager;

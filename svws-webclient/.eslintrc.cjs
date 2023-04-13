@@ -19,6 +19,7 @@ module.exports = {
 			"./src/core/ts/tsconfig.json",
 			"./src/core-test/ts/tsconfig.json",
 			"./src/client/ts/tsconfig.json",
+			"./src/client-test/ts/tsconfig.json",
 			"./src/ui/ts/tsconfig.json",
 		]
 	},

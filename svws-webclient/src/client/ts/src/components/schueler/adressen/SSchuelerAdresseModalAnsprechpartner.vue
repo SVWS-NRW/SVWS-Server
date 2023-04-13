@@ -24,8 +24,9 @@
 
 <script setup lang="ts">
 
-	import { BetriebAnsprechpartner } from "@svws-nrw/svws-core";
-	import { computed, ref, WritableComputedRef } from 'vue';
+	import type { BetriebAnsprechpartner } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		ansprechpartner: BetriebAnsprechpartner;

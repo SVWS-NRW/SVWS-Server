@@ -79,8 +79,10 @@
 
 <script setup lang="ts">
 
-	import {computed, onErrorCaptured, Ref, ref, WritableComputedRef} from "vue";
-	import { DBSchemaListeEintrag, List, ArrayList } from "@svws-nrw/svws-core";
+	import type { Ref, WritableComputedRef} from "vue";
+	import {computed, onErrorCaptured, ref} from "vue";
+	import type { DBSchemaListeEintrag, List} from "@svws-nrw/svws-core";
+	import { ArrayList } from "@svws-nrw/svws-core";
 	import { version } from '../../version';
 
 	const errors: Ref<Error[]> = ref([]);

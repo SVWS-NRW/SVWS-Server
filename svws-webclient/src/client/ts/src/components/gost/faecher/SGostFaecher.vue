@@ -17,7 +17,8 @@
 
 <script setup lang="ts">
 
-	import { GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
+	import type { GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten} from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
 
 	defineProps<{
 		faecherManager: GostFaecherManager;

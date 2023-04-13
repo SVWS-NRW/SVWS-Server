@@ -44,8 +44,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, Ref, ref } from "vue";
-	import { GostKursplanungProps } from "./SGostKursplanungProps";
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, ref } from "vue";
+	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 
 	const props = defineProps<GostKursplanungProps>();
 

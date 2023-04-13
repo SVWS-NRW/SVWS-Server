@@ -29,8 +29,10 @@
 
 <script setup lang="ts">
 
-	import { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
-	import { computed, Ref, ref, WritableComputedRef } from "vue";
+	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@svws-nrw/svws-core";
+	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
+	import type { Ref, WritableComputedRef } from "vue";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		createSchuelerBetriebsdaten: (data: SchuelerBetriebsdaten) => Promise<void>;

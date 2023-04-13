@@ -187,10 +187,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef, ref } from "vue";
+	import type { ComputedRef} from "vue";
+	import { computed, ref } from "vue";
 
-	import { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination,
-		GostHalbjahr, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core";
+	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core";
+	import {
+		GostHalbjahr } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;

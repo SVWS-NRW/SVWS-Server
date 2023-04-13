@@ -146,8 +146,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { GostJahrgang, GostStatistikFachwahl, List, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { GostJahrgang, GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
+	import { ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		jahrgang: GostJahrgang;

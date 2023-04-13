@@ -1,7 +1,8 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
-import { routeKurse, RouteKurse } from "~/router/apps/RouteKurse";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
+import type { RouteKurse } from "~/router/apps/RouteKurse";
+import { routeKurse } from "~/router/apps/RouteKurse";
 import { RouteNode } from "~/router/RouteNode";
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");

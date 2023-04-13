@@ -41,10 +41,11 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
-	import { DataTableItem } from "@ui";
-	import { computed, ComputedRef, ref, Ref } from 'vue';
-	import { ApiStatus } from '~/components/ApiStatus';
+	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
+	import type { DataTableItem } from "@ui";
+	import type { ComputedRef, Ref } from 'vue';
+	import { computed, ref } from 'vue';
+	import type { ApiStatus } from '~/components/ApiStatus';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;

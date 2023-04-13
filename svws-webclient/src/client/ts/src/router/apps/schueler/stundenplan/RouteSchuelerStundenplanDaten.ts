@@ -103,7 +103,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<RouteDataSchuelerSt
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idSchueler = to_params.id === undefined ? undefined : parseInt(to_params.id);
 		if (idSchueler === undefined)
-			return routeSchueler.getRoute(undefined);
+			return routeSchueler.getRoute();
 		if (to_params.idStundenplan === undefined) {
 			if (this.data.mapStundenplaene.size === 0)
 				return false;

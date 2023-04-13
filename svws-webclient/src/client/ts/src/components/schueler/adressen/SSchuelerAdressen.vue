@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuelerAdressenProps } from "./SSChuelerAdressenProps";
+	import type { SchuelerAdressenProps } from "./SSChuelerAdressenProps";
 
 	defineProps<SchuelerAdressenProps>();
 </script>

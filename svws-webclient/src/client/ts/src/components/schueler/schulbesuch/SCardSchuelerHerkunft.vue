@@ -27,8 +27,9 @@
 <script setup lang="ts">
 
 	import { Herkunftsarten, Schulform, Schulgliederung } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
-	import { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: SchuelerSchulbesuchsdaten;

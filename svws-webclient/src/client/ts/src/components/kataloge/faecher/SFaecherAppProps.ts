@@ -1,5 +1,5 @@
-import { FaecherListeEintrag  } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { FaecherListeEintrag  } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface FaecherAppProps {
 	auswahl: FaecherListeEintrag | undefined;

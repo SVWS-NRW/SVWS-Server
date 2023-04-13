@@ -1,8 +1,10 @@
-import { BenutzerKompetenz, GostJahrgang, GostStatistikFachwahl, List, Schulform, ArrayList } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
+import type { GostJahrgang, GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { api } from "~/router/Api";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import type { RouteGost} from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 
 export class RouteDataGostFachwahlen  {

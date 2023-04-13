@@ -66,9 +66,11 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ComputedRef, WritableComputedRef } from "vue";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
-	import { Fachgruppe, GostFach, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { GostFach} from "@svws-nrw/svws-core";
+	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;

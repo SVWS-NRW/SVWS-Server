@@ -15,8 +15,10 @@
 
 <script setup lang="ts">
 
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonaldaten, LehrerRechtsverhaeltnis } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { LehrerPersonaldaten} from "@svws-nrw/svws-core";
+	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		personaldaten: LehrerPersonaldaten

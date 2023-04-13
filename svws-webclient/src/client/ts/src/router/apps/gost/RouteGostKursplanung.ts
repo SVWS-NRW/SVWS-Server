@@ -1,13 +1,14 @@
 import { RouteNode } from "~/router/RouteNode";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import type { RouteGost} from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
 import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
 import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
 import { api } from "~/router/Api";
-import { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
-import { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
+import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
+import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 
 

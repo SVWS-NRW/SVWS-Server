@@ -1,4 +1,4 @@
-import { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
+import type { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
 
 export interface SchuelerLeistungenDatenProps {
 	data: SchuelerLernabschnittsdaten | undefined;

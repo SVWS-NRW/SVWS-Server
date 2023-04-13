@@ -1,4 +1,4 @@
-import { LehrerListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { LehrerListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface LehrerAuswahlProps {
 		auswahl: LehrerListeEintrag | undefined;

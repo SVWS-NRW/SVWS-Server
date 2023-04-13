@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { SchuelerAbschnittAuswahlProps } from "./SSchuelerAbschnittAuswahlProps";
+	import type { SchuelerAbschnittAuswahlProps } from "./SSchuelerAbschnittAuswahlProps";
 
 	const props = defineProps<SchuelerAbschnittAuswahlProps>();
 

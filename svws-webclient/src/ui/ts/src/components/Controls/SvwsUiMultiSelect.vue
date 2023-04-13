@@ -1,7 +1,7 @@
 <script setup lang="ts">
 	import { type PropType, type ComputedRef, computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
 	import { genId } from "../../utils";
-	import TextInput from "./SvwsUiTextInput.vue";
+	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 
 	type Item = Record<string, any>;
@@ -49,12 +49,12 @@
 	const listIdPrefix = genId();
 	const showInput = computed(() => {
 		switch (true) {
-			default:
-				return true;
 			case props.tags && !props.autocomplete:
 				return false;
 			case props.tags && props.autocomplete && !showList.value:
 				return false;
+			default:
+				return true;
 		}
 	});
 
@@ -66,7 +66,6 @@
 
 	function onFocus() {
 		hasFocus.value = true;
-	// open();
 	}
 
 	function onBlur() {
@@ -76,10 +75,10 @@
 
 	const dynModelValue = computed<string>(() => {
 		switch (true) {
-			default:
-				return generateInputText() ?? '';
 			case showList.value && props.autocomplete:
 				return searchText.value;
+			default:
+				return generateInputText() ?? '';
 		}
 	});
 
@@ -237,7 +236,6 @@
 		selectItem(undefined);
 	}
 
-	/*const reference = ref(null); */
 	const floating = ref(null);
 
 	const {x, y, strategy, placement} = useFloating(

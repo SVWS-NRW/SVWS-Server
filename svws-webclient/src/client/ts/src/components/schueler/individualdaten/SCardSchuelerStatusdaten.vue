@@ -25,8 +25,10 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { KatalogEintrag, SchuelerStammdaten, SchuelerStatus } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { KatalogEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
+	import { SchuelerStatus } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		data: SchuelerStammdaten;

@@ -12,8 +12,10 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, GostBlockungRegel, GostFach, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { GostBlockungKurs, GostBlockungRegel, GostFach} from "@svws-nrw/svws-core";
+	import { GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 	import { useRegelParameterKurs, getKursbezeichnung, getKursFromId } from '../composables';
 
 	const props = defineProps<{

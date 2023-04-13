@@ -21,7 +21,7 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
+	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
 
 	const props = defineProps<FaecherAuswahlProps>();
 

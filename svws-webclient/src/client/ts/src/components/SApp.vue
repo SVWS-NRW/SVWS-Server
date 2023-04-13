@@ -69,9 +69,10 @@
 <script setup lang="ts">
 
 	import { version } from '../../version';
-	import { computed, ComputedRef, onErrorCaptured, ref, Ref, watch } from "vue";
-	import { AppProps } from './SAppProps';
-	import { AuswahlChildData } from './AuswahlChildData';
+	import type { ComputedRef, Ref} from "vue";
+	import { computed, onErrorCaptured, ref, watch } from "vue";
+	import type { AppProps } from './SAppProps';
+	import type { AuswahlChildData } from './AuswahlChildData';
 
 	const errors: Ref<Error[]> = ref([]);
 

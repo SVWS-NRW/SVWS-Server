@@ -18,9 +18,11 @@
 
 <script setup lang="ts">
 
-	import { computed, Ref, ref, WritableComputedRef } from "vue";
+	import type { Ref, WritableComputedRef } from "vue";
+	import { computed, ref } from "vue";
 
-	import { AdressenUtils, LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+	import { AdressenUtils } from "@svws-nrw/svws-core";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
 
 	const eingabeStrasseOk: Ref<boolean> = ref(true);

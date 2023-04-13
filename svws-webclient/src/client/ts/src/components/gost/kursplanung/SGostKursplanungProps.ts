@@ -1,6 +1,6 @@
-import { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core";
-import { Config } from "~/components/Config";
-import { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { Config } from "~/components/Config";
+import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;

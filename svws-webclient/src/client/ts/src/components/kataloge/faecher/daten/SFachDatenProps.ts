@@ -1,4 +1,4 @@
-import { FachDaten, FaecherListeEintrag } from "@svws-nrw/svws-core";
+import type { FachDaten, FaecherListeEintrag } from "@svws-nrw/svws-core";
 
 export interface FachDatenProps {
 	patch: (data : Partial<FachDaten>) => Promise<void>;

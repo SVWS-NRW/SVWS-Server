@@ -1,4 +1,4 @@
-import { SchuleStammdaten, SchuelerLernabschnittsdaten, LehrerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, FoerderschwerpunktEintrag, SchuelerLernabschnittBemerkungen } from "@svws-nrw/svws-core";
+import type { SchuleStammdaten, SchuelerLernabschnittsdaten, LehrerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, FoerderschwerpunktEintrag, SchuelerLernabschnittBemerkungen } from "@svws-nrw/svws-core";
 
 export interface SchuelerAbschnittDatenProps {
 	schule: SchuleStammdaten;

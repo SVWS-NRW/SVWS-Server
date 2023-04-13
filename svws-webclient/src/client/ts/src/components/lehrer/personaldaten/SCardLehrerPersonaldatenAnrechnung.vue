@@ -15,8 +15,10 @@
 
 <script setup lang="ts">
 
-	import { computed, WritableComputedRef } from "vue";
-	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt, LehrerPersonaldaten } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { LehrerPersonaldaten } from "@svws-nrw/svws-core";
+	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		personaldaten: LehrerPersonaldaten

@@ -1,8 +1,9 @@
-import { GostFaecherManager, GostKlausurtermin, GostHalbjahr, GostJahrgangsdaten, GostKursklausur, GostKursklausurManager, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabenManager, GostKlausurvorgabe } from "@svws-nrw/svws-core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe } from "@svws-nrw/svws-core";
+import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { RouteNode } from "~/router/RouteNode";
+import type { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungKlausurdaten } from "./RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungKonflikte } from "./RouteGostKlausurplanungKonflikte";

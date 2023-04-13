@@ -1,4 +1,4 @@
-import { SchuelerListeEintrag, List, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, SchuelerStatus } from "@svws-nrw/svws-core";
+import type { SchuelerListeEintrag, List, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, Schulgliederung, Schuljahresabschnitt, SchuelerStatus } from "@svws-nrw/svws-core";
 
 export interface Filter {
 	jahrgang: JahrgangsListeEintrag | undefined;

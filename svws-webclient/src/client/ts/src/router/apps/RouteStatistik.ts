@@ -1,7 +1,8 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { computed, WritableComputedRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { RouteApp } from "../RouteApp";
+import type { WritableComputedRef } from "vue";
+import { computed } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteApp } from "../RouteApp";
 import { RouteNode } from "../RouteNode";
 
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")

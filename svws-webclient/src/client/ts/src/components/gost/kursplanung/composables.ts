@@ -1,5 +1,7 @@
-import { GostBlockungKurs, GostBlockungSchiene, GostBlockungRegel, GostKursart, SchuelerListeEintrag, GostFach } from "@svws-nrw/svws-core";
-import { computed, Ref, WritableComputedRef } from 'vue';
+import type { GostBlockungRegel, GostFach } from "@svws-nrw/svws-core";
+import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { Ref, WritableComputedRef } from 'vue';
+import { computed } from 'vue';
 
 export function getKursFromId(kurse: GostBlockungKurs[], kursId: number): GostBlockungKurs {
 	return kurse.find(kurs => kurs.id === kursId) || new GostBlockungKurs();

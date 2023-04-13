@@ -1,5 +1,5 @@
-import { GostJahrgang } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "../AuswahlChildData";
+import type { GostJahrgang } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface GostAppProps {
 	auswahl: GostJahrgang | undefined;

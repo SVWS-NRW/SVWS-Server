@@ -1,4 +1,5 @@
-import { computed, Ref } from 'vue'
+import type { Ref } from 'vue';
+import { computed } from 'vue'
 
 import type { DataTableColumnInternal, DataTableRow, DataTableSortingOrder } from '../types'
 import { DataTableSortingOptions } from '../types';

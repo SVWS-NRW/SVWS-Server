@@ -1,9 +1,10 @@
-import { GostJahrgang, GostJahrgangsdaten, GostFaecherManager, ArrayList, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
+import { GostFaecherManager, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { RouteParams } from "vue-router";
+import type { RouteParams } from "vue-router";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { RouteNode } from "~/router/RouteNode";
+import type { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../RouteGost";
 import { routeGostJahrgangsdaten } from "./RouteGostJahrgangsdaten";
 

@@ -1,4 +1,4 @@
-import { LehrerPersonaldaten } from "@svws-nrw/svws-core";
+import type { LehrerPersonaldaten } from "@svws-nrw/svws-core";
 
 export interface LehrerPersonaldatenProps {
 	patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;

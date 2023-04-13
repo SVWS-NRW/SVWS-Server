@@ -8,7 +8,7 @@
 
 	import { computed } from "vue";
 	import { useDebouncedPatch } from "~/utils/composables/debouncedPatch";
-	import { FoerderschwerpunktDatenProps } from "./SFoerderschwerpunktDatenProps";
+	import type { FoerderschwerpunktDatenProps } from "./SFoerderschwerpunktDatenProps";
 
 	const props = defineProps<FoerderschwerpunktDatenProps>();
 

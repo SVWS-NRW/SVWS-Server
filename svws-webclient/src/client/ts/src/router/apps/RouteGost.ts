@@ -1,9 +1,10 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
-import { GostAppProps } from "~/components/gost/SGostAppProps";
-import { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { GostAppProps } from "~/components/gost/SGostAppProps";
+import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
+import type { RouteApp } from "~/router/RouteApp";
+import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";

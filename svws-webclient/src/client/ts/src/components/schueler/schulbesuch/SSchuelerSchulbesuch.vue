@@ -14,7 +14,7 @@
 
 	import { computed } from 'vue';
 	import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
-	import { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
+	import type { SchuelerSchulbesuchProps } from './SSchuelerSchulbesuchProps';
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)

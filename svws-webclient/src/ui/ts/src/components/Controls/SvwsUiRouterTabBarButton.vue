@@ -5,9 +5,10 @@
 </template>
 
 <script lang="ts" setup>
-	import { computed, ComputedRef } from 'vue';
-	import { RouteRecordRaw } from "vue-router";
-	import { AuswahlChildData } from '../../types';
+	import type { ComputedRef } from 'vue';
+	import { computed } from 'vue';
+	import type { RouteRecordRaw } from "vue-router";
+	import type { AuswahlChildData } from '../../types';
 
 	const emit = defineEmits<{
 		(e: 'select', value: RouteRecordRaw | AuswahlChildData) : void

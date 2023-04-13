@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import { GostFachwahlenProps } from "./SGostFachwahlenProps";
+	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
 
 	defineProps<GostFachwahlenProps>();
 

@@ -1,7 +1,9 @@
-import { BenutzerKompetenz, BenutzerListeEintrag, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
-import { routeSchuleBenutzer, RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import type { BenutzerListeEintrag} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
+import type { RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 

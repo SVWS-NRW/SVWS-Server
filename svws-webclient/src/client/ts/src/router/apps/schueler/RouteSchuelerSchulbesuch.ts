@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, SchuelerSchulbesuchsdaten, Schulform } from "@svws-nrw/svws-core";
-import { Ref, ref } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
+import type { SchuelerSchulbesuchsdaten} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { Ref} from "vue";
+import { ref } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");

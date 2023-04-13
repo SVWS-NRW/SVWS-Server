@@ -1,4 +1,5 @@
-import { ShallowRef, shallowRef } from "vue";
+import type { ShallowRef} from "vue";
+import { shallowRef } from "vue";
 
 
 export interface ApiPendingData {

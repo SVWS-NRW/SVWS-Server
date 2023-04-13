@@ -1,4 +1,4 @@
-import { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core";
+import type { JahrgangsDaten, JahrgangsListeEintrag } from "@svws-nrw/svws-core";
 
 export interface JahrgangDatenProps {
 	patch: (data : Partial<JahrgangsDaten>) => Promise<void>;

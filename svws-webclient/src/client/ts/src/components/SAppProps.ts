@@ -1,5 +1,5 @@
-import { SchuleStammdaten, Schulform } from "@svws-nrw/svws-core";
-import { AuswahlChildData } from "./AuswahlChildData";
+import type { SchuleStammdaten, Schulform } from "@svws-nrw/svws-core";
+import type { AuswahlChildData } from "./AuswahlChildData";
 
 export interface AppProps {
 	schulform: Schulform;

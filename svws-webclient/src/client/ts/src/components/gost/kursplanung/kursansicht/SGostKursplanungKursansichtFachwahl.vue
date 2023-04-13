@@ -24,12 +24,14 @@
 
 <script setup lang="ts">
 
-	import { List, GostBlockungKurs, GostBlockungSchiene, GostKursart, GostStatistikFachwahl, GostStatistikFachwahlHalbjahr,
-		ZulaessigesFach, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
+	import type { List, GostBlockungKurs, GostBlockungSchiene, GostStatistikFachwahl, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
 		GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core";
-	import { computed, ComputedRef } from "vue";
-	import { Config } from "~/components/Config";
-	import { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import { GostKursart, GostStatistikFachwahlHalbjahr,
+		ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { Config } from "~/components/Config";
+	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

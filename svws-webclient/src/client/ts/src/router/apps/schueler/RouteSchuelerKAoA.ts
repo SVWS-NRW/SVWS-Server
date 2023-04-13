@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, SchuelerKAoADaten, SchuelerListeEintrag, Schulform } from "@svws-nrw/svws-core";
+import type { SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, SchuelerKAoADaten, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler, routeSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler} from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
 
 interface RouteStateSchuelerKAoA {
 	auswahl: SchuelerListeEintrag | undefined;

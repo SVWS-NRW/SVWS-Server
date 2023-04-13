@@ -1,5 +1,5 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "./Api";

@@ -1,4 +1,4 @@
-import { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@svws-nrw/svws-core";
+import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@svws-nrw/svws-core";
 
 export interface GostFaecherProps {
 	faecherManager: GostFaecherManager;

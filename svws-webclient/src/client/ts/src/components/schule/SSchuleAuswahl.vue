@@ -15,6 +15,6 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuleAuswahlProps } from './SSchuleAuswahlProps';
+	import type { SchuleAuswahlProps } from './SSchuleAuswahlProps';
 	const props = defineProps<SchuleAuswahlProps>();
 </script>

@@ -11,8 +11,9 @@
 
 <script setup lang="ts">
 
-	import {BenutzergruppenManager} from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type {BenutzergruppenManager} from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;

@@ -1,9 +1,11 @@
-import { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, Schulform, Schulgliederung, SchuleStammdaten, Schuljahresabschnitt, BenutzerTyp, BenutzerDaten, BenutzerKompetenz } from "@svws-nrw/svws-core";
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
+	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from "@svws-nrw/svws-core";
+import { Schulform, Schulgliederung, BenutzerTyp } from "@svws-nrw/svws-core";
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
-import { ComputedRef, computed } from "vue";
-import { Config } from "~/components/Config";
+import type { ComputedRef} from "vue";
+import { computed } from "vue";
+import type { Config } from "~/components/Config";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich

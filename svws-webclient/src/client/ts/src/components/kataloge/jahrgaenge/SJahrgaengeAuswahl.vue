@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 
-	import { DataTableColumn } from "@ui";
-	import { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
+	import type { DataTableColumn } from "@ui";
+	import type { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
 

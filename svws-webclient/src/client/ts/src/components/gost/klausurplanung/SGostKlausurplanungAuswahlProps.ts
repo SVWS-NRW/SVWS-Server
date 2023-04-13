@@ -1,4 +1,4 @@
-import { GostHalbjahr } from "@svws-nrw/svws-core";
+import type { GostHalbjahr } from "@svws-nrw/svws-core";
 
 export interface GostKlausurplanungAuswahlChildData {
 	name: string,

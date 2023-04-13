@@ -22,8 +22,8 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungListeneintrag } from "@svws-nrw/svws-core";
-	import { ApiStatus } from "~/components/ApiStatus";
+	import type { GostBlockungListeneintrag } from "@svws-nrw/svws-core";
+	import type { ApiStatus } from "~/components/ApiStatus";
 
 	const props = defineProps<{
 		blockung: GostBlockungListeneintrag;

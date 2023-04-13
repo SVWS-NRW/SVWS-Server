@@ -1,8 +1,9 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogReligion, RouteKatalogReligionen } from "../RouteKatalogReligionen";
+import type { RouteKatalogReligionen } from "../RouteKatalogReligionen";
+import { routeKatalogReligion } from "../RouteKatalogReligionen";
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
 

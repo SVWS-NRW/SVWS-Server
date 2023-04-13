@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 //TODO: props weiterleiten über :open. Das mit den refs ist Blödsinn
 	import { Dialog, DialogTitle, DialogDescription, TransitionRoot, TransitionChild } from "@headlessui/vue";
-	import { Size } from "../../../types";
+	import type { Size } from "../../../types";
 	import {ref} from "vue";
 
 	const props = withDefaults(defineProps<{

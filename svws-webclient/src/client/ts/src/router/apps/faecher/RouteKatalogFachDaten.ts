@@ -1,8 +1,9 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogFaecher, RouteKatalogFaecher } from "../RouteKatalogFaecher";
+import type { RouteKatalogFaecher } from "../RouteKatalogFaecher";
+import { routeKatalogFaecher } from "../RouteKatalogFaecher";
 
 const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 

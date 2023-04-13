@@ -6,8 +6,10 @@
 
 <script setup lang="ts">
 
-	import { computed, ComputedRef } from "vue";
-	import { KlassenDaten, LehrerListeEintrag, PersonalTyp } from "@svws-nrw/svws-core";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+	import type { KlassenDaten, LehrerListeEintrag} from "@svws-nrw/svws-core";
+	import { PersonalTyp } from "@svws-nrw/svws-core";
 	import type { DataTableColumn } from "@ui";
 
 	type Lehrer = {

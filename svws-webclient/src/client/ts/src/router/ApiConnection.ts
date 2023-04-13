@@ -1,5 +1,7 @@
-import { ApiSchema, ApiServer, BenutzerDaten, BenutzerKompetenz, DBSchemaListeEintrag, List, SchuleStammdaten, ArrayList } from "@svws-nrw/svws-core";
-import { Ref, ref, ShallowRef, shallowRef } from "vue";
+import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@svws-nrw/svws-core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList } from "@svws-nrw/svws-core";
+import type { Ref, ShallowRef} from "vue";
+import { ref, shallowRef } from "vue";
 import { Config } from "~/components/Config";
 
 export class ApiConnection {

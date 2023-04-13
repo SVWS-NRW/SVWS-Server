@@ -1,6 +1,7 @@
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteGost, routeGost } from "~/router/apps/RouteGost";
+import type { RouteGost} from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/RouteGost";
 import { RouteDataGostKlausurplanung } from "./klausurplanung/RouteDataGostKlausurplanung";
 import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
@@ -10,7 +11,7 @@ import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlau
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
 import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
-import { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
+import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");

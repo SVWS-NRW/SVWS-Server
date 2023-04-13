@@ -192,7 +192,8 @@
 </script>
 
 <script lang="ts" setup>
-	import {defineComponent, computed, TableHTMLAttributes, ref, useAttrs} from "vue";
+	import type { TableHTMLAttributes} from "vue";
+	import {defineComponent, computed, ref, useAttrs} from "vue";
 
 	import useColumns from "./hooks/useColumns";
 	import useRows from "./hooks/useRows";

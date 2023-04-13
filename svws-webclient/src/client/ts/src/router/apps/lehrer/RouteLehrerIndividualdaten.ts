@@ -1,8 +1,9 @@
 import { RouteNode } from "~/router/RouteNode";
-import { RouteLehrer, routeLehrer } from "~/router/apps/RouteLehrer";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLehrer} from "~/router/apps/RouteLehrer";
+import { routeLehrer } from "~/router/apps/RouteLehrer";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
-import { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
+import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");

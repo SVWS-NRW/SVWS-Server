@@ -1,7 +1,7 @@
 import { RouteNode } from "~/router/RouteNode";
-import { RouteSchueler } from "~/router/apps/RouteSchueler";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
-import { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");

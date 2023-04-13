@@ -20,9 +20,10 @@
 
 <script setup lang="ts">
 
-	import { DataTableColumn } from "@ui";
-	import { computed, ref, Ref } from "vue";
-	import { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import type { DataTableColumn } from "@ui";
+	import type { Ref } from "vue";
+	import { computed, ref } from "vue";
+	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const sichtbar: Ref<boolean> = ref(true);

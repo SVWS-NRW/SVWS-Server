@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
-	import { SchuelerListeEintrag } from "@svws-nrw/svws-core";
-	import { computed, WritableComputedRef } from "vue";
+	import type { SchuelerListeEintrag } from "@svws-nrw/svws-core";
+	import type { WritableComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: SchuelerListeEintrag;

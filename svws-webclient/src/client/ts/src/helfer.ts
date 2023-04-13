@@ -1,4 +1,4 @@
-import { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache } from "@svws-nrw/svws-core";
+import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache } from "@svws-nrw/svws-core";
 
 /** Die Sortierfunktion für den Ortskatalog */
 export const orte_sort = (a: OrtKatalogEintrag, b: OrtKatalogEintrag): number => {

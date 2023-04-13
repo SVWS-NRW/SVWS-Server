@@ -1,4 +1,5 @@
-import { KursDaten, JahrgangsListeEintrag, LehrerListeEintrag, List, Schueler } from "@svws-nrw/svws-core";
+import type { KursDaten, JahrgangsListeEintrag, LehrerListeEintrag, Schueler } from "@svws-nrw/svws-core";
+import { List } from "@svws-nrw/svws-core";
 
 export interface KursDatenProps {
 		patch: (data : Partial<KursDaten>) => Promise<void>;

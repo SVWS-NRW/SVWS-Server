@@ -1,8 +1,8 @@
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { AuswahlChildData } from "~/components/AuswahlChildData";
-import { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
-import { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
@@ -11,7 +11,8 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuel
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { routeApp, RouteApp } from "~/router/RouteApp";
+import type { RouteApp } from "~/router/RouteApp";
+import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";

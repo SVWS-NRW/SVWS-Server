@@ -10,7 +10,7 @@
 	const props = withDefaults(defineProps<{
 		tag?: string;
 		draggable?: boolean;
-		data: Object;
+		data: object;
 	}>(), {
 		tag: 'div',
 		draggable: true,

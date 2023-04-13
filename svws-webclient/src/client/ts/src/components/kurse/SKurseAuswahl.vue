@@ -22,10 +22,11 @@
 
 <script setup lang="ts">
 
-	import { ArrayList } from "@svws-nrw/svws-core";
-	import { DataTableColumn } from "@ui";
-	import { Ref, ref, computed } from "vue";
-	import { KurseAuswahlProps } from "./SKurseAuswahlProps";
+	import type { ArrayList } from "@svws-nrw/svws-core";
+	import type { DataTableColumn } from "@ui";
+	import type { Ref} from "vue";
+	import { ref, computed } from "vue";
+	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 
 	const props = defineProps<KurseAuswahlProps>();
 
