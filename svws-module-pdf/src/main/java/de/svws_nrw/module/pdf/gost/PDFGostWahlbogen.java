@@ -373,11 +373,11 @@ public final class PDFGostWahlbogen extends PDFCreator {
 			return;
 		}
 		final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
-		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF) || ((kursart == GostKursart.GK) && ((belegungHj.schriftlich == null) || (!belegungHj.schriftlich)))) {
+		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF) || ((kursart == GostKursart.GK) && (!belegungHj.schriftlich))) {
 			sb.append("<td>M</td>");
 			return;
 		}
-		if ((kursart == GostKursart.GK) && (belegungHj.schriftlich != null) && (belegungHj.schriftlich)) {
+		if ((kursart == GostKursart.GK) && belegungHj.schriftlich) {
 			sb.append("<td>S</td>");
 			return;
 		}

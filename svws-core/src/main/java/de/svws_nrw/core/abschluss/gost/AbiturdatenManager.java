@@ -445,7 +445,7 @@ public class AbiturdatenManager {
 		if (fachbelegung == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr == null) || (belegungHalbjahr.schriftlich == null))
+		if (belegungHalbjahr == null)
 			return false;
 		switch (schriftlichkeit) {
 			case BELIEBIG: return true;
@@ -527,10 +527,9 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
-			final boolean schriftlich = (belegungHalbjahr.schriftlich != null) && belegungHalbjahr.schriftlich;
 			if (((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
-					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!schriftlich))
-							|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (schriftlich)))))
+					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
+							|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
 				return true;
 		}
 		return false;
@@ -558,7 +557,7 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr == null)
 				continue;
-			if ((schriftlichkeit.istSchriftlich == null) || (schriftlichkeit.istSchriftlich == belegungHalbjahr.schriftlich))
+			if ((schriftlichkeit.istSchriftlich == null) || (schriftlichkeit.istSchriftlich.equals(belegungHalbjahr.schriftlich)))
 				return true;
 		}
 		return false;
@@ -702,7 +701,7 @@ public class AbiturdatenManager {
 					if (aktFachbelegung.belegungen[halbjahr.id] != null) {
 						final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
 						if (((halbjahr != GostHalbjahr.Q11) && (halbjahr != GostHalbjahr.Q12) && (halbjahr != GostHalbjahr.Q21))
-								|| ((belegungHalbjahr != null) && (belegungHalbjahr.schriftlich != null) && (belegungHalbjahr.schriftlich)))
+								|| ((belegungHalbjahr != null) && (belegungHalbjahr.schriftlich)))
 							hatHalbjahresBelegung = true;
 						// "break;" wird hier nicht verwendet, da bei der fehlerhaften Belegung von inhaltsgleichen Fächern (gleiches Statistik-Kürzel) im selben Halbjahr diese Prüfung dennoch korrekt ablaufen sollte
 					}
@@ -1362,8 +1361,7 @@ public class AbiturdatenManager {
 						final AbiturFachbelegungHalbjahr belegung = fb.belegungen[halbjahr.id];
 						if (belegung != null) {
 							boolean istSchriftlichkeitOK = true;
-							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21))
-									&& ((belegung.schriftlich == null) || (!belegung.schriftlich)))
+							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21)) && (!belegung.schriftlich))
 								istSchriftlichkeitOK = false;
 							if (istSchriftlichkeitOK) {
 								belegung_vorhanden = true;

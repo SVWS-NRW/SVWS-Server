@@ -28,7 +28,7 @@ export class AdressenUtils extends JavaObject {
 			return result;
 		}
 		const tmp : string = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
-		result[0] = JavaString.replaceFirst(tmp, " *([0-9]+ *[-\\+]+)* *[0-9]+\\D*$", "");
+		result[0] = JavaString.replaceFirst(tmp, " *(\\d+ *[-\\+]+)* *\\d+\\D*$", "");
 		const rest : string = tmp.substring(result[0].length).trim();
 		result[1] = JavaString.replaceFirst(rest, "\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length).trim();

@@ -15,7 +15,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	/**
 	 * Gibt an, ob das Fach schriftlich belegt wurde oder nicht.
 	 */
-	public schriftlich : boolean | null = null;
+	public schriftlich : boolean = false;
 
 	/**
 	 * Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde.
@@ -75,7 +75,9 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		if (typeof obj.kursartKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kursartKuerzel');
 		result.kursartKuerzel = obj.kursartKuerzel;
-		result.schriftlich = typeof obj.schriftlich === "undefined" ? null : obj.schriftlich === null ? null : obj.schriftlich;
+		if (typeof obj.schriftlich === "undefined")
+			 throw new Error('invalid json format, missing attribute schriftlich');
+		result.schriftlich = obj.schriftlich;
 		result.biliSprache = typeof obj.biliSprache === "undefined" ? null : obj.biliSprache === null ? null : obj.biliSprache;
 		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
 		if (typeof obj.wochenstunden === "undefined")
@@ -97,7 +99,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		let result = '{';
 		result += '"halbjahrKuerzel" : ' + '"' + obj.halbjahrKuerzel! + '"' + ',';
 		result += '"kursartKuerzel" : ' + '"' + obj.kursartKuerzel! + '"' + ',';
-		result += '"schriftlich" : ' + ((!obj.schriftlich) ? 'null' : obj.schriftlich) + ',';
+		result += '"schriftlich" : ' + obj.schriftlich + ',';
 		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
@@ -120,7 +122,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 			result += '"kursartKuerzel" : ' + '"' + obj.kursartKuerzel + '"' + ',';
 		}
 		if (typeof obj.schriftlich !== "undefined") {
-			result += '"schriftlich" : ' + ((!obj.schriftlich) ? 'null' : obj.schriftlich) + ',';
+			result += '"schriftlich" : ' + obj.schriftlich + ',';
 		}
 		if (typeof obj.biliSprache !== "undefined") {
 			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';

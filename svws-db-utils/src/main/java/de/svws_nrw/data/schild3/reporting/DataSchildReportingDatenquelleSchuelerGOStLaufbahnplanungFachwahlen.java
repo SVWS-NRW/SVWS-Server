@@ -171,27 +171,21 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 	 *
 	 * @return String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
-	private String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
+	private static String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
 		if (belegungHj == null)
 			return "";
 
 		final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
-		if (kursart == GostKursart.GK) {
-			if (belegungHj.schriftlich != null)
-				return belegungHj.schriftlich ? "S" : "M";
-			return "";
-		}
-		if (kursart == GostKursart.LK) {
+		if (kursart == GostKursart.GK)
+			return belegungHj.schriftlich ? "S" : "M";
+		if (kursart == GostKursart.LK)
 			return "LK";
-		}
 		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF))
 			return "M";
-		if (kursart == GostKursart.ZK) {
+		if (kursart == GostKursart.ZK)
 			return "ZK";
-		}
-		if ("AT".equals(belegungHj.kursartKuerzel)) {
+		if ("AT".equals(belegungHj.kursartKuerzel))
 			return "AT";
-		}
 		return "";
 	}
 

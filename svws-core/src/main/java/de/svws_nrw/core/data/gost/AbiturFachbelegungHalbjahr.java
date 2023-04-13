@@ -27,7 +27,7 @@ public class AbiturFachbelegungHalbjahr {
 	public @NotNull String kursartKuerzel = "";
 
 	/** Gibt an, ob das Fach schriftlich belegt wurde oder nicht. */
-	public Boolean schriftlich = null;
+	public boolean schriftlich = false;
 
 	/** Das einstellige Kürzel der bilingualen Sprache, sofern das Fach bilingual unterrichtet wurde. */
 	public String biliSprache = null;

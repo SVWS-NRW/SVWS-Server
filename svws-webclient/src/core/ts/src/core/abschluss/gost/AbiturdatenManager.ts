@@ -432,17 +432,17 @@ export class AbiturdatenManager extends JavaObject {
 		if (fachbelegung === null)
 			return false;
 		const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr === null) || (belegungHalbjahr.schriftlich === null))
+		if (belegungHalbjahr === null)
 			return false;
 		switch (schriftlichkeit) {
 			case GostSchriftlichkeit.BELIEBIG: {
 				return true;
 			}
 			case GostSchriftlichkeit.SCHRIFTLICH: {
-				return belegungHalbjahr.schriftlich!;
+				return belegungHalbjahr.schriftlich;
 			}
 			case GostSchriftlichkeit.MUENDLICH: {
-				return !belegungHalbjahr.schriftlich!;
+				return !belegungHalbjahr.schriftlich;
 			}
 			default: {
 				return false;
@@ -517,8 +517,7 @@ export class AbiturdatenManager extends JavaObject {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr === null)
 				continue;
-			const schriftlich : boolean = (belegungHalbjahr.schriftlich !== null) && belegungHalbjahr.schriftlich;
-			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (schriftlich)))))
+			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!belegungHalbjahr.schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (belegungHalbjahr.schriftlich)))))
 				return true;
 		}
 		return false;
@@ -545,7 +544,7 @@ export class AbiturdatenManager extends JavaObject {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
 			if (belegungHalbjahr === null)
 				continue;
-			if ((schriftlichkeit.istSchriftlich === null) || (schriftlichkeit.istSchriftlich as unknown === belegungHalbjahr.schriftlich as unknown))
+			if ((schriftlichkeit.istSchriftlich === null) || (JavaObject.equalsTranspiler(schriftlichkeit.istSchriftlich, (belegungHalbjahr.schriftlich))))
 				return true;
 		}
 		return false;
@@ -677,7 +676,7 @@ export class AbiturdatenManager extends JavaObject {
 				for (const aktFachbelegung of alleBelegungen) {
 					if (aktFachbelegung.belegungen[halbjahr.id] !== null) {
 						const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
-						if (((halbjahr as unknown !== GostHalbjahr.Q11 as unknown) && (halbjahr as unknown !== GostHalbjahr.Q12 as unknown) && (halbjahr as unknown !== GostHalbjahr.Q21 as unknown)) || ((belegungHalbjahr !== null) && (belegungHalbjahr.schriftlich !== null) && (belegungHalbjahr.schriftlich)))
+						if (((halbjahr as unknown !== GostHalbjahr.Q11 as unknown) && (halbjahr as unknown !== GostHalbjahr.Q12 as unknown) && (halbjahr as unknown !== GostHalbjahr.Q21 as unknown)) || ((belegungHalbjahr !== null) && (belegungHalbjahr.schriftlich)))
 							hatHalbjahresBelegung = true;
 					}
 				}
@@ -1295,7 +1294,7 @@ export class AbiturdatenManager extends JavaObject {
 						const belegung : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 						if (belegung !== null) {
 							let istSchriftlichkeitOK : boolean = true;
-							if (((halbjahr as unknown === GostHalbjahr.Q11 as unknown) || (halbjahr as unknown === GostHalbjahr.Q12 as unknown) || (halbjahr as unknown === GostHalbjahr.Q21 as unknown)) && ((belegung.schriftlich === null) || (!belegung.schriftlich)))
+							if (((halbjahr as unknown === GostHalbjahr.Q11 as unknown) || (halbjahr as unknown === GostHalbjahr.Q12 as unknown) || (halbjahr as unknown === GostHalbjahr.Q21 as unknown)) && (!belegung.schriftlich))
 								istSchriftlichkeitOK = false;
 							if (istSchriftlichkeitOK) {
 								belegung_vorhanden = true;
