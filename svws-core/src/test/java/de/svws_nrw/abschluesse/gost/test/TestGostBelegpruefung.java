@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,9 +48,11 @@ class TestGostBelegpruefung {
 	/**
 	 * Initialisiert den Test und lädt dafür die Jahrgänge und die Aiturdaten aus den
 	 * zugehörigen JSON-Dateien mit den Testfällen.
+	 *
+	 * @throws IOException bei einem Fehler beim Laden der JSON-Resourcen
 	 */
 	@BeforeAll
-	static void setup() {
+	static void setup() throws IOException {
 		System.out.println("- Lade die Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostFach[]> tempTestGostJahrgaengeFaecher = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
 		assert (tempTestGostJahrgaengeFaecher != null) && tempTestGostJahrgaengeFaecher.size() != 0 : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";

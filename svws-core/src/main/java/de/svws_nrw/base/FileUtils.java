@@ -67,8 +67,10 @@ public final class FileUtils {
 	 * @param file   die Datei
 	 *
 	 * @return das Byte-Array
+	 *
+	 * @throws IOException falls ein Fehler beim lesenden Zugriff auf die Datei aufgetreten ist
 	 */
-	public static byte[] file2ByteArray(final File file) {
+	public static byte[] file2ByteArray(final File file) throws IOException {
 		try (InputStream istream = new BufferedInputStream(new FileInputStream(file))) {
 			final ByteArrayOutputStream result = new ByteArrayOutputStream();
 			final byte[] buffer = new byte[1024];
@@ -77,8 +79,8 @@ public final class FileUtils {
 				result.write(buffer, 0, length);
 			}
 			return result.toByteArray();
-		} catch (@SuppressWarnings("unused") NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
-			return null;
+		} catch (NullPointerException | SecurityException | IOException | IndexOutOfBoundsException e) {
+			throw new IOException("Fehler beim Lesen der Datei " + file.getName(), e);
 		}
 	}
 
@@ -90,14 +92,17 @@ public final class FileUtils {
 	 * @param filename   der Dateiname
 	 *
 	 * @return das Byte-Array
+	 *
+	 * @throws IOException falls ein Fehler beim lesenden Zugriff auf die Datei aufgetreten ist
 	 */
-	public static byte[] file2ByteArray(final String filename) {
+	public static byte[] file2ByteArray(final String filename) throws IOException {
+		final File file;
 		try {
-			final File file = new File(filename);
-			return file2ByteArray(file);
-		} catch (@SuppressWarnings("unused") final NullPointerException e) {
-			return null;
+			file = new File(filename);
+		} catch (final NullPointerException e) {
+			throw new IOException("filename darf nicht null sein.", e);
 		}
+		return file2ByteArray(file);
 	}
 
 

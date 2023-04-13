@@ -16,6 +16,7 @@ import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.logger.LogLevel;
 
 import java.util.Map;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
@@ -35,9 +36,11 @@ class TestGEAbschluesse {
     /**
      * Initialisiert den Test und lädt dafür die Notenbilder aus den
      * zugehörigen JSON-Dateien mit den Testfällen.
+     *
+     * @throws IOException bei einem Fehler beim Laden der Notenbilder
      */
     @BeforeAll
-    static void setup() {
+    static void setup() throws IOException {
         System.out.println(" - Lade Notenbilder aus den JSON-Resourcen...");
         notenBilder = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.ge.test", "geabschlusstest_", GEAbschlussTestfall.class);
         if ((notenBilder == null) || notenBilder.size() == 0)

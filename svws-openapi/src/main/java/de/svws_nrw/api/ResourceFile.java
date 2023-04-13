@@ -63,7 +63,7 @@ System.out.println("Adding File Resource: " + this.path);
 				this.cache = FileUtils.file2ByteArray(file);
 				this.cacheTimestamp = file.lastModified();
 			}
-		} catch (final SecurityException e) {
+		} catch (final SecurityException | IOException e) {
 			// TODO log error
 			e.printStackTrace();
 			return null;

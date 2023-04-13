@@ -27,14 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public final class ResourceUtils {
 
+	/** Eine Map für die bereits geöffneten Jar-Dateisysteme */
+	private static final HashMap<String, FileSystem> jarFS = new HashMap<>();
+
+	private static final String FILE_EXTENSION_JSON = ".json";
+
+
 	private ResourceUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
-
-
-	/** Eine Map für die bereits geöffneten Jar-Dateisysteme */
-	private static HashMap<String, FileSystem> jarFS = new HashMap<>();
-
 
 	/**
 	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
@@ -47,25 +48,24 @@ public final class ResourceUtils {
 	 * @param fileextension   die Dateiendung
 	 *
 	 * @return eine List mit den Pfaden der gefundenen Dateien
+	 *
+	 * @throws IOException wenn ein Fehler beim Lesen der Dateien auftritt
 	 */
-	private static List<Path> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) {
+	private static List<Path> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) throws IOException {
 		final List<Path> classes = new ArrayList<>();
 		final Path fullPath = fs.getPath(path + (path.endsWith("/") ? "" : "/") + packagePath);
 		if (!Files.isDirectory(fullPath))
 			return classes;
-		try {
-			try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
-				dirStream.forEach(p -> {
-					if (Files.isDirectory(p)) {
-						classes.addAll(getFilesInPath(fs, path, packagePath + "/" + p.getFileName(), fileextension));
-					} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
-						classes.add(p);
-					}
-				});
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
+			for (final Path p : dirStream) {
+				if (Files.isDirectory(p)) {
+					classes.addAll(getFilesInPath(fs, path, packagePath + "/" + p.getFileName(), fileextension));
+				} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
+					classes.add(p);
+				}
 			}
 		} catch (final IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IOException("Fehler beim Lesen der Dateien im Pfad " + path, e);
 		}
 		return classes;
 	}
@@ -130,6 +130,46 @@ public final class ResourceUtils {
 
 
 	/**
+	 * Hilfsmethode für {@link ResourceUtils#getFilesInPackage(String, String)}. Bestimmt
+	 * für die übergebene URL die entsprechenden Dateien und schreibt {@link Path}-Objekt
+	 * für diese in die Liste.
+	 *
+	 * @param url             die URL des Packages
+	 * @param packagePath     der Pfad für das Package
+	 * @param result          die Liste, wo die {@link Path}-Objekt für die Dateien ergänzt werden
+	 * @param fileextension   die Dateiendung
+	 *
+	 * @throws IOException    bei einem Fehler beim Zugriff auf das Package
+	 */
+	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension) throws IOException {
+		URI uri;
+		try {
+			uri = url.toURI();
+		} catch (@SuppressWarnings("unused") final URISyntaxException e) {
+			return;
+		}
+		Path path = null;
+		if ("jar".equals(uri.getScheme())) {
+			@SuppressWarnings("resource")
+			final FileSystem fs = getJARFileSystem(uri);
+			final String[] array = uri.toString().split("!");
+			path = fs.getPath(array[1]);
+			final int j = Paths.get(packagePath).getNameCount();
+			for (int i = 0; i < j; i++)
+				path = path.getParent();
+			result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
+		} else {
+			path = Paths.get(uri);
+			final int j = Paths.get(packagePath).getNameCount();
+			for (int i = 0; i < j; i++)
+				path = path.getParent();
+			@SuppressWarnings("resource")
+			final FileSystem fs = FileSystems.getDefault();
+			result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
+		}
+	}
+
+	/**
 	 * Ermittelt alle Dateien, die mit dem Classloader dieser Klasse in dem Classpath in
 	 * dem Package packageName oder einem Sub-Package davon verfügbar sind sowie
 	 * die angegebene Dateiendung haben.
@@ -145,35 +185,8 @@ public final class ResourceUtils {
 		try {
 			final String packagePath = packageName.replace(".", "/");
 			res = ResourceUtils.class.getClassLoader().getResources(packagePath);
-			while (res.hasMoreElements()) {
-				URI uri;
-				try {
-					uri = res.nextElement().toURI();
-				} catch (@SuppressWarnings("unused") final URISyntaxException e) {
-					continue;
-				}
-				Path path = null;
-				if ("jar".equals(uri.getScheme())) {
-					@SuppressWarnings("resource")
-					final
-					FileSystem fs = getJARFileSystem(uri);
-					final String[] array = uri.toString().split("!");
-					path = fs.getPath(array[1]);
-					final int j = Paths.get(packagePath).getNameCount();
-					for (int i = 0; i < j; i++)
-						path = path.getParent();
-					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
-				} else {
-					path = Paths.get(uri);
-					final int j = Paths.get(packagePath).getNameCount();
-					for (int i = 0; i < j; i++)
-						path = path.getParent();
-					@SuppressWarnings("resource")
-					final
-					FileSystem fs = FileSystems.getDefault();
-					result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
-				}
-			}
+			while (res.hasMoreElements())
+				getFilesInPackageFromURL(res.nextElement(), packagePath, result, fileextension);
 		} catch (final IOException e1) {
 			e1.printStackTrace();
 		}
@@ -192,8 +205,10 @@ public final class ResourceUtils {
 	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
 	 *
 	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
+	 *
+	 * @throws IOException bei einem Fehler beim Laden der JSON-Daten
 	 */
-	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final Class<T> clazz) {
+	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final Class<T> clazz) throws IOException {
 		return json2Classes(resourcePackage, prefix, "", clazz);
 	}
 
@@ -210,22 +225,23 @@ public final class ResourceUtils {
 	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
 	 *
 	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
+	 *
+	 * @throws IOException bei einem Fehler beim Laden der JSON-Daten
 	 */
-	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz) {
+	public static <T> Map<String, T> json2Classes(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz) throws IOException {
 		final Map<String, T> classes = new TreeMap<>();
-		final List<Path> paths = ResourceUtils.getFilesInPackage(resourcePackage, ".json");
+		final List<Path> paths = ResourceUtils.getFilesInPackage(resourcePackage, FILE_EXTENSION_JSON);
 		final ObjectMapper mapper = new ObjectMapper();
 		for (final Path filePath: paths) {
 			final String filename = filePath.getFileName().toString();
 			try {
-				if (filename.toLowerCase().startsWith(prefix.toLowerCase()) && filename.toLowerCase().endsWith((suffix + ".json").toLowerCase())) {
-					final String name = filename.substring(prefix.length(), filename.length() - (suffix + ".json").length());
+				if (filename.toLowerCase().startsWith(prefix.toLowerCase()) && filename.toLowerCase().endsWith((suffix + FILE_EXTENSION_JSON).toLowerCase())) {
+					final String name = filename.substring(prefix.length(), filename.length() - (suffix + FILE_EXTENSION_JSON).length());
 					final String json = Files.readString(filePath, StandardCharsets.UTF_8);
 					classes.put(name, mapper.readValue(json, clazz));
 				}
 			} catch (final IOException e) {
-				System.out.println("Fehler beim Laden eines Testfalles aus der Datei " + filename + "!");
-				e.printStackTrace();
+				throw new IOException("Fehler beim Lesen aus der Datei " + filename + "!", e);
 			}
 		}
 		return classes;
