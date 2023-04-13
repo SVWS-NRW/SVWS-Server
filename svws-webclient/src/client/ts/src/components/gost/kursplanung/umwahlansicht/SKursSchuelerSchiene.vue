@@ -1,8 +1,16 @@
 <template>
-	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'bg-error': schiene_hat_kollisionen }">
-		<div role="cell" class="data-table__td">
+	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': schiene_hat_kollisionen }">
+		<div role="cell" class="data-table__td" :class="{ 'text-error': schiene_hat_kollisionen }">
 			<div class="flex flex-col py-1">
-				<span class="font-bold">{{ schiene_g?.bezeichnung }}</span>
+				<span class="font-bold inline-flex items-center gap-1">
+					<svws-ui-tooltip v-if="schiene_hat_kollisionen">
+						<i-ri-alert-line />
+						<template #content>
+							<span>Kollision in dieser Schiene</span>
+						</template>
+					</svws-ui-tooltip>
+					{{ schiene_g?.bezeichnung }}
+				</span>
 				<span class="text-sm">{{ schiene.kurse.size() }} Kurse</span>
 				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
 			</div>
@@ -11,6 +19,9 @@
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:api-status="apiStatus" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
 			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="emit('dnd', $event)" />
+		<template v-if="maxKurse">
+			<div v-for="n in (maxKurse - getSchieneKurse.size())" :key="n" role="cell" class="data-table__td" />
+		</template>
 	</div>
 </template>
 
@@ -21,6 +32,7 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";
+	import {get} from "@vueuse/core";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 
@@ -35,6 +47,7 @@
 		apiStatus: ApiStatus;
 		allowRegeln: boolean;
 		dragAndDropData?: DndData;
+		maxKurse?: number;
 	}>();
 
 	const emit = defineEmits<{

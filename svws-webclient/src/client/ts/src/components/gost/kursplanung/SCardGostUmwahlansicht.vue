@@ -8,7 +8,7 @@
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
 			<div class="w-1/6 min-w-[9rem]">
 				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
-					<div class="border-2 border-transparent -m-[2px]" :class="{ 'border-dashed border-error': active }">
+					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
 						<div class="">
 							<svws-ui-data-table v-model="fachbelegungen"
 								:items="undefined"
@@ -36,17 +36,15 @@
 			</div>
 			<div class="flex-grow">
 				<svws-ui-data-table v-model="schienen"
-					:items="undefined">
+					:items="undefined"
+					:columns="cols">
+					<template #header><div /></template>
 					<template #body>
-						<div role="row"
-							class="data-table__tr data-table__tbody__tr"
-							v-for="(schiene, index) in schienen"
-							:key="index">
-							<s-kurs-schueler-schiene :schiene="schiene" :selected="schueler"
-								:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-								:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
-								:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
-						</div>
+						<s-kurs-schueler-schiene v-for="(schiene, index) in schienen"
+							:key="index" :schiene="schiene" :selected="schueler" :max-kurse="maxKurseInSchienen"
+							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
+							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
 					</template>
 				</svws-ui-data-table>
 			</div>
@@ -63,6 +61,8 @@
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
+	import {ArrayList} from "@svws-nrw/svws-core";
+	import type {DataTableColumn} from "@ui";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 
@@ -120,5 +120,29 @@
 	function updateDragAndDropData(data: DndData | undefined) {
 		dragAndDropData.value = data;
 	}
+
+	/*const getSchieneKurse: ComputedRef<ArrayList<GostBlockungsergebnisKurs>> = computed(()=> props.schiene.kurse)*/
+
+	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
+		let max = 0;
+		for (let i = 0; i < schienen.value.size(); i++) {
+			if (schienen.value?.get(i)?.kurse) {
+				max = Math.max(max, schienen.value.get(i).kurse.size());
+			}
+		}
+		return max;
+	});
+
+	function calculateColumns(): DataTableColumn[] {
+		const cols: Array<DataTableColumn> = [{ key: "schiene", label: "Schiene" }];
+
+		for (let i = 0; i < maxKurseInSchienen?.value; i++) {
+			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center' });
+		}
+
+		return cols;
+	}
+
+	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
 
 </script>

@@ -2,7 +2,7 @@
 	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-bold': (belegung === undefined) }">
 		<svws-ui-drag-data :key="kursid" tag="div" role="cell" :data="{ id: kursid, fachID: fach.fachID, kursart: kursartid }"
 			:draggable="(belegung === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
-			class="select-none data-table__td" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-grab' : (belegung === undefined) }"
+			class="select-none data-table__td" :class="{ 'bg-white' : (belegung !== undefined), 'cursor-grab' : (belegung === undefined) && (!blockung_aktiv) }"
 			:style="style">
 			<div class="flex items-center justify-between gap-1 w-full">
 				<span>{{ get_kurs_name() }}</span>

@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-drag-data :key="kurs.id" tag="div" role="cell" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
-		class="data-table__td data-table__td__align-center data-table__td__no-padding select-none cursor-grab" :class="{ 'bg-yellow-200': is_drop_zone }"
+		class="data-table__td data-table__td__align-center data-table__td__no-padding select-none cursor-grab" :class="{ 'is-drop-zone': is_drop_zone }"
 		:draggable="is_draggable" @drag-start="drag_started" @drag-end="drag_ended" :style="{ 'background-color': bgColor }">
 		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" :drop-allowed="is_drop_zone" class="w-full">
 			<span>{{ kurs_name }}</span>
@@ -180,3 +180,14 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+.is-drop-zone {
+	@apply relative bg-primary/5;
+
+	&:before {
+		content: '';
+		@apply absolute inset-1 border-2 border-dashed border-primary pointer-events-none;
+	}
+}
+</style>

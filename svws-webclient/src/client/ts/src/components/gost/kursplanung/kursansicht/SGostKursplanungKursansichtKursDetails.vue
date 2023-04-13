@@ -1,6 +1,6 @@
 <template>
 	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
-		<td :colspan="anzahlSpalten" style="padding-top: 0.75rem; padding-bottom: 0.75rem;">
+		<div class="py-4 flex justify-center">
 			<div class="flex justify-between items-center gap-2">
 				<div class="flex items-center gap-12">
 					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
@@ -42,7 +42,7 @@
 					<svws-ui-button size="small" type="secondary">Aufteilen…</svws-ui-button>
 				</div>
 			</div>
-		</td>
+		</div>
 	</div>
 </template>
 
@@ -102,8 +102,8 @@
 <style lang="postcss">
 
 	.table--row-kursdetail {
-		@apply relative z-10 border-b-2 border-black/25;
-		box-shadow: inset 0 -2px 6px 0 rgba(0, 0, 0, 0.05), inset 0 1px 6px 0 rgba(0, 0, 0, 0.1);
+		@apply relative z-10 border-b border-black/25;
+		box-shadow: inset 0 -4px 8px 0 rgba(0, 0, 0, 0.1);
 	}
 
 </style>
