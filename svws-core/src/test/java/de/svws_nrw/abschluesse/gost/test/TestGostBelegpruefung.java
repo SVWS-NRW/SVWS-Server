@@ -1,6 +1,6 @@
 package de.svws_nrw.abschluesse.gost.test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
@@ -194,7 +194,7 @@ class TestGostBelegpruefung {
 							}
 
 							// Prüfe den Erfolg der Belegprüfung
-							assertTrue(ergebnis.erfolgreich == vergleichErgebnisGesamt.erfolgreich, ergebnis.erfolgreich
+							assertEquals(vergleichErgebnisGesamt.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
 									? "Fehler: Gesamt-Belegprüfung war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
 											: "Fehler: Gesamt-Belegprüfung war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
 

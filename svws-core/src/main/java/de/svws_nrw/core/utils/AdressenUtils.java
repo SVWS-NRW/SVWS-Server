@@ -30,7 +30,7 @@ public final class AdressenUtils {
 			return result;
 		}
 		final @NotNull String tmp = strasse.trim().replace("  ", " ").replace("  ", " ").replace(" -", "-").replace("- ", "-");
-		result[0] = tmp.replaceFirst(" *([0-9]+ *[-\\+]+)* *[0-9]+\\D*$", "");
+		result[0] = tmp.replaceFirst(" *(\\d+ *[-\\+]+)* *\\d+\\D*$", "");
 		final @NotNull String rest = tmp.substring(result[0].length()).trim();
 		result[1] = rest.replaceFirst("\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length()).trim();

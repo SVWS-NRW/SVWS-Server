@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -340,15 +341,15 @@ class TestLinkedCollection {
 	/**
 	 * Test method for {@link LinkedCollection#equals(Object)}.
 	 */
-	@SuppressWarnings({ "unlikely-arg-type", "static-method" })
+	@SuppressWarnings({ "static-method" })
 	@Test
 	final void testEqualsObject() {
-		assertFalse(coll.equals("no collection"));
-		assertFalse(coll.equals(v2));
-		assertFalse(coll.equals(coll2));
-		assertFalse(coll.equals(v4));
+		assertNotEquals("no collection", coll);
+		assertNotEquals(v2, coll);
+		assertNotEquals(coll2, coll);
+		assertNotEquals(v4, coll);
 		assertTrue(coll2.equals(v2));
-		assertTrue(coll2.equals(coll2));
+		assertEquals(coll2, coll2);
 	}
 
 	/**
