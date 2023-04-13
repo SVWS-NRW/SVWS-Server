@@ -189,6 +189,13 @@ export class RouteDataSchueler {
 		return this._state.value.mapAbiturjahrgaenge;
 	}
 
+	patch = async (data : Partial<SchuelerStammdaten>) => {
+		if (this.auswahl === undefined)
+			return;
+		await api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id);
+		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
+	}
+
 	gotoSchueler = async (value: SchuelerListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchueler.name, params: { } });

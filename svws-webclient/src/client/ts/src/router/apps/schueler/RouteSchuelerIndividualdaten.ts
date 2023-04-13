@@ -1,4 +1,4 @@
-import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
@@ -7,22 +7,77 @@ import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchueler} from "../RouteSchueler";
 import { routeSchueler } from "../RouteSchueler";
+import { shallowRef } from "vue";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
+interface RouteStateDataSchuelerIndividualdaten {
+	mapFahrschuelerarten: Map<number, KatalogEintrag>;
+	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
+	mapHaltestellen: Map<number, KatalogEintrag>;
+	mapReligionen: Map<number, ReligionEintrag>;
+}
 export class RouteDataSchuelerIndividualdaten {
 
-	item: SchuelerListeEintrag | undefined = undefined;
-	mapFahrschuelerarten: Map<number, KatalogEintrag> = new Map();
-	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag> = new Map();
-	mapHaltestellen: Map<number, KatalogEintrag> = new Map();
-	mapReligionen: Map<number, ReligionEintrag> = new Map();
+	private static _defaultState: RouteStateDataSchuelerIndividualdaten = {
+		mapFahrschuelerarten: new Map(),
+		mapFoerderschwerpunkte: new Map(),
+		mapHaltestellen: new Map(),
+		mapReligionen: new Map(),
+	}
 
-	patch = async (data : Partial<SchuelerStammdaten>) => {
-		if (this.item === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchSchuelerStammdaten(data, api.schema, this.item.id);
-		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
+	private _state = shallowRef(RouteDataSchuelerIndividualdaten._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerIndividualdaten>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerIndividualdaten._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerIndividualdaten>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	get mapFahrschuelerarten(): Map<number, KatalogEintrag> {
+		return this._state.value.mapFahrschuelerarten;
+	}
+
+	get mapFoerderschwerpunkte(): Map<number, FoerderschwerpunktEintrag> {
+		return this._state.value.mapFoerderschwerpunkte;
+	}
+
+	get mapHaltestellen(): Map<number, KatalogEintrag> {
+		return this._state.value.mapHaltestellen;
+	}
+
+	get mapReligionen(): Map<number, ReligionEintrag> {
+		return this._state.value.mapReligionen;
+	}
+
+	public async ladeListe() {
+		// Lade den Katalog der Fahrschülerarten
+		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
+		const mapFahrschuelerarten = new Map();
+		for (const fa of fahrschuelerarten)
+			mapFahrschuelerarten.set(fa.id, fa);
+		// Lade den Katalog der Förderschwerpunkte
+		const foerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
+		const mapFoerderschwerpunkte = new Map();
+		for (const fs of foerderschwerpunkte)
+			mapFoerderschwerpunkte.set(fs.id, fs);
+		// Lade den Katalog der Haltestellen
+		const haltestellen = await api.server.getHaltestellen(api.schema);
+		const mapHaltestellen = new Map();
+		for (const h of haltestellen)
+			mapHaltestellen.set(h.id, h);
+		// Lade den Katalog der Religionen
+		const religionen = await api.server.getReligionen(api.schema)
+		const mapReligionen = new Map();
+		for (const r of religionen)
+			mapReligionen.set(r.id, r);
+		this.setPatchedDefaultState({ mapFahrschuelerarten, mapFoerderschwerpunkte, mapHaltestellen, mapReligionen })
 	}
 
 }
@@ -36,53 +91,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		// Lade den Katalog der Fahrschülerarten
-		const fahrschuelerarten = await api.server.getSchuelerFahrschuelerarten(api.schema)
-		const mapFachschuelerarten = new Map();
-		for (const fa of fahrschuelerarten)
-			mapFachschuelerarten.set(fa.id, fa);
-		this.data.mapFahrschuelerarten = mapFachschuelerarten;
-		// Lade den Katalog der Förderschwerpunkte
-		const foerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
-		const mapFoerderschwerpunkte = new Map();
-		for (const fs of foerderschwerpunkte)
-			mapFoerderschwerpunkte.set(fs.id, fs);
-		this.data.mapFoerderschwerpunkte = mapFoerderschwerpunkte;
-		// Lade den Katalog der Haltestellen
-		const haltestellen = await api.server.getHaltestellen(api.schema);
-		const mapHaltestellen = new Map();
-		for (const h of haltestellen)
-			mapHaltestellen.set(h.id, h);
-		this.data.mapHaltestellen = mapHaltestellen;
-		// Lade den Katalog der Religionen
-		const religionen = await api.server.getReligionen(api.schema)
-		const mapReligionen = new Map();
-		for (const r of religionen)
-			mapReligionen.set(r.id, r);
-		this.data.mapReligionen = mapReligionen;
-	}
-
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.id === undefined) {
-			await this.onSelect();
-		} else {
-			const id = parseInt(to_params.id);
-			await this.onSelect(this.parent.data.mapSchueler.get(id));
-		}
-	}
-
-	protected async onSelect(item?: SchuelerListeEintrag) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-		} else {
-			this.data.item = item;
-		}
+		await this.data.ladeListe();
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -91,7 +100,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
-			patch: this.data.patch,
+			patch: routeSchueler.data.patch,
 			data: routeSchueler.data.stammdaten,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,

@@ -60,7 +60,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (!this.data.hatStammdaten) {
 			if (to.name === this.name)
 				return;
-			return this.getRoute(undefined);
+			return this.getRoute();
 		}
 		if (to.name === this.name)
 			return this.getChildRoute(this.data.stammdaten.id);
