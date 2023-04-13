@@ -1,7 +1,6 @@
 import type { SchuelerSchulbesuchsdaten} from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import type { Ref} from "vue";
-import { ref } from "vue";
+import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { api } from "~/router/Api";
@@ -10,33 +9,46 @@ import { RouteNode } from "~/router/RouteNode";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
+interface RouteStateDataSchuelerSchulbesuch {
+	daten: SchuelerSchulbesuchsdaten | undefined;
+	idSchueler: number | undefined;
+}
+
 class RouteDataSchuelerSchulbesuch {
 
-	_daten: Ref<SchuelerSchulbesuchsdaten | undefined>;
-
-	public constructor() {
-		this._daten = ref(undefined);
+	private static _defaultState: RouteStateDataSchuelerSchulbesuch = {
+		daten: undefined,
+		idSchueler: undefined,
 	}
 
-	public get daten(): SchuelerSchulbesuchsdaten {
-		if (this._daten.value === undefined)
+	private _state = shallowRef(RouteDataSchuelerSchulbesuch._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerSchulbesuch>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerSchulbesuch._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerSchulbesuch>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	get daten(): SchuelerSchulbesuchsdaten {
+		if (this._state.value.daten === undefined)
 			throw new Error("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
-		return this._daten.value;
+		return this._state.value.daten;
 	}
 
-	public get visible(): boolean {
-		return !(routeSchuelerSchulbesuch.hidden()) && (this._daten.value !== undefined);
-	}
-
-	public async onSelect(id?: number) {
-		if (((id === undefined) && (this._daten.value === undefined)) || ((this._daten.value !== undefined) && (this.daten.id === id)))
+	public async setEintrag(idSchueler?: number) {
+		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
 			return;
-		this._daten.value = (id === undefined) ? undefined : await api.server.getSchuelerSchulbesuch(api.schema, id);
+		const daten = await api.server.getSchuelerSchulbesuch(api.schema, idSchueler);
+		this.setPatchedState({idSchueler, daten});
 	}
 
 	patch = async (data : Partial<SchuelerSchulbesuchsdaten>) => {
-		if (this._daten.value === undefined)
-			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchSchuelerSchulbesuch(data, api.schema, this.daten.id);
 	}
 }
@@ -49,17 +61,12 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 		super.text = "Schulbesuch";
 	}
 
-
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.id === undefined) {
-			await this.data.onSelect(undefined);
-		} else {
+		if (to_params.id !== undefined) {
 			const id = parseInt(to_params.id);
-			await this.data.onSelect(this.parent.data.mapSchueler.get(id)?.id);
+			await this.data.setEintrag(id);
 		}
 	}
 
