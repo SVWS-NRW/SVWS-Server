@@ -147,8 +147,16 @@ public class Kurs42Import {
 		for (final Kurs42DataFaecher fach : k42Faecher) {
 			mapFachKuerzelToID.put(fach.Krz, fach.IDNr);
 		}
-		long curKursID = 0;
 		long curRegelID = 0;
+		curRegelID = initKurse(curRegelID, mapLehrer);
+		initSchienen();
+		curRegelID = initBlockplan(curRegelID);
+		initFachwahlen();
+	}
+
+	private long initKurse(final long firstRegelID, final Map<String, Long> mapLehrer) throws IOException {
+		long curRegelID = firstRegelID;
+		long curKursID = 0;
 		for (final Kurs42DataKurse k42Kurs : k42Kurse) {
 			final long id = curKursID++;
 			final Long fachID = mapFachKuerzelToID.get(k42Kurs.Fach);
@@ -204,6 +212,10 @@ public class Kurs42Import {
 				}
 			}
 		}
+		return curRegelID;
+	}
+
+	private void initSchienen() {
 		long curSchienenID = 0;
 		for (final Kurs42DataSchienen k42Schiene : k42Schienen) {
 			final long id = curSchienenID++;
@@ -216,6 +228,10 @@ public class Kurs42Import {
 			schiene.bezeichnung = k42Schiene.Bezeichnung;
 			this.schienen.add(schiene);
 		}
+	}
+
+	private long initBlockplan(final long firstRegelID) throws IOException {
+		long curRegelID = firstRegelID;
 		for (final Kurs42DataBlockplan bp : k42Blockplan) {
 			final Long id = mapKursNameToID.get(bp.Kursbezeichnung);
 			if (id == null)
@@ -234,6 +250,10 @@ public class Kurs42Import {
 				regeln.add(regel);
 			}
 		}
+		return curRegelID;
+	}
+
+	private void initFachwahlen() throws IOException {
 		for (final Kurs42DataFachwahlen fw : k42Fachwahlen) {
 			final String schuelerKey = getSchuelerKeyFW.apply(fw);
 			final Long kursID = mapKursNameToID.get(fw.Kurs);

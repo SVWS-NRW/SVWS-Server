@@ -26,8 +26,14 @@ public class CommandLineOption {
 	 * @param longTag       die lange Bezeichnung für die Option, wird mit zwei einfachen Bindestrichen verwendet
 	 * @param hasArgument   gibt an, ob nach der Bezeichnung für die Option ein Argument folgen muss oder nicht
 	 * @param description   eine textuelle Beschreibung dieser Option
+	 *
+	 * @throws CommandLineException falls die kurze oder die lange Bezeichnung null sind.
 	 */
-	public CommandLineOption(final String shortTag, final String longTag, final boolean hasArgument, final String description) {
+	public CommandLineOption(final String shortTag, final String longTag, final boolean hasArgument, final String description) throws CommandLineException {
+		if (shortTag == null)
+			throw new CommandLineException(CommandLineExceptionType.SHORT_TAG_NOT_DEFINED);
+		if (longTag == null)
+			throw new CommandLineException(CommandLineExceptionType.LONG_TAG_NOT_DEFINED);
 		this.shortTag = shortTag;
 		this.longTag = longTag;
 		this.hasArgument = hasArgument;

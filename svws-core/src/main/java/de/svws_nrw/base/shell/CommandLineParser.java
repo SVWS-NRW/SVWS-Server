@@ -43,12 +43,15 @@ public class CommandLineParser {
 	 * @throws CommandLineException    tritt auf, falls eine ungültige Option in der Kommandozeile entdeckt wird
 	 */
 	private void parse() throws CommandLineException {
-		CommandLineOption current = null;
+		if (options.isEmpty())
+			throw new CommandLineException(CommandLineExceptionType.NO_OPTIONS);
+		// Setze die aktuelle option auf die erste definierte Option, diese wird nicht benötigt, sollte aber nicht null sein
+		CommandLineOption current = options.entrySet().iterator().next().getValue();
 		boolean isArgument = false;
 		for (int i = 0; i < args.length; i++) {
 			final String arg = args[i];
 			// Prüfe, zunächst, ob es sich um ein Argument der zuvor gelesenen Option handelt und schreibe ggf. den Wert
-			if (isArgument && (current != null)) {
+			if (isArgument) {
 				values.put(current.getShortTag(), arg);
 				isArgument = false;
 			} else {
@@ -157,16 +160,25 @@ public class CommandLineParser {
 	 * @param error   die Fehlermeldung, die ausgegeben werden soll
 	 */
 	public void printOptions(final String error) {
+		final StringBuilder sb = new StringBuilder();
 		if (error != null) {
-			System.out.println(error);
-			System.out.println();
+			sb.append(error);
+			sb.append(System.lineSeparator());
 		}
-		System.out.println("Gültige Kommandozeilen-Optionen sind: ");
+		sb.append("Gültige Kommandozeilen-Optionen sind:");
+		sb.append(System.lineSeparator());
 		for (final CommandLineOption option : options.values()) {
-			System.out.println("  -" + option.getShortTag());
-			System.out.println("  --" + option.getLongTag());
-			System.out.println("        " + option.getDescription());
+			sb.append("  -");
+			sb.append(option.getShortTag());
+			sb.append(System.lineSeparator());
+			sb.append("  --");
+			sb.append(option.getLongTag());
+			sb.append(System.lineSeparator());
+			sb.append("        ");
+			sb.append(option.getDescription());
+			sb.append(System.lineSeparator());
 		}
+		System.out.print(sb.toString());
 	}
 
 
