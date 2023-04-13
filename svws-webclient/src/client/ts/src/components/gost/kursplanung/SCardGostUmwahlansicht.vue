@@ -10,34 +10,30 @@
 				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
 					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
 						<div class="">
-							<svws-ui-data-table v-model="fachbelegungen"
-								:items="undefined"
-								:no-data="false">
+							<svws-ui-data-table :items="[]" :no-data="false">
 								<template #body>
 									<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
 										:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+									<template v-if="!blockung_aktiv">
+										<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
+											<div v-if="active" class="flex gap-2 items-center w-full h-full">
+												<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
+												<span>Entfernen</span>
+											</div>
+											<div v-else class="flex gap-2 items-center w-full h-full">
+												<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
+											</div>
+										</div>
+									</template>
 								</template>
 							</svws-ui-data-table>
-							<template v-if="!blockung_aktiv">
-								<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
-									<div v-if="active" class="flex gap-2 items-center w-full h-full">
-										<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
-										<span>Entfernen</span>
-									</div>
-									<div v-else class="flex gap-2 items-center w-full h-full">
-										<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
-									</div>
-								</div>
-							</template>
 						</div>
 					</div>
 				</svws-ui-drop-data>
 				<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
 			</div>
 			<div class="flex-grow">
-				<svws-ui-data-table v-model="schienen"
-					:items="undefined"
-					:columns="cols">
+				<svws-ui-data-table :items="[]" :columns="cols">
 					<template #header><div /></template>
 					<template #body>
 						<s-kurs-schueler-schiene v-for="(schiene, index) in schienen"
@@ -57,7 +53,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFach, GostFachwahl, List } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
