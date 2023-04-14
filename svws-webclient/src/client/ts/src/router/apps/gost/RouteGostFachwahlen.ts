@@ -1,5 +1,6 @@
-import type { GostJahrgang, GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
+import type { GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 import { api } from "~/router/Api";
@@ -7,9 +8,39 @@ import type { RouteGost} from "~/router/apps/RouteGost";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 
+
+interface RouteStateDataGostFachwahlen {
+	fachwahlen: List<GostStatistikFachwahl>;
+}
 export class RouteDataGostFachwahlen  {
-	item: GostJahrgang | undefined = undefined;
-	fachwahlen: List<GostStatistikFachwahl> = new ArrayList<GostStatistikFachwahl>();
+
+	private static _defaultState: RouteStateDataGostFachwahlen = {
+		fachwahlen: new ArrayList<GostStatistikFachwahl>(),
+	}
+
+	private _state = shallowRef(RouteDataGostFachwahlen._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataGostFachwahlen>) {
+		this._state.value = Object.assign({ ... RouteDataGostFachwahlen._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataGostFachwahlen>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+
+	public get fachwahlen(): List<GostStatistikFachwahl> {
+		return this._state.value.fachwahlen;
+	}
+
+	public async setEintrag(abiturjahr?: number) {
+		const fachwahlen = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr || -1);
+		this.setPatchedState({fachwahlen})
+	}
+
 }
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -21,25 +52,25 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {
-			return this.checkHidden(routeGost.data.auswahl);
+			return this.checkHidden(params);
 		}
 	}
 
-	public checkHidden(jahrgang: GostJahrgang | undefined) {
-		return (jahrgang === undefined) || (jahrgang.abiturjahr === -1);
+	public checkHidden(params?: RouteParams) {
+		if (params?.abiturjahr instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		const abiturjahr = (params === undefined) || !params.abiturjahr ? undefined : parseInt(params.abiturjahr);
+		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to.name === this.name) {
-			if (to_params.abiturjahr === undefined)
-				return false;
 			if (this.parent === undefined)
 				throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-			const id = parseInt(to_params.abiturjahr);
-			const jahrgang = this.parent.data.mapAbiturjahrgaenge.get(id)
-			if (this.checkHidden(jahrgang))
+			const abiturjahr = parseInt(to_params.abiturjahr);
+			if (abiturjahr === undefined || abiturjahr === -1)
 				return { name: this.parent.defaultChild!.name, params: { abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
 		}
 		return true;
@@ -50,24 +81,8 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.parent === undefined)
 			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.abiturjahr === undefined) {
-			await this.onSelect(undefined);
-		} else {
-			const id = parseInt(to_params.abiturjahr);
-			await this.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
-		}
-	}
-
-	protected async onSelect(item?: GostJahrgang) {
-		if (item === this.data.item)
-			return;
-		if (item === undefined) {
-			this.data.item = undefined;
-			this.data.fachwahlen = new ArrayList<GostStatistikFachwahl>();
-		} else {
-			this.data.item = item;
-			this.data.fachwahlen = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, this.data.item.abiturjahr || -1);
-		}
+		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		await this.data.setEintrag(abiturjahr);
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
@@ -76,8 +91,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {
 		return {
-			jahrgang: routeGost.data.jahrgangsdaten,
-			fachwahlen: this.data.fachwahlen
+			fachwahlen: this.data.fachwahlen,
 		};
 	}
 

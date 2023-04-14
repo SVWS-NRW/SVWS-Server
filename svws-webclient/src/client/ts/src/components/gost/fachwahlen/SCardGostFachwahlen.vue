@@ -148,11 +148,10 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { GostJahrgang, GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
+	import type { GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
 	import { ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		jahrgang: GostJahrgang;
 		fachwahlen: List<GostStatistikFachwahl>;
 	}>();
 

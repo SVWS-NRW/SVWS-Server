@@ -1,6 +1,6 @@
 <template>
 	<div class="app-container">
-		<s-card-gost-fachwahlen :jahrgang="jahrgang" :fachwahlen="fachwahlen" />
+		<s-card-gost-fachwahlen :fachwahlen="fachwahlen" />
 	</div>
 </template>
 
