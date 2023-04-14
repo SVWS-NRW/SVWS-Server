@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-data-table :clicked="lernabschnitt" @update:clicked="setLernabschnitt" clickable :columns="cols" :items="lernabschnitte" :footer="false">
+	<svws-ui-data-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" clickable :columns="cols" :items="lernabschnitte" :footer="false">
 		<template #cell="{rowData: row}">
 			{{ row.schuljahr + "." + row.abschnitt + (row.wechselNr === null ? "" : " (alt)") }}
 		</template>

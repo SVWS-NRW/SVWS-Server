@@ -3,5 +3,5 @@ import type { SchuelerLernabschnittListeEintrag, List } from "@svws-nrw/svws-cor
 export interface SchuelerAbschnittAuswahlProps {
 	lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;
 	lernabschnitte: List<SchuelerLernabschnittListeEintrag>;
-	setLernabschnitt: (value: SchuelerLernabschnittListeEintrag | undefined) => Promise<void>;
+	gotoLernabschnitt: (value: SchuelerLernabschnittListeEintrag | undefined) => Promise<void>;
 }
