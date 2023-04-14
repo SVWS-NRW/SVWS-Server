@@ -1,7 +1,6 @@
-import type { GostJahrgang, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@svws-nrw/svws-core";
+import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import type { Ref} from "vue";
-import { ref } from "vue";
+import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { api } from "~/router/Api";
@@ -9,35 +8,53 @@ import type { RouteGost} from "~/router/apps/RouteGost";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 
+interface RouteStateDataGostFaecher {
+	abiturjahr: number | undefined;
+	mapFachkombinationen: Map<number, GostJahrgangFachkombination> | undefined;
+}
 export class RouteDataGostFaecher  {
 
-	item: GostJahrgang | undefined = undefined;
-	private _mapFachkombinationen: Ref<Map<number, GostJahrgangFachkombination> | undefined> = ref(undefined);
+	private static _defaultState: RouteStateDataGostFaecher = {
+		abiturjahr: undefined,
+		mapFachkombinationen: undefined,
+	}
 
-	public async onSelect(item?: GostJahrgang) {
-		if (item === this.item)
-			return;
-		if (item === undefined) {
-			this.item = undefined;
-			this._mapFachkombinationen.value = undefined;
-		} else {
-			this.item = item;
-			await this.ladeFachkombinationen(item);
-		}
+	private _state = shallowRef(RouteDataGostFaecher._defaultState);
+
+	private setPatchedDefaultState(patch: Partial<RouteStateDataGostFaecher>) {
+		this._state.value = Object.assign({ ... RouteDataGostFaecher._defaultState }, patch);
+	}
+
+	private setPatchedState(patch: Partial<RouteStateDataGostFaecher>) {
+		this._state.value = Object.assign({ ... this._state.value }, patch);
+	}
+
+	private commit(): void {
+		this._state.value = { ... this._state.value };
+	}
+	get abiturjahr(): number {
+		if (this._state.value.abiturjahr === undefined)
+			throw new Error("Unerwarteter Fehler: Jahrgang nicht festgelegt, es können keine Informationen zu den Fächern abgerufen oder eingegeben werden.");
+		return this._state.value.abiturjahr;
 	}
 
 	public get mapFachkombinationen() : Map<number, GostJahrgangFachkombination> {
-		if (this._mapFachkombinationen.value === undefined)
+		if (this._state.value.mapFachkombinationen === undefined)
 			throw new Error("Zugriff auf die Fachkombinationen, bevor diese geladen wurden.");
-		return this._mapFachkombinationen.value;
+		return this._state.value.mapFachkombinationen;
 	}
 
-	public async ladeFachkombinationen(item: GostJahrgang) {
-		const listfachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, item.abiturjahr);
-		const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
-		for (const fk of listfachkombinationen)
-			mapFachkombinationen.set(fk.id, fk);
-		this._mapFachkombinationen.value = mapFachkombinationen;
+	public async setEintrag(abiturjahr?: number) {
+		if (abiturjahr === this._state.value.abiturjahr)
+			return;
+		let mapFachkombinationen = undefined;
+		if (abiturjahr !== undefined) {
+			const listFachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, abiturjahr);
+			mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
+			for (const fk of listFachkombinationen)
+				mapFachkombinationen.set(fk.id, fk);
+		}
+		this.setPatchedState({abiturjahr, mapFachkombinationen})
 	}
 
 	patchFachkombination = async (data: Partial<GostJahrgangFachkombination>, id : number) => {
@@ -46,15 +63,17 @@ export class RouteDataGostFaecher  {
 			throw new Error("Änderungen an der Fachkombination mit der ID " + id + " nicht möglich, da eine solche Fachkombination nicht bekannt ist.");
 		await api.server.patchGostFachkombination(data, api.schema, id);
 		Object.assign(kombi, data);
+		this.commit();
 		return true;
 	}
 
 	addFachkombination = async (typ: GostLaufbahnplanungFachkombinationTyp) => {
-		if (this.item === undefined)
+		if (this._state.value.abiturjahr === undefined)
 			return undefined;
-		const result = await api.server.addGostAbiturjahrgangFachkombination(api.schema, this.item.abiturjahr, typ.getValue());
+		const result = await api.server.addGostAbiturjahrgangFachkombination(api.schema, this.abiturjahr, typ.getValue());
 		if (result !== undefined)
 			this.mapFachkombinationen.set(result.id, result);
+		this.commit();
 		return result;
 	}
 
@@ -62,6 +81,7 @@ export class RouteDataGostFaecher  {
 		const result = await api.server.deleteGostFachkombination(api.schema, id);
 		if (result !== undefined)
 			this.mapFachkombinationen.delete(id);
+		this.commit();
 		return result;
 	}
 
@@ -77,7 +97,6 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 		super.text = "Fächer";
 	}
 
-
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
@@ -92,12 +111,8 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.parent === undefined)
 			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		if (to_params.abiturjahr === undefined) {
-			await this.data.onSelect(undefined);
-			return routeGost.getRoute();
-		}
-		const id = parseInt(to_params.abiturjahr);
-		await this.data.onSelect(this.parent.data.mapAbiturjahrgaenge.get(id));
+		const id = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		await this.data.setEintrag(id);
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
