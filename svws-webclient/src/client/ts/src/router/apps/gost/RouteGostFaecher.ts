@@ -58,12 +58,14 @@ export class RouteDataGostFaecher  {
 	}
 
 	patchFachkombination = async (data: Partial<GostJahrgangFachkombination>, id : number) => {
-		const kombi = this.mapFachkombinationen.get(id);
+		const mapFachkombinationen = this.mapFachkombinationen;
+		const kombi = mapFachkombinationen.get(id);
 		if (kombi === undefined)
 			throw new Error("Änderungen an der Fachkombination mit der ID " + id + " nicht möglich, da eine solche Fachkombination nicht bekannt ist.");
 		await api.server.patchGostFachkombination(data, api.schema, id);
 		Object.assign(kombi, data);
-		this.commit();
+		mapFachkombinationen.set(kombi.id, kombi);
+		this.setPatchedState({mapFachkombinationen});
 		return true;
 	}
 
@@ -71,17 +73,19 @@ export class RouteDataGostFaecher  {
 		if (this._state.value.abiturjahr === undefined)
 			return undefined;
 		const result = await api.server.addGostAbiturjahrgangFachkombination(api.schema, this.abiturjahr, typ.getValue());
+		const mapFachkombinationen = this.mapFachkombinationen;
 		if (result !== undefined)
-			this.mapFachkombinationen.set(result.id, result);
-		this.commit();
+			mapFachkombinationen.set(result.id, result);
+		this.setPatchedState({mapFachkombinationen});
 		return result;
 	}
 
 	removeFachkombination = async (id: number) => {
 		const result = await api.server.deleteGostFachkombination(api.schema, id);
+		const mapFachkombinationen = this.mapFachkombinationen;
 		if (result !== undefined)
-			this.mapFachkombinationen.delete(id);
-		this.commit();
+			mapFachkombinationen.delete(id);
+		this.setPatchedState({mapFachkombinationen});
 		return result;
 	}
 
@@ -128,7 +132,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			removeFachkombination: this.data.removeFachkombination,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: routeGost.data.jahrgangsdaten,
-			mapFachkombinationen: this.data.mapFachkombinationen
+			mapFachkombinationen: () => this.data.mapFachkombinationen
 		};
 	}
 

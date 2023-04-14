@@ -17,19 +17,10 @@
 
 <script setup lang="ts">
 
-	import type { GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten} from "@svws-nrw/svws-core";
 	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
+	import type { GostFaecherProps } from "./SGostFaecherProps";
 
-	defineProps<{
-		faecherManager: GostFaecherManager;
-		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
-		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
-		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
-		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
-		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
-	}>();
+	defineProps<GostFaecherProps>();
 
 </script>
 

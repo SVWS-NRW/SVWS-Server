@@ -45,7 +45,7 @@
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
+		mapFachkombinationen: () => Map<number, GostJahrgangFachkombination>;
 	}>();
 
 	const title: ComputedRef<string> = computed(() => {
@@ -61,7 +61,7 @@
 
 	const rows: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
 		const result = new ArrayList<GostJahrgangFachkombination>();
-		for (const kombi of props.mapFachkombinationen.values())
+		for (const kombi of props.mapFachkombinationen().values())
 			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
 				result.add(kombi);
 		return result;

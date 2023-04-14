@@ -8,5 +8,5 @@ export interface GostFaecherProps {
 	removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
+	mapFachkombinationen: () => Map<number, GostJahrgangFachkombination>;
 }
