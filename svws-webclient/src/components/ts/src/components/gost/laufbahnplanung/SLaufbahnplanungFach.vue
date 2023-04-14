@@ -54,7 +54,7 @@
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : 'rgb(var(--color-light))');
+	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : 'rgb(var(--color-gray))');
 
 	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager.getFachbelegungByID(props.fach.id));
 

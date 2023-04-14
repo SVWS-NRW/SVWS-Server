@@ -345,6 +345,10 @@
 		padding: 0.1rem 0.5rem 0.1rem;
 		line-height: 1;
 
+		&__separate {
+			@apply border-r-2;
+		}
+
 		&__no-padding {
 			@apply p-0;
 		}

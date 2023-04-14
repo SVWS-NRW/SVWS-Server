@@ -97,7 +97,7 @@
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgb(var(--color-light))';
+			return 'rgb(var(--color-gray))';
 		return ((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
@@ -105,7 +105,7 @@
 
 	const bgColorTransparent: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgb(var(--color-light))';
+			return 'rgb(var(--color-gray))';
 		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.6)
 	});
 
