@@ -20,13 +20,14 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
+	import {ZulaessigesFach} from "@svws-nrw/svws-core";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "fachID", label: "Fach", span: 1, sortable: false },
-		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: false },
-		{ key: "note", label: "Note", span: 1, sortable: false },
+		{ key: "fachID", label: "Fach", span: 1, sortable: true },
+		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true },
+		{ key: "note", label: "Note", span: 0.5, sortable: true },
 	];
 
 	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);

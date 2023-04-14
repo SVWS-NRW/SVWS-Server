@@ -79,7 +79,7 @@
 }
 
 .input--schule-abschnitte .multiselect-input-component {
-	@apply cursor-pointer opacity-25;
+	@apply cursor-pointer opacity-50;
 
 	&:hover,
 	&:focus-within,

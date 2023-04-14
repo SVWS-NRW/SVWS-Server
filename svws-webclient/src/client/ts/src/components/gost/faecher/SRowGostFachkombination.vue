@@ -1,15 +1,37 @@
 <template>
-	<td> <svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless /> </td>
-	<td> <svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless /> </td>
-	<td> <svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless /> </td>
-	<td> <svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigEF1" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigEF2" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ11" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ12" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ21" headless /> </td>
-	<td> <svws-ui-checkbox v-model="gueltigQ22" headless /> </td>
-	<td> <svws-ui-icon class="cursor-pointer text-red-400" @click="del_fachkombi"><i-ri-delete-bin-2-line /></svws-ui-icon> </td>
+	<div role="cell" class="data-table__td data-table__td__no-padding">
+		<svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
+		<svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__no-padding">
+		<svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
+		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigEF1" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigEF2" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigQ11" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigQ12" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigQ21" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-checkbox v-model="gueltigQ22" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center">
+		<svws-ui-button type="trash" @click="del_fachkombi" />
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -1,68 +1,87 @@
 <template>
-	<td class="px-2 text-left" :style="{ 'background-color': bgColor }">
-		{{ fach.kuerzelAnzeige }}
-	</td>
-	<td class="text-left" :style="{ 'background-color': bgColor }">
-		{{ fach.bezeichnung }}
-	</td>
-	<td class="text-center" :style="{ 'background-color': bgColor }">
-		{{ fach.istFremdSpracheNeuEinsetzend ? "&#x2713;" : "&#x2717;" }}
-	</td>
-	<td class="text-center" :class="{ 'cursor-pointer': istProjektkurs }" :style="{ 'background-color': bgColor }"
-		@click="set_pjk_stunden">
-		<template v-if="istProjektkurs">
-			<span class="px-1" :class="{ 'bg-green-400': fach.wochenstundenQualifikationsphase === 2, 'bg-slate-50': fach.wochenstundenQualifikationsphase === 3}">2</span>
-			<span class="px-1" :class="{ 'bg-green-400': fach.wochenstundenQualifikationsphase === 3, 'bg-slate-50': fach.wochenstundenQualifikationsphase === 2}">3</span>
-		</template>
-		<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
-	</td>
-	<td class="text-left" :style="{ 'background-color': bgColor }">
-		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
-			<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach1=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
+	<div class="data-table__tr data-table__tbody__tr" role="row" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td">
+			<div class="data-table__td-content" :title="fach.kuerzelAnzeige">
+				{{ fach.kuerzelAnzeige }}
+			</div>
 		</div>
-		<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
-	</td>
-	<td class="text-left" :style="{ 'background-color': bgColor }">
-		<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-			<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-			<svws-ui-icon class="text-red-400 cursor-pointer" @click="leitfach2=undefined"><i-ri-delete-bin-2-line /></svws-ui-icon>
+		<div role="cell" class="data-table__td">
+			<span class="hyphens-auto">{{ fach.bezeichnung }}</span>
 		</div>
-		<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
-	</td>
-
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer': ef_moeglich } ]"
-		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef1_set">
-		{{ ef_moeglich ? toggle(fach.istMoeglichEF1) : "" }}
-	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer': ef_moeglich } ]"
-		:style="{ 'background-color': ef_moeglich ? bgColor : 'gray' }" @click="ef2_set">
-		{{ ef_moeglich ? toggle(fach.istMoeglichEF2) : "" }}
-	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
-		:style="{ 'background-color': bgColor }" @click="q11_set">
-		{{ toggle(fach.istMoeglichQ11) }}
-	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
-		:style="{ 'background-color': bgColor }" @click="q12_set">
-		{{ toggle(fach.istMoeglichQ12) }}
-	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
-		:style="{ 'background-color': bgColor }" @click="q21_set">
-		{{ toggle(fach.istMoeglichQ21) }}
-	</td>
-	<td :class="[ 'w-12 text-center', 'cursor-pointer' ]"
-		:style="{ 'background-color': bgColor }" @click="q22_set">
-		{{ toggle(fach.istMoeglichQ22) }}
-	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer': abi_gk_moeglich } ]"
-		:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'gray' }" @click="abi_gk_set">
-		{{ abi_gk_moeglich ? toggle(fach.istMoeglichAbiGK) : "" }}
-	</td>
-	<td :class="[ 'w-12 text-center', { 'cursor-pointer': abi_lk_moeglich } ]"
-		:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'gray' }" @click="abi_lk_set">
-		{{ abi_lk_moeglich ? toggle(fach.istMoeglichAbiLK) : "" }}
-	</td>
+		<div role="cell" class="data-table__td data-table__td__align-center">
+			<i-ri-check-line v-if="fach.istFremdSpracheNeuEinsetzend" />
+			<i-ri-close-line v-else class="opacity-25" />
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
+			<div v-if="istProjektkurs" class="flex items-center border border-black/25 rounded group">
+				<span class="px-1 py-0.5 rounded-l" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 2, 'text-black/50 bg-white group-hover:text-black': fach.wochenstundenQualifikationsphase === 3}">2</span>
+				<span class="px-1 py-0.5 rounded-r" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 3, 'text-black/50 bg-white group-hover:text-black': fach.wochenstundenQualifikationsphase === 2}">3</span>
+			</div>
+			<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center">
+			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
+				<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-button type="trash" @click="leitfach1=undefined" />
+			</div>
+			<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
+				<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-button type="trash" @click="leitfach2=undefined" />
+			</div>
+			<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': ef_moeglich } ]"
+			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef1_set">
+			<template v-if="ef_moeglich">
+				<i-ri-checkbox-line v-if="fach.istMoeglichEF1" />
+				<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			</template>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': ef_moeglich } ]"
+			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef2_set">
+			<template v-if="ef_moeglich">
+				<i-ri-checkbox-line v-if="fach.istMoeglichEF2" />
+				<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			</template>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
+			@click="q11_set">
+			<i-ri-checkbox-line v-if="fach.istMoeglichQ11" />
+			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
+			@click="q12_set">
+			<i-ri-checkbox-line v-if="fach.istMoeglichQ12" />
+			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
+			@click="q21_set">
+			<i-ri-checkbox-line v-if="fach.istMoeglichQ21" />
+			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ 'cursor-pointer' ]"
+			@click="q22_set">
+			<i-ri-checkbox-line v-if="fach.istMoeglichQ22" />
+			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_gk_moeglich } ]"
+			:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_gk_set">
+			<template v-if="abi_gk_moeglich">
+				<i-ri-checkbox-line v-if="fach.istMoeglichAbiGK" />
+				<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			</template>
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_lk_moeglich } ]"
+			:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_lk_set">
+			<template v-if="abi_lk_moeglich">
+				<i-ri-checkbox-line v-if="fach.istMoeglichAbiLK" />
+				<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			</template>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -1,9 +1,7 @@
 <template>
 	<div class="s-gost-faecher--wrapper">
-		<div class="w-128">
-			<s-card-gost-faecher :faecher-manager="faecherManager" :abiturjahr="jahrgangsdaten?.abiturjahr ?? -1" :patch-fach="patchFach" />
-		</div>
-		<div>
+		<s-card-gost-faecher :faecher-manager="faecherManager" :abiturjahr="jahrgangsdaten?.abiturjahr ?? -1" :patch-fach="patchFach" />
+		<div class="flex flex-col gap-12">
 			<s-card-gost-zusatzkurse v-if="jahrgangsdaten !== undefined" :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager="faecherManager"
 				:map-fachkombinationen="mapFachkombinationen" :patch-fachkombination="patchFachkombination"
@@ -26,6 +24,10 @@
 
 <style>
 	.s-gost-faecher--wrapper {
-		@apply grid grid-cols-1 gap-8 gap-x-8 gap-y-4 2xl:grid-cols-2;
+		@apply grid grid-cols-1 gap-8;
+
+		@media (min-width: theme("screens.2xl")) {
+			grid-template-columns: 1.5fr 1fr;
+		}
 	}
 </style>

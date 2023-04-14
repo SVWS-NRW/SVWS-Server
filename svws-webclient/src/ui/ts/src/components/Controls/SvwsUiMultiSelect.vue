@@ -8,7 +8,7 @@
 		shallowReactive,
 		shallowRef,
 		watch,
-		Teleport
+		Teleport, readonly
 	} from "vue";
 	import {genId} from "../../utils";
 	import type TextInput from "./SvwsUiTextInput.vue";
@@ -365,6 +365,7 @@
 								!tags && closeListbox();
 							}
 						">
+						<span v-if="itemText?.(item).length === 0" class="opacity-25">–</span>
 						{{ itemText(item) }}
 						<i-ri-check-line v-if="selectedItemList.has(item)" class="opacity-50" />
 					</li>
@@ -463,7 +464,7 @@
 	@apply flex;
 	@apply inset-y-0 right-0;
 	@apply items-center justify-center cursor-pointer text-base;
-	@apply opacity-50;
+	@apply opacity-25;
 
 	&:hover {
 		@apply opacity-100;

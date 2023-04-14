@@ -1,5 +1,6 @@
 <template>
-	<span :style="{ 'background-color': bgColor }">
+	<span class="w-4 h-4 rounded-full inline-block mr-1 border border-black/25" :style="{ 'background-color': bgColor }" />
+	<span>
 		{{ fach_bezeichnung }}
 	</span>
 </template>
