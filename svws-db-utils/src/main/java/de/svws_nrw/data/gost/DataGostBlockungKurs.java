@@ -57,7 +57,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostBlockungKurs} in einen Core-DTO {@link GostBlockungKurs}.
 	 */
-	public static Function<DTOGostBlockungKurs, GostBlockungKurs> dtoMapper = (final DTOGostBlockungKurs kurs) -> {
+	public static final Function<DTOGostBlockungKurs, GostBlockungKurs> dtoMapper = (final DTOGostBlockungKurs kurs) -> {
 		final GostBlockungKurs daten = new GostBlockungKurs();
 		daten.id = kurs.ID;
 		daten.fach_id = kurs.Fach_ID;
@@ -81,6 +81,56 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final GostBlockungKurs daten = dtoMapper.apply(kurs);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
+
+	/**
+	 * Passt die Anzahl der Schienen für den angegebenen Kurs auf die übergebene Schienenzahl an
+	 *
+	 * @param kurs             der Kurs
+	 * @param idErgebnis       die ID des Vorlagen-Ergebnis der Blockung
+	 * @param schienenAnzahl   die neue Schienenzahl
+	 */
+	private void updateSchienenAnzahl(final DTOGostBlockungKurs kurs, final long idErgebnis, final int schienenAnzahl) {
+	    if (schienenAnzahl == kurs.Schienenanzahl)
+	    	return;
+	    // Bestimme die Schienen der Blockung und sortiere die nach der Schienennummer
+	    List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", kurs.Blockung_ID, DTOGostBlockungSchiene.class);
+	    if ((schienenAnzahl < 1) || (schienenAnzahl > schienen.size()))
+	    	throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schienen für den Kurs ist entweder < 1 oder größer als die Anzahl der verfügbaren Schienen.");
+	    // Bestimme die aktuelle Schienenzuordnungen des Kurses
+	    final List<DTOGostBlockungZwischenergebnisKursSchiene> zuordnungen
+	    		= conn.queryList("SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = ?1 AND e.Blockung_Kurs_ID = ?2", DTOGostBlockungZwischenergebnisKursSchiene.class, idErgebnis, kurs.ID);
+	    if (schienenAnzahl > kurs.Schienenanzahl) {
+		    final Set<Long> kursSchienenIDs = zuordnungen.stream().map(z -> z.Schienen_ID).collect(Collectors.toSet());
+			// Erhöhe die Anzahl der Schienen solange mit den nächsten freien Schienen bis die geforderte Schienenanzahl erreicht wurde
+	    	schienen = schienen.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer)).toList();
+	    	for (final DTOGostBlockungSchiene schiene : schienen) {
+	    		if (kursSchienenIDs.contains(schiene.ID))
+	    			continue;
+	    		conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(idErgebnis, kurs.ID, schiene.ID));
+	    		kursSchienenIDs.add(schiene.ID);
+	    		kurs.Schienenanzahl++;
+	    		if (kurs.Schienenanzahl == schienenAnzahl)
+	    			break;
+	    	}
+	    } else if (schienenAnzahl < kurs.Schienenanzahl) {
+	    	final Map<Long, DTOGostBlockungZwischenergebnisKursSchiene> mapKursSchienen
+	    			= zuordnungen.stream().collect(Collectors.toMap(z -> z.Schienen_ID, z -> z));
+			// Reduziere die Anzahl der Schienen solange mit den hinteren Schienennummern bis die geforderte Schienenanzahl erreicht wurde
+	    	schienen = schienen.stream().sorted((a, b) -> (-1) * Integer.compare(a.Nummer, b.Nummer)).toList();
+	    	for (final DTOGostBlockungSchiene schiene : schienen) {
+	    		final DTOGostBlockungZwischenergebnisKursSchiene zuordnung = mapKursSchienen.get(schiene.ID);
+	    		if (zuordnung == null)
+	    			continue;
+	    		conn.transactionRemove(zuordnung);
+	    		mapKursSchienen.remove(schiene.ID);
+	    		kurs.Schienenanzahl--;
+	    		if (kurs.Schienenanzahl == schienenAnzahl)
+	    			break;
+	    	}
+	    }
+	}
+
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
@@ -127,11 +177,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    			case "suffix" -> kurs.BezeichnungSuffix = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Blockung_Kurse.col_BezeichnungSuffix.datenlaenge());
 	    			case "anzahlSchienen" -> {
 	    			    final int schienenAnzahl = JSONMapper.convertToInteger(value, false);
-	    			    if (schienenAnzahl > kurs.Schienenanzahl) {
-	    			        // TODO lege den Kurs in zusätzlichen Schienen bei dem Vorlagen-Ergebnis an
-	    			    } else if (schienenAnzahl < kurs.Schienenanzahl) {
-	    			        // TODO entferne den Kurs in den Schienen im Vorlage-Ergebnis, wo er zu viel enthalten ist
-	    			    }
+    			    	updateSchienenAnzahl(kurs, vorlage.ID, schienenAnzahl);
 	    			}
 	    			case "wochenstunden" -> {
 	    				kurs.Wochenstunden = JSONMapper.convertToInteger(value, false);
@@ -185,10 +231,12 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 				throw OperationError.CONFLICT.exception();
 			// Bestimme die Kursart
 			GostKursart kursart = GostKursart.fromID(idKursart);
-			if (kursart == GostKursart.GK)
-				kursart = (fach.StatistikFach == ZulaessigesFach.VX)
-					? GostKursart.VTF
-					: (fach.StatistikFach == ZulaessigesFach.PX) ? GostKursart.PJK : GostKursart.GK;
+			if (kursart == GostKursart.GK) {  // Korrigiere ggf. für Vertiefungs- und Projektkurse
+				if (fach.StatistikFach == ZulaessigesFach.VX)
+					kursart = GostKursart.VTF;
+				else if (fach.StatistikFach == ZulaessigesFach.PX)
+					kursart = GostKursart.PJK;
+			}
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
 			final long idKurs = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
@@ -196,7 +244,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    	final String jpql = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1 and e.Fach_ID = ?2 and e.Kursart = ?3";
 	    	final List<DTOGostBlockungKurs> kurse = conn.queryList(jpql, DTOGostBlockungKurs.class, idBlockung, idFach, kursart);
 	    	int kursnummer = 1;
-	    	if ((kurse != null) && (kurse.size() > 0)) { // Bestimme die erste freie Kursnummer
+	    	if ((kurse != null) && (!kurse.isEmpty())) { // Bestimme die erste freie Kursnummer
 	    		final Set<Integer> kursIDs = kurse.stream().map(e -> e.Kursnummer).collect(Collectors.toSet());
 	    		while (kursIDs.contains(kursnummer))
 	    			kursnummer++;
