@@ -1441,6 +1441,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/new
+	 *
+	 * Erstellt eine neue Betriebart und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Betriebsart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Betiebsart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Betriebsart anzulegen.
+	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {KatalogEintrag} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Betiebsart wurde erfolgreich angelegt.
+	 */
+	public async createBetriebsart(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
+		const path = "/db/{schema}/betriebe/betriebsart/new"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = KatalogEintrag.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createSchuelerbetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \d+}/betrieb/{betrieb_id: \d+}
 	 *
 	 * Erstellt einen neuen Schülerbetrieb und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Schülerbetriebs besitzt.

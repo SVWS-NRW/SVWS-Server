@@ -340,7 +340,7 @@ public class APIBetrieb {
     }
 
 
-    /**
+     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Beschäftigungsarten im angegebenen Schema.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -471,6 +471,40 @@ public class APIBetrieb {
             return (new DataKatalogBetriebsarten(conn)).get(id);
         }
     }
+
+
+    /**
+     * Die OpenAPI-Methode für das Erstellen einer neuen Betriebsart.
+     *
+     * @param schema       das Datenbankschema, in welchem der Betriebsansprechpartner erstellt wird
+     * @param is           das JSON-Objekt
+      * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Betriebsart
+     */
+    @POST
+    @Path("/betriebsart/new")
+    @Operation(summary = "Erstellt einen neue Betriebsart und gibt den neuen Datensatz zurück.",
+    description = "Erstellt eine neue Betriebart und gibt den neuen Datensatz zurück."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Betriebsart "
+                + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Betiebsart wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = KatalogEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Betriebsart anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Kein Betrieb  mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createBetriebsart(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true, content =
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) { // TODO Anpassung der Benutzerrechte
+            return (new DataKatalogBetriebsarten(conn)).create(is);
+        }
+    }
+
 
     /**
      * Die OpenAPI-Methode für das Patchen einer Betriebsart im angegebenen Schema
