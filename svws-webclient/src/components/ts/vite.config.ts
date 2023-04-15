@@ -5,6 +5,7 @@ import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
+import Markdown from "vite-plugin-vue-markdown";
 import { HstVue } from '@histoire/plugin-vue'
 
 export default defineConfig({
@@ -17,7 +18,10 @@ export default defineConfig({
 	},
 	plugins: [
 		BetterDefine.vite(),
-		Vue(),
+		Vue({
+			include: [/\.vue$/, /\.md$/]
+		}),
+		Markdown(),
 		Components({
 			resolvers: [IconsResolver()],
 			dirs: [

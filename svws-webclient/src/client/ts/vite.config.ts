@@ -4,7 +4,7 @@ import Vue from "@vitejs/plugin-vue";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
-import Markdown from "vite-plugin-md";
+import Markdown from "vite-plugin-vue-markdown";
 import { resolve } from "path";
 
 export default defineConfig({

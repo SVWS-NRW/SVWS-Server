@@ -255,9 +255,7 @@
 	import { computed, ref } from "vue";
 
 	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core";
-	import {
-		GostHalbjahr, GostKursart
-	} from "@svws-nrw/svws-core";
+	import { GostHalbjahr } from "@svws-nrw/svws-core";
 	import type {DataTableColumn} from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
@@ -305,8 +303,7 @@
 	const wst_d_ef: ComputedRef<number> = computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
 
 	const wst_d_q: ComputedRef<number> = computed(() => {
-		const [e, f, ...q] = wochenstunden.value;
-		void e, f;
+		const [...q] = wochenstunden.value;
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 

@@ -38,7 +38,7 @@
 		faechermanager: GostFaecherManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		halbjahr?: GostHalbjahr | undefined;
+		halbjahr?: GostHalbjahr;
 		wahl: string;
 		moeglich: boolean;
 		bewertet: boolean;
