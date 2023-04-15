@@ -4,11 +4,13 @@ import { resolve } from 'path'
 export default defineConfig({
   test: {
     globals: true,
-    root: "src",
+    root: "../../../src",
     reporters: ["default", "junit"],
-    outputFile: "../../../build/coverage/svws-core/junit.xml",
+    outputFile: "../build/coverage/svws-core/junit.xml",
     coverage: {
-      reportsDirectory: "../../../build/coverage/svws-core",
+      provider: "c8",
+      reportsDirectory: "../build/coverage/svws-core",
+      allowExternal: true,
     },
   },
   resolve: {
