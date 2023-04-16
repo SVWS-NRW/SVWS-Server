@@ -320,7 +320,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			final GostBlockungRegel daten = new GostBlockungRegel();
 			daten.id = id;
 	    	final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", id, DTOGostBlockungRegelParameter.class);
-	    	if ((params == null) || (params.size() <= 0))
+	    	if ((params == null) || (params.size() < 0))
 	    		throw OperationError.NOT_FOUND.exception();
 	    	params.sort((a, b) -> Integer.compare(a.Nummer, b.Nummer));
 			for (final DTOGostBlockungRegelParameter param : params)

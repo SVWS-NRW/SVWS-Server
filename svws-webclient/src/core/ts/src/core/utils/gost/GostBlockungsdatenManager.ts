@@ -1137,12 +1137,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Entfernt die übergebene Regel aus der Blockung.
 	 *
-	 * @param regel die zu entfernende Regel
+	 * @param pRegel die zu entfernende Regel
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
-	public removeRegel(regel : GostBlockungRegel) : void {
-		this.removeRegelByID(regel.id);
+	public removeRegel(pRegel : GostBlockungRegel) : void {
+		this.removeRegelByID(pRegel.id);
 	}
 
 	/**

@@ -1076,7 +1076,6 @@ public class GostBlockungsdatenManager {
 		// Regeln hinzufügen.
 		for (final @NotNull GostBlockungRegel regel : pRegeln)
 			addRegelOhneSortierung(regel);
-
 		// Sortieren der Regelmenge.
 		_daten.regeln.sort(compRegel);
 	}
@@ -1159,12 +1158,12 @@ public class GostBlockungsdatenManager {
 	/**
 	 * Entfernt die übergebene Regel aus der Blockung.
 	 *
-	 * @param regel die zu entfernende Regel
+	 * @param pRegel die zu entfernende Regel
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
-	public void removeRegel(final @NotNull GostBlockungRegel regel)  throws DeveloperNotificationException, UserNotificationException {
-		removeRegelByID(regel.id);
+	public void removeRegel(final @NotNull GostBlockungRegel pRegel)  throws DeveloperNotificationException, UserNotificationException {
+		removeRegelByID(pRegel.id);
 	}
 
 	/**
