@@ -99,6 +99,40 @@ public class APIBetrieb {
     }
 
     /**
+     * Die OpenAPI-Methode für das Erstellen einer neuen Betriebes.
+     *
+     * @param schema       das Datenbankschema, in welchem der Betriebsansprechpartner erstellt wird
+     * @param is           das JSON-Objekt
+      * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Betriebsart
+     */
+    @POST
+    @Path("/new")
+    @Operation(summary = "Erstellt einen neuen Betrieb und gibt den neuen Datensatz zurück.",
+    description = "Erstellt einen neuen Betrieb und gibt den neuen Datensatz zurück."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Betriebes "
+                + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Betieb wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = BetriebStammdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Betrieb anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Keine Betriebart oder kein Ort  mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createBetrieb(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Der Post für die Betrieb-Daten", required = true, content =
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebStammdaten.class))) final InputStream is,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) { // TODO Anpassung der Benutzerrechte
+            return (new DataBetriebsStammdaten(conn)).create(is);
+        }
+    }
+
+
+
+    /**
      * Die OpenAPI-Methode für das Patchen der Stammdaten eines Betriebs.
      *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
