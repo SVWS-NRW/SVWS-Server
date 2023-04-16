@@ -1744,6 +1744,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Informiert den Manager, dass sich bei mindestens einem Kurs die Lehrkraft geändert hat.
+	 * Führt zu einer Revalidierung der Bewertung der Ergebnisse.
+	 */
+	public patchOfKursLehrkaefteChanged() : void {
+		this.stateRevalidateEverything();
+	}
+
+	/**
 	 * Nur für Debug-Zwecke.
 	 */
 	public debug() : void {

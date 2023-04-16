@@ -1837,6 +1837,14 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Informiert den Manager, dass sich bei mindestens einem Kurs die Lehrkraft geändert hat.
+	 * Führt zu einer Revalidierung der Bewertung der Ergebnisse.
+	 */
+	public void patchOfKursLehrkaefteChanged() {
+		stateRevalidateEverything();
+	}
+	
+	/**
 	 * Nur für Debug-Zwecke.
 	 */
 	public void debug() {
