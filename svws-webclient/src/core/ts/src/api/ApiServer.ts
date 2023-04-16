@@ -1470,6 +1470,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/new
+	 *
+	 * Erstellt einen neuen Betrieb und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Betriebes besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Betieb wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BetriebStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Betrieb anzulegen.
+	 *   Code 404: Keine Betriebart oder kein Ort  mit der angegebenen ID gefunden
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {BetriebStammdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Betieb wurde erfolgreich angelegt.
+	 */
+	public async createBetrieb(data : BetriebStammdaten, schema : string) : Promise<BetriebStammdaten> {
+		const path = "/db/{schema}/betriebe/new"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = BetriebStammdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BetriebStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode createSchuelerbetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \d+}/betrieb/{betrieb_id: \d+}
 	 *
 	 * Erstellt einen neuen Schülerbetrieb und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Schülerbetriebs besitzt.
