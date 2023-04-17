@@ -173,7 +173,7 @@
 							class="font-bold opacity-50">{{ modelValue.length }}/{{
 								sortedRows.length
 							}} ausgewählt</span>
-						<span v-else class="opacity-50">{{ sortedRows.length }} Einträge</span>
+						<span v-else class="opacity-50">{{ sortedRows.length === 1 ? 'Blockungsvorlage': `${sortedRows.length} Ergebnisse` }}</span>
 					</div>
 					<div role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-actions"
 						v-if="$slots.footerActions">
