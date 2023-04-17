@@ -1843,7 +1843,7 @@ public class GostBlockungsergebnisManager {
 	public void patchOfKursLehrkaefteChanged() {
 		stateRevalidateEverything();
 	}
-	
+
 	/**
 	 * Nur für Debug-Zwecke.
 	 */

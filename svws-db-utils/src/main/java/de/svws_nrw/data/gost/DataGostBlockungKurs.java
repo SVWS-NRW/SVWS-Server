@@ -19,6 +19,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
+import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
@@ -276,6 +277,127 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			conn.transactionRollback();
 			if (exception instanceof final IllegalArgumentException e)
 				throw OperationError.NOT_FOUND.exception();
+			if (exception instanceof final WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
+
+	/**
+	 * Teilt einen Kurs in zwei Kurse auf. Beide Kurse liegen
+	 * danach in der gleichen Schiene. Eine evtl. zugeordnete Schülermenge
+	 * wird zwischen den Kursen geteilt.
+	 *
+	 * @param idKurs   die ID des zu teilenden Kurses
+	 *
+	 * @return eine HTTP-Response mit einem Array mit den beiden resultierenden Kursen
+	 */
+	public Response splitKurs(final long idKurs) {
+		try {
+			// Bestimme den Kurs der Blockung
+			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
+			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
+			if (kurs == null)
+				return OperationError.NOT_FOUND.getResponse();
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs.Blockung_ID);
+	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht aufgeteilt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+	        // Bestimme die erste freie Kursnummer
+	        final List<DTOGostBlockungKurs> kurse = conn.queryList("SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1 AND e.Fach_ID = ?2 AND e.Kursart = ?3", DTOGostBlockungKurs.class, kurs.Blockung_ID, kurs.Fach_ID, kurs.Kursart);
+			if ((kurse == null) || (kurse.isEmpty()))
+				return OperationError.NOT_FOUND.getResponse();
+			final Set<Integer> kursnummern = kurse.stream().map(k -> k.Kursnummer).collect(Collectors.toSet());
+			int nummer = 1;
+			while (kursnummern.contains(nummer))
+				nummer++;
+			// Bestimme die ID, für welche der Datensatz eingefügt wird
+			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final long idKurs2 = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
+			// Lege den neuen Kurs an.
+			final DTOGostBlockungKurs kursNeu = new DTOGostBlockungKurs(idKurs2, kurs.Blockung_ID, kurs.Fach_ID,
+					kurs.Kursart, nummer, kurs.IstKoopKurs, kurs.Schienenanzahl, kurs.Wochenstunden);
+			if (!conn.transactionPersist(kursNeu))
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			// Passe nun die zugeordneten Schienen an und ordne die Hälfte der Schüler dem zweiten Kurs zu
+			conn.transactionBegin();
+			final List<DTOGostBlockungZwischenergebnisKursSchiene> schienen = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchiene.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchiene.class);
+			for (final DTOGostBlockungZwischenergebnisKursSchiene schiene : schienen)
+				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(schiene.Zwischenergebnis_ID, kursNeu.ID, schiene.Schienen_ID));
+			final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+			for (int i = schuelerListe.size() / 2; i < schuelerListe.size(); i++) {
+				final DTOGostBlockungZwischenergebnisKursSchueler schueler = schuelerListe.get(i);
+				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(schueler.Zwischenergebnis_ID, kursNeu.ID, schueler.Schueler_ID));
+				conn.transactionRemove(schueler);
+			}
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			// Gebe die beiden Kurse zurück
+			final GostBlockungKurs daten1 = dtoMapper.apply(kurs);
+			final GostBlockungKurs daten2 = dtoMapper.apply(kursNeu);
+			final GostBlockungKurs[] daten = { daten1, daten2 };
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception exception) {
+			conn.transactionRollback();
+			if (exception instanceof final WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
+
+	/**
+	 * Kombiniert zwei Kurse, sofern sie dem gleichen Fach und der gleichen
+	 * Kursart zugeordnet sind.
+	 *
+	 * @param idKurs1   die ID des ersten Kurses
+	 * @param idKurs2   die ID des zweiten Kurses
+	 *
+	 * @return eine HTTP-Response mit einem Array mit den beiden resultierenden Kursen
+	 */
+	public Response combineKurs(final long idKurs1, final long idKurs2) {
+		try {
+			// Bestimme die Kurse der Blockung
+			conn.transactionBegin();
+			GostUtils.pruefeSchuleMitGOSt(conn);
+			final DTOGostBlockungKurs kurs1 = conn.queryByKey(DTOGostBlockungKurs.class, idKurs1);
+			final DTOGostBlockungKurs kurs2 = conn.queryByKey(DTOGostBlockungKurs.class, idKurs2);
+			if ((kurs1 == null) || (kurs2 == null))
+				return OperationError.NOT_FOUND.getResponse();
+			// Prüfe, ob die Kurse zu der gleichen Blockung gehören
+			if (!kurs1.Blockung_ID.equals(kurs2.Blockung_ID))
+	        	throw OperationError.BAD_REQUEST.exception("Die beiden Kurse müssen zur gleichen Blockung gehören.");
+			// Prüfe, ob das Fach übereinstimmt
+			if (!kurs1.Fach_ID.equals(kurs2.Fach_ID))
+	        	throw OperationError.BAD_REQUEST.exception("Die Fächer der beiden Kurse müssen übereinstimmen.");
+			// Prüfe, ob die Kursart übereinstimmt
+			if (!kurs1.Kursart.equals(kurs2.Kursart))
+	        	throw OperationError.BAD_REQUEST.exception("Die Kursarten der beiden Kurse müssen übereinstimmen.");
+	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
+	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs1.Blockung_ID);
+	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
+	        if (vorlage == null)
+	        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht aufgeteilt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+			// Verschiebe die Schüler des zweiten Kurses in den ersten Kurs
+			final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs2.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
+			for (final DTOGostBlockungZwischenergebnisKursSchueler schueler : schuelerListe) {
+				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(schueler.Zwischenergebnis_ID, kurs1.ID, schueler.Schueler_ID));
+				conn.transactionRemove(schueler);
+			}
+			// Lösche dann den zweiten Kurs
+			conn.transactionRemove(kurs2);
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			// Gebe den ersten Kurs zurück
+			final GostBlockungKurs daten = dtoMapper.apply(kurs1);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception exception) {
+			conn.transactionRollback();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
 			throw exception;

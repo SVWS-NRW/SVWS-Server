@@ -3110,6 +3110,68 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode splitGostBlockungKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid : \d+}/split
+	 *
+	 * Teilt einen Kurs einer Blockung der Gymnasialen Oberstufe auf, indem ein zweiter Kurs mit der Hälfte der schüler erzeugt wird.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Teilen eines Kurses hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBlockungKurs>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs hinzuzufügen.
+	 *   Code 404: Keine Blockung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid - der Pfad-Parameter kursid
+	 *
+	 * @returns Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe
+	 */
+	public async splitGostBlockungKurs(schema : string, kursid : number) : Promise<List<GostBlockungKurs>> {
+		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/split"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
+		const result : string = await super.postJSON(path, null);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBlockungKurs>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungKurs.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode combineGostBlockungKurs für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/kurse/{kursid1 : \d+}/combine/{kursid2 : \d+}
+	 *
+	 * Führt zwei Kurse einer Blockung der Gymnasialen Oberstufe zusammen, sofern Fach und Kursart zusammenpassen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zusammenführen der Kurse hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der zusammengeführte Kurs der Blockung der gymnasialen Oberstufe
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungKurs
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um zwei Kurse zusammenzuführen.
+	 *   Code 404: Keine Blockung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} kursid1 - der Pfad-Parameter kursid1
+	 * @param {number} kursid2 - der Pfad-Parameter kursid2
+	 *
+	 * @returns Der zusammengeführte Kurs der Blockung der gymnasialen Oberstufe
+	 */
+	public async combineGostBlockungKurs(schema : string, kursid1 : number, kursid2 : number) : Promise<GostBlockungKurs> {
+		const path = "/db/{schema}/gost/blockungen/kurse/{kursid1 : \\d+}/combine/{kursid2 : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{kursid1\s*(:[^}]+)?}/g, kursid1.toString())
+			.replace(/{kursid2\s*(:[^}]+)?}/g, kursid2.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return GostBlockungKurs.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostBlockungRegel für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/regeln/{regelid : \d+}
 	 *
 	 * Liest die angegebene Regel einer Blockung der gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.

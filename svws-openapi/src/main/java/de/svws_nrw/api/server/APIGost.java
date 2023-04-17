@@ -1067,6 +1067,70 @@ public class APIGost {
 
 
     /**
+     * Die OpenAPI-Methode für das Aufteilen eines Kurses bei einer
+     * Blockung der Gymnasialen Oberstufe.
+     *
+     * @param schema    das Datenbankschema, in welchem der Kurs der Blockung aufgeteilt wird
+     * @param idKurs    die ID des aufzuteilenden Kurses
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Kursen der Blockung der gymnasialen Oberstufe
+     */
+    @POST
+    @Path("/blockungen/kurse/{kursid : \\d+}/split")
+    @Operation(summary = "Teilt einen Kurs einer Blockung der Gymnasialen Oberstufe auf, indem ein zweiter Kurs mit der Hälfte der schüler erzeugt wird.",
+               description = "Teilt einen Kurs einer Blockung der Gymnasialen Oberstufe auf, indem ein zweiter Kurs mit der Hälfte der schüler erzeugt wird."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Teilen eines Kurses hat.")
+    @ApiResponse(responseCode = "200", description = "Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungKurs.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Kurs hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response splitGostBlockungKurs(
+    		@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
+    		@Context final HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKurs(conn)).splitKurs(idKurs);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Zusammenführen eines Kurses bei einer
+     * Blockung der Gymnasialen Oberstufe mit einem zweiten Kurs des gleichen
+     * Faches und Kursart. Der zweite Kurs fällt dabei weg.
+     *
+     * @param schema       das Datenbankschema, in welchem der Kurs der Blockung aufgeteilt wird
+     * @param idKurs1      die ID des ersten Kurses
+     * @param idKurs2      die ID des zweiten Kurses
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem resultierenden ersten Kurs der Blockung der gymnasialen Oberstufe, wobei der zweite Kurs wegfällt
+     */
+    @POST
+    @Path("/blockungen/kurse/{kursid1 : \\d+}/combine/{kursid2 : \\d+}")
+    @Operation(summary = "Führt zwei Kurse einer Blockung der Gymnasialen Oberstufe zusammen, sofern Fach und Kursart zusammenpassen.",
+               description = "Führt zwei Kurse einer Blockung der Gymnasialen Oberstufe zusammen, sofern Fach und Kursart zusammenpassen."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zusammenführen der Kurse hat.")
+    @ApiResponse(responseCode = "200", description = "Der zusammengeführte Kurs der Blockung der gymnasialen Oberstufe",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKurs.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um zwei Kurse zusammenzuführen.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response combineGostBlockungKurs(
+    		@PathParam("schema") final String schema, @PathParam("kursid1") final long idKurs1,
+    		@PathParam("kursid2") final long idKurs2, @Context final HttpServletRequest request) {
+    	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN)) {
+    		return (new DataGostBlockungKurs(conn)).combineKurs(idKurs1, idKurs2);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Löschen eines Kurses bei einer
      * Blockung der Gymnasialen Oberstufe.
      *
