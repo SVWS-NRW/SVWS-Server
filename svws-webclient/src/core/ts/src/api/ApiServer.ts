@@ -4325,32 +4325,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/beratungsdaten
-	 *
-	 * Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten zu ändern.
-	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<GostLaufbahnplanungBeratungsdaten>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
-	 */
-	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data : Partial<GostLaufbahnplanungBeratungsdaten>, schema : string, schuelerid : number) : Promise<void> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
-		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode exportGostSchuelerLaufbahnplanungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/laufbahnplanung/daten
 	 *
 	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
@@ -4570,6 +4544,32 @@ export class ApiServer extends BaseApi {
 			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString())
 			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
 		const body : string = GostSchuelerFachwahl.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/laufbahnplanung/beratungsdaten
+	 *
+	 * Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Beratungsdaten zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostLaufbahnplanungBeratungsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async patchGostSchuelerLaufbahnplanungBeratungsdaten(data : Partial<GostLaufbahnplanungBeratungsdaten>, schema : string, schuelerid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/laufbahnplanung/beratungsdaten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

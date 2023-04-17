@@ -468,7 +468,7 @@ public class APIGost {
      * @return die HTTP-Antwort
      */
     @PATCH
-    @Path("/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten")
+    @Path("/schueler/{schuelerid : \\d+}/laufbahnplanung/beratungsdaten")
     @Operation(summary = "Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an.",
     description = "Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten "
