@@ -41,7 +41,7 @@
 	</div>
 	<div v-else>
 		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
-		"Blockung hinzufügen", um eine neue Kursplanung zu erstellen.
+		„Blockung hinzufügen“, um eine neue Kursplanung zu erstellen oder auf „Wiederherstellen“, um aus bestehenden Leistungsdaten ein Blockung zu restaurieren.
 	</div>
 </template>
 
