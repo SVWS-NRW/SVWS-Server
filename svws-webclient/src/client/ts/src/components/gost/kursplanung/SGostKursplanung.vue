@@ -26,7 +26,7 @@
 				<router-view />
 			</div>
 		</section>
-		<Teleport to=".app-layout--main">
+		<Teleport to="body">
 			<aside class="app-layout--aside max-w-2xl h-auto" v-if="allow_regeln && !collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
 				<div class="app-layout--aside-container relative">
 					<h2 class="text-headline flex justify-between py-7 px-7 3xl:px-8">
