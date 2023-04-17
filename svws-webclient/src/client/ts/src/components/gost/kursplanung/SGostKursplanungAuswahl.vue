@@ -4,14 +4,19 @@
 			<template #cell(kuerzel)="{ rowData: row }">
 				<div class="flex justify-between w-full">
 					{{ row.kuerzel }}
-					<svws-ui-button type="secondary" v-if="allow_add_blockung(row)" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+					<template v-if="allow_add_blockung(row)">
+						<svws-ui-button type="secondary" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+						<s-gost-kursplanung-modal-blockung-recover v-slot="{ openModal }" :restore-blockung="restoreBlockung">
+							<svws-ui-button :disabled="jahrgangsdaten?.istBlockungFestgelegt[halbjahr.id] || false" type="secondary" @click="openModal()">Wiederherstellen</svws-ui-button>
+						</s-gost-kursplanung-modal-blockung-recover>
+					</template>
 				</div>
 			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
-			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung" />
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung" :restore-blockung="restoreBlockung" />
 	</template>
 </template>
 
@@ -24,7 +29,6 @@
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
-
 
 	const allow_add_blockung = (row: DataTableItem): boolean => {
 		const curr_hj = row.id === props.halbjahr.id;

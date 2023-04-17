@@ -64,7 +64,6 @@ export class RouteDataGostKursplanung {
 		this._state.value = { ... this._state.value };
 	}
 
-
 	public get hatAbiturjahr(): boolean {
 		return this._state.value.abiturjahr !== undefined;
 	}
@@ -144,7 +143,6 @@ export class RouteDataGostKursplanung {
 		return this._state.value.mapLehrer;
 	}
 
-
 	public get halbjahr() : GostHalbjahr {
 		return this._state.value.halbjahr;
 	}
@@ -183,7 +181,6 @@ export class RouteDataGostKursplanung {
 		});
 		return true;
 	}
-
 
 	public get hatBlockung(): boolean {
 		return this._state.value.datenmanager !== undefined;
@@ -234,7 +231,6 @@ export class RouteDataGostKursplanung {
 			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
 		return this._state.value.datenmanager;
 	}
-
 
 	public get hatErgebnis(): boolean {
 		return this._state.value.ergebnismanager !== undefined;
@@ -289,7 +285,6 @@ export class RouteDataGostKursplanung {
 		return this._state.value.schuelerFilter;
 	}
 
-
 	public get hatSchueler(): boolean {
 		return this._state.value.auswahlSchueler !== undefined;
 	}
@@ -314,8 +309,17 @@ export class RouteDataGostKursplanung {
 		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
 		this.mapBlockungen.set(result.id, result);
 		this.setPatchedState({mapBlockungen: this.mapBlockungen})
-		api.status.stop();
 		await this.gotoBlockung(result);
+		api.status.stop();
+	}
+
+	restoreBlockung = async () => {
+		api.status.start();
+		const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.halbjahr)
+		this.mapBlockungen.set(result.id, result);
+		this.setPatchedState({mapBlockungen: this.mapBlockungen})
+		await this.gotoBlockung(result);
+		api.status.stop();
 	}
 
 	removeBlockung = async () => {
@@ -325,8 +329,8 @@ export class RouteDataGostKursplanung {
 		await api.server.deleteGostBlockung(api.schema, this.auswahlBlockung.id);
 		this._state.value.mapBlockungen.delete(this.auswahlBlockung.id);
 		await this.setAuswahlBlockung(undefined);
-		api.status.stop();
 		await this.gotoHalbjahr(this.halbjahr);
+		api.status.stop();
 	}
 
 	patchBlockung = async (data: Partial<GostBlockungsdaten>, idBlockung: number): Promise<boolean> => {

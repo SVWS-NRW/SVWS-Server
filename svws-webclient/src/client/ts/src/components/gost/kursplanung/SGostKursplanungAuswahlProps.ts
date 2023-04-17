@@ -21,4 +21,5 @@ export interface GostKursplanungAuswahlProps {
 	setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 	hatBlockung: boolean;
 	auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+	restoreBlockung: () => Promise<void>;
 }

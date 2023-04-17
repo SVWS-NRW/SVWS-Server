@@ -64,6 +64,7 @@
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 		hatBlockung: boolean;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
+		restoreBlockung: () => Promise<void>;
 	}>();
 
 	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {
