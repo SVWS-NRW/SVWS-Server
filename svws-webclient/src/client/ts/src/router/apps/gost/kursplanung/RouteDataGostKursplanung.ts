@@ -462,6 +462,7 @@ export class RouteDataGostKursplanung {
 			return
 		}
 		this.datenmanager.patchOfKursAddLehrkraft(kurs_id, lehrer);
+		this.ergebnismanager.patchOfKursLehrkaefteChanged();
 		this.commit();
 		api.status.stop();
 		return lehrer;
@@ -473,6 +474,7 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
 		this.datenmanager.patchOfKursRemoveLehrkraft(kurs_id, lehrer_id);
+		this.ergebnismanager.patchOfKursLehrkaefteChanged();
 		this.commit();
 		api.status.stop();
 	}
