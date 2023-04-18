@@ -40,8 +40,8 @@
 		</Teleport>
 	</div>
 	<div v-else>
-		Es liegt noch keine Planung für dieses Halbjahr vor. Klicken Sie auf
-		„Blockung hinzufügen“, um eine neue Kursplanung zu erstellen oder auf „Wiederherstellen“, um aus bestehenden Leistungsdaten ein Blockung zu restaurieren.
+		<h3 class="text-headline-sm mb-2"><i-ri-information-line class="inline align-text-top" /> Es liegt noch keine Planung für dieses Halbjahr vor.</h3>
+		<p>Klicken Sie auf „Blockung hinzufügen“, um eine neue Kursplanung zu erstellen oder auf „Wiederherstellen“, um aus bestehenden Leistungsdaten ein Blockung zu restaurieren.</p>
 	</div>
 </template>
 

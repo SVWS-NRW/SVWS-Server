@@ -353,6 +353,10 @@
 			@apply px-0;
 		}
 
+		&__separate {
+			@apply border-r-2;
+		}
+
 		&:last-child {
 			@apply border-r-0;
 		}

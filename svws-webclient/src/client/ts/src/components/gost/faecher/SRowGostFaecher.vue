@@ -35,51 +35,59 @@
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': ef_moeglich } ]"
 			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef1_set">
-			<template v-if="ef_moeglich">
-				<i-ri-checkbox-line v-if="fach.istMoeglichEF1" />
-				<i-ri-checkbox-blank-line v-else class="opacity-25" />
-			</template>
+			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichEF1" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': ef_moeglich } ]"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ { 'cursor-pointer': ef_moeglich } ]"
 			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef2_set">
-			<template v-if="ef_moeglich">
-				<i-ri-checkbox-line v-if="fach.istMoeglichEF2" />
-				<i-ri-checkbox-blank-line v-else class="opacity-25" />
-			</template>
+			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichEF2" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
 			@click="q11_set">
-			<i-ri-checkbox-line v-if="fach.istMoeglichQ11" />
-			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			<span class="faecher-toggle--checkbox">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ11" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ 'cursor-pointer' ]"
 			@click="q12_set">
-			<i-ri-checkbox-line v-if="fach.istMoeglichQ12" />
-			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			<span class="faecher-toggle--checkbox">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ12" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
 			@click="q21_set">
-			<i-ri-checkbox-line v-if="fach.istMoeglichQ21" />
-			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			<span class="faecher-toggle--checkbox">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ21" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ 'cursor-pointer' ]"
 			@click="q22_set">
-			<i-ri-checkbox-line v-if="fach.istMoeglichQ22" />
-			<i-ri-checkbox-blank-line v-else class="opacity-25" />
+			<span class="faecher-toggle--checkbox">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ22" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_gk_moeglich } ]"
 			:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_gk_set">
-			<template v-if="abi_gk_moeglich">
-				<i-ri-checkbox-line v-if="fach.istMoeglichAbiGK" />
-				<i-ri-checkbox-blank-line v-else class="opacity-25" />
-			</template>
+			<span class="faecher-toggle--checkbox" v-if="abi_gk_moeglich">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichAbiGK" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_lk_moeglich } ]"
 			:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_lk_set">
-			<template v-if="abi_lk_moeglich">
-				<i-ri-checkbox-line v-if="fach.istMoeglichAbiLK" />
-				<i-ri-checkbox-blank-line v-else class="opacity-25" />
-			</template>
+			<span class="faecher-toggle--checkbox" v-if="abi_lk_moeglich">
+				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichAbiLK" />
+				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+			</span>
 		</div>
 	</div>
 </template>
@@ -197,3 +205,18 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+	.faecher-toggle--checkbox {
+		svg {
+			@apply -my-0.5;
+			width: 1.4em;
+			height: 1.4em;
+
+			&:hover,
+			&:focus {
+				@apply opacity-75;
+			}
+		}
+	}
+</style>

@@ -63,7 +63,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								EF.2
@@ -79,7 +79,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Q1.2
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Q2.2

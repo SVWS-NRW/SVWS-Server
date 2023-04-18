@@ -23,7 +23,7 @@
 			</template>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center">
-			<svws-ui-checkbox headless v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
+			<svws-ui-checkbox headless circle bw v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
 			<svws-ui-icon v-else class="inline-block opacity-50">
 				<i-ri-check-line v-if="kurs.istKoopKurs" />
 				<i-ri-close-line v-else />

@@ -52,7 +52,7 @@
 					</div>
 					<div role="columnheader"
 						class="data-table__th data-table__thead__th data-table__th__align-center" v-if="allow_regeln">
-						<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen" class="ml-1 w-6 h-6 p-0.5">
+						<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen" class="w-6 h-6 p-0.5">
 							<i-ri-add-line />
 						</svws-ui-button>
 					</div>

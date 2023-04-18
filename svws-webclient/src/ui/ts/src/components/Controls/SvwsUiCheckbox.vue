@@ -2,7 +2,7 @@
 	import { computed } from 'vue';
 
 	type CheckboxValue = string | number | boolean | null;
-	type ModelValue = boolean | Array<CheckboxValue> | undefined;
+	type ModelValue = boolean | Array<CheckboxValue> | undefined | 'indeterminate';
 
 	const props = withDefaults(defineProps<{
 		value?: CheckboxValue;
@@ -11,12 +11,14 @@
 		disabled?: boolean;
 		circle?: boolean;
 		headless?: boolean;
+		bw?: boolean;
 	}>(), {
 		value: '',
 		statistics: false,
 		disabled: false,
 		circle: false,
-		headless: false
+		headless: false,
+		bw: false
 	});
 
 	const emit = defineEmits<{
@@ -41,13 +43,14 @@
 			'checkbox--checked': modelValue,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': modelValue === undefined || modelValue === 'indeterminate'
+			'checkbox--indeterminate': modelValue === undefined || modelValue === 'indeterminate',
+			'checkbox--bw': bw,
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
 		<svws-ui-icon v-if="modelValue === 'indeterminate' && typeof modelValue !== 'undefined'" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="modelValue" role="checkbox" class="text-primary">
+		<svws-ui-icon v-else-if="modelValue" role="checkbox" :class="{'text-primary': !bw}">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</svws-ui-icon>

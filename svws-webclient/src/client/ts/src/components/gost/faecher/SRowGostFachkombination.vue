@@ -12,22 +12,22 @@
 		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigEF1" headless />
+		<svws-ui-checkbox circle v-model="gueltigEF1" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+		<svws-ui-checkbox circle v-model="gueltigEF2" headless />
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigEF2" headless />
+		<svws-ui-checkbox circle v-model="gueltigQ11" headless />
+	</div>
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+		<svws-ui-checkbox circle v-model="gueltigQ12" headless />
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigQ11" headless />
+		<svws-ui-checkbox circle v-model="gueltigQ21" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigQ12" headless />
-	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigQ21" headless />
-	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox v-model="gueltigQ22" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+		<svws-ui-checkbox circle v-model="gueltigQ22" headless />
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
 		<svws-ui-button type="trash" @click="del_fachkombi" />

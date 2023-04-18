@@ -2,7 +2,7 @@
 	<template v-if="!blockungAktiv">
 		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
 			v-slot="{ active }"
-			class="data-table__td data-table__td__no-padding data-table__td__align-center data-table__td__no-padding"
+			class="data-table__td data-table__td__no-padding data-table__td__align-center"
 			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id, 'p-0.5': !active && !is_drop_zone(schiene), 'p-0': active || is_drop_zone(schiene)}"
 			tag="div"
 			role="cell"
@@ -41,18 +41,19 @@
 		</svws-ui-drop-data>
 	</template>
 	<template v-else>
-		<div role="cell" v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="data-table__td data-table__td__align-center">
-			<svws-ui-badge v-if="kurs_schiene_zugeordnet(schiene)"
-				size="tiny" :type="selected_kurs ? 'primary' : 'highlight'" class="cursor-pointer"
+		<div role="cell" v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
+			<div v-if="kurs_schiene_zugeordnet(schiene)"
+				class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
+				:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
 				@click="toggle_active_kurs">
 				{{ kurs_blockungsergebnis?.schueler.size() }}
-				<svws-ui-icon v-if="istFixiert(schiene)">
+				<svws-ui-icon class="absolute right-1" v-if="istFixiert(schiene)">
 					<i-ri-pushpin-fill class="inline-block" />
 				</svws-ui-icon>
-				<svws-ui-icon class="px-4 py-2" v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
-					<i-ri-forbid-fill class="inline-block text-red-500" />
+				<svws-ui-icon v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
+					<i-ri-prohibited-line class="inline-block" />
 				</svws-ui-icon>
-			</svws-ui-badge>
+			</div>
 		</div>
 	</template>
 	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
