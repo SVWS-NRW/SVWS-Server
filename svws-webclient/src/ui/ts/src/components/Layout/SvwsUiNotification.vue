@@ -3,7 +3,7 @@
 		:class="{
 			'notification--info': type === 'info',
 			'notification--success': type === 'success',
-			'notification--error': type === 'error',
+			'notification--error': type === 'error' || type === 'bug',
 			'notification--warning': type === 'warning',
 		}">
 		<div class="notification--content-wrapper flex justify-between items-start">
@@ -11,6 +11,7 @@
 				<svws-ui-icon v-if="icon || type" class="notification--icon">
 					<i-ri-lock-2-line v-if="icon === 'login'" />
 					<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
+					<i-ri-bug-fill v-else-if="icon === 'bug' || type === 'bug'" />
 					<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
 					<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
 					<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
@@ -21,11 +22,16 @@
 				<div class="notification--text">
 					<slot />
 				</div>
-				<button v-if="$slots.stack" @click="toggleStackOpen" class="mt-4 inline-flex items-center text-sm-bold opacity-50 hover:opacity-100">
-					<span>Details</span>
-					<i-ri-arrow-up-s-line v-if="stackOpen" />
-					<i-ri-arrow-down-s-line v-else />
-				</button>
+				<div class="mt-3 -mb-1 flex flex-wrap gap-4" v-if="$slots.stack || type === 'bug'">
+					<svws-ui-button v-if="type === 'bug'" type="secondary">
+						Fehler melden
+						<i-ri-send-plane-fill />
+					</svws-ui-button>
+					<button v-if="$slots.stack" @click="toggleStackOpen" class="inline-flex px-1 border border-transparent items-center font-bold text-button normal-case opacity-50 hover:opacity-100 focus-visible:opacity-100 rounded-md focus:outline-none focus-visible:ring focus-visible:border-white focus-visible:ring-white/25">
+						<span>Details</span>
+						<i-ri-arrow-up-s-line v-if="stackOpen" />
+					</button>
+				</div>
 				<div class="notification--stack" v-if="$slots.stack && stackOpen">
 					<slot name="stack" />
 				</div>
@@ -45,8 +51,8 @@
 	import {ref} from "vue";
 
 	const props = withDefaults(defineProps<{
-		type?: 'info' | 'error' | 'success' | 'warning';
-		icon?: 'error' | 'login' | 'success' | 'warning' | 'info';
+		type?: 'info' | 'error' | 'success' | 'warning' | 'bug';
+		icon?: 'error' | 'login' | 'success' | 'warning' | 'info' | 'bug';
 	}>(), {
 		type: 'info',
 		icon: undefined,
@@ -83,11 +89,10 @@
 	@apply bg-primary text-white font-bold;
 	transition: transform 0.2s ease-out;
 
-	.button, .button--icon {
+	.button:not(.button--secondary), .button--icon {
 		@apply rounded-md;
 
-		&:hover,
-		&:focus {
+		&:hover {
 			@apply ring-0 bg-white/25;
 		}
 	}

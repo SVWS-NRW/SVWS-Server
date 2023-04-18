@@ -97,16 +97,32 @@
 .button--secondary {
 	@apply bg-transparent text-black border-dark;
 
+	.notification--error & {
+		@apply text-white border-white/25;
+	}
+
 	&:hover {
 		@apply border-primary text-primary;
+
+		.notification--error & {
+			@apply border-white text-white brightness-100;
+		}
 	}
 
 	&:focus-visible {
 		@apply ring-primary ring-opacity-25 border-primary;
+
+		.notification--error & {
+			@apply ring-white/25 border-white;
+		}
 	}
 
 	&:active {
-		@apply bg-primary bg-opacity-5 brightness-100;
+		@apply bg-primary/5 brightness-100;
+
+		.notification--error & {
+			@apply bg-white/10;
+		}
 	}
 }
 
