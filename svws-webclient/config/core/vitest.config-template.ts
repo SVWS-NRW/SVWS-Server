@@ -4,11 +4,13 @@ import { resolve } from 'path'
 export default defineConfig({
   test: {
     globals: true,
-    root: "src",
+    root: "../../../src",
     reporters: ["default", "junit"],
     outputFile: "@coverage_out@/junit.xml",
     coverage: {
+      provider: "c8",
       reportsDirectory: "@coverage_out@",
+      allowExternal: true,
     },
   },
   resolve: {
