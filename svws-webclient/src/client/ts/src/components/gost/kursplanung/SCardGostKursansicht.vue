@@ -108,7 +108,7 @@
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 						</template>
 					</template>
 				</template>
@@ -120,7 +120,7 @@
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 						</template>
 					</template>
 				</template>
@@ -131,7 +131,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import { GostKursart } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
@@ -151,6 +151,8 @@
 		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;

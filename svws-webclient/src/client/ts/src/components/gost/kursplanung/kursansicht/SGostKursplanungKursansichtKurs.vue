@@ -62,7 +62,7 @@
 	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
 		:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
-		:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+		:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 </template>
 
 <script setup lang="ts">
@@ -84,6 +84,8 @@
 		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;

@@ -34,12 +34,12 @@
 					<svws-ui-dropdown v-if="kurseMitKursart.size() > 1" type="icon">
 						<template #dropdownButton>Zusammenlegen</template>
 						<template #dropdownItems>
-							<svws-ui-dropdown-item v-for="k in andereKurse.values()" :key="k.id" class="px-2">
+							<svws-ui-dropdown-item v-for="k in andereKurse.values()" :key="k.id" class="px-2" @click="combineKurs(kurs, k)">
 								{{ get_kursbezeichnung(k.id) }}
 							</svws-ui-dropdown-item>
 						</template>
 					</svws-ui-dropdown>
-					<svws-ui-button size="small" type="secondary">Aufteilen…</svws-ui-button>
+					<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 				</div>
 			</div>
 		</div>
@@ -51,7 +51,6 @@
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
-	import { GostBlockungSchiene } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -60,6 +59,8 @@
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		bgColor: string;

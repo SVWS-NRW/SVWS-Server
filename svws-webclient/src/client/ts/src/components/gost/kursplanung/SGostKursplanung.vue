@@ -7,7 +7,7 @@
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 			:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 			:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :ergebnis-hochschreiben="ergebnisHochschreiben"
-			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs">
+			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs">
 			<template #triggerRegeln>
 				<svws-ui-button @click="onToggle" :disabled="!allow_regeln">
 					<i-ri-settings3-line />

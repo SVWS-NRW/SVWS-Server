@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
 import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
@@ -434,6 +434,34 @@ export class RouteDataGostKursplanung {
 		return kurs;
 	}
 
+	combineKurs = async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs) => {
+		api.status.start();
+		const result = await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
+		if (kurs2 instanceof GostBlockungsergebnisKurs)
+			kurs2 = this.datenmanager.getKurs(kurs2.id);
+		this.datenmanager.removeKurs(kurs1);
+		this.ergebnismanager.setRemoveKursByID(kurs1.id)
+		this.datenmanager.removeKurs(kurs2);
+		this.ergebnismanager.setRemoveKursByID(kurs2.id)
+		this.datenmanager.addKurs(result);
+		this.ergebnismanager.setAddKursByID(result.id);
+		this.commit();
+		api.status.stop();
+	}
+
+	splitKurs = async (kurs: GostBlockungKurs) => {
+		api.status.start();
+		const result = await api.server.splitGostBlockungKurs(api.schema, kurs.id);
+		this.datenmanager.removeKurs(kurs);
+		this.ergebnismanager.setRemoveKursByID(kurs.id)
+		for (const k of result) {
+			this.datenmanager.addKurs(k);
+			this.ergebnismanager.setAddKursByID(k.id);
+		}
+		this.commit();
+		api.status.stop();
+	}
+
 	addSchieneKurs = async (kurs: GostBlockungKurs) => {
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
@@ -522,7 +550,6 @@ export class RouteDataGostKursplanung {
 		api.status.stop();
 		return result;
 	}
-
 
 	updateKursSchienenZuordnung = async (idKurs: number, idSchieneAlt: number, idSchieneNeu: number): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))

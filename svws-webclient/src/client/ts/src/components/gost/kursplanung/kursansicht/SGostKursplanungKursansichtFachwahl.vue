@@ -33,14 +33,14 @@
 			:hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
-			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" />
+			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 	</template>
 </template>
 
 <script setup lang="ts">
 
 	import type { List, GostBlockungKurs, GostBlockungSchiene, GostStatistikFachwahl, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
-		GostBlockungsergebnisManager, GostBlockungsdatenManager } from "@svws-nrw/svws-core";
+		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs } from "@svws-nrw/svws-core";
 	import { GostKursart, GostStatistikFachwahlHalbjahr,
 		ZulaessigesFach } from "@svws-nrw/svws-core";
 	import type { ComputedRef } from "vue";
@@ -57,6 +57,8 @@
 		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
