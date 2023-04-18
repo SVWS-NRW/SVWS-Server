@@ -95,7 +95,7 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
+		@apply -ml-4 z-50 w-1/2 p-3 absolute top-2 right-2 bottom-2;
 	}
 
 	.app-layout--aside-container {

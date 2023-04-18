@@ -5,7 +5,7 @@
 			{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} nie zusammen mit {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }}
 		</template>
 		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse" />
-		immer zusammen mit
+		<span class="leading-none">immer zusammen mit</span>
 		<parameter-kurs v-model="kurs2" :map-faecher="mapFaecher" :kurse="kurse" />
 	</BlockungsregelBase>
 </template>

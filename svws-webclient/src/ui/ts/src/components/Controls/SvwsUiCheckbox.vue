@@ -6,7 +6,7 @@
 
 	const props = withDefaults(defineProps<{
 		value?: CheckboxValue;
-		modelValue: ModelValue | null;
+		modelValue: ModelValue;
 		statistics?: boolean;
 		disabled?: boolean;
 		circle?: boolean;
@@ -41,18 +41,19 @@
 			'checkbox--checked': modelValue,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': modelValue === undefined || modelValue === null
+			'checkbox--indeterminate': modelValue === undefined || modelValue === 'indeterminate'
 		}">
 		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<svws-ui-icon v-if="modelValue === null" role="checkbox">
+		<svws-ui-icon v-if="modelValue === 'indeterminate' && typeof modelValue !== 'undefined'" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="modelValue" role="checkbox">
-			<i-ri-checkbox-line v-if="!circle" />
+		<svws-ui-icon v-else-if="modelValue" role="checkbox" class="text-primary">
+			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</svws-ui-icon>
 		<svws-ui-icon v-else-if="!modelValue" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />
+			<i-ri-checkbox-blank-circle-line v-if="circle" />
 		</svws-ui-icon>
 		<span class="checkbox--label" v-if="$slots.default || statistics">
 			<slot />
@@ -63,7 +64,7 @@
 	</label>
 </template>
 
-<style>
+<style lang="postcss">
 .checkbox {
 	@apply cursor-pointer;
 	@apply inline-flex;
@@ -71,10 +72,32 @@
 	@apply select-none;
 	@apply text-base font-normal leading-none;
 	@apply my-1;
+
+	.icon svg {
+		@apply -my-0.5;
+		width: 1.4em;
+		height: 1.4em;
+	}
+
+	&:hover,
+	&:focus {
+		.icon {
+			@apply opacity-75;
+		}
+	}
 }
 
-.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) .icon {
-	@apply opacity-50;
+.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) {
+	.icon {
+		@apply opacity-25;
+	}
+
+	&:hover,
+	&:focus {
+		.icon {
+			@apply opacity-100;
+		}
+	}
 }
 
 .checkbox--control {

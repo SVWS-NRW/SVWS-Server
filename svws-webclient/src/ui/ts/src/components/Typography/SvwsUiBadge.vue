@@ -97,32 +97,6 @@
 }
 
 .badge--short {
-	@apply overflow-hidden relative;
-	max-width: 6ch;
-
-	&:before {
-		@apply absolute top-0 right-0 w-2/3 h-full bg-gradient-to-r;
-		content: '';
-	}
-
-	&.badge--error:before {
-		@apply from-error/0 from-10% to-error/100 to-75%;
-	}
-
-	&.badge--primary:before {
-		@apply from-primary/0 from-10% to-primary/100 to-75%;
-	}
-
-	&.badge--light:before {
-		@apply from-light/0 from-10% to-light/100 to-75%;
-	}
-
-	&.badge--success:before {
-		@apply from-success/0 from-10% to-success/100 to-75%;
-	}
-
-	&.badge--highlight:before {
-		@apply from-highlight/0 from-10% to-highlight/100 to-75%;
-	}
+	@apply overflow-hidden relative line-clamp-1 overflow-ellipsis w-full max-w-full break-all;
 }
 </style>

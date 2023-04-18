@@ -28,7 +28,7 @@
 		</section>
 		<Teleport to="body">
 			<aside class="app-layout--aside max-w-2xl h-auto" v-if="allow_regeln && !collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
-				<div class="app-layout--aside-container relative">
+				<div class="app-layout--aside-container relative h-auto max-h-full">
 					<h2 class="text-headline flex justify-between py-7 px-7 3xl:px-8">
 						<span>Regeln zur Blockung</span>
 						<i-ri-close-line @click="onToggle" class="opacity-25 hover:opacity-100 cursor-pointer" />

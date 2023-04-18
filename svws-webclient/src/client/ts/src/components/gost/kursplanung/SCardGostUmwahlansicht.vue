@@ -14,19 +14,20 @@
 								<template #body>
 									<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
 										:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
-									<template v-if="!blockung_aktiv">
-										<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
-											<div v-if="active" class="flex gap-2 items-center w-full h-full">
-												<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
-												<span>Entfernen</span>
-											</div>
-											<div v-else class="flex gap-2 items-center w-full h-full">
-												<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
-											</div>
-										</div>
-									</template>
 								</template>
 							</svws-ui-data-table>
+							<template v-if="!blockung_aktiv">
+								<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
+									<div v-if="active" class="flex gap-2 items-center w-full h-full">
+										<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
+										<span>Entfernen</span>
+									</div>
+									<div v-else class="flex gap-2 items-center w-full h-full">
+										<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
+										<span class="opacity-25">Entfernen</span>
+									</div>
+								</div>
+							</template>
 						</div>
 					</div>
 				</svws-ui-drop-data>

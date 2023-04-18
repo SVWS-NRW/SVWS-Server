@@ -2,8 +2,8 @@
 	<template v-if="!blockungAktiv">
 		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
 			v-slot="{ active }"
-			class="data-table__td data-table__td__no-padding data-table__td__align-center"
-			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id}"
+			class="data-table__td data-table__td__no-padding data-table__td__align-center data-table__td__no-padding"
+			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id, 'p-0.5': !active && !is_drop_zone(schiene), 'p-0': active || is_drop_zone(schiene)}"
 			tag="div"
 			role="cell"
 			:drop-allowed="is_drop_zone(schiene)"
@@ -12,18 +12,20 @@
 				:key="kurs.id"
 				tag="div"
 				:data="{kurs, schiene}"
-				class="select-none leading-5"
+				class="select-none w-full h-full rounded flex items-center justify-center relative group"
 				:draggable="true"
-				:class="{'schiene-gesperrt': schiene_gesperrt(schiene)}"
+				:class="{'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
 				@drag-start="drag_started"
-				@drag-end="drag_ended">
-				<svws-ui-badge size="tiny" class="cursor-grab" :type="selected_kurs ? 'primary' : istFixiert(schiene) ? 'error' : active && drag_data?.kurs?.id !== kurs.id ? 'success' : 'highlight'" @click="toggle_active_kurs">
-					{{ kurs_blockungsergebnis?.schueler.size() }}
-					<svws-ui-icon class="cursor-pointer" @click="fixieren_regel_toggle(schiene)">
-						<i-ri-pushpin-fill v-if="istFixiert(schiene)" class="inline-block" />
-						<i-ri-pushpin-line v-if="!istFixiert(schiene) && allowRegeln" class="inline-block" />
-					</svws-ui-icon>
-				</svws-ui-badge>
+				@drag-end="drag_ended"
+				@click="toggle_active_kurs">
+				{{ kurs_blockungsergebnis?.schueler.size() }}
+				<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5">
+					<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-50 group-hover:text-black" />
+				</span>
+				<svws-ui-icon class="cursor-pointer group absolute right-1" @click.stop="fixieren_regel_toggle(schiene)">
+					<i-ri-pushpin-fill v-if="istFixiert(schiene)" class="inline-block group-hover:opacity-75" />
+					<i-ri-pushpin-line v-if="!istFixiert(schiene) && allowRegeln" class="inline-block opacity-25 group-hover:opacity-100" />
+				</svws-ui-icon>
 			</svws-ui-drag-data>
 			<template v-else>
 				<div class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle(schiene)"
@@ -31,8 +33,8 @@
 						'schiene-gesperrt': schiene_gesperrt(schiene)}">
 					<div v-if="active && is_drop_zone(schiene)" class="absolute inset-1 border-2 border-dashed border-black/25" />
 					<svws-ui-icon>
-						<i-ri-forbid-fill v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block" />
-						<i-ri-forbid-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
+						<i-ri-prohibited-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block" />
+						<i-ri-prohibited-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
 					</svws-ui-icon>
 				</div>
 			</template>

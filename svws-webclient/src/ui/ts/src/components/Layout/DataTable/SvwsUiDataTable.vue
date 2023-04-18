@@ -42,7 +42,7 @@
 					<div role="checkbox" aria-label="Alle auswählen" v-if="selectable"
 						class="data-table__th data-table__thead__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
-							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
+							:model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>
 					<div role="columnheader"
@@ -164,7 +164,7 @@
 					<div role="checkbox" v-if="selectable"
 						class="data-table__th data-table__tfoot__th data-table__cell-select">
 						<svws-ui-checkbox class="data-table__cell-checkbox"
-							:model-value="someNotAllRowsSelected ? null : allRowsSelected"
+							:model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected"
 							@update:model-value="toggleBulkSelection" />
 					</div>
 					<div v-if="count && modelValue" role="cell"

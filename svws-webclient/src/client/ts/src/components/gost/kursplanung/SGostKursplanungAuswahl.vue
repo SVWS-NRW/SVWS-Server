@@ -4,12 +4,12 @@
 			<template #cell(kuerzel)="{ rowData: row }">
 				<div class="flex justify-between w-full">
 					{{ row.kuerzel }}
-					<template v-if="allow_add_blockung(row)">
-						<svws-ui-button type="secondary" @click.stop="blockung_hinzufuegen">Blockung hinzufügen</svws-ui-button>
+					<div v-if="allow_add_blockung(row)" class="inline-flex gap-1 -my-0.5">
+						<svws-ui-button type="secondary" @click.stop="blockung_hinzufuegen">Blockung <i-ri-add-circle-line class="-mr-0.5" /></svws-ui-button>
 						<s-gost-kursplanung-modal-blockung-recover v-slot="{ openModal }" :restore-blockung="restoreBlockung">
 							<svws-ui-button :disabled="jahrgangsdaten?.istBlockungFestgelegt[halbjahr.id] || false" type="secondary" @click="openModal()">Wiederherstellen</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
-					</template>
+					</div>
 				</div>
 			</template>
 		</svws-ui-data-table>

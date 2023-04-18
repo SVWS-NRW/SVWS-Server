@@ -20,8 +20,8 @@
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + schienen.size()}">
 				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">
-					Kurs hinzufügen
-					<i-ri-add-circle-line />
+					Kurs
+					<i-ri-add-circle-line class="-mr-0.5" />
 				</svws-ui-button>
 			</div>
 			<div role="cell" class="data-table__td" />

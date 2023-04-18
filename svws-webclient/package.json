@@ -10,7 +10,7 @@
 	],
 	"devDependencies": {
 		"@histoire/plugin-vue": "^0.16.1",
-		"@iconify-json/ri": "^1.1.6",
+		"@iconify-json/ri": "^1.1.8",
 		"@rollup/plugin-typescript": "^11.1.0",
 		"@types/node": "^18.13.0",
 		"@typescript-eslint/eslint-plugin": "^5.51.0",

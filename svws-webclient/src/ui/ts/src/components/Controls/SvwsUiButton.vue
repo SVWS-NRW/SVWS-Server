@@ -266,13 +266,13 @@
 
 .button--badge {
 	@apply absolute top-0 left-[100%];
-	@apply font-bold text-primary;
-	@apply bg-light rounded-full shadow border border-white;
+	@apply font-bold text-white;
+	@apply bg-error rounded-full shadow;
 	@apply flex items-center justify-center;
 	@apply pointer-events-none;
-	@apply -mt-1.5 -ml-3;
+	@apply -mt-2 -ml-3;
 	@apply px-1.5;
-	@apply h-4;
+	@apply h-5;
 	font-size: 0.8rem;
 }
 </style>
