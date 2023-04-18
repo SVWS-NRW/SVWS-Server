@@ -1,3 +1,4 @@
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
@@ -23,10 +24,21 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 	}
 
 	public toString() : string {
-		let s : string | null = "";
-		for (const value of this)
-			s += (s.length === 0 ? "" : ", ") + value;
-		return "values = [" + s! + "], size = " + this.size() + " --> " + this._sub.toString()!;
+		const sb : StringBuilder | null = new StringBuilder();
+		sb.append("values = [");
+		let first : boolean = true;
+		for (const value of this) {
+			if (first)
+				first = false;
+			else
+				sb.append(", ");
+			sb.append(value);
+		}
+		sb.append("], size = ");
+		sb.append(this.size());
+		sb.append(" --> ");
+		sb.append(this._sub.toString());
+		return sb.toString();
 	}
 
 	public size() : number {

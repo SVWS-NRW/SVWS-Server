@@ -2,6 +2,7 @@ import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaM
 import { NavigableSet } from '../../../java/util/NavigableSet';
 import { JavaSet } from '../../../java/util/JavaSet';
 import { NavigableMap } from '../../../java/util/NavigableMap';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { AVLMapSubCollection } from '../../../core/adt/map/AVLMapSubCollection';
 import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -54,10 +55,21 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	public toString() : string {
-		let s : string | null = "";
-		for (const e of this.entrySet())
-			s += (s.length === 0 ? "" : ", ") + e;
-		return "Entries = [" + s! + "], iv = " + this._iv + ", asc = " + this._asc;
+		const sb : StringBuilder | null = new StringBuilder();
+		sb.append("Entries = [");
+		let first : boolean = true;
+		for (const e of this.entrySet()) {
+			if (first)
+				first = false;
+			else
+				sb.append(", ");
+			sb.append(e);
+		}
+		sb.append("], iv = ");
+		sb.append(this._iv);
+		sb.append(", asc = ");
+		sb.append(this._asc);
+		return sb.toString();
 	}
 
 	public equals(o : unknown) : boolean {

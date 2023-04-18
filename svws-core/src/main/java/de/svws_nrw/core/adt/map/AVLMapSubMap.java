@@ -60,10 +60,21 @@ public final class AVLMapSubMap<@NotNull K, @NotNull V> implements NavigableMap<
 
 	@Override
 	public @NotNull String toString() {
-		String s = "";
-		for (final Entry<K, V> e : entrySet())
-			s += (s.length() == 0 ? "" : ", ") + e;
-		return "Entries = [" + s + "], iv = " + _iv + ", asc = " + _asc;
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Entries = [");
+		boolean first = true;
+		for (final Entry<K, V> e : entrySet()) {
+			if (first)
+				first = false;
+			else
+				sb.append(", ");
+			sb.append(e);
+		}
+		sb.append("], iv = ");
+		sb.append(_iv);
+		sb.append(", asc = ");
+		sb.append(_asc);
+		return sb.toString();
 	}
 
 	@Override

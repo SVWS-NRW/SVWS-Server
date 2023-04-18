@@ -33,10 +33,21 @@ public final class AVLMapSubCollection<@NotNull K, @NotNull V> implements Collec
 
 	@Override
 	public @NotNull String toString() {
-		String s = "";
-		for (final V value : this)
-			s += (s.length() == 0 ? "" : ", ") + value;
-		return "values = [" + s + "], size = " + size() + " --> " + _sub.toString();
+		final StringBuilder sb = new StringBuilder();
+		sb.append("values = [");
+		boolean first = true;
+		for (final V value : this) {
+			if (first)
+				first = false;
+			else
+				sb.append(", ");
+			sb.append(value);
+		}
+		sb.append("], size = ");
+		sb.append(size());
+		sb.append(" --> ");
+		sb.append(_sub.toString());
+		return sb.toString();
 	}
 
 	@Override
