@@ -1778,6 +1778,32 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Verschiebt alles SuS von pKursID2delete nach pKursID1keep und löscht dann den
+	 * Kurs mit der ID beim {@link GostBlockungsdatenManager}, anschließend in diesem
+	 * Manager.
+	 *
+	 * @param  pKursID1keep    Die Datenbank-ID des Kurses, der erhalten bleibt.
+	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
+	 */
+	public void setMergeKurseByID(final long pKursID1keep, final long pKursID2delete) {
+		// 1) Kurs2 löschen (beim Parent-Manager).
+		_parent.removeKursByID(pKursID2delete);
+
+		// 2) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
+		@NotNull GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
+		for (final @NotNull Long schuelerID : kurs2.schueler) {
+			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
+			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);
+		}
+
+		// 3) Kurs2 löschen (in diesem Manager).
+		setRemoveKursByID(pKursID2delete);
+
+		// 4) Revalidierung, da dadurch die Bewertung sich verändern kann.
+		stateRevalidateEverything();
+	}
+
+	/**
 	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
 	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
