@@ -3,7 +3,7 @@
 		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
 			v-slot="{ active }"
 			class="data-table__td data-table__td__no-padding data-table__td__align-center"
-			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id, 'p-0.5': !active && !is_drop_zone(schiene), 'p-0': active || is_drop_zone(schiene)}"
+			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id}"
 			tag="div"
 			role="cell"
 			:drop-allowed="is_drop_zone(schiene)"
@@ -14,7 +14,7 @@
 				:data="{kurs, schiene}"
 				class="select-none w-full h-full rounded flex items-center justify-center relative group"
 				:draggable="true"
-				:class="{'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
+				:class="{'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone(schiene), 'p-0': active || is_drop_zone(schiene)}"
 				@drag-start="drag_started"
 				@drag-end="drag_ended"
 				@click="toggle_active_kurs">
