@@ -36,6 +36,10 @@
 			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid url @input="onInput" />
 		</Variant>
 
+		<Variant title="MaxLen">
+			<svws-ui-text-input type="text" model-value="zu lang" placeholder="Text Input Placeholder" :max-len="5" @input="onInput" />
+		</Variant>
+
 		<Variant title="Headless">
 			<div class="bg-light p-8 font-bold">
 				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid headless @input="onInput" class="bg-highlight" />

@@ -21,6 +21,7 @@
 		focus?: boolean;
 		rounded?: boolean;
 		url?: boolean;
+		maxLen?: number;
 	}>(), {
 		type: "text",
 		modelValue: "",
@@ -34,6 +35,7 @@
 		focus: false,
 		rounded: false,
 		url: false,
+		maxLen: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -52,6 +54,12 @@
 			if (props.focus) el.focus();
 		}
 	};
+
+	const maxLenValid = computed(()=>{
+		if (props.maxLen === undefined)
+			return true;
+		return typeof tmp.value === 'string' && tmp.value?.toLocaleString().length < props.maxLen;
+	})
 
 	const emailValid = computed(() => {
 		if (props.type !== "email" || !tmp.value)
@@ -85,7 +93,7 @@
 	<label class="text-input-component"
 		:class="{
 			'text-input-filled': `${tmp}`.length > 0,
-			'text-input-invalid': (valid === false) || (emailValid === false),
+			'text-input-invalid': (valid === false) || (emailValid === false) || (maxLenValid === false),
 			'text-input-disabled': disabled,
 			'text-input-readonly': readonly,
 			'text-input--icon': hasIcon,
