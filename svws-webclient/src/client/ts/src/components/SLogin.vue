@@ -46,7 +46,7 @@
 										</a>
 									</nav>
 									<div class="bg-light mt-6 px-6 pt-4 pb-5">
-										<img class="mb-4 w-2/3 mx-auto" src="/images/MSB_NRW_Logo.svg">
+										<img class="mb-4 w-2/3 mx-auto" src="/images/MSB_NRW_Logo.svg" alt="das NRW-Logo">
 										<p class="text-sm opacity-50 text-left">
 											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
 											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.

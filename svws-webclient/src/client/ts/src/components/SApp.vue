@@ -73,10 +73,14 @@
 	import { computed, onErrorCaptured, ref, watch } from "vue";
 	import type { AppProps } from './SAppProps';
 	import type { AuswahlChildData } from './AuswahlChildData';
+	import { api } from '~/router/Api';
 
 	const errors: Ref<Error[]> = ref([]);
 
-	onErrorCaptured((e) => { errors.value.push(e); });
+	onErrorCaptured((e) => {
+		errors.value.push(e);
+		api.status.stop();
+	});
 
 	const props = defineProps<AppProps>();
 
