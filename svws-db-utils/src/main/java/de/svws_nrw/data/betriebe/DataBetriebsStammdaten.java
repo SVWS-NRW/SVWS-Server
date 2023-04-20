@@ -95,9 +95,10 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 
 	/**
 	 * Estellt einen neuen Betrieb
-	 * @param is @param is            das JSON-Objekt
 	 *
-	 * @return die HTTP-Antwort mit der neuen Betriebsart
+	 * @param is             das JSON-Objekt
+	 *
+	 * @return  die HTTP-Antwort mit der neuen Betriebsart
 	 */
 	public Response create(final InputStream is) {
 	    DTOKatalogAllgemeineAdresse betrieb = null;
