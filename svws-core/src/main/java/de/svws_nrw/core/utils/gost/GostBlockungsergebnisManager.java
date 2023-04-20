@@ -1798,9 +1798,29 @@ public class GostBlockungsergebnisManager {
 
 		// 3) Kurs2 löschen (in diesem Manager).
 		setRemoveKursByID(pKursID2delete);
+	}
 
-		// 4) Revalidierung, da dadurch die Bewertung sich verändern kann.
-		// stateRevalidateEverything(); // nicht nötig, passiert schon bei 1) und 3)
+	/**
+	 * Erzeugt einen neuen Kurs2 beim {@link GostBlockungsdatenManager},
+	 * dann bei diesem Manager und
+	 * verschiebt alle SuS des übergebenen Arrays von Kurs1 nach Kurs2.
+	 *
+	 * @param  pKurs1alt     Der Kurs, der gesplittet wird.
+	 * @param  pKurs2neu     Der Kurs, der neu erzeugt wird.
+	 * @param  pSusVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
+	 */
+	public void setSplitKurs(final @NotNull GostBlockungKurs pKurs1alt, final @NotNull GostBlockungKurs pKurs2neu, final @NotNull long[] pSusVon1nach2) {
+		// 1) Kurs2 erzeugen (beim Parent-Manager).
+		_parent.addKurs(pKurs2neu);
+
+		// 2) Kurs2 erzeugen (in diesem Manager).
+		setAddKursByID(pKurs2neu.id);
+
+		// 3) Verschieben der SuS von Kurs1 nach Kurs2 (in diesem Manager).
+		for (final long schuelerID : pSusVon1nach2) {
+			stateSchuelerKursEntfernen(schuelerID, pKurs1alt.id);
+			stateSchuelerKursHinzufuegen(schuelerID, pKurs2neu.id);
+		}
 	}
 
 	/**

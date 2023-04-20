@@ -1711,6 +1711,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Erzeugt einen neuen Kurs2 beim {@link GostBlockungsdatenManager},
+	 * dann bei diesem Manager und
+	 * verschiebt alle SuS des übergebenen Arrays von Kurs1 nach Kurs2.
+	 *
+	 * @param  pKurs1alt     Der Kurs, der gesplittet wird.
+	 * @param  pKurs2neu     Der Kurs, der neu erzeugt wird.
+	 * @param  pSusVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
+	 */
+	public setSplitKurs(pKurs1alt : GostBlockungKurs, pKurs2neu : GostBlockungKurs, pSusVon1nach2 : Array<number>) : void {
+		this._parent.addKurs(pKurs2neu);
+		this.setAddKursByID(pKurs2neu.id);
+		for (const schuelerID of pSusVon1nach2) {
+			this.stateSchuelerKursEntfernen(schuelerID, pKurs1alt.id);
+			this.stateSchuelerKursHinzufuegen(schuelerID, pKurs2neu.id);
+		}
+	}
+
+	/**
 	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
 	 *
 	 * @param  pKursID Die Datenbank-ID des Kurses.
