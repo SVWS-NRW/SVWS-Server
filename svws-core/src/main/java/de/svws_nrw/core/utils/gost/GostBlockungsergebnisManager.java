@@ -1792,7 +1792,7 @@ public class GostBlockungsergebnisManager {
 			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
 			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);
 		}
-		
+
 		// 2) Kurs2 löschen (beim Parent-Manager).
 		_parent.removeKursByID(pKursID2delete);
 
@@ -1800,7 +1800,7 @@ public class GostBlockungsergebnisManager {
 		setRemoveKursByID(pKursID2delete);
 
 		// 4) Revalidierung, da dadurch die Bewertung sich verändern kann.
-		// stateRevalidateEverything(); // nicht nötig, passiert schon bei 1) und 3) 
+		// stateRevalidateEverything(); // nicht nötig, passiert schon bei 1) und 3)
 	}
 
 	/**
