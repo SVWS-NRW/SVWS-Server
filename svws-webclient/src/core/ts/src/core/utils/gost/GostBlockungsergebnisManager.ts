@@ -1701,14 +1701,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
 	public setMergeKurseByID(pKursID1keep : number, pKursID2delete : number) : void {
-		this._parent.removeKursByID(pKursID2delete);
 		let kurs2 : GostBlockungsergebnisKurs = this.getKursE(pKursID2delete);
 		for (const schuelerID of kurs2.schueler) {
 			this.stateSchuelerKursEntfernen(schuelerID!, pKursID2delete);
 			this.stateSchuelerKursHinzufuegen(schuelerID!, pKursID1keep);
 		}
+		this._parent.removeKursByID(pKursID2delete);
 		this.setRemoveKursByID(pKursID2delete);
-		this.stateRevalidateEverything();
 	}
 
 	/**

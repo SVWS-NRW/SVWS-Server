@@ -1786,21 +1786,21 @@ public class GostBlockungsergebnisManager {
 	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
 	public void setMergeKurseByID(final long pKursID1keep, final long pKursID2delete) {
-		// 1) Kurs2 löschen (beim Parent-Manager).
-		_parent.removeKursByID(pKursID2delete);
-
-		// 2) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
+		// 1) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
 		@NotNull GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
 		for (final @NotNull Long schuelerID : kurs2.schueler) {
 			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
 			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);
 		}
+		
+		// 2) Kurs2 löschen (beim Parent-Manager).
+		_parent.removeKursByID(pKursID2delete);
 
 		// 3) Kurs2 löschen (in diesem Manager).
 		setRemoveKursByID(pKursID2delete);
 
 		// 4) Revalidierung, da dadurch die Bewertung sich verändern kann.
-		stateRevalidateEverything();
+		// stateRevalidateEverything(); // nicht nötig, passiert schon bei 1) und 3) 
 	}
 
 	/**
