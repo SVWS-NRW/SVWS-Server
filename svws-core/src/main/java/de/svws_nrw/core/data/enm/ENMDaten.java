@@ -73,7 +73,7 @@ public class ENMDaten {
 
 	/** Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool) */
 	@Schema(description = "Der Katalog mit den gültigen Einträgen von Förderschwerpunkten (als Übersicht für das ENM-Tool).")
-	public@NotNull  List<@NotNull ENMFoerderschwerpunkt> foerderschwerpunkte = new ArrayList<>();
+	public @NotNull List<@NotNull ENMFoerderschwerpunkt> foerderschwerpunkte = new ArrayList<>();
 
 	/** Die Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind.  */
 	@ArraySchema(schema = @Schema(implementation = ENMJahrgang.class, description = "Ein Array mit den Informationen zu den einzelnen Jahrgängen, die in der Notendatei enthalten sind."))

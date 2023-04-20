@@ -1,7 +1,10 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -9,6 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
+import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.data.DataManager;
@@ -21,6 +25,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
@@ -276,12 +281,39 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		} catch (final Exception exception) {
 			conn.transactionRollback();
 			if (exception instanceof final IllegalArgumentException e)
-				throw OperationError.NOT_FOUND.exception();
+				throw OperationError.NOT_FOUND.exception(e);
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
 			throw exception;
 		}
 	}
+
+
+	/**
+	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link DTOSchueler}.
+	 */
+	private static final Comparator<DTOSchueler> dtoSchuelerComparator = (a, b) -> {
+		final Collator collator = Collator.getInstance(Locale.GERMAN);
+		if ((a.Nachname == null) && (b.Nachname != null))
+			return -1;
+		else if ((a.Nachname != null) && (b.Nachname == null))
+			return 1;
+		else if ((a.Nachname == null) && (b.Nachname == null))
+			return 0;
+		int result = collator.compare(a.Nachname, b.Nachname);
+		if (result != 0)
+			return result;
+		if ((a.Vorname == null) && (b.Vorname != null))
+			return -1;
+		else if ((a.Vorname != null) && (b.Vorname == null))
+			return 1;
+		else if ((a.Vorname == null) && (b.Vorname == null))
+			return 0;
+		result = collator.compare(a.Vorname, b.Vorname);
+		if (result != 0)
+			return result;
+		return Long.compare(a.ID, b.ID);
+	};
 
 
 	/**
@@ -330,17 +362,36 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			for (final DTOGostBlockungZwischenergebnisKursSchiene schiene : schienen)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(schiene.Zwischenergebnis_ID, kursNeu.ID, schiene.Schienen_ID));
 			final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
-			for (int i = schuelerListe.size() / 2; i < schuelerListe.size(); i++) {
+			final Map<Long, DTOGostBlockungZwischenergebnisKursSchueler> mapKursSchueler = schuelerListe.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.Schueler_ID).toList();
+			final List<DTOSchueler> listSchuelerDTOs = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+			final Map<Long, DTOSchueler> mapSchuelerDTOs = listSchuelerDTOs.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+			for (int i = 0; i < schuelerListe.size(); i++) { // Prüfe die Konsistenz der Daten in der Datenbank
 				final DTOGostBlockungZwischenergebnisKursSchueler schueler = schuelerListe.get(i);
+				final DTOSchueler schuelerDTO = mapSchuelerDTOs.get(schueler.Schueler_ID);
+				if (schuelerDTO == null)
+					throw OperationError.INTERNAL_SERVER_ERROR.exception("Schüler mit der ID " + schueler.Schueler_ID + " nicht in der Datenbank gefunden.");
+				final DTOGostBlockungZwischenergebnisKursSchueler kursSchueler = mapKursSchueler.get(schueler.Schueler_ID);
+				if (kursSchueler == null)
+					throw OperationError.INTERNAL_SERVER_ERROR.exception("Unerwarteter interner Fehler bei dem erstellen einer Map.");
+			}
+			final List<DTOSchueler> listSchuelerDTOsSortiert = listSchuelerDTOs.stream().sorted(dtoSchuelerComparator).toList();
+			for (int i = listSchuelerDTOsSortiert.size() / 2; i < listSchuelerDTOsSortiert.size(); i++) {
+				final DTOSchueler schuelerDTO = listSchuelerDTOsSortiert.get(i);
+				final DTOGostBlockungZwischenergebnisKursSchueler schueler = mapKursSchueler.get(schuelerDTO.ID);
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(schueler.Zwischenergebnis_ID, kursNeu.ID, schueler.Schueler_ID));
 				conn.transactionRemove(schueler);
 			}
 			if (!conn.transactionCommit())
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			// Gebe die beiden Kurse zurück
-			final GostBlockungKurs daten1 = dtoMapper.apply(kurs);
-			final GostBlockungKurs daten2 = dtoMapper.apply(kursNeu);
-			final GostBlockungKurs[] daten = { daten1, daten2 };
+			final GostBlockungKursAufteilung daten = new GostBlockungKursAufteilung();
+			daten.kurs1 = dtoMapper.apply(kurs);
+			daten.kurs2 = dtoMapper.apply(kursNeu);
+			for (int i = 0; i < listSchuelerDTOsSortiert.size() / 2; i++)
+				daten.schueler1.add(listSchuelerDTOsSortiert.get(i).ID);
+			for (int i = listSchuelerDTOsSortiert.size() / 2; i < listSchuelerDTOsSortiert.size(); i++)
+				daten.schueler2.add(listSchuelerDTOsSortiert.get(i).ID);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();
@@ -439,7 +490,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			// Bestimme die Kurse der Blockung, welche das Kriterium erfüllen und löschen Kurs mit der höchsten Kursnummer
 	    	final String jpql = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1 and e.Fach_ID = ?2 and e.Kursart = ?3";
 	    	final List<DTOGostBlockungKurs> kurse = conn.queryList(jpql, DTOGostBlockungKurs.class, idBlockung, idFach, kursart);
-	    	if ((kurse == null) || (kurse.size() == 0))
+	    	if ((kurse == null) || (kurse.isEmpty()))
 	    		throw OperationError.NOT_FOUND.exception();
 	    	final DTOGostBlockungKurs kurs = kurse.stream().max((a, b) -> Integer.compare(a.Kursnummer, b.Kursnummer)).get();
 			final GostBlockungKurs daten = dtoMapper.apply(kurs);
@@ -451,7 +502,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		} catch (final Exception exception) {
 			conn.transactionRollback();
 			if (exception instanceof final IllegalArgumentException e)
-				throw OperationError.NOT_FOUND.exception();
+				throw OperationError.NOT_FOUND.exception(e);
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
 			throw exception;

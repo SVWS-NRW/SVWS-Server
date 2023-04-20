@@ -33,6 +33,7 @@ import { FoerderschwerpunktKatalogEintrag } from '../core/data/schule/Foerdersch
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostBlockungKurs } from '../core/data/gost/GostBlockungKurs';
+import { GostBlockungKursAufteilung } from '../core/data/gost/GostBlockungKursAufteilung';
 import { GostBlockungKursLehrer } from '../core/data/gost/GostBlockungKursLehrer';
 import { GostBlockungListeneintrag } from '../core/data/gost/GostBlockungListeneintrag';
 import { GostBlockungRegel } from '../core/data/gost/GostBlockungRegel';
@@ -3117,7 +3118,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostBlockungKurs>
+	 *     - Rückgabe-Typ: GostBlockungKursAufteilung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Kurs hinzuzufügen.
 	 *   Code 404: Keine Blockung vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -3128,15 +3129,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe
 	 */
-	public async splitGostBlockungKurs(schema : string, kursid : number) : Promise<List<GostBlockungKurs>> {
+	public async splitGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKursAufteilung> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}/split"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{kursid\s*(:[^}]+)?}/g, kursid.toString());
 		const result : string = await super.postJSON(path, null);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostBlockungKurs>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungKurs.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return GostBlockungKursAufteilung.transpilerFromJSON(text);
 	}
 
 

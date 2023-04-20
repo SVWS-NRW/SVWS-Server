@@ -12,6 +12,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
+import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -1082,7 +1083,7 @@ public class APIGost {
                description = "Teilt einen Kurs einer Blockung der Gymnasialen Oberstufe auf, indem ein zweiter Kurs mit der Hälfte der schüler erzeugt wird."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Teilen eines Kurses hat.")
     @ApiResponse(responseCode = "200", description = "Der zusätzliche Kurs der Blockung der gymnasialen Oberstufe",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungKurs.class))))
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungKursAufteilung.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Kurs hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
