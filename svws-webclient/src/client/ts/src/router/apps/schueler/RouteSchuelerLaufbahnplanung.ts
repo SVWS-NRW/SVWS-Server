@@ -1,5 +1,5 @@
 import type { Abiturdaten, GostFach, GostJahrgangFachkombination,
-	GostSchuelerFachwahl, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+	GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
 import { AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 	GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
@@ -24,6 +24,7 @@ interface RouteStateSchuelerLaufbahnplanung {
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
 	listGostFaecher: List<GostFach>;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
+	mapLehrer: Map<number, LehrerListeEintrag>;
 }
 export class RouteDataSchuelerLaufbahnplanung {
 
@@ -39,6 +40,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
 		listGostFaecher: new ArrayList(),
 		mapFachkombinationen: new Map(),
+		mapLehrer: new Map(),
 	}
 
 	private _state = shallowRef<RouteStateSchuelerLaufbahnplanung>(RouteDataSchuelerLaufbahnplanung._defaultState);
@@ -83,6 +85,10 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	get gostLaufbahnBeratungsdaten(): GostLaufbahnplanungBeratungsdaten {
 		return this._state.value.gostLaufbahnBeratungsdaten;
+	}
+
+	get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
 	}
 
 	get faechermanager(): GostFaecherManager {
@@ -190,7 +196,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		if (this.parent === undefined)
 			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 		if (to_params.id === undefined) {
-			await this.data.ladeDaten(undefined);
+			await this.data.ladeDaten();
 		} else {
 			const id = parseInt(to_params.id);
 			try {
@@ -220,7 +226,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			gostBelegpruefungErgebnis: this.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: this.data.abiturdatenManager,
 			faechermanager: this.data.faechermanager,
-			mapFachkombinationen: this.data.mapFachkombinationen
+			mapFachkombinationen: this.data.mapFachkombinationen,
+			mapLehrer: this.data.mapLehrer,
 		};
 	}
 

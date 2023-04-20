@@ -10,6 +10,7 @@
 			<div class="mt-16 flex flex-col gap-2">
 				<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
 				<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" />
+				<div>Letzte Beratung durchgeführt von <span class="font-bold">{{ beratungslehrer || '–' }}</span></div>
 			</div>
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
 		</div>
@@ -21,7 +22,7 @@
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
-		GostBelegpruefungsArt, Sprachendaten, GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
+		GostBelegpruefungsArt, Sprachendaten, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
@@ -31,6 +32,7 @@
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: GostBelegpruefungsArt;
+		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -56,6 +58,13 @@
 		get: () => props.gostLaufbahnBeratungsdaten().kommentar || "",
 		set: (value) => void props.patchBeratungsdaten({ kommentar: value })
 	});
+
+	const beratungslehrer: WritableComputedRef<string | undefined> = computed(()=>{
+		const id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
+		if (id === null)
+			return;
+		return props.mapLehrer.get(id)?.kuerzel;
+	})
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 

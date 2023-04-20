@@ -1,4 +1,4 @@
-import type { GostSchuelerFachwahl, GostBelegpruefungsArt, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
+import type { GostSchuelerFachwahl, GostBelegpruefungsArt, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@svws-nrw/svws-core";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
@@ -15,4 +15,5 @@ export interface SchuelerLaufbahnplanungProps {
 	abiturdatenManager: AbiturdatenManager;
 	faechermanager: GostFaecherManager;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
+	mapLehrer: Map<number, LehrerListeEintrag>;
 }
