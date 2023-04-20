@@ -303,7 +303,7 @@
 	const wst_d_ef: ComputedRef<number> = computed(() => (wochenstunden.value[0] + wochenstunden.value[1]) / 2);
 
 	const wst_d_q: ComputedRef<number> = computed(() => {
-		const [...q] = wochenstunden.value;
+		const [e, f, ...q] = wochenstunden.value;
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 
