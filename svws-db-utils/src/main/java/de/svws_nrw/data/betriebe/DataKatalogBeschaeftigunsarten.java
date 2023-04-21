@@ -19,6 +19,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
+import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 
@@ -86,44 +87,79 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(eintrag).build();
 	}
 
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		if (id == null)
-            return OperationError.NOT_FOUND.getResponse("Die Id der zu ändernden Beshäftigungart darf nicht null sein.");
+	/**
+     * Estellt eine neue Beschäftigungsart
+     *
+     * @param is             das JSON-Objekt
+     *
+     * @return  die HTTP-Antwort mit der neuen Beschäftigungsart
+     */
+    public Response create(final InputStream is) {
+        DTOBeschaeftigungsart dtoObjekt = null;
+     // Bestimme die ID der neuen Beschäftigungsart
+        final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_BeschaeftigungsArt");
+        final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+
+        // Beschätigungsart anlegen
+        dtoObjekt = new DTOBeschaeftigungsart(id, "");
+        return persistDTO(is, dtoObjekt, null);
+    }
+    @Override
+    public Response patch(final Long id, final InputStream is) {
+        final DTOBeschaeftigungsart dtoObjekt = conn.queryByKey(DTOBeschaeftigungsart.class, id);
+        return persistDTO(is, dtoObjekt, id);
+     }
+
+	/**
+     * Erstellet eine DTO-Objekt aus dem JSON-Objekt und persistiert es in der Datanbenk.
+     *
+     * @param is            das JSON-Objekt
+     * @param dtoObjekt   das neue oder bereits vorhandene DTO-Objekt
+     * @param id            die ID des DTO-Objekts bei einem Patch, null bei create
+     *
+     * @return die HTTP-Antwort mit der neuen bzw. angepassten Beschäftigungsart.
+     */
+
+    public Response  persistDTO(final InputStream is, final DTOBeschaeftigungsart dtoObjekt, final Long id) {
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
             try {
                 conn.transactionBegin();
-                final DTOBeschaeftigungsart art = conn.queryByKey(DTOBeschaeftigungsart.class, id);
-                if (art == null)
-                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+                if (dtoObjekt == null)
+                    throw OperationError.NOT_FOUND.exception();
                 for (final Entry<String, Object> entry : map.entrySet()) {
                     final String key = entry.getKey();
                     final Object value = entry.getValue();
                     switch (key) {
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
-                        case "text" -> art.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_BeschaeftigungsArt.col_Bezeichnung.datenlaenge());
-						case "istSichtbar" -> art.Sichtbar = JSONMapper.convertToBoolean(value, true);
-						case "istAenderbar" -> art.Aenderbar = JSONMapper.convertToBoolean(value, true);
-                       	default -> throw OperationError.BAD_REQUEST.exception();
+                        case "id" -> {
+                            if (id != null) {
+                                final Long patch_id = JSONMapper.convertToLong(value, true);
+                                if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+                                    throw OperationError.BAD_REQUEST.exception();
+                            }
+                        }
+                        // TODO  Überbrüfe bei create Duplikate in DB mit dem gleichem "text"
+                        case "text" -> dtoObjekt.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_BeschaeftigungsArt.col_Bezeichnung.datenlaenge());
+                        case "istSichtbar" -> dtoObjekt.Sichtbar = JSONMapper.convertToBoolean(value, true);
+                        case "istAenderbar" -> dtoObjekt.Aenderbar = JSONMapper.convertToBoolean(value, true);
+                        default -> throw OperationError.BAD_REQUEST.exception();
                     }
                 }
-                conn.transactionPersist(art);
-                conn.transactionCommit();
+                conn.transactionPersist(dtoObjekt);
+                if (!conn.transactionCommit())
+                    return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Beschäftigungsarten.");
             } catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+                if (e instanceof final WebApplicationException webAppException)
+                    return webAppException.getResponse();
+                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+            } finally {
+                conn.transactionRollback();
+            }
         }
-        return Response.status(Status.OK).build();
+        if (id != null)
+            return Response.status(Status.OK).build();
+         final KatalogEintrag daten = dtoMapper.apply(dtoObjekt);
+         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 }

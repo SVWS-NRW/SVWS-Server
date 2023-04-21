@@ -1362,6 +1362,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode createBescheftigungsArt für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/new
+	 *
+	 * Erstellt eine neue Beschäftigungsart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Beschäftigungsart wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {KatalogEintrag} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Beschäftigungsart wurde erfolgreich angelegt.
+	 */
+	public async createBescheftigungsArt(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
+		const path = "/db/{schema}/betriebe/beschaeftigungsart/new"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = KatalogEintrag.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return KatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.

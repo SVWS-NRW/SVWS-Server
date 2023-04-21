@@ -424,6 +424,37 @@ public class APIBetrieb {
         }
     }
 
+    /**
+     * Die OpenAPI-Methode für das Erstellen einer neuen Beschäftigungsart.
+     *
+     * @param schema       das Datenbankschema, in welchem die Beschäftigungsart erstellt wird
+     * @param request      die Informationen zur HTTP-Anfrage
+     * @param is           das JSON-Objekt
+     * @return die HTTP-Antwort mit der neuen Beschäftigungsart
+     */
+    @POST
+    @Path("/beschaeftigungsart/new")
+    @Operation(summary = "Erstellt eine neue Beschäftigungsart und gibt sie zurück.",
+    description = "Erstellt eine neue Beschäftigungsart und gibt sie zurück."
+                + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart "
+                + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Beschäftigungsart wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = KatalogEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response createBescheftigungsArt(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Der Post für die Beschäftigungsart-Daten", required = true, content =
+            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) { // TODO Anpassung der Benutzerrechte
+            return (new DataKatalogBeschaeftigunsarten(conn)).create(is);
+        }
+    }
+
+
      /**
      * Die OpenAPI-Methode für das Patchen einer Beschäftigungsart im angegebenen Schema
      *
