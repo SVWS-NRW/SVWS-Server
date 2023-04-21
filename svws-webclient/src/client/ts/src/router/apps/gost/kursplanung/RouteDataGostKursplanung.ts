@@ -1,5 +1,5 @@
-import { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
-import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus, ArrayList } from "@svws-nrw/svws-core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
@@ -437,16 +437,16 @@ export class RouteDataGostKursplanung {
 	combineKurs = async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs) => {
 		api.status.start();
 		await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
-		await this.setAuswahlBlockung(this.auswahlBlockung, true);
-		await this.gotoBlockung(this.auswahlBlockung);
+		this.ergebnismanager.setMergeKurseByID(kurs1.id, kurs2.id);
+		this.commit();
 		api.status.stop();
 	}
 
 	splitKurs = async (kurs: GostBlockungKurs) => {
 		api.status.start();
-		await api.server.splitGostBlockungKurs(api.schema, kurs.id);
-		await this.setAuswahlBlockung(this.auswahlBlockung, true);
-		await this.gotoBlockung(this.auswahlBlockung);
+		const { kurs1, kurs2, schueler2 } = await api.server.splitGostBlockungKurs(api.schema, kurs.id);
+		this.ergebnismanager.setSplitKurs(kurs1, kurs2, <number[]>schueler2.toArray())
+		this.commit();
 		api.status.stop();
 	}
 
@@ -588,7 +588,7 @@ export class RouteDataGostKursplanung {
 		return true;
 	}
 
-	autoKursSchuelerZuordnung = async (idSchueler : number): Promise<void> => {
+	autoKursSchuelerZuordnung = async (idSchueler : number) => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
 		api.status.start();
@@ -612,7 +612,6 @@ export class RouteDataGostKursplanung {
 		this.datenmanager.updateErgebnisBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
-		return;
 	}
 
 	removeErgebnisse = async (ergebnisse: GostBlockungsergebnisListeneintrag[]): Promise<void> => {
@@ -636,9 +635,9 @@ export class RouteDataGostKursplanung {
 		api.status.stop();
 	}
 
-	rechneGostBlockung = async () => {
+	rechneGostBlockung = async (): Promise<List<number>> => {
 		const id = this.auswahlBlockung.id;
-		let liste: List<number> = new ArrayList();
+		let liste;
 		try {
 			api.status.start(<ApiPendingData>{ name: "gost.kursblockung.berechnen", id: id });
 			liste = await api.server.rechneGostBlockung(api.schema, id, 5000);
