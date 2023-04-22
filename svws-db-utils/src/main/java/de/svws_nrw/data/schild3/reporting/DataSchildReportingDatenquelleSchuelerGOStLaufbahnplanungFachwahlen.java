@@ -37,7 +37,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
     DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen() {
         super(SchildReportingSchuelerGOStLaufbahnplanungFachwahlen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
+        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
@@ -64,7 +64,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 
 			if ((gostSchueler != null) && (abidaten.abiturjahr > 0)) {
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fächer in den Ergebnisvektor eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.
-				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.");
+				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.")
 
 				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgang, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
 				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)) {
@@ -92,46 +92,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "";
 					laufbahnplanungFach.positionFremdsprachenfolge = "";
 
-					if (fach.istFremdsprache) {
-						final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-
-						// Verhindern, dass Pseudofächer der Statistik hier als zulässiges Fach verwendet werden.
-						if (!(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"))) {
-							final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-							final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
-
-							if (sprachbelegung != null) {
-								if ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
-									// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
-									if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty()
-											|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-											|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0))) {
-										laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
-										laufbahnplanungFach.jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
-										laufbahnplanungFach.positionFremdsprachenfolge = sprachbelegung.reihenfolge.toString();
-									}
-								}
-							} else if (sprachpruefung != null) {
-								if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, zfach.daten.kuerzel)) {
-									laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
-									if (sprachpruefung.istFeststellungspruefung) {
-										laufbahnplanungFach.jahrgangFremdsprachenbeginn = "SFP";
-									} else if (sprachpruefung.istHSUPruefung) {
-										laufbahnplanungFach.jahrgangFremdsprachenbeginn = "HSU";
-									}
-									if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
-										laufbahnplanungFach.positionFremdsprachenfolge = "1";
-									else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
-										laufbahnplanungFach.positionFremdsprachenfolge = "2";
-									else if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
-										laufbahnplanungFach.positionFremdsprachenfolge = "2";
-									else {
-										laufbahnplanungFach.positionFremdsprachenfolge = "";
-									}
-								}
-							}
-						}
-					}
+					eintragFremdspracheInLaufbahnplanungFachErgaenzen(laufbahnplanungFach, fach, abidaten, sprachbelegungen, sprachpruefungen);
 
 					if (belegung == null) {
 						laufbahnplanungFach.belegungEF1 = "";
@@ -165,9 +126,60 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 
 
 	/**
-	 * Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück.
+	 * Ergänzt im übergebenen LaufbahnplanungFachwahl-Objekt den Fremdspracheneintrag, wenn es sich um eine Fremdsprache handelt.
+	 * @param laufbahnplanungFach 	Das Laufbahnplanungsfach, bei dem die Fremdspracheninformationen ergänzt werden sollen.
+	 * @param fach 					GOST-Fach der Fremdsprache
+	 * @param abiturdaten 			Abiturdaten des Schülers
+	 * @param sprachbelegungen 		Sprachbelegungen des Schülers aus der Sprachenfolge
+	 * @param sprachpruefungen 		Sprachprüfungen des Schülers
+	 */
+	private static void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach, final GostFach fach, final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
+
+		if (!fach.istFremdsprache)
+			return;
+
+		final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+
+		// Verhindern, dass Pseudofächer der Statistik hier als zulässiges Fach verwendet werden.
+		if (!(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"))) {
+			final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
+			final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+
+			if (sprachbelegung != null) {
+				if (((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
+					&& ((zfach.daten.abJahrgang == null)
+					|| zfach.daten.abJahrgang.isEmpty()
+					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
+					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+					laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
+					laufbahnplanungFach.jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
+					laufbahnplanungFach.positionFremdsprachenfolge = sprachbelegung.reihenfolge.toString();
+				}
+			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
+				laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
+				if (sprachpruefung.istFeststellungspruefung) {
+					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "SFP";
+				} else if (sprachpruefung.istHSUPruefung) {
+					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "HSU";
+				}
+				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
+					laufbahnplanungFach.positionFremdsprachenfolge = "1";
+				else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
+					laufbahnplanungFach.positionFremdsprachenfolge = "2";
+				else if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
+					laufbahnplanungFach.positionFremdsprachenfolge = "2";
+				else {
+					laufbahnplanungFach.positionFremdsprachenfolge = "";
+				}
+			}
+		}
+	}
+
+
+	/**Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück.
 	 *
-	 * @param belegungHj   die Halbjahresbelegung des Faches
+	 * @param belegungHj die Halbjahresbelegung des Faches
 	 *
 	 * @return String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */

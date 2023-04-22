@@ -28,7 +28,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
     DataSchildReportingDatenquelleSchuelerleistungsdaten() {
         super(SchildReportingSchuelerleistungsdaten.class);
         this.setMaster("abschnittID", "Schuelerlernabschnitte", "id", SchildReportingAttributTyp.INT);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
+        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 
@@ -41,35 +41,38 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
         for (final Long abschnittID : params)
             if (abschnitte.get(abschnittID) == null)
                 throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
-        // Aggregiere die benötigten Daten aus der Datenbank
+
+		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
+		final ArrayList<SchildReportingSchuelerleistungsdaten> result = new ArrayList<>();
+
+		// Aggregiere die benötigten Daten aus der Datenbank
         final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", params, DTOSchuelerLeistungsdaten.class);
-        if (leistungsdaten == null)
-            return null;
-        if (leistungsdaten.size() == 0)
-        	return new ArrayList<SchildReportingSchuelerleistungsdaten>();
+        if (leistungsdaten == null || leistungsdaten.isEmpty())
+        	return result;
         final List<Long> idFaecher = leistungsdaten.stream().filter(l -> l.Fach_ID != null).map(l -> l.Fach_ID).distinct().toList();
-        final Map<Long, DTOFach> mapFaecher = (idFaecher.size() == 0) ? Collections.emptyMap()
+        final Map<Long, DTOFach> mapFaecher = (idFaecher.isEmpty()) ? Collections.emptyMap()
         		: conn.queryNamed("DTOFach.id.multiple", idFaecher, DTOFach.class)
         			.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
         final List<Long> idLehrer = leistungsdaten.stream().filter(l -> l.Fachlehrer_ID != null).map(l -> l.Fachlehrer_ID).distinct().toList();
-        final Map<Long, DTOLehrer> mapLehrer = (idLehrer.size() == 0) ? Collections.emptyMap()
+        final Map<Long, DTOLehrer> mapLehrer = (idLehrer.isEmpty()) ? Collections.emptyMap()
         		: conn.queryNamed("DTOLehrer.id.multiple", idLehrer, DTOLehrer.class)
         			.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
         final List<Long> idKurse = leistungsdaten.stream().filter(l -> l.Kurs_ID != null).map(l -> l.Kurs_ID).distinct().toList();
-        final Map<Long, DTOKurs> mapKurse = (idKurse.size() == 0) ? Collections.emptyMap()
+        final Map<Long, DTOKurs> mapKurse = (idKurse.isEmpty()) ? Collections.emptyMap()
         		: conn.queryNamed("DTOKurs.id.multiple", idKurse, DTOKurs.class)
         			.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-        // Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-        final ArrayList<SchildReportingSchuelerleistungsdaten> result = new ArrayList<>();
+
+		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %s konnte nicht für die Leistungsdaten mit der ID %s gefunden werden.";
+
         for (final DTOSchuelerLeistungsdaten dto : leistungsdaten) {
-        	final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
+			final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
             if (dtoFach == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistent: Fach mit der ID " + dto.Fach_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID.toString(), dto.ID.toString()));
             String lehrerKuerzel = null;
             if (dto.Fachlehrer_ID != null) {
 	        	final DTOLehrer dtoLehrer = mapLehrer.get(dto.Fachlehrer_ID);
 	            if (dtoLehrer == null)
-	                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistent: Fachlehrer mit der ID " + dto.Fachlehrer_ID + " konnte nicht für die Leistungsdaten mit der ID " + dto.ID + " gefunden werden.");
+	                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID.toString(), dto.ID.toString()));
 	            lehrerKuerzel = dtoLehrer.Kuerzel;
             }
         	final DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);

@@ -32,7 +32,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinw
     DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise() {
         super(SchildReportingSchuelerGOStLaufbahnplanungHinweise.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
+        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
@@ -56,9 +56,9 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinw
 
 			if ((gostSchueler != null) && (abidaten.abiturjahr > 0)) {
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fehler in die Ergebnisliste eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.
-				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.");
+				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.")
 
-				// Abiturdatenmanager für weitere Angaben erzeugen
+				// Abiturdatenmanager für weitere Angaben erzeugen.
 				// Da unter Umständen durch Migration und Importe alter Daten aus Schild und LuPO die GOSt-Fächer nicht mit den Fachwahlen übereinstimmen könnten,
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
@@ -66,7 +66,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinw
 					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
 
 					final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
-					if (ergebnis.fehlercodes.size() > 0) {
+					if (!ergebnis.fehlercodes.isEmpty()) {
 						for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
 							final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 							if (art == GostBelegungsfehlerArt.HINWEIS) {

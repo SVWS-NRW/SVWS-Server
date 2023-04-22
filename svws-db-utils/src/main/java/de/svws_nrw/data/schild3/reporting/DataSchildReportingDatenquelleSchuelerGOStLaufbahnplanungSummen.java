@@ -29,7 +29,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
     DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen() {
         super(SchildReportingSchuelerGOStLaufbahnplanungSummen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
+        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
@@ -57,7 +57,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 			if ((abidaten.abiturjahr <= 0) || (jahrgangsdaten == null)) {
 				// Zum Schüler wurden keine Abiturdaten gefunden oder die Jahrgangsdaten zum Abiturjahrgang existieren nicht.
 				// Gebe daher leere Daten zurück. So wird die Datenquelle auch gefüllt, wenn bei Anfragen zu mehreren Schülern die Daten von nur einem Schüler nicht existiert.
-				// Alternativ wäre der vollständige Abbruch: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Der Abiturjahrgang des Schülers mit der ID " + schuelerID.toString() + " ist ungültig.");
+				// Alternativ wäre der vollständige Abbruch: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Der Abiturjahrgang des Schülers mit der ID " + schuelerID.toString() + " ist ungültig.")
 
 				laufbahnplanungSummen.kursanzahlEF1 = 0;
 				laufbahnplanungSummen.kursanzahlEF2 = 0;
@@ -79,7 +79,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 				laufbahnplanungSummen.wochenstundenDurchschnittQPh = 0;
 				laufbahnplanungSummen.wochenstundenGesamt = 0;
 			} else {
-				// Abiturdatenmanager für weitere Angaben erzeugen
+				// Abiturdatenmanager für weitere Angaben erzeugen.
 				// Da unter Umständen durch Migration und Importe alter Daten aus Schild und LuPO die GOSt-Fächer nicht mit den Fachwahlen übereinstimmen könnten,
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {

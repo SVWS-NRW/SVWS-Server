@@ -27,7 +27,7 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
     DataSchildReportingDatenquelleSchuelerlernabschnitte() {
         super(SchildReportingSchuelerlernabschnitt.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT);
-        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE);
+        // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
@@ -39,10 +39,14 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
         for (final Long schuelerID : params)
             if (schueler.get(schuelerID) == null)
                 throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
+
+		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
+		final ArrayList<SchildReportingSchuelerlernabschnitt> result = new ArrayList<>();
+
         // Aggregiere die benötigten Daten aus der Datenbank
-        final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", params, DTOSchuelerLernabschnittsdaten.class);
-        if (lernabschnittsdaten == null)
-            return null;
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id.multiple", params, DTOSchuelerLernabschnittsdaten.class);
+        if (lernabschnittsdaten == null || lernabschnittsdaten.isEmpty())
+            return result;
         final List<Long> idSchuljahresabschnitte = lernabschnittsdaten.stream().map(l -> l.Schuljahresabschnitts_ID).toList();
         final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn
                 .queryNamed("DTOSchuljahresabschnitte.id.multiple", idSchuljahresabschnitte, DTOSchuljahresabschnitte.class)
@@ -55,18 +59,20 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
         final Map<Long, DTOJahrgang> mapJahrgaenge = conn
                 .queryNamed("DTOJahrgang.id.multiple", idJahrgaenge, DTOJahrgang.class)
                 .stream().collect(Collectors.toMap(j -> j.ID, j -> j));
-        // Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-        final ArrayList<SchildReportingSchuelerlernabschnitt> result = new ArrayList<>();
+
+		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %s konnte nicht für die Lernabschnittsdaten mit der ID %s gefunden werden.";
+
         for (final DTOSchuelerLernabschnittsdaten dto : lernabschnittsdaten) {
-            final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
+			final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
+
             if (dtoSJA == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Schuljahresabschnitt mit der ID " + dto.Schuljahresabschnitts_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt",  dto.Schuljahresabschnitts_ID.toString(), dto.ID.toString()));
             final DTOKlassen dtoKlasse = mapKlassen.get(dto.Klassen_ID);
             if (dtoKlasse == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Klasse mit der ID " + dto.Klassen_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID.toString(), dto.ID.toString()));
             final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(dto.Jahrgang_ID);
             if (dtoJahrgang == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception("Daten inkonsistend: Jahrgang mit der ID " + dto.Jahrgang_ID + " konnte nicht für die Lernabschnittsdaten mit der ID " + dto.ID + " gefunden werden.");
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID.toString(), dto.ID.toString()));
             final SchildReportingSchuelerlernabschnitt data = new SchildReportingSchuelerlernabschnitt();
             data.id = dto.ID;
             data.schuelerID = dto.Schueler_ID;

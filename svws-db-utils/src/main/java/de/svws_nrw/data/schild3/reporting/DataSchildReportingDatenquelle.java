@@ -44,7 +44,7 @@ public abstract class DataSchildReportingDatenquelle {
 
 
     /**
-     * Erstellt einen neue Datenquelle für Schild-Reports
+     * Erstellt eine neue Datenquelle für Schild-Reports
      *
      * @param clazz   die Klasse des Core-DTOs
      */
@@ -149,7 +149,7 @@ public abstract class DataSchildReportingDatenquelle {
             return OperationError.INTERNAL_SERVER_ERROR.getResponse("Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
         final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
         for (final var datenquelle : datenquellen.values()) {
-            if ((datenquelle.schulformen.size() == 0) || (datenquelle.schulformen.contains(schule.Schulform)))
+            if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schule.Schulform)))
                 result.add(datenquelle.datenquelle);
         }
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
@@ -242,25 +242,26 @@ public abstract class DataSchildReportingDatenquelle {
         if (datenquelle == null)
             return OperationError.NOT_FOUND.getResponse("Keine Datenquelle \"" + name + "\" vorhanden.");
         List<? extends Object> result = null;
+		final String meldungKeinParameter = "Kein Parameter für das Attribut der Master-Datenquelle angegeben";
+		final String meldungUngueltigerParameter = "Ungültiger Parameter für das Attribut der Master-Datenquelle angegeben";
         switch (datenquelle.mastertyp) {
             case BOOLEAN -> {
                 // Daten vorhanden?
-                if (params.size() == 0)
-                    return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
+                if (params.isEmpty())
+                    return OperationError.NOT_FOUND.getResponse(meldungKeinParameter);
                 // Prüfe, ob alle Parameter vom Typ Boolean sind
                 for (final Object p : params) {
                     if (!(p instanceof Boolean))
-                        return OperationError.CONFLICT.getResponse("Ungültiger Parameter für das Attribut der Master-Datenquelle angegeben");
+                        return OperationError.CONFLICT.getResponse(meldungUngueltigerParameter);
                 }
                 @SuppressWarnings("unchecked")
-				final
-                List<Boolean> paramListe = (List<Boolean>) params;
+				final List<Boolean> paramListe = (List<Boolean>) params;
                 result = datenquelle.getDatenBoolean(conn, paramListe);
             }
             case INT -> {
                 // Daten vorhanden?
-                if (params.size() == 0)
-                    return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
+                if (params.isEmpty())
+                    return OperationError.NOT_FOUND.getResponse(meldungKeinParameter);
                 // Prüfe, ob alle Parameter vom Typ Long sind
                 final ArrayList<Long> paramListe = new ArrayList<>();
                 for (final Object p : params) {
@@ -273,14 +274,14 @@ public abstract class DataSchildReportingDatenquelle {
                     else if (p instanceof final Byte b)
                         paramListe.add(b.longValue());
                     else
-                        return OperationError.CONFLICT.getResponse("Ungültiger Parameter für das Attribut der Master-Datenquelle angegeben");
+                        return OperationError.CONFLICT.getResponse(meldungUngueltigerParameter);
                 }
                 result = datenquelle.getDatenInteger(conn, paramListe);
             }
             case NUMBER -> {
                 // Daten vorhanden?
-                if (params.size() == 0)
-                    return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
+                if (params.isEmpty())
+                    return OperationError.NOT_FOUND.getResponse(meldungKeinParameter);
                 // Prüfe, ob alle Parameter vom Typ Double sind
                 final ArrayList<Double> paramListe = new ArrayList<>();
                 for (final Object p : params) {
@@ -289,26 +290,25 @@ public abstract class DataSchildReportingDatenquelle {
                     else if (p instanceof final Float f)
                         paramListe.add(f.doubleValue());
                     else
-                        return OperationError.CONFLICT.getResponse("Ungültiger Parameter für das Attribut der Master-Datenquelle angegeben");
+                        return OperationError.CONFLICT.getResponse(meldungUngueltigerParameter);
                 }
                 result = datenquelle.getDatenNumber(conn, paramListe);
             }
-            case STRING -> {
+			case STRING, MEMO -> {
                 // Daten vorhanden?
-                if (params.size() == 0)
-                    return OperationError.NOT_FOUND.getResponse("Kein Parameter für das Attribut der Master-Datenquelle angegeben");
+                if (params.isEmpty())
+                    return OperationError.NOT_FOUND.getResponse(meldungKeinParameter);
                 // Prüfe, ob alle Parameter vom Typ String sind
                 for (final Object p : params) {
                     if (!(p instanceof String))
-                        return OperationError.CONFLICT.getResponse("Üngültiger Parameter für das Attribut der Master-Datenquelle angegeben");
+                        return OperationError.CONFLICT.getResponse(meldungUngueltigerParameter);
                 }
                 @SuppressWarnings("unchecked")
-				final
-                List<String> paramListe = (List<String>) params;
+				final List<String> paramListe = (List<String>) params;
                 result = datenquelle.getDatenString(conn, paramListe);
             }
             default -> {
-                if (params.size() > 0)
+                if (!params.isEmpty())
                     return OperationError.CONFLICT.getResponse("Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
                 result = datenquelle.getDaten(conn);
             }

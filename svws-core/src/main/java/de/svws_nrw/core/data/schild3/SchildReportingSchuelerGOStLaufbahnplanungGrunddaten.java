@@ -24,13 +24,22 @@ public class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten {
     public int abiturjahr;
 
 	/** Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt */
+	@Schema(description = "Das Halbjahr der Oberstufenlaufbahn, in dem sich der Schüler befindet", example = "Q1.1")
+	public @NotNull String aktuellesGOSthalbjahr = "";
+
+	/** Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt */
 	@Schema(description = "Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt", example = "Q1.2")
-	public @NotNull String beratungshalbjahr = "";
+	public @NotNull String beratungsGOSthalbjahr = "";
 
 	/** Der Text der Schule für den Beratungsbogen */
 	@SchildReportingMemo
 	@Schema(description = "Der Text der Schule für den Beratungsbogen", example = "Mit der Abgabe der folgenden Wahl ...")
 	public @NotNull String beratungsbogentext = "";
+
+	/** Der Text der Schule für den E-Mail-Versand */
+	@SchildReportingMemo
+	@Schema(description = "Der Text der Schule für das versenden der Wahldateien mit einer E-Mail", example = "Mit dieser E-Mail ...")
+	public @NotNull String emailtext = "";
 
 	/** Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt */
 	@Schema(description = "Die Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt", example = "Klaus Müller; Erwin Meier")

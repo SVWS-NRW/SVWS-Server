@@ -15,12 +15,22 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 	/**
 	 * Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt
 	 */
-	public beratungshalbjahr : string = "";
+	public aktuellesGOSthalbjahr : string = "";
+
+	/**
+	 * Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt
+	 */
+	public beratungsGOSthalbjahr : string = "";
 
 	/**
 	 * Der Text der Schule für den Beratungsbogen
 	 */
 	public beratungsbogentext : string = "";
+
+	/**
+	 * Der Text der Schule für den E-Mail-Versand
+	 */
+	public emailtext : string = "";
 
 	/**
 	 * Beratungslehrkräfte des Abiturjahrgangs durch Semikolon getrennt
@@ -65,12 +75,18 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		if (typeof obj.abiturjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		if (typeof obj.beratungshalbjahr === "undefined")
-			 throw new Error('invalid json format, missing attribute beratungshalbjahr');
-		result.beratungshalbjahr = obj.beratungshalbjahr;
+		if (typeof obj.aktuellesGOSthalbjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute aktuellesGOSthalbjahr');
+		result.aktuellesGOSthalbjahr = obj.aktuellesGOSthalbjahr;
+		if (typeof obj.beratungsGOSthalbjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute beratungsGOSthalbjahr');
+		result.beratungsGOSthalbjahr = obj.beratungsGOSthalbjahr;
 		if (typeof obj.beratungsbogentext === "undefined")
 			 throw new Error('invalid json format, missing attribute beratungsbogentext');
 		result.beratungsbogentext = obj.beratungsbogentext;
+		if (typeof obj.emailtext === "undefined")
+			 throw new Error('invalid json format, missing attribute emailtext');
+		result.emailtext = obj.emailtext;
 		if (typeof obj.beratungslehrkraefte === "undefined")
 			 throw new Error('invalid json format, missing attribute beratungslehrkraefte');
 		result.beratungslehrkraefte = obj.beratungslehrkraefte;
@@ -93,8 +109,10 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"beratungshalbjahr" : ' + '"' + obj.beratungshalbjahr! + '"' + ',';
+		result += '"aktuellesGOSthalbjahr" : ' + '"' + obj.aktuellesGOSthalbjahr! + '"' + ',';
+		result += '"beratungsGOSthalbjahr" : ' + '"' + obj.beratungsGOSthalbjahr! + '"' + ',';
 		result += '"beratungsbogentext" : ' + '"' + obj.beratungsbogentext! + '"' + ',';
+		result += '"emailtext" : ' + '"' + obj.emailtext! + '"' + ',';
 		result += '"beratungslehrkraefte" : ' + '"' + obj.beratungslehrkraefte! + '"' + ',';
 		result += '"beratungslehrkraft" : ' + '"' + obj.beratungslehrkraft! + '"' + ',';
 		result += '"ruecklaufdatum" : ' + '"' + obj.ruecklaufdatum! + '"' + ',';
@@ -113,11 +131,17 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		if (typeof obj.abiturjahr !== "undefined") {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.beratungshalbjahr !== "undefined") {
-			result += '"beratungshalbjahr" : ' + '"' + obj.beratungshalbjahr + '"' + ',';
+		if (typeof obj.aktuellesGOSthalbjahr !== "undefined") {
+			result += '"aktuellesGOSthalbjahr" : ' + '"' + obj.aktuellesGOSthalbjahr + '"' + ',';
+		}
+		if (typeof obj.beratungsGOSthalbjahr !== "undefined") {
+			result += '"beratungsGOSthalbjahr" : ' + '"' + obj.beratungsGOSthalbjahr + '"' + ',';
 		}
 		if (typeof obj.beratungsbogentext !== "undefined") {
 			result += '"beratungsbogentext" : ' + '"' + obj.beratungsbogentext + '"' + ',';
+		}
+		if (typeof obj.emailtext !== "undefined") {
+			result += '"emailtext" : ' + '"' + obj.emailtext + '"' + ',';
 		}
 		if (typeof obj.beratungslehrkraefte !== "undefined") {
 			result += '"beratungslehrkraefte" : ' + '"' + obj.beratungslehrkraefte + '"' + ',';
