@@ -368,7 +368,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
+	 * Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
 	 *
 	 * @return der Fächer-Manager (siehe {@link GostFaecherManager})
 	 */
@@ -377,7 +377,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *Liefert die Anzahl an Fächern.
+	 * Liefert die Anzahl an Fächern.
 	 *
 	 * @return Die Anzahl an Fächern.
 	 */
@@ -386,7 +386,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 *Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
+	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
 	 *
 	 * @return Die Anzahl verschiedenen Kursarten.
 	 */
@@ -440,8 +440,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die übergebene ID ungültig bzw. negativ ist.
 	 */
 	public setID(pBlockungsID : number) : void {
-		if (pBlockungsID < 0)
-			throw new DeveloperNotificationException("Ungültige Blockungs-ID (" + pBlockungsID + ")!")
+		DeveloperNotificationException.check("pBlockungsID < 0", pBlockungsID < 0);
 		this._daten.id = pBlockungsID;
 	}
 
@@ -461,8 +460,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls der übergebene String leer ist.
 	 */
 	public setName(pName : string) : void {
-		if (JavaObject.equalsTranspiler("", (pName)))
-			throw new UserNotificationException("Ein leerer Name ist für die Blockung nicht zulässig.")
+		UserNotificationException.check("Ein leerer Name ist für die Blockung nicht zulässig.", JavaObject.equalsTranspiler("", (pName)));
 		this._daten.name = pName;
 	}
 
@@ -485,14 +483,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private addErgebnisOhneSortierung(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
-		if (pErgebnis.id < 1)
-			throw new DeveloperNotificationException("Ergebnis.id = " + pErgebnis.id + " --> zu gering!")
-		if (this._mapErgebnis.containsKey(pErgebnis.id))
-			throw new DeveloperNotificationException("Ergebnis.id =  " + pErgebnis.id + " --> doppelt!")
-		if (pErgebnis.blockungID < 1)
-			throw new DeveloperNotificationException("Ergebnis.blockungID = " + pErgebnis.blockungID + " --> zu gering!")
-		if (GostHalbjahr.fromID(pErgebnis.gostHalbjahr) === null)
-			throw new DeveloperNotificationException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!")
+		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 1", pErgebnis.id < 1);
+		DeveloperNotificationException.check("_mapErgebnis.containsKey(" + pErgebnis.id + ")", this._mapErgebnis.containsKey(pErgebnis.id));
+		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 1", pErgebnis.blockungID < 1);
+		DeveloperNotificationException.check("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ") == null", GostHalbjahr.fromID(pErgebnis.gostHalbjahr) === null);
 		this._daten.ergebnisse.add(pErgebnis);
 		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
 	}
@@ -524,15 +518,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
 	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
 	 *
-	 * @param pErgebnisID           Die Datenbank-ID des Ergebnisses.
-	 * @return                      Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @param pErgebnisID  Die Datenbank-ID des Ergebnisses.
+	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public getErgebnis(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
 		const e : GostBlockungsergebnisListeneintrag | null = this._mapErgebnis.get(pErgebnisID);
-		if (e === null)
-			throw new DeveloperNotificationException("Ergebnis mit ID = " + pErgebnisID + " nicht vorhanden!")
-		return e;
+		return DeveloperNotificationException.checkNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
 	}
 
 	/**
@@ -574,10 +566,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
 	 */
 	public updateErgebnisBewertung(pErgebnis : GostBlockungsergebnis) : void {
-		if (pErgebnis.id < 0)
-			throw new DeveloperNotificationException("GostBlockungsergebnis.id=" + pErgebnis.id + " zu klein!")
-		if (pErgebnis.blockungID < 0)
-			throw new DeveloperNotificationException("GostBlockungsergebnis.blockungID=" + pErgebnis.blockungID + " zu klein!")
+		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 0", pErgebnis.id < 0);
+		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 0", pErgebnis.blockungID < 0);
 		for (const eintrag of this._daten.ergebnisse)
 			if (eintrag.id === pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
@@ -585,23 +575,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private addKursOhneSortierung(pKurs : GostBlockungKurs) : void {
-		if (pKurs.id < 0)
-			throw new DeveloperNotificationException("GostBlockungKurs.id=" + pKurs.id + " zu klein!")
-		if (this._mapKurse.containsKey(pKurs.id))
-			throw new DeveloperNotificationException("GostBlockungKurs.id =  " + pKurs.id + " --> doppelt!")
-		if (pKurs.anzahlSchienen < 1)
-			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + pKurs.anzahlSchienen + " --> zu gering!")
 		const nSchienen : number = this.getSchienenAnzahl();
-		if (pKurs.anzahlSchienen > nSchienen)
-			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + nSchienen + " --> zu groß!")
-		if (pKurs.nummer < 1)
-			throw new DeveloperNotificationException("GostBlockungKurs.nummer = " + pKurs.nummer + " --> zu gering!")
-		if (this._faecherManager.get(pKurs.fach_id) === null)
-			throw new DeveloperNotificationException("GostBlockungKurs.fach_id = " + pKurs.fach_id + " --> unbekannt!")
-		if (GostKursart.fromIDorNull(pKurs.kursart) === null)
-			throw new DeveloperNotificationException("GostBlockungKurs.kursart = " + pKurs.kursart + " --> unbekannt!")
-		if (pKurs.wochenstunden < 0)
-			throw new DeveloperNotificationException("GostBlockungKurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!")
+		DeveloperNotificationException.check("pKurs.id(" + pKurs.id + ") < 0", pKurs.id < 0);
+		DeveloperNotificationException.check("pKurs.wochenstunden(" + pKurs.wochenstunden + ") < 0", pKurs.wochenstunden < 0);
+		DeveloperNotificationException.check("_mapKurse.containsKey(" + pKurs.id + ")", this._mapKurse.containsKey(pKurs.id));
+		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") < 1", pKurs.anzahlSchienen < 1);
+		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") > nSchienen(" + nSchienen + ")", pKurs.anzahlSchienen > nSchienen);
+		DeveloperNotificationException.check("pKurs.nummer(" + pKurs.nummer + ") < 1", pKurs.nummer < 1);
+		DeveloperNotificationException.check("_faecherManager.get(" + pKurs.fach_id + ") == null", this._faecherManager.get(pKurs.fach_id) === null);
+		DeveloperNotificationException.check("GostKursart.fromIDorNull(" + pKurs.kursart + ") == null", GostKursart.fromIDorNull(pKurs.kursart) === null);
 		this._daten.kurse.add(pKurs);
 		this._mapKurse.put(pKurs.id, pKurs);
 		this._kurse_sortiert_fach_kursart_kursnummer.add(pKurs);

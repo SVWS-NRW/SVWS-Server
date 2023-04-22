@@ -14,6 +14,17 @@ export class UserNotificationException extends RuntimeException {
 		super(pFehlermeldung);
 	}
 
+	/**
+	 * Überprüft, ob eine Bedingung erfüllt ist und wirft in diesem Fall eine UserNotificationException.
+	 *
+	 * @param pBeschreibung Die Beschreibung der Bedingung.
+	 * @param pErfuellt     Falls TRUE, wird eine UserNotificationException geworfen.
+	 */
+	public static check(pBeschreibung : string, pErfuellt : boolean) : void {
+		if (pErfuellt)
+			throw new UserNotificationException(pBeschreibung)
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'java.lang.Exception', 'de.svws_nrw.core.exceptions.UserNotificationException', 'java.io.Serializable'].includes(name);
 	}

@@ -79,10 +79,6 @@ public class GostBlockungsdatenManager {
 	/** Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl>> _map_schulerID_fachID_fachwahl = new HashMap<>();
 
-	// /** Schüler-ID --> List<Facharten> */
-	// private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_schulerID_facharten = new
-	// HashMap<>();
-
 	/** Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag} */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungsergebnisListeneintrag> _mapErgebnis = new HashMap<>();
 
@@ -148,8 +144,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursFachKursartNummer() {
-		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a,
-				final @NotNull GostBlockungKurs b) -> {
+		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
 			final @NotNull GostFach aFach = _faecherManager.getOrException(a.fach_id);
 			final @NotNull GostFach bFach = _faecherManager.getOrException(b.fach_id);
 			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
@@ -167,8 +162,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	private @NotNull Comparator<@NotNull GostBlockungKurs> createComparatorKursKursartFachNummer() {
-		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a,
-				final @NotNull GostBlockungKurs b) -> {
+		final @NotNull Comparator<@NotNull GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
 			if (a.kursart < b.kursart)
 				return -1;
 			if (a.kursart > b.kursart)
@@ -337,7 +331,8 @@ public class GostBlockungsdatenManager {
 		return 1 - 1 / (0.25 * wert + 1);
 	}
 
-	/** Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
+	/**
+	 * Gibt den Fächer-Manager zurück, der für die Blockungsdaten verwendet wird.
 	 *
 	 * @return der Fächer-Manager (siehe {@link GostFaecherManager})
 	 */
@@ -345,7 +340,8 @@ public class GostBlockungsdatenManager {
 		return this._faecherManager;
 	}
 
-	/** Liefert die Anzahl an Fächern.
+	/**
+	 * Liefert die Anzahl an Fächern.
 	 *
 	 * @return Die Anzahl an Fächern.
 	 */
@@ -353,7 +349,8 @@ public class GostBlockungsdatenManager {
 		return _faecherManager.faecher().size();
 	}
 
-	/** Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
+	/**
+	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
 	 *
 	 * @return Die Anzahl verschiedenen Kursarten.
 	 */
@@ -407,8 +404,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die übergebene ID ungültig bzw. negativ ist.
 	 */
 	public void setID(final long pBlockungsID) throws DeveloperNotificationException {
-		if (pBlockungsID < 0)
-			throw new DeveloperNotificationException("Ungültige Blockungs-ID (" + pBlockungsID + ")!");
+		DeveloperNotificationException.check("pBlockungsID < 0", pBlockungsID < 0);
 		_daten.id = pBlockungsID;
 	}
 
@@ -428,8 +424,7 @@ public class GostBlockungsdatenManager {
 	 * @throws UserNotificationException Falls der übergebene String leer ist.
 	 */
 	public void setName(final @NotNull String pName) throws UserNotificationException {
-		if ("".equals(pName))
-			throw new UserNotificationException("Ein leerer Name ist für die Blockung nicht zulässig.");
+		UserNotificationException.check("Ein leerer Name ist für die Blockung nicht zulässig.", "".equals(pName));
 		_daten.name = pName;
 	}
 
@@ -453,14 +448,10 @@ public class GostBlockungsdatenManager {
 
 	private void addErgebnisOhneSortierung(final @NotNull GostBlockungsergebnisListeneintrag pErgebnis) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
-		if (pErgebnis.id < 1)
-			throw new DeveloperNotificationException("Ergebnis.id = " + pErgebnis.id + " --> zu gering!");
-		if (_mapErgebnis.containsKey(pErgebnis.id))
-			throw new DeveloperNotificationException("Ergebnis.id =  " + pErgebnis.id + " --> doppelt!");
-		if (pErgebnis.blockungID < 1)
-			throw new DeveloperNotificationException("Ergebnis.blockungID = " + pErgebnis.blockungID + " --> zu gering!");
-		if (GostHalbjahr.fromID(pErgebnis.gostHalbjahr) == null)
-			throw new DeveloperNotificationException("Ergebnis.gostHalbjahr = " + pErgebnis.gostHalbjahr + " --> unbekannt!");
+		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 1", pErgebnis.id < 1);
+		DeveloperNotificationException.check("_mapErgebnis.containsKey(" + pErgebnis.id + ")", _mapErgebnis.containsKey(pErgebnis.id));
+		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 1", pErgebnis.blockungID < 1);
+		DeveloperNotificationException.check("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ") == null", GostHalbjahr.fromID(pErgebnis.gostHalbjahr) == null);
 
 		// Hinzufügen des Kurses.
 		_daten.ergebnisse.add(pErgebnis);
@@ -474,6 +465,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
 	 */
 	public void addErgebnis(final @NotNull GostBlockungsergebnisListeneintrag pErgebnis) throws DeveloperNotificationException {
+		// Hinzufügen
 		addErgebnisOhneSortierung(pErgebnis);
 
 		// Liste sortieren
@@ -487,6 +479,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
 	public void addErgebnisListe(final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> pErgebnisse) throws DeveloperNotificationException {
+		// Hinzufügen
 		for (final @NotNull GostBlockungsergebnisListeneintrag ergebnis : pErgebnisse)
 			addErgebnisOhneSortierung(ergebnis);
 
@@ -498,15 +491,15 @@ public class GostBlockungsdatenManager {
 	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
 	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
 	 *
-	 * @param pErgebnisID           Die Datenbank-ID des Ergebnisses.
-	 * @return                      Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @param pErgebnisID  Die Datenbank-ID des Ergebnisses.
+	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public @NotNull GostBlockungsergebnisListeneintrag getErgebnis(final long pErgebnisID) throws DeveloperNotificationException {
 		final GostBlockungsergebnisListeneintrag e = _mapErgebnis.get(pErgebnisID);
-		if (e == null)
-			throw new DeveloperNotificationException("Ergebnis mit ID = " + pErgebnisID + " nicht vorhanden!");
-		return e;
+//		if (e == null)
+//			throw new DeveloperNotificationException("_mapErgebnis.get(" + pErgebnisID + ") == null");
+		return DeveloperNotificationException.checkNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
 	}
 
 	/**
@@ -552,10 +545,8 @@ public class GostBlockungsdatenManager {
 	 */
 	public void updateErgebnisBewertung(final @NotNull GostBlockungsergebnis pErgebnis) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
-		if (pErgebnis.id < 0)
-			throw new DeveloperNotificationException("GostBlockungsergebnis.id=" + pErgebnis.id + " zu klein!");
-		if (pErgebnis.blockungID < 0)
-			throw new DeveloperNotificationException("GostBlockungsergebnis.blockungID=" + pErgebnis.blockungID + " zu klein!");
+		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 0", pErgebnis.id < 0);
+		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 0", pErgebnis.blockungID < 0);
 
 		// Bewertung aktualisieren.
 		for (final @NotNull GostBlockungsergebnisListeneintrag eintrag : _daten.ergebnisse)
@@ -567,23 +558,17 @@ public class GostBlockungsdatenManager {
 	}
 
 	private void addKursOhneSortierung(final @NotNull GostBlockungKurs pKurs) throws DeveloperNotificationException {
-		if (pKurs.id < 0)
-			throw new DeveloperNotificationException("GostBlockungKurs.id=" + pKurs.id + " zu klein!");
-		if (_mapKurse.containsKey(pKurs.id))
-			throw new DeveloperNotificationException("GostBlockungKurs.id =  " + pKurs.id + " --> doppelt!");
-		if (pKurs.anzahlSchienen < 1)
-			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + pKurs.anzahlSchienen + " --> zu gering!");
 		final int nSchienen = getSchienenAnzahl();
-		if (pKurs.anzahlSchienen > nSchienen)
-			throw new DeveloperNotificationException("GostBlockungKurs.anzahlSchienen = " + nSchienen + " --> zu groß!");
-		if (pKurs.nummer < 1)
-			throw new DeveloperNotificationException("GostBlockungKurs.nummer = " + pKurs.nummer + " --> zu gering!");
-		if (_faecherManager.get(pKurs.fach_id) == null)
-			throw new DeveloperNotificationException("GostBlockungKurs.fach_id = " + pKurs.fach_id + " --> unbekannt!");
-		if (GostKursart.fromIDorNull(pKurs.kursart) == null)
-			throw new DeveloperNotificationException("GostBlockungKurs.kursart = " + pKurs.kursart + " --> unbekannt!");
-		if (pKurs.wochenstunden < 0)
-			throw new DeveloperNotificationException("GostBlockungKurs.wochenstunden = " + pKurs.wochenstunden + " --> zu gering!");
+
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.check("pKurs.id(" + pKurs.id + ") < 0", pKurs.id < 0);
+		DeveloperNotificationException.check("pKurs.wochenstunden(" + pKurs.wochenstunden + ") < 0", pKurs.wochenstunden < 0);
+		DeveloperNotificationException.check("_mapKurse.containsKey(" + pKurs.id + ")", _mapKurse.containsKey(pKurs.id));
+		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") < 1", pKurs.anzahlSchienen < 1);
+		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") > nSchienen(" + nSchienen + ")", pKurs.anzahlSchienen > nSchienen);
+		DeveloperNotificationException.check("pKurs.nummer(" + pKurs.nummer + ") < 1", pKurs.nummer < 1);
+		DeveloperNotificationException.check("_faecherManager.get(" + pKurs.fach_id + ") == null", _faecherManager.get(pKurs.fach_id) == null);
+		DeveloperNotificationException.check("GostKursart.fromIDorNull(" + pKurs.kursart + ") == null", GostKursart.fromIDorNull(pKurs.kursart) == null);
 
 		// Hinzufügen des Kurses.
 		_daten.kurse.add(pKurs);

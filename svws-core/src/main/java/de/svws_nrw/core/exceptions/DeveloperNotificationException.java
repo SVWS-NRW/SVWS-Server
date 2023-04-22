@@ -22,4 +22,30 @@ public class DeveloperNotificationException extends RuntimeException {
 		super(pFehlermeldung);
 	}
 
+	/**
+	 * Überprüft, ob eine Bedingung erfüllt ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param pBeschreibung Die Beschreibung der Bedingung.
+	 * @param pErfuellt     Falls TRUE, wird eine DeveloperNotificationException geworfen.
+	 */
+	public static void check(final @NotNull String pBeschreibung, final boolean pErfuellt) {
+		if (pErfuellt)
+			throw new DeveloperNotificationException(pBeschreibung);
+	}
+
+  	/**
+     * Überprüft, ob eine Bedingung erfüllt ist und wirft in diesem Fall eine DeveloperNotificationException.
+     * Andernfalls wird der Parameter t zurückgegeben.
+	 *
+	 * @param pFehlermeldung Die Beschreibung der Bedingung.
+  	 * @param pErgebnis Der Rückgabewert, falls es keinen Fehler gibt.
+  	 * @param <T> Der Typ von pErgebnis.
+  	 * @return Liefert pErgebnis, falls es keinen Fehler gibt.
+	 */
+	public static <@NotNull T> @NotNull T checkNull(final @NotNull String pFehlermeldung, final T pErgebnis) {
+		if (pErgebnis == null)
+			throw new DeveloperNotificationException(pFehlermeldung);
+		return pErgebnis;
+	}
+
 }

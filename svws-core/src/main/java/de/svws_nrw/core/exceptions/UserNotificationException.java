@@ -22,4 +22,15 @@ public class UserNotificationException extends RuntimeException {
 		super(pFehlermeldung);
 	}
 
+	/**
+	 * Überprüft, ob eine Bedingung erfüllt ist und wirft in diesem Fall eine UserNotificationException.
+	 *
+	 * @param pBeschreibung Die Beschreibung der Bedingung.
+	 * @param pErfuellt     Falls TRUE, wird eine UserNotificationException geworfen.
+	 */
+	public static void check(final @NotNull String pBeschreibung, final boolean pErfuellt) {
+		if (pErfuellt)
+			throw new UserNotificationException(pBeschreibung);
+	}
+
 }
