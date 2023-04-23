@@ -5,8 +5,8 @@ import { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
@@ -182,19 +182,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
+		const strErrorDoppelteSchienennummer : string | null = "Schienen NR %d doppelt!";
+		const strErrorDoppelteSchienenID : string | null = "Schienen ID %d doppelt!";
 		for (const gSchiene of this._parent.daten().schienen) {
 			const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
 			this._ergebnis.schienen.add(eSchiene);
 			if (this._map_schienenNr_schiene.put(gSchiene.nummer, eSchiene) !== null)
-				throw new DeveloperNotificationException("Schienen NR " + gSchiene.nummer + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienennummer, gSchiene.nummer))
 			if (this._map_schienenID_schiene.put(gSchiene.id, eSchiene) !== null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
 			if (this._map_schienenID_schuelerAnzahl.put(gSchiene.id, 0) !== null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
 			if (this._map_schienenID_kollisionen.put(gSchiene.id, 0) !== null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
 		}
+		const strErrorDoppelteKursID : string | null = "Kurs-ID %d doppelt!";
 		for (const gKurs of this._parent.daten().kurse) {
 			const eKurs : GostBlockungsergebnisKurs = new GostBlockungsergebnisKurs();
 			eKurs.id = gKurs.id;
@@ -203,11 +206,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (this._map_kursID_kurs.put(eKurs.id, eKurs) !== null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
 			if (this._map_kursID_schienen.put(eKurs.id, new HashSet<GostBlockungsergebnisSchiene>()) !== null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
 			if (this._map_kursID_schuelerIDs.put(eKurs.id, new HashSet<number>()) !== null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
 			if (!this._map_fachID_kurse.containsKey(eKurs.fachID))
 				this._map_fachID_kurse.put(eKurs.fachID, new ArrayList());
 			const fachgruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
@@ -233,21 +236,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
 				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList());
 		}
+		const strErrorDoppelteSchuelerID : string | null = "Schüler-ID %d doppelt!";
 		for (const gSchueler of this._parent.daten().schueler) {
 			const eSchuelerID : number = gSchueler.id;
 			if (this._map_schuelerID_kurse.put(eSchuelerID, new HashSet<GostBlockungsergebnisKurs>()) !== null)
-				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID! + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
 			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null)
-				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID! + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
 		}
 		for (const gSchueler of this._parent.daten().schueler)
 			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
+		const strErrorUnbekannteFachwahl : string | null = "Schüler %d hat eine Fachwahl ist aber unbekannt!";
+		const strErrorDoppeltesFach : string | null = "Schüler %d hat Fach %d doppelt!";
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			const mapFachKurs : JavaMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
 			if (mapFachKurs === null)
-				throw new DeveloperNotificationException("Schüler " + gFachwahl.schuelerID + " hat eine Fachwahl ist aber unbekannt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorUnbekannteFachwahl, gFachwahl.schuelerID))
 			if (mapFachKurs.put(gFachwahl.fachID, null) !== null)
-				throw new DeveloperNotificationException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!")
+				throw new DeveloperNotificationException(JavaString.format(strErrorDoppeltesFach, gFachwahl.schuelerID, gFachwahl.fachID))
 		}
 		for (const gSchueler of this._parent.daten().schueler) {
 			this._map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap());
@@ -1701,7 +1707,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
 	public setMergeKurseByID(pKursID1keep : number, pKursID2delete : number) : void {
-		let kurs2 : GostBlockungsergebnisKurs = this.getKursE(pKursID2delete);
+		const kurs2 : GostBlockungsergebnisKurs = this.getKursE(pKursID2delete);
 		for (const schuelerID of kurs2.schueler) {
 			this.stateSchuelerKursEntfernen(schuelerID!, pKursID2delete);
 			this.stateSchuelerKursHinzufuegen(schuelerID!, pKursID1keep);

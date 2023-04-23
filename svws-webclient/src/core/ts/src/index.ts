@@ -548,6 +548,7 @@ export { HashMap } from './java/util/HashMap';
 export { HashMapCollection } from './java/util/HashMapCollection';
 export { HashSet } from './java/util/HashSet';
 export { HashSetIterator } from './java/util/HashSetIterator';
+export { IllegalFormatException } from './java/util/IllegalFormatException';
 export { JavaIterator } from './java/util/JavaIterator';
 export { JavaMap } from './java/util/JavaMap';
 export { JavaMapEntry } from './java/util/JavaMapEntry';

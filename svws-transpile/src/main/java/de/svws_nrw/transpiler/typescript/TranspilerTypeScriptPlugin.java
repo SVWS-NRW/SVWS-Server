@@ -1389,6 +1389,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					return "JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 				if ("replaceFirst".equals(ms.getIdentifier().toString()))
 					return "JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				if ("formatted".equals(ms.getIdentifier().toString()))
+					return "JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				if ("format".equals(ms.getIdentifier().toString()))
+					return "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 				if ("length".equals(ms.getIdentifier().toString()))
 					return expression + ".length"; // in typescript it is not a method...
 			}

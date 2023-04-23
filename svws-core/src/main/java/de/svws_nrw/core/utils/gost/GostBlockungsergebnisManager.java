@@ -152,6 +152,8 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
 
 		// Schienen von '_parent' kopieren und hinzufügen.
+		final String strErrorDoppelteSchienennummer = "Schienen NR %d doppelt!";
+		final String strErrorDoppelteSchienenID = "Schienen ID %d doppelt!";
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
 			final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
@@ -160,16 +162,17 @@ public class GostBlockungsergebnisManager {
 			// Hinzufügen.
 			_ergebnis.schienen.add(eSchiene);
 			if (_map_schienenNr_schiene.put(gSchiene.nummer, eSchiene) != null)
-				throw new DeveloperNotificationException("Schienen NR " + gSchiene.nummer + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienennummer, gSchiene.nummer));
 			if (_map_schienenID_schiene.put(gSchiene.id, eSchiene) != null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
 			if (_map_schienenID_schuelerAnzahl.put(gSchiene.id, 0) != null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
 			if (_map_schienenID_kollisionen.put(gSchiene.id, 0) != null)
-				throw new DeveloperNotificationException("Schienen ID " + gSchiene.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
 		}
 
 		// Kurse von '_parent' kopieren und hinzufügen. Fachart-IDs erzeugen.
+		final String strErrorDoppelteKursID = "Kurs-ID %d doppelt!";
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
 			// GostBlockungKurs --> GostBlockungsergebnisKurs
 			final @NotNull GostBlockungsergebnisKurs eKurs = new GostBlockungsergebnisKurs();
@@ -181,11 +184,11 @@ public class GostBlockungsergebnisManager {
 			// Hinzufügen.
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (_map_kursID_kurs.put(eKurs.id, eKurs) != null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
 			if (_map_kursID_schienen.put(eKurs.id, new HashSet<@NotNull GostBlockungsergebnisSchiene>()) != null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
 			if (_map_kursID_schuelerIDs.put(eKurs.id, new HashSet<@NotNull Long>()) != null)
-				throw new DeveloperNotificationException("Kurs-ID " + eKurs.id + " doppelt!");
+				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
 
 			if (!_map_fachID_kurse.containsKey(eKurs.fachID))
 				_map_fachID_kurse.put(eKurs.fachID, new ArrayList<>());
@@ -219,26 +222,29 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Schüler kopieren und hinzufügen.
+		final String strErrorDoppelteSchuelerID = "Schüler-ID %d doppelt!";
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
 			// Schueler --> GostBlockungsergebnisKurs
 			final @NotNull Long eSchuelerID = gSchueler.id;
 
 			// Hinzufügen.
 			if (_map_schuelerID_kurse.put(eSchuelerID, new HashSet<@NotNull GostBlockungsergebnisKurs>()) != null)
-				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID + " doppelt!");
+				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
 			if (_map_schuelerID_kollisionen.put(eSchuelerID, 0) != null)
-				throw new DeveloperNotificationException("Schüler ID " + eSchuelerID + " doppelt!");
+				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
 		}
 
 		// Fachwahlen kopieren und hinzufügen.
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
 			_map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap<>());
+		final String strErrorUnbekannteFachwahl = "Schüler %d hat eine Fachwahl ist aber unbekannt!";
+		final String strErrorDoppeltesFach = "Schüler %d hat Fach %d doppelt!";
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
 			final Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = _map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
 			if (mapFachKurs == null)
-				throw new DeveloperNotificationException("Schüler " + gFachwahl.schuelerID + " hat eine Fachwahl ist aber unbekannt!");
+				throw new DeveloperNotificationException(strErrorUnbekannteFachwahl.formatted(gFachwahl.schuelerID));
 			if (mapFachKurs.put(gFachwahl.fachID, null) != null)
-				throw new DeveloperNotificationException("Schüler " + gFachwahl.schuelerID + " hat Fach " + gFachwahl.fachID + " doppelt!");
+				throw new DeveloperNotificationException(strErrorDoppeltesFach.formatted(gFachwahl.schuelerID, gFachwahl.fachID));
 		}
 
 		// _map_schuelerID_schienenID_kurse
@@ -1787,7 +1793,8 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void setMergeKurseByID(final long pKursID1keep, final long pKursID2delete) {
 		// 1) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
-		@NotNull GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
+		@NotNull
+		final GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
 		for (final @NotNull Long schuelerID : kurs2.schueler) {
 			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
 			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);

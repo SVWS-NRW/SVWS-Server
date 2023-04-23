@@ -1,3 +1,5 @@
+import { IllegalFormatException } from '../util/IllegalFormatException';
+
 export abstract class JavaString {
 
 	public static contains(str: string, s: string | null) : boolean {
@@ -18,6 +20,55 @@ export abstract class JavaString {
 
 	public static replaceAll(s : string, regex : string, replacement : string) {
 		return s.replace(new RegExp(regex, "g"), replacement);
+	}
+
+	public static format(s : string, ...args: any[]): string {
+		var i = -1;
+		function handleParam(expression: string, ...formatParams: any[]) : string {
+			if (formatParams.length !== 5)
+				throw new IllegalFormatException();
+			if (expression == '%%')
+				return '%';
+			// Bestimme den Wert, der für den Parameter eingesetzt wird
+			if (args[++i] === undefined)
+				throw new IllegalFormatException();
+			const replacement = args[i];
+			const hasLeftJustifiedResult = formatParams[0] !== undefined;
+			const paddingChar = (formatParams[1] !== undefined) && (formatParams[1][0] == '0') ? '0' : ' ';
+			const paddingSize = parseInt(formatParams[1]);
+			const precision = formatParams[2] === undefined ? undefined : parseInt(formatParams[2].substr(1));
+			const base = formatParams[3] === undefined ? undefined : parseInt(formatParams[3].substr(1));
+			var result : string = "";
+			switch (formatParams[4]) {
+				case 's':
+					result = typeof(replacement) === 'object' ? JSON.stringify(replacement) : replacement.toString(base);
+					break;
+				case 'c':
+					result = typeof(replacement[0]) === 'object' ? JSON.stringify(replacement[0]) : replacement[0].toString(base);
+					break;
+				case 'f':
+					result = parseFloat(replacement).toFixed(precision);
+					break;
+				case 'p':
+					result = parseFloat(replacement).toPrecision(precision);
+					break;
+				case 'e':
+					result = parseFloat(replacement).toExponential(precision);
+					break;
+				case 'x':
+					result = parseInt(replacement).toString(base ? base : 16);
+					break;
+				case 'd':
+					result = parseFloat(parseInt(replacement, base ? base : 10).toPrecision(precision)).toFixed(0);
+					break;
+			}
+			while (result.length < paddingSize)
+				result = hasLeftJustifiedResult ? result + paddingChar : paddingChar + result;
+			return result;
+		}
+		// TODO Erweiterung der Methode um argument_index und weitere conversion - Möglichkeiten laut https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax
+		const regex = /%(-)?(0?[0-9]+)?([.][0-9]+)?([#][0-9]+)?([scfpexd%])/g;
+		return s.replace(regex, handleParam);
 	}
 
 	public static compareToIgnoreCase(a: string, b : string | null) : number {
