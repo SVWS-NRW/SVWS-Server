@@ -768,7 +768,8 @@ public class KursblockungDynDaten {
 
 		// Kopiere Kurse mit Freiheitsgraden.
 		kursArrFrei = new KursblockungDynKurs[nKursFrei];
-		for (int i = 0, j = 0; i < kursArr.length; i++)
+		int j = 0;
+		for (int i = 0; i < kursArr.length; i++)
 			if (kursArr[i].gibHatFreiheitsgrade()) {
 				kursArrFrei[j] = kursArr[i];
 				j++;

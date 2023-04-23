@@ -593,7 +593,8 @@ export class KursblockungDynDaten extends JavaObject {
 			if (kurs.gibHatFreiheitsgrade())
 				nKursFrei++;
 		this.kursArrFrei = Array(nKursFrei).fill(null);
-		for (let i : number = 0, j : number = 0; i < this.kursArr.length; i++)
+		let j : number = 0;
+		for (let i : number = 0; i < this.kursArr.length; i++)
 			if (this.kursArr[i].gibHatFreiheitsgrade()) {
 				this.kursArrFrei[j] = this.kursArr[i];
 				j++;
