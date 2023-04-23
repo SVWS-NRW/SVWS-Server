@@ -185,9 +185,11 @@ public class GostBlockungsergebnisManager {
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (_map_kursID_kurs.put(eKurs.id, eKurs) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
-			if (_map_kursID_schienen.put(eKurs.id, new HashSet<@NotNull GostBlockungsergebnisSchiene>()) != null)
+			final HashSet<@NotNull GostBlockungsergebnisSchiene> newSetSchiene = new HashSet<>();
+			if (_map_kursID_schienen.put(eKurs.id, newSetSchiene) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
-			if (_map_kursID_schuelerIDs.put(eKurs.id, new HashSet<@NotNull Long>()) != null)
+			final HashSet<@NotNull Long> newSetSchueler = new HashSet<>();
+			if (_map_kursID_schuelerIDs.put(eKurs.id, newSetSchueler) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
 
 			if (!_map_fachID_kurse.containsKey(eKurs.fachID))
@@ -228,7 +230,8 @@ public class GostBlockungsergebnisManager {
 			final @NotNull Long eSchuelerID = gSchueler.id;
 
 			// Hinzufügen.
-			if (_map_schuelerID_kurse.put(eSchuelerID, new HashSet<@NotNull GostBlockungsergebnisKurs>()) != null)
+			final HashSet<@NotNull GostBlockungsergebnisKurs> newSetKurse = new HashSet<>();
+			if (_map_schuelerID_kurse.put(eSchuelerID, newSetKurse) != null)
 				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
 			if (_map_schuelerID_kollisionen.put(eSchuelerID, 0) != null)
 				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
@@ -250,8 +253,10 @@ public class GostBlockungsergebnisManager {
 		// _map_schuelerID_schienenID_kurse
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
 			_map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap<>());
-			for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
-				getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet<@NotNull GostBlockungsergebnisKurs>());
+			for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
+				final HashSet<@NotNull GostBlockungsergebnisKurs> newSet = new HashSet<>();
+				getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, newSet);
+			}
 		}
 
 		// Zuordnungen kopieren (diese können leer sein).

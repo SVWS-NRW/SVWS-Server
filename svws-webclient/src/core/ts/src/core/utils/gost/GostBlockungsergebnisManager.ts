@@ -257,8 +257,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const gSchueler of this._parent.daten().schueler) {
 			this._map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap());
-			for (const gSchiene of this._parent.daten().schienen)
-				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, new HashSet<GostBlockungsergebnisKurs>());
+			for (const gSchiene of this._parent.daten().schienen) {
+				const newSet : HashSet<GostBlockungsergebnisKurs> | null = new HashSet();
+				this.getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, newSet);
+			}
 		}
 		const kursBearbeitet : HashSet<number> | null = new HashSet();
 		for (const schieneOld of pOld.schienen)
