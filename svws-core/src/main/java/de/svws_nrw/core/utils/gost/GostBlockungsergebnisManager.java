@@ -180,14 +180,14 @@ public class GostBlockungsergebnisManager {
 			eKurs.fachID = gKurs.fach_id;
 			eKurs.kursart = gKurs.kursart;
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
-
-			// Hinzufügen.
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (_map_kursID_kurs.put(eKurs.id, eKurs) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
+
 			final HashSet<@NotNull GostBlockungsergebnisSchiene> newSetSchiene = new HashSet<>();
 			if (_map_kursID_schienen.put(eKurs.id, newSetSchiene) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
+
 			final HashSet<@NotNull Long> newSetSchueler = new HashSet<>();
 			if (_map_kursID_schuelerIDs.put(eKurs.id, newSetSchueler) != null)
 				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));

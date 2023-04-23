@@ -117,7 +117,7 @@ public final class Clause implements Comparable<@NotNull Clause> {
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof Clause)
-			return compareTo((Clause) obj) == 0;
+			return compareTo( (Clause)obj) == 0;
 		return super.equals(obj);
 	}
 
