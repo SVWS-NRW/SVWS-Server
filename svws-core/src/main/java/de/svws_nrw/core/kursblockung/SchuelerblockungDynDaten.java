@@ -326,8 +326,7 @@ public class SchuelerblockungDynDaten {
 				|| ((_aktuellNichtwahlen == _aktuellNichtwahlenBest) && (_aktuellBewertung < _aktuellBewertungBest))) {
 			_aktuellNichtwahlenBest = _aktuellNichtwahlen;
 			_aktuellBewertungBest = _aktuellBewertung;
-			for (int i = 0; i < nFachwahlen; i++)
-				_aktuellFachwahlZuKursBest[i] = _aktuellFachwahlZuKurs[i];
+			System.arraycopy(_aktuellFachwahlZuKurs, 0, _aktuellFachwahlZuKursBest, 0, nFachwahlen);
 		}
 
 		// Die Kurse entfernen.

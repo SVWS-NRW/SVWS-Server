@@ -573,9 +573,7 @@ public class KlausurterminblockungDynDaten {
 	 */
 	void aktionZustand1Speichern() {
 		_terminAnzahl1 = _terminAnzahl;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuTermin1[nr] = _klausurZuTermin[nr];
+		System.arraycopy(_klausurZuTermin, 0, _klausurZuTermin1, 0, _klausurenAnzahl);
 	}
 
 	/**
@@ -584,9 +582,7 @@ public class KlausurterminblockungDynDaten {
 	void aktionZustand1Laden() {
 		aktionClear();
 		_terminAnzahl = _terminAnzahl1;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuTermin[nr] = _klausurZuTermin1[nr];
+		System.arraycopy(_klausurZuTermin1, 0, _klausurZuTermin, 0, _klausurenAnzahl);
 	}
 
 	/**
@@ -594,10 +590,7 @@ public class KlausurterminblockungDynDaten {
 	 */
 	void aktionZustand2Speichern() {
 		_terminAnzahl2 = _terminAnzahl;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuTermin2[nr] = _klausurZuTermin[nr];
-
+		System.arraycopy(_klausurZuTermin, 0, _klausurZuTermin2, 0, _klausurenAnzahl);
 		//debug("BESSER");
 	}
 
@@ -607,9 +600,7 @@ public class KlausurterminblockungDynDaten {
 	void aktionZustand2Laden() {
 		aktionClear();
 		_terminAnzahl = _terminAnzahl2;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuTermin[nr] = _klausurZuTermin2[nr];
+		System.arraycopy(_klausurZuTermin2, 0, _klausurZuTermin, 0, _klausurenAnzahl);
 	}
 
 	/**

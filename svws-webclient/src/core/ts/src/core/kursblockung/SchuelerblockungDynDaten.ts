@@ -5,6 +5,7 @@ import { SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblocku
 import { ArrayList } from '../../java/util/ArrayList';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { System } from '../../java/lang/System';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
 import { Random } from '../../java/util/Random';
@@ -272,8 +273,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		if ((this._aktuellNichtwahlen < this._aktuellNichtwahlenBest) || ((this._aktuellNichtwahlen === this._aktuellNichtwahlenBest) && (this._aktuellBewertung < this._aktuellBewertungBest))) {
 			this._aktuellNichtwahlenBest = this._aktuellNichtwahlen;
 			this._aktuellBewertungBest = this._aktuellBewertung;
-			for (let i : number = 0; i < this.nFachwahlen; i++)
-				this._aktuellFachwahlZuKursBest[i] = this._aktuellFachwahlZuKurs[i];
+			System.arraycopy(this._aktuellFachwahlZuKurs, 0, this._aktuellFachwahlZuKursBest, 0, this.nFachwahlen);
 		}
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++)
 			if (!this._fachwahlZuHatMultikurse[iFachwahl]) {

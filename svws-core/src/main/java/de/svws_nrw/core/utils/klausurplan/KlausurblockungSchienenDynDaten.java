@@ -579,9 +579,7 @@ public class KlausurblockungSchienenDynDaten {
 	 */
 	void aktionZustand1Speichern() {
 		_schienenAnzahl1 = _schienenAnzahl;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuSchiene1[nr] = _klausurZuSchiene[nr];
+		System.arraycopy(_klausurZuSchiene, 0, _klausurZuSchiene1, 0, _klausurenAnzahl);
 	}
 
 	/**
@@ -590,9 +588,7 @@ public class KlausurblockungSchienenDynDaten {
 	void aktionZustand1Laden() {
 		aktionKlausurenAusSchienenEntfernen();
 		_schienenAnzahl = _schienenAnzahl1;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuSchiene[nr] = _klausurZuSchiene1[nr];
+		System.arraycopy(_klausurZuSchiene1, 0, _klausurZuSchiene, 0, _klausurenAnzahl);
 	}
 
 	/**
@@ -600,10 +596,7 @@ public class KlausurblockungSchienenDynDaten {
 	 */
 	void aktionZustand2Speichern() {
 		_schienenAnzahl2 = _schienenAnzahl;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuSchiene2[nr] = _klausurZuSchiene[nr];
-
+		System.arraycopy(_klausurZuSchiene, 0, _klausurZuSchiene2, 0, _klausurenAnzahl);
 		// debug("BESSER, bevorzugtSumme = "+gibSchienenBevorzugt(_klausurZuSchiene));
 	}
 
@@ -613,9 +606,7 @@ public class KlausurblockungSchienenDynDaten {
 	void aktionZustand2Laden() {
 		aktionKlausurenAusSchienenEntfernen();
 		_schienenAnzahl = _schienenAnzahl2;
-
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			_klausurZuSchiene[nr] = _klausurZuSchiene2[nr];
+		System.arraycopy(_klausurZuSchiene2, 0, _klausurZuSchiene, 0, _klausurenAnzahl);
 	}
 
 	/**

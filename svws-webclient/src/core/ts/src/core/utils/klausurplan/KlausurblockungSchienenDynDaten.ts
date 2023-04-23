@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
@@ -541,8 +542,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionZustand1Speichern() : void {
 		this._schienenAnzahl1 = this._schienenAnzahl;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuSchiene1[nr] = this._klausurZuSchiene[nr];
+		System.arraycopy(this._klausurZuSchiene, 0, this._klausurZuSchiene1, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -551,8 +551,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	aktionZustand1Laden() : void {
 		this.aktionKlausurenAusSchienenEntfernen();
 		this._schienenAnzahl = this._schienenAnzahl1;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuSchiene[nr] = this._klausurZuSchiene1[nr];
+		System.arraycopy(this._klausurZuSchiene1, 0, this._klausurZuSchiene, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -560,8 +559,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	aktionZustand2Speichern() : void {
 		this._schienenAnzahl2 = this._schienenAnzahl;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuSchiene2[nr] = this._klausurZuSchiene[nr];
+		System.arraycopy(this._klausurZuSchiene, 0, this._klausurZuSchiene2, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -570,8 +568,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	aktionZustand2Laden() : void {
 		this.aktionKlausurenAusSchienenEntfernen();
 		this._schienenAnzahl = this._schienenAnzahl2;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuSchiene[nr] = this._klausurZuSchiene2[nr];
+		System.arraycopy(this._klausurZuSchiene2, 0, this._klausurZuSchiene, 0, this._klausurenAnzahl);
 	}
 
 	/**

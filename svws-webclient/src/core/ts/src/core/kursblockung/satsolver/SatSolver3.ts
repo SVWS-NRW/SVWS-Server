@@ -306,9 +306,7 @@ export class SatSolver3 extends SatSolverA {
 			return;
 		}
 		this.learnClauseMin = size;
-		for (let i : number = 0; i < size; i++) {
-			backtrackLearn[i] = backtrackV[i];
-		}
+		System.arraycopy(backtrackV, 0, backtrackLearn, 0, size);
 	}
 
 	private simplify() : number {

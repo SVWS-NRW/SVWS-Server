@@ -5,6 +5,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
 import { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
@@ -544,8 +545,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktionZustand1Speichern() : void {
 		this._terminAnzahl1 = this._terminAnzahl;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuTermin1[nr] = this._klausurZuTermin[nr];
+		System.arraycopy(this._klausurZuTermin, 0, this._klausurZuTermin1, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -554,8 +554,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	aktionZustand1Laden() : void {
 		this.aktionClear();
 		this._terminAnzahl = this._terminAnzahl1;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuTermin[nr] = this._klausurZuTermin1[nr];
+		System.arraycopy(this._klausurZuTermin1, 0, this._klausurZuTermin, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -563,8 +562,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktionZustand2Speichern() : void {
 		this._terminAnzahl2 = this._terminAnzahl;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuTermin2[nr] = this._klausurZuTermin[nr];
+		System.arraycopy(this._klausurZuTermin, 0, this._klausurZuTermin2, 0, this._klausurenAnzahl);
 	}
 
 	/**
@@ -573,8 +571,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	aktionZustand2Laden() : void {
 		this.aktionClear();
 		this._terminAnzahl = this._terminAnzahl2;
-		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			this._klausurZuTermin[nr] = this._klausurZuTermin2[nr];
+		System.arraycopy(this._klausurZuTermin2, 0, this._klausurZuTermin, 0, this._klausurenAnzahl);
 	}
 
 	/**

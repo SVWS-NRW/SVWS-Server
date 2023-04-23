@@ -407,9 +407,7 @@ public final class SatSolver3 extends SatSolverA {
 			return;
 		}
 		learnClauseMin = size;
-		for (int i = 0; i < size; i++) {
-			backtrackLearn[i] = backtrackV[i];
-		}
+		System.arraycopy(backtrackV, 0, backtrackLearn, 0, size);
 		// System.out.println("BETTER "+learnClauseMin+" : "+ Arrays.toString(Arrays.copyOf(backtrackV, size)));
 	}
 
