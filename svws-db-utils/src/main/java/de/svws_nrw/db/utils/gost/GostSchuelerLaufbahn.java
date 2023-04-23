@@ -185,8 +185,11 @@ public final class GostSchuelerLaufbahn {
 				fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			fach.abiturFach = tmpAbiturFach == null ? null : tmpAbiturFach.id;
-			final GostKursart fachKursart = "PX".equals(gostFach.kuerzel) ? GostKursart.PJK
-					: "VX".equals(gostFach.kuerzel) ? GostKursart.VTF : GostKursart.GK;
+			GostKursart fachKursart = GostKursart.GK;
+			if ("PX".equals(gostFach.kuerzel))
+				fachKursart = GostKursart.PJK;
+			else if ("VX".equals(gostFach.kuerzel))
+				fachKursart = GostKursart.VTF;
 			GostHalbjahr letzteBelegungHalbjahr = null;   // das Halbjahr der letzten Belegung
 			if ((fach.belegungen[GostHalbjahr.EF1.id] == null) && (belegungPlanung.EF1_Kursart != null)) {
 				final AbiturFachbelegungHalbjahr belegung = new AbiturFachbelegungHalbjahr();
@@ -235,7 +238,6 @@ public final class GostSchuelerLaufbahn {
     }
 
 
-    // TODO
     private static void setFachbelegung(final GostHalbjahr halbjahr, final AbiturFachbelegungHalbjahr belegung, final DTOGostSchuelerFachbelegungen belegungPlanung,
     		final GostKursart fachKursart, final int wochenstunden) {
     	belegung.halbjahrKuerzel = halbjahr.kuerzel;
@@ -255,13 +257,14 @@ public final class GostSchuelerLaufbahn {
     }
 
 
-    // TODO
     private static void setFachbelegung(final AbiturFachbelegungHalbjahr belegung, final String belegungPlanungKursart,
     		final GostKursart fachKursart, final int wochenstunden, final boolean istInAbiwertung) {
-		belegung.kursartKuerzel = "AT".equals(belegungPlanungKursart) ? "AT"
-				: "LK".equals(belegungPlanungKursart) ? "LK"
-				: "ZK".equals(belegungPlanungKursart) ? "ZK"
-				: fachKursart.toString();
+		belegung.kursartKuerzel = belegungPlanungKursart == null ? null : switch (belegungPlanungKursart) {
+			case "AT" -> "AT";
+			case "LK" -> "LK";
+			case "ZK" -> "ZK";
+			default -> fachKursart.toString();
+		};
 		belegung.schriftlich = belegungPlanungKursart == null ? null
 				: "LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;

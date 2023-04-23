@@ -85,7 +85,7 @@ public final class GostBlockungUtils {
 		logger.logLn("-> Bestimme die Lehrkräfte der Schule aus der Datenbank...");
 		logger.modifyIndent(2);
 		final List<DTOLehrer> listeLehrer = conn.queryAll(DTOLehrer.class);
-		if ((listeLehrer == null) || (listeLehrer.size() == 0)) {
+		if ((listeLehrer == null) || (listeLehrer.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Lehrer nicht einlesen");
 			return false;
 		}
@@ -96,7 +96,7 @@ public final class GostBlockungUtils {
 		logger.logLn("-> Bestimme die Fächer der Schule aus der Datenbank...");
 		logger.modifyIndent(2);
 		final List<DTOFach> listeFaecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
-		if ((listeFaecher == null) || (listeFaecher.size() == 0)) {
+		if ((listeFaecher == null) || (listeFaecher.isEmpty())) {
 			logger.logLn("[Fehler] - Konnte die Liste der Fächer der Oberstufe nicht einlesen");
 			return false;
 		}

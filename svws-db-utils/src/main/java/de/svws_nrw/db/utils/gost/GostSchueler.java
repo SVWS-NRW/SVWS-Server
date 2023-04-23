@@ -87,7 +87,7 @@ public final class GostSchueler {
 				.sorted((l1, l2) -> {
 					final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 					final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
-					return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
+					return (!a1.Jahr.equals(a2.Jahr)) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 				})
 				.toList();
 
@@ -175,7 +175,7 @@ public final class GostSchueler {
 		// Sortiere Fächer anhand der SII-Sortierung der Fächer
 		faecher.values().stream()
 			.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
-			.forEach(f -> daten.faecher.add(f));
+			.forEach(daten.faecher::add);
 		return daten;
 	}
 
@@ -301,7 +301,7 @@ public final class GostSchueler {
 			}
 			// Sortiere Fächer anhand der SII-Sortierung der Fächer
 			faecher.values().stream()
-				.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
+				.sorted((a, b) -> Integer.compare(a.fach.sortierung, b.fach.sortierung))
 				.forEach(daten.faecher::add);
 			result.put(id, daten);
     	}

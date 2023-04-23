@@ -139,7 +139,7 @@ public final class GostSchuelerAbitur {
     	// Ermittle nun zunächst die Abiturdaten aus den entsprechenden Tabellen
     	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
+    		throw OperationError.NOT_FOUND.exception();
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte dtoAbschnitt = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
@@ -148,7 +148,7 @@ public final class GostSchuelerAbitur {
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryNamed("DTOSchuelerAbitur.schueler_id", id, DTOSchuelerAbitur.class);
-		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.size() == 0))
+		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
 			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 		// TODO if (dtosSchuelerAbitur.size() > 1) - Es existieren mehrere Abiturdatensätze für den Schüler mit der ID - TODO neueren Jahrgang auswählen
 		final DTOSchuelerAbitur dtoSchuelerAbitur = dtosSchuelerAbitur.get(0);
