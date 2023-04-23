@@ -443,11 +443,12 @@ export class KursblockungDynSchueler extends JavaObject {
 			if ((this.fachartZuKurs[r] !== null) || fachart.gibHatMultikurs()) {
 				continue;
 			}
-			for (let c : number = 0; c < this.schieneBelegt.length; c++) {
-				if (!this.schieneBelegt[c]) {
-					data[r][c] = fachart.gibHatKursInSchiene(c, this.kursGesperrt) ? _VAL_KURS_GEWAEHLT : fachart.gibHatKursMitFreierSchiene(c, this.kursGesperrt) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
-				}
-			}
+			for (let c : number = 0; c < this.schieneBelegt.length; c++)
+				if (!this.schieneBelegt[c])
+					if (fachart.gibHatKursInSchiene(c, this.kursGesperrt))
+						data[r][c] = _VAL_KURS_GEWAEHLT;
+					else
+						data[r][c] = fachart.gibHatKursMitFreierSchiene(c, this.kursGesperrt) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
 		}
 		const r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		let kurslage_veraendert : boolean = false;

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -241,10 +242,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 				list.addLast(klausurNr);
 			}
 		}
-		for (const schuelerID of mapSchuelerKlausuren.keySet()) {
-			const list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
-			if (list === null)
-				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.")
+		for (const e of mapSchuelerKlausuren.entrySet()) {
+			const list : LinkedCollection<number> = e.getValue();
 			for (const klausurNr1 of list)
 				for (const klausurNr2 of list)
 					if (klausurNr1 !== klausurNr2)
@@ -515,17 +514,12 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		const out : List<List<number>> = new ArrayList();
 		for (let i : number = 0; i < this._terminAnzahl; i++)
 			out.add(new ArrayList());
-		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
-			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
-			if (klausurID === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!")
-			if (klausurNr === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!")
+		for (const e of this._mapKlausurZuNummer.entrySet()) {
+			const klausurID : number = e.getKey();
+			const klausurNr : number = e.getValue();
 			const terminNr : number = this._klausurZuTermin[klausurNr.valueOf()];
-			if (terminNr < 0)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'terminNr'!")
-			if (terminNr >= this._terminAnzahl)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'terminNr'!")
+			DeveloperNotificationException.check("terminNr(" + terminNr + ") < 0", terminNr < 0);
+			DeveloperNotificationException.check("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= this._terminAnzahl);
 			out.get(terminNr).add(klausurID);
 		}
 		return out;
@@ -633,20 +627,19 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		console.log();
 		console.log(JSON.stringify(header));
 		for (let s : number = 0; s < this._terminAnzahl; s++) {
-			let line : string | null = "";
-			line += "    Schiene " + (s + 1) + ": ";
+			let line : StringBuilder = new StringBuilder();
+			line.append("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuTermin[nr] === s) {
 					const gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
-					line += " " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!;
+					line.append(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
 				}
-			console.log(JSON.stringify(line));
+			console.log(JSON.stringify(line.toString()));
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			if (this._klausurZuTermin[nr] < 0)
-				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!")
+			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuTermin[nr] < 0);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

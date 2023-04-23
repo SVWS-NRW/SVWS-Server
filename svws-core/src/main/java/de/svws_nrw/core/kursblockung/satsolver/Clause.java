@@ -65,18 +65,16 @@ public final class Clause implements Comparable<@NotNull Clause> {
 
 	@Override
 	public @NotNull String toString() {
-		@NotNull String s = "";
+		@NotNull StringBuilder s = new StringBuilder();
+		s.append("[");
 		for (final @NotNull Variable v : variables) {
-			if (v.index == -1) {
+			if (v.index == -1)
 				return "[SAT]";
-			}
-			if (v.index >= 0) {
-				s = s + " " + v.nr;
-
-			}
+			if (v.index >= 0)
+				s.append(" " + v.nr);
 		}
-
-		return "[" + s + "]";
+		s.append("]");
+		return s.toString();
 	}
 
 	private @NotNull AVLSet<@NotNull Integer> getSet() {
@@ -117,7 +115,7 @@ public final class Clause implements Comparable<@NotNull Clause> {
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof Clause)
-			return compareTo( (Clause)obj) == 0;
+			return compareTo((Clause) obj) == 0;
 		return super.equals(obj);
 	}
 

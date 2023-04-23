@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -130,18 +131,14 @@ public class KlausurblockungSchienenDynDaten {
 			}
 		}
 
-		for (final @NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
-			final LinkedCollection<@NotNull Long> list = mapSchuelerKlausuren.get(schuelerID);
-			if (list == null) throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
-			for (final @NotNull Long klausurID1 : list) {
+		for (final @NotNull Entry<@NotNull Long, @NotNull LinkedCollection<@NotNull Long>> e : mapSchuelerKlausuren.entrySet()) {
+			final @NotNull LinkedCollection<@NotNull Long> list = e.getValue();
+			for (final @NotNull Long klausurID1 : list)
 				for (final @NotNull Long klausurID2 : list) {
-					final Integer klausurNr1 = _mapKlausurZuNummer.get(klausurID1);
-					final Integer klausurNr2 = _mapKlausurZuNummer.get(klausurID2);
-					if (klausurNr1 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1);
-					if (klausurNr2 == null) throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2);
+					final @NotNull Integer klausurNr1 = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")", _mapKlausurZuNummer.get(klausurID1));
+					final @NotNull Integer klausurNr2 = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")", _mapKlausurZuNummer.get(klausurID2));
 					_verboten[klausurNr1][klausurNr2] = true;
 				}
-			}
 		}
 
 	}
@@ -212,23 +209,15 @@ public class KlausurblockungSchienenDynDaten {
 	@NotNull List<@NotNull List<@NotNull Long>> gibErzeugeOutput() {
 
 		final @NotNull List<@NotNull List<@NotNull Long>> out = new ArrayList<>();
-		for (int i = 0; i < _schienenAnzahl; i++) {
+		for (int i = 0; i < _schienenAnzahl; i++)
 			out.add(new ArrayList<>());
-		}
 
-		for (final @NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {
-			final Integer klausurNr = _mapKlausurZuNummer.get(klausurID);
-			if (klausurID == null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");
-			if (klausurNr == null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!");
-
+		for (final @NotNull Entry<@NotNull Long, @NotNull Integer> e : _mapKlausurZuNummer.entrySet()) {
+			final @NotNull Long klausurID = e.getKey();
+			final @NotNull Integer klausurNr = e.getValue();
 			final int schiene = _klausurZuSchiene[klausurNr];
-			if (schiene < 0)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'schiene'!");
-			if (schiene >= _schienenAnzahl)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'schiene'!");
-
+			DeveloperNotificationException.check("schiene(" + schiene + ") < 0", schiene < 0);
+			DeveloperNotificationException.check("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= _schienenAnzahl);
 			// Schienen-Klausur-Zuordnung
 			out.get(schiene).add(klausurID);
 		}
@@ -735,16 +724,16 @@ public class KlausurblockungSchienenDynDaten {
 		System.out.println(header);
 
 		for (int s = 0; s < _schienenAnzahl; s++) {
-			String line = "";
-			line += "    Schiene " + (s + 1) + ": ";
+			@NotNull StringBuilder line = new StringBuilder();
+			line.append("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuSchiene[nr] == s) {
 					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr);
 					if (gostKlausur == null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
-					line += " " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene);
+					line.append(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
-			System.out.println(line);
+			System.out.println(line.toString());
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)

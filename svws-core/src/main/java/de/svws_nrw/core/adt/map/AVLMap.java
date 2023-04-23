@@ -1059,13 +1059,17 @@ public final class AVLMap<@NotNull K, @NotNull V> implements NavigableMap<@NotNu
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeNextOrNull(final @NotNull AVLMapNode<@NotNull K, @NotNull V> node,
 			final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		final AVLMapNode<@NotNull K, @NotNull V> next = node._next;
-		return (next == null) ? null : _isOutOfRange(next._key, iv) ? null : next;
+		if (next == null)
+			return null;
+		return _isOutOfRange(next._key, iv) ? null : next;
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodePrevOrNull(final @NotNull AVLMapNode<@NotNull K, @NotNull V> node,
 			final @NotNull AVLMapIntervall<@NotNull K> iv) {
 		final AVLMapNode<@NotNull K, @NotNull V> prev = node._prev;
-		return (prev == null) ? null : _isOutOfRange(prev._key, iv) ? null : prev;
+		if (prev == null)
+			return null;
+		return _isOutOfRange(prev._key, iv) ? null : prev;
 	}
 
 	private AVLMapNode<@NotNull K, @NotNull V> _nodeGetOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<@NotNull K> iv) {

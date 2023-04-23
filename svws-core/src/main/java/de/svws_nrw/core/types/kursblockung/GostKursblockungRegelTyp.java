@@ -229,8 +229,8 @@ public enum GostKursblockungRegelTyp {
 	}
 
 	/**
-	 * Simuliert ein Löschen der Schienen-Nummer und
-	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.
+	 * Simuliert ein Löschen der Schienen-Nummer und liefert die ggf. veränderten Parameterwerte zurück,
+	 * oder NULL wenn die Regel gelöscht werden muss.
 	 *
 	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
 	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
@@ -243,14 +243,21 @@ public enum GostKursblockungRegelTyp {
 		switch (typ) {
 			case LEHRKRAEFTE_BEACHTEN: // 10
 				return new long[] {};   // Keine Veränderung bei 0 Parametern.
+
 			case LEHRKRAFT_BEACHTEN: // 9
 				return new long[] { param.get(0) };   // Keine Veränderung bei 1 Parameter.
 				// Keine Veränderung bei 2 Parametern.
+
 			case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS: // 4, 5, 7, 8
 				return new long[] { param.get(0), param.get(1) };
+
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
-				return (param.get(1) < pSchienenNr) ? new long[] { param.get(0), param.get(1) }
-					: (param.get(1) > pSchienenNr) ? new long[] { param.get(0), param.get(1) - 1 } : null;
+				if (pSchienenNr > param.get(1))
+					return new long[] { param.get(0), param.get(1) }; // Keine Veränderung.
+				if (pSchienenNr < param.get(1))
+					return new long[] { param.get(0), param.get(1) - 1 }; // Indexverschiebung der Schienen-Nr.
+				return null;
+
 			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 1, 6
 				long von = param.get(1);
 				long bis = param.get(2);
@@ -259,6 +266,7 @@ public enum GostKursblockungRegelTyp {
 				if (von <= bis)
 					return new long[] { param.get(0), von, bis };
 				return null;
+
 			default:
 				throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
 		}

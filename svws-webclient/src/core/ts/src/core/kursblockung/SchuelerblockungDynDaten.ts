@@ -5,6 +5,7 @@ import { SchuelerblockungOutputFachwahlZuKurs } from '../../core/data/kursblocku
 import { ArrayList } from '../../java/util/ArrayList';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../java/lang/JavaString';
 import { System } from '../../java/lang/System';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
@@ -335,9 +336,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
 			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
-			while (sData.length < 5)
-				sData = " " + sData!;
-			console.log(JSON.stringify(sData));
+			console.log(JSON.stringify(JavaString.format("%5s", sData)));
 		}
 		console.log();
 		for (let iFachwahl : number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
@@ -345,9 +344,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				let sData : string = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)
 					sData = "INF";
-				while (sData.length < 5)
-					sData = " " + sData!;
-				console.log(JSON.stringify(sData));
+				console.log(JSON.stringify(JavaString.format("%5s", sData)));
 			}
 			console.log();
 		}

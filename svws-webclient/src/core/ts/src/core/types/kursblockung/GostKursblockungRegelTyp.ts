@@ -220,8 +220,8 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 	}
 
 	/**
-	 * Simuliert ein Löschen der Schienen-Nummer und
-	 * liefert die ggf. veränderten Parameterwerte zurück, oder NULL wenn die Regel gelöscht werden muss.
+	 * Simuliert ein Löschen der Schienen-Nummer und liefert die ggf. veränderten Parameterwerte zurück,
+	 * oder NULL wenn die Regel gelöscht werden muss.
 	 *
 	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
 	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
@@ -246,7 +246,11 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
-				return (param.get(1) < pSchienenNr) ? [param.get(0), param.get(1)] : (param.get(1) > pSchienenNr) ? [param.get(0), param.get(1) - 1] : null;
+				if (pSchienenNr > param.get(1))
+					return [param.get(0), param.get(1)];
+				if (pSchienenNr < param.get(1))
+					return [param.get(0), param.get(1) - 1];
+				return null;
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {

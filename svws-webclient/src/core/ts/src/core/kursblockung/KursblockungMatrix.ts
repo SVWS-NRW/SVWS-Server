@@ -362,16 +362,18 @@ export class KursblockungMatrix extends JavaObject {
 	 * @return                    Eine String-Representation der Matrix.
 	 */
 	public convertToString(kommentar : string, zellenbreite : number, mitKnotenPotential : boolean) : string {
-		const sb : StringBuilder = new StringBuilder();
-		sb.append(kommentar! + System.lineSeparator()!);
+		const sb : StringBuilder = new StringBuilder(kommentar! + System.lineSeparator()!);
 		for (let r : number = 0; r < this.rows; r++) {
 			for (let c : number = 0; c < this.cols; c++) {
 				const wert : number = mitKnotenPotential ? this.matrix[r][c] + this.potentialR[r] - this.potentialC[c] : this.matrix[r][c];
-				let sWert : string | null = "" + wert;
-				while (sWert.length < zellenbreite)
-					sWert = " " + sWert!;
+				let sWert1 : StringBuilder = new StringBuilder();
+				let sWert2 : StringBuilder = new StringBuilder("" + wert);
+				while (sWert1.length() + sWert2.length() < zellenbreite)
+					sWert1.append(" ");
 				const sZusatz : string = this.r2c[r] === c ? "*" : " ";
-				sb.append(sWert! + sZusatz!);
+				sb.append(sWert1);
+				sb.append(sWert2);
+				sb.append(sZusatz);
 			}
 			sb.append("\n");
 		}

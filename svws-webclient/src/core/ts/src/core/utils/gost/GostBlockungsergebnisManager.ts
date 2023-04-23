@@ -851,8 +851,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerHatNichtwahl(pSchuelerID : number) : boolean {
 		const map : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
-		for (const fachID of map.keySet())
-			if (map.get(fachID) === null)
+		for (let e of map.entrySet())
+			if (e.getValue() === null)
 				return true;
 		return false;
 	}

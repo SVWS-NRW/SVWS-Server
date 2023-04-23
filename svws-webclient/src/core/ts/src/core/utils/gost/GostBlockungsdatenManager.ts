@@ -1233,7 +1233,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public getOfSchuelerHatFachart(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
 		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") unbekannt!", this._map_schulerID_fachID_fachwahl.get(pSchuelerID));
 		const wahl : GostFachwahl | null = map.get(pFach);
-		return wahl === null ? false : wahl.kursartID === pKursart;
+		return (wahl !== null) && (wahl.kursartID === pKursart);
 	}
 
 	/**

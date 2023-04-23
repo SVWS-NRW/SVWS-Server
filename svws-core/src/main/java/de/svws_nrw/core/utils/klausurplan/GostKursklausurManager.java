@@ -173,8 +173,7 @@ public class GostKursklausurManager {
 			long oldTerminId = -2;
 
 			// aus _mapTerminKursklausuren löschen
-			// for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>
-			// entry : _mapTerminKursklausuren.entrySet()) {
+			// for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> entry : _mapTerminKursklausuren.entrySet()) {
 			for (final @NotNull Long key : _mapTerminKursklausuren.keySet()) {
 				final ArrayList<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
 				if (entry == null) {

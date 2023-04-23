@@ -58,7 +58,7 @@ public final class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorit
 		// Speicherung des Start-Zustandes.
 		dynDaten.aktionZustandSpeichernK();
 
-		// Optimimiere, solange noch Zeit ist ...
+		// Optimiere, solange noch Zeit ist ...
 		int difNichtWaehler = 1;
 		while (System.currentTimeMillis() - timeStart < pMaxTimeMillis) {
 			// Berechne eine Lösung mit dem SAT-Solver.
@@ -100,45 +100,35 @@ public final class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorit
 		final int nSchienen = dynDaten.gibSchienenAnzahl();
 
 		// SAT-SOLVER: Variablen von "kursInSchiene"
-		final @NotNull
-		HashMap<@NotNull KursblockungDynKurs, @NotNull int[]> mapKursSchiene = new HashMap<>();
-		for (final @NotNull
-				KursblockungDynKurs kurs : kurseAlle) {
-			final @NotNull
-			int[] schienen = new int[nSchienen];
-			for (int s = 0; s < nSchienen; s++) {
-				schienen[s] = kurs.gibIstSchieneFixiert(s) ? ssw.getVarTRUE()
-						: kurs.gibIstSchieneGesperrt(s) ? ssw.getVarFALSE() : ssw.createNewVar();
-			}
+		final @NotNull HashMap<@NotNull KursblockungDynKurs, @NotNull int[]> mapKursSchiene = new HashMap<>();
+		for (final @NotNull KursblockungDynKurs kurs : kurseAlle) {
+			final @NotNull int[] schienen = new int[nSchienen];
+			for (int s = 0; s < nSchienen; s++)
+				if (kurs.gibIstSchieneFixiert(s))
+					schienen[s] = ssw.getVarTRUE();
+				else
+					schienen[s] = kurs.gibIstSchieneGesperrt(s) ? ssw.getVarFALSE() : ssw.createNewVar();
 			mapKursSchiene.put(kurs, schienen);
 		}
 
 		// SAT-SOLVER: Variablen von "schuelerInKurs"
-		final @NotNull
-		HashMap<@NotNull KursblockungDynSchueler, @NotNull HashMap<@NotNull KursblockungDynFachart, @NotNull Integer>> mapSchuelerFachartNichtwahl = new HashMap<>();
-		final @NotNull
-		HashMap<@NotNull KursblockungDynSchueler, @NotNull HashMap<@NotNull KursblockungDynKurs, @NotNull Integer>> mapSchuelerIstInKurs = new HashMap<>();
+		final @NotNull HashMap<@NotNull KursblockungDynSchueler, @NotNull HashMap<@NotNull KursblockungDynFachart, @NotNull Integer>> mapSchuelerFachartNichtwahl = new HashMap<>();
+		final @NotNull HashMap<@NotNull KursblockungDynSchueler, @NotNull HashMap<@NotNull KursblockungDynKurs, @NotNull Integer>> mapSchuelerIstInKurs = new HashMap<>();
 
-		final @NotNull
-		LinkedCollection<@NotNull Integer> listNichtwahlen = new LinkedCollection<>();
-		for (final @NotNull
-				KursblockungDynSchueler schueler : schuelerAlle) {
+		final @NotNull LinkedCollection<@NotNull Integer> listNichtwahlen = new LinkedCollection<>();
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerAlle) {
 			mapSchuelerFachartNichtwahl.put(schueler, new HashMap<>());
 			mapSchuelerIstInKurs.put(schueler, new HashMap<>());
-			for (final @NotNull
-					KursblockungDynFachart fachart : schueler.gibFacharten()) {
+			for (final @NotNull KursblockungDynFachart fachart : schueler.gibFacharten()) {
 				final int varNichtwahlen = ssw.createNewVar();
-				final HashMap<@NotNull KursblockungDynFachart, @NotNull Integer> mapFachartNichtwahl = mapSchuelerFachartNichtwahl
-						.get(schueler);
+				final HashMap<@NotNull KursblockungDynFachart, @NotNull Integer> mapFachartNichtwahl = mapSchuelerFachartNichtwahl.get(schueler);
 				if (mapFachartNichtwahl == null)
 					throw new NullPointerException();
 				mapFachartNichtwahl.put(fachart, varNichtwahlen);
 				listNichtwahlen.add(varNichtwahlen);
-				for (final @NotNull
-						KursblockungDynKurs kurs : fachart.gibKurse()) {
+				for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse()) {
 					final int varKurs = ssw.createNewVar();
-					final HashMap<@NotNull KursblockungDynKurs, @NotNull Integer> mapIstInKurs = mapSchuelerIstInKurs
-							.get(schueler);
+					final HashMap<@NotNull KursblockungDynKurs, @NotNull Integer> mapIstInKurs = mapSchuelerIstInKurs.get(schueler);
 					if (mapIstInKurs == null)
 						throw new NullPointerException();
 					mapIstInKurs.put(kurs, varKurs);
@@ -147,30 +137,23 @@ public final class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorit
 		}
 
 		// Forciere: Jeder Kurs in GENAU ... Schienen
-		for (final @NotNull
-				KursblockungDynKurs kurs : kurseAlle) {
-			final @NotNull
-			LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
+		for (final @NotNull KursblockungDynKurs kurs : kurseAlle) {
+			final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
 			final int[] schienen = mapKursSchiene.get(kurs);
 			if (schienen == null)
 				throw new NullPointerException();
-			for (int s = 0; s < nSchienen; s++) {
+			for (int s = 0; s < nSchienen; s++)
 				list.add(schienen[s]);
-			}
 			final int amount = kurs.gibSchienenAnzahl();
 			ssw.c_exactly_GENERIC(list, amount);
 		}
 
 		// Forciere: Jeder Schüler hat pro Fach genau ein Kurs
-		for (final @NotNull
-				KursblockungDynSchueler schueler : schuelerAlle) {
-			for (final @NotNull
-					KursblockungDynFachart fachart : schueler.gibFacharten()) {
-				final @NotNull
-				LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerAlle) {
+			for (final @NotNull KursblockungDynFachart fachart : schueler.gibFacharten()) {
+				final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
 				for (final KursblockungDynKurs kurs : fachart.gibKurse()) {
-					final HashMap<@NotNull KursblockungDynKurs, @NotNull Integer> mapIstInKurs = mapSchuelerIstInKurs
-							.get(schueler);
+					final HashMap<@NotNull KursblockungDynKurs, @NotNull Integer> mapIstInKurs = mapSchuelerIstInKurs.get(schueler);
 					if (mapIstInKurs == null)
 						throw new NullPointerException();
 					final Integer varKurs = mapIstInKurs.get(kurs);
@@ -183,22 +166,15 @@ public final class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorit
 		}
 
 		// Forciere: Jeder Schüler: Wenn zwei Kurse gewählt, dann nicht gleiche Schiene.
-		// int sCount = 0;
-		for (final @NotNull
-				KursblockungDynSchueler schueler : schuelerAlle) {
+		for (final @NotNull KursblockungDynSchueler schueler : schuelerAlle) {
 			final HashMap<@NotNull KursblockungDynKurs, @NotNull Integer> mapIstInKurs = mapSchuelerIstInKurs.get(schueler);
 			if (mapIstInKurs == null)
 				throw new NullPointerException();
-			// sCount++;
-			for (final @NotNull
-					KursblockungDynFachart fachart1 : schueler.gibFacharten()) {
-				for (final @NotNull
-						KursblockungDynFachart fachart2 : schueler.gibFacharten()) {
+			for (final @NotNull KursblockungDynFachart fachart1 : schueler.gibFacharten()) {
+				for (final @NotNull KursblockungDynFachart fachart2 : schueler.gibFacharten()) {
 					if (fachart1.gibNr() < fachart2.gibNr()) {
-						for (final @NotNull
-								KursblockungDynKurs kurs1 : fachart1.gibKurse()) {
-							for (final @NotNull
-									KursblockungDynKurs kurs2 : fachart2.gibKurse()) {
+						for (final @NotNull KursblockungDynKurs kurs1 : fachart1.gibKurse()) {
+							for (final @NotNull KursblockungDynKurs kurs2 : fachart2.gibKurse()) {
 								final Integer var1 = mapIstInKurs.get(kurs1);
 								final Integer var2 = mapIstInKurs.get(kurs2);
 								if ((var1 == null) || (var2 == null))
@@ -231,25 +207,21 @@ public final class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorit
 		final int satresult = ssw.solve(pMaxTimeMillis);
 
 		// Abbrechen, wenn nicht gelöst.
-		if (satresult != SatSolverA.RESULT_SATISFIABLE) {
+		if (satresult != SatSolverA.RESULT_SATISFIABLE)
 			return satresult;
-		}
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 
 		// Verteile die Kurse so, wie der SAT-Solver es vorschlägt.
-		for (final @NotNull
-				KursblockungDynKurs kurs : kurseAlle) {
-			final @NotNull
-			LinkedCollection<@NotNull Integer> schienen = new LinkedCollection<>();
+		for (final @NotNull KursblockungDynKurs kurs : kurseAlle) {
+			final @NotNull LinkedCollection<@NotNull Integer> schienen = new LinkedCollection<>();
 			for (int s = 0; s < nSchienen; s++) {
 				final int[] schienenKurs = mapKursSchiene.get(kurs);
 				if (schienenKurs == null)
 					throw new NullPointerException();
-				if (ssw.isVarTrue(schienenKurs[s])) {
+				if (ssw.isVarTrue(schienenKurs[s]))
 					schienen.add(s);
-				}
 			}
 			kurs.aktionVerteileAufSchienen(schienen);
 		}

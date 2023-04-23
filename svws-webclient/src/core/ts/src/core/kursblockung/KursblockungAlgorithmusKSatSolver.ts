@@ -76,9 +76,11 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		const mapKursSchiene : HashMap<KursblockungDynKurs, Array<number> | null> = new HashMap();
 		for (const kurs of this.kurseAlle) {
 			const schienen : Array<number> = Array(nSchienen).fill(0);
-			for (let s : number = 0; s < nSchienen; s++) {
-				schienen[s] = kurs.gibIstSchieneFixiert(s) ? ssw.getVarTRUE() : kurs.gibIstSchieneGesperrt(s) ? ssw.getVarFALSE() : ssw.createNewVar();
-			}
+			for (let s : number = 0; s < nSchienen; s++)
+				if (kurs.gibIstSchieneFixiert(s))
+					schienen[s] = ssw.getVarTRUE();
+				else
+					schienen[s] = kurs.gibIstSchieneGesperrt(s) ? ssw.getVarFALSE() : ssw.createNewVar();
 			mapKursSchiene.put(kurs, schienen);
 		}
 		const mapSchuelerFachartNichtwahl : HashMap<KursblockungDynSchueler, HashMap<KursblockungDynFachart, number>> = new HashMap();
@@ -108,9 +110,8 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 			const schienen : Array<number> | null = mapKursSchiene.get(kurs);
 			if (schienen === null)
 				throw new NullPointerException()
-			for (let s : number = 0; s < nSchienen; s++) {
+			for (let s : number = 0; s < nSchienen; s++)
 				list.add(schienen[s]);
-			}
 			const amount : number = kurs.gibSchienenAnzahl();
 			ssw.c_exactly_GENERIC(list, amount);
 		}
@@ -160,9 +161,8 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 		}
 		console.log(JSON.stringify("V=" + ssw.getVarCount() + ", C=" + ssw.getClauseCount()));
 		const satresult : number = ssw.solve(pMaxTimeMillis);
-		if (satresult !== SatSolverA.RESULT_SATISFIABLE) {
+		if (satresult !== SatSolverA.RESULT_SATISFIABLE)
 			return satresult;
-		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		for (const kurs of this.kurseAlle) {
 			const schienen : LinkedCollection<number> = new LinkedCollection();
@@ -170,9 +170,8 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 				const schienenKurs : Array<number> | null = mapKursSchiene.get(kurs);
 				if (schienenKurs === null)
 					throw new NullPointerException()
-				if (ssw.isVarTrue(schienenKurs[s])) {
+				if (ssw.isVarTrue(schienenKurs[s]))
 					schienen.add(s);
-				}
 			}
 			kurs.aktionVerteileAufSchienen(schienen);
 		}

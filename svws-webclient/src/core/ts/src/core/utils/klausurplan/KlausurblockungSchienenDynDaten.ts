@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -143,21 +144,14 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 				list.addLast(gostKursklausur.id);
 			}
 		}
-		for (const schuelerID of mapSchuelerKlausuren.keySet()) {
-			const list : LinkedCollection<number> | null = mapSchuelerKlausuren.get(schuelerID);
-			if (list === null)
-				throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.")
-			for (const klausurID1 of list) {
+		for (const e of mapSchuelerKlausuren.entrySet()) {
+			const list : LinkedCollection<number> = e.getValue();
+			for (const klausurID1 of list)
 				for (const klausurID2 of list) {
-					const klausurNr1 : number | null = this._mapKlausurZuNummer.get(klausurID1);
-					const klausurNr2 : number | null = this._mapKlausurZuNummer.get(klausurID2);
-					if (klausurNr1 === null)
-						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + klausurID1!)
-					if (klausurNr2 === null)
-						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + klausurID2!)
+					const klausurNr1 : number = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1! + ")", this._mapKlausurZuNummer.get(klausurID1));
+					const klausurNr2 : number = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2! + ")", this._mapKlausurZuNummer.get(klausurID2));
 					this._verboten[klausurNr1.valueOf()][klausurNr2.valueOf()] = true;
 				}
-			}
 		}
 	}
 
@@ -221,20 +215,14 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	 */
 	gibErzeugeOutput() : List<List<number>> {
 		const out : List<List<number>> = new ArrayList();
-		for (let i : number = 0; i < this._schienenAnzahl; i++) {
+		for (let i : number = 0; i < this._schienenAnzahl; i++)
 			out.add(new ArrayList());
-		}
-		for (const klausurID of this._mapKlausurZuNummer.keySet()) {
-			const klausurNr : number | null = this._mapKlausurZuNummer.get(klausurID);
-			if (klausurID === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!")
-			if (klausurNr === null)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!")
+		for (const e of this._mapKlausurZuNummer.entrySet()) {
+			const klausurID : number = e.getKey();
+			const klausurNr : number = e.getValue();
 			const schiene : number = this._klausurZuSchiene[klausurNr.valueOf()];
-			if (schiene < 0)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'schiene'!")
-			if (schiene >= this._schienenAnzahl)
-				throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'schiene'!")
+			DeveloperNotificationException.check("schiene(" + schiene + ") < 0", schiene < 0);
+			DeveloperNotificationException.check("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= this._schienenAnzahl);
 			out.get(schiene).add(klausurID);
 		}
 		return out;
@@ -689,16 +677,16 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		console.log();
 		console.log(JSON.stringify(header));
 		for (let s : number = 0; s < this._schienenAnzahl; s++) {
-			let line : string | null = "";
-			line += "    Schiene " + (s + 1) + ": ";
+			let line : StringBuilder = new StringBuilder();
+			line.append("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuSchiene[nr] === s) {
 					const gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
 					if (gostKlausur === null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
-					line += " " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene)!;
+					line.append(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
 				}
-			console.log(JSON.stringify(line));
+			console.log(JSON.stringify(line.toString()));
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 			if (this._klausurZuSchiene[nr] < 0)

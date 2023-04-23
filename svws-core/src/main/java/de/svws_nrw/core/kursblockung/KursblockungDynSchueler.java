@@ -506,12 +506,12 @@ public class KursblockungDynSchueler {
 			}
 
 			// Bewerte die Zeile, falls die Schiene c nicht belegt ist.
-			for (int c = 0; c < schieneBelegt.length; c++) {
-				if (!schieneBelegt[c]) {
-					data[r][c] = fachart.gibHatKursInSchiene(c, kursGesperrt) ? _VAL_KURS_GEWAEHLT
-							: fachart.gibHatKursMitFreierSchiene(c, kursGesperrt) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
-				}
-			}
+			for (int c = 0; c < schieneBelegt.length; c++)
+				if (!schieneBelegt[c])
+					if (fachart.gibHatKursInSchiene(c, kursGesperrt))
+						data[r][c] = _VAL_KURS_GEWAEHLT;
+					else
+						data[r][c] = fachart.gibHatKursMitFreierSchiene(c, kursGesperrt) ? _VAL_KURS_MUSS_WANDERN : _VAL_UNGUELTIG;
 
 		}
 

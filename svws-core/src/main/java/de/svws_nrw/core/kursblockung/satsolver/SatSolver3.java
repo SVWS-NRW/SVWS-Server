@@ -472,11 +472,10 @@ public final class SatSolver3 extends SatSolverA {
 
 	@SuppressWarnings("unused")
 	private static String fill(final int index) {
-		String s = "";
-		for (int i = 0; i < index; i++) {
-			s = s + "    ";
-		}
-		return s;
+		@NotNull StringBuilder s = new StringBuilder();
+		for (int i = 0; i < index; i++)
+			s.append("    ");
+		return s.toString();
 	}
 
 	/**

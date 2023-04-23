@@ -402,9 +402,7 @@ public class SchuelerblockungDynDaten {
 		final @NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
 		for (int schiene = 0; schiene < nSchienen; schiene++) {
 			String sData = _aktuellGesperrteSchiene[schiene] ? "1" : "0";
-			while (sData.length() < 5)
-				sData = " " + sData;
-			System.out.print(sData);
+			System.out.print(String.format("%5s", sData));
 		}
 		System.out.println();
 
@@ -413,9 +411,7 @@ public class SchuelerblockungDynDaten {
 				@NotNull String sData = "" + data[iFachwahl][schiene];
 				if (data[iFachwahl][schiene] == UNENDLICH)
 					sData = "INF";
-				while (sData.length() < 5)
-					sData = " " + sData;
-				System.out.print(sData);
+				System.out.print(String.format("%5s", sData));
 			}
 			System.out.println();
 		}

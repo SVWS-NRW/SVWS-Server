@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -895,8 +896,8 @@ public class GostBlockungsergebnisManager {
 	public boolean getOfSchuelerHatNichtwahl(final long pSchuelerID) {
 		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(pSchuelerID);
 
-		for (final @NotNull Long fachID : map.keySet())
-			if (map.get(fachID) == null)
+		for (@NotNull Entry<@NotNull Long, @NotNull GostBlockungsergebnisKurs> e : map.entrySet())
+			if (e.getValue() == null)
 				return true;
 
 		return false;

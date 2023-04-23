@@ -1,13 +1,14 @@
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { Variable, cast_de_svws_nrw_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
+import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { Heap } from '../../../core/kursblockung/satsolver/Heap';
+import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
 import { SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { Clause } from '../../../core/kursblockung/satsolver/Clause';
 import { Arrays } from '../../../java/util/Arrays';
-import { Heap } from '../../../core/kursblockung/satsolver/Heap';
-import { System } from '../../../java/lang/System';
 
 export class SatSolver3 extends SatSolverA {
 
@@ -359,11 +360,10 @@ export class SatSolver3 extends SatSolverA {
 	}
 
 	private static fill(index : number) : string | null {
-		let s : string | null = "";
-		for (let i : number = 0; i < index; i++) {
-			s = s! + "    ";
-		}
-		return s;
+		let s : StringBuilder = new StringBuilder();
+		for (let i : number = 0; i < index; i++)
+			s.append("    ");
+		return s.toString();
 	}
 
 	/**

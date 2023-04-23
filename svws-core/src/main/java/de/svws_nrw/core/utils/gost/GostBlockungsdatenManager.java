@@ -1261,7 +1261,7 @@ public class GostBlockungsdatenManager {
 	public boolean getOfSchuelerHatFachart(final long pSchuelerID, final long pFach, final long pKursart) throws DeveloperNotificationException {
 		final @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl> map = DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") unbekannt!", _map_schulerID_fachID_fachwahl.get(pSchuelerID));
 		final GostFachwahl wahl = map.get(pFach);
-		return wahl == null ? false : wahl.kursartID == pKursart;
+		return (wahl != null) && (wahl.kursartID == pKursart);
 	}
 
 	/**

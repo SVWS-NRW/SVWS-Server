@@ -1000,12 +1000,16 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
 	private _nodeNextOrNull(node : AVLMapNode<K, V>, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		const next : AVLMapNode<K, V> | null = node._next;
-		return (next === null) ? null : this._isOutOfRange(next._key, iv) ? null : next;
+		if (next === null)
+			return null;
+		return this._isOutOfRange(next._key, iv) ? null : next;
 	}
 
 	private _nodePrevOrNull(node : AVLMapNode<K, V>, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {
 		const prev : AVLMapNode<K, V> | null = node._prev;
-		return (prev === null) ? null : this._isOutOfRange(prev._key, iv) ? null : prev;
+		if (prev === null)
+			return null;
+		return this._isOutOfRange(prev._key, iv) ? null : prev;
 	}
 
 	private _nodeGetOrNull(key : K, iv : AVLMapIntervall<K>) : AVLMapNode<K, V> | null {

@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.klausurplan;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -241,9 +242,8 @@ public class KlausurterminblockungDynDaten {
 		}
 
 		// Verbiete Klausur-Paare
-		for (final @NotNull Long schuelerID : mapSchuelerKlausuren.keySet()) {
-			final LinkedCollection<@NotNull Integer> list = mapSchuelerKlausuren.get(schuelerID);
-			if (list == null) throw new DeveloperNotificationException("Die Liste darf nicht NULL sein.");
+		for (final @NotNull Entry<@NotNull Long, @NotNull LinkedCollection<@NotNull Integer>> e : mapSchuelerKlausuren.entrySet()) {
+			final @NotNull LinkedCollection<@NotNull Integer> list = e.getValue();
 			for (final int klausurNr1 : list)
 				for (final int klausurNr2 : list)
 					if (klausurNr1 != klausurNr2)
@@ -415,7 +415,7 @@ public class KlausurterminblockungDynDaten {
 		 */
 
 		// Kriterium 3: Besser ist, wenn ein Termin möglichst wenig Klausuren hat.
-		final int[] histogramm = new int[_terminAnzahl]; // TODO als Methode
+		final int[] histogramm = new int[_terminAnzahl]; // TODO BAR als Methode
 		final int[] histogrammX = new int[_terminAnzahl];
 		for (int i = 0; i < _klausurenAnzahl; i++) {
 			histogramm[_klausurZuTermin[i]]++;
@@ -424,7 +424,7 @@ public class KlausurterminblockungDynDaten {
 
 		int minHisto = _klausurenAnzahl;
 		int minHistoX = _klausurenAnzahl;
-		for (int i = 0; i < _terminAnzahl; i++) {  // TODO als Methode
+		for (int i = 0; i < _terminAnzahl; i++) {  // TODO BAR als Methode
 			minHisto = Math.min(minHisto, histogramm[i]);
 			minHistoX = Math.min(minHistoX, histogrammX[i]);
 		}
@@ -543,15 +543,12 @@ public class KlausurterminblockungDynDaten {
 		for (int i = 0; i < _terminAnzahl; i++)
 			out.add(new ArrayList<>());
 
-		for (final @NotNull Long klausurID : _mapKlausurZuNummer.keySet()) {
-			final Integer klausurNr = _mapKlausurZuNummer.get(klausurID);
-			if (klausurID == null) throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurID'!");
-			if (klausurNr == null) throw new DeveloperNotificationException("gibErzeugeOutput(): NULL-Wert bei 'klausurNr'!");
-
+		for (final @NotNull Entry<@NotNull Long, @NotNull Integer> e : _mapKlausurZuNummer.entrySet()) {
+			final @NotNull Long klausurID = e.getKey();
+			final @NotNull Integer klausurNr = e.getValue();
 			final int terminNr = _klausurZuTermin[klausurNr];
-			if (terminNr <              0) throw new DeveloperNotificationException("gibErzeugeOutput(): negativer Wert bei 'terminNr'!");
-			if (terminNr >= _terminAnzahl) throw new DeveloperNotificationException("gibErzeugeOutput(): zu großer Wert bei 'terminNr'!");
-
+			DeveloperNotificationException.check("terminNr(" + terminNr + ") < 0", terminNr < 0);
+			DeveloperNotificationException.check("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= _terminAnzahl);
 			// Termin-Klausur-Zuordnung
 			out.get(terminNr).add(klausurID);
 		}
@@ -670,20 +667,20 @@ public class KlausurterminblockungDynDaten {
 		System.out.println(header);
 
 		for (int s = 0; s < _terminAnzahl; s++) {
-			String line = "";
-			line += "    Schiene " + (s + 1) + ": ";
+			@NotNull StringBuilder line = new StringBuilder();
+			line.append("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuTermin[nr] == s) {
 					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr);
-					if (gostKlausur == null) throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
-					line += " " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene);
+					if (gostKlausur == null)
+						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
+					line.append(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
-			System.out.println(line);
+			System.out.println(line.toString());
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			if (_klausurZuTermin[nr] < 0)
-				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!");
+			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuTermin[nr] < 0);
 	}
 
 

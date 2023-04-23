@@ -2,6 +2,7 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { Comparable } from '../../../java/lang/Comparable';
 import { Variable, cast_de_svws_nrw_core_kursblockung_satsolver_Variable } from '../../../core/kursblockung/satsolver/Variable';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { JavaObject } from '../../../java/lang/JavaObject';
@@ -75,16 +76,16 @@ export class Clause extends JavaObject implements Comparable<Clause> {
 	}
 
 	public toString() : string {
-		let s : string = "";
+		let s : StringBuilder = new StringBuilder();
+		s.append("[");
 		for (const v of this.variables) {
-			if (v.index === -1) {
+			if (v.index === -1)
 				return "[SAT]";
-			}
-			if (v.index >= 0) {
-				s = s! + " " + v.nr;
-			}
+			if (v.index >= 0)
+				s.append(" " + v.nr);
 		}
-		return "[" + s! + "]";
+		s.append("]");
+		return s.toString();
 	}
 
 	private getSet() : AVLSet<number> {

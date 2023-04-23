@@ -404,16 +404,18 @@ public class KursblockungMatrix {
 	 *                            Knotenpotentiale, andernfalls bleiben die Kantenwerte unverändert.
 	 * @return                    Eine String-Representation der Matrix. */
 	public @NotNull String convertToString(final @NotNull String kommentar, final int zellenbreite, final boolean mitKnotenPotential) {
-		final @NotNull StringBuilder sb = new StringBuilder();
-		sb.append(kommentar + System.lineSeparator());
+		final @NotNull StringBuilder sb = new StringBuilder(kommentar + System.lineSeparator());
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < cols; c++) {
 				final long wert = mitKnotenPotential ? matrix[r][c] + potentialR[r] - potentialC[c] : matrix[r][c];
-				String sWert = "" + wert;
-				while (sWert.length() < zellenbreite)
-					sWert = " " + sWert;
+				@NotNull StringBuilder sWert1 = new StringBuilder();          // leading spaces
+				@NotNull StringBuilder sWert2 = new StringBuilder("" + wert); // value
+				while (sWert1.length() + sWert2.length() < zellenbreite)
+					sWert1.append(" ");
 				final @NotNull String sZusatz = r2c[r] == c ? "*" : " ";
-				sb.append(sWert + sZusatz);
+				sb.append(sWert1);
+				sb.append(sWert2);
+				sb.append(sZusatz);
 			}
 			sb.append("\n");
 		}

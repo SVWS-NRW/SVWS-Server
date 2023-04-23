@@ -113,15 +113,6 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	}
 
 	/**
-	 * Setzt den zu verwendenden Algorithmus.
-	 * @param pAlgorithmus den zu verwendenden Algorithmus.
-	 * @deprecated
-	 */
-	public set_algorithmus(pAlgorithmus : number) : void {
-		this.algorithmus = pAlgorithmus;
-	}
-
-	/**
 	 * Liefert den LK-GK-Modus.
 	 * @return den LK-GK-Modus.
 	 */
@@ -155,15 +146,6 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	 */
 	public set_lk_gk_modus_getrennt() : void {
 		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT;
-	}
-
-	/**
-	 * Setzt den LK-GK-Modus.
-	 * @param modus ein Wert aus {@link #LK_GK_MODUS_BEIDE}, {@link #LK_GK_MODUS_NUR_GK}, {@link #LK_GK_MODUS_NUR_LK}, {@link #LK_GK_MODUS_GETRENNT}.
-	 * @deprecated
-	 */
-	public set_lk_gk_modus(modus : number) : void {
-		this.lk_gk_modus = modus;
 	}
 
 	/**
