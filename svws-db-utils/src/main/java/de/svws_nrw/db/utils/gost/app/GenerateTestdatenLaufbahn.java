@@ -26,16 +26,17 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
-import de.svws_nrw.db.utils.data.Schule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt eine Kommandozeilen-Anwendung zur Verfügung, die dem
@@ -83,7 +84,6 @@ public class GenerateTestdatenLaufbahn {
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */
 	public static void main(final String[] args) {
-		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
@@ -115,8 +115,8 @@ public class GenerateTestdatenLaufbahn {
 				}
 
 				// Prüfe die Schulform
-				final Schulform schulform = Schule.queryCached(conn).getSchulform();
-		    	if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
+				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+		    	if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 		    		throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
 		    	final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";

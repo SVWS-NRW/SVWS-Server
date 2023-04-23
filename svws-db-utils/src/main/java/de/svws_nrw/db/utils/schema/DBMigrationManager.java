@@ -26,6 +26,7 @@ import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AdressenUtils;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBConnectionException;
@@ -33,6 +34,7 @@ import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.MigrationDTOs;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
@@ -83,9 +85,9 @@ import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattfo
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
-import de.svws_nrw.db.utils.data.Schule;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Methoden zur Verfügung, um ein Schild2-Datenbankschema in
@@ -390,22 +392,22 @@ public final class DBMigrationManager {
 	 */
 	private boolean fixSchulform() {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
-			final Schule schule = Schule.query(conn);
-			logger.logLn("- Schulnummer: " + schule.dto.SchulNr);
-			logger.logLn("- Schulform: " + schule.getSchulform().daten.kuerzel);
+			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+			logger.logLn("- Schulnummer: " + schule.SchulNr);
+			logger.logLn("- Schulform: " + schule.Schulform.daten.kuerzel);
 			final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
-			final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.dto.SchulNr)).findFirst().orElse(null);
+			final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.SchulNr)).findFirst().orElse(null);
 			if (dtoSchulver == null) {
-				logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.dto.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
+				logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
 				return false;
 			}
 
 			final Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
-			if (statSchulform != schule.getSchulform()) {
+			if (statSchulform != schule.Schulform) {
 				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);
 				logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
-				schule.dto.Schulform = statSchulform;
-				conn.persist(schule.dto);
+				schule.Schulform = statSchulform;
+				conn.persist(schule);
 			}
 			return true;
 		}

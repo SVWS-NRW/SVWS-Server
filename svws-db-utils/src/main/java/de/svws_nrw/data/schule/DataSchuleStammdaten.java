@@ -39,7 +39,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.data.Schule;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -192,8 +191,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 		    			case "schuleAbschnitte" -> {
 		    				@SuppressWarnings("unchecked") // TODO check conversion
-							final
-							Map<String, Object> mapAbschnitte = (Map<String, Object>) value;
+							final Map<String, Object> mapAbschnitte = (Map<String, Object>) value;
 		    				if (mapAbschnitte.containsKey("anzahlAbschnitte")) {
 		    					final Integer anzahlAbschnitte = JSONMapper.convertToInteger(mapAbschnitte.get("anzahlAbschnitte"), false);
 		    					if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4))
@@ -215,6 +213,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		    							case 1 -> schule.BezAbschnitt2 = (String) objBezeichnung;
 		    							case 2 -> schule.BezAbschnitt3 = (String) objBezeichnung;
 		    							case 3 -> schule.BezAbschnitt4 = (String) objBezeichnung;
+		    							default -> throw OperationError.BAD_REQUEST.exception();
 		    						}
 		    					}
 		    				}
@@ -247,10 +246,10 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 * @return Die HTTP-Response der Get-Operation
 	 */
 	public Response getSchullogo() {
-    	final Schule schule = Schule.query(conn);
-    	if ((schule == null) || (schule.dto == null))
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final String daten = "\"" + schule.dto.SchulLogoBase64 + "\"";
+    	final String daten = "\"" + schule.SchulLogoBase64 + "\"";
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

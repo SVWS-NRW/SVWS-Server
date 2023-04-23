@@ -18,14 +18,16 @@ import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.utils.data.Schule;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -48,7 +50,7 @@ public final class GostSchuelerLaufbahn {
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 */
     public static Abiturdaten get(final DBEntityManager conn, final long id) {
-    	final Schule schule = Schule.queryCached(conn);
+    	final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
     	final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
     	if (dtoSchueler == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
@@ -63,7 +65,7 @@ public final class GostSchuelerLaufbahn {
     			.getResultList().stream().findFirst().orElse(null);
     	if (aktAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	final Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktAbschnitt, dtoAbschnitt.Jahr);
+    	final Integer abiturjahr = GostSchueler.getAbiturjahr(schule.Schulform, aktAbschnitt, dtoAbschnitt.Jahr);
     	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
     	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
     	if (dtoGostSchueler == null) {

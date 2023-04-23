@@ -2,18 +2,20 @@ package de.svws_nrw.db.utils.gost;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.fach.Fachgruppe;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.data.Schule;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -52,9 +54,8 @@ public final class FaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		final int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb()
-				? 4
-				: ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)  ? 2 : 3));
+		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
+		final int defaultWochenstundenQ = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX) ? 2 : defaultWochenstundenQ_GK;
 		eintrag.wochenstundenQualifikationsphase = fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		if (fach.ProjektKursLeitfach1_ID == null) {
@@ -105,9 +106,8 @@ public final class FaecherGost {
 		eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
 		eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 		eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
-		final int defaultWochenstundenQ = (Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb()
-				? 4
-				: ((fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX)  ? 2 : 3));
+		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
+		final int defaultWochenstundenQ = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX) ? 2 : defaultWochenstundenQ_GK;
 		eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase == null ? defaultWochenstundenQ : jf.WochenstundenQPhase;
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		eintrag.projektKursLeitfach1Kuerzel = fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
@@ -126,30 +126,28 @@ public final class FaecherGost {
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
 	public static GostFaecherManager getFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
-		final Schulform schulform = Schule.query(conn).getSchulform();
-		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
+		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();
     	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	if (faecher == null)
     		throw OperationError.NOT_FOUND.exception();
 		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
-	    	final GostFaecherManager manager = new GostFaecherManager(faecher.values().stream()
+	    	return new GostFaecherManager(faecher.values().stream()
 	    		.filter(fach -> fach.IstOberstufenFach)
 	    		.map(fach -> mapFromDTOFach(fach, faecher))
-	    		.filter(fach -> (fach != null))
-	    		.collect(Collectors.toList())
+	    		.filter(Objects::nonNull)
+	    		.toList()
 	    	);
-	    	return manager;
 		}
 
 		final List<DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class);
-    	if (jahrgangfaecher == null)
-			return new GostFaecherManager();
-    	final GostFaecherManager manager = new GostFaecherManager(jahrgangfaecher.stream()
-    			.map(jf -> mapFromDTOGostJahrgangFaecher(jf, faecher))
-    			.filter(fach -> (fach != null)).collect(Collectors.toList())
+		if (jahrgangfaecher == null)
+    		return new GostFaecherManager();
+    	return new GostFaecherManager(jahrgangfaecher.stream()
+   			.map(jf -> mapFromDTOGostJahrgangFaecher(jf, faecher))
+   			.filter(Objects::nonNull).toList()
     	);
-    	return manager;
     }
 
 }

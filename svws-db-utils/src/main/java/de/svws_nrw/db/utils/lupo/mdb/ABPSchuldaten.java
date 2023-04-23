@@ -14,7 +14,7 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.db.utils.data.Schule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Schuldaten aus einer LuPO-Datenbank
@@ -275,8 +275,7 @@ public final class ABPSchuldaten {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuldaten
 	 */
 	public static List<ABPSchuldaten> getDefault() {
-		final List<ABPSchuldaten> schuldaten = new ArrayList<>();
-		return schuldaten;
+		return new ArrayList<>();
 	}
 
 
@@ -286,21 +285,21 @@ public final class ABPSchuldaten {
 	 *
 	 * @param schule     das SVWS-Server-DTO für die Schuldaten
 	 * @param jahrgang   der Jahrgang, für den die Lupo-MDB erstellt wird
+	 * @param halbjahr   das Halbjahr, für den die Lupo-MDB erstellt wird
 	 *
 	 * @return der Eintrag für die Tabelle ABPSchuldaten
 	 */
-	public static List<ABPSchuldaten> get(final Schule schule, final String jahrgang) {
+	public static List<ABPSchuldaten> get(final DTOEigeneSchule schule, final String jahrgang, final int halbjahr) {
 		final List<ABPSchuldaten> lupoSchuldaten = new ArrayList<>();
 		if (schule == null)
 			return lupoSchuldaten;
-		final var sf = schule.getSchulform();
 		final ABPSchuldaten schuldaten = new ABPSchuldaten();
-		schuldaten.Schulnr = "" + schule.dto.SchulNr;
-		schuldaten.SchulformKrz = ((sf == null) || (sf.daten == null)) ? null : sf.daten.kuerzel;
-		schuldaten.SchulformBez = ((sf == null) || (sf.daten == null)) ? null : sf.daten.bezeichnung;
-		schuldaten.Bezeichnung1 = schule.dto.Bezeichnung1;
-		schuldaten.Bezeichnung2 = schule.dto.Bezeichnung2;
-		schuldaten.Bezeichnung3 = schule.dto.Bezeichnung3;
+		schuldaten.Schulnr = "" + schule.SchulNr;
+		schuldaten.SchulformKrz = ((schule.Schulform == null) || (schule.Schulform.daten == null)) ? null : schule.Schulform.daten.kuerzel;
+		schuldaten.SchulformBez = ((schule.Schulform == null) || (schule.Schulform.daten == null)) ? null : schule.Schulform.daten.bezeichnung;
+		schuldaten.Bezeichnung1 = schule.Bezeichnung1;
+		schuldaten.Bezeichnung2 = schule.Bezeichnung2;
+		schuldaten.Bezeichnung3 = schule.Bezeichnung3;
 		schuldaten.Kennwort = null;
 		schuldaten.PruefOrdnung = "APO-GOSt(B)10/G8"; // TODO Prüfungsordnung demnächst automatisch setzen anhand des Abiturjahrganges.
 		schuldaten.PruefPhase = null;
@@ -312,7 +311,7 @@ public final class ABPSchuldaten {
 		schuldaten.ZusatzkursSoWiVorhanden = true;
 		schuldaten.ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
 		schuldaten.AusdruckAlleFaecher = true;
-		schuldaten.Beratungshalbjahr = jahrgang + "." + schule.getHalbjahr();
+		schuldaten.Beratungshalbjahr = jahrgang + "." + halbjahr;
 		schuldaten.BeratungsText = null;
 		schuldaten.MailText = null;
 		schuldaten.MailTextBoegen = null;
@@ -320,7 +319,7 @@ public final class ABPSchuldaten {
 		schuldaten.Komprimieren = null;
 		schuldaten.AenderungenErlauben = null;
 		schuldaten.AutoPruefModus = true;
-		schuldaten.DauerUnterrichtseinheit = schule.dto.DauerUnterrichtseinheit;
+		schuldaten.DauerUnterrichtseinheit = schule.DauerUnterrichtseinheit;
 		schuldaten.SMTP_User = null;
 		schuldaten.SMTP_Password = null;
 		schuldaten.SMTP_Server = null;

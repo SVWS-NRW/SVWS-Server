@@ -6,20 +6,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.data.Schule;
 import de.svws_nrw.db.utils.gost.FaecherGost;
 
 /**
@@ -49,8 +50,8 @@ public final class DataGostFaecher extends DataManager<Long> {
 	 * @return der Manager für die Liste der Fächer der gymnasialen Oberstufe
 	 */
 	public GostFaecherManager getListInternal() {
-		final Schulform schulform = Schule.queryCached(conn).getSchulform();
-    	if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
+		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+    	if ((schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
     		return null;
     	return FaecherGost.getFaecherListeGost(conn, abijahr);
 	}

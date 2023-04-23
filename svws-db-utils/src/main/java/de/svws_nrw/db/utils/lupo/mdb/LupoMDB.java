@@ -30,6 +30,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
@@ -45,12 +46,13 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
-import de.svws_nrw.db.utils.data.Schule;
 import de.svws_nrw.db.utils.gost.GostSchueler;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 
 
 /**
@@ -203,7 +205,8 @@ public class LupoMDB {
 	 */
 	public void getFromLeistungsdaten(final Benutzer user, final String jahrgang) {
 		try (DBEntityManager conn = user.getEntityManager()) {
-			final Schule schule = Schule.query(conn);
+			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+			final @NotNull DTOSchuljahresabschnitte schuljahresabschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
 			if ((jahrgang == null) || ((!"EF".equalsIgnoreCase(jahrgang)) && (!"Q1".equalsIgnoreCase(jahrgang)) && (!"Q2".equalsIgnoreCase(jahrgang)))) {
 				logger.logLn("Ungültiger Jahrgang! Erzeuge Daten für eine leere LuPO-Datei...");
 				logger.modifyIndent(2);
@@ -214,7 +217,7 @@ public class LupoMDB {
 			logger.logLn("Lese Daten für den Jahrgang " + jahrgang + " aus der SVWS-Datenbank...");
 			logger.modifyIndent(2);
 			final List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream()
-					.sorted((f1, f2) -> f1.SortierungSekII == null ? -1 : f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII).collect(Collectors.toList());
+					.sorted((f1, f2) -> f1.SortierungSekII == null ? -1 : f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII).toList();
 			final Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
 			final TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
@@ -240,7 +243,7 @@ public class LupoMDB {
 					.setParameter("value", schuelerIDs)
 					.getResultList().stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 			versionen = ABPVersion.getDefault();
-			schuldaten = ABPSchuldaten.get(schule, jahrgang);
+			schuldaten = ABPSchuldaten.get(schule, jahrgang, schuljahresabschnitt.Abschnitt);
 			fachgruppen = ABPFachgruppen.getDefault();
 			faecher = ABPFaecher.get(fachgruppen, dtofaecher, dtoFaecherMap);
 			kursarten = ABPKursarten.getDefault();
@@ -396,15 +399,15 @@ public class LupoMDB {
 	 */
 	public void setLUPOTables(final Benutzer user, final boolean replace) {
 		try (DBEntityManager conn = user.getEntityManager()) {
-			final Schule schule = Schule.query(conn);
+			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 			final Map<Long, DTOKlassen> klassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
-			final DTOSchuljahresabschnitte dtoAbschnittSchule = schuljahresabschnitte.get(schule.dto.Schuljahresabschnitts_ID);
+			final DTOSchuljahresabschnitte dtoAbschnittSchule = schuljahresabschnitte.get(schule.Schuljahresabschnitts_ID);
 
 			logger.logLn("Informationen zu der LuPO-Datei...");
 			logger.modifyIndent(2);
-			logger.logLn("- Schulhalbjahr der SVWS-DB: " + dtoAbschnittSchule.Jahr + "." + schule.getHalbjahr());
-			if (schuldaten.size() <= 0) {
+			logger.logLn("- Schulhalbjahr der SVWS-DB: " + dtoAbschnittSchule.Jahr + "." + dtoAbschnittSchule.Abschnitt);
+			if (schuldaten.isEmpty()) {
 				logger.logLn("- FEHLER: Fehlender Eintrag für die aktuelle Schule in den LuPO-Daten!");
 				logger.modifyIndent(-2);
 				return;
@@ -475,7 +478,7 @@ public class LupoMDB {
 					logger.modifyIndent(-2);
 					continue;
 				}
-				final int restjahre = dtoJahrgang.AnzahlRestabschnitte / schule.dto.AnzahlAbschnitte;
+				final int restjahre = dtoJahrgang.AnzahlRestabschnitte / schule.AnzahlAbschnitte;
 				final int abiJahrgang = dtoAbschnittSchueler.Jahr + restjahre;
 				logger.logLn(0, "" + abiJahrgang);
 				logger.log("- Prüfe, ob der Abiturjahrgang bereits vorgekommen ist: ");
@@ -780,28 +783,28 @@ public class LupoMDB {
 	private static String getNotenkuerzelFromLupoNotenpunkte(final String lupoNotenpunkte) {
 		if (lupoNotenpunkte == null)
 			return null;
-		switch (lupoNotenpunkte) {
-			case "E1": return Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN.kuerzel;
-			case "E2": return Note.E2_MIT_ERFOLG_TEILGENOMMEN.kuerzel;
-			case "E3": return Note.E3_TEILGENOMMEN.kuerzel;
-			case "00": case "0": return Note.UNGENUEGEND.kuerzel;
-			case "01": case "1": return Note.MANGELHAFT_MINUS.kuerzel;
-			case "02": case "2": return Note.MANGELHAFT.kuerzel;
-			case "03": case "3": return Note.MANGELHAFT_PLUS.kuerzel;
-			case "04": case "4": return Note.AUSREICHEND_MINUS.kuerzel;
-			case "05": case "5": return Note.AUSREICHEND.kuerzel;
-			case "06": case "6": return Note.AUSREICHEND_PLUS.kuerzel;
-			case "07": case "7": return Note.BEFRIEDIGEND_MINUS.kuerzel;
-			case "08": case "8": return Note.BEFRIEDIGEND.kuerzel;
-			case "09": case "9": return Note.BEFRIEDIGEND_PLUS.kuerzel;
-			case "10": return Note.GUT_MINUS.kuerzel;
-			case "11": return Note.GUT.kuerzel;
-			case "12": return Note.GUT_PLUS.kuerzel;
-			case "13": return Note.SEHR_GUT_MINUS.kuerzel;
-			case "14": return Note.SEHR_GUT.kuerzel;
-			case "15": return Note.SEHR_GUT_PLUS.kuerzel;
-		}
-		return null;
+		return switch (lupoNotenpunkte) {
+			case "E1" -> Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN.kuerzel;
+			case "E2" -> Note.E2_MIT_ERFOLG_TEILGENOMMEN.kuerzel;
+			case "E3" -> Note.E3_TEILGENOMMEN.kuerzel;
+			case "00", "0" -> Note.UNGENUEGEND.kuerzel;
+			case "01", "1" -> Note.MANGELHAFT_MINUS.kuerzel;
+			case "02", "2" -> Note.MANGELHAFT.kuerzel;
+			case "03", "3" -> Note.MANGELHAFT_PLUS.kuerzel;
+			case "04", "4" -> Note.AUSREICHEND_MINUS.kuerzel;
+			case "05", "5" -> Note.AUSREICHEND.kuerzel;
+			case "06", "6" -> Note.AUSREICHEND_PLUS.kuerzel;
+			case "07", "7" -> Note.BEFRIEDIGEND_MINUS.kuerzel;
+			case "08", "8" -> Note.BEFRIEDIGEND.kuerzel;
+			case "09", "9" -> Note.BEFRIEDIGEND_PLUS.kuerzel;
+			case "10" -> Note.GUT_MINUS.kuerzel;
+			case "11" -> Note.GUT.kuerzel;
+			case "12" -> Note.GUT_PLUS.kuerzel;
+			case "13" -> Note.SEHR_GUT_MINUS.kuerzel;
+			case "14" -> Note.SEHR_GUT.kuerzel;
+			case "15" -> Note.SEHR_GUT_PLUS.kuerzel;
+			default -> null;
+		};
 	}
 
 

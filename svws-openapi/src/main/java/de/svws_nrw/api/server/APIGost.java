@@ -48,9 +48,10 @@ import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.data.Schule;
 import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchueler;
 import de.svws_nrw.db.utils.gost.GostSchuelerAbitur;
@@ -63,6 +64,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -707,7 +709,8 @@ public class APIGost {
     		@Context final HttpServletRequest request) {
     	// TODO Benutzerkompetenz
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-	    	if (!Schule.queryCached(conn).getSchulform().daten.hatGymOb)
+    		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
@@ -745,7 +748,8 @@ public class APIGost {
     		@Context final HttpServletRequest request) {
     	// TODO Benutzerkompetenz
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-	    	if (!Schule.queryCached(conn).getSchulform().daten.hatGymOb)
+    		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);

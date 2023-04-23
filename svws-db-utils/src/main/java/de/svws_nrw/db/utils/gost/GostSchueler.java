@@ -14,17 +14,20 @@ import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.Schueler;
-import de.svws_nrw.db.utils.data.Schule;
+import jakarta.validation.constraints.NotNull;
 
 
 
@@ -42,16 +45,16 @@ public final class GostSchueler {
 	 * Bestimmt für den übergegebenen Schüler das zugehörige Abiturjahr, sofern sich der Schüler
 	 * bereits in der gymnasialen Oberstufe befindet.
 	 *
-	 * @param schule          die Schule des Schülers
+	 * @param schulform       die Schulform der Schule des Schülers
 	 * @param lernabschnitt   der aktuelle Lernabschnitt des Schülers
 	 * @param schuljahr       das aktuelle Schuljahr, in welchem sich der Schüler befindet
 	 *
 	 * @return das voraussichtliche Jahr des Abiturs
 	 */
-	public static Integer getAbiturjahr(final Schule schule, final DTOSchuelerLernabschnittsdaten lernabschnitt, final int schuljahr) {
+	public static Integer getAbiturjahr(final Schulform schulform, final DTOSchuelerLernabschnittsdaten lernabschnitt, final int schuljahr) {
 		if ((lernabschnitt == null) || (lernabschnitt.Schuljahresabschnitts_ID == null))
 			return null;
-		return GostAbiturjahrUtils.getGostAbiturjahr(schule.getSchulform(), lernabschnitt.Schulgliederung, schuljahr, lernabschnitt.ASDJahrgang);
+		return GostAbiturjahrUtils.getGostAbiturjahr(schulform, lernabschnitt.Schulgliederung, schuljahr, lernabschnitt.ASDJahrgang);
 	}
 
 
@@ -66,7 +69,7 @@ public final class GostSchueler {
 	 *         angegebenen ID
 	 */
 	public static GostLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) {
-		final Schule schule = Schule.queryCached(conn);
+		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
@@ -87,12 +90,12 @@ public final class GostSchueler {
 					final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
 					return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 				})
-				.collect(Collectors.toList());
+				.toList();
 
 		// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
 		final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
 
-		final Integer abiturjahr = GostSchueler.getAbiturjahr(schule, aktLernabschnitt, abschnittSchueler.Jahr);
+		final Integer abiturjahr = GostSchueler.getAbiturjahr(schule.Schulform, aktLernabschnitt, abschnittSchueler.Jahr);
     	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
 
 		// Ermittle nun die Leistungsdaten aus den Lernabschnitten
@@ -111,9 +114,7 @@ public final class GostSchueler {
 			if (abschnittLeistungsdaten == null)
 				continue;
 
-			final GostHalbjahr halbjahr = schule.istImQuartalsmodus()
-					? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnittLeistungsdaten.Abschnitt + 1) / 2)
-					: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
+			final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
 			if ((halbjahr != null) && (lernabschnitt.SemesterWertung))
 				daten.bewertetesHalbjahr[halbjahr.id] = true;
 
@@ -192,7 +193,6 @@ public final class GostSchueler {
 	 *         angegebenen IDs
 	 */
 	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) {
-		final Schule schule = Schule.queryCached(conn);
 		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
     	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, null);
 
@@ -220,9 +220,9 @@ public final class GostSchueler {
 					.sorted((l1, l2) -> {
 						final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 						final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
-						return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
+						return (!a1.Jahr.equals(a2.Jahr)) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 					})
-					.collect(Collectors.toList());
+					.toList();
 
 			// Bestimme den neuesten Lernabschnitt des Schülers. Aus diesem kann das voraussichliche Abiturjahr ermittelt werden.
 			final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
@@ -244,9 +244,7 @@ public final class GostSchueler {
 					continue;
 				if (!("EF".equals(lernabschnitt.ASDJahrgang) || "Q1".equals(lernabschnitt.ASDJahrgang) || "Q2".equals(lernabschnitt.ASDJahrgang)))
 					continue;
-				final GostHalbjahr halbjahr = schule.istImQuartalsmodus()
-						? GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, (abschnittLeistungsdaten.Abschnitt + 1) / 2)
-						: GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
+				final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
 				if (lernabschnitt.SemesterWertung)
 					daten.bewertetesHalbjahr[halbjahr.id] = true;
 
@@ -305,7 +303,7 @@ public final class GostSchueler {
 			// Sortiere Fächer anhand der SII-Sortierung der Fächer
 			faecher.values().stream()
 				.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
-				.forEach(f -> daten.faecher.add(f));
+				.forEach(daten.faecher::add);
 			result.put(id, daten);
     	}
     	return result;
