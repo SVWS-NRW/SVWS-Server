@@ -197,7 +197,7 @@ public class GostKlausurvorgabenManager {
 				.get(quartal);
 		if (map1 == null)
 			return null;
-			final HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(kursartAllg);
+		final HashMap<@NotNull Long, @NotNull GostKlausurvorgabe> map2 = map1.get(kursartAllg);
 		if (map2 != null)
 			return map2.get(idFach);
 		return null;

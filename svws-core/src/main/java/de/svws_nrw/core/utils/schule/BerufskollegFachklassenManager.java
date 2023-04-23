@@ -104,7 +104,7 @@ public class BerufskollegFachklassenManager {
 	public long getVersion(final Schulgliederung gliederung) {
 		if (gliederung.daten.bkIndex == null)
 			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.");
-			final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
+		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(gliederung.daten.bkIndex);
 		if (katIndex == null)
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.");
 		return katIndex.version;
