@@ -18,6 +18,7 @@ import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.data.schueler.DBUtilsSchueler;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -26,7 +27,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.Schueler;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -42,8 +42,7 @@ public final class GostSchueler {
 	}
 
 	/**
-	 * Bestimmt für den übergegebenen Schüler das zugehörige Abiturjahr, sofern sich der Schüler
-	 * bereits in der gymnasialen Oberstufe befindet.
+	 * Bestimmt für den übergegebenen Lernabschnitt eines Schülers das zugehörige Abiturjahr.
 	 *
 	 * @param schulform       die Schulform der Schule des Schülers
 	 * @param lernabschnitt   der aktuelle Lernabschnitt des Schülers
@@ -80,7 +79,7 @@ public final class GostSchueler {
 		if (abschnittSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
 
-		final Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
+		final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
 		// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)
@@ -212,7 +211,7 @@ public final class GostSchueler {
 			if (abschnittSchueler == null)
 				throw OperationError.NOT_FOUND.exception();
 
-			final Sprachendaten sprachendaten = Schueler.getSchuelerSprachendaten(conn, id);
+			final Sprachendaten sprachendaten = DBUtilsSchueler.getSchuelerSprachendaten(conn, id);
 
 			// Bestimme alle Lernabschnitte der Oberstufe des Schülers, sortiert nach dem Schuljahr und dem Abschnitt
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryNamed("DTOSchuelerLernabschnittsdaten.schueler_id", id, DTOSchuelerLernabschnittsdaten.class)

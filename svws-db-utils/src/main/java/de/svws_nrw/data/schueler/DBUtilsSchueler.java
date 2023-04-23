@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils;
+package de.svws_nrw.data.schueler;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * von Schülern zur Verfügung.
  */
-public final class Schueler {
+public final class DBUtilsSchueler {
 
-	private Schueler() {
-		throw new IllegalStateException("Instantiation of " + Schueler.class.getName() + " not allowed");
+	private DBUtilsSchueler() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsSchueler.class.getName() + " not allowed");
 	}
 
 	/**
