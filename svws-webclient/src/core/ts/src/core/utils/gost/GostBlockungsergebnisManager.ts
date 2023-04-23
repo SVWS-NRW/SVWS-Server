@@ -207,9 +207,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			if (this._map_kursID_kurs.put(eKurs.id, eKurs) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
-			if (this._map_kursID_schienen.put(eKurs.id, new HashSet<GostBlockungsergebnisSchiene>()) !== null)
+			const newSetSchiene : HashSet<GostBlockungsergebnisSchiene> | null = new HashSet();
+			if (this._map_kursID_schienen.put(eKurs.id, newSetSchiene) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
-			if (this._map_kursID_schuelerIDs.put(eKurs.id, new HashSet<number>()) !== null)
+			const newSetSchueler : HashSet<number> | null = new HashSet();
+			if (this._map_kursID_schuelerIDs.put(eKurs.id, newSetSchueler) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
 			if (!this._map_fachID_kurse.containsKey(eKurs.fachID))
 				this._map_fachID_kurse.put(eKurs.fachID, new ArrayList());
@@ -239,7 +241,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const strErrorDoppelteSchuelerID : string | null = "Schüler-ID %d doppelt!";
 		for (const gSchueler of this._parent.daten().schueler) {
 			const eSchuelerID : number = gSchueler.id;
-			if (this._map_schuelerID_kurse.put(eSchuelerID, new HashSet<GostBlockungsergebnisKurs>()) !== null)
+			const newSetKurse : HashSet<GostBlockungsergebnisKurs> | null = new HashSet();
+			if (this._map_schuelerID_kurse.put(eSchuelerID, newSetKurse) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
 			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
