@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed } from 'vue';
+	import { ref, watch } from 'vue';
 
 	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined | 'indeterminate';
@@ -21,18 +21,16 @@
 		bw: false
 	});
 
+	const tmp = ref<ModelValue>(props.modelValue);
+
+	watch(()=>tmp.value, (neu)=>
+		emit("update:modelValue", neu)
+	);
+
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: ModelValue): void;
 	}>();
 
-	const model = computed({
-		get(): ModelValue {
-			return props.modelValue ?? undefined;
-		},
-		set(value: ModelValue) {
-			emit("update:modelValue", value);
-		}
-	});
 </script>
 
 <template>
@@ -40,21 +38,21 @@
 		:class="{
 			'checkbox--disabled': disabled,
 			'checkbox--statistics': statistics,
-			'checkbox--checked': modelValue,
+			'checkbox--checked': tmp,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': modelValue === undefined || modelValue === 'indeterminate',
+			'checkbox--indeterminate': tmp === undefined || tmp === 'indeterminate',
 			'checkbox--bw': bw,
 		}">
-		<input v-model="model" class="checkbox--control" type="checkbox" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<svws-ui-icon v-if="modelValue === 'indeterminate' && typeof modelValue !== 'undefined'" role="checkbox">
+		<input class="checkbox--control" type="checkbox" v-model="tmp" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
+		<svws-ui-icon v-if="tmp === 'indeterminate' && typeof tmp !== 'undefined'" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="modelValue" role="checkbox" :class="{'text-primary': !bw}">
+		<svws-ui-icon v-else-if="tmp" role="checkbox" :class="{'text-primary': !bw}">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="!modelValue" role="checkbox">
+		<svws-ui-icon v-else-if="!tmp" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 			<i-ri-checkbox-blank-circle-line v-if="circle" />
 		</svws-ui-icon>

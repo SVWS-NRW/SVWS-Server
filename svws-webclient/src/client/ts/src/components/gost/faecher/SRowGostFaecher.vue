@@ -1,7 +1,7 @@
 <template>
 	<div class="data-table__tr data-table__tbody__tr" role="row" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="data-table__td">
-			<div class="data-table__td-content" :title="fach.kuerzelAnzeige">
+			<div class="data-table__td-content" :title="fach.kuerzelAnzeige || undefined">
 				{{ fach.kuerzelAnzeige }}
 			</div>
 		</div>
@@ -33,60 +33,48 @@
 			</div>
 			<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': ef_moeglich } ]"
-			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef1_set">
+		<div role="cell" class="data-table__td data-table__td__align-center"
+			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichEF1" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="ef1" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ { 'cursor-pointer': ef_moeglich } ]"
-			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="ef2_set">
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate"
+			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichEF2" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="ef2" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
-			@click="q11_set">
+		<div role="cell" class="data-table__td data-table__td__align-center">
 			<span class="faecher-toggle--checkbox">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ11" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="q11" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ 'cursor-pointer' ]"
-			@click="q12_set">
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 			<span class="faecher-toggle--checkbox">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ12" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="q12" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ 'cursor-pointer' ]"
-			@click="q21_set">
+		<div role="cell" class="data-table__td data-table__td__align-center">
 			<span class="faecher-toggle--checkbox">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ21" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="q21" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="[ 'cursor-pointer' ]"
-			@click="q22_set">
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 			<span class="faecher-toggle--checkbox">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichQ22" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="q22" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_gk_moeglich } ]"
-			:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_gk_set">
+		<div role="cell" class="data-table__td data-table__td__align-center"
+			:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
 			<span class="faecher-toggle--checkbox" v-if="abi_gk_moeglich">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichAbiGK" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="abiGK" circle bw />
 			</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': abi_lk_moeglich } ]"
-			:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'rgb(var(--color-gray))' }" @click="abi_lk_set">
+		<div role="cell" class="data-table__td data-table__td__align-center"
+			:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
 			<span class="faecher-toggle--checkbox" v-if="abi_lk_moeglich">
-				<i-ri-checkbox-circle-fill v-if="fach.istMoeglichAbiLK" />
-				<i-ri-checkbox-blank-circle-line v-else class="opacity-25" />
+				<svws-ui-checkbox v-model="abiLK" circle bw />
 			</span>
 		</div>
 	</div>
@@ -158,45 +146,45 @@
 		return bool ? "\u2705" : "\u274C";
 	}
 
-	async function ef1_set() {
-		if (!ef_moeglich.value)
-			return;
-		await doPatch({ istMoeglichEF1: !props.fach.istMoeglichEF1 });
-	}
+	const ef1 = computed({
+		get: () => props.fach.istMoeglichEF1,
+		set: (value) => void doPatch({ istMoeglichEF1: !props.fach.istMoeglichEF1 })
+	})
 
-	async function ef2_set() {
-		if (!ef_moeglich.value)
-			return;
-		await doPatch({ istMoeglichEF2: !props.fach.istMoeglichEF2 });
-	}
+	const ef2 = computed({
+		get: () => props.fach.istMoeglichEF2,
+		set: (value) => void doPatch({ istMoeglichEF2: !props.fach.istMoeglichEF2 })
+	})
 
-	async function q11_set() {
-		await doPatch({ istMoeglichQ11: !props.fach.istMoeglichQ11 });
-	}
+	const q11 = computed({
+		get: () => props.fach.istMoeglichQ11,
+		set: (value) => void doPatch({ istMoeglichQ11: !props.fach.istMoeglichQ11 })
+	})
 
-	async function q12_set() {
-		await doPatch({ istMoeglichQ12: !props.fach.istMoeglichQ12 });
-	}
+	const q12 = computed({
+		get: () => props.fach.istMoeglichQ12,
+		set: (value) => void doPatch({ istMoeglichQ12: !props.fach.istMoeglichQ12 })
+	})
 
-	async function q21_set() {
-		await doPatch({ istMoeglichQ21: !props.fach.istMoeglichQ21 });
-	}
+	const q21 = computed({
+		get: () => props.fach.istMoeglichQ21,
+		set: (value) => void doPatch({ istMoeglichQ21: !props.fach.istMoeglichQ21 })
+	})
 
-	async function q22_set() {
-		await doPatch({ istMoeglichQ22: !props.fach.istMoeglichQ22 });
-	}
+	const q22 = computed({
+		get: () => props.fach.istMoeglichQ22,
+		set: (value) => void doPatch({ istMoeglichQ22: !props.fach.istMoeglichQ22 })
+	})
 
-	async function abi_gk_set() {
-		if (!abi_gk_moeglich.value)
-			return;
-		await doPatch({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK });
-	}
+	const abiGK = computed({
+		get: () => props.fach.istMoeglichAbiGK,
+		set: (value) => void doPatch({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK })
+	})
 
-	async function abi_lk_set() {
-		if (!abi_gk_moeglich.value)
-			return;
-		await doPatch({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK });
-	}
+	const abiLK = computed({
+		get: () => props.fach.istMoeglichAbiLK,
+		set: (value) => void doPatch({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK })
+	})
 
 	async function set_pjk_stunden() {
 		if (!istPJK(props.fach))
