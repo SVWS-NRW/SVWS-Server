@@ -28,7 +28,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public static readonly ALGORITHMUS_NORMAL : number = 1;
 
 	/**
-	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 *  Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
 	 *  Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public static readonly ALGORITHMUS_FAECHERWEISE : number = 2;
@@ -97,7 +97,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	}
 
 	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
 	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public set_algorithmus_faecherweise() : void {
@@ -114,6 +114,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Liefert den LK-GK-Modus.
+	 *
 	 * @return den LK-GK-Modus.
 	 */
 	public get_lk_gk_modus() : number {
@@ -135,14 +136,14 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
+	 * Dieser LK-GK-Modus blockt nur die Kursarten, die nicht LK sind.
 	 */
 	public set_lk_gk_modus_nur_gk() : void {
 		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK;
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach alle Kursarten, die nicht LK sind.
 	 */
 	public set_lk_gk_modus_getrennt() : void {
 		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT;
@@ -150,6 +151,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 *
 	 * @return TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
 	public get_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin() : boolean {
@@ -158,6 +160,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 *
 	 * @param pAktivieren TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
 	public set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(pAktivieren : boolean) : void {
@@ -166,6 +169,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 *
 	 * @return TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
 	 */
 	public get_regel_bevorzuge_gleiche_kursschienen_pro_termin() : boolean {
@@ -174,7 +178,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	/**
 	 * TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
-	 * @param pAktivieren TRUETRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 * @param pAktivieren TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
 	 */
 	public set_regel_bevorzuge_gleiche_kursschienen_pro_termin(pAktivieren : boolean) : void {
 		this.regel_bevorzuge_gleiche_kursschienen_pro_termin = pAktivieren;

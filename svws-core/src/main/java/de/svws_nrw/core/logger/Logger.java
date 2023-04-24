@@ -113,7 +113,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der angebenen Einrückung.
+	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der angegebenen Einrückung.
 	 *
 	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
@@ -125,7 +125,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der angebenen Einrückung
+	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der angegebenen Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
 	 *
 	 * @param level    das Log-Level des zu loggenden Textes
@@ -138,7 +138,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung.
+	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung.
 	 *
 	 * @param level    das Log-Level des zu loggenden Textes
 	 * @param text     der Text
@@ -149,7 +149,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung
+	 * Loggt den angegebenen Text mit dem angegebenen Log-Level und der Standard-Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
 	 *
 	 *
@@ -162,7 +162,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung.
+	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der angegebenen Einrückung.
 	 *
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
 	 * @param text     der Text
@@ -173,7 +173,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem Standard-Log-Level und der angebenen Einrückung
+	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der angegebenen Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
 	 *
 	 * @param indent   die Einrückung, die bei dem Text verwendet werden soll
@@ -185,7 +185,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung.
+	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der Standard-Einrückung.
 	 *
 	 * @param text     der Text
 	 */
@@ -195,7 +195,7 @@ public class Logger {
 
 
 	/**
-	 * Loggt den angebenen Text mit dem Standard-Log-Level und der Standard-Einrückung
+	 * Loggt den angegebenen Text mit dem Standard-Log-Level und der Standard-Einrückung
 	 * und gibt an, dass am Ende eine neue Zeile angefangen werden soll.
 	 *
 	 * @param text     der Text

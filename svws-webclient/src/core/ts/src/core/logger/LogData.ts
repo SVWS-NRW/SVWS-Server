@@ -61,7 +61,7 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 	}
 
 	/**
-	 * Erhögt die Einrückung bei der Ausgabe, um den angebenen Wert.
+	 * Erhöht die Einrückung bei der Ausgabe, um den angegebenen Wert.
 	 *
 	 * @param indent   der Wert, um den die Einrückung erhöht wird.
 	 */

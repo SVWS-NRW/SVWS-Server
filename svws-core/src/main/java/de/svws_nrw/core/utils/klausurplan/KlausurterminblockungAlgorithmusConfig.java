@@ -3,8 +3,10 @@ package de.svws_nrw.core.utils.klausurplan;
 import java.util.List;
 
 /**
- * Konfiguration des Algorithmus. Die GUI muss diese Daten definieren und dem Algorithmus beim
- * Aufruf der Methode {@link KlausurblockungSchienenAlgorithmus#berechne(List, long)} übergeben.
+ * Konfiguration des Algorithmus.
+ *
+ * Die GUI muss diese Daten definieren und dem Algorithmus beim Aufruf der Methode
+ * {@link KlausurterminblockungAlgorithmus#berechne(List, KlausurterminblockungAlgorithmusConfig)} übergeben.
  *
  * @author Benjamin A. Bartsch
  */
@@ -36,7 +38,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public static final int ALGORITHMUS_NORMAL = 1;
 
 	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
 	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public static final int ALGORITHMUS_FAECHERWEISE = 2;
@@ -99,7 +101,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	}
 
 	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind (LK+GK).
+	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
 	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
 	 */
 	public void set_algorithmus_faecherweise() {
@@ -116,6 +118,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Liefert den LK-GK-Modus.
+	 *
 	 * @return den LK-GK-Modus.
 	 */
 	public int get_lk_gk_modus() {
@@ -137,14 +140,14 @@ public class KlausurterminblockungAlgorithmusConfig {
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
+	 * Dieser LK-GK-Modus blockt nur die Kursarten, die nicht LK sind.
 	 */
 	public void set_lk_gk_modus_nur_gk() {
 		lk_gk_modus = LK_GK_MODUS_NUR_GK;
 	}
 
 	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
+	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach alle Kursarten, die nicht LK sind.
 	 */
 	public void set_lk_gk_modus_getrennt() {
 		lk_gk_modus = LK_GK_MODUS_GETRENNT;
@@ -152,6 +155,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Liefert TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 *
 	 * @return TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
 	public boolean get_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin() {
@@ -160,6 +164,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
+	 *
 	 * @param pAktivieren TRUE, falls Kurse mit gleicher Lehrkraft+Fach+Kursart im selben Termin landen sollen.
 	 */
 	public void set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(final boolean pAktivieren) {
@@ -168,6 +173,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * Liefert TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
+	 *
 	 * @return TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert ist.
 	 */
 	public boolean get_regel_bevorzuge_gleiche_kursschienen_pro_termin() {
@@ -176,7 +182,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	/**
 	 * TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
-	 * @param pAktivieren TRUETRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
+	 * @param pAktivieren TRUE, falls die Regel "bevorzuge gleiche Kursschienen pro Termin" aktiviert werden soll.
 	 */
 	public void set_regel_bevorzuge_gleiche_kursschienen_pro_termin(final boolean pAktivieren) {
 		this.regel_bevorzuge_gleiche_kursschienen_pro_termin = pAktivieren;

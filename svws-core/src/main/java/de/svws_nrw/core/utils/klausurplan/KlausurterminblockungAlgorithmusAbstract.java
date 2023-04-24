@@ -19,7 +19,8 @@ public abstract class KlausurterminblockungAlgorithmusAbstract {
 	/** Die aktuellen Blockungsdaten. Dieses Objekt dient zur Manipulation der Daten während des Blockungsvorganges. */
 	protected final @NotNull KlausurterminblockungDynDaten _dynDaten;
 
-	/** Der Konstruktor.
+	/**
+	 * Der Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.

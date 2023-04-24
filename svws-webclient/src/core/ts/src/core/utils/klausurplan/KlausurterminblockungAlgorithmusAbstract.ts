@@ -16,7 +16,7 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 
 
 	/**
-	 *Der Konstruktor.
+	 * Der Konstruktor.
 	 *
 	 * @param pRandom   Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pDynDaten Die aktuellen Blockungsdaten.
