@@ -47,13 +47,13 @@ public enum Note {
 	/** Die Note "gut minus" mit 10 Punkten.*/
 	GUT_MINUS(10, 201, 10, "2-", "gut (minus)", "gut", null, null),
 
-	/** Die Note "gut" mit 111 Punkten.*/
+	/** Die Note "gut" mit 11 Punkten.*/
 	GUT(11, 200, 11, "2", "gut", "gut", null, null),
 
 	/** Die Note "gut plus" mit 12 Punkten.*/
 	GUT_PLUS(12, 199, 12, "2+", "gut (plus)", "gut", null, null),
 
-	/** Die Note "sehr gut mnus" mit 13 Punkten.*/
+	/** Die Note "sehr gut minus" mit 13 Punkten.*/
 	SEHR_GUT_MINUS(13, 101, 13, "1-", "sehr gut (minus)", "sehr gut", null, null),
 
 	/** Die Note "sehr gut" mit 14 Punkten.*/
