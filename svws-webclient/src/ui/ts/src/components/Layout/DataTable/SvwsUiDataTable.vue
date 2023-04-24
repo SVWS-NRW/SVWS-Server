@@ -193,7 +193,7 @@
 
 <script lang="ts" setup>
 	import type { TableHTMLAttributes} from "vue";
-	import {defineComponent, computed, ref, useAttrs} from "vue";
+	import { defineComponent, computed, ref, useAttrs } from "vue";
 
 	import useColumns from "./hooks/useColumns";
 	import useRows from "./hooks/useRows";
@@ -304,7 +304,7 @@
 		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
 	});
 
-	const {isRowClicked, toggleRowClick, setClickedRow} = useClickable({
+	const {isRowClicked, toggleRowClick, setClickedRow } = useClickable({
 		isActive: () => props.clickable,
 		canReset: () => props.allowUnclick,
 		clickedItem: () => props.clicked,

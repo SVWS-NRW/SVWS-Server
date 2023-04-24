@@ -6,32 +6,319 @@
 
 	const data = ref([
 		{
-			id: 1,
-			name: "A",
-			email: "test@web.de",
-			age: 16,
-			isActive: false,
+			"id": "6435185e4d6c9c5ebdb14a65",
+			"email": "shermanjoseph@barkarama.com",
+			"name": "Nicholson",
+			"age": 32,
+			"isActive": true
 		},
 		{
-			id: 2,
-			name: "B",
-			email: "bla@gmx.de",
-			age: 31,
-			isActive: true,
+			"id": "6435185e4199f940e786d831",
+			"email": "nicholsonjoseph@barkarama.com",
+			"name": "Lorraine",
+			"age": 30,
+			"isActive": false
 		},
 		{
-			id: 3,
-			name: "C",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
+			"id": "6435185e0ad9a9f269d37a10",
+			"email": "lorrainejoseph@barkarama.com",
+			"name": "Berta",
+			"age": 28,
+			"isActive": true
 		},
 		{
-			id: 4,
-			name: "D",
-			email: "hallo@gmail.com",
-			age: 49,
-			isActive: true,
+			"id": "6435185e8f64be794ee58fe9",
+			"email": "bertajoseph@barkarama.com",
+			"name": "Neal",
+			"age": 36,
+			"isActive": false
+		},
+		{
+			"id": "6435185e01443306bc959b8a",
+			"email": "nealjoseph@barkarama.com",
+			"name": "Clare",
+			"age": 30,
+			"isActive": true
+		},
+		{
+			"id": "6435185ef54b710b63a6d99e",
+			"email": "clarejoseph@barkarama.com",
+			"name": "Blanche",
+			"age": 35,
+			"isActive": false
+		},
+		{
+			"id": "6435185eedc4d9388d160e95",
+			"email": "blanchejoseph@barkarama.com",
+			"name": "Perry",
+			"age": 31,
+			"isActive": false
+		},
+		{
+			"id": "6435185e5f76ec01a66e8482",
+			"email": "perryjoseph@barkarama.com",
+			"name": "Callahan",
+			"age": 24,
+			"isActive": true
+		},
+		{
+			"id": "6435185ebcb463d402aef799",
+			"email": "callahanjoseph@barkarama.com",
+			"name": "Tonia",
+			"age": 31,
+			"isActive": true
+		},
+		{
+			"id": "6435185ee74583db924c081f",
+			"email": "toniajoseph@barkarama.com",
+			"name": "Roy",
+			"age": 20,
+			"isActive": true
+		},
+		{
+			"id": "6435185e943d4c71e8b24be7",
+			"email": "royjoseph@barkarama.com",
+			"name": "Cummings",
+			"age": 27,
+			"isActive": false
+		},
+		{
+			"id": "6435185e39a422abe50804e7",
+			"email": "cummingsjoseph@barkarama.com",
+			"name": "Mason",
+			"age": 36,
+			"isActive": true
+		},
+		{
+			"id": "6435185e3ba677291de5e885",
+			"email": "masonjoseph@barkarama.com",
+			"name": "Merritt",
+			"age": 20,
+			"isActive": false
+		},
+		{
+			"id": "6435185ecd5bf8d1689fac1c",
+			"email": "merrittjoseph@barkarama.com",
+			"name": "Mullins",
+			"age": 27,
+			"isActive": false
+		},
+		{
+			"id": "6435185e01d97098df50b992",
+			"email": "mullinsjoseph@barkarama.com",
+			"name": "Nona",
+			"age": 25,
+			"isActive": false
+		},
+		{
+			"id": "6435185ef3da44fb935a003d",
+			"email": "nonajoseph@barkarama.com",
+			"name": "Lydia",
+			"age": 26,
+			"isActive": false
+		},
+		{
+			"id": "6435185ef2ed2f7560ab6d6b",
+			"email": "lydiajoseph@barkarama.com",
+			"name": "Klein",
+			"age": 36,
+			"isActive": false
+		},
+		{
+			"id": "6435185ebe5094e68cc2b73d",
+			"email": "kleinjoseph@barkarama.com",
+			"name": "Sloan",
+			"age": 37,
+			"isActive": false
+		},
+		{
+			"id": "6435185e910a3bee912069ff",
+			"email": "sloanjoseph@barkarama.com",
+			"name": "Mcdonald",
+			"age": 32,
+			"isActive": true
+		},
+		{
+			"id": "6435185e5e200ebd6fd073ca",
+			"email": "mcdonaldjoseph@barkarama.com",
+			"name": "Cindy",
+			"age": 25,
+			"isActive": false
+		},
+		{
+			"id": "6435185e33f27433c3fd2b0c",
+			"email": "cindyjoseph@barkarama.com",
+			"name": "Johns",
+			"age": 31,
+			"isActive": true
+		},
+		{
+			"id": "6435185eee682bb5a20b02ce",
+			"email": "johnsjoseph@barkarama.com",
+			"name": "Potter",
+			"age": 40,
+			"isActive": true
+		},
+		{
+			"id": "6435185ea4822b8213cd99df",
+			"email": "potterjoseph@barkarama.com",
+			"name": "Francesca",
+			"age": 31,
+			"isActive": false
+		},
+		{
+			"id": "6435185ebefe8ed62a414003",
+			"email": "francescajoseph@barkarama.com",
+			"name": "Addie",
+			"age": 34,
+			"isActive": false
+		},
+		{
+			"id": "6435185e6e982e2c8590fd9e",
+			"email": "addiejoseph@barkarama.com",
+			"name": "Shields",
+			"age": 33,
+			"isActive": false
+		},
+		{
+			"id": "6435185e8a759ad1effb47a0",
+			"email": "shieldsjoseph@barkarama.com",
+			"name": "Rice",
+			"age": 25,
+			"isActive": true
+		},
+		{
+			"id": "6435185eb1cf99ac826b269e",
+			"email": "ricejoseph@barkarama.com",
+			"name": "Thornton",
+			"age": 37,
+			"isActive": false
+		},
+		{
+			"id": "6435185e340497a2b2f1e06a",
+			"email": "thorntonjoseph@barkarama.com",
+			"name": "Lucinda",
+			"age": 20,
+			"isActive": true
+		},
+		{
+			"id": "6435185e3ddcd5200d6b9287",
+			"email": "lucindajoseph@barkarama.com",
+			"name": "Verna",
+			"age": 32,
+			"isActive": true
+		},
+		{
+			"id": "6435185ee8fb73f2e4140d04",
+			"email": "vernajoseph@barkarama.com",
+			"name": "Gomez",
+			"age": 39,
+			"isActive": false
+		},
+		{
+			"id": "6435185e189beec86164b4a0",
+			"email": "gomezjoseph@barkarama.com",
+			"name": "Bender",
+			"age": 24,
+			"isActive": true
+		},
+		{
+			"id": "6435185ebc7f058ff1179f45",
+			"email": "benderjoseph@barkarama.com",
+			"name": "Holloway",
+			"age": 40,
+			"isActive": true
+		},
+		{
+			"id": "6435185e959a6b5f8dbb5221",
+			"email": "hollowayjoseph@barkarama.com",
+			"name": "Tammi",
+			"age": 28,
+			"isActive": true
+		},
+		{
+			"id": "6435185e0d57aed234dd295f",
+			"email": "tammijoseph@barkarama.com",
+			"name": "Yvette",
+			"age": 28,
+			"isActive": false
+		},
+		{
+			"id": "6435185e3550ce13c0c9e1e4",
+			"email": "yvettejoseph@barkarama.com",
+			"name": "Simpson",
+			"age": 40,
+			"isActive": true
+		},
+		{
+			"id": "6435185eb8e0cd05d2316349",
+			"email": "simpsonjoseph@barkarama.com",
+			"name": "Gibson",
+			"age": 29,
+			"isActive": false
+		},
+		{
+			"id": "6435185e8eaebf8089ef6d4d",
+			"email": "gibsonjoseph@barkarama.com",
+			"name": "Moran",
+			"age": 37,
+			"isActive": true
+		},
+		{
+			"id": "6435185e5a8633746f8907c1",
+			"email": "moranjoseph@barkarama.com",
+			"name": "Louella",
+			"age": 24,
+			"isActive": true
+		},
+		{
+			"id": "6435185edd98e2770ebd9f6e",
+			"email": "louellajoseph@barkarama.com",
+			"name": "Dunlap",
+			"age": 22,
+			"isActive": false
+		},
+		{
+			"id": "6435185e3c2b646609432164",
+			"email": "dunlapjoseph@barkarama.com",
+			"name": "Deidre",
+			"age": 25,
+			"isActive": false
+		},
+		{
+			"id": "6435185e9f9cf05d628b7c27",
+			"email": "deidrejoseph@barkarama.com",
+			"name": "Guadalupe",
+			"age": 20,
+			"isActive": false
+		},
+		{
+			"id": "6435185e6455ddff03029246",
+			"email": "guadalupejoseph@barkarama.com",
+			"name": "Adriana",
+			"age": 28,
+			"isActive": true
+		},
+		{
+			"id": "6435185e9ab71ac00a7e8fa8",
+			"email": "adrianajoseph@barkarama.com",
+			"name": "Penny",
+			"age": 26,
+			"isActive": true
+		},
+		{
+			"id": "6435185e90502fd227c6fde7",
+			"email": "pennyjoseph@barkarama.com",
+			"name": "Carney",
+			"age": 23,
+			"isActive": false
+		},
+		{
+			"id": "6435185ed708fa83a012c554",
+			"email": "carneyjoseph@barkarama.com",
+			"name": "Rosie",
+			"age": 19,
+			"isActive": false
 		}
 	]);
 	const dataCollapsible = ref([
@@ -40,11 +327,35 @@
 		}
 	]);
 	const set = new Set<DataTableItem>();
-	set.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
-	set.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
+	set.add({
+		"id": "643517f82c0533f1cc096130",
+		"email": "perezjoseph@barkarama.com",
+		"name": "Kathie",
+		"age": 38,
+		"isActive": false
+	});
+	set.add({
+		"id": "643517f86d23cd36ad9e1d1f",
+		"email": "kathiejoseph@barkarama.com",
+		"name": "Cherry",
+		"age": 34,
+		"isActive": false
+	});
 	const setReactive = reactive(new Set<DataTableItem>());
-	setReactive.add({ id: 1, name: "A", email: "test@web.de", age: 16, isActive: false });
-	setReactive.add({ id: 2, name: "B", email: "bla@gmx.de", age: 31, isActive: true });
+	setReactive.add({
+		"id": "643517f82c0533f1cc096130",
+		"email": "perezjoseph@barkarama.com",
+		"name": "Kathie",
+		"age": 38,
+		"isActive": false
+	});
+	setReactive.add({
+		"id": "643517f86d23cd36ad9e1d1f",
+		"email": "kathiejoseph@barkarama.com",
+		"name": "Cherry",
+		"age": 34,
+		"isActive": false
+	});
 	const columns = ref([
 		{
 			key: "id",
@@ -99,7 +410,7 @@
 		{ label: "Edit", action: "edit" },
 	];
 
-	const clickedRow = ref(data.value[0]);
+	const clickedRow = ref(data.value[data.value.length - 1]);
 	const selectedRows2 = ref([]);
 	const selectedRows3 = ref([]);
 	const selectedRows4 = ref([]);

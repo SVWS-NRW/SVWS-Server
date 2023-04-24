@@ -1,4 +1,6 @@
-import { computed, toRaw } from 'vue'
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { computed, onUpdated, toRaw, onMounted } from 'vue'
+import { useDebounceFn } from '@vueuse/core';
 
 import type { DataTableRow, DataTableItem } from '../types'
 
@@ -35,6 +37,25 @@ export default function useClickable({ clickedItem: data, emit, isActive, canRes
 		if (!isActive)
 			return;
 		emit(row.source);
+	}
+
+	onMounted(scrollToClickedElement);
+	onUpdated(useDebounceFn(scrollToClickedElement, 250));
+
+	function isInView(el: Element) {
+		console.log("so oft")
+		const box = el.getBoundingClientRect();
+		return box.top < window.innerHeight && box.bottom >= 0;
+	}
+
+	function scrollToClickedElement() {
+		const clickedElementHtml = document.querySelector('.data-table__tr--clicked');
+		const scrollOptions: ScrollIntoViewOptions = { behavior: "smooth", block: "center" };
+		if (clickedElementHtml) {
+			// @ts-ignore
+			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function") clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions)
+		 	else if(!isInView(clickedElementHtml)) clickedElementHtml.scrollIntoView(scrollOptions);
+		}
 	}
 
 	return { isRowClicked, toggleRowClick, setClickedRow };
