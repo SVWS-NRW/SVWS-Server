@@ -23,10 +23,8 @@ export abstract class JavaString {
 	}
 
 	public static format(s : string, ...args: any[]): string {
-		var i = -1;
+		let i = -1;
 		function handleParam(expression: string, ...formatParams: any[]) : string {
-			if (formatParams.length !== 5)
-				throw new IllegalFormatException();
 			if (expression == '%%')
 				return '%';
 			// Bestimme den Wert, der für den Parameter eingesetzt wird
@@ -38,7 +36,7 @@ export abstract class JavaString {
 			const paddingSize = parseInt(formatParams[1]);
 			const precision = formatParams[2] === undefined ? undefined : parseInt(formatParams[2].substr(1));
 			const base = formatParams[3] === undefined ? undefined : parseInt(formatParams[3].substr(1));
-			var result : string = "";
+			let result : string = "";
 			switch (formatParams[4]) {
 				case 's':
 					result = typeof(replacement) === 'object' ? JSON.stringify(replacement) : replacement.toString(base);
@@ -78,12 +76,12 @@ export abstract class JavaString {
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {
-			const cmp = ca[i].localeCompare(cb[i].valueOf(), undefined, { sensitivity: 'accent' });
+			const cmp = ca[i].localeCompare(cb[i], undefined, { sensitivity: 'accent' });
 			if (cmp !== 0) {
-				const cpa = ca[i].codePointAt(0);
+				const cpa = ca[i].toLocaleLowerCase().codePointAt(0);
 				if (cpa === undefined)
 					return 1;
-				const cpb = cb[i].codePointAt(0);
+				const cpb = cb[i].toLocaleLowerCase().codePointAt(0);
 				if (cpb === undefined)
 					return -1;
 				return cpa - cpb;
@@ -99,7 +97,7 @@ export abstract class JavaString {
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {
-			const cmp = ca[i].localeCompare(cb[i].valueOf(), undefined, { sensitivity: 'variant' });
+			const cmp = ca[i].localeCompare(cb[i], undefined, { sensitivity: 'variant' });
 			if (cmp !== 0) {
 				const cpa = ca[i].codePointAt(0);
 				if (cpa === undefined)
