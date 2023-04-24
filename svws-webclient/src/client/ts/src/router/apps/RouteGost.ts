@@ -14,6 +14,7 @@ import { routeGostFaecher } from "./gost/RouteGostFaecher";
 import { routeGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
 import { routeGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
+import { routeGostLaufbahnplanung } from "./gost/RouteGostLaufbahnplanung";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -28,6 +29,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		super.children = [
 			routeGostJahrgangsdaten,
 			routeGostFaecher,
+			routeGostLaufbahnplanung,
 			routeGostFachwahlen,
 			routeGostKursplanung,
 			routeGostKlausurplanung

@@ -43,7 +43,6 @@ export default function useClickable({ clickedItem: data, emit, isActive, canRes
 	onUpdated(useDebounceFn(scrollToClickedElement, 250));
 
 	function isInView(el: Element) {
-		console.log("so oft")
 		const box = el.getBoundingClientRect();
 		return box.top < window.innerHeight && box.bottom >= 0;
 	}

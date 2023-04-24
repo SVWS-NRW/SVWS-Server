@@ -1,4 +1,4 @@
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs } from "@svws-nrw/svws-core";
 import type { Config } from "~/components/Config";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
@@ -15,7 +15,7 @@ export interface GostKursplanungProps {
 	patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
 	addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 	removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
-	combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs) => Promise<void>;
+	combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
 	splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
