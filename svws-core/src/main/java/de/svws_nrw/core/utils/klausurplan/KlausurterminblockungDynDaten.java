@@ -11,6 +11,7 @@ import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,6 +23,9 @@ public class KlausurterminblockungDynDaten {
 
 	/** Ein Maximal-Wert für die maximale Anzahl an Terminen. */
 	private static final int MAX_TERMINE = 1000;
+
+	/** Ein {@link Logger}-Objekt für Debug-Zwecke. */
+	private final @NotNull Logger _logger;
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
@@ -61,11 +65,13 @@ public class KlausurterminblockungDynDaten {
 	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur,
 	 * welche als Basis für alle Algorithmen zur schnellen Manipulation dient.
 	 *
+	 * @param pLogger Ein {@link Logger}-Objekt für Debug-Zwecke.
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
-	public KlausurterminblockungDynDaten(final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	public KlausurterminblockungDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+		_logger = pLogger;
 		_random = pRandom;
 
 		initialisiereMapKlausuren(pInput);
@@ -86,20 +92,20 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void checkKlausurgruppenOrException() {
-		// TODO BAR genauere Meldung der Exception
-		for (final @NotNull ArrayList<@NotNull Integer> gruppe : _klausurGruppen) {
+		for (final @NotNull ArrayList<@NotNull Integer> gruppe : _klausurGruppen)
 			for (final int nr1 : gruppe)
 				for (final int nr2 : gruppe)
 					if (_verboten[nr1][nr2])
-						throw new UserNotificationException("Klausurgruppe hat einen Schülerkonflikt!");
-		}
+						throw new UserNotificationException("Die aktuelle Konfiguration führt zu einer Klausurgruppe, in der mindestens ein S. doppelt ist!");
+	}
+
+	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausur pGostKursklausur) {
+		return DeveloperNotificationException.checkNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", _mapKlausurZuNummer.get(pGostKursklausur.id));
 	}
 
 	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
-
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 			final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();
 			gruppe.add(klausurNr);
 			_klausurGruppen.add(gruppe);
@@ -108,9 +114,9 @@ public class KlausurterminblockungDynDaten {
 
 	private void initialisiereKlausurgruppenFaecherweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapFachZuKlausurGruppe = new HashMap<>();
+
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 
 			final long fachID = gostKursklausur.idFach;
 			if (fachID < 0) {
@@ -133,9 +139,9 @@ public class KlausurterminblockungDynDaten {
 
 	private void initialisiereKlausurgruppenSchienenweise(final @NotNull List<@NotNull GostKursklausur> pInput) {
 		final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Integer>> mapSchieneZuKlausurGruppe = new HashMap<>();
+
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
-			final Integer klausurNr = _mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr == null) throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id);
+			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 
 			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
 			if (schienenID < 0) {
@@ -157,19 +163,18 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-		// pConfig.set_algorithmus_faecherweise(); // TODO BAR remove fake algorithm
 
 		switch (pConfig.get_algorithmus()) {
-			// Jede Gruppe besteht aus einer einzelnen Klausur
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL:
+				// Jede Gruppe besteht aus einer einzelnen Klausur
 				initialisiereKlausurgruppenNormal(pInput);
 				break;
-			// Jede Gruppe besteht aus allen Klausuren des selben Faches.
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE:
+				// Jede Gruppe besteht aus allen Klausuren des selben Faches.
 				initialisiereKlausurgruppenFaecherweise(pInput);
 				break;
-			// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:
+				// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 				initialisiereKlausurgruppenSchienenweise(pInput);
 				break;
 			default:
@@ -408,14 +413,9 @@ public class KlausurterminblockungDynDaten {
 		if (_terminAnzahl > terminAnzahlX) return false;
 
 		// Kriterium 2: Besser, wenn mehr Paare bevorzugt
-		/*int bevorzugt = gibSchienenBevorzugt(_klausurZuSchiene);
-		int bevorzugtX = gibSchienenBevorzugt(klausurZuSchieneX);
-		if (bevorzugt > bevorzugtX) return true;
-		if (bevorzugt < bevorzugtX) return false;
-		 */
 
 		// Kriterium 3: Besser ist, wenn ein Termin möglichst wenig Klausuren hat.
-		final int[] histogramm = new int[_terminAnzahl]; // TODO BAR als Methode
+		final int[] histogramm = new int[_terminAnzahl];
 		final int[] histogrammX = new int[_terminAnzahl];
 		for (int i = 0; i < _klausurenAnzahl; i++) {
 			histogramm[_klausurZuTermin[i]]++;
@@ -424,7 +424,7 @@ public class KlausurterminblockungDynDaten {
 
 		int minHisto = _klausurenAnzahl;
 		int minHistoX = _klausurenAnzahl;
-		for (int i = 0; i < _terminAnzahl; i++) {  // TODO BAR als Methode
+		for (int i = 0; i < _terminAnzahl; i++) {
 			minHisto = Math.min(minHisto, histogramm[i]);
 			minHistoX = Math.min(minHistoX, histogrammX[i]);
 		}
@@ -588,7 +588,7 @@ public class KlausurterminblockungDynDaten {
 	void aktionZustand2Speichern() {
 		_terminAnzahl2 = _terminAnzahl;
 		System.arraycopy(_klausurZuTermin, 0, _klausurZuTermin2, 0, _klausurenAnzahl);
-		//debug("BESSER");
+		_logger.logLn("BESSER");
 	}
 
 	/**
@@ -662,25 +662,24 @@ public class KlausurterminblockungDynDaten {
 	 *
 	 * @param header Überschrift der Debug-Ausgabe.
 	 */
-	void debug(final String header) {
-		System.out.println();
-		System.out.println(header);
+	void debug(final @NotNull String header) {
+		_logger.modifyIndent(+4);
+		_logger.logLn(header);
 
 		for (int s = 0; s < _terminAnzahl; s++) {
-			@NotNull StringBuilder line = new StringBuilder();
-			line.append("    Schiene " + (s + 1) + ": ");
+			_logger.log("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuTermin[nr] == s) {
-					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr);
-					if (gostKlausur == null)
-						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
-					line.append(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
+					final @NotNull GostKursklausur gostKlausur = DeveloperNotificationException.checkNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", _mapNummerZuKlausur.get(nr));
+					_logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
-			System.out.println(line.toString());
+			_logger.logLn("");
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
 			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuTermin[nr] < 0);
+
+		_logger.modifyIndent(-4);
 	}
 
 

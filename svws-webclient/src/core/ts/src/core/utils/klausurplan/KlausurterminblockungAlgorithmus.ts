@@ -114,7 +114,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		const zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.get_max_time_millis();
 		const seed : number = KlausurterminblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
-		const dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(random, pInput, pConfig);
+		const dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(this._logger, random, pInput, pConfig);
 		const algorithmen : Array<KlausurterminblockungAlgorithmusAbstract> = [new KlausurterminblockungAlgorithmusGreedy1(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy1b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy2b(random, dynDaten), new KlausurterminblockungAlgorithmusGreedy3(random, dynDaten)];
 		dynDaten.aktion_Clear_TermineNacheinander_GruppeZufaellig();
 		dynDaten.aktionZustand2Speichern();

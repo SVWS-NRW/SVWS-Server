@@ -77,7 +77,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	public static readonly GUT_MINUS : Note = new Note("GUT_MINUS", 11, 10, 201, 10, "2-", "gut (minus)", "gut", null, null);
 
 	/**
-	 * Die Note "gut" mit 111 Punkten.
+	 * Die Note "gut" mit 11 Punkten.
 	 */
 	public static readonly GUT : Note = new Note("GUT", 12, 11, 200, 11, "2", "gut", "gut", null, null);
 
@@ -87,7 +87,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	public static readonly GUT_PLUS : Note = new Note("GUT_PLUS", 13, 12, 199, 12, "2+", "gut (plus)", "gut", null, null);
 
 	/**
-	 * Die Note "sehr gut mnus" mit 13 Punkten.
+	 * Die Note "sehr gut minus" mit 13 Punkten.
 	 */
 	public static readonly SEHR_GUT_MINUS : Note = new Note("SEHR_GUT_MINUS", 14, 13, 101, 13, "1-", "sehr gut (minus)", "sehr gut", null, null);
 

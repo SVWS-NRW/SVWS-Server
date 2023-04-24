@@ -1,11 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
-import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
 import { List } from '../../../java/util/List';
@@ -18,6 +18,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * Ein Maximal-Wert für die maximale Anzahl an Terminen.
 	 */
 	private static readonly MAX_TERMINE : number = 1000;
+
+	/**
+	 * Ein {@link Logger}-Objekt für Debug-Zwecke.
+	 */
+	private readonly _logger : Logger;
 
 	/**
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
@@ -78,12 +83,14 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur,
 	 * welche als Basis für alle Algorithmen zur schnellen Manipulation dient.
 	 *
+	 * @param pLogger Ein {@link Logger}-Objekt für Debug-Zwecke.
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 * @param pConfig Informationen zur Konfiguration des Algorithmus.
 	 */
-	public constructor(pRandom : Random, pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) {
+	public constructor(pLogger : Logger, pRandom : Random, pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) {
 		super();
+		this._logger = pLogger;
 		this._random = pRandom;
 		this.initialisiereMapKlausuren(pInput);
 		this._klausurenAnzahl = this._mapKlausurZuNummer.size();
@@ -99,19 +106,20 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private checkKlausurgruppenOrException() : void {
-		for (const gruppe of this._klausurGruppen) {
+		for (const gruppe of this._klausurGruppen)
 			for (const nr1 of gruppe)
 				for (const nr2 of gruppe)
 					if (this._verboten[nr1][nr2])
-						throw new UserNotificationException("Klausurgruppe hat einen Schülerkonflikt!")
-		}
+						throw new UserNotificationException("Die aktuelle Konfiguration führt zu einer Klausurgruppe, in der mindestens ein S. doppelt ist!")
+	}
+
+	private gibKlausurNrOrException(pGostKursklausur : GostKursklausur) : number {
+		return DeveloperNotificationException.checkNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", this._mapKlausurZuNummer.get(pGostKursklausur.id));
 	}
 
 	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausur>) : void {
 		for (const gostKursklausur of pInput) {
-			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr === null)
-				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const gruppe : ArrayList<number> = new ArrayList();
 			gruppe.add(klausurNr);
 			this._klausurGruppen.add(gruppe);
@@ -121,9 +129,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private initialisiereKlausurgruppenFaecherweise(pInput : List<GostKursklausur>) : void {
 		const mapFachZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
-			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr === null)
-				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const fachID : number = gostKursklausur.idFach;
 			if (fachID < 0) {
 				const gruppe : ArrayList<number> = new ArrayList();
@@ -144,9 +150,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private initialisiereKlausurgruppenSchienenweise(pInput : List<GostKursklausur>) : void {
 		const mapSchieneZuKlausurGruppe : HashMap<number, ArrayList<number>> = new HashMap();
 		for (const gostKursklausur of pInput) {
-			const klausurNr : number | null = this._mapKlausurZuNummer.get(gostKursklausur.id);
-			if (klausurNr === null)
-				throw new DeveloperNotificationException("Kein Mapping zu gostKursklausur.id = " + gostKursklausur.id)
+			const klausurNr : number = this.gibKlausurNrOrException(gostKursklausur);
 			const schienenID : number = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0];
 			if (schienenID < 0) {
 				const gruppe : ArrayList<number> = new ArrayList();
@@ -557,6 +561,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	aktionZustand2Speichern() : void {
 		this._terminAnzahl2 = this._terminAnzahl;
 		System.arraycopy(this._klausurZuTermin, 0, this._klausurZuTermin2, 0, this._klausurenAnzahl);
+		this._logger.logLn("BESSER");
 	}
 
 	/**
@@ -623,23 +628,21 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 *
 	 * @param header Überschrift der Debug-Ausgabe.
 	 */
-	debug(header : string | null) : void {
-		console.log();
-		console.log(JSON.stringify(header));
+	debug(header : string) : void {
+		this._logger.modifyIndent(+4);
+		this._logger.logLn(header);
 		for (let s : number = 0; s < this._terminAnzahl; s++) {
-			let line : StringBuilder = new StringBuilder();
-			line.append("    Schiene " + (s + 1) + ": ");
+			this._logger.log("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuTermin[nr] === s) {
-					const gostKlausur : GostKursklausur | null = this._mapNummerZuKlausur.get(nr);
-					if (gostKlausur === null)
-						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!")
-					line.append(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
+					const gostKlausur : GostKursklausur = DeveloperNotificationException.checkNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
+					this._logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
 				}
-			console.log(JSON.stringify(line.toString()));
+			this._logger.logLn("");
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuTermin[nr] < 0);
+		this._logger.modifyIndent(-4);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
