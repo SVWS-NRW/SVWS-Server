@@ -84,61 +84,69 @@
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
-	import type { GostFach} from "@svws-nrw/svws-core";
+	import type { GostFach, GostFaecherManager} from "@svws-nrw/svws-core";
 	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
-		fach: GostFach;
+		fachId: number;
 		mapLeitfaecher: Map<number, GostFach>;
+		faecherManager: () => GostFaecherManager;
 	}>();
 
 	async function doPatch(data: Partial<GostFach>) {
-		await props.patchFach(data, props.fach.id);
+		await props.patchFach(data, props.fachId);
 	}
+
+	const fach = computed(()=> {
+		const fach = props.faecherManager().get(props.fachId);
+		if (fach === null)
+			throw new Error("Fehler, es gibt kein gültiges Fach.");
+		return fach;
+	})
 
 	function istPJK(fach: GostFach) : boolean {
 		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
 	}
 
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.fach.projektKursLeitfach1ID === null ? undefined : props.mapLeitfaecher.get(props.fach.projektKursLeitfach1ID),
+		get: () => fach.value.projektKursLeitfach1ID === null ? undefined : props.mapLeitfaecher.get(fach.value.projektKursLeitfach1ID),
 		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.fach.projektKursLeitfach2ID === null ? undefined : props.mapLeitfaecher.get(props.fach.projektKursLeitfach2ID),
+		get: () => fach.value.projektKursLeitfach2ID === null ? undefined : props.mapLeitfaecher.get(fach.value.projektKursLeitfach2ID),
 		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
 	});
 
 	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => props.abiturjahr < 0);
 
-	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(props.fach));
+	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(fach.value));
 
 	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
 		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
 	});
 
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB());
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
 		return !((fg === Fachgruppe.FG_ME) || (fg === Fachgruppe.FG_PX));
 	});
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
+		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 
 	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		if ((fach.getJahrgangAb() === Jahrgaenge.JG_EF) ||
-			((props.fach.biliSprache !== null) && (props.fach.biliSprache !== "D")))
+		const f = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel);
+		if ((f.getJahrgangAb() === Jahrgaenge.JG_EF) ||
+			((fach.value.biliSprache !== null) && (fach.value.biliSprache !== "D")))
 			return false;
-		const fg = fach.getFachgruppe();
+		const fg = f.getFachgruppe();
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 
@@ -147,49 +155,49 @@
 	}
 
 	const ef1 = computed({
-		get: () => props.fach.istMoeglichEF1,
-		set: (value) => void doPatch({ istMoeglichEF1: !props.fach.istMoeglichEF1 })
+		get: () => fach.value.istMoeglichEF1,
+		set: (value) => void doPatch({ istMoeglichEF1: !fach.value.istMoeglichEF1 })
 	})
 
 	const ef2 = computed({
-		get: () => props.fach.istMoeglichEF2,
-		set: (value) => void doPatch({ istMoeglichEF2: !props.fach.istMoeglichEF2 })
+		get: () => fach.value.istMoeglichEF2,
+		set: (value) => void doPatch({ istMoeglichEF2: !fach.value.istMoeglichEF2 })
 	})
 
 	const q11 = computed({
-		get: () => props.fach.istMoeglichQ11,
-		set: (value) => void doPatch({ istMoeglichQ11: !props.fach.istMoeglichQ11 })
+		get: () => fach.value.istMoeglichQ11,
+		set: (value) => void doPatch({ istMoeglichQ11: !fach.value.istMoeglichQ11 })
 	})
 
 	const q12 = computed({
-		get: () => props.fach.istMoeglichQ12,
-		set: (value) => void doPatch({ istMoeglichQ12: !props.fach.istMoeglichQ12 })
+		get: () => fach.value.istMoeglichQ12,
+		set: (value) => void doPatch({ istMoeglichQ12: !fach.value.istMoeglichQ12 })
 	})
 
 	const q21 = computed({
-		get: () => props.fach.istMoeglichQ21,
-		set: (value) => void doPatch({ istMoeglichQ21: !props.fach.istMoeglichQ21 })
+		get: () => fach.value.istMoeglichQ21,
+		set: (value) => void doPatch({ istMoeglichQ21: !fach.value.istMoeglichQ21 })
 	})
 
 	const q22 = computed({
-		get: () => props.fach.istMoeglichQ22,
-		set: (value) => void doPatch({ istMoeglichQ22: !props.fach.istMoeglichQ22 })
+		get: () => fach.value.istMoeglichQ22,
+		set: (value) => void doPatch({ istMoeglichQ22: !fach.value.istMoeglichQ22 })
 	})
 
 	const abiGK = computed({
-		get: () => props.fach.istMoeglichAbiGK,
-		set: (value) => void doPatch({ istMoeglichAbiGK: !props.fach.istMoeglichAbiGK })
+		get: () => fach.value.istMoeglichAbiGK,
+		set: (value) => void doPatch({ istMoeglichAbiGK: !fach.value.istMoeglichAbiGK })
 	})
 
 	const abiLK = computed({
-		get: () => props.fach.istMoeglichAbiLK,
-		set: (value) => void doPatch({ istMoeglichAbiLK: !props.fach.istMoeglichAbiLK })
+		get: () => fach.value.istMoeglichAbiLK,
+		set: (value) => void doPatch({ istMoeglichAbiLK: !fach.value.istMoeglichAbiLK })
 	})
 
 	async function set_pjk_stunden() {
-		if (!istPJK(props.fach))
+		if (!istPJK(fach.value))
 			return;
-		await doPatch({ wochenstundenQualifikationsphase: props.fach.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
+		await doPatch({ wochenstundenQualifikationsphase: fach.value.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
 	}
 
 </script>

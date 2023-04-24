@@ -124,7 +124,7 @@
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
-		faecherManager: GostFaecherManager;
+		faecherManager: () => GostFaecherManager;
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;

@@ -42,17 +42,17 @@
 	import { GostKursart, GostHalbjahr } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		faecherManager: GostFaecherManager;
+		faecherManager: () => GostFaecherManager;
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		kombination: GostJahrgangFachkombination;
 	}>();
 
-	const faecher: ComputedRef<LinkedCollection<GostFach> | undefined> = computed(() => props.faecherManager.faecher());
+	const faecher: ComputedRef<LinkedCollection<GostFach> | undefined> = computed(() => props.faecherManager().faecher());
 	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
 
 	const fach1: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.faecherManager.get(props.kombination.fachID1) || undefined,
+		get: () => props.faecherManager().get(props.kombination.fachID1) || undefined,
 		set: (value) => void props.patchFachkombination({ fachID1: value?.id }, props.kombination.id)
 	});
 
@@ -62,7 +62,7 @@
 	});
 
 	const fach2: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => props.faecherManager.get(props.kombination.fachID2) || undefined,
+		get: () => props.faecherManager().get(props.kombination.fachID2) || undefined,
 		set: (value) => void props.patchFachkombination({ fachID2: value?.id }, props.kombination.id)
 	});
 

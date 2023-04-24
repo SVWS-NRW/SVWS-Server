@@ -145,7 +145,7 @@
 				</div>
 			</template>
 			<template #body>
-				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach="fach" :abiturjahr="abiturjahr" :map-leitfaecher="mapLeitfaecher" :patch-fach="patchFach" />
+				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach-id="fach.id" :abiturjahr="abiturjahr" :map-leitfaecher="mapLeitfaecher" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
@@ -161,13 +161,13 @@
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
-		faecherManager: GostFaecherManager;
+		faecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
 	}>();
 
 	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
-		return props.faecherManager.faecher();
+		return props.faecherManager().faecher();
 	});
 
 	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {

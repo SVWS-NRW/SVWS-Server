@@ -125,7 +125,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public getProps(to: RouteLocationNormalized): GostFaecherProps {
 		return {
-			faecherManager: routeGost.data.faecherManager,
+			faecherManager: () => routeGost.data.faecherManager,
 			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,
 			addFachkombination: this.data.addFachkombination,
