@@ -21,19 +21,19 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Kurs- und Wochenstundensummen der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle<SchildReportingSchuelerGOStLaufbahnplanungSummen, Long> {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungSummen
      */
     DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen() {
         super(SchildReportingSchuelerGOStLaufbahnplanungSummen.class);
-        this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT);
+        this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
+    List<SchildReportingSchuelerGOStLaufbahnplanungSummen> getDaten(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn

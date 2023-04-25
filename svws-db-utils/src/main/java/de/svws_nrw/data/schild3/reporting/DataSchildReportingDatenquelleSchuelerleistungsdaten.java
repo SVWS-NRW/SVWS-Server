@@ -20,20 +20,20 @@ import de.svws_nrw.db.utils.OperationError;
 /**
  * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten"
  */
-public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSchildReportingDatenquelle {
+public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSchildReportingDatenquelle<SchildReportingSchuelerleistungsdaten, Long> {
 
     /**
      * Erstelle eine die Datenquelle Schuelerleistungsdaten
      */
     DataSchildReportingDatenquelleSchuelerleistungsdaten() {
         super(SchildReportingSchuelerleistungsdaten.class);
-        this.setMaster("abschnittID", "Schuelerlernabschnitte", "id", SchildReportingAttributTyp.INT);
+        this.setMaster("abschnittID", "Schuelerlernabschnitte", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 
     @Override
-    List<? extends Object> getDatenInteger(final DBEntityManager conn, final List<Long> params) {
+    List<SchildReportingSchuelerleistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) {
         // Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
         final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn
                 .queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", params, DTOSchuelerLernabschnittsdaten.class)
