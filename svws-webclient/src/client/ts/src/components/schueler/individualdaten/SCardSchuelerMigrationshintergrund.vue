@@ -2,7 +2,6 @@
 	<svws-ui-content-card title="Migrationshintergrund">
 		<template #actions>
 			<svws-ui-checkbox v-model="hatMigrationshintergrund">Migrationshintergrund vorhanden</svws-ui-checkbox>
-			<!--<svws-ui-toggle v-model="hatMigrationshintergrund">Vorhanden</svws-ui-toggle>-->
 		</template>
 		<div class="input-wrapper">
 			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" />
@@ -33,7 +32,7 @@
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/helfer";
 
 	const props = defineProps<{
-		data: SchuelerStammdaten;
+		data: () => SchuelerStammdaten;
 	}>();
 
 	const emit = defineEmits<{
@@ -46,32 +45,32 @@
 
 
 	const geburtsland: WritableComputedRef<Nationalitaeten> = computed({
-		get: () => Nationalitaeten.getByISO3(props.data.geburtsland) || Nationalitaeten.DEU,
+		get: () => Nationalitaeten.getByISO3(props.data().geburtsland) || Nationalitaeten.DEU,
 		set: (value) => doPatch({ geburtsland: value.daten.iso3 })
 	});
 
 	const zuzugsjahr: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.zuzugsjahr ?? undefined,
+		get: () => props.data().zuzugsjahr ?? undefined,
 		set: (value) => doPatch({ zuzugsjahr: value })
 	});
 
 	const geburtslandMutter: WritableComputedRef<Nationalitaeten> = computed({
-		get: () => Nationalitaeten.getByISO3(props.data.geburtslandMutter) || Nationalitaeten.DEU,
+		get: () => Nationalitaeten.getByISO3(props.data().geburtslandMutter) || Nationalitaeten.DEU,
 		set: (value) => doPatch({ geburtslandMutter: value.daten.iso3 })
 	});
 
 	const geburtslandVater: WritableComputedRef<Nationalitaeten> = computed({
-		get: () => Nationalitaeten.getByISO3(props.data.geburtslandVater) || Nationalitaeten.DEU,
+		get: () => Nationalitaeten.getByISO3(props.data().geburtslandVater) || Nationalitaeten.DEU,
 		set: (value) => doPatch({ geburtslandVater: value.daten.iso3 })
 	});
 
 	const verkehrsprache: WritableComputedRef<Verkehrssprache> = computed({
-		get: () => Verkehrssprache.getByKuerzelAuto(props.data.verkehrspracheFamilie) || Verkehrssprache.DEU,
+		get: () => Verkehrssprache.getByKuerzelAuto(props.data().verkehrspracheFamilie) || Verkehrssprache.DEU,
 		set: (value) => doPatch({ verkehrspracheFamilie: value.daten.kuerzel })
 	});
 
 	const hatMigrationshintergrund: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.data.hatMigrationshintergrund,
+		get: () => props.data().hatMigrationshintergrund,
 		set: (value) => doPatch({ hatMigrationshintergrund: value })
 	});
 

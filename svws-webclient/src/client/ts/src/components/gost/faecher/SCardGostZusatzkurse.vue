@@ -25,7 +25,7 @@
 
 	const props = defineProps<{
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-		jahrgangsdaten: GostJahrgangsdaten;
+		jahrgangsdaten: () => GostJahrgangsdaten;
 	}>();
 
 	const inputBeginnZusatzkurs: ComputedRef<Array<GostHalbjahr>> = computed(
@@ -33,23 +33,23 @@
 	);
 
 	const inputHatZusatzkursGE: WritableComputedRef<boolean> = computed({
-		get: () => props.jahrgangsdaten.hatZusatzkursGE,
-		set: (value) => { void props.patchJahrgangsdaten({ hatZusatzkursGE: value }, props.jahrgangsdaten.abiturjahr); }
+		get: () => props.jahrgangsdaten().hatZusatzkursGE,
+		set: (value) => { void props.patchJahrgangsdaten({ hatZusatzkursGE: value }, props.jahrgangsdaten().abiturjahr); }
 	});
 
 	const inputBeginnZusatzkursGE: WritableComputedRef<GostHalbjahr> = computed({
-		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten.beginnZusatzkursGE) || GostHalbjahr.Q21,
-		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursGE: value.kuerzel }, props.jahrgangsdaten.abiturjahr)
+		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten().beginnZusatzkursGE) || GostHalbjahr.Q21,
+		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursGE: value.kuerzel }, props.jahrgangsdaten().abiturjahr)
 	});
 
 	const inputHatZusatzkursSW: WritableComputedRef<boolean> = computed({
-		get: () => props.jahrgangsdaten.hatZusatzkursSW,
-		set: (value) => void props.patchJahrgangsdaten({ hatZusatzkursSW: value }, props.jahrgangsdaten.abiturjahr)
+		get: () => props.jahrgangsdaten().hatZusatzkursSW,
+		set: (value) => void props.patchJahrgangsdaten({ hatZusatzkursSW: value }, props.jahrgangsdaten().abiturjahr)
 	});
 
 	const inputBeginnZusatzkursSW: WritableComputedRef<GostHalbjahr> = computed({
-		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten.beginnZusatzkursSW) || GostHalbjahr.Q21,
-		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursSW: value.kuerzel }, props.jahrgangsdaten.abiturjahr)
+		get: () => GostHalbjahr.fromKuerzel(props.jahrgangsdaten().beginnZusatzkursSW) || GostHalbjahr.Q21,
+		set: (value) => void props.patchJahrgangsdaten({ beginnZusatzkursSW: value.kuerzel }, props.jahrgangsdaten().abiturjahr)
 	});
 
 </script>

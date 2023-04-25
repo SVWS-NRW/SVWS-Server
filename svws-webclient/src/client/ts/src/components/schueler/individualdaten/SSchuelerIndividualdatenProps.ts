@@ -2,7 +2,7 @@ import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Kat
 
 export interface SchuelerIndividualdatenProps {
 	patch: (data : Partial<SchuelerStammdaten>) => Promise<void>;
-	data: SchuelerStammdaten;
+	data: () => SchuelerStammdaten;
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	mapFahrschuelerarten: Map<number, KatalogEintrag>;

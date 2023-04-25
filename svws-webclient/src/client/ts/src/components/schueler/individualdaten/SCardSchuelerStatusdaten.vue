@@ -31,7 +31,7 @@
 	import { SchuelerStatus } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		data: SchuelerStammdaten;
+		data: () => SchuelerStammdaten;
 		mapFahrschuelerarten: Map<number, KatalogEintrag>;
 		mapHaltestellen: Map<number, KatalogEintrag>
 	}>();
@@ -45,62 +45,68 @@
 	}
 
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
-		get: () => (SchuelerStatus.fromID(props.data.status) || undefined),
+		get: () => (SchuelerStatus.fromID(props.data().status) || undefined),
 		set: (value) => doPatch({ status: value?.id })
 	});
 
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => props.data.fahrschuelerArtID === null ? undefined : props.mapFahrschuelerarten.get(props.data.fahrschuelerArtID),
+		get: () => {
+			const id = props.data().fahrschuelerArtID;
+			return id === null ? undefined : props.mapFahrschuelerarten.get(id)
+		},
 		set: (value) => doPatch({ fahrschuelerArtID: value === undefined ? null : value.id })
 	});
 
 	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
-		get: () => props.data.haltestelleID === null ? undefined : props.mapHaltestellen.get(props.data.haltestelleID),
+		get: () => {
+			const id = props.data().haltestelleID;
+			return id === null ? undefined : props.mapHaltestellen.get(id)
+		},
 		set: (value) => doPatch({ haltestelleID: value === undefined ? null : value.id })
 	});
 
 	const inputAnmeldedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.anmeldedatum ?? undefined,
+		get: () => props.data().anmeldedatum ?? undefined,
 		set: (value) => doPatch({ anmeldedatum: value })
 	});
 
 	const inputAufnahmedatum: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.aufnahmedatum ?? undefined,
+		get: () => props.data().aufnahmedatum ?? undefined,
 		set: (value) => doPatch({ aufnahmedatum: value })
 	});
 
 	const inputIstDuplikat: WritableComputedRef<boolean> = computed({
-		get: () => props.data.istDuplikat,
+		get: () => props.data().istDuplikat,
 		set: (value) => doPatch({ istDuplikat: value })
 	});
 
 	const inputIstSchulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => props.data.istSchulpflichtErfuellt === null ? false : props.data.istSchulpflichtErfuellt,
+		get: () => props.data().istSchulpflichtErfuellt || false,
 		set: (value) => doPatch({ istSchulpflichtErfuellt: value })
 	});
 
 	const inputHatMasernimpfnachweis: WritableComputedRef<boolean> = computed({
-		get: () => props.data.hatMasernimpfnachweis,
+		get: () => props.data().hatMasernimpfnachweis,
 		set: (value) => doPatch({ hatMasernimpfnachweis: value })
 	});
 
 	const inputKeineAuskunftAnDritte: WritableComputedRef<boolean> = computed({
-		get: () => props.data.keineAuskunftAnDritte,
+		get: () => props.data().keineAuskunftAnDritte,
 		set: (value) => doPatch({ keineAuskunftAnDritte: value })
 	});
 
 	const inputErhaeltSchuelerBAFOEG: WritableComputedRef<boolean> = computed({
-		get: () => props.data.erhaeltSchuelerBAFOEG,
+		get: () => props.data().erhaeltSchuelerBAFOEG,
 		set: (value) => doPatch({ erhaeltSchuelerBAFOEG: value })
 	});
 
 	const inputIstBerufsschulpflichtErfuellt: WritableComputedRef<boolean> = computed({
-		get: () => props.data.istBerufsschulpflichtErfuellt === null ? false : props.data.istBerufsschulpflichtErfuellt,
+		get: () => props.data().istBerufsschulpflichtErfuellt || false,
 		set: (value) => doPatch({ istBerufsschulpflichtErfuellt: value })
 	});
 
 	const inputIstVolljaehrig: WritableComputedRef<boolean> = computed({
-		get: () => props.data.istVolljaehrig === null ? false : props.data.istVolljaehrig,
+		get: () => props.data().istVolljaehrig || false,
 		set: (value) => doPatch({ istVolljaehrig: value })
 	});
 

@@ -193,6 +193,8 @@ export class RouteDataSchueler {
 		if (this.auswahl === undefined)
 			return;
 		await api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id);
+		const stammdaten = this.stammdaten;
+		this.setPatchedState({stammdaten: Object.assign(stammdaten, data)});
 		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 

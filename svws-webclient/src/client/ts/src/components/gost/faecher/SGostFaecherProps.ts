@@ -7,6 +7,6 @@ export interface GostFaecherProps {
 	addFachkombination: (typ: GostLaufbahnplanungFachkombinationTyp) => Promise<GostJahrgangFachkombination | undefined>;
 	removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
-	jahrgangsdaten: GostJahrgangsdaten | undefined;
+	jahrgangsdaten: () => GostJahrgangsdaten | undefined;
 	mapFachkombinationen: () => Map<number, GostJahrgangFachkombination>;
 }

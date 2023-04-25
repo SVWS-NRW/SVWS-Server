@@ -17,6 +17,6 @@
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
-	const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
+	const { doPatch } = useDebouncedPatch(computed(() => props.data()), props.patch)
 
 </script>

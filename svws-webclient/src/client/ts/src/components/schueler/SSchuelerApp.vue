@@ -9,7 +9,7 @@
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
 					<svws-ui-badge type="light" title="ID" class="font-mono">
 						<i-ri-fingerprint-line />
-						{{ stammdaten === undefined ? "" : stammdaten.id }}
+						{{ stammdaten()?.id || "" }}
 					</svws-ui-badge>
 					<br>
 					<span class="opacity-50"> {{ inputKlasse ? inputKlasse : '–' }} </span>
@@ -38,15 +38,15 @@
 	const props = defineProps<SchuelerAppProps>();
 
 	const foto: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten?.foto ?? undefined;
+		return props.stammdaten()?.foto ?? undefined;
 	});
 
 	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten?.nachname;
+		return props.stammdaten()?.nachname;
 	});
 
 	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten?.vorname;
+		return props.stammdaten()?.vorname;
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {

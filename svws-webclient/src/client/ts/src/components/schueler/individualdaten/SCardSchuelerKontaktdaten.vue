@@ -8,13 +8,13 @@
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
-			<svws-ui-text-input placeholder="Telefon" :model-value="data.telefon"
+			<svws-ui-text-input placeholder="Telefon" :model-value="data().telefon"
 				@update:model-value="doPatch({ telefon: String($event) })" type="tel" />
-			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data.telefonMobil"
+			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data().telefonMobil"
 				@update:model-value="doPatch({ telefonMobil: String($event) })" type="tel" />
-			<svws-ui-text-input placeholder="Private E-Mail-Adresse" :model-value="data.emailPrivat"
+			<svws-ui-text-input placeholder="Private E-Mail-Adresse" :model-value="data().emailPrivat"
 				@update:model-value="doPatch({ emailPrivat: String($event) })" type="email" verify-email />
-			<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :model-value="data.emailSchule"
+			<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :model-value="data().emailSchule"
 				@update:model-value="doPatch({ emailSchule: String($event) })" type="email" verify-email />
 		</div>
 	</svws-ui-content-card>
@@ -30,7 +30,7 @@
 	import { AdressenUtils } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		data: SchuelerStammdaten;
+		data: () => SchuelerStammdaten;
 		mapOrte: Map<number, OrtKatalogEintrag>;
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
@@ -47,7 +47,7 @@
 
 	const inputStrasse: WritableComputedRef<string | undefined> = computed({
 		get: () => {
-			const ret = AdressenUtils.combineStrasse(props.data.strassenname || "", props.data.hausnummer || "", props.data.hausnummerZusatz || "");
+			const ret = AdressenUtils.combineStrasse(props.data().strassenname || "", props.data().hausnummer || "", props.data().hausnummerZusatz || "");
 			return ret ?? undefined;
 		},
 		set(value: string | undefined) {
@@ -60,12 +60,18 @@
 	});
 
 	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => props.data.wohnortID === null ? undefined : props.mapOrte.get(props.data.wohnortID),
+		get: () => {
+			const id = props.data().wohnortID;
+			return id === null ? undefined : props.mapOrte.get(id)
+		},
 		set: (value) => doPatch({ wohnortID: value === undefined ? null : value.id })
 	});
 
 	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
-		get: () => props.data.ortsteilID === null ? undefined : props.mapOrtsteile.get(props.data.ortsteilID),
+		get: () => {
+			const id = props.data().ortsteilID;
+			return id === null ? undefined : props.mapOrtsteile.get(id)
+		},
 		set: (value) => doPatch({ ortsteilID: value === undefined ? null : value.id })
 	});
 

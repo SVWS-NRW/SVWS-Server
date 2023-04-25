@@ -103,7 +103,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
 			auswahl: this.data.auswahl,
-			stammdaten: this.data.auswahl === undefined ? undefined : this.data.stammdaten,
+			stammdaten: () => this.data.auswahl === undefined ? undefined : this.data.stammdaten,
 			mapKlassen: this.data.mapKlassen,
 			// Props für die Navigation
 			setTab: this.setTab,

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { ref, watch } from 'vue';
+	import { computed } from 'vue';
 
 	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined | 'indeterminate';
@@ -21,11 +21,11 @@
 		bw: false
 	});
 
-	const tmp = ref<ModelValue>(props.modelValue);
 
-	watch(()=>tmp.value, (neu)=>
-		emit("update:modelValue", neu)
-	);
+	const value = computed({
+		get: () => props.modelValue,
+		set: (value) =>	emit("update:modelValue", value)
+	})
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: ModelValue): void;
@@ -38,21 +38,21 @@
 		:class="{
 			'checkbox--disabled': disabled,
 			'checkbox--statistics': statistics,
-			'checkbox--checked': tmp,
+			'checkbox--checked': value,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': tmp === undefined || tmp === 'indeterminate',
+			'checkbox--indeterminate': value === undefined || value === 'indeterminate',
 			'checkbox--bw': bw,
 		}">
-		<input class="checkbox--control" type="checkbox" v-model="tmp" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
-		<svws-ui-icon v-if="tmp === 'indeterminate' && typeof tmp !== 'undefined'" role="checkbox">
+		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
+		<svws-ui-icon v-if="value === 'indeterminate' && typeof value !== 'undefined'" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="tmp" role="checkbox" :class="{'text-primary': !bw}">
+		<svws-ui-icon v-else-if="value" role="checkbox" :class="{'text-primary': !bw}">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="!tmp" role="checkbox">
+		<svws-ui-icon v-else-if="!value" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 			<i-ri-checkbox-blank-circle-line v-if="circle" />
 		</svws-ui-icon>

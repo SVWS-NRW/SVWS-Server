@@ -131,7 +131,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			addFachkombination: this.data.addFachkombination,
 			removeFachkombination: this.data.removeFachkombination,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
-			jahrgangsdaten: routeGost.data.jahrgangsdaten,
+			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			mapFachkombinationen: () => this.data.mapFachkombinationen
 		};
 	}
