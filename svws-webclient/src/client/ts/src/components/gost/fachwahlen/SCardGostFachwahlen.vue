@@ -4,7 +4,7 @@
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fach
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate	">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-5 data-table__th__separate	">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Q2.2
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
+						class="data-table__th data-table__thead__th data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fach
@@ -86,7 +86,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -94,7 +94,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								GK
@@ -110,7 +110,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -118,7 +118,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								GK
@@ -134,7 +134,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -150,7 +150,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								LK
@@ -166,7 +166,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -182,7 +182,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								LK
@@ -198,7 +198,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -222,7 +222,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								LK
@@ -238,7 +238,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								S
@@ -280,55 +280,55 @@
 					<div role="cell" class="data-table__td" :style="{ 'background-color': getBgColor(row) }">
 						{{ row.kuerzel }}
 					</div>
-					<div role="cell" class="data-table__td" :style="{ 'background-color': getBgColor(row) }">
+					<div role="cell" class="data-table__td data-table__td__separate" :style="{ 'background-color': getBgColor(row) }">
 						{{ row.bezeichnung }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[0].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[0] .wahlenGKSchriftlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 						{{ row.fachwahlen[0] == null || row.fachwahlen[0].wahlenGK == 0 ? "" : row.fachwahlen[0].wahlenGK }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[1].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[1].wahlenGKSchriftlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 						{{ row.fachwahlen[1] == null || row.fachwahlen[1].wahlenGK == 0 ? "" : row.fachwahlen[1].wahlenGK }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[2].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[2].wahlenGKSchriftlich }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenGK == 0 ? "" : row.fachwahlen[2].wahlenGK }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 						{{ row.fachwahlen[2] == null || row.fachwahlen[2].wahlenLK == 0 ? "" : row.fachwahlen[2].wahlenLK }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[3].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[3].wahlenGKSchriftlich }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenGK == 0 ? "" : row.fachwahlen[3].wahlenGK }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 						{{ row.fachwahlen[3] == null || row.fachwahlen[3].wahlenLK == 0 ? "" : row.fachwahlen[3].wahlenLK }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[4].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[4].wahlenGKSchriftlich }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
@@ -337,13 +337,13 @@
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenZK == 0 ? "" : row.fachwahlen[4].wahlenZK }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 						{{ row.fachwahlen[4] == null || row.fachwahlen[4].wahlenLK == 0 ? "" : row.fachwahlen[4].wahlenLK }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenGKMuendlich == 0 ? "" : row.fachwahlen[5].wahlenGKMuendlich }}
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenGKSchriftlich == 0 ? "" : row.fachwahlen[5].wahlenGKSchriftlich }}
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
