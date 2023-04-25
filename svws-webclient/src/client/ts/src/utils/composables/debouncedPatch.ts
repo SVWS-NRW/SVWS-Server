@@ -28,7 +28,7 @@ export function useDebouncedPatch<
     PatchFn extends (patchData: Partial<TData>) => Promise<any> = (patchData: Partial<TData>) => Promise<any>
 >(data: Ref<TData>, patchFn: PatchFn, options: DebouncedPatchOptions = {}): DebouncedPatchReturn<TData> {
 	const {
-		delay = 1000,
+		delay = 100,
 		maxWait = 5000
 	} = options
 	const error = shallowRef<Error>()

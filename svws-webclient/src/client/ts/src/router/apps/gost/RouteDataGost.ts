@@ -138,7 +138,7 @@ export class RouteDataGost {
 	}
 
 	set params(value) {
-		this.setPatchedState({params: value})
+		this.setPatchedState({ params: value })
 	}
 
 	public get idSchuljahresabschnitt(): number {
