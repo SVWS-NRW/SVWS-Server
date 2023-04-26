@@ -100,4 +100,5 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
     	return Response.status(Status.OK).build();
 	}
 
+
 }

@@ -56,11 +56,11 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 			"DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
 		if (schuelerAbijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
-		if (schuelerAbijahrgang.size() == 0)
+		if (schuelerAbijahrgang.isEmpty())
 			return new ArrayList<>();
-		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
+		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		if ((schuelerListe == null) || (schuelerListe.size() == 0))
+		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
 			throw OperationError.NOT_FOUND.exception();
 		return schuelerListe;
 	}
@@ -72,7 +72,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
-		if (schuelerListe.size() == 0) {
+		if (schuelerListe.isEmpty()) {
 			final List<SchuelerListeEintrag> daten = new ArrayList<>();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
@@ -91,7 +91,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
     	final List<SchuelerListeEintrag> daten = schuelerListe.stream()
         		.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID)))
         		.sorted(DataSchuelerliste.dataComparator)
-    	    	.collect(Collectors.toList());
+    	    	.toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

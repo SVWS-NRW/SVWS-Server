@@ -12,14 +12,19 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
+import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
+import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerConsole;
@@ -47,6 +52,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -696,5 +702,58 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.log = log.getStrings();
 		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
+
+	/**
+	 * Führt eine Belegprüfung für alles Schüler des angebenen Abitur-Jahrgangs durch
+	 * und gibt die Belegprüfungsergebnisse für die Schüler zurück.
+	 *
+	 * @param abiturjahr     der zu prüfende Abiturjahrgang
+	 * @param pruefungsArt   die Art der Belegprüfung
+	 *
+	 * @return die Belegprüfungsergebnisse
+	 */
+	public Response pruefeBelegungGesamt(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
+		try {
+			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
+
+			// Erstelle das DTO für die Eregbnisrückmeldung
+			final GostBelegpruefungsErgebnisse daten = new GostBelegpruefungsErgebnisse();
+			daten.kuerzel = pruefungsArt.kuerzel;
+
+			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
+			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).toList();
+
+			// Führe für alle Schüler nacheinander die Belegprüfung durch
+			for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
+				// Bestimme die Laufbahndaten des Schülers
+				final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
+
+				// Führe die Belegprüfung für den Schüler durch
+				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
+				final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
+
+				// Erstelle das zugehörige Schüler-DTO
+				final Schueler schueler = new Schueler();
+				schueler.id = dtoSchueler.ID;
+				schueler.vorname = dtoSchueler.Nachname;
+				schueler.nachname = dtoSchueler.Vorname;
+				schueler.status = dtoSchueler.Status.id;
+				schueler.geschlecht = dtoSchueler.Geschlecht.id;
+
+				// Schreibe das Ergebnis in die Rückmeldung
+				daten.schueler.add(schueler);
+				daten.ergebnisse.add(ergebnis);
+			}
+
+			// Erzeuge die Response mit den Belegprüfungsergebnissen
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final WebApplicationException wae) {
+			return wae.getResponse();
+		}
+	}
+
 
 }

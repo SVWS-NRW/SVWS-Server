@@ -126,6 +126,7 @@ export { AbiturFachbelegung } from './core/data/gost/AbiturFachbelegung';
 export { AbiturFachbelegungHalbjahr } from './core/data/gost/AbiturFachbelegungHalbjahr';
 export { AbiturKursMarkierung } from './core/data/gost/AbiturKursMarkierung';
 export { Abiturdaten } from './core/data/gost/Abiturdaten';
+export { GostBelegpruefungsErgebnisse } from './core/data/gost/GostBelegpruefungsErgebnisse';
 export { GostBelegpruefungsdaten } from './core/data/gost/GostBelegpruefungsdaten';
 export { GostBeratungslehrer } from './core/data/gost/GostBeratungslehrer';
 export { GostBlockungKurs } from './core/data/gost/GostBlockungKurs';

@@ -11,6 +11,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -401,6 +402,67 @@ public class APIGost {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für die Abfrage alle Laufbahnplanungsfehler/-rückmeldungen
+     * der Gesamt-Belegprüfungen zu den Schüler-Laufbahnen eines Abitur-Jahrgangs der
+     * gymnasialen Oberstufe im angegebenen Schema.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abiturjahr    der Abitur-Jahrgang
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              die Belegprüfungsergebnisse
+     */
+    @GET
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt")
+    @Operation(summary = "Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
+               description = "Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines "
+                           + "Abitur-Jahrganges der gymnasialen Oberstufe zurück."
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. ",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBelegpruefungsErgebnisse.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.")
+    @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
+    public Response getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		if (abiturjahr < 0)
+    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungGesamt(abiturjahr, GostBelegpruefungsArt.GESAMT);
+        }
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage alle Laufbahnplanungsfehler/-rückmeldungen
+     * der EF1-Belegprüfungen zu den Schüler-Laufbahnen eines Abitur-Jahrgangs der
+     * gymnasialen Oberstufe im angegebenen Schema.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param abiturjahr    der Abitur-Jahrgang
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              die Belegprüfungsergebnisse
+     */
+    @GET
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1")
+    @Operation(summary = "Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
+               description = "Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines "
+                           + "Abitur-Jahrganges der gymnasialen Oberstufe zurück."
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. ",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBelegpruefungsErgebnisse.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.")
+    @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
+    public Response getGostAbiturjahrgangBelegpruefungsergebnisseEF1(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		if (abiturjahr < 0)
+    			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungGesamt(abiturjahr, GostBelegpruefungsArt.EF1);
+        }
+    }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers.
@@ -425,7 +487,7 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
     public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).get(id);
     	}
     }

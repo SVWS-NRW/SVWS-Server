@@ -32,6 +32,7 @@ import { FoerderschwerpunktEintrag } from '../core/data/schule/Foerderschwerpunk
 import { FoerderschwerpunktKatalogEintrag } from '../core/data/schule/FoerderschwerpunktKatalogEintrag';
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
+import { GostBelegpruefungsErgebnisse } from '../core/data/gost/GostBelegpruefungsErgebnisse';
 import { GostBlockungKurs } from '../core/data/gost/GostBlockungKurs';
 import { GostBlockungKursAufteilung } from '../core/data/gost/GostBlockungKursAufteilung';
 import { GostBlockungKursLehrer } from '../core/data/gost/GostBlockungKursLehrer';
@@ -2325,6 +2326,64 @@ export class ApiServer extends BaseApi {
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
 		const body : string = GostJahrgangsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangBelegpruefungsergebnisseEF1 für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/belegpruefung/EF1
+	 *
+	 * Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBelegpruefungsErgebnisse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.
+	 *   Code 404: Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 */
+	public async getGostAbiturjahrgangBelegpruefungsergebnisseEF1(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangBelegpruefungsergebnisseGesamt für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/belegpruefung/gesamt
+	 *
+	 * Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBelegpruefungsErgebnisse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.
+	 *   Code 404: Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 */
+	public async getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
