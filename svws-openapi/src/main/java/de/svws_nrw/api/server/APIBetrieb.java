@@ -444,7 +444,7 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.")
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response createBescheftigungsArt(
+    public Response createBeschaeftigungsArt(
             @PathParam("schema") final String schema,
             @RequestBody(description = "Der Post für die Beschäftigungsart-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,

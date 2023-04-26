@@ -1363,7 +1363,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createBescheftigungsArt für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/new
+	 * Implementierung der POST-Methode createBeschaeftigungsArt für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart/new
 	 *
 	 * Erstellt eine neue Beschäftigungsart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.
 	 *
@@ -1380,7 +1380,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Beschäftigungsart wurde erfolgreich angelegt.
 	 */
-	public async createBescheftigungsArt(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
+	public async createBeschaeftigungsArt(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
 		const path = "/db/{schema}/betriebe/beschaeftigungsart/new"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const body : string = KatalogEintrag.transpilerToJSON(data);
