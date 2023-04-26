@@ -85,7 +85,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * @return die Statistik zu den Fachwahlen des Abiturjahrgangs dieses Objektes
 	 */
 	public List<GostStatistikFachwahl> getFachwahlen() {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if (schueler == null)
@@ -171,7 +171,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	public List<GostFachwahl> getSchuelerFachwahlen(final GostHalbjahr halbjahr) {
 	    if (halbjahr == null)
 	        return Collections.emptyList();
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
 		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))

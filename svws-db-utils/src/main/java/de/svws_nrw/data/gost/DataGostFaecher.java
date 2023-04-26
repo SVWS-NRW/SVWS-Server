@@ -71,7 +71,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	if (faecher == null)
     		return OperationError.NOT_FOUND.getResponse();
@@ -97,7 +97,7 @@ public final class DataGostFaecher extends DataManager<Long> {
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-    			GostUtils.pruefeSchuleMitGOSt(conn);
+    			DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	    	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
     	    	if (faecher == null)
     	    		return OperationError.NOT_FOUND.getResponse();

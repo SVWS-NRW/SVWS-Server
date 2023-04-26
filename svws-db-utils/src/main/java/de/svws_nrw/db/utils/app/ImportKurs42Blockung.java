@@ -10,10 +10,10 @@ import de.svws_nrw.base.shell.CommandLineParser;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.data.gost.DBUtilsGostBlockung;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.gost.GostBlockungUtils;
 
 
 
@@ -61,7 +61,7 @@ public class ImportKurs42Blockung {
 
 			// Führe den Import aus
 			try (DBEntityManager conn = user.getEntityManager();) {
-				GostBlockungUtils.importKurs42(conn, logger, path);
+				DBUtilsGostBlockung.importKurs42(conn, logger, path);
 			}
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());

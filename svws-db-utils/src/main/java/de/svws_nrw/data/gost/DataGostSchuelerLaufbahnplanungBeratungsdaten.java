@@ -46,7 +46,7 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	public Response get(final Long schueler_id) {
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
     	if (gostSchueler == null)
     		return OperationError.NOT_FOUND.getResponse();

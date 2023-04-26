@@ -17,7 +17,6 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.gost.GostBlockungUtils;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -84,7 +83,7 @@ public final class DataKurs42 {
 		final LupoMDB lupoMDB = new LupoMDB(tmpDirectory + "/" + tmpFilename);
 		lupoMDB.logger.copyConsumer(logger);
 		try {
-			GostBlockungUtils.importKurs42(conn, logger, path);
+			DBUtilsGostBlockung.importKurs42(conn, logger, path);
 			logger.logLn("  Import beendet");
 		} catch (@SuppressWarnings("unused") final IOException e1) {
 			logger.logLn("  [FEHLER] beim Zugriff auf die Text-Datien.");

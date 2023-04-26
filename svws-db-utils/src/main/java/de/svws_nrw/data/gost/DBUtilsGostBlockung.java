@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils.gost;
+package de.svws_nrw.data.gost;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,10 +40,10 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 /**
  * Diese Klasse stellt Hilfs-Methoden rund um Blockungen der gymnasialen Oberstufe zur Verfügung.
  */
-public final class GostBlockungUtils {
+public final class DBUtilsGostBlockung {
 
-	private GostBlockungUtils() {
-		throw new IllegalStateException("Instantiation of " + GostBlockungUtils.class.getName() + " not allowed");
+	private DBUtilsGostBlockung() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsGostBlockung.class.getName() + " not allowed");
 	}
 
 	/** Funktion zum Bestimmen der nächsten freien ID bei einer Tabelle mit Autoinkrement */

@@ -87,7 +87,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	public Response get(final Long idLehrer) {
 		try {
 			conn.transactionBegin();
-			final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(idLehrer);
 			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, kurslehrer.Lehrer_ID);
 			if (lehrer == null)
@@ -168,7 +168,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob ein Kurs mit der ID für eine Blockung existiert
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 			if (kurs == null)
@@ -215,9 +215,9 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	public Response deleteKurslehrer(final long idLehrer) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob ein Kurs mit der ID für eine Blockung existiert
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 			if (kurs == null)

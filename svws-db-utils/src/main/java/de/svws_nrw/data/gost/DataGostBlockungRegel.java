@@ -72,7 +72,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Regel der Blockung
 		final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 		if (regel == null)
@@ -90,7 +90,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Regel der Blockung
 			final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 			if (regel == null)
@@ -197,7 +197,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
@@ -306,7 +306,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		try {
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Regel
 			final DTOGostBlockungRegel regel = conn.queryByKey(DTOGostBlockungRegel.class, id);
 			if (regel == null)

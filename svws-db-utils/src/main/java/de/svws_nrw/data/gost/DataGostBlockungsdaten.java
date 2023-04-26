@@ -221,7 +221,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		GostBlockungsdaten daten;
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Erstellen den Manager mit den Blockungsdaten
 			final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
             daten = manager.daten();
@@ -246,7 +246,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung
 			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 			if (blockung == null)
@@ -291,7 +291,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response create(final int abiturjahr, final int halbjahr) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe die Parameter
 			final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
 			if (gostHalbjahr == null)
@@ -415,7 +415,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		// TODO use transaction
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
@@ -508,7 +508,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response dupliziere(final long idErgebnisOriginal) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung und das zugehörige Ergebnis
 			DTOGostBlockung blockungOriginal;
 			final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
@@ -656,7 +656,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response hochschreiben(final long idErgebnisOriginal) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Blockung und das zugehörige Ergebnis
 			DTOGostBlockung blockungOriginal;
 			final DTOGostBlockungZwischenergebnis ergebnisOriginal = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnisOriginal);
@@ -808,7 +808,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response restore(final int abiturjahr, final int halbjahrID) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 			// Bestimme das Halbjahr der gymnasialen Oberstufe und das Schuljahr, wo der Abiturjahrgang in diesem Halbjahr war
 			final GostHalbjahr halbjahr = GostHalbjahr.fromID(halbjahrID);

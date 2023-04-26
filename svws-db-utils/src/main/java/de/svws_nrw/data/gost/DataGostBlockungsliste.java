@@ -52,7 +52,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
@@ -72,7 +72,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(id);
 		if (halbjahr == null)
 			return OperationError.NOT_FOUND.getResponse();
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();

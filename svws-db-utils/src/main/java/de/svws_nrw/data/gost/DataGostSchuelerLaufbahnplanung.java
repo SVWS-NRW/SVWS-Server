@@ -82,7 +82,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response get(final Long schueler_id) {
 		if (schueler_id == null)
 			return OperationError.NOT_FOUND.getResponse();
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -101,7 +101,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return Die HTTP-Response der Get-Operation
 	 */
 	public Response getFachwahl(final Long schueler_id, final Long fach_id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse();
@@ -224,7 +224,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		if (map.size() > 0) {
 			try {
 				conn.transactionBegin();
-				final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+				final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 				final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 				if (schueler == null)
 					throw OperationError.NOT_FOUND.exception();
@@ -376,7 +376,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die Response mit der GZip-Komprimierten Laufbahnplanungs-Datei
 	 */
 	public Response exportGZip(final long idSchueler) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
@@ -392,7 +392,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die Response mit den Laufbahnplanungsdaten
 	 */
 	public Response exportJSON(final long idSchueler) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
@@ -643,7 +643,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response importGZip(final long idSchueler, final byte[] data) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
@@ -681,7 +681,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	public Response importJSON(final long idSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten) {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();

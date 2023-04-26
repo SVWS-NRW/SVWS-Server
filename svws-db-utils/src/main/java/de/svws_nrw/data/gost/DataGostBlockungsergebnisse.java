@@ -167,7 +167,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
@@ -194,7 +194,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response delete(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme das Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (erg == null)
@@ -207,7 +207,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	private void _createKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if (idSchueler == null)
 			throw OperationError.CONFLICT.exception();
 		// Bestimme das Blockungs-Zwischenergebnis
@@ -239,7 +239,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
 	private void _deleteKursSchuelerZuordnung(final Long idZwischenergebnis, final Long idSchueler, final Long idKurs) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		if ((idSchueler == null) || (idKurs == null))
 			throw OperationError.CONFLICT.exception();
 		// Entferne die Zuordnung
@@ -329,7 +329,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
     private void _createKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
-        GostUtils.pruefeSchuleMitGOSt(conn);
+        DBUtilsGost.pruefeSchuleMitGOSt(conn);
         if (idSchiene == null)
             throw OperationError.CONFLICT.exception();
         // Bestimme das Blockungs-Zwischenergebnis
@@ -359,7 +359,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 
     private void _deleteKursSchieneZuordnung(final Long idZwischenergebnis, final Long idSchiene, final Long idKurs) {
-        GostUtils.pruefeSchuleMitGOSt(conn);
+        DBUtilsGost.pruefeSchuleMitGOSt(conn);
         if ((idSchiene == null) || (idKurs == null))
             throw OperationError.CONFLICT.exception();
         // Entferne die Zuordnung
@@ -657,7 +657,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      */
     public Response aktiviere(final Long idErgebnis) {
     	try {
-			final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 			// Bestimme das Blockungs-Zwischenergebnis
 			final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
@@ -675,14 +675,14 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	        if (schule.AnzahlAbschnitte == 4) {
 	        	final DTOSchuljahresabschnitte abschnitt1 = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr == 1 ? 1 : 3);
 	        	final DTOSchuljahresabschnitte abschnitt2 = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr == 1 ? 2 : 4);
-	        	if (GostUtils.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt1)
-	        			|| GostUtils.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt2))
+	        	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt1)
+	        			|| DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt2))
 	        		return OperationError.CONFLICT.getResponse();
 	        	aktiviere(ergebnisManager, abschnitt1, halbjahr);
 	        	aktiviere(ergebnisManager, abschnitt2, halbjahr);
 	        } else {
 	        	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
-	        	if (GostUtils.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
+	        	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
 	        		return OperationError.CONFLICT.getResponse();
 	        	aktiviere(ergebnisManager, abschnitt, halbjahr);
 	        }

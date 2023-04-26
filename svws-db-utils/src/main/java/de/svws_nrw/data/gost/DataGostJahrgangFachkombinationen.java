@@ -77,7 +77,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Lese die Fächerkombinationen für den Abiturjahrgang ein
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abijahrgang, DTOGostJahrgangFachkombinationen.class);
@@ -100,7 +100,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
     	if (map.size() > 0) {
     		try {
     			conn.transactionBegin();
-    			GostUtils.pruefeSchuleMitGOSt(conn);
+    			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 				final DTOGostJahrgangFachkombinationen kombi = conn.queryByKey(DTOGostJahrgangFachkombinationen.class, id);
 				if (kombi == null)
 					throw OperationError.NOT_FOUND.exception();
@@ -188,7 +188,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Fachkombination
 			final DTOGostJahrgangFachkombinationen kombi = conn.queryByKey(DTOGostJahrgangFachkombinationen.class, id);
 			if (kombi == null)
@@ -219,7 +219,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe ob der Typ der Regel korrekt ist
 			final GostLaufbahnplanungFachkombinationTyp kombityp = GostLaufbahnplanungFachkombinationTyp.fromValue(typ);
 			// Bestimme die ID für die neue Regel

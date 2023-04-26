@@ -75,7 +75,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 	@Override
 	public Response get(final Integer abi_jahrgang) {
-		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -126,7 +126,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    	for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
 	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abi_jahrgang, abschnitt.Jahr,
 	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
-	    		daten.istBlockungFestgelegt[halbjahr.id] = GostUtils.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
+	    		daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 	    	}
     	}
     	// Ergänze die Beratungslehrer
@@ -142,7 +142,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 	    	if (jahrgangsdaten == null)
 	    		throw OperationError.NOT_FOUND.exception();

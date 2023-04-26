@@ -70,7 +70,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schiene der Blockung
 		final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 		if (schiene == null)
@@ -86,7 +86,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Schiene der Blockung
 			final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
 			if (schiene == null)
@@ -223,7 +223,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		        return OperationError.CONFLICT.getResponse();
 			// Bestimme die Schiene der Blockung
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
             final GostBlockungSchiene daten = _delete(conn.queryByKey(DTOGostBlockungSchiene.class, id));
     		conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -247,7 +247,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Blockung mit der ID existiert
 			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 			if (blockung == null)
@@ -293,7 +293,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	public Response deleteSchiene(final long idBlockung) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
 	    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
 	    	if ((schienen == null) || (schienen.size() == 0))

@@ -23,7 +23,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.gost.GostUtils;
+import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
@@ -402,7 +402,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		// Lese die Laufbahndaten aus der DB
 		if (schueler_id == null)
 	    	return OperationError.NOT_FOUND.getResponse();
-		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();

@@ -79,7 +79,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme den Kurs der Blockung
 		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, id);
 		if (kurs == null)
@@ -145,7 +145,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme den Kurs der Blockung
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, id);
 			if (kurs == null)
@@ -220,7 +220,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Prüfe, ob die Blockung mit der ID existiert
 			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 			if (blockung == null)
@@ -329,7 +329,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		try {
 			// Bestimme den Kurs der Blockung
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 			if (kurs == null)
 				return OperationError.NOT_FOUND.getResponse();
@@ -415,7 +415,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		try {
 			// Bestimme die Kurse der Blockung
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostBlockungKurs kurs1 = conn.queryByKey(DTOGostBlockungKurs.class, idKurs1);
 			final DTOGostBlockungKurs kurs2 = conn.queryByKey(DTOGostBlockungKurs.class, idKurs2);
 			if ((kurs1 == null) || (kurs2 == null))
@@ -469,7 +469,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	public Response deleteKurs(final long idBlockung, final long idFach, final int idKursart) {
 		try {
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
 	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
@@ -521,7 +521,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		try {
 			// Bestimme den Kurs der Blockung
 			conn.transactionBegin();
-			GostUtils.pruefeSchuleMitGOSt(conn);
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, id);
 			if (kurs == null)
 				return OperationError.NOT_FOUND.getResponse();

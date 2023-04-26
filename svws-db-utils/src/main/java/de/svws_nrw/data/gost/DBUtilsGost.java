@@ -17,10 +17,10 @@ import jakarta.ws.rs.WebApplicationException;
  * zur Verfügung, welche in den Data-Klassen an mehreren Stellen
  * verwendet werden.
  */
-public final class GostUtils {
+public final class DBUtilsGost {
 
-	private GostUtils() {
-		throw new IllegalStateException("Instantiation of " + GostUtils.class.getName() + " not allowed");
+	private DBUtilsGost() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsGost.class.getName() + " not allowed");
 	}
 
 	/**

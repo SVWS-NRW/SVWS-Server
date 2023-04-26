@@ -68,7 +68,7 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() {
-		GostUtils.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();

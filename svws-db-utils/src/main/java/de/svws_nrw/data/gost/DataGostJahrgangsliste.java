@@ -57,7 +57,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() {
-		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -132,7 +132,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 */
 	public Response create(final long jahrgang_id) {
 		// Prüfe die Schuldaten
-		final DTOEigeneSchule schule = GostUtils.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
 			return OperationError.NOT_FOUND.getResponse();
