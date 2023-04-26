@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils;
+package de.svws_nrw.data.benutzer;
 
 import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -11,10 +11,10 @@ import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 /**
  * Diese Klasse stellt allgemeine Methoden bezüglich eines Datenbank-Benutzer zur Verfügung.
  */
-public final class BenutzerUtils {
+public final class DBUtilsBenutzer {
 
-	private BenutzerUtils() {
-		throw new IllegalStateException("Instantiation of " + BenutzerUtils.class.getName() + " not allowed");
+	private DBUtilsBenutzer() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsBenutzer.class.getName() + " not allowed");
 	}
 
 	/**

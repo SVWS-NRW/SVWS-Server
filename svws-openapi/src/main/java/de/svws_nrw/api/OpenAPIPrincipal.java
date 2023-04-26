@@ -5,10 +5,10 @@ import java.security.Principal;
 
 import jakarta.servlet.http.HttpServletRequest;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.data.benutzer.DBUtilsBenutzer;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.BenutzerUtils;
 import de.svws_nrw.db.utils.OperationError;
 
 
@@ -159,11 +159,11 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 		user.setPassword(password);
 
 		// Prüfe den Passwort-Hash des Benutzer aus der DB
-		if (!BenutzerUtils.pruefePasswort(user, password))
+		if (!DBUtilsBenutzer.pruefePasswort(user, password))
 			return null;
 
 		// Lese die Benutzerkompetenzen aus der Datenbank
-		BenutzerUtils.leseKompetenzen(user);
+		DBUtilsBenutzer.leseKompetenzen(user);
 
 		return new OpenAPIPrincipal(user);
 	}
