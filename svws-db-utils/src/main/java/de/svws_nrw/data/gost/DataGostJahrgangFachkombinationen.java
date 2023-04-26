@@ -14,13 +14,13 @@ import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -226,7 +226,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 			final DTODBAutoInkremente dbID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_Gost_Jahrgang_Fachkombinationen.name());
 			final long id = dbID == null ? 1 : dbID.MaxID + 1;
 			// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
-			final GostFaecherManager fachmanager = FaecherGost.getFaecherListeGost(conn, abijahrgang);
+			final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahrgang);
 			final List<GostFach> faecher = fachmanager.toList();
 			if (faecher.size() < 2)
 				throw OperationError.NOT_FOUND.exception("Nicht genügend Fächer für den Abiturjahrgang definiert.");

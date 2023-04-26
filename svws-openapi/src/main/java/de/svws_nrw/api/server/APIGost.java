@@ -33,6 +33,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBlockungKurs;
 import de.svws_nrw.data.gost.DataGostBlockungKursLehrer;
@@ -52,7 +53,6 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchueler;
 import de.svws_nrw.db.utils.gost.GostSchuelerAbitur;
 import de.svws_nrw.module.pdf.gost.PDFGostWahlbogen;
@@ -713,9 +713,9 @@ public class APIGost {
 	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+	    	GostFaecherManager gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
-	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
+	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
 			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toList(), GostBelegpruefungsArt.GESAMT);
 			return manager.getBelegpruefungErgebnis();
     	}
@@ -752,9 +752,9 @@ public class APIGost {
 	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-	    	GostFaecherManager gostFaecherManager = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+	    	GostFaecherManager gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
-	    		gostFaecherManager = FaecherGost.getFaecherListeGost(conn, null);
+	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
 			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toList(), GostBelegpruefungsArt.EF1);
 			return manager.getBelegpruefungErgebnis();
     	}

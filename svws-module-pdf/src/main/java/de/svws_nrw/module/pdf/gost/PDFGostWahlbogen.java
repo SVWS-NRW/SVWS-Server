@@ -22,6 +22,7 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.GostUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -32,7 +33,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 import de.svws_nrw.module.pdf.PDFCreator;
 import jakarta.persistence.TypedQuery;
@@ -433,7 +433,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
     	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	if (planungsHalbjahr == null)
     		planungsHalbjahr = (halbjahr == null) ? GostHalbjahr.EF1 : GostHalbjahr.Q22;
-    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
     	if (gostFaecher.isEmpty())
     		return OperationError.NOT_FOUND.getResponse();
     	final PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(

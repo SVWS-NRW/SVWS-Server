@@ -32,6 +32,7 @@ import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
@@ -45,7 +46,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.WebApplicationException;
@@ -307,7 +307,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) {
 		// Lese die Daten aus der Datenbank
 			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
 		if (kombis == null)
@@ -423,7 +423,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
 		final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
 			logger.logLn("Fehler: Das Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");

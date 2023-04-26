@@ -27,6 +27,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -34,7 +35,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 import jakarta.validation.constraints.NotNull;
 
@@ -128,7 +128,7 @@ public class GenerateTestdatenLaufbahn {
 				// Lese die Fächerdaten aus der Datenbank und generiere die Testdateien
 				final List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
-					final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
+					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
 					if (gostFaecher.isEmpty())
 						continue; // Lasse Jahrgänge ohne Fächerdaten aus
 					final String strJahrgangID = String.format("%02d", jahrgangID++);

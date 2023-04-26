@@ -18,6 +18,7 @@ import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
@@ -95,7 +96,7 @@ public final class GostSchueler {
 		final DTOSchuelerLernabschnittsdaten aktLernabschnitt = lernabschnitte.get(lernabschnitte.size() - 1);
 
 		final Integer abiturjahr = GostSchueler.getAbiturjahr(schule.Schulform, aktLernabschnitt, abschnittSchueler.Jahr);
-    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
 
 		// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 		final GostLeistungen daten = new GostLeistungen();
@@ -193,7 +194,7 @@ public final class GostSchueler {
 	 */
 	public static Map<Long, GostLeistungen> getLeistungsdaten(final DBEntityManager conn, final List<Long> ids) {
 		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
-    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, null);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
 
 		final Map<Long, DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 

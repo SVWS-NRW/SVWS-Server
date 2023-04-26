@@ -15,13 +15,13 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -53,7 +53,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
     	if ((schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
     		return null;
-    	return FaecherGost.getFaecherListeGost(conn, abijahr);
+    	return DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
 	}
 
 	@Override
@@ -80,13 +80,13 @@ public final class DataGostFaecher extends DataManager<Long> {
     		return OperationError.NOT_FOUND.getResponse();
 		GostFach daten = null;
 		if (abijahr == -1) {
-	    	daten = FaecherGost.mapFromDTOFach(fach, faecher);
+	    	daten = DBUtilsFaecherGost.mapFromDTOFach(fach, faecher);
 		} else {
 	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
 	    	final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
 	    	if (jf == null)
 	    		return OperationError.NOT_FOUND.getResponse();
-	    	daten = FaecherGost.mapFromDTOGostJahrgangFaecher(jf, faecher);
+	    	daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(jf, faecher);
 		}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

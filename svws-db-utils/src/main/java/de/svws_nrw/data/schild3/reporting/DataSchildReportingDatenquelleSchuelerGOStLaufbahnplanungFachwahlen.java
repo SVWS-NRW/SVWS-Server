@@ -12,11 +12,11 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.FaecherGost;
 import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 
 				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgang, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
 				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)) {
-					jahrgangGostFaecher.put(abidaten.abiturjahr, FaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr));
+					jahrgangGostFaecher.put(abidaten.abiturjahr, DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr));
 				}
 
 				// Erzeuge eine Map Fach-ID → AbiturFachbelegung aus den AbiturDaten

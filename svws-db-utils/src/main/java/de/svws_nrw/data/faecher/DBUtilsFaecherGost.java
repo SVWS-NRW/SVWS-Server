@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils.gost;
+package de.svws_nrw.data.faecher;
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +21,10 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu Fächern der gymnasialen Oberstufe zur Verfügung.
  */
-public final class FaecherGost {
+public final class DBUtilsFaecherGost {
 
-	private FaecherGost() {
-		throw new IllegalStateException("Instantiation of " + FaecherGost.class.getName() + " not allowed");
+	private DBUtilsFaecherGost() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsFaecherGost.class.getName() + " not allowed");
 	}
 
 	/**

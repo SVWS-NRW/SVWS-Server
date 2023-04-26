@@ -18,6 +18,7 @@ import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
@@ -66,7 +67,7 @@ public final class GostSchuelerLaufbahn {
     	if (aktAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
     	final Integer abiturjahr = GostSchueler.getAbiturjahr(schule.Schulform, aktAbschnitt, dtoAbschnitt.Jahr);
-    	final GostFaecherManager gostFaecher = FaecherGost.getFaecherListeGost(conn, abiturjahr);
+    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
     	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
     	if (dtoGostSchueler == null) {
     		dtoGostSchueler = new DTOGostSchueler(id, false);
