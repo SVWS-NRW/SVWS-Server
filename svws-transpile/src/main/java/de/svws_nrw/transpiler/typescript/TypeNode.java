@@ -528,11 +528,11 @@ public class TypeNode {
 	public String getTypeCheck(final String identifier) {
 		if (node instanceof final PrimitiveTypeTree p)
 			return checkPrimitiveType(identifier, p);
-		if (node instanceof final IdentifierTree i)
+		if (node instanceof IdentifierTree)
 			return getInstanceOf(identifier) + (notNull ? "" : (" || (" + identifier + " === null)"));
 		if (node instanceof final ParameterizedTypeTree p)
 			return getParameterizedTypeBaseTypeNode(p).getTypeCheck(identifier);
-		if (node instanceof final ArrayTypeTree a)
+		if (node instanceof ArrayTypeTree)
 			return "Array.isArray(" + identifier + ")";
 		if (node instanceof final AnnotatedTypeTree a) {
 			final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(a);
@@ -567,7 +567,7 @@ public class TypeNode {
 					default -> "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 				};
 			}
-			if (type instanceof final ExpressionTypeVar typeVar)
+			if (type instanceof ExpressionTypeVar)
 				return identifier + " as unknown as " + type.toString();
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());
 		}
@@ -586,13 +586,13 @@ public class TypeNode {
 				}
 				return "cast_" + classType.getFullQualifiedName().replace('.', '_') + "(" + identifier + ")";
 			}
-			if (type instanceof final ExpressionTypeVar typeVar)
+			if (type instanceof ExpressionTypeVar)
 				return identifier + " as unknown as " + type.toString();
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the member select " + mst.toString());
 		}
 		if (node instanceof final ParameterizedTypeTree p)
 			return getParameterizedTypeBaseTypeNode(p).getTypeCast(identifier);
-		if (node instanceof final ArrayTypeTree a)
+		if (node instanceof ArrayTypeTree)
 			return identifier;
 		if (node instanceof final AnnotatedTypeTree att) {
 			final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(att);
