@@ -24,6 +24,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
@@ -33,7 +34,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 import de.svws_nrw.module.pdf.PDFCreator;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.WebApplicationException;
@@ -422,7 +422,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
     	final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, aktAbschnitt.Klassen_ID);
 		if (klasse == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final Abiturdaten daten = GostSchuelerLaufbahn.get(conn, schueler_id);
+    	final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
 		if (daten == null)
     		return OperationError.NOT_FOUND.getResponse();
     	final DTOGostJahrgangsdaten jahrgangsDaten = conn.queryByKey(DTOGostJahrgangsdaten.class, daten.abiturjahr);

@@ -3,6 +3,7 @@ package de.svws_nrw.data.schild3.reporting;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungGrunddaten;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -14,7 +15,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrun
 
 			// GOSt-Daten des Schülers und dessen Abiturdaten und Jahrgangsdaten ermitteln
 			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
-			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schuelerID);
 			DTOGostJahrgangsdaten jahrgangsdaten = null;
 			if (abidaten.abiturjahr > 0) {
 				jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);

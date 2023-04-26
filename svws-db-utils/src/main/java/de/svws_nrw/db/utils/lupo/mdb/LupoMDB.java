@@ -30,6 +30,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
@@ -50,7 +51,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
-import de.svws_nrw.db.utils.gost.GostSchueler;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 
@@ -231,7 +231,7 @@ public class LupoMDB {
 					.setParameter("jahrgang", jahrgang)
 					.getResultList();
 			final List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).collect(Collectors.toList());
-			final Map<Long, GostLeistungen> gostLeistungen = GostSchueler.getLeistungsdaten(conn, schuelerIDs);
+			final Map<Long, GostLeistungen> gostLeistungen = DBUtilsGost.getLeistungsdaten(conn, schuelerIDs);
 			final Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 			final Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 			final Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));

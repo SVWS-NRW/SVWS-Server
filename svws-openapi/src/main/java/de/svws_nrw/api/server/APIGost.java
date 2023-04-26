@@ -34,6 +34,7 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
+import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBlockungKurs;
 import de.svws_nrw.data.gost.DataGostBlockungKursLehrer;
@@ -49,12 +50,11 @@ import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.GostSchueler;
-import de.svws_nrw.db.utils.gost.GostSchuelerAbitur;
 import de.svws_nrw.module.pdf.gost.PDFGostWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -613,7 +613,7 @@ public class APIGost {
     public GostLeistungen getGostSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                            @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-	    	return GostSchueler.getLeistungsdaten(conn, id);
+	    	return DBUtilsGost.getLeistungsdaten(conn, id);
     	}
     }
 
@@ -646,7 +646,7 @@ public class APIGost {
     public Abiturdaten getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                                       @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return GostSchuelerAbitur.getAbiturdatenAusLeistungsdaten(conn, id);
+    		return DBUtilsGostAbitur.getAbiturdatenAusLeistungsdaten(conn, id);
     	}
     }
 
@@ -677,7 +677,7 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Abiturdaten getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-	    	return GostSchuelerAbitur.getAbiturdaten(conn, id);
+	    	return DBUtilsGostAbitur.getAbiturdaten(conn, id);
     	}
     }
 

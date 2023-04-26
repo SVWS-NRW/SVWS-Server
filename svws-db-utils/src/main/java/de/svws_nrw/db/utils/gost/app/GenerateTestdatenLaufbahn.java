@@ -28,6 +28,7 @@ import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -35,7 +36,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -146,7 +146,7 @@ public class GenerateTestdatenLaufbahn {
 					final String strSchuelerID = String.format("%04d", schueler.Schueler_ID);
 					Abiturdaten abiturdaten;
 					try {
-						abiturdaten = GostSchuelerLaufbahn.get(conn, schueler.Schueler_ID);
+						abiturdaten = DBUtilsGostLaufbahn.get(conn, schueler.Schueler_ID);
 					} catch (@SuppressWarnings("unused") final Exception e) {
 						abiturdaten = null;
 					}

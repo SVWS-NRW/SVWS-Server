@@ -7,11 +7,11 @@ import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungS
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 			laufbahnplanungSummen.schuelerID = schuelerID;
 
 			// Abiturdaten und Abiturjahrgangsdaten zur Schueler_ID ermitteln
-			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schuelerID);
 			final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
 
 			if ((abidaten.abiturjahr <= 0) || (jahrgangsdaten == null)) {

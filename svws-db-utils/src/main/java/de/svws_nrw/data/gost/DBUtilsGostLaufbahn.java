@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils.gost;
+package de.svws_nrw.data.gost;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,10 +34,10 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu der Laufbahnplanung von Schülern der gymnasialen Oberstufe zur Verfügung.
  */
-public final class GostSchuelerLaufbahn {
+public final class DBUtilsGostLaufbahn {
 
-	private GostSchuelerLaufbahn() {
-		throw new IllegalStateException("Instantiation of " + GostSchuelerLaufbahn.class.getName() + " not allowed");
+	private DBUtilsGostLaufbahn() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsGostLaufbahn.class.getName() + " not allowed");
 	}
 
 	/**
@@ -66,7 +66,7 @@ public final class GostSchuelerLaufbahn {
     			.getResultList().stream().findFirst().orElse(null);
     	if (aktAbschnitt == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-    	final Integer abiturjahr = GostSchueler.getAbiturjahr(schule.Schulform, aktAbschnitt, dtoAbschnitt.Jahr);
+    	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, aktAbschnitt, dtoAbschnitt.Jahr);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
     	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
     	if (dtoGostSchueler == null) {
@@ -79,7 +79,7 @@ public final class GostSchuelerLaufbahn {
     			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 
     	// Bestimme die bereits vorhandenen Leistungsdaten für die weitere Laufbahnplanung
-    	final GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
+    	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
     	if (leistungen == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 

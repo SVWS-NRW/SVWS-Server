@@ -10,11 +10,11 @@ import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungF
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
+import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.db.utils.gost.GostSchuelerLaufbahn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehl
 		for (final Long schuelerID : params) {
 			// GOSt-Daten des Schülers und Abiturdaten zur Schueler_ID ermitteln
 			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
-			final Abiturdaten abidaten = GostSchuelerLaufbahn.get(conn, schuelerID);
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, schuelerID);
 
 			if ((gostSchueler != null) && (abidaten.abiturjahr > 0)) {
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fehler in die Ergebnisliste eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.

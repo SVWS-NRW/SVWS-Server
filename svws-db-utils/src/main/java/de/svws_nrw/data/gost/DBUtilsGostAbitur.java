@@ -1,4 +1,4 @@
-package de.svws_nrw.db.utils.gost;
+package de.svws_nrw.data.gost;
 
 import java.util.List;
 import java.util.Map;
@@ -36,10 +36,10 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
  * zu dem Abiturbereich von Schülern der gymnasialen Oberstufe zur Verfügung.
  */
-public final class GostSchuelerAbitur {
+public final class DBUtilsGostAbitur {
 
-	private GostSchuelerAbitur() {
-		throw new IllegalStateException("Instantiation of " + GostSchuelerAbitur.class.getName() + " not allowed");
+	private DBUtilsGostAbitur() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsGostAbitur.class.getName() + " not allowed");
 	}
 
 	/**
@@ -52,7 +52,7 @@ public final class GostSchuelerAbitur {
 	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
 	 */
     public static Abiturdaten getAbiturdatenAusLeistungsdaten(final DBEntityManager conn, final long id) {
-    	final GostLeistungen leistungen = GostSchueler.getLeistungsdaten(conn, id);
+    	final GostLeistungen leistungen = DBUtilsGost.getLeistungsdaten(conn, id);
     	if (leistungen == null)
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 
