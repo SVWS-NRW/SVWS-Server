@@ -59,6 +59,14 @@
 							</div>
 						</div>
 					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate	">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Abiturfach
+							</div>
+						</div>
+					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
@@ -262,10 +270,26 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								LK
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								3
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								4
 							</div>
 						</div>
 					</div>
@@ -352,8 +376,14 @@
 					<div role="cell" class="data-table__td data-table__td__align-center">
 						{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenZK == 0 ? "" : row.fachwahlen[5].wahlenZK }}
 					</div>
+					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
+						{{ row.fachwahlen[5]?.wahlenLK || "" }}
+					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[5] == null || row.fachwahlen[5].wahlenLK == 0 ? "" : row.fachwahlen[5].wahlenLK }}
+						{{ row.wahlenAB3 || "" }}
+					</div>
+					<div role="cell" class="data-table__td data-table__td__align-center">
+						{{ row.wahlenAB4 || "" }}
 					</div>
 				</div>
 			</template>
@@ -403,7 +433,9 @@
 		{ key: "S", label: "S", align: 'center', span: 0.25, minWidth: 2.5 },
 		{ key: "GK", label: "GK", align: 'center', span: 0.25, minWidth: 2.5 },
 		{ key: "ZK", label: "ZK", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 2.5 }
+		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 2.5 },
+		{ key: "AB3", label: "3", align: 'center', span: 0.25, minWidth: 2.5 },
+		{ key: "AB4", label: "4", align: 'center', span: 0.25, minWidth: 2.5 }
 	];
 
 </script>
