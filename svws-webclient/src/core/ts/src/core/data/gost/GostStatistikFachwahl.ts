@@ -29,6 +29,16 @@ export class GostStatistikFachwahl extends JavaObject {
 	public kuerzelStatistik : string | null = null;
 
 	/**
+	 * Die Anzahl der Wahlen als drittes Abiturfach.
+	 */
+	public wahlenAB3 : number = 0;
+
+	/**
+	 * Die Anzahl der Wahlen als viertes Abiturfach.
+	 */
+	public wahlenAB4 : number = 0;
+
+	/**
 	 * Ein Array mit den Fachwahlen der 6 Halbjahre der gymnasialen Oberstufe
 	 */
 	public fachwahlen : Array<GostStatistikFachwahlHalbjahr> = Array(6).fill(null);
@@ -54,6 +64,12 @@ export class GostStatistikFachwahl extends JavaObject {
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		if (typeof obj.wahlenAB3 === "undefined")
+			 throw new Error('invalid json format, missing attribute wahlenAB3');
+		result.wahlenAB3 = obj.wahlenAB3;
+		if (typeof obj.wahlenAB4 === "undefined")
+			 throw new Error('invalid json format, missing attribute wahlenAB4');
+		result.wahlenAB4 = obj.wahlenAB4;
 		for (let i = 0; i < obj.fachwahlen.length; i++) {
 			result.fachwahlen[i] = (GostStatistikFachwahlHalbjahr.transpilerFromJSON(JSON.stringify(obj.fachwahlen[i])));
 		}
@@ -67,6 +83,8 @@ export class GostStatistikFachwahl extends JavaObject {
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		result += '"wahlenAB3" : ' + obj.wahlenAB3 + ',';
+		result += '"wahlenAB4" : ' + obj.wahlenAB4 + ',';
 		if (!obj.fachwahlen) {
 			result += '"fachwahlen" : []';
 		} else {
@@ -100,6 +118,12 @@ export class GostStatistikFachwahl extends JavaObject {
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
 			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		}
+		if (typeof obj.wahlenAB3 !== "undefined") {
+			result += '"wahlenAB3" : ' + obj.wahlenAB3 + ',';
+		}
+		if (typeof obj.wahlenAB4 !== "undefined") {
+			result += '"wahlenAB4" : ' + obj.wahlenAB4 + ',';
 		}
 		if (typeof obj.fachwahlen !== "undefined") {
 			const a = obj.fachwahlen;

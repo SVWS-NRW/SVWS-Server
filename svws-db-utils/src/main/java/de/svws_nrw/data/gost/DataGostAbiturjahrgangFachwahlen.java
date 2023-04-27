@@ -88,18 +88,16 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
-		if (schueler == null)
-			return null;
-		if (schueler.size() == 0)
+		if ((schueler == null) || (schueler.isEmpty()))
 			return new ArrayList<>();
-		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
+		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
     	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
 		if (fachbelegungen == null)
-			return null;
+			return new ArrayList<>();
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if ((faecher == null) || (faecher.size() == 0))
-			return null;
+			return new ArrayList<>();
     	// Ermittle die Fachwahlmatrix für alle angegebenen Schüler-IDs
 		final HashMap<Long, GostStatistikFachwahl> fachwahlen = new HashMap<>();
 	    for (final DTOGostSchuelerFachbelegungen fachbelegung: fachbelegungen) {
@@ -123,10 +121,16 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q12, fachbelegung.Q12_Kursart);
 	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q21, fachbelegung.Q21_Kursart);
 	        GostStatistikFachwahlManager.setFachwahlHalbjahr(fachwahl, GostHalbjahr.Q22, fachbelegung.Q22_Kursart);
+	        if (fachbelegung.AbiturFach != null) {
+	        	if (fachbelegung.AbiturFach == 3)
+	    	        fachwahl.wahlenAB3++;
+	        	if (fachbelegung.AbiturFach == 4)
+	        		fachwahl.wahlenAB4++;
+	        }
 	    }
-		return fachwahlen.values().stream().sorted((a, b) -> {
-    		return Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII);
-    	}).collect(Collectors.toList());
+		return fachwahlen.values().stream()
+				.sorted((a, b) -> Integer.compare(faecher.get(a.id).SortierungSekII, faecher.get(b.id).SortierungSekII))
+				.toList();
 	}
 
 
@@ -140,7 +144,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
      */
 	public Response getSchuelerFachwahlenResponse(final int halbjahr_id) {
         final List<GostFachwahl> daten = this.getSchuelerFachwahlen(GostHalbjahr.fromID(halbjahr_id));
-        if (daten.size() == 0)
+        if (daten.isEmpty())
             return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -174,15 +178,15 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahr, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))
+		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
 			return Collections.emptyList();
-		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toList());
+		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
     	final List<DTOGostSchuelerFachbelegungen> fachbelegungen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id.multiple", schuelerIDs, DTOGostSchuelerFachbelegungen.class);
-		if ((fachbelegungen == null) || (fachbelegungen.size() == 0))
+		if ((fachbelegungen == null) || (fachbelegungen.isEmpty()))
 			return Collections.emptyList();
 		// Bestimme die Schülernamen
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
-		if ((schuelerListe == null) || (schuelerListe.size() == 0))
+		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
 			return Collections.emptyList();
 		final Map<Long, DTOSchueler> schuelerMap = schuelerListe.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		// Lese die Fachliste aus der DB
@@ -212,8 +216,13 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 				default -> false;
 			};
 			final GostKursart kursart = switch (strKursart) {
-			    case "M" -> "VX".equals(fach.StatistikFach.daten.kuerzelASD) ? GostKursart.VTF
-			    		: "PX".equals(fach.StatistikFach.daten.kuerzelASD) ? GostKursart.PJK : GostKursart.GK;
+			    case "M" -> {
+			    	if ("VX".equals(fach.StatistikFach.daten.kuerzelASD))
+			    		yield GostKursart.VTF;
+			    	if ("PX".equals(fach.StatistikFach.daten.kuerzelASD))
+			    		yield GostKursart.PJK;
+			    	yield GostKursart.GK;
+			    }
 			    case "S" -> GostKursart.GK;
 			    case "LK" -> GostKursart.LK;
 			    case "ZK" -> GostKursart.ZK;
