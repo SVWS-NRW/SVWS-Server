@@ -713,15 +713,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 *
 	 * @return die Belegprüfungsergebnisse
 	 */
-	public Response pruefeBelegungGesamt(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
+	public Response pruefeBelegungAbitujahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) {
 		try {
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
 
 			// Erstelle das DTO für die Eregbnisrückmeldung
-			final GostBelegpruefungsErgebnisse daten = new GostBelegpruefungsErgebnisse();
-			daten.kuerzel = pruefungsArt.kuerzel;
+			final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
 
 			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
 			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).toList();
@@ -731,21 +730,22 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				// Bestimme die Laufbahndaten des Schülers
 				final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 
-				// Führe die Belegprüfung für den Schüler durch
-				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
-				final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
+				// Erzeuge das Ergebnis-DTO für die Rückgabe
+				final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
-				// Erstelle das zugehörige Schüler-DTO
-				final Schueler schueler = new Schueler();
-				schueler.id = dtoSchueler.ID;
-				schueler.vorname = dtoSchueler.Nachname;
-				schueler.nachname = dtoSchueler.Vorname;
-				schueler.status = dtoSchueler.Status.id;
-				schueler.geschlecht = dtoSchueler.Geschlecht.id;
+				// Führe die Belegprüfung für den Schüler durch
+				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher, pruefungsArt);
+				ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
+
+				// F+lle das zugehörige Schüler-DTO
+				ergebnisse.schueler.id = dtoSchueler.ID;
+				ergebnisse.schueler.vorname = dtoSchueler.Nachname;
+				ergebnisse.schueler.nachname = dtoSchueler.Vorname;
+				ergebnisse.schueler.status = dtoSchueler.Status.id;
+				ergebnisse.schueler.geschlecht = dtoSchueler.Geschlecht.id;
 
 				// Schreibe das Ergebnis in die Rückmeldung
-				daten.schueler.add(schueler);
-				daten.ergebnisse.add(ergebnis);
+				daten.add(ergebnisse);
 			}
 
 			// Erzeuge die Response mit den Belegprüfungsergebnissen

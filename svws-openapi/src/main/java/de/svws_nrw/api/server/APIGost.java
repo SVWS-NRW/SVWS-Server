@@ -428,7 +428,7 @@ public class APIGost {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungGesamt(abiturjahr, GostBelegpruefungsArt.GESAMT);
+            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbitujahrgang(abiturjahr, GostBelegpruefungsArt.GESAMT);
         }
     }
 
@@ -459,7 +459,7 @@ public class APIGost {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
-            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungGesamt(abiturjahr, GostBelegpruefungsArt.EF1);
+            return (new DataGostSchuelerLaufbahnplanung(conn)).pruefeBelegungAbitujahrgang(abiturjahr, GostBelegpruefungsArt.EF1);
         }
     }
 

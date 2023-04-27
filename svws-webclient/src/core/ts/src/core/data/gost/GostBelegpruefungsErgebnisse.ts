@@ -1,26 +1,18 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../core/data/schueler/Schueler';
-import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
-import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
-import { List } from '../../../java/util/List';
 
 export class GostBelegpruefungsErgebnisse extends JavaObject {
 
 	/**
-	 * Die Art der durchgeführten Belegprüfung.
+	 * Der Schüler, für welchen die Belegprüfung durchgeführt wurde
 	 */
-	public kuerzel : string = GostBelegpruefungsArt.GESAMT.kuerzel;
+	public schueler : Schueler = new Schueler();
 
 	/**
-	 * Die Liste der Schüler, für welche die Belegprüfung durchgeführt wurde
+	 * Die zugehörigen Belegprüfungsergebnisse
 	 */
-	public schueler : List<Schueler> = new ArrayList();
-
-	/**
-	 * Die Liste der Belegprüfungsergebnisse, die Anzahl und Reihenfolge muss der Anzahl und Reihenfolge der Schülerlist entsprechen.
-	 */
-	public ergebnisse : List<GostBelegpruefungErgebnis> = new ArrayList();
+	public ergebnis : GostBelegpruefungErgebnis = new GostBelegpruefungErgebnis();
 
 
 	public constructor() {
@@ -34,49 +26,19 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungsErgebnisse {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsErgebnisse();
-		if (typeof obj.kuerzel === "undefined")
-			 throw new Error('invalid json format, missing attribute kuerzel');
-		result.kuerzel = obj.kuerzel;
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
-			for (const elem of obj.schueler) {
-				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
-		if ((obj.ergebnisse !== undefined) && (obj.ergebnisse !== null)) {
-			for (const elem of obj.ergebnisse) {
-				result.ergebnisse?.add(GostBelegpruefungErgebnis.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
+		if (typeof obj.schueler === "undefined")
+			 throw new Error('invalid json format, missing attribute schueler');
+		result.schueler = Schueler.transpilerFromJSON(JSON.stringify(obj.schueler));
+		if (typeof obj.ergebnis === "undefined")
+			 throw new Error('invalid json format, missing attribute ergebnis');
+		result.ergebnis = GostBelegpruefungErgebnis.transpilerFromJSON(JSON.stringify(obj.ergebnis));
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBelegpruefungsErgebnisse) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
-			result += '"schueler" : [ ';
-			for (let i = 0; i < obj.schueler.size(); i++) {
-				const elem = obj.schueler.get(i);
-				result += Schueler.transpilerToJSON(elem);
-				if (i < obj.schueler.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (!obj.ergebnisse) {
-			result += '"ergebnisse" : []';
-		} else {
-			result += '"ergebnisse" : [ ';
-			for (let i = 0; i < obj.ergebnisse.size(); i++) {
-				const elem = obj.ergebnisse.get(i);
-				result += GostBelegpruefungErgebnis.transpilerToJSON(elem);
-				if (i < obj.ergebnisse.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
+		result += '"schueler" : ' + Schueler.transpilerToJSON(obj.schueler) + ',';
+		result += '"ergebnis" : ' + GostBelegpruefungErgebnis.transpilerToJSON(obj.ergebnis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,36 +46,11 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungsErgebnisse>) : string {
 		let result = '{';
-		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
-		}
 		if (typeof obj.schueler !== "undefined") {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += Schueler.transpilerToJSON(elem);
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
+			result += '"schueler" : ' + Schueler.transpilerToJSON(obj.schueler) + ',';
 		}
-		if (typeof obj.ergebnisse !== "undefined") {
-			if (!obj.ergebnisse) {
-				result += '"ergebnisse" : []';
-			} else {
-				result += '"ergebnisse" : [ ';
-				for (let i = 0; i < obj.ergebnisse.size(); i++) {
-					const elem = obj.ergebnisse.get(i);
-					result += GostBelegpruefungErgebnis.transpilerToJSON(elem);
-					if (i < obj.ergebnisse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
+		if (typeof obj.ergebnis !== "undefined") {
+			result += '"ergebnis" : ' + GostBelegpruefungErgebnis.transpilerToJSON(obj.ergebnis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
