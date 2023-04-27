@@ -125,8 +125,8 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 	public getProps(to: RouteLocationNormalized): GostLaufbahnplanungProps {
 		return {
 			config: api.config,
-			listBelegpruefungsErgebnisse: this.data.listBelegpruefungsErgebnisse,
-			belegpruefungsart: this.data.belegpruefungsart,
+			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
+			belegpruefungsart: () => this.data.belegpruefungsart,
 			setBelegpruefungsart: this.data.setBelegpruefungsart,
 		};
 	}

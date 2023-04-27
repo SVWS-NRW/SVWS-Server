@@ -3,7 +3,7 @@ import type { Config } from "~/components/Config";
 
 export interface GostLaufbahnplanungProps {
 	config: Config,
-	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
-	belegpruefungsart: GostBelegpruefungsArt;
+	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
+	belegpruefungsart: () => GostBelegpruefungsArt;
 	setBelegpruefungsart: (belegpruefungsart: GostBelegpruefungsArt) => Promise<void>;
 }
