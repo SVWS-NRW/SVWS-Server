@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
-import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
@@ -24,7 +23,6 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
-import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerConsole;
