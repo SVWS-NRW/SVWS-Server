@@ -146,10 +146,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		routeGost.data.params = from_params;
-	}
-
 	public getRoute() : RouteLocationRaw {
 		return { name: routeGost.name, params: { abiturjahr: -1 }};
 	}

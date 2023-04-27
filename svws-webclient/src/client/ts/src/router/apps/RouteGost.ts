@@ -63,6 +63,10 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
 	}
 
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		routeGost.data.params = from_params;
+	}
+
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))

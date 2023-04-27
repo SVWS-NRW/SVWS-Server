@@ -3,7 +3,7 @@
 		<svws-ui-toggle v-model="filterFehler" /> Nur Ergebnisse mit Fehlern anzeigen
 		<s-laufbahnplanung-belegpruefungsart :model-value="belegpruefungsart()" @update:model-value="setBelegpruefungsart($event)" />
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
-			<template #cell(schueler)="{ value: s}">
+			<template #cell(schueler)="{ value: s}: {value: Schueler}">
 				{{ s.nachname }}, {{ s.vorname }}
 			</template>
 		</svws-ui-data-table>
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostBelegpruefungsErgebnisse, List } from '@svws-nrw/svws-core';
+	import type { GostBelegpruefungsErgebnisse, List, Schueler } from '@svws-nrw/svws-core';
 	import { ArrayList } from '@svws-nrw/svws-core';
 	import type { GostBelegpruefungsArt } from '@svws-nrw/svws-core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
