@@ -226,7 +226,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				    + "AND (sla.Schueler_ID, k1.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) "
 				    + "AND (sla.Schueler_ID, k2.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) ";
 				final List<Long> tmpLeistungsdatenIDs = conn.queryNative(sql);
-				if (tmpLeistungsdatenIDs.size() > 0) {
+				if (!tmpLeistungsdatenIDs.isEmpty()) {
 					sql = "UPDATE SchuelerLeistungsdaten SET Kurs_ID = NULL WHERE ID IN ";
 					sql += tmpLeistungsdatenIDs.stream().map(id -> "" + id).collect(Collectors.joining(",", "(", ")"));
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {

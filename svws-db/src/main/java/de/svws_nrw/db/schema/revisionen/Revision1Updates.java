@@ -45,27 +45,27 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Korrigiere Religion_ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			UPDATE Schueler
-				JOIN (
-					SELECT
-						SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
-						SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
-					FROM K_Religion
-					GROUP BY Bezeichnung
-					HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
-				) mapping ON Schueler.Religion_ID = mapping.ID_ORIG
+			    JOIN (
+			        SELECT
+			            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
+			            SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
+			        FROM K_Religion
+			        GROUP BY Bezeichnung
+			        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    ) mapping ON Schueler.Religion_ID = mapping.ID_ORIG
 			SET Schueler.Religion_ID = mapping.ID_REPLACE
 			""",
 			Schema.tab_K_Religion, Schema.tab_Schueler
 		);
-		add("Entferne ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
+		add("Entferne ID, falls ein Religions-Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			DELETE FROM K_Religion
 			WHERE ID IN (
-				SELECT
-					SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				FROM K_Religion
-				GROUP BY Bezeichnung
-				HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    SELECT
+			        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+			    FROM K_Religion
+			    GROUP BY Bezeichnung
+			    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
 			)
 			""",
 			Schema.tab_K_Religion
@@ -76,27 +76,27 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Korrigiere ErzieherArt_ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			UPDATE SchuelerErzAdr
-				JOIN (
-					SELECT
-						SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
-						SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
-					FROM K_ErzieherArt
-					GROUP BY Bezeichnung
-					HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
-				) mapping ON SchuelerErzAdr.ErzieherArt_ID = mapping.ID_ORIG
+			    JOIN (
+			        SELECT
+			            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
+			            SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
+			        FROM K_ErzieherArt
+			        GROUP BY Bezeichnung
+			        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    ) mapping ON SchuelerErzAdr.ErzieherArt_ID = mapping.ID_ORIG
 			SET SchuelerErzAdr.ErzieherArt_ID = mapping.ID_REPLACE
 			""",
 			Schema.tab_K_ErzieherArt, Schema.tab_SchuelerErzAdr
 		);
-		add("Entferne ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
+		add("Entferne ID, falls ein Erzieher-Art-Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			DELETE FROM K_ErzieherArt
 			WHERE ID IN (
-				SELECT
-					SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				FROM K_ErzieherArt
-				GROUP BY Bezeichnung
-				HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    SELECT
+			        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+			    FROM K_ErzieherArt
+			    GROUP BY Bezeichnung
+			    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
 			)
 			""",
 			Schema.tab_K_ErzieherArt
@@ -107,14 +107,14 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Korrigiere Ortsteil_ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			UPDATE Schueler
-				JOIN (
-					SELECT
-						SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
-						SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
-					FROM K_Ortsteil
-					GROUP BY Bezeichnung
-					HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
-				) mapping ON Schueler.Ortsteil_ID = mapping.ID_ORIG
+			    JOIN (
+			        SELECT
+			            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
+			            SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
+			        FROM K_Ortsteil
+			        GROUP BY Bezeichnung
+			        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    ) mapping ON Schueler.Ortsteil_ID = mapping.ID_ORIG
 			SET Schueler.Ortsteil_ID = mapping.ID_REPLACE
 			""",
 			Schema.tab_K_Ortsteil, Schema.tab_Schueler
@@ -122,27 +122,27 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Korrigiere ErzOrtsteil_ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			UPDATE SchuelerErzAdr
-				JOIN (
-					SELECT
-						SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
-						SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
-					FROM K_Ortsteil
-					GROUP BY Bezeichnung
-					HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
-				) mapping ON SchuelerErzAdr.ErzOrtsteil_ID = mapping.ID_ORIG
+			    JOIN (
+			        SELECT
+			            SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG,
+			            SUM(CASE WHEN SchulnrEigner = 0 THEN ID ELSE null END) AS ID_REPLACE
+			        FROM K_Ortsteil
+			        GROUP BY Bezeichnung
+			        HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    ) mapping ON SchuelerErzAdr.ErzOrtsteil_ID = mapping.ID_ORIG
 			SET SchuelerErzAdr.ErzOrtsteil_ID = mapping.ID_REPLACE
 			""",
 			Schema.tab_K_Ortsteil, Schema.tab_SchuelerErzAdr
 		);
-		add("Entferne ID, falls ein Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
+		add("Entferne ID, falls ein Ortsteil-Katalog-Eintrag doppelt vorkommt (z.B. bei SchildZentral-Dbs)",
 			"""
 			DELETE FROM K_Ortsteil
 			WHERE ID IN (
-				SELECT
-					SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				FROM K_Ortsteil
-				GROUP BY Bezeichnung
-				HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    SELECT
+			        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+			    FROM K_Ortsteil
+			    GROUP BY Bezeichnung
+			    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
 			)
 			""",
 			Schema.tab_K_Ortsteil
@@ -155,11 +155,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM K_Ort
 			WHERE ID IN (
-				SELECT
-					SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
-				FROM K_Ort
-				GROUP BY PLZ, Bezeichnung
-				HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
+			    SELECT
+			        SUM(CASE WHEN SchulnrEigner <> 0 THEN ID ELSE null END) AS ID_ORIG
+			    FROM K_Ort
+			    GROUP BY PLZ, Bezeichnung
+			    HAVING count(ID) = 2 AND SUM(CASE WHEN SchulnrEigner = 0 THEN 1 ELSE 2 END) = 3
 			)
 			""",
 			Schema.tab_K_Ort
@@ -183,8 +183,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE EigeneSchule_Abteilungen
 			SET AbteilungsLeiter = NULL
 			WHERE AbteilungsLeiter NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_EigeneSchule_Abteilungen, Schema.tab_K_Lehrer
@@ -194,30 +194,30 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Floskeln
 			SET FloskelGruppe = NULL
 			WHERE FloskelGruppe NOT IN (
-				SELECT Kuerzel
-				FROM Floskelgruppen
+			    SELECT Kuerzel
+			    FROM Floskelgruppen
 			)
 			""",
 			Schema.tab_Floskeln, Schema.tab_Floskelgruppen
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte EigeneSchule_Jahrgaenge der Tabelle Floskeln",
-				"""
-				UPDATE Floskeln
-				SET FloskelJahrgang = NULL
-				WHERE FloskelJahrgang NOT IN (
-					SELECT ASDJahrgang
-					FROM EigeneSchule_Jahrgaenge
-				)
-				""",
-				Schema.tab_Floskeln, Schema.tab_EigeneSchule_Jahrgaenge
-			);
+			"""
+			UPDATE Floskeln
+			SET FloskelJahrgang = NULL
+			WHERE FloskelJahrgang NOT IN (
+			    SELECT ASDJahrgang
+			    FROM EigeneSchule_Jahrgaenge
+			)
+			""",
+		    Schema.tab_Floskeln, Schema.tab_EigeneSchule_Jahrgaenge
+		);
 		add("Korrektur für den Fremdschluessel auf die Spalte AllgAdrAdressArt der Tabelle K_AllgAdresse",
 			"""
 			UPDATE K_AllgAdresse
 			SET AllgAdrAdressArt = NULL
 			WHERE AllgAdrAdressArt NOT IN (
-				SELECT Bezeichnung
-				FROM K_Adressart
+			    SELECT Bezeichnung
+			    FROM K_Adressart
 			)
 			""",
 			Schema.tab_K_Adressart, Schema.tab_K_AllgAdresse
@@ -235,8 +235,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE K_Ankreuzfloskeln
 			SET Fach_ID = null
 			WHERE Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_K_Ankreuzfloskeln, Schema.tab_EigeneSchule_Faecher
@@ -246,8 +246,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE K_Lehrer
 			SET StaatKrz = NULL
 			WHERE StaatKrz NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_K_Lehrer, Schema.tab_Nationalitaeten_Keys
@@ -257,8 +257,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Kurse
 			SET Jahrgang_ID = NULL
 			WHERE Jahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_Kurse, Schema.tab_EigeneSchule_Jahrgaenge
@@ -267,8 +267,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM Kurse
 			WHERE Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_Kurse, Schema.tab_EigeneSchule_Faecher
@@ -278,7 +278,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schild_Verwaltung
 			SET DatumLoeschfristHinweisDeaktiviertUserID = NULL
 			WHERE DatumLoeschfristHinweisDeaktiviertUserID NOT IN (
-				SELECT ID FROM Users
+			    SELECT ID FROM Users
 			)
 			""",
 			Schema.tab_Schild_Verwaltung, Schema.tab_Users
@@ -288,8 +288,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Einschulungsart_ID = null
 			WHERE Einschulungsart_ID NOT IN (
-				SELECT ID
-				FROM K_EinschulungsArt
+			    SELECT ID
+			    FROM K_EinschulungsArt
 			)
 			""",
 			Schema.tab_K_EinschulungsArt, Schema.tab_Schueler
@@ -299,8 +299,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Entlassjahrgang_ID = null
 			WHERE Entlassjahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Schueler
@@ -310,8 +310,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET FachklasseNSJ_ID = null
 			WHERE FachklasseNSJ_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Fachklassen
+			    SELECT ID
+			    FROM EigeneSchule_Fachklassen
 			)
 			""",
 			Schema.tab_EigeneSchule_Fachklassen, Schema.tab_Schueler
@@ -321,8 +321,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Fahrschueler_ID = null
 			WHERE Fahrschueler_ID NOT IN (
-				SELECT ID
-				FROM K_FahrschuelerArt
+			    SELECT ID
+			    FROM K_FahrschuelerArt
 			)
 			""",
 			Schema.tab_K_FahrschuelerArt, Schema.tab_Schueler
@@ -332,8 +332,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Haltestelle_ID = null
 			WHERE Haltestelle_ID NOT IN (
-				SELECT ID
-				FROM K_Haltestelle
+			    SELECT ID
+			    FROM K_Haltestelle
 			)
 			""",
 			Schema.tab_K_Haltestelle, Schema.tab_Schueler
@@ -343,8 +343,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Jahrgang_ID = null
 			WHERE Jahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_EigeneSchule_Jahrgaenge, Schema.tab_Schueler
@@ -354,8 +354,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Kindergarten_ID = null
 			WHERE Kindergarten_ID NOT IN (
-				SELECT ID
-				FROM K_Kindergarten
+			    SELECT ID
+			    FROM K_Kindergarten
 			)
 			""",
 			Schema.tab_K_Kindergarten, Schema.tab_Schueler
@@ -365,8 +365,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Klasse = null
 			WHERE Klasse NOT IN (
-				SELECT Klasse
-				FROM Versetzung
+			    SELECT Klasse
+			    FROM Versetzung
 			)
 			""",
 			Schema.tab_Versetzung, Schema.tab_Schueler
@@ -376,8 +376,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Ortsteil_ID = NULL
 			WHERE Ortsteil_ID NOT IN (
-				SELECT ID
-				FROM K_Ortsteil
+			    SELECT ID
+			    FROM K_Ortsteil
 			)
 			""",
 			Schema.tab_K_Ortsteil, Schema.tab_Schueler
@@ -387,7 +387,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Religion_ID = NULL
 			WHERE Religion_ID NOT IN (
-				SELECT ID FROM K_Religion
+			    SELECT ID FROM K_Religion
 			)
 			""",
 			Schema.tab_K_Religion, Schema.tab_Schueler
@@ -397,8 +397,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET StaatKrz = NULL
 			WHERE StaatKrz NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_Nationalitaeten_Keys, Schema.tab_Schueler
@@ -408,8 +408,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET StaatKrz2 = NULL
 			WHERE StaatKrz2 NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_Nationalitaeten_Keys, Schema.tab_Schueler
@@ -419,8 +419,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET GeburtslandSchueler = NULL
 			WHERE GeburtslandSchueler NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_Nationalitaeten_Keys, Schema.tab_Schueler
@@ -430,8 +430,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET GeburtslandVater = NULL
 			WHERE GeburtslandVater NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_Nationalitaeten_Keys, Schema.tab_Schueler
@@ -441,8 +441,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET GeburtslandMutter = NULL
 			WHERE GeburtslandMutter NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_Nationalitaeten_Keys, Schema.tab_Schueler
@@ -452,8 +452,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Schwerpunkt_ID = NULL
 			WHERE Schwerpunkt_ID NOT IN (
-				SELECT ID
-				FROM K_Schwerpunkt
+			    SELECT ID
+			    FROM K_Schwerpunkt
 			)
 			""",
 			Schema.tab_K_Schwerpunkt, Schema.tab_Schueler
@@ -463,8 +463,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Sportbefreiung_ID = NULL
 			WHERE Sportbefreiung_ID NOT IN (
-				SELECT ID
-				FROM K_Sportbefreiung
+			    SELECT ID
+			    FROM K_Sportbefreiung
 			)
 			""",
 			Schema.tab_K_Schwerpunkt, Schema.tab_Schueler
@@ -477,8 +477,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler_AllgAdr
 			SET Ansprechpartner_ID = NULL
 			WHERE Ansprechpartner_ID NOT IN (
-				SELECT ID
-				FROM AllgAdrAnsprechpartner
+			    SELECT ID
+			    FROM AllgAdrAnsprechpartner
 			)
 			""",
 			Schema.tab_AllgAdrAnsprechpartner, Schema.tab_Schueler_AllgAdr
@@ -488,8 +488,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler_AllgAdr
 			SET Vertragsart_ID = NULL
 			WHERE Vertragsart_ID NOT IN (
-				SELECT ID
-				FROM K_BeschaeftigungsArt
+			    SELECT ID
+			    FROM K_BeschaeftigungsArt
 			)
 			""",
 			Schema.tab_K_BeschaeftigungsArt, Schema.tab_Schueler_AllgAdr
@@ -499,8 +499,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET Kurs_ID = NULL
 			WHERE Kurs_ID NOT IN (
-				SELECT ID
-				FROM Kurse
+			    SELECT ID
+			    FROM Kurse
 			)
 			""",
 			Schema.tab_SchuelerAbiFaecher, Schema.tab_Kurse
@@ -510,8 +510,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerEinzelleistungen
 			SET Lehrer_ID = NULL WHERE
 			Lehrer_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_K_Lehrer
@@ -521,8 +521,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerErzAdr
 			SET ErzieherArt_ID = NULL
 			WHERE ErzieherArt_ID NOT IN (
-				SELECT ID
-				FROM K_ErzieherArt
+			    SELECT ID
+			    FROM K_ErzieherArt
 			)
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_K_ErzieherArt
@@ -532,8 +532,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerErzAdr
 			SET ErzOrtsteil_ID = NULL
 			WHERE ErzOrtsteil_ID NOT IN (
-				SELECT ID
-				FROM K_Ortsteil
+			    SELECT ID
+			    FROM K_Ortsteil
 			)
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_K_Ortsteil
@@ -543,8 +543,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerErzAdr
 			SET Erz1StaatKrz = NULL
 			WHERE Erz1StaatKrz NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_Nationalitaeten_Keys
@@ -554,8 +554,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerErzAdr
 			SET Erz2StaatKrz = NULL
 			WHERE Erz2StaatKrz NOT IN (
-				SELECT DEStatisCode
-				FROM Nationalitaeten_Keys
+			    SELECT DEStatisCode
+			    FROM Nationalitaeten_Keys
 			)
 			""",
 			Schema.tab_SchuelerErzAdr, Schema.tab_Nationalitaeten_Keys
@@ -565,8 +565,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerFehlstunden
 			SET Fach_ID = null
 			WHERE Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_SchuelerFehlstunden, Schema.tab_EigeneSchule_Faecher
@@ -576,8 +576,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerFehlstunden
 			SET Lehrer_ID = NULL
 			WHERE Lehrer_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerFehlstunden, Schema.tab_K_Lehrer
@@ -587,30 +587,30 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerFoerderempfehlungen
 			SET Lehrer_ID = NULL
 			WHERE Lehrer_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_K_Lehrer
 		);
 		add("Korrektur für den Fremdschluessel auf die Spalte KategorieID der Tabelle SchuelerKAoADaten",
-				"""
-				UPDATE SchuelerKAoADaten
-				SET KategorieID = NULL
-				WHERE KategorieID NOT IN (
-					SELECT ID
-					FROM KAoA_Kategorie_Keys
-				)
-				""",
-				Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Kategorie_Keys
-			);
+			"""
+			UPDATE SchuelerKAoADaten
+			SET KategorieID = NULL
+			WHERE KategorieID NOT IN (
+			    SELECT ID
+			    FROM KAoA_Kategorie_Keys
+			)
+			""",
+			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Kategorie_Keys
+		);
 		add("Korrektur für den Fremdschluessel auf die Spalte MerkmalID der Tabelle SchuelerKAoADaten",
 			"""
 			UPDATE SchuelerKAoADaten
 			SET MerkmalID = NULL
 			WHERE MerkmalID NOT IN (
-				SELECT ID
-				FROM KAoA_Merkmal_Keys
+			    SELECT ID
+			    FROM KAoA_Merkmal_Keys
 			)
 			""",
 			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Merkmal_Keys
@@ -620,8 +620,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerKAoADaten
 			SET ZusatzmerkmalID = NULL
 			WHERE ZusatzmerkmalID NOT IN (
-				SELECT ID
-				FROM KAoA_Zusatzmerkmal_Keys
+			    SELECT ID
+			    FROM KAoA_Zusatzmerkmal_Keys
 			)
 			""",
 			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Zusatzmerkmal_Keys
@@ -631,8 +631,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerKAoADaten
 			SET AnschlussoptionID = NULL
 			WHERE AnschlussoptionID NOT IN (
-				SELECT ID
-				FROM KAoA_Anschlussoption_Keys
+			    SELECT ID
+			    FROM KAoA_Anschlussoption_Keys
 			)
 			""",
 			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Anschlussoption_Keys
@@ -642,8 +642,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerKAoADaten
 			SET BerufsfeldID = NULL
 			WHERE BerufsfeldID NOT IN (
-				SELECT ID
-				FROM KAoA_Berufsfeld_Keys
+			    SELECT ID
+			    FROM KAoA_Berufsfeld_Keys
 			)
 			""",
 			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_Berufsfeld_Keys
@@ -653,8 +653,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerKAoADaten
 			SET SBO_Ebene4ID = NULL
 			WHERE SBO_Ebene4ID NOT IN (
-				SELECT ID
-				FROM KAoA_SBO_Ebene4_Keys
+			    SELECT ID
+			    FROM KAoA_SBO_Ebene4_Keys
 			)
 			""",
 			Schema.tab_SchuelerKAoADaten, Schema.tab_KAoA_SBO_Ebene4_Keys
@@ -664,8 +664,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLeistungsdaten
 			SET Fachlehrer = NULL
 			WHERE Fachlehrer NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_K_Lehrer
@@ -675,8 +675,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLeistungsdaten
 			SET Zusatzkraft = NULL
 			WHERE Zusatzkraft NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_K_Lehrer
@@ -686,8 +686,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLeistungsdaten
 			SET Kurs_ID = NULL
 			WHERE Kurs_ID NOT IN (
-				SELECT ID
-				FROM Kurse
+			    SELECT ID
+			    FROM Kurse
 			)
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurse
@@ -695,7 +695,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Setzen des ASDJahrgang, falls diese NULL ist auf den Eintrag des Jahrgangs bei Jahrgang_ID in der Tabelle Lernabschnittsdaten",
 			"""
 			UPDATE SchuelerLernabschnittsdaten JOIN EigeneSchule_Jahrgaenge
-				ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID
+			    ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID
 			SET SchuelerLernabschnittsdaten.ASDJahrgang = EigeneSchule_Jahrgaenge.ASDJahrgang
 			WHERE SchuelerLernabschnittsdaten.ASDJahrgang IS NULL AND SchuelerLernabschnittsdaten.Jahrgang_ID IS NOT NULL;
 			""",
@@ -706,8 +706,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET NPV_Fach_ID = null
 			WHERE NPV_Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Faecher
@@ -717,8 +717,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET NPAA_Fach_ID = null
 			WHERE NPAA_Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Faecher
@@ -728,8 +728,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET NPBQ_Fach_ID = null
 			WHERE NPBQ_Fach_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Faecher
+			    SELECT ID
+			    FROM EigeneSchule_Faecher
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Faecher
@@ -739,8 +739,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Fachklasse_ID = NULL
 			WHERE Fachklasse_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Fachklassen
+			    SELECT ID
+			    FROM EigeneSchule_Fachklassen
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Fachklassen
@@ -750,8 +750,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Foerderschwerpunkt_ID = NULL
 			WHERE Foerderschwerpunkt_ID NOT IN (
-				SELECT ID
-				FROM K_Foerderschwerpunkt
+			    SELECT ID
+			    FROM K_Foerderschwerpunkt
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Foerderschwerpunkt
@@ -761,8 +761,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Foerderschwerpunkt2_ID = NULL
 			WHERE Foerderschwerpunkt2_ID NOT IN (
-				SELECT ID
-				FROM K_Foerderschwerpunkt
+			    SELECT ID
+			    FROM K_Foerderschwerpunkt
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Foerderschwerpunkt
@@ -772,8 +772,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Jahrgang_ID = NULL
 			WHERE Jahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Jahrgaenge
@@ -783,8 +783,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET KlassenLehrer = NULL
 			WHERE KlassenLehrer NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Lehrer
@@ -794,8 +794,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET StvKlassenlehrer_ID = NULL
 			WHERE StvKlassenlehrer_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Lehrer
@@ -805,8 +805,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Schwerpunkt_ID = NULL
 			WHERE Schwerpunkt_ID NOT IN (
-				SELECT ID
-				FROM K_Schwerpunkt
+			    SELECT ID
+			    FROM K_Schwerpunkt
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Schwerpunkt
@@ -816,8 +816,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Sonderpaedagoge_ID = NULL
 			WHERE Sonderpaedagoge_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_Lehrer
@@ -827,8 +827,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerTelefone
 			SET TelefonArt_ID = NULL
 			WHERE TelefonArt_ID NOT IN (
-				SELECT ID
-				FROM K_TelefonArt
+			    SELECT ID
+			    FROM K_TelefonArt
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_K_TelefonArt
@@ -838,8 +838,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Versetzung
 			SET Fachklasse_ID = NULL
 			WHERE Fachklasse_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Fachklassen
+			    SELECT ID
+			    FROM EigeneSchule_Fachklassen
 			)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule_Fachklassen
@@ -849,8 +849,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Versetzung
 			SET Jahrgang_ID = NULL
 			WHERE Jahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_Versetzung, Schema.tab_EigeneSchule_Jahrgaenge
@@ -860,8 +860,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Versetzung
 			SET KlassenlehrerKrz = NULL
 			WHERE KlassenlehrerKrz NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_Versetzung, Schema.tab_K_Lehrer
@@ -871,8 +871,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Versetzung
 			SET StvKlassenlehrerKrz = NULL
 			WHERE StvKlassenlehrerKrz NOT IN (
-				SELECT Kuerzel
-				FROM K_Lehrer
+			    SELECT Kuerzel
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_Versetzung, Schema.tab_K_Lehrer
@@ -882,8 +882,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE ZuordnungReportvorlagen
 			SET Fachklasse_ID = NULL
 			WHERE Fachklasse_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Fachklassen
+			    SELECT ID
+			    FROM EigeneSchule_Fachklassen
 			)
 			""",
 			Schema.tab_ZuordnungReportvorlagen, Schema.tab_EigeneSchule_Fachklassen
@@ -893,8 +893,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE ZuordnungReportvorlagen
 			SET Jahrgang_ID = NULL
 			WHERE Jahrgang_ID NOT IN (
-				SELECT ID
-				FROM EigeneSchule_Jahrgaenge
+			    SELECT ID
+			    FROM EigeneSchule_Jahrgaenge
 			)
 			""",
 			Schema.tab_ZuordnungReportvorlagen, Schema.tab_EigeneSchule_Jahrgaenge
@@ -914,10 +914,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			UPDATE SchuelerLeistungsdaten
 			SET
-				Kursart = 'PUK',
-				KursartAllg = 'PUK'
+			    Kursart = 'PUK',
+			    KursartAllg = 'PUK'
 			WHERE ((Kursart IS NULL) OR (Kursart = ''))
-				AND (Kurs_ID IS NULL)
+			    AND (Kurs_ID IS NULL)
 			""",
 			Schema.tab_SchuelerLeistungsdaten
 		);
@@ -925,10 +925,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			UPDATE SchuelerLeistungsdaten
 			SET
-				Kursart = 'PUT',
-				KursartAllg = 'PUT'
+			    Kursart = 'PUT',
+			    KursartAllg = 'PUT'
 			WHERE ((Kursart IS NULL) OR (Kursart = ''))
-				AND (Kurs_ID IS NOT NULL)
+			    AND (Kurs_ID IS NOT NULL)
 			""",
 			Schema.tab_SchuelerLeistungsdaten
 		);
@@ -937,11 +937,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLD_PSFachBem
 			SET AUE = LELS
 			WHERE ((
-					SELECT count(*)
-					FROM EigeneSchule
-					WHERE SchulformKrz = 'G'
-				) = 0)
-				AND LELS IS NOT NULL
+			        SELECT count(*)
+			        FROM EigeneSchule
+			        WHERE SchulformKrz = 'G'
+			    ) = 0)
+			    AND LELS IS NOT NULL
 			""",
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_EigeneSchule
 		);
@@ -950,11 +950,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLD_PSFachBem
 			SET LELS = NULL
 			WHERE ((
-					SELECT count(*)
-					FROM EigeneSchule
-					WHERE SchulformKrz = 'G'
-				) = 0)
-				AND LELS IS NOT NULL
+			        SELECT count(*)
+			        FROM EigeneSchule
+			        WHERE SchulformKrz = 'G'
+			    ) = 0)
+			    AND LELS IS NOT NULL
 			""",
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_EigeneSchule
 		);
@@ -962,53 +962,53 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 
 
 	private void passeSprachenfolgeAn() {
-		add("Eintragung des atomaren Sprachenkürzels und der vorhandenen Jahrgänge in die ASD-Jahrgännge",
+		add("Eintragung des atomaren Sprachenkürzels und der vorhandenen Jahrgänge in die ASD-Jahrgänge",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN EigeneSchule_Faecher esf ON ssf.Fach_ID = esf.ID
-				INNER JOIN FachKatalog sszf ON esf.StatistikKrz = sszf.KuerzelASD
+			    INNER JOIN EigeneSchule_Faecher esf ON ssf.Fach_ID = esf.ID
+			    INNER JOIN FachKatalog sszf ON esf.StatistikKrz = sszf.KuerzelASD
 			SET
-				ssf.Sprache = sszf.Kuerzel,
-				ssf.ASDJahrgangVon = CASE
-					WHEN ((ssf.JahrgangVon IS NOT NULL)
-						AND (
-							(
-								FIND_IN_SET(
-									RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2),
-									(SELECT GROUP_CONCAT(Kuerzel) FROM Jahrgaenge_Keys)
-								) > 0
-							) OR (
-								FIND_IN_SET(
-									RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2),
-									(SELECT DISTINCT GROUP_CONCAT(ASDJahrgang) FROM SchuelerLernabschnittsdaten WHERE ASDJahrgang IS NOT NULL)
-								) > 0
-							)
-						)
-					) THEN
-						RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2)
-					ELSE
-						NULL
-					END,
-				ssf.ASDJahrgangBis = CASE
-					WHEN ((ssf.JahrgangBis IS NOT NULL)
-						AND (
-							(
-								FIND_IN_SET(
-									RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2),
-									(SELECT GROUP_CONCAT(Kuerzel) FROM Jahrgaenge_Keys)
-								) > 0
-							) OR (
-								FIND_IN_SET(
-									RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2),
-									(SELECT DISTINCT GROUP_CONCAT(ASDJahrgang) FROM SchuelerLernabschnittsdaten WHERE ASDJahrgang IS NOT NULL)
-								) > 0
-							)
-						)
-					) THEN
-						RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2)
-					ELSE
-						NULL
-					END
+			    ssf.Sprache = sszf.Kuerzel,
+			    ssf.ASDJahrgangVon = CASE
+			        WHEN ((ssf.JahrgangVon IS NOT NULL)
+			            AND (
+			                (
+			                    FIND_IN_SET(
+			                        RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2),
+			                        (SELECT GROUP_CONCAT(Kuerzel) FROM Jahrgaenge_Keys)
+			                    ) > 0
+			                ) OR (
+			                    FIND_IN_SET(
+			                        RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2),
+			                        (SELECT DISTINCT GROUP_CONCAT(ASDJahrgang) FROM SchuelerLernabschnittsdaten WHERE ASDJahrgang IS NOT NULL)
+			                    ) > 0
+			                )
+			            )
+			        ) THEN
+			            RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2)
+			        ELSE
+			            NULL
+			        END,
+			    ssf.ASDJahrgangBis = CASE
+			        WHEN ((ssf.JahrgangBis IS NOT NULL)
+			            AND (
+			                (
+			                    FIND_IN_SET(
+			                        RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2),
+			                        (SELECT GROUP_CONCAT(Kuerzel) FROM Jahrgaenge_Keys)
+			                    ) > 0
+			                ) OR (
+			                    FIND_IN_SET(
+			                        RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2),
+			                        (SELECT DISTINCT GROUP_CONCAT(ASDJahrgang) FROM SchuelerLernabschnittsdaten WHERE ASDJahrgang IS NOT NULL)
+			                    ) > 0
+			                )
+			            )
+			        ) THEN
+			            RIGHT(CONCAT('00', CONVERT(ssf.JahrgangBis, CHAR)), 2)
+			        ELSE
+			            NULL
+			        END
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_SchuelerLernabschnittsdaten,
 			Schema.tab_EigeneSchule_Faecher, Schema.tab_FachKatalog, Schema.tab_Jahrgaenge_Keys
@@ -1024,31 +1024,31 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Ein Sprachbeginn unter APO-GOSt(B)10/G8 in 10/11 wird zu EF",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
 			SET ssf.ASDJahrgangVon = 'EF'
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND ((
-					ssf.ASDJahrgangVon = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
-				) OR (
-					ssf.ASDJahrgangVon = '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
-				))
+			    AND ((
+			        ssf.ASDJahrgangVon = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
+			    ) OR (
+			        ssf.ASDJahrgangVon = '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
+			    ))
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Ein Sprachbeginn unter APO-GOSt(B)10/G8 in 10/11 wird zu EF. Ein späterer Sprachbeginn zu NULL, da unzulässig",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
 			SET ssf.ASDJahrgangVon = null
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND ((
-					ssf.ASDJahrgangVon > '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
-				) OR (
-					ssf.ASDJahrgangVon > '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
-				))
-				AND ASDJahrgangVon <> 'EF'
+			    AND ((
+			        ssf.ASDJahrgangVon > '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
+			    ) OR (
+			        ssf.ASDJahrgangVon > '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
+			    ))
+			    AND ASDJahrgangVon <> 'EF'
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
@@ -1056,16 +1056,16 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Bei Sprachbeginn in EF unter APO-GOSt(B)10/G8 ist ein Sprachende in 10/11 die EF",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
 			SET ssf.ASDJahrgangBis = 'EF'
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND ((
-					ssf.ASDJahrgangBis = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
-				) OR (
-					ssf.ASDJahrgangBis = '11' AND (select SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
-				))
-				AND ASDJahrgangVon = 'EF'
+			    AND ((
+			        ssf.ASDJahrgangBis = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
+			    ) OR (
+			        ssf.ASDJahrgangBis = '11' AND (select SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
+			    ))
+			    AND ASDJahrgangVon = 'EF'
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
@@ -1073,16 +1073,16 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Ein Sprachende unter APO-GOSt(B)10/G8 in 10 am GY kann eine abgeschlossene Sprache der Sek-I sein (z. B. bei Wechsel von R, GE zum GY). Prüfe daher, ob Sprache in Leistungsdaten der EF.1 vorhanden",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.id = sla.Schueler_ID
-				INNER JOIN SchuelerLeistungsdaten sld ON sla.ID = sld.Abschnitt_ID
-				INNER JOIN EigeneSchule_Faecher esf ON sld.Fach_ID = esf.ID
-				INNER JOIN FachKatalog sszf ON (sszf.KuerzelASD = esf.StatistikKrz AND ssf.Sprache = sszf.Kuerzel)
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.id = sla.Schueler_ID
+			    INNER JOIN SchuelerLeistungsdaten sld ON sla.ID = sld.Abschnitt_ID
+			    INNER JOIN EigeneSchule_Faecher esf ON sld.Fach_ID = esf.ID
+			    INNER JOIN FachKatalog sszf ON (sszf.KuerzelASD = esf.StatistikKrz AND ssf.Sprache = sszf.Kuerzel)
 			SET ssf.ASDJahrgangBis = 'EF'
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND sla.ASDJahrgang  = 'EF'
-				AND sla.Abschnitt = 1
-				AND (ssf.ASDJahrgangBis = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY')
+			    AND sla.ASDJahrgang  = 'EF'
+			    AND sla.Abschnitt = 1
+			    AND (ssf.ASDJahrgangBis = '10' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY')
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule,
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_EigeneSchule_Faecher, Schema.tab_FachKatalog
@@ -1091,15 +1091,15 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Ein Sprachende unter APO-GOSt(B)10/G8 in 11/12 wird zu Q1",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
 			SET ssf.ASDJahrgangBis = 'Q1'
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND ((
-					ssf.ASDJahrgangBis = '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
-				) OR (
-					ssf.ASDJahrgangBis = '12' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
-				))
+			    AND ((
+			        ssf.ASDJahrgangBis = '11' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
+			    ) OR (
+			        ssf.ASDJahrgangBis = '12' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
+			    ))
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
@@ -1107,92 +1107,92 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Anpassung ASDJahrgänge auf alpha-nummerische Werte: Ein Sprachende unter APO-GOSt(B)10/G8 in 12/13 wird zu Q2",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
-				INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
+			    INNER JOIN Schueler s ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerLernabschnittsdaten sla ON s.ID = sla.Schueler_ID
 			SET ssf.ASDJahrgangBis = 'Q2'
 			WHERE sla.PruefOrdnung = 'APO-GOSt(B)10/G8'
-				AND ((
-					ssf.ASDJahrgangBis = '12' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
-				) OR (
-					ssf.ASDJahrgangBis = '13' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
-				))
+			    AND ((
+			        ssf.ASDJahrgangBis = '12' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'GY'
+			    ) OR (
+			        ssf.ASDJahrgangBis = '13' AND (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) <> 'GY'
+			    ))
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (1)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangVon = '01'
 			WHERE (
-				ssf.JahrgangVon = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangVon = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (2)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangVon = '02'
 			WHERE (
-				ssf.JahrgangVon = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangVon = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachbeginn am BK 11-12-13 > 01-02-03 (3)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangVon = '03'
 			WHERE (
-				ssf.JahrgangVon = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangVon = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (1)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangBis = '01'
 			WHERE (
-				ssf.JahrgangBis = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangBis = '11' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (2)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangBis = '02'
 			WHERE (
-				ssf.JahrgangBis = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangBis = '12' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
 		);
 
-		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03",
+		add("Anpassung ASDJahrgänge Sprachende am BK 11-12-13 > 01-02-03 (3)",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
 			SET ssf.ASDJahrgangBis = '03'
 			WHERE (
-				ssf.JahrgangBis = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
+			    ssf.JahrgangBis = '13' AND (((SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'BK'
 			) OR (
-				(SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
+			    (SELECT SchulformKrz FROM EigeneSchule LIMIT 1) = 'SB'))
 			)
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_EigeneSchule
@@ -1202,15 +1202,15 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO SchuelerSprachpruefungen (Schueler_ID, Sprache, ASDJahrgang, IstHSUPruefung, IstFeststellungspruefung, Referenzniveau)
 			SELECT
-				s.ID,
-				ssf.Sprache,
-				COALESCE(COALESCE(ASDJahrgangBis, ASDJahrgangVon),
-				COALESCE(ASDJahrgangVon, ASDJahrgangBis)),
-				CASE WHEN ssf.Reihenfolge = 'P' THEN 1 ELSE 0 END,
-				CASE WHEN ssf.Reihenfolge = 'N' THEN 1 ELSE 0 END,
-				ssf.Referenzniveau
+			    s.ID,
+			    ssf.Sprache,
+			    COALESCE(COALESCE(ASDJahrgangBis, ASDJahrgangVon),
+			    COALESCE(ASDJahrgangVon, ASDJahrgangBis)),
+			    CASE WHEN ssf.Reihenfolge = 'P' THEN 1 ELSE 0 END,
+			    CASE WHEN ssf.Reihenfolge = 'N' THEN 1 ELSE 0 END,
+			    ssf.Referenzniveau
 			FROM Schueler s
-				INNER JOIN SchuelerSprachenfolge ssf ON ssf.Schueler_ID = s.ID
+			    INNER JOIN SchuelerSprachenfolge ssf ON ssf.Schueler_ID = s.ID
 			WHERE ssf.Reihenfolge = 'P' OR ssf.Reihenfolge = 'N'
 			""",
 			Schema.tab_SchuelerSprachpruefungen, Schema.tab_SchuelerSprachenfolge, Schema.tab_Schueler
@@ -1281,9 +1281,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Übertrage die Angaben (kleines) Latinum von der Abitur in die Sprachenfolge-Tabelle",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
+			    INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
 			SET
-				ssf.KleinesLatinumErreicht = CASE WHEN sabi.KlLatinum = '+' THEN 1 ELSE 0 END,
+			    ssf.KleinesLatinumErreicht = CASE WHEN sabi.KlLatinum = '+' THEN 1 ELSE 0 END,
 			    ssf.LatinumErreicht = CASE WHEN sabi.Latinum = '+' THEN 1 ELSE 0 END
 			WHERE ssf.Sprache = 'L'
 			""",
@@ -1293,11 +1293,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Übertrage die Angabe Graecum von der Abitur in die Sprachenfolge-Tabelle",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
+			    INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
 			SET
-				ssf.GraecumErreicht = CASE WHEN sabi.Graecum = '+' THEN 1 ELSE 0 END
+			    ssf.GraecumErreicht = CASE WHEN sabi.Graecum = '+' THEN 1 ELSE 0 END
 			WHERE
-				ssf.Sprache = 'G'
+			    ssf.Sprache = 'G'
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_SchuelerAbitur
 		);
@@ -1305,11 +1305,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Übertrage die Angabe Hebraicum von der Abitur in die Sprachenfolge-Tabelle",
 			"""
 			UPDATE SchuelerSprachenfolge ssf
-				INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
+			    INNER JOIN SchuelerAbitur sabi ON ssf.Schueler_ID = sabi.Schueler_ID
 			SET
-				ssf.HebraicumErreicht = CASE WHEN sabi.Hebraicum = '+' THEN 1 ELSE 0 END
+			    ssf.HebraicumErreicht = CASE WHEN sabi.Hebraicum = '+' THEN 1 ELSE 0 END
 			WHERE
-				ssf.Sprache = 'H'
+			    ssf.Sprache = 'H'
 			""",
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_SchuelerAbitur
 		);
@@ -1332,13 +1332,13 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			CREATE TEMPORARY TABLE TMP_SchuelerLeistungsdaten_Duplikate_DeleteIDs AS
 			SELECT a.ID
 			FROM SchuelerLeistungsdaten a
-				JOIN TMP_SchuelerLeistungsdaten_Duplikate_MaxID b
-					ON a.Abschnitt_ID = b.Abschnitt_ID
-					AND (a.Fach_ID = b.Fach_ID)
-					AND ((a.Fachlehrer = b.Fachlehrer) OR (a.Fachlehrer IS NULL AND b.Fachlehrer IS NULL))
-					AND ((a.Kurs_ID = b.Kurs_ID) OR (a.Kurs_ID IS NULL AND b.Kurs_ID IS NULL))
-					AND ((a.Kursart = b.Kursart) OR (a.Kursart IS NULL AND b.Kursart IS NULL))
-					AND a.ID <> b.maxID
+			    JOIN TMP_SchuelerLeistungsdaten_Duplikate_MaxID b
+			        ON a.Abschnitt_ID = b.Abschnitt_ID
+			        AND (a.Fach_ID = b.Fach_ID)
+			        AND ((a.Fachlehrer = b.Fachlehrer) OR (a.Fachlehrer IS NULL AND b.Fachlehrer IS NULL))
+			        AND ((a.Kurs_ID = b.Kurs_ID) OR (a.Kurs_ID IS NULL AND b.Kurs_ID IS NULL))
+			        AND ((a.Kursart = b.Kursart) OR (a.Kursart IS NULL AND b.Kursart IS NULL))
+			        AND a.ID <> b.maxID
 			""",
 			Schema.tab_SchuelerLeistungsdaten
 		);
@@ -1346,8 +1346,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerLeistungsdaten
 			WHERE ID IN (
-				SELECT ID
-				FROM TMP_SchuelerLeistungsdaten_Duplikate_DeleteIDs
+			    SELECT ID
+			    FROM TMP_SchuelerLeistungsdaten_Duplikate_DeleteIDs
 			)
 			""",
 			Schema.tab_SchuelerLeistungsdaten
@@ -1367,7 +1367,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLeistungsdaten
 			SET NotenKrz = ''
 			WHERE NotenKrz IS NOT NULL
-				AND NotenKrz NOT IN ('6','5-','5','5+','4-','4','4+','3-','3','3+','2-','2','2+','1-','1','1+','E1','E2','E3','AT','AM','NB','NT','NE','LM')
+			    AND NotenKrz NOT IN ('6','5-','5','5+','4-','4','4+','3-','3','3+','2-','2','2+','1-','1','1+','E1','E2','E3','AT','AM','NB','NT','NE','LM')
 			""",
 			Schema.tab_SchuelerLeistungsdaten
 		);
@@ -1456,9 +1456,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			UPDATE K_AllgAdresse
 			SET AdressArt_ID = (
-				SELECT K_Adressart.ID
-				FROM K_Adressart
-				WHERE K_Adressart.Bezeichnung = K_AllgAdresse.AllgAdrAdressArt LIMIT 1
+			    SELECT K_Adressart.ID
+			    FROM K_Adressart
+			    WHERE K_Adressart.Bezeichnung = K_AllgAdresse.AllgAdrAdressArt LIMIT 1
 			)
 			""",
 			Schema.tab_K_AllgAdresse, Schema.tab_K_Adressart
@@ -1467,8 +1467,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerEinzelleistungen
 			WHERE Leistung_ID NOT IN (
-				SELECT ID
-				FROM SchuelerLeistungsdaten
+			    SELECT ID
+			    FROM SchuelerLeistungsdaten
 			)
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_SchuelerLeistungsdaten
@@ -1477,8 +1477,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerEinzelleistungen
 			WHERE Art_ID NOT IN (
-				SELECT ID
-				FROM K_Einzelleistungen
+			    SELECT ID
+			    FROM K_Einzelleistungen
 			)
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_K_Einzelleistungen
@@ -1487,8 +1487,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerEinzelleistungen
 			WHERE Lehrer_ID NOT IN (
-				SELECT ID
-				FROM K_Lehrer
+			    SELECT ID
+			    FROM K_Lehrer
 			)
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_K_Lehrer
@@ -1509,7 +1509,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P11_1 = null
 			WHERE P11_1 IS NOT NULL
-				AND P11_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P11_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1518,7 +1518,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P11_2 = null
 			WHERE P11_2 IS NOT NULL
-				AND P11_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P11_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1527,7 +1527,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P12_1 = null
 			WHERE P12_1 IS NOT NULL
-				AND P12_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P12_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1536,7 +1536,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P12_2 = null
 			WHERE P12_2 IS NOT NULL
-				AND P12_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P12_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1545,7 +1545,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P13_1 = null
 			WHERE P13_1 IS NOT NULL
-				AND P13_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P13_1 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1554,7 +1554,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P13_2 = null
 			WHERE P13_2 IS NOT NULL
-				AND P13_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
+			    AND P13_2 NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','AT')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1563,7 +1563,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET P_FA = null
 			WHERE P_FA IS NOT NULL
-				AND P_FA NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15')
+			    AND P_FA NOT IN ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15')
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1572,7 +1572,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET AbiPruefErgebnis = null
 			WHERE AbiPruefErgebnis IS NOT NULL
-				AND (AbiPruefErgebnis < 0 OR AbiPruefErgebnis > 15)
+			    AND (AbiPruefErgebnis < 0 OR AbiPruefErgebnis > 15)
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1581,7 +1581,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbiFaecher
 			SET MdlPruefErgebnis = null
 			WHERE MdlPruefErgebnis IS NOT NULL
-				AND (MdlPruefErgebnis < 0 OR MdlPruefErgebnis > 15)
+			    AND (MdlPruefErgebnis < 0 OR MdlPruefErgebnis > 15)
 			""",
 			Schema.tab_SchuelerAbiFaecher
 		);
@@ -1590,7 +1590,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerAbitur
 			SET BLL_Punkte = null
 			WHERE BLL_Punkte IS NOT NULL
-				AND (BLL_Punkte < 0 OR BLL_Punkte > 15)
+			    AND (BLL_Punkte < 0 OR BLL_Punkte > 15)
 			""",
 			Schema.tab_SchuelerAbitur
 		);
@@ -1727,28 +1727,28 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle Klassen: Erstellung der aktuellen Einträge aus der Versetzungstabelle",
 			"""
 			INSERT INTO Klassen(ID, Schuljahresabschnitts_ID, Bezeichnung, ASDKlasse, Klasse, Jahrgang_ID, FKlasse, VKlasse, OrgFormKrz, ASDSchulformNr,
-				Fachklasse_ID, PruefOrdnung, Sichtbar, Sortierung, Klassenart, SommerSem, NotenGesperrt, AdrMerkmal, KoopKlasse, Ankreuzzeugnisse)
+			    Fachklasse_ID, PruefOrdnung, Sichtbar, Sortierung, Klassenart, SommerSem, NotenGesperrt, AdrMerkmal, KoopKlasse, Ankreuzzeugnisse)
 			SELECT
-				Versetzung.ID,
-				EigeneSchule.Schuljahresabschnitts_ID,
-				Versetzung.Bezeichnung,
-				Versetzung.ASDKlasse,
-				Versetzung.Klasse,
-				Versetzung.Jahrgang_ID,
-				Versetzung.FKlasse,
-				Versetzung.VKlasse,
-				Versetzung.OrgFormKrz,
-				Versetzung.ASDSchulformNr,
-				Versetzung.Fachklasse_ID,
-				Versetzung.PruefOrdnung,
-				Versetzung.Sichtbar,
-				Versetzung.Sortierung,
-				Versetzung.Klassenart,
-				Versetzung.SommerSem,
-				Versetzung.NotenGesperrt,
-				Versetzung.AdrMerkmal,
-				Versetzung.KoopKlasse,
-				Versetzung.Ankreuzzeugnisse
+			    Versetzung.ID,
+			    EigeneSchule.Schuljahresabschnitts_ID,
+			    Versetzung.Bezeichnung,
+			    Versetzung.ASDKlasse,
+			    Versetzung.Klasse,
+			    Versetzung.Jahrgang_ID,
+			    Versetzung.FKlasse,
+			    Versetzung.VKlasse,
+			    Versetzung.OrgFormKrz,
+			    Versetzung.ASDSchulformNr,
+			    Versetzung.Fachklasse_ID,
+			    Versetzung.PruefOrdnung,
+			    Versetzung.Sichtbar,
+			    Versetzung.Sortierung,
+			    Versetzung.Klassenart,
+			    Versetzung.SommerSem,
+			    Versetzung.NotenGesperrt,
+			    Versetzung.AdrMerkmal,
+			    Versetzung.KoopKlasse,
+			    Versetzung.Ankreuzzeugnisse
 			FROM Versetzung JOIN EigeneSchule
 			""",
 			Schema.tab_Klassen, Schema.tab_Versetzung, Schema.tab_EigeneSchule
@@ -1757,25 +1757,25 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
 			((
-				SELECT
-					Versetzung.ID AS Klassen_ID,
-					K_Lehrer.ID AS Lehrer_ID,
-					1 AS Reihenfolge
-				FROM
-					Versetzung JOIN K_Lehrer ON Versetzung.KlassenlehrerKrz = K_Lehrer.Kuerzel
-				WHERE
-					Versetzung.KlassenlehrerKrz IS NOT NULL
+			    SELECT
+			        Versetzung.ID AS Klassen_ID,
+			        K_Lehrer.ID AS Lehrer_ID,
+			        1 AS Reihenfolge
+			    FROM
+			        Versetzung JOIN K_Lehrer ON Versetzung.KlassenlehrerKrz = K_Lehrer.Kuerzel
+			    WHERE
+			        Versetzung.KlassenlehrerKrz IS NOT NULL
 			) UNION (
-				SELECT
-					Versetzung.ID AS Klassen_ID,
-					K_Lehrer.ID AS Lehrer_ID,
-					2 AS Reihenfolge
-				FROM
-					Versetzung JOIN K_Lehrer
-						ON Versetzung.StvKlassenlehrerKrz = K_Lehrer.Kuerzel
-							AND Versetzung.StvKlassenlehrerKrz <> Versetzung.KlassenlehrerKrz
-				WHERE
-					Versetzung.StvKlassenlehrerKrz IS NOT NULL
+			    SELECT
+			        Versetzung.ID AS Klassen_ID,
+			        K_Lehrer.ID AS Lehrer_ID,
+			        2 AS Reihenfolge
+			    FROM
+			        Versetzung JOIN K_Lehrer
+			            ON Versetzung.StvKlassenlehrerKrz = K_Lehrer.Kuerzel
+			                AND Versetzung.StvKlassenlehrerKrz <> Versetzung.KlassenlehrerKrz
+			    WHERE
+			        Versetzung.StvKlassenlehrerKrz IS NOT NULL
 			))
 			""",
 			Schema.tab_KlassenLehrer, Schema.tab_Versetzung, Schema.tab_K_Lehrer
@@ -1783,74 +1783,74 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle Klassen: Erstellung Einträge für die übrigen Schuljahresabschnitte basierend auf der Versetzungstabelle",
 			"""
 			INSERT INTO Klassen(Schuljahresabschnitts_ID, Bezeichnung, ASDKlasse, Klasse, Jahrgang_ID, FKlasse, VKlasse, OrgFormKrz, ASDSchulformNr,
-				Fachklasse_ID, PruefOrdnung, Sichtbar, Sortierung, Klassenart, SommerSem, NotenGesperrt, AdrMerkmal, KoopKlasse, Ankreuzzeugnisse)
+			    Fachklasse_ID, PruefOrdnung, Sichtbar, Sortierung, Klassenart, SommerSem, NotenGesperrt, AdrMerkmal, KoopKlasse, Ankreuzzeugnisse)
 			SELECT
-				Schuljahresabschnitte.ID,
-				Versetzung.Bezeichnung,
-				Versetzung.ASDKlasse,
-				Versetzung.Klasse,
-				Versetzung.Jahrgang_ID,
-				Versetzung.FKlasse,
-				Versetzung.VKlasse,
-				Versetzung.OrgFormKrz,
-				Versetzung.ASDSchulformNr,
-				Versetzung.Fachklasse_ID,
-				Versetzung.PruefOrdnung,
-				Versetzung.Sichtbar,
-				Versetzung.Sortierung,
-				Versetzung.Klassenart,
-				Versetzung.SommerSem,
-				Versetzung.NotenGesperrt,
-				Versetzung.AdrMerkmal,
-				Versetzung.KoopKlasse,
-				Versetzung.Ankreuzzeugnisse
+			    Schuljahresabschnitte.ID,
+			    Versetzung.Bezeichnung,
+			    Versetzung.ASDKlasse,
+			    Versetzung.Klasse,
+			    Versetzung.Jahrgang_ID,
+			    Versetzung.FKlasse,
+			    Versetzung.VKlasse,
+			    Versetzung.OrgFormKrz,
+			    Versetzung.ASDSchulformNr,
+			    Versetzung.Fachklasse_ID,
+			    Versetzung.PruefOrdnung,
+			    Versetzung.Sichtbar,
+			    Versetzung.Sortierung,
+			    Versetzung.Klassenart,
+			    Versetzung.SommerSem,
+			    Versetzung.NotenGesperrt,
+			    Versetzung.AdrMerkmal,
+			    Versetzung.KoopKlasse,
+			    Versetzung.Ankreuzzeugnisse
 			FROM
-    			Versetzung, Schuljahresabschnitte
+			    Versetzung, Schuljahresabschnitte
 			WHERE
-				Schuljahresabschnitte.ID NOT IN (
-					SELECT Schuljahresabschnitts_ID
-					FROM EigeneSchule
+			    Schuljahresabschnitte.ID NOT IN (
+			        SELECT Schuljahresabschnitts_ID
+			        FROM EigeneSchule
 			)
 			""",
 			Schema.tab_Klassen, Schema.tab_Versetzung, Schema.tab_Schuljahresabschnitte, Schema.tab_EigeneSchule
 		);
 		add("Tabelle KlassenLehrer: Erstellung Einträge für die übrigen Schuljahresabschnitte basierend auf den Schüler-Abschnittsdaten",
 			"""
- 			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
+			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
 			SELECT
-				Klassen_ID,
-				Lehrer_ID,
-				ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) AS Reihenfolge
+			    Klassen_ID,
+			    Lehrer_ID,
+			    ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) AS Reihenfolge
 			FROM
-				((
-					SELECT
-  						Klassen.ID AS Klassen_ID,
-  						K_Lehrer.ID AS Lehrer_ID,
-  						count(*)*2 AS Anzahl
-					FROM SchuelerLernabschnittsdaten
-   						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
-   							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
-   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel
-					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
-						SELECT Schuljahresabschnitts_ID
-						FROM EigeneSchule
-					)
-					GROUP BY Klassen.ID, K_Lehrer.ID
-				) UNION (
-					SELECT
-						Klassen.ID AS Klassen_ID,
-						K_Lehrer.ID AS Lehrer_ID,
-						count(*) AS Anzahl
-					FROM SchuelerLernabschnittsdaten
-						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
-							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
-   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID
-					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
-						SELECT Schuljahresabschnitts_ID
-						FROM EigeneSchule
-					)
-					GROUP BY Klassen.ID, K_Lehrer.ID
-				)) a
+			    ((
+			        SELECT
+			            Klassen.ID AS Klassen_ID,
+			            K_Lehrer.ID AS Lehrer_ID,
+			            count(*)*2 AS Anzahl
+			        FROM SchuelerLernabschnittsdaten
+			            JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
+			                AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
+			            JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel
+			        WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
+			            SELECT Schuljahresabschnitts_ID
+			            FROM EigeneSchule
+			        )
+			        GROUP BY Klassen.ID, K_Lehrer.ID
+			    ) UNION (
+			        SELECT
+			            Klassen.ID AS Klassen_ID,
+			            K_Lehrer.ID AS Lehrer_ID,
+			            count(*) AS Anzahl
+			        FROM SchuelerLernabschnittsdaten
+			            JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
+			                AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
+			            JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID
+			        WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID NOT IN (
+			            SELECT Schuljahresabschnitts_ID
+			            FROM EigeneSchule
+			        )
+			        GROUP BY Klassen.ID, K_Lehrer.ID
+			    )) a
 			GROUP BY Klassen_ID, Lehrer_ID
 			ORDER BY Klassen_ID, Anzahl DESC, Lehrer_ID
 			""",
@@ -1858,41 +1858,41 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		);
 		add("Tabelle KlassenLehrer: Erstellung Einträge für die übrigen Schuljahresabschnitte basierend auf den Schüler-Abschnittsdaten",
 			"""
- 			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
+			INSERT INTO KlassenLehrer(Klassen_ID, Lehrer_ID, Reihenfolge)
 			SELECT
-				Klassen_ID,
-				Lehrer_ID,
-				ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) + 2 AS Reihenfolge
+			    Klassen_ID,
+			    Lehrer_ID,
+			    ROW_NUMBER() OVER (PARTITION BY Klassen_ID ORDER BY sum(Anzahl) DESC, Lehrer_ID) + 2 AS Reihenfolge
 			FROM
-				((
-					SELECT
-  						Klassen.ID AS Klassen_ID,
-  						K_Lehrer.ID AS Lehrer_ID,
-  						count(*)*2 AS Anzahl
-					FROM SchuelerLernabschnittsdaten
-   						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
-   							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
-   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel
-					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
-						SELECT Schuljahresabschnitts_ID
-						FROM EigeneSchule
-					) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
-					GROUP BY Klassen.ID, K_Lehrer.ID
-				) UNION (
-					SELECT
-						Klassen.ID AS Klassen_ID,
-						K_Lehrer.ID AS Lehrer_ID,
-						count(*) AS Anzahl
-					FROM SchuelerLernabschnittsdaten
-						JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
-							AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
-   						JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID
-					WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
-						SELECT Schuljahresabschnitts_ID
-						FROM EigeneSchule
-					) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
-					GROUP BY Klassen.ID, K_Lehrer.ID
-				)) a
+			    ((
+			        SELECT
+			            Klassen.ID AS Klassen_ID,
+			            K_Lehrer.ID AS Lehrer_ID,
+			            count(*)*2 AS Anzahl
+			        FROM SchuelerLernabschnittsdaten
+			            JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
+			                AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
+			            JOIN K_Lehrer ON SchuelerLernabschnittsdaten.Klassenlehrer = K_Lehrer.Kuerzel
+			        WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
+			            SELECT Schuljahresabschnitts_ID
+			            FROM EigeneSchule
+			        ) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
+			        GROUP BY Klassen.ID, K_Lehrer.ID
+			    ) UNION (
+			        SELECT
+			            Klassen.ID AS Klassen_ID,
+			            K_Lehrer.ID AS Lehrer_ID,
+			            count(*) AS Anzahl
+			        FROM SchuelerLernabschnittsdaten
+			            JOIN Klassen ON SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
+			                AND SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse
+			            JOIN K_Lehrer ON SchuelerLernabschnittsdaten.StvKlassenlehrer_ID = K_Lehrer.ID
+			        WHERE SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID IN (
+			            SELECT Schuljahresabschnitts_ID
+			            FROM EigeneSchule
+			        ) AND (Klassen.ID, K_Lehrer.ID) NOT IN (SELECT Klassen_ID, Lehrer_ID FROM KlassenLehrer)
+			        GROUP BY Klassen.ID, K_Lehrer.ID
+			    )) a
 			GROUP BY Klassen_ID, Lehrer_ID
 			ORDER BY Klassen_ID, Anzahl DESC, Lehrer_ID
 			""",
@@ -1904,7 +1904,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle Kurse: Umstellen von Lehrer-Kürzel auf Lehrer-ID",
 			"""
 			UPDATE Kurse
-				JOIN K_Lehrer ON Kurse.LehrerKrz = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON Kurse.LehrerKrz = K_Lehrer.Kuerzel
 			SET Kurse.Lehrer_ID = K_Lehrer.ID
 			""",
 			Schema.tab_Kurse, Schema.tab_K_Lehrer
@@ -1912,7 +1912,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle SchuelerAbiFaecher: Umstellen von Lehrer-Kürzel auf Lehrer-ID",
 			"""
 			UPDATE SchuelerAbiFaecher
-				JOIN K_Lehrer ON SchuelerAbiFaecher.Fachlehrer = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON SchuelerAbiFaecher.Fachlehrer = K_Lehrer.Kuerzel
 			SET SchuelerAbiFaecher.Fachlehrer_ID = K_Lehrer.ID
 			""",
 			Schema.tab_SchuelerAbiFaecher, Schema.tab_K_Lehrer
@@ -1920,7 +1920,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle SchuelerBKFaecher: Umstellen von Lehrer-Kürzel auf Lehrer-ID",
 			"""
 			UPDATE SchuelerBKFaecher
-				JOIN K_Lehrer ON SchuelerBKFaecher.Fachlehrer = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON SchuelerBKFaecher.Fachlehrer = K_Lehrer.Kuerzel
 			SET SchuelerBKFaecher.Fachlehrer_ID = K_Lehrer.ID
 			""",
 			Schema.tab_SchuelerBKFaecher, Schema.tab_K_Lehrer
@@ -1928,7 +1928,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle SchuelerLeistungsdaten: Umstellen von Lehrer-Kürzel auf Lehrer-ID (1)",
 			"""
 			UPDATE SchuelerLeistungsdaten
-				JOIN K_Lehrer ON SchuelerLeistungsdaten.Fachlehrer = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON SchuelerLeistungsdaten.Fachlehrer = K_Lehrer.Kuerzel
 			SET SchuelerLeistungsdaten.Fachlehrer_ID = K_Lehrer.ID
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_K_Lehrer
@@ -1936,7 +1936,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle SchuelerLeistungsdaten: Umstellen von Lehrer-Kürzel auf Lehrer-ID (2) - Zusatzkraft",
 			"""
 			UPDATE SchuelerLeistungsdaten
-				JOIN K_Lehrer ON SchuelerLeistungsdaten.Zusatzkraft = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON SchuelerLeistungsdaten.Zusatzkraft = K_Lehrer.Kuerzel
 			SET SchuelerLeistungsdaten.Zusatzkraft_ID = K_Lehrer.ID
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_K_Lehrer
@@ -1944,7 +1944,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle Stundentafel_Faecher: Umstellen von Lehrer-Kürzel auf Lehrer-ID",
 			"""
 			UPDATE Stundentafel_Faecher
-				JOIN K_Lehrer ON Stundentafel_Faecher.LehrerKrz = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON Stundentafel_Faecher.LehrerKrz = K_Lehrer.Kuerzel
 			SET Stundentafel_Faecher.Lehrer_ID = K_Lehrer.ID
 			""",
 			Schema.tab_Stundentafel_Faecher, Schema.tab_K_Lehrer
@@ -1952,7 +1952,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Tabelle EigeneSchule_Abteilungen: Umstellen von Lehrer-Kürzel auf Lehrer-ID",
 			"""
 			UPDATE EigeneSchule_Abteilungen
-				JOIN K_Lehrer ON EigeneSchule_Abteilungen.AbteilungsLeiter = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON EigeneSchule_Abteilungen.AbteilungsLeiter = K_Lehrer.Kuerzel
 			SET EigeneSchule_Abteilungen.AbteilungsLeiter_ID = K_Lehrer.ID
 			""",
 			Schema.tab_EigeneSchule_Abteilungen, Schema.tab_K_Lehrer
@@ -1964,21 +1964,21 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("ZP10: Kopiere Daten aus SchuelerBKFaecher nach SchuelerZP10",
 			"""
 			INSERT INTO SchuelerZP10(ID, Schueler_ID, Schuljahresabschnitts_ID, Fach_ID, Vornote, NoteSchriftlich,
-				MdlPruefung, MdlPruefungFW, NoteMuendlich, NoteAbschluss, Fachlehrer_ID)
+			    MdlPruefung, MdlPruefungFW, NoteMuendlich, NoteAbschluss, Fachlehrer_ID)
 			SELECT
-				SchuelerBKFaecher.ID,
-				SchuelerBKFaecher.Schueler_ID,
-				SchuelerBKFaecher.Schuljahresabschnitts_ID,
-				SchuelerBKFaecher.Fach_ID,
-				SchuelerBKFaecher.Vornote,
-				SchuelerBKFaecher.NoteSchriftlich,
-				SchuelerBKFaecher.MdlPruefung,
-				SchuelerBKFaecher.MdlPruefungFW,
-				SchuelerBKFaecher.NoteMuendlich,
-				SchuelerBKFaecher.NoteAbschluss,
-				SchuelerBKFaecher.Fachlehrer_ID
+			    SchuelerBKFaecher.ID,
+			    SchuelerBKFaecher.Schueler_ID,
+			    SchuelerBKFaecher.Schuljahresabschnitts_ID,
+			    SchuelerBKFaecher.Fach_ID,
+			    SchuelerBKFaecher.Vornote,
+			    SchuelerBKFaecher.NoteSchriftlich,
+			    SchuelerBKFaecher.MdlPruefung,
+			    SchuelerBKFaecher.MdlPruefungFW,
+			    SchuelerBKFaecher.NoteMuendlich,
+			    SchuelerBKFaecher.NoteAbschluss,
+			    SchuelerBKFaecher.Fachlehrer_ID
 			FROM SchuelerBKFaecher
-				JOIN EigeneSchule ON EigeneSchule.SchulformKrz NOT IN ('BK','SB')
+			    JOIN EigeneSchule ON EigeneSchule.SchulformKrz NOT IN ('BK','SB')
 			""",
 			Schema.tab_SchuelerZP10, Schema.tab_SchuelerBKFaecher, Schema.tab_EigeneSchule
 		);
@@ -1986,9 +1986,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerBKFaecher
 			WHERE (
-				SELECT ID
-				FROM EigeneSchule
-				WHERE EigeneSchule.SchulformKrz NOT IN ('BK','SB')
+			    SELECT ID
+			    FROM EigeneSchule
+			    WHERE EigeneSchule.SchulformKrz NOT IN ('BK','SB')
 			)
 			""",
 			Schema.tab_SchuelerBKFaecher, Schema.tab_EigeneSchule
@@ -1997,9 +1997,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM SchuelerBKAbschluss
 			WHERE (
-				SELECT ID
-				FROM EigeneSchule
-				WHERE EigeneSchule.SchulformKrz NOT IN ('BK','SB')
+			    SELECT ID
+			    FROM EigeneSchule
+			    WHERE EigeneSchule.SchulformKrz NOT IN ('BK','SB')
 			)
 			""",
 			Schema.tab_SchuelerBKAbschluss, Schema.tab_EigeneSchule
@@ -2010,11 +2010,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE Schueler
 			SET Klasse = null
 			WHERE (Schuljahresabschnitts_ID, Klasse) NOT IN (
-				SELECT
-					Schuljahresabschnitts_ID,
-					Klasse
-				FROM
-					Klassen
+			    SELECT
+			        Schuljahresabschnitts_ID,
+			        Klasse
+			    FROM
+			        Klassen
 			)
 			""",
 			Schema.tab_Schueler, Schema.tab_Klassen
@@ -2024,10 +2024,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schüler-Klassen-Zuordnung: Bestimme die Klassen-ID des Schülers und setze diese",
 			"""
 			UPDATE Schueler
-				JOIN Klassen ON (Schueler.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
-					AND (Schueler.Klasse = Klassen.Klasse)
+			    JOIN Klassen ON (Schueler.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
+			        AND (Schueler.Klasse = Klassen.Klasse)
 			SET
-				Schueler.Klassen_ID = Klassen.ID
+			    Schueler.Klassen_ID = Klassen.ID
 			""",
 			Schema.tab_Schueler, Schema.tab_Klassen
 		);
@@ -2035,16 +2035,16 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("SchuelerFoerderempfehlungen-Klassen-Zuordnung: Entferne alle Einträge, die nicht in der neuen Klassentabelle vorhanden sind und wo daher keine Zuordnung machbar ist",
 			"""
 			UPDATE SchuelerFoerderempfehlungen
-				JOIN SchuelerLernabschnittsdaten ON SchuelerFoerderempfehlungen.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
+			    JOIN SchuelerLernabschnittsdaten ON SchuelerFoerderempfehlungen.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
 			SET
-				SchuelerFoerderempfehlungen.Klasse = null
+			    SchuelerFoerderempfehlungen.Klasse = null
 			WHERE (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID, SchuelerFoerderempfehlungen.Klasse) NOT IN (
-				SELECT
-					Schuljahresabschnitts_ID,
-					Klasse
-				FROM
-					Klassen
-				)
+			    SELECT
+			        Schuljahresabschnitts_ID,
+			        Klasse
+			    FROM
+			        Klassen
+			    )
 			""",
 			Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
@@ -2052,11 +2052,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("SchuelerFoerderempfehlungen-Klassen-Zuordnung: Bestimme die Klassen-ID der Schüler-Förderempfehlung und setze diese",
 			"""
 			UPDATE SchuelerFoerderempfehlungen
-				JOIN SchuelerLernabschnittsdaten ON SchuelerFoerderempfehlungen.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
-				JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
-					AND (SchuelerFoerderempfehlungen.Klasse = Klassen.Klasse)
+			    JOIN SchuelerLernabschnittsdaten ON SchuelerFoerderempfehlungen.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
+			    JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
+			        AND (SchuelerFoerderempfehlungen.Klasse = Klassen.Klasse)
 			SET
-				SchuelerFoerderempfehlungen.Klassen_ID = Klassen.ID
+			    SchuelerFoerderempfehlungen.Klassen_ID = Klassen.ID
 			""",
 			Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
@@ -2066,12 +2066,12 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Klasse = null
 			WHERE (Schuljahresabschnitts_ID, Klasse) NOT IN (
-				SELECT
-					Schuljahresabschnitts_ID,
-					Klasse
-				FROM
-					Klassen
-				)
+			    SELECT
+			        Schuljahresabschnitts_ID,
+			        Klasse
+			    FROM
+			        Klassen
+			    )
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
@@ -2079,10 +2079,10 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schüler-Lernabschnitt-Klassen-Zuordnung: Bestimme die Klassen-ID des Schüler-Lernabschnitts und setze diese",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
-					AND (SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse)
+			    JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
+			        AND (SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse)
 			SET
-				SchuelerLernabschnittsdaten.Klassen_ID = Klassen.ID
+			    SchuelerLernabschnittsdaten.Klassen_ID = Klassen.ID
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
@@ -2090,9 +2090,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schuljahresabschnitte: Setzen der Abschnitts-ID des vorigen Abschnitts",
 			"""
 			UPDATE Schuljahresabschnitte s
-				JOIN Schuljahresabschnitte t
-					ON t.Jahr = CASE WHEN s.Abschnitt - 1 < 1 THEN s.Jahr - 1 ELSE s.Jahr END
-					AND	t.Abschnitt = CASE WHEN s.Abschnitt - 1 < 1 THEN (SELECT AnzahlAbschnitte FROM EigeneSchule) ELSE s.Abschnitt - 1 END
+			    JOIN Schuljahresabschnitte t
+			        ON t.Jahr = CASE WHEN s.Abschnitt - 1 < 1 THEN s.Jahr - 1 ELSE s.Jahr END
+			        AND t.Abschnitt = CASE WHEN s.Abschnitt - 1 < 1 THEN (SELECT AnzahlAbschnitte FROM EigeneSchule) ELSE s.Abschnitt - 1 END
 			SET s.VorigerAbschnitt_ID = t.ID
 			""",
 			Schema.tab_Schuljahresabschnitte
@@ -2100,9 +2100,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schuljahresabschnitte: Setzen der Folge-Abschnitts-ID",
 			"""
 			UPDATE Schuljahresabschnitte s
-				JOIN Schuljahresabschnitte t
-					ON t.Jahr = CASE WHEN s.Abschnitt + 1 > (SELECT AnzahlAbschnitte FROM EigeneSchule) THEN s.Jahr + 1 ELSE s.Jahr END
-					AND t.Abschnitt = CASE WHEN s.Abschnitt + 1 > (SELECT AnzahlAbschnitte FROM EigeneSchule) THEN 1 ELSE s.Abschnitt + 1 END
+			    JOIN Schuljahresabschnitte t
+			        ON t.Jahr = CASE WHEN s.Abschnitt + 1 > (SELECT AnzahlAbschnitte FROM EigeneSchule) THEN s.Jahr + 1 ELSE s.Jahr END
+			        AND t.Abschnitt = CASE WHEN s.Abschnitt + 1 > (SELECT AnzahlAbschnitte FROM EigeneSchule) THEN 1 ELSE s.Abschnitt + 1 END
 			SET s.FolgeAbschnitt_ID = t.ID
 			""",
 			Schema.tab_Schuljahresabschnitte
@@ -2112,21 +2112,21 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLernabschnittsdaten
 			SET Folgeklasse = null
 			WHERE (Schuljahresabschnitts_ID, Folgeklasse) NOT IN (
-				SELECT
-					Schuljahresabschnitts_ID,
-					Klasse
-				FROM
-					Klassen
-				)
+			    SELECT
+			        Schuljahresabschnitts_ID,
+			        Klasse
+			    FROM
+			        Klassen
+			    )
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
 		add("Schüler-Lernabschnitt-Folge-Klassen-Zuordnung: Entferne alle Einträge, die dem Standardeintrag in der neuen Klassentabelle entsprechen",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
-					AND (SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse)
-					AND (SchuelerLernabschnittsdaten.Folgeklasse = Klassen.FKlasse)
+			    JOIN Klassen ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID)
+			        AND (SchuelerLernabschnittsdaten.Klasse = Klassen.Klasse)
+			        AND (SchuelerLernabschnittsdaten.Folgeklasse = Klassen.FKlasse)
 			SET Folgeklasse = null
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
@@ -2134,9 +2134,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schüler-Lernabschnitt-Folge-Klassen-Zuordnung: Entferne den Folgeklassen-Eintrag, falls der nächste Lernabschnitt noch nicht definiert ist",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Schuljahresabschnitte ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID)
-					AND (Schuljahresabschnitte.FolgeAbschnitt_ID IS NULL)
-					AND (SchuelerLernabschnittsdaten.Folgeklasse IS NOT NULL)
+			    JOIN Schuljahresabschnitte ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID)
+			        AND (Schuljahresabschnitte.FolgeAbschnitt_ID IS NULL)
+			        AND (SchuelerLernabschnittsdaten.Folgeklasse IS NOT NULL)
 			SET Folgeklasse = NULL
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
@@ -2144,11 +2144,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Schüler-Lernabschnitt-Folge-Klassen-Zuordnung: Bestimme die FolgeKlassen-ID des Schüler-Lernabschnitts und setze diese",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Schuljahresabschnitte ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID)
-					AND (SchuelerLernabschnittsdaten.Folgeklasse IS NOT NULL)
-					AND (Schuljahresabschnitte.FolgeAbschnitt_ID IS NOT NULL)
-				JOIN Klassen ON (Schuljahresabschnitte.FolgeAbschnitt_ID = Klassen.Schuljahresabschnitts_ID)
-					AND (SchuelerLernabschnittsdaten.Folgeklasse = Klassen.Klasse)
+			    JOIN Schuljahresabschnitte ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID)
+			        AND (SchuelerLernabschnittsdaten.Folgeklasse IS NOT NULL)
+			        AND (Schuljahresabschnitte.FolgeAbschnitt_ID IS NOT NULL)
+			    JOIN Klassen ON (Schuljahresabschnitte.FolgeAbschnitt_ID = Klassen.Schuljahresabschnitts_ID)
+			        AND (SchuelerLernabschnittsdaten.Folgeklasse = Klassen.Klasse)
 			SET Folgeklasse_ID = Klassen.ID
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Schuljahresabschnitte, Schema.tab_Klassen
@@ -2157,8 +2157,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			UPDATE EigeneSchule_Abteilungen
 			SET Schuljahresabschnitts_ID = (
-				SELECT Schuljahresabschnitts_ID
-				FROM EigeneSchule
+			    SELECT Schuljahresabschnitts_ID
+			    FROM EigeneSchule
 			)
 			""",
 			Schema.tab_EigeneSchule_Abteilungen, Schema.tab_EigeneSchule
@@ -2166,90 +2166,90 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("SchuelerLernabschnittsdaten: Erzeuge leere Abschnitte bei Schülern ohne aktuellen Lernabschnitt",
 			"""
 			INSERT INTO SchuelerLernabschnittsdaten(
-				Schueler_ID, Schuljahresabschnitts_ID, WechselNr, Schulbesuchsjahre, Hochrechnung, SemesterWertung, PruefOrdnung, Klassen_ID, Verspaetet,
-				NPV_Fach_ID, NPV_NoteKrz, NPV_Datum, NPAA_Fach_ID, NPAA_NoteKrz, NPAA_Datum, NPBQ_Fach_ID, NPBQ_NoteKrz, NPBQ_Datum, VersetzungKrz, AbschlussArt,
-				AbschlIstPrognose, Konferenzdatum, ZeugnisDatum, ASDSchulgliederung, ASDJahrgang, Jahrgang_ID, Fachklasse_ID, Schwerpunkt_ID, ZeugnisBem,
-				Schwerbehinderung, Foerderschwerpunkt_ID, OrgFormKrz, RefPaed, Klassenart, SumFehlStd, SumFehlStdU, Wiederholung, Gesamtnote_GS, Gesamtnote_NW, Folgeklasse_ID,
-				Foerderschwerpunkt2_ID, Abschluss, Abschluss_B, DSNote, AV_Leist, AV_Zuv, AV_Selbst, SV_Verant, SV_Konfl, SV_Koop, MoeglNPFaecher,
-				Zertifikate, DatumFHR, PruefAlgoErgebnis, Zeugnisart, DatumVon, DatumBis, FehlstundenGrenzwert, Sonderpaedagoge_ID, FachPraktAnteilAusr, BilingualerZweig,
-				Jahr, Abschnitt)
+			    Schueler_ID, Schuljahresabschnitts_ID, WechselNr, Schulbesuchsjahre, Hochrechnung, SemesterWertung, PruefOrdnung, Klassen_ID, Verspaetet,
+			    NPV_Fach_ID, NPV_NoteKrz, NPV_Datum, NPAA_Fach_ID, NPAA_NoteKrz, NPAA_Datum, NPBQ_Fach_ID, NPBQ_NoteKrz, NPBQ_Datum, VersetzungKrz, AbschlussArt,
+			    AbschlIstPrognose, Konferenzdatum, ZeugnisDatum, ASDSchulgliederung, ASDJahrgang, Jahrgang_ID, Fachklasse_ID, Schwerpunkt_ID, ZeugnisBem,
+			    Schwerbehinderung, Foerderschwerpunkt_ID, OrgFormKrz, RefPaed, Klassenart, SumFehlStd, SumFehlStdU, Wiederholung, Gesamtnote_GS, Gesamtnote_NW, Folgeklasse_ID,
+			    Foerderschwerpunkt2_ID, Abschluss, Abschluss_B, DSNote, AV_Leist, AV_Zuv, AV_Selbst, SV_Verant, SV_Konfl, SV_Koop, MoeglNPFaecher,
+			    Zertifikate, DatumFHR, PruefAlgoErgebnis, Zeugnisart, DatumVon, DatumBis, FehlstundenGrenzwert, Sonderpaedagoge_ID, FachPraktAnteilAusr, BilingualerZweig,
+			    Jahr, Abschnitt)
 			SELECT
-				ID AS Schueler_ID,
-				Schuljahresabschnitts_ID,
-				NULL AS WechselNr,
-				Jahrgang AS Schulbesuchsjahre,
-				0 AS Hochrechnung,
-				'+' AS SemesterWertung,
-				PruefOrdnung,
-				Klassen_ID,
-				0 AS Verspaetet,
-				NULL AS NPV_Fach_ID,
-				NULL AS NPV_NoteKrz,
-				NULL AS NPV_Datum,
-				NULL AS NPAA_Fach_ID,
-				NULL AS NPAA_NoteKrz,
-				NULL AS NPAA_Datum,
-				NULL AS NPBQ_Fach_ID,
-				NULL AS NPBQ_NoteKrz,
-				NULL AS NPBQ_Datum,
-				NULL AS VersetzungKrz,
-				NULL AS AbschlussArt,
-				'-' AS AbschlIstPrognose,
-				NULL AS Konferenzdatum,
-				NULL AS ZeugnisDatum,
-				ASDSchulform AS ASDSchulgliederung,
-				ASDJahrgang,
-				Jahrgang_ID,
-				Fachklasse_ID,
-				Schwerpunkt_ID,
-				NULL AS ZeugnisBem,
-				Schwerbehinderung,
-				NULL AS Foerderschwerpunkt_ID,
-				OrgFormKrz,
-				RefPaed,
-				Klassenart,
-				NULL AS SumFehlStd,
-				NULL AS SumFehlStdU,
-				'-' AS Wiederholung,
-				NULL AS Gesamtnote_GS,
-				NULL AS Gesamtnote_NW,
-				NULL AS Folgeklasse_ID,
-				NULL AS Foerderschwerpunkt2_ID,
-				NULL AS Abschluss,
-				NULL AS Abschluss_B,
-				NULL AS DSNote,
-				NULL AS AV_Leist,
-				NULL AS AV_Zuv,
-				NULL AS AV_Selbst,
-				NULL AS SV_Verant,
-				NULL AS SV_Konfl,
-				NULL AS SV_Koop,
-				NULL AS MoeglNPFaecher,
-				NULL AS Zertifikate,
-				NULL AS DatumFHR,
-				NULL AS PruefAlgoErgebnis,
-				NULL AS Zeugnisart,
-				NULL AS DatumVon,
-				NULL AS DatumBis,
-				NULL AS FehlstundenGrenzwert,
-				NULL AS Sonderpaedagoge_ID,
-				'+' AS FachPraktAnteilAusr,
-				BilingualerZweig,
-				2000 AS Jahr,
-				1 AS Abschnitt
+			    ID AS Schueler_ID,
+			    Schuljahresabschnitts_ID,
+			    NULL AS WechselNr,
+			    Jahrgang AS Schulbesuchsjahre,
+			    0 AS Hochrechnung,
+			    '+' AS SemesterWertung,
+			    PruefOrdnung,
+			    Klassen_ID,
+			    0 AS Verspaetet,
+			    NULL AS NPV_Fach_ID,
+			    NULL AS NPV_NoteKrz,
+			    NULL AS NPV_Datum,
+			    NULL AS NPAA_Fach_ID,
+			    NULL AS NPAA_NoteKrz,
+			    NULL AS NPAA_Datum,
+			    NULL AS NPBQ_Fach_ID,
+			    NULL AS NPBQ_NoteKrz,
+			    NULL AS NPBQ_Datum,
+			    NULL AS VersetzungKrz,
+			    NULL AS AbschlussArt,
+			    '-' AS AbschlIstPrognose,
+			    NULL AS Konferenzdatum,
+			    NULL AS ZeugnisDatum,
+			    ASDSchulform AS ASDSchulgliederung,
+			    ASDJahrgang,
+			    Jahrgang_ID,
+			    Fachklasse_ID,
+			    Schwerpunkt_ID,
+			    NULL AS ZeugnisBem,
+			    Schwerbehinderung,
+			    NULL AS Foerderschwerpunkt_ID,
+			    OrgFormKrz,
+			    RefPaed,
+			    Klassenart,
+			    NULL AS SumFehlStd,
+			    NULL AS SumFehlStdU,
+			    '-' AS Wiederholung,
+			    NULL AS Gesamtnote_GS,
+			    NULL AS Gesamtnote_NW,
+			    NULL AS Folgeklasse_ID,
+			    NULL AS Foerderschwerpunkt2_ID,
+			    NULL AS Abschluss,
+			    NULL AS Abschluss_B,
+			    NULL AS DSNote,
+			    NULL AS AV_Leist,
+			    NULL AS AV_Zuv,
+			    NULL AS AV_Selbst,
+			    NULL AS SV_Verant,
+			    NULL AS SV_Konfl,
+			    NULL AS SV_Koop,
+			    NULL AS MoeglNPFaecher,
+			    NULL AS Zertifikate,
+			    NULL AS DatumFHR,
+			    NULL AS PruefAlgoErgebnis,
+			    NULL AS Zeugnisart,
+			    NULL AS DatumVon,
+			    NULL AS DatumBis,
+			    NULL AS FehlstundenGrenzwert,
+			    NULL AS Sonderpaedagoge_ID,
+			    '+' AS FachPraktAnteilAusr,
+			    BilingualerZweig,
+			    2000 AS Jahr,
+			    1 AS Abschnitt
 			FROM Schueler
 			WHERE
-				(ID, Schuljahresabschnitts_ID) NOT IN (
-					SELECT Schueler_ID, Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten)
-				AND Schuljahresabschnitts_ID IN (SELECT ID FROM Schuljahresabschnitte)
+			    (ID, Schuljahresabschnitts_ID) NOT IN (
+			        SELECT Schueler_ID, Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten)
+			    AND Schuljahresabschnitts_ID IN (SELECT ID FROM Schuljahresabschnitte)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Schueler, Schema.tab_Schuljahresabschnitte
 		);
 		add("SchuelerLernabschnittsdaten: Setze das Feld Schulbesuchsjahre beim aktuellen Abschnitt",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Schueler ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schueler.Schuljahresabschnitts_ID)
-					AND (SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID)
+			    JOIN Schueler ON (SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = Schueler.Schuljahresabschnitts_ID)
+			        AND (SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID)
 			SET SchuelerLernabschnittsdaten.Schulbesuchsjahre = Schueler.Jahrgang
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Schueler
@@ -2257,12 +2257,12 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("SchuelerLernabschnittsdaten: Setze die Felder BilingualerZweig, AOSF, Autist, ZieldifferentesLernen bei allen Lernabschnitten eines Schülers",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-				JOIN Schueler ON (SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID)
+			    JOIN Schueler ON (SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID)
 			SET
-				SchuelerLernabschnittsdaten.BilingualerZweig = Schueler.BilingualerZweig,
-				SchuelerLernabschnittsdaten.AOSF = Schueler.AOSF,
-				SchuelerLernabschnittsdaten.Autist = Schueler.Autist,
-				SchuelerLernabschnittsdaten.ZieldifferentesLernen = Schueler.ZieldifferentesLernen
+			    SchuelerLernabschnittsdaten.BilingualerZweig = Schueler.BilingualerZweig,
+			    SchuelerLernabschnittsdaten.AOSF = Schueler.AOSF,
+			    SchuelerLernabschnittsdaten.Autist = Schueler.Autist,
+			    SchuelerLernabschnittsdaten.ZieldifferentesLernen = Schueler.ZieldifferentesLernen
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Schueler
 		);
@@ -2270,24 +2270,24 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO EigeneSchule_Abteilungen(Bezeichnung, Schuljahresabschnitts_ID, AbteilungsLeiter_ID, Sichtbar, Raum, Email, Durchwahl, Sortierung)
 			SELECT
-				abt.Bezeichnung,
-				abschnitt.ID AS Schuljahresabschnitts_ID,
-				abt.AbteilungsLeiter_ID,
-				abt.Sichtbar,
-				abt.Raum,
-				abt.Email,
-				abt.Durchwahl,
-				abt.Sortierung
+			    abt.Bezeichnung,
+			    abschnitt.ID AS Schuljahresabschnitts_ID,
+			    abt.AbteilungsLeiter_ID,
+			    abt.Sichtbar,
+			    abt.Raum,
+			    abt.Email,
+			    abt.Durchwahl,
+			    abt.Sortierung
 			FROM
-				EigeneSchule_Abteilungen abt
-					JOIN (
-						SELECT *
-						FROM Schuljahresabschnitte
-						WHERE ID NOT IN (
-							SELECT Schuljahresabschnitts_ID
-							FROM EigeneSchule_Abteilungen
-						)
-					) abschnitt
+			    EigeneSchule_Abteilungen abt
+			        JOIN (
+			            SELECT *
+			            FROM Schuljahresabschnitte
+			            WHERE ID NOT IN (
+			                SELECT Schuljahresabschnitts_ID
+			                FROM EigeneSchule_Abteilungen
+			            )
+			        ) abschnitt
 			""",
 			Schema.tab_EigeneSchule_Abteilungen, Schema.tab_Schuljahresabschnitte
 		);
@@ -2295,34 +2295,34 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO EigeneSchule_Abt_Kl(Abteilung_ID, Klasse, Klassen_ID, Sichtbar)
 			SELECT
-				mapping.id_ersatz AS Abteilung_ID,
-				abt_kl.Klasse,
-				-1 AS Klassen_ID,
-				abt_kl.Sichtbar
+			    mapping.id_ersatz AS Abteilung_ID,
+			    abt_kl.Klasse,
+			    -1 AS Klassen_ID,
+			    abt_kl.Sichtbar
 			FROM EigeneSchule_Abt_Kl abt_kl
-				JOIN (
-					SELECT
-						a.ID AS id_orig,
-						b.ID AS id_ersatz
-					FROM (
-						(
-							SELECT * FROM EigeneSchule_Abteilungen WHERE ID IN (SELECT Abteilung_ID FROM EigeneSchule_Abt_Kl)
-						) a JOIN (
-							SELECT * FROM EigeneSchule_Abteilungen WHERE ID NOT IN (SELECT Abteilung_ID FROM EigeneSchule_Abt_Kl)
-						) b ON a.Bezeichnung = b.Bezeichnung
-      				)
-    			) mapping ON abt_kl.Abteilung_ID = mapping.id_orig
-    		""",
+			    JOIN (
+			        SELECT
+			            a.ID AS id_orig,
+			            b.ID AS id_ersatz
+			        FROM (
+			            (
+			                SELECT * FROM EigeneSchule_Abteilungen WHERE ID IN (SELECT Abteilung_ID FROM EigeneSchule_Abt_Kl)
+			            ) a JOIN (
+			                SELECT * FROM EigeneSchule_Abteilungen WHERE ID NOT IN (SELECT Abteilung_ID FROM EigeneSchule_Abt_Kl)
+			            ) b ON a.Bezeichnung = b.Bezeichnung
+			        )
+			    ) mapping ON abt_kl.Abteilung_ID = mapping.id_orig
+			""",
 			Schema.tab_EigeneSchule_Abt_Kl, Schema.tab_EigeneSchule_Abteilungen
 		);
 		add("EigeneSchule_Abt_Kl: Umstellung auf Klassen-IDs",
 			"""
 			UPDATE EigeneSchule_Abt_Kl
-				JOIN EigeneSchule_Abteilungen ON EigeneSchule_Abt_Kl.Abteilung_ID = EigeneSchule_Abteilungen.ID
-				JOIN Klassen ON EigeneSchule_Abt_Kl.Klasse = Klassen.Klasse
-					AND EigeneSchule_Abteilungen.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
+			    JOIN EigeneSchule_Abteilungen ON EigeneSchule_Abt_Kl.Abteilung_ID = EigeneSchule_Abteilungen.ID
+			    JOIN Klassen ON EigeneSchule_Abt_Kl.Klasse = Klassen.Klasse
+			        AND EigeneSchule_Abteilungen.Schuljahresabschnitts_ID = Klassen.Schuljahresabschnitts_ID
 			SET
-				Klassen_ID = Klassen.ID
+			    Klassen_ID = Klassen.ID
 			""",
 			Schema.tab_EigeneSchule_Abt_Kl, Schema.tab_EigeneSchule_Abteilungen, Schema.tab_Klassen
 		);
@@ -2331,8 +2331,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			UPDATE EigeneSchule_Faecher
 			SET Zeugnisdatenquelle_ID = Fachgruppe_ID
 			WHERE Fachgruppe_ID IN (
-				SELECT SchildFgID
-				FROM Fachgruppen
+			    SELECT SchildFgID
+			    FROM Fachgruppen
 			)
 			""",
 			Schema.tab_EigeneSchule_Faecher, Schema.tab_Fachgruppen
@@ -2352,11 +2352,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO Credentials(ID, Benutzername, PasswordHash)
 			SELECT
-				ID,
-				US_LoginName,
-				US_PasswordHash
+			    ID,
+			    US_LoginName,
+			    US_PasswordHash
 			FROM
-				Users
+			    Users
 			""",
 			Schema.tab_Credentials, Schema.tab_Users
 		);
@@ -2364,25 +2364,25 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO BenutzerAllgemein(ID, AnzeigeName, CredentialID)
 			SELECT
-				ID,
-				US_Name,
-				ID
+			    ID,
+			    US_Name,
+			    ID
 			FROM
-				Users
+			    Users
 			WHERE
-				US_LoginName NOT IN (
-					SELECT Kuerzel
-					FROM K_Lehrer
-				)
+			    US_LoginName NOT IN (
+			        SELECT Kuerzel
+			        FROM K_Lehrer
+			    )
 			""",
 			Schema.tab_BenutzerAllgemein, Schema.tab_Users, Schema.tab_K_Lehrer
 		);
 		add("K_Lehrer: Setze die Kennwortinformationen aus der Benutzertabelle",
 			"""
 			UPDATE K_Lehrer
-				JOIN Users ON Users.US_LoginName = K_Lehrer.Kuerzel
+			    JOIN Users ON Users.US_LoginName = K_Lehrer.Kuerzel
 			SET
-				K_Lehrer.CredentialID = Users.ID
+			    K_Lehrer.CredentialID = Users.ID
 			""",
 			Schema.tab_Users, Schema.tab_K_Lehrer
 		);
@@ -2390,17 +2390,17 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO Benutzer(ID, Typ, Allgemein_ID, IstAdmin)
 			SELECT
-				ID,
-				0,
-				ID,
-				CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
+			    ID,
+			    0,
+			    ID,
+			    CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
 			FROM
-				Users
+			    Users
 			WHERE
-				US_LoginName NOT IN (
-					SELECT Kuerzel
-					FROM K_Lehrer
-				)
+			    US_LoginName NOT IN (
+			        SELECT Kuerzel
+			        FROM K_Lehrer
+			    )
 			""",
 			Schema.tab_Benutzer, Schema.tab_Users, Schema.tab_K_Lehrer
 		);
@@ -2408,12 +2408,12 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO Benutzer(ID, Typ, Lehrer_ID, IstAdmin)
 			SELECT
-				Users.ID,
-				1,
-				K_Lehrer.ID,
-                CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
+			    Users.ID,
+			    1,
+			    K_Lehrer.ID,
+			    CASE WHEN INSTR(US_Privileges, '$') > 0 THEN 1 ELSE 0 END
 			FROM Users
-				JOIN K_Lehrer ON Users.US_LoginName = K_Lehrer.Kuerzel
+			    JOIN K_Lehrer ON Users.US_LoginName = K_Lehrer.Kuerzel
 			""",
 			Schema.tab_Benutzer, Schema.tab_Users, Schema.tab_K_Lehrer
 		);
@@ -2421,19 +2421,19 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO BenutzerEmail(Benutzer_ID, Email, EmailName, SMTPUsername, SMTPPassword, EMailSignature, HeartbeatDate, ComputerName)
 			SELECT
-				ID AS Benutzer_ID,
-				Email,
-				EmailName,
-				SMTPUsername,
-				SMTPPassword,
-				EmailSignature,
-				HeartbeatDate,
-				ComputerName
+			    ID AS Benutzer_ID,
+			    Email,
+			    EmailName,
+			    SMTPUsername,
+			    SMTPPassword,
+			    EmailSignature,
+			    HeartbeatDate,
+			    ComputerName
 			FROM
-				Users
+			    Users
 			WHERE
-				Email IS NOT NULL
-				AND EmailName IS NOT NULL
+			    Email IS NOT NULL
+			    AND EmailName IS NOT NULL
 			""",
 			Schema.tab_BenutzerEmail, Schema.tab_Users
 		);
@@ -2441,13 +2441,13 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO Benutzergruppen(ID, Bezeichnung)
 			SELECT
-				UG_ID,
-				UG_Bezeichnung
+			    UG_ID,
+			    UG_Bezeichnung
 			FROM
-				Usergroups
+			    Usergroups
 			WHERE
-				UG_ID IS NOT NULL
-				AND UG_Bezeichnung IS NOT NULL
+			    UG_ID IS NOT NULL
+			    AND UG_Bezeichnung IS NOT NULL
 			""",
 			Schema.tab_Benutzergruppen, Schema.tab_Usergroups
 		);
@@ -2455,37 +2455,37 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO BenutzergruppenKompetenzen(Gruppe_ID, Kompetenz_ID)
 			SELECT DISTINCT * FROM JSON_TABLE(
-				(
-					SELECT
-  						CONCAT(
-  							'[',
-  							GROUP_CONCAT(
-  								'{"Gruppe_ID":',
-  								UG_ID,
-  								',
-  								"Kompetenz_ID":',
-  								REPLACE(
-  									REPLACE(UG_Kompetenzen,'$','-1'),';',
-  									CONCAT(
-  										'}, {"Gruppe_ID":',
-  										UG_ID,
-  										', "Kompetenz_ID":'
-  									)
-  								),
-  								'}'
-  							),
-  							']'
-  						)
-					FROM
-						Usergroups
-					WHERE
-						UG_Kompetenzen IS NOT NULL
-						AND TRIM(UG_Kompetenzen) <> ""
-				),
-				'$[*]' columns(
-					Gruppe_ID bigint path '$.Gruppe_ID',
-					Kompetenz_ID bigint path '$.Kompetenz_ID'
-				)
+			    (
+			        SELECT
+			            CONCAT(
+			                '[',
+			                GROUP_CONCAT(
+			                    '{"Gruppe_ID":',
+			                    UG_ID,
+			                    ',
+			                    "Kompetenz_ID":',
+			                    REPLACE(
+			                        REPLACE(UG_Kompetenzen,'$','-1'),';',
+			                        CONCAT(
+			                            '}, {"Gruppe_ID":',
+			                            UG_ID,
+			                            ', "Kompetenz_ID":'
+			                        )
+			                    ),
+			                    '}'
+			                ),
+			                ']'
+			            )
+			        FROM
+			            Usergroups
+			        WHERE
+			            UG_Kompetenzen IS NOT NULL
+			            AND TRIM(UG_Kompetenzen) <> ""
+			    ),
+			    '$[*]' columns(
+			        Gruppe_ID bigint path '$.Gruppe_ID',
+			        Kompetenz_ID bigint path '$.Kompetenz_ID'
+			    )
 			) AS GruppenKompetenzen
 			""",
 			Schema.tab_BenutzergruppenKompetenzen, Schema.tab_Usergroups
@@ -2493,14 +2493,15 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Benutzergruppen: Setze das Flag IstAdmin für administrative Gruppen",
 			"""
 			UPDATE Benutzergruppen
-				JOIN BenutzergruppenKompetenzen ON Benutzergruppen.ID = BenutzergruppenKompetenzen.Gruppe_ID
-					AND BenutzergruppenKompetenzen.Kompetenz_ID = -1
+			    JOIN BenutzergruppenKompetenzen ON Benutzergruppen.ID = BenutzergruppenKompetenzen.Gruppe_ID
+			        AND BenutzergruppenKompetenzen.Kompetenz_ID = -1
 			SET Benutzergruppen.IstAdmin = 1
 			""",
 			Schema.tab_Benutzergruppen, Schema.tab_BenutzergruppenKompetenzen
 		);
+		final String strInsertBenutzerGruppenKompetenzen = "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)";
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für die Stundenplanung anhand vorhandener Kompetenzen",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            strInsertBenutzerGruppenKompetenzen
             + "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN.daten.id
             + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
             + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.LEHRERDATEN_ANSEHEN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
@@ -2527,7 +2528,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für das Noten-Modul anhand der Kompetenzen zu den Schüler-Leistungsdaten",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            strInsertBenutzerGruppenKompetenzen
             + "SELECT Gruppe_ID, " + BenutzerKompetenz.NOTENMODUL_ADMINISTRATION.daten.id
             + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
             + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
@@ -2550,7 +2551,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für das Datenbank-Management anhand der alten Kompetenz Backup durchführen",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            strInsertBenutzerGruppenKompetenzen
             + "SELECT Gruppe_ID, " + BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN.daten.id
             + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
             + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_BACKUP_DURCHFUEHREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
@@ -2565,7 +2566,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für Oberstufenberechnungen anhand der alten Kompetenz zum Kurs42-Import",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            strInsertBenutzerGruppenKompetenzen
             + "SELECT Gruppe_ID, " + BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN.daten.id
             + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
             + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
@@ -2604,7 +2605,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
             Schema.tab_BenutzergruppenKompetenzen
         );
         add(Schema.tab_BenutzergruppenKompetenzen.name() + ": Setze Default-Werte für Oberstufenberechnungen anhand der alten Kompetenz zum Kurs42-Import",
-            "INSERT INTO " + Schema.tab_BenutzergruppenKompetenzen.name() + "(Gruppe_ID, Kompetenz_ID)"
+            strInsertBenutzerGruppenKompetenzen
             + "SELECT Gruppe_ID, " + BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN.daten.id
             + " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
             + " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN.daten.id + ", " + BenutzerKompetenz.ADMIN.daten.id + ")"
@@ -2641,37 +2642,37 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO BenutzergruppenMitglieder(Gruppe_ID, Benutzer_ID)
 			SELECT DISTINCT * FROM JSON_TABLE(
-				(
-					SELECT
-  						CONCAT(
-  							'[',
-  							GROUP_CONCAT(
-  								'{"Gruppe_ID":',
-  								REPLACE(
-  									REPLACE(US_UserGroups,'$','-1'),
-  									';',
-  									CONCAT(
-  										', "Benutzer_ID": ',
-  										ID,
-  										'}, {"Gruppe_ID":'
-  									)
-  								),
-  								', "Benutzer_ID":',
-  								ID,
-  								'}'
-  							),
-  							']'
-  						)
-					FROM
-						Users
-					WHERE
-						US_UserGroups IS NOT NULL
-						AND TRIM(US_UserGroups) <> ""
-				),
-				'$[*]' columns(
-					Gruppe_ID bigint path '$.Gruppe_ID',
-					Benutzer_ID bigint path '$.Benutzer_ID'
-				)
+			    (
+			        SELECT
+			            CONCAT(
+			                '[',
+			                GROUP_CONCAT(
+			                    '{"Gruppe_ID":',
+			                    REPLACE(
+			                        REPLACE(US_UserGroups,'$','-1'),
+			                        ';',
+			                        CONCAT(
+			                            ', "Benutzer_ID": ',
+			                            ID,
+			                            '}, {"Gruppe_ID":'
+			                        )
+			                    ),
+			                    ', "Benutzer_ID":',
+			                    ID,
+			                    '}'
+			                ),
+			                ']'
+			            )
+			        FROM
+			            Users
+			        WHERE
+			            US_UserGroups IS NOT NULL
+			            AND TRIM(US_UserGroups) <> ""
+			    ),
+			    '$[*]' columns(
+			        Gruppe_ID bigint path '$.Gruppe_ID',
+			        Benutzer_ID bigint path '$.Benutzer_ID'
+			    )
 			) AS GruppenMitglieder
 			""",
 			Schema.tab_BenutzergruppenMitglieder, Schema.tab_Users
@@ -2680,8 +2681,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM BenutzergruppenMitglieder
 			WHERE Gruppe_ID NOT IN (
-				SELECT ID
-				FROM Benutzergruppen
+			    SELECT ID
+			    FROM Benutzergruppen
 			)
 			""",
 			Schema.tab_BenutzergruppenMitglieder, Schema.tab_Benutzergruppen
@@ -2689,8 +2690,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		add("Benutzer: Setze das Flag IstAdmin für administrative Benutzer, falls es von einer Gruppenzuweisung geerbt wird",
 			"""
 			UPDATE Benutzer
-				JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
-				JOIN Benutzergruppen ON BenutzergruppenMitglieder.Gruppe_ID = Benutzergruppen.ID AND Benutzergruppen.IstAdmin = 1
+			    JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID
+			    JOIN Benutzergruppen ON BenutzergruppenMitglieder.Gruppe_ID = Benutzergruppen.ID AND Benutzergruppen.IstAdmin = 1
 			SET Benutzer.IstAdmin = 1
 			""",
 			Schema.tab_Benutzer, Schema.tab_BenutzergruppenMitglieder, Schema.tab_Benutzergruppen
@@ -2699,8 +2700,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM BenutzerKompetenzen
 			WHERE Kompetenz_ID NOT IN (
-				SELECT KO_ID
-				FROM Kompetenzen
+			    SELECT KO_ID
+			    FROM Kompetenzen
 			)
 			""",
 			Schema.tab_BenutzerKompetenzen, Schema.tab_Kompetenzen
@@ -2709,8 +2710,8 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			"""
 			DELETE FROM BenutzergruppenKompetenzen
 			WHERE Kompetenz_ID NOT IN (
-				SELECT KO_ID
-				FROM Kompetenzen
+			    SELECT KO_ID
+			    FROM Kompetenzen
 			)
 			""",
 			Schema.tab_BenutzergruppenKompetenzen, Schema.tab_Kompetenzen

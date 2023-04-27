@@ -26,14 +26,14 @@ public final class Revision2Updates extends SchemaRevisionUpdateSQL {
 			UPDATE SchuelerLeistungsdaten a
 			SET Kurs_ID = NULL
 			WHERE (SELECT Schuljahresabschnitts_ID FROM Kurse WHERE ID = a.Kurs_ID)
-				<> (SELECT Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten WHERE ID = a.Abschnitt_ID)
+			    <> (SELECT Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten WHERE ID = a.Abschnitt_ID)
 			""",
 			DBDriver.SQLITE,
 			"""
 			UPDATE SchuelerLeistungsdaten
 			SET Kurs_ID = NULL
 			WHERE (SELECT Schuljahresabschnitts_ID FROM Kurse WHERE Kurse.ID = SchuelerLeistungsdaten.Kurs_ID)
-				<> (SELECT Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = SchuelerLeistungsdaten.Abschnitt_ID)
+			    <> (SELECT Schuljahresabschnitts_ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = SchuelerLeistungsdaten.Abschnitt_ID)
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten
 		);
@@ -41,12 +41,12 @@ public final class Revision2Updates extends SchemaRevisionUpdateSQL {
 			"""
 			INSERT INTO Kurs_Schueler
 			SELECT DISTINCT
-				Kurse.ID AS Kurs_ID,
-				Schueler.ID AS Schueler_ID
+			    Kurse.ID AS Kurs_ID,
+			    Schueler.ID AS Schueler_ID
 			FROM
-				Kurse JOIN SchuelerLeistungsdaten ON Kurse.ID = SchuelerLeistungsdaten.Kurs_ID
-					JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
-					JOIN Schueler ON SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			    Kurse JOIN SchuelerLeistungsdaten ON Kurse.ID = SchuelerLeistungsdaten.Kurs_ID
+			        JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
+			        JOIN Schueler ON SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
 			""",
 			Schema.tab_Kurs_Schueler, Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten
 		);
