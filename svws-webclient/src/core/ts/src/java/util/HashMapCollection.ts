@@ -5,13 +5,14 @@ import { Class } from '../../java/lang/Class';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { TranspiledObject } from '../../java/lang/TranspiledObject';
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
+import { JavaMapEntry } from './JavaMapEntry';
 
 
 export class HashMapCollection<K, V> implements Collection<V> {
 
-	readonly #_map : Map<K, V>;
+	readonly #_map : Map<K, JavaMapEntry<K, V>>;
 
-	public constructor(map : Map<K,V>) {
+	public constructor(map : Map<K, JavaMapEntry<K, V>>) {
 		this.#_map = map;
 	}
 
@@ -24,7 +25,8 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	}
 
 	contains(value: any): boolean {
-		for (const [k, v] of this.#_map) {
+		for (const [k, e] of this.#_map) {
+			const v : V = e.getValue();
 			if (v === value)
 				return true;
 			if ((v instanceof JavaObject) && (v.equals(value)))
@@ -41,9 +43,9 @@ export class HashMapCollection<K, V> implements Collection<V> {
 				return next_item.done ? false : true
 			},
 			next(): V {
-				const v = next_item.value
+				const e = next_item.value
 				next_item = it.next()
-				return v
+				return e.getValue();
 			},
 			remove() {
 			},
@@ -105,7 +107,15 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	}
 
 	[Symbol.iterator](): Iterator<V> {
-		return this.#_map.values();
+		const iter : JavaIterator<V> = this.iterator();
+		const result : Iterator<V> = {
+			next() : IteratorResult<V> {
+				if (iter.hasNext())
+					return { value : iter.next(), done : false };
+				return { value : null, done : true };
+			}
+		};
+		return result;
 	}
 
 	getClass<T extends TranspiledObject>(): Class<T> {
@@ -118,7 +128,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
 
 	toString(): string | null {
 		let res = '[';
-		this.#_map.forEach(v => res + (v as unknown as JavaObject).toString() + ', ');
+		this.#_map.forEach(e => res + (e.getValue() as unknown as JavaObject).toString() + ', ');
 		res = res.substring(-2, 0);
 		res + ']';
 		return res;

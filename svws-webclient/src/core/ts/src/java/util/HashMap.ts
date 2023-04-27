@@ -10,10 +10,13 @@ import { JavaObject } from '../../java/lang/JavaObject';
 
 import { Serializable } from '../../java/io/Serializable';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
+import { HashMapEntrySet } from './HashMapEntrySet';
+import { HashMapEntry } from './HashMapEntry';
+import { HashMapKeySet } from './HashMapKeySet';
 
 export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneable, Serializable {
 
-	private readonly _map : Map<K, V> = new Map();
+	private readonly _map : Map<K, JavaMapEntry<K, V>> = new Map();
 
 	public constructor() {
 		super();
@@ -32,7 +35,8 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 	}
 
 	public containsValue(value : V) : boolean {
-		for (const [k, v] of this._map) {
+		for (const [k, e] of this._map) {
+			const v : V = e.getValue();
 			if (v === value)
 				return true;
 			if ((v instanceof JavaObject) && (v.equals(value)))
@@ -44,13 +48,14 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 	public get(key : any | null) : V | null {
 		if (key === null)
 			return null;
-		const value : V | undefined = this._map.get(key);
-		return (value === undefined) ? null : value;
+		const entry : JavaMapEntry<K, V> | undefined = this._map.get(key);
+		return (entry === undefined) ? null : entry.getValue();
 	}
 
 	public put(key : K, value : V) : V | null {
 		const oldValue : V | null = this.get(key);
-		this._map.set(key, value);
+		const newEntry = new HashMapEntry(key, value);
+		this._map.set(key, newEntry);
 		return oldValue;
 	}
 
@@ -75,10 +80,7 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 	}
 
 	public keySet() : JavaSet<K> {
-		const result = new HashSet<K>();
-		for (const [key, value] of this._map)
-			result.add(key);
-		return result;
+		return new HashMapKeySet<K, V>(this._map);
 	}
 
 	public values() : Collection<V> {
@@ -86,7 +88,7 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 	}
 
 	public entrySet() : JavaSet<JavaMapEntry<K, V>> {
-		throw new UnsupportedOperationException();
+		return new HashMapEntrySet<K, V>(this._map);
 	}
 
 	public equals(o : any) : boolean {
