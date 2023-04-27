@@ -2,9 +2,11 @@ package de.svws_nrw.data.benutzer;
 
 import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.core.types.benutzer.BenutzerTyp;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer;
+import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 
 
@@ -58,13 +60,14 @@ public final class DBUtilsBenutzer {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn.useDBLogin())
 				return true;
-			final DTOViewBenutzer dbBenutzer = conn
-					.queryNamed("DTOViewBenutzer.benutzername", user.getUsername(), DTOViewBenutzer.class).stream()
+			final DTOViewBenutzerdetails dbBenutzer = conn
+					.queryNamed("DTOViewBenutzerdetails.benutzername", user.getUsername(), DTOViewBenutzerdetails.class).stream()
 					.findFirst().orElse(null);
 			if (dbBenutzer == null)
 				return false;
 			final String pwHash = dbBenutzer.PasswordHash;
 			user.setId(dbBenutzer.ID);
+			user.setIdLehrer(dbBenutzer.Typ == BenutzerTyp.LEHRER ? dbBenutzer.TypID : null);
 			if ((password == null) || ("".equals(password))) {
 				return (pwHash == null) || ("".equals(pwHash));
 			}

@@ -29,6 +29,8 @@ public final class Benutzer {
 	/** Der Managaer für dei Datenbank-Verbindungen */
 	public final ConnectionManager connectionManager;
 
+	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
+	private Long idLehrer = null;
 
 
     /**
@@ -238,6 +240,27 @@ public final class Benutzer {
 			// TODO error handling
 			return null;
 		}
+	}
+
+
+	/**
+	 * Gibt die Lehrer-ID des angemeldeten Benutzers zurück, sofern
+	 * ein Lehrer angemeldet ist.
+	 *
+	 * @return die Lehrer-ID oder null, falls der angemeldete Benutzer kein Lehrer ist
+	 */
+	public Long getIdLehrer() {
+		return idLehrer;
+	}
+
+
+	/**
+	 * Setzt die Lehrer-ID des angemeldeten Benutzers
+	 *
+	 * @param idLehrer   die Lehrer-ID oder null, falls der angemeldete Benutzer kein Lehrer ist
+	 */
+	public void setIdLehrer(final Long idLehrer) {
+		this.idLehrer = idLehrer;
 	}
 
 }
