@@ -2734,16 +2734,16 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			final List<Object[]> tmpDuplikate = conn.queryNative("SELECT ID, ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis FROM SchuelerSprachenfolge WHERE Schueler_ID = " + schuelerID + " AND Sprache = '" + sprache + "' ORDER BY ASDJahrgangVon, AbschnittVon");
 			final long[] ids = new long[tmpDuplikate.size()];
 			final String[] jgVon = new String[tmpDuplikate.size()];
-			final Integer[] abschnittVon = new Integer[tmpDuplikate.size()];
+			final Short[] abschnittVon = new Short[tmpDuplikate.size()];
 			final String[] jgBis = new String[tmpDuplikate.size()];
-			final Integer[] abschnittBis = new Integer[tmpDuplikate.size()];
+			final Short[] abschnittBis = new Short[tmpDuplikate.size()];
 			for (int i = 0; i < tmpDuplikate.size(); i++) {
 				 final Object[] duplikat = tmpDuplikate.get(i);
 				 ids[i] = (Long) duplikat[0];
 				 jgVon[i] = (String) duplikat[1];
-				 abschnittVon[i] = (Integer) duplikat[2];
+				 abschnittVon[i] = (Short) duplikat[2];
 				 jgBis[i] = (String) duplikat[3];
-				 abschnittBis[i] = (Integer) duplikat[4];
+				 abschnittBis[i] = (Short) duplikat[4];
 			}
 			// TODO Bestimme die ID, welche entfernt werden sollen
 
