@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -90,8 +91,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
                 "DTOGostBlockungZwischenergebnis.blockung_id", datenManager.getID(), DTOGostBlockungZwischenergebnis.class);
         if (ergebnisse == null)
             throw OperationError.NOT_FOUND.exception();
-        final List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).collect(Collectors.toList());
-        if (ergebnisIDs.size() == 0) // Es muss immer mindestens ein aktuelles Ergebnis vorliegen
+        final List<Long> ergebnisIDs = ergebnisse.stream().map(e -> e.ID).toList();
+        if (ergebnisIDs.isEmpty()) // Es muss immer mindestens ein aktuelles Ergebnis vorliegen
             throw OperationError.INTERNAL_SERVER_ERROR.exception();
 
         // Bestimme die Kurs-Schienen-Zuordnungen für alle Zwischenergebnisse
@@ -117,8 +118,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             for (final var ks : listKursSchueler)
                 manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
             final GostBlockungsergebnis ergebnis = manager.getErgebnis();
-            ergebnis.istMarkiert = erg.IstMarkiert == null ? false : erg.IstMarkiert;
-            ergebnis.istVorlage = erg.IstVorlage == null ? false : erg.IstVorlage;
+            ergebnis.istMarkiert = erg.IstMarkiert != null && erg.IstMarkiert;
+            ergebnis.istVorlage = erg.IstVorlage != null && erg.IstVorlage;
 
             // Hinzufügen des Ergebnis-Listeneintrags zu den Blockungsdaten
             final var eintrag = new GostBlockungsergebnisListeneintrag();
@@ -159,8 +160,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         for (final DTOGostBlockungZwischenergebnisKursSchueler ks : listKursSchueler)
             manager.setSchuelerKurs(ks.Schueler_ID, ks.Blockung_Kurs_ID, true);
         final GostBlockungsergebnis daten = manager.getErgebnis();
-        daten.istMarkiert = ergebnis.IstMarkiert == null ? false : ergebnis.IstMarkiert;
-        daten.istVorlage = ergebnis.IstVorlage == null ? false : ergebnis.IstVorlage;
+        daten.istMarkiert = ergebnis.IstMarkiert != null && ergebnis.IstMarkiert;
+        daten.istVorlage = ergebnis.IstVorlage != null && ergebnis.IstVorlage;
         return daten;
 	}
 
@@ -220,7 +221,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
     	// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.size() == 0))
+		if ((schuelerAbijahrgang == null) || (schuelerAbijahrgang.isEmpty()))
 			throw OperationError.NOT_FOUND.exception();
 		final Set<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).collect(Collectors.toSet());
 		if (!schuelerIDs.contains(idSchueler))
@@ -229,7 +230,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 		if (kurs == null)
 			throw OperationError.NOT_FOUND.exception();
-		if (kurs.Blockung_ID != ergebnis.Blockung_ID)
+		if (!Objects.equals(kurs.Blockung_ID, ergebnis.Blockung_ID))
 			throw OperationError.CONFLICT.exception();
 
 		// Füge die neue Kurszuordnung hinzu
@@ -344,13 +345,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
         final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, idSchiene);
         if (schiene == null)
             throw OperationError.NOT_FOUND.exception();
-        if (schiene.Blockung_ID != ergebnis.Blockung_ID) // Fehler in der DB
+        if (!Objects.equals(schiene.Blockung_ID, ergebnis.Blockung_ID)) // Fehler in der DB
             throw OperationError.CONFLICT.exception();
         // Bestimme die Kurse, welche für die Blockung angelegt wurden
         final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
         if (kurs == null)
             throw OperationError.NOT_FOUND.exception();
-        if (kurs.Blockung_ID != ergebnis.Blockung_ID)
+        if (!Objects.equals(kurs.Blockung_ID, ergebnis.Blockung_ID))
             throw OperationError.CONFLICT.exception(); // Fehler in der DB
         // Füge die neue Kurs-Schienen-Zuordnung hinzu
         conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(idZwischenergebnis, idKurs, idSchiene));
@@ -460,7 +461,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
             conn.transactionBegin();
 	    	// Bestimme die ID des Jahrgangs
 	    	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
-	    	if (jahrgangsliste.size() == 0)
+	    	if (jahrgangsliste.isEmpty())
 	    		throw OperationError.NOT_FOUND.exception();
 	    	if (jahrgangsliste.size() > 1)
 	    		throw OperationError.CONFLICT.exception();
