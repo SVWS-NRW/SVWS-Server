@@ -255,7 +255,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception(
                     "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
-        if (kids.size() > 0) {
+        if (!kids.isEmpty()) {
             // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
             for (final Long kid : kids) {
                 if (BenutzerKompetenz.getByID(kid) == null)
@@ -301,7 +301,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception(
                     "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
-        if (kids.size() > 0) {
+        if (!kids.isEmpty()) {
             // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
             for (final Long kid : kids) {
                 if (BenutzerKompetenz.getByID(kid) == null)
@@ -343,7 +343,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
                     + "bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
-        if (bids.size() > 0) {
+        if (!bids.isEmpty()) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
             for (final Long bid : bids) {
                 final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, bid);
@@ -386,8 +386,8 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
         if (id == null || bids == null)
             return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
                     + "bzw. dürfen nicht null sein.");
-        getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
-        if (bids.size() > 0) {
+        final DTOBenutzergruppe dto = getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
+        if (!bids.isEmpty()) {
         	// Prüfe, ob die Benutzer mit den Ids existieren.
         	final List<DTOBenutzer> benutzer = conn.queryNamed("DTOBenutzer.id.multiple", bids, DTOBenutzer.class);
         	if (benutzer.size() != bids.size())
@@ -401,7 +401,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                         throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
                                 + "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
                     // Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
-                    if ((conn.getUser().getId() == bid) && (getDTO(id).IstAdmin))
+                    if ((bid.equals(conn.getUser().getId())) && (dto.IstAdmin))
                         pruefeAdminUeberGruppe(id);
                     conn.transactionRemove(bgm);
                 }
@@ -441,7 +441,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                 conn.getUser().getId(), true);
 
         // Prüfe, ob der aktuelle Benutzer überhaupt eine Admin-Berechtigung über eine administrative Gruppe hat
-        if (bgs.size() == 0) {
+        if (bgs.isEmpty()) {
             // Dieser Fall sollte nicht auftreten, da der aktuelle Benutzer dann weder als Benutzer
             // noch über eine Gruppe administrative Berechtigungen erhalte hätte und diese Operation
             // unzulässig wäre...
@@ -489,7 +489,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                         }
                         case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
                         case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
-                        case "kompetenzen" -> System.out.println("//TODO Kompetenzen bei Benutzergruppe-Inputstream Create");
+                        case "kompetenzen" -> throw OperationError.BAD_REQUEST.exception("Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
                         default -> throw OperationError.BAD_REQUEST.exception();
                     }
                 }
@@ -521,22 +521,21 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      */
     public Response remove(final List<Long> bgids) {
         try {
-            conn.transactionBegin();
-           final DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
-            if (user == null)
-                throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
+        	conn.transactionBegin();
+        	final DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
+        	if (user == null)
+        		throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
 
             //In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
             if (!user.IstAdmin) {
 
               //Lese die Benutzergruppen_IDs des Users ein.
                 final List<Long> user_gruppen_ids = conn
-                        .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(),
-                                DTOBenutzergruppenMitglied.class)
+                        .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(), DTOBenutzergruppenMitglied.class)
                         .stream().map(g -> g.Gruppe_ID).sorted().toList();
 
                 //Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein
-                final List<Long>  user_admingruppen_ids = new ArrayList<>();
+                final List<Long> user_admingruppen_ids = new ArrayList<>();
                 for (final Long id : user_gruppen_ids)
                     if (getDTO(id).IstAdmin)
                         user_admingruppen_ids.add(id);
