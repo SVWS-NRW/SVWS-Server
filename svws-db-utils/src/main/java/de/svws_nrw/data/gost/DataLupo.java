@@ -31,6 +31,8 @@ public final class DataLupo {
 		throw new IllegalStateException("Instantiation of " + DataLupo.class.getName() + " not allowed");
 	}
 
+	private static final Random random = new Random();
+
     /**
      * Importiert die in dem Multipart übergebene Datei.
      *
@@ -46,7 +48,6 @@ public final class DataLupo {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
-    	final Random random = new Random();
     	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
         final String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
           .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
@@ -107,7 +108,6 @@ public final class DataLupo {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Bestimme den Dateinamen für eine temporäre LuPO-Datei
-    	final Random random = new Random();
     	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
         final String tmpFilename = user.connectionManager.getConfig().getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
           .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters

@@ -63,6 +63,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "SchemaRoot")
 public class APISchemaRoot {
 
+	private static final Random random = new Random();
 
 	/**
 	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
@@ -207,8 +208,7 @@ public class APISchemaRoot {
     		return false;
     	DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(kennwort.user, kennwort.password);
     	switch (dbconfig.getDBDriver()) {
-    		case MYSQL:
-			case MARIA_DB:
+    		case MYSQL, MARIA_DB:
 				dbconfig = dbconfig.switchSchema("information_schema");
 				break;
 			case MDB:
@@ -402,7 +402,6 @@ public class APISchemaRoot {
 	    	logger.addConsumer(new LogConsumerConsole());
 
 	    	// Erstelle temporär eine MDB-Datei aus dem übergebenen Byte-Array
-	    	final Random random = new Random();
 	    	final String mdbdirectory = SVWSKonfiguration.get().getTempPath();
 	        final String mdbFilename = schemaname +  "_" + random.ints(48, 123)  // from 0 to z
 	          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
@@ -474,7 +473,6 @@ public class APISchemaRoot {
 	    	logger.addConsumer(new LogConsumerConsole());
 
 	    	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-	    	final Random random = new Random();
 	    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
 	        final String tmpFilename = schemaname +  "_" + random.ints(48, 123)  // from 0 to z
 	          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters

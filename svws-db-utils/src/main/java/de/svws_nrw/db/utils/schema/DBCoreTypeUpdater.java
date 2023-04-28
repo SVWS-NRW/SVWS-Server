@@ -355,7 +355,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(DEStatisCode) ");
-		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().collect(Collectors.toList());
+		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < codes.size(); i++) {
 			final String code = codes.get(i);
@@ -502,7 +502,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -529,7 +529,7 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			final Herkunft herkunft = values[i];
 			for (final HerkunftKatalogEintrag h : herkunft.historie) {
-				final List<Schulform> schulformen = h.schulformen.stream().map(s -> Schulform.getByKuerzel(s)).collect(Collectors.toList());
+				final List<Schulform> schulformen = h.schulformen.stream().map(Schulform::getByKuerzel).toList();
 				for (final Schulform sf : schulformen) {
 					sql.append(isFirst ? "VALUES (" : ", (");
 					isFirst = false;
@@ -579,7 +579,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -630,7 +630,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -652,7 +652,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -722,7 +722,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -778,7 +778,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -800,7 +800,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -822,7 +822,7 @@ public class DBCoreTypeUpdater {
 		sql.append("INSERT INTO ");
 		sql.append(tabname);
 		sql.append("(Kuerzel) ");
-		final List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().collect(Collectors.toList());
+		final List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
@@ -849,7 +849,7 @@ public class DBCoreTypeUpdater {
 				Stream.of(BerufskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)
-				).flatMap(o -> o).distinct().collect(Collectors.toList());
+				).flatMap(o -> o).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
