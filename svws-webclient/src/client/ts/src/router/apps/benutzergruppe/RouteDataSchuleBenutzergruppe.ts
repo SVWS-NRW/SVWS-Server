@@ -1,9 +1,13 @@
+import { routeSchuleBenutzergruppeDaten } from "./RouteSchuleBenutzergruppeDaten";
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@svws-nrw/svws-core";
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import type { RouteNode } from "~/router/RouteNode";
+import { routeSchule } from "../RouteSchule";
 import { routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
+
 
 interface RoutStateSchuleBenutzergruppe {
     auswahl: BenutzergruppeListeEintrag | undefined;
@@ -13,6 +17,7 @@ interface RoutStateSchuleBenutzergruppe {
 	daten: BenutzergruppeDaten | undefined;
 	listBenutzerAlle: List<BenutzerListeEintrag>;
 	listBenutzergruppenBenutzer: List<BenutzerListeEintrag>;
+	view: RouteNode<any, any>;
 }
 
 export class RouteDataSchuleBenutzergruppe {
@@ -24,6 +29,7 @@ export class RouteDataSchuleBenutzergruppe {
 		listBenutzerAlle: new ArrayList(),
 		listBenutzergruppenBenutzer: new ArrayList(),
 		daten: undefined,
+		view: routeSchuleBenutzergruppeDaten,
 	}
 
 	private _state = shallowRef<RoutStateSchuleBenutzergruppe>(RouteDataSchuleBenutzergruppe._defaultState);
@@ -114,6 +120,16 @@ export class RouteDataSchuleBenutzergruppe {
 		return this._state.value.benutzergruppenManager;
 	}
 
+	public async setView(view: RouteNode<any,any>) {
+		if (routeSchule.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für Schule gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
 
 	get benutzergruppenManager(): BenutzergruppenManager {
 		if(this._state.value.benutzergruppenManager === undefined)
@@ -343,7 +359,7 @@ export class RouteDataSchuleBenutzergruppe {
 	/**
 	 * Entfernt die ausgewählten Benutzergruppen
 	 */
-	deleteBenutzergruppe_n = async (selectedItems: BenutzergruppeListeEintrag[]) => {
+	deleteBenutzergruppen = async (selectedItems: BenutzergruppeListeEintrag[]) => {
 		const bids = new ArrayList<number>();
 		for ( const b of selectedItems){
 			bids.add(b.id)

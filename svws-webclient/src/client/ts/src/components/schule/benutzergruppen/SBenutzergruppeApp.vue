@@ -9,7 +9,7 @@
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeSchuleBenutzergruppe.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" @update:model-value="setTab" :model-value="tab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -22,14 +22,9 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-
-	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 	import type { BenutzergruppeAppProps } from "./SBenutzergruppeAppProps";
 
 	const props = defineProps<BenutzergruppeAppProps>();
-
-	const selectedRoute = routeSchuleBenutzergruppe.childRouteSelector;
-	const children_hidden = routeSchuleBenutzergruppe.children_hidden();
 
 	const id: ComputedRef<string> = computed(() => "" + props.auswahl()?.id ?? "?");
 	const bezeichnung: ComputedRef<string> = computed(() => props.auswahl()?.bezeichnung ?? "–");

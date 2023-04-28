@@ -12,7 +12,7 @@
 				<span class="opacity-50">{{ name }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routeSchuleBenutzer.children_records" :hidden="children_hidden" v-model="selectedRoute">
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" @update:model-value="setTab" :model-value="tab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
@@ -26,13 +26,9 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 
-	import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 	import type { BenutzerAppProps } from "./SBenutzerAppProps";
 
 	const props = defineProps<BenutzerAppProps>();
-
-	const selectedRoute = routeSchuleBenutzer.childRouteSelector;
-	const children_hidden = routeSchuleBenutzer.children_hidden();
 
 	const id: ComputedRef<number | string> = computed(() => props.auswahl()?.id ?? "?");
 	const anzeigename: ComputedRef<string> = computed(() => props.auswahl()?.anzeigename ?? "---");

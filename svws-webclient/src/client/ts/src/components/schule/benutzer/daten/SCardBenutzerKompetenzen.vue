@@ -48,7 +48,7 @@
 					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
 						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
 						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
-						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
 				</template>
 			</template>
 		</svws-ui-data-table>
@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { BenutzerKompetenz, BenutzerManager, List } from "@svws-nrw/svws-core";
 	import { BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
@@ -70,6 +70,7 @@
 		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>;
 		getGruppen4Kompetenz : ( kompetenz : BenutzerKompetenz ) => string;
+		benutzerKompetenzen : List<BenutzerKompetenz>;
 	}>();
 
 	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));

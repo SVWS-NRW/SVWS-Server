@@ -106,7 +106,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
-			returnToSchule: routeSchule.returnToSchule,
+			gotoSchule: routeSchule.gotoSchule,
 			// Props für die Navigation
 			setChild: this.setChild,
 			child: this.getChild(),

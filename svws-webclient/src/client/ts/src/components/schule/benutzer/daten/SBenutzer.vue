@@ -8,13 +8,13 @@
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:get-benutzer-manager="getBenutzerManager"
-				:go-to-benutzergruppe="goToBenutzergruppe" />
+				:goto-benutzergruppe="gotoBenutzergruppe" />
 		</div>
 		<div>
 			<s-card-benutzer-kompetenzen :get-benutzer-manager="getBenutzerManager"
 				:set-ist-admin="setIstAdmin" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
 				:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
-				:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" />
+				:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
 		</div>
 	</div>
 </template>

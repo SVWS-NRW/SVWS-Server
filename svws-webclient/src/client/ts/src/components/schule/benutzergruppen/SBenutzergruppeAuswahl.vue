@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a title="Schule" @click="router.push({ name: routeSchule.name })">Schule</a>
+				<a title="Schule" @click="gotoSchule">Schule</a>
 				<span title="Benutzergruppen">Benutzergruppen</span>
 			</nav>
 		</template>
@@ -26,10 +26,7 @@
 
 	import type { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from "vue";
-	import { computed, ref, ShallowRef, WritableComputedRef } from "vue";
-	import { router } from "~/router/RouteManager";
-	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
+	import { computed, ref } from "vue";
 	import type { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();

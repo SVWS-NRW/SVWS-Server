@@ -1,4 +1,4 @@
-import type { BenutzerListeEintrag} from "@svws-nrw/svws-core";
+import type { BenutzerKompetenzGruppe, BenutzerListeEintrag} from "@svws-nrw/svws-core";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
@@ -6,6 +6,7 @@ import type { RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutz
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
+import { routeSchule } from "../RouteSchule";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
 
@@ -45,11 +46,12 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 			addBenutzerKompetenzGruppe : routeSchuleBenutzer.data.addBenutzerKompetenzGruppe,
 			removeBenutzerKompetenzGruppe : routeSchuleBenutzer.data.removeBenutzerKompetenzGruppe,
 			getGruppen4Kompetenz : routeSchuleBenutzer.data.getGruppen4Kompetenz,
-			goToBenutzergruppe: this.gotToBenutzergruppe
+			gotoBenutzergruppe: this.gotoBenutzergruppe,
+			benutzerKompetenzen: routeSchule.benutzerKompetenzen
 		};
 	}
 
-	public gotToBenutzergruppe = async (b_id: number) => await RouteManager.doRoute({ name: "benutzergruppe_daten", params: { id: b_id} });
+	public gotoBenutzergruppe = async (b_id: number) => await RouteManager.doRoute({ name: "benutzergruppe_daten", params: { id: b_id} });
 }
 
 export const routeSchuleBenutzerDaten = new RouteSchuleBenutzerDaten();

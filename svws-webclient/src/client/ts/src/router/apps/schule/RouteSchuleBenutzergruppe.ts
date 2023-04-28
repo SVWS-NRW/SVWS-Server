@@ -9,6 +9,8 @@ import { RouteDataSchuleBenutzergruppe } from "../benutzergruppe/RouteDataSchule
 import type { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
 import { RouteManager } from "~/router/RouteManager";
 import type { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
+import { routeSchule } from "../RouteSchule";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBenutzergruppeApp.vue")
@@ -37,6 +39,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		this.data.ladeListe();
 	}
 
 	//Wird bei jeder Änderung Routenänderung von "/schule/benutzergruppe" ausgeführt.""
@@ -57,7 +60,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 		await this.data.setBenutzergruppe(eintrag);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
+	public getRoute(id: number | undefined) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id: id }};
 	}
 
@@ -67,13 +70,19 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			mapBenutzergruppe: this.data.mapBenutzergruppe,
 			gotoBenutzergruppe: this.data.gotoBenutzergruppe,
 			createBenutzergruppe : this.data.create,
-			deleteBenutzergruppe_n : this.data.deleteBenutzergruppe_n
+			deleteBenutzergruppen : this.data.deleteBenutzergruppen,
+			gotoSchule: routeSchule.gotoSchule
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzergruppeAppProps {
 		return {
-			auswahl: () => this.data.auswahl
+			auswahl: () => this.data.auswahl,
+			// Props für die Navigation
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
 		};
 	}
 
@@ -86,6 +95,29 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			}
 		});
 	}
+
+	private getTab(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getTabs(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of this.children)
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setTab = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name) return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined) throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({
+			name: value.name,
+			params: { id: this.data.auswahl?.id },
+		});
+		await this.data.setView(node);
+	};
 
 }
 

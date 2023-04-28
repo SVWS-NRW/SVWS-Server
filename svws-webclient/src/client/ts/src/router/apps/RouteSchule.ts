@@ -3,12 +3,13 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { RouteApp } from "~/router/RouteApp";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, BenutzerKompetenzGruppe, List, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "../RouteNode";
 import { RouteManager } from "../RouteManager";
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";
+import { api } from "../Api";
 
 interface RouteStateSchule {
 	view: RouteNode<any, any>;
@@ -102,7 +103,11 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		await this.data.setView(node);
 	}
 
-	returnToSchule = async () => await RouteManager.doRoute({ name: this.name, params: {} });
+	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: {} });
+
+	public benutzerKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
+		return BenutzerKompetenz.getKompetenzenMitSchulform(gruppe, api.schulform)
+	}
 
 }
 

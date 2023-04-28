@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}"
-			v-for="kompetenz in BenutzerKompetenz.getKompetenzenMitSchulform(kompetenzgruppe,api.schulform)" :key="kompetenz.daten.id">
+			v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
 			<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin"
 				:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
 		</div>
@@ -30,11 +30,11 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppenManager, BenutzerKompetenzGruppe} from "@svws-nrw/svws-core";
-	import { BenutzergruppeDaten, BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { BenutzergruppenManager, BenutzerKompetenzGruppe, List} from "@svws-nrw/svws-core";
+	import { BenutzerKompetenz} from "@svws-nrw/svws-core";
 	import type { Ref,WritableComputedRef } from "vue";
 	import { ref, computed } from "vue";
-	import { api } from "~/router/Api";
+
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;
 		kompetenzgruppe: BenutzerKompetenzGruppe;
@@ -42,12 +42,13 @@
 		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
 		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
 		addBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>,
-		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>
+		removeBenutzerKompetenzGruppe : (kompetenzgruppe : BenutzerKompetenzGruppe) => Promise<boolean>,
+		benutzerKompetenzen : (kompetenzgruppe : BenutzerKompetenzGruppe) => List<BenutzerKompetenz>;
 	}>();
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const hatSubKompetenzen: WritableComputedRef<number> = computed(() => BenutzerKompetenz.getKompetenzenMitSchulform(props.kompetenzgruppe,api.schulform).size());
+	const hatSubKompetenzen: WritableComputedRef<number> = computed(() =>  props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
 	const selected: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)),

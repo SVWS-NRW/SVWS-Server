@@ -8,7 +8,7 @@
 	<div role="cell" class="data-table__td">
 		<div class="flex items-center gap-1">
 			{{ row.bezeichnung }}
-			<svws-ui-button type="icon" size="small" @click="goToBenutzergruppe(row.id)">
+			<svws-ui-button type="icon" size="small" @click="gotoBenutzergruppe(row.id)">
 				<i-ri-link />
 			</svws-ui-button>
 		</div>
@@ -37,7 +37,7 @@
 		getBenutzerManager: () => BenutzerManager;
 		addBenutzerToBenutzergruppe: (bg_id : number) => Promise<void>;
 		removeBenutzerFromBenutzergruppe: (bg_id : number) => Promise<void>;
-		goToBenutzergruppe: (b_id: number) => Promise<void>;
+		gotoBenutzergruppe: (b_id: number) => Promise<void>;
 	}>(), {
 		istAlle: false
 	});

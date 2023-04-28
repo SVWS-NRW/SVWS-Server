@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleBenutzergruppe} from "../schule/RouteSchuleBenutzergruppe";
 import { routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
 import { RouteDataSchuleBenutzergruppe } from "./RouteDataSchuleBenutzergruppe";
+import { routeSchule } from "../RouteSchule";
 
 
 
@@ -16,13 +17,14 @@ const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe, new RouteDataSchuleBenutzergruppe());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe);
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Daten";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
-
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any>{
+		if(routeSchuleBenutzergruppe.data.auswahl === undefined )
+			return routeSchuleBenutzergruppe.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -45,7 +47,8 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 			create : routeSchuleBenutzergruppe.data.create,
 			addBenutzerToBenutzergruppe : routeSchuleBenutzergruppe.data.addBenutzerToBenutzergruppe,
 			removeBenutzerFromBenutzergruppe : routeSchuleBenutzergruppe.data.removeBenutzerFromBenutzergruppe,
-			goToBenutzer: this.gotToBenutzer
+			goToBenutzer: this.gotToBenutzer,
+			benutzerKompetenzen: routeSchule.benutzerKompetenzen
 		};
 	}
 

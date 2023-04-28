@@ -4,5 +4,6 @@ export interface BenutzergruppeAuswahlProps {
     mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>;
 	gotoBenutzergruppe: (benutzer: BenutzergruppeListeEintrag) => Promise<void>;
 	createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
-	deleteBenutzergruppe_n : (selectedItems: BenutzergruppeListeEintrag[]) => Promise<void>;
+	deleteBenutzergruppen : (selectedItems: BenutzergruppeListeEintrag[]) => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

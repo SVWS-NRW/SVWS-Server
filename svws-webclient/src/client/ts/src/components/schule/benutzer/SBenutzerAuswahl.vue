@@ -2,7 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a title="Schule" @click="router.push({ name: routeSchule.name })">Schule</a>
+				<a title="Schule" @click="gotoSchule">Schule</a>
 				<span title="Benutzer">Benutzer</span>
 			</nav>
 		</template>
@@ -25,11 +25,8 @@
 <script setup lang="ts">
 
 	import type { BenutzerListeEintrag} from "@svws-nrw/svws-core";
-	import { List } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
-	import { routeSchule } from "~/router/apps/RouteSchule";
-	import { router } from "~/router/RouteManager";
 	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
 
 	const selectedItems: Ref<BenutzerListeEintrag[]> = ref([]);

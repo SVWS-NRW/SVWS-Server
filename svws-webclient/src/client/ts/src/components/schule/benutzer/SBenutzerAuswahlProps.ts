@@ -6,4 +6,5 @@ export interface BenutzerAuswahlProps {
 	gotoBenutzer: (benutzer: BenutzerListeEintrag) => Promise<void>;
 	createBenutzerAllgemein : (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
 	deleteBenutzerAllgemein : (selectedItems: BenutzerListeEintrag[]) => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

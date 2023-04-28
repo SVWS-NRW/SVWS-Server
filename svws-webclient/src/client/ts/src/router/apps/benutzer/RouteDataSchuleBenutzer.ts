@@ -5,6 +5,8 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuleBenutzer } from "../schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzerDaten } from "./RouteSchuleBenutzerDaten";
+import type { RouteNode } from "~/router/RouteNode";
+import { routeSchule } from "../RouteSchule";
 
 
 interface RouteStateSchuleBenutzer {
@@ -14,6 +16,7 @@ interface RouteStateSchuleBenutzer {
 	benutzerManager: BenutzerManager;
 	listBenutzergruppen: List<BenutzergruppeListeEintrag>;
 	daten: BenutzerDaten | undefined;
+	view: RouteNode<any, any>;
 }
 export class RouteDataSchuleBenutzer {
 
@@ -24,6 +27,7 @@ export class RouteDataSchuleBenutzer {
 		benutzerManager: new BenutzerManager(new BenutzerDaten()),
 		listBenutzergruppen: new ArrayList(),
 		daten: undefined,
+		view: routeSchuleBenutzerDaten,
 	}
 
 	private _state = shallowRef<RouteStateSchuleBenutzer>(RouteDataSchuleBenutzer._defaultState);
@@ -110,6 +114,18 @@ export class RouteDataSchuleBenutzer {
 	getBenutzerManager = () => {
 		return this._state.value.benutzerManager;
 	}
+
+	public async setView(view: RouteNode<any,any>) {
+		if (routeSchule.children.includes(view))
+			this.setPatchedState({ view: view });
+		else
+			throw new Error("Diese für Schule gewählte Ansicht wird nicht unterstützt.");
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
+	}
+
 	get auswahl(): BenutzerListeEintrag | undefined {
 		return this._state.value.auswahl;
 	}

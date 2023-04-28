@@ -6,7 +6,7 @@ export interface SchuleDatenaustauschAuswahlProps {
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
-	returnToSchule: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 	setChild: (value: AuswahlChildData) => Promise<void>;
 	child: AuswahlChildData;
 	children: AuswahlChildData[];

@@ -41,7 +41,7 @@
 						:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 						:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 						:get-benutzer-manager="getBenutzerManager"
-						:go-to-benutzergruppe="goToBenutzergruppe" />
+						:goto-benutzergruppe="gotoBenutzergruppe" />
 				</div>
 			</template>
 		</svws-ui-data-table>
@@ -59,7 +59,7 @@
 		getBenutzerManager: () => BenutzerManager;
 		addBenutzerToBenutzergruppe : (bg_id : number) => Promise<void>;
 		removeBenutzerFromBenutzergruppe	: (bg_id : number) => Promise<void>;
-		goToBenutzergruppe: (b_id: number) => Promise<void>;
+		gotoBenutzergruppe: (b_id: number) => Promise<void>;
 	}>();
 
 	const selected: WritableComputedRef<boolean> = computed({
