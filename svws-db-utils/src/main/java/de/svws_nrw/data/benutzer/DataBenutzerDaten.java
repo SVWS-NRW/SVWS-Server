@@ -38,6 +38,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataBenutzerDaten extends DataManager<Long> {
 
+	private static final String strBenutzerMitIDExistiertNicht = "Der Benutzer mit der ID existiert nicht.";
+
     /**
      * Erstellt einen neuen {@link DataManager} für den Core-DTO
      * {@link BenutzerDaten}.
@@ -88,7 +90,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
             throw OperationError.NOT_FOUND.exception("Die ID des zu änderden Benutzers darf nicht null sein.");
         final DTOViewBenutzerdetails benutzer = conn.queryByKey(DTOViewBenutzerdetails.class, id);
         if (benutzer == null)
-            throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+            throw OperationError.NOT_FOUND.exception(strBenutzerMitIDExistiertNicht);
         return benutzer;
     }
 
@@ -153,7 +155,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
             final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
             if (benutzer == null)
-                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+                throw OperationError.NOT_FOUND.exception(strBenutzerMitIDExistiertNicht);
             if (benutzer.IstAdmin)
                 throw OperationError.BAD_REQUEST.exception("Der Benutzer hat bereits administrative Rechte.");
             benutzer.IstAdmin = true;
@@ -346,13 +348,13 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         final List<Long> gruppenIDs = conn
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
-        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
+        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
         // Lese die Informationen zu den Kompetenzen ein
         final List<Long> kompetenzIDs = conn.queryNamed("DTOBenutzerKompetenz.benutzer_id", id, DTOBenutzerKompetenz.class)
                 .stream().map(b -> b.Kompetenz_ID).sorted().toList();
-        final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.size() == 0)
+        final List<DTOBenutzergruppenKompetenz> gruppenKompetenzen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppenKompetenz.gruppe_id.multiple", gruppenIDs,
                         DTOBenutzergruppenKompetenz.class);
@@ -390,11 +392,11 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
             final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, id);
             if (benutzer == null)
-                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+                throw OperationError.NOT_FOUND.exception(strBenutzerMitIDExistiertNicht);
             if (!benutzer.IstAdmin)
                 throw OperationError.BAD_REQUEST.exception("Der Benutzer mit der ID " + id
                         + " besitzt selbst direkt keine administrative Berechtigung, die entfernt werden könnte.");
-            if ((id == conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
+            if (id.equals(conn.getUser().getId()) && (getAnzahlAdminGruppen() == 0))
                 throw OperationError.BAD_REQUEST.exception(
                         "Der aktuelle Benutzer darf seine Admin-Berechtigung nicht entfernen, wenn er diese nicht zusätzlich über administrative Gruppen besitzt.");
             benutzer.IstAdmin = false;
@@ -418,28 +420,30 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      * @return bei Erfolg eine HTTP-Response 200
      */
     public Response removeBenutzerAllgemein(final List<Long> bids) {
-        // TODO Auto-generated method stub
+    	final String strErrorBenutzerCredIDFehler = "Der zu löschende Benutzer mit der ID %d hat keine Credentials zugeordnet.";
+    	final String strErrorCredIDFehler = "Der zu löschende Datensatz in DTOCredentials mit der ID %d existiert nicht.";
+    	final String strErrorBenutzerIDFehlt = "Der zu löschende Datensatz in DTOBenutzerAllgemein mit der ID %d existiert nicht.";
         try {
             conn.transactionBegin();
             for (final Long id : bids) {
 
                 final DTOViewBenutzerdetails v_benutzer = getDTO(id);
 
-                //Ist der angemeldete Benutzer dabei?
-                if (conn.getUser().getId() == id)
+                // Ist der angemeldete Benutzer dabei?
+                if (id.equals(conn.getUser().getId()))
                     return OperationError.CONFLICT.getResponse("Der aktuelle User kann sich selber nicht löschen.");
 
-                //Lese credential-ID
+                // Lese credential-ID
                 final Long c_ID = v_benutzer.credentialID;
                 if (c_ID == null)
-                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOViewBentuerdetails mit der credential-ID" + id + " existiert nicht");
-                //Credential löschen
+                    throw OperationError.NOT_FOUND.exception(strErrorBenutzerCredIDFehler.formatted(id));
+                // Credential löschen
                 final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, c_ID);
                 if (credential == null)
-                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOCredentials mit der ID" + id + " existiert nicht");
+                    throw OperationError.NOT_FOUND.exception(strErrorCredIDFehler.formatted(c_ID));
                 conn.transactionRemove(credential);
 
-                //Lese benutzer-ID
+                // Lese benutzer-ID
                 final Long b_ID = v_benutzer.ID;
                 // Benutzer löschen.
                 // Damit werden die dazugehörige Datensätze in den Tabenllen DaBenutzerAllgemein, BenutzerKompetenzen und BenutzergruppenMitglieder gelöscht.
@@ -447,7 +451,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 final DTOBenutzerAllgemein allg_benutzer =  conn.queryByKey(DTOBenutzerAllgemein.class, benutzer.Allgemein_ID);
 
                 if (allg_benutzer == null)
-                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOBenutzerAllgemein mit der ID" + id + " existiert nicht");
+                    throw OperationError.NOT_FOUND.exception(strErrorBenutzerIDFehlt.formatted(id));
                 conn.transactionRemove(allg_benutzer);
                 //conn.transactionRemove(benutzer);
              }
@@ -476,15 +480,13 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         this.istKompetenzZulaessig(kids);
 
         if (id == null || kids == null)
-            return OperationError.NOT_FOUND.getResponse(
-                    "Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+            return OperationError.NOT_FOUND.getResponse("Die ID der zu änderden Benutzer bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         // Prüfe, ob der Benutzer mit der ID existiert.
         getDTO(id);
         // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
         for (final Long kid : kids) {
             if (BenutzerKompetenz.getByID(kid) == null)
-                return OperationError.NOT_FOUND
-                        .getResponse("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+                return OperationError.NOT_FOUND.getResponse("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
         }
         try {
             conn.transactionBegin();
@@ -492,9 +494,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 // Bestimme den Datensatz aus DTOBenutzerKompetenz
                 final DTOBenutzerKompetenz bk = conn.queryByKey(DTOBenutzerKompetenz.class, id, kid);
                 if (bk == null)
-                    throw OperationError.NOT_FOUND
-                            .exception("Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID" + id
-                                    + "und Kompetenz_ID" + kid + " existiert nicht");
+                    throw OperationError.NOT_FOUND.exception("Der zu löschende Datensatz in DTOBenutzerkompetenz mit Benutzer_ID " + id + "und Kompetenz_ID" + kid + " existiert nicht");
                 // Entferne die Kompetenz
                 conn.transactionRemove(bk);
             }
@@ -532,13 +532,12 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 throw OperationError.NOT_FOUND.exception("Die ID der zu änderden Benutzer darf nicht null sein.");
             final DTOBenutzerAllgemein benutzerallgemein = conn.queryByKey(DTOBenutzerAllgemein.class, id);
             if (benutzerallgemein == null)
-                throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID existiert nicht.");
+                throw OperationError.NOT_FOUND.exception(strBenutzerMitIDExistiertNicht);
             // Der Anzeigename wird nur bei den Benutzern mit dem Benutzertyp Allgemein
             // geändert.
             final DTOViewBenutzerdetails benutzerdetails = getDTO(id);
             if (benutzerdetails.Typ != BenutzerTyp.ALLGEMEIN)
-                return OperationError.BAD_REQUEST.getResponse("Der Anzeigename kann bei dem Benutzer mit der ID" + id
-                        + "aufgrund des Benutzertyps nicht geändert werden");
+                return OperationError.BAD_REQUEST.getResponse("Der Anzeigename kann bei dem Benutzer mit der ID " + id + "aufgrund des Benutzertyps nicht geändert werden");
             // Der alte Anzeigename wurde übergeben.
             if (name.equals(benutzerallgemein.AnzeigeName))
                 return Response.status(Status.OK).build();
@@ -572,10 +571,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         try {
             conn.transactionBegin();
             if ((name == null) || "".equals(name))
-                return OperationError.CONFLICT
-                        .getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
-            // TODO Ist es richtig?
-            if (conn.getUser().getId() == id)
+                return OperationError.CONFLICT.getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
+            if (id.equals(conn.getUser().getId()))
                 return OperationError.CONFLICT.getResponse("Der aktuelle User kann seinen Benutzernamen nicht ändern.");
             final DTOViewBenutzerdetails benutzer = getDTO(id);
             // Der alte Anmeldename wurde übergeben.
@@ -583,8 +580,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
                 return Response.status(Status.OK).build();
             final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
             if (cred == null)
-                return OperationError.INTERNAL_SERVER_ERROR
-                        .getResponse("Dem Benutzer sind keine gültigen Credentials zugeordnet.");
+                return OperationError.INTERNAL_SERVER_ERROR.getResponse("Dem Benutzer sind keine gültigen Credentials zugeordnet.");
             // Prüfe vorher, ob der Name nicht bereits verwendet wird -> Conflict
             final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
             for (final DTOCredentials data : creds) {
