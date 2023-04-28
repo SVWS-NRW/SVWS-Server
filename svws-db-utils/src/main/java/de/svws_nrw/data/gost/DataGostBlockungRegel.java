@@ -44,8 +44,8 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		final GostBlockungRegel daten = new GostBlockungRegel();
 		daten.id = regel.ID;
 		daten.typ = regel.Typ.typ;
-		if ((params != null) && (params.size() > 0))
-			daten.parameter.addAll(params.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer)).map(r -> r.Parameter).collect(Collectors.toList()));
+		if ((params != null) && (!params.isEmpty()))
+			daten.parameter.addAll(params.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer)).map(r -> r.Parameter).toList());
 		return daten;
 	};
 
@@ -138,12 +138,12 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 								}
 								case KURS_ID -> {
 									final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, pvalue);
-									if ((kurs == null) || (kurs.Blockung_ID != regel.Blockung_ID))
+									if ((kurs == null) || (!kurs.Blockung_ID.equals(regel.Blockung_ID)))
 										throw OperationError.BAD_REQUEST.exception();
 								}
 								case SCHIENEN_NR -> {
 									final List<DTOGostBlockungSchiene> dtos = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", regel.Blockung_ID, DTOGostBlockungSchiene.class);
-									if ((dtos == null) || (dtos.size() <= 0))
+									if ((dtos == null) || (dtos.isEmpty()))
 										throw OperationError.BAD_REQUEST.exception();
 									final Set<Integer> schienen = dtos.stream().map(s -> s.Nummer).collect(Collectors.toSet());
 									if (!schienen.contains((int) pvalue))
@@ -217,35 +217,33 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	    	daten.id = idRegel;
 	    	daten.typ = regelTyp.typ;
 	    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
-				throw OperationError.CONFLICT.exception();
+	    		throw OperationError.CONFLICT.exception();
 	    	// Füge Default-Parameter zu der Regel hinzu.
 	    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
 	    		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
-	    		long paramValue;
+	    		final long paramValue;
 	    		if (regelParameter == null) {
 		    		paramValue = switch (paramType) {
 						case KURSART -> GostKursart.LK.id;
 						case KURS_ID -> {
 					    	final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", idBlockung, DTOGostBlockungKurs.class);
-							if ((kurse == null) || (kurse.size() == 0))
+							if ((kurse == null) || (kurse.isEmpty()))
 								throw OperationError.NOT_FOUND.exception();
 							yield kurse.get(0).ID;
 						}
 						case SCHIENEN_NR -> {
-							final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min((a, b) -> Integer.compare(a, b));
+							final Optional<Integer> minSchiene = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class).stream().map(s -> s.Nummer).min(Integer::compare);
 							if (minSchiene.isEmpty())
 								throw OperationError.NOT_FOUND.exception();
 							yield minSchiene.get();
 						}
 						case SCHUELER_ID -> {
 							final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", blockung.Abi_Jahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
-							if ((schueler == null) || (schueler.size() == 0))
+							if ((schueler == null) || (schueler.isEmpty()))
 								throw OperationError.NOT_FOUND.exception();
 							yield schueler.get(0).ID;
 						}
-						case BOOLEAN -> {
-							yield 0L;
-						}
+						case BOOLEAN -> 0L;
 		    		};
 	    		} else {
 					final Long tmp = regelParameter.get(i);
@@ -269,7 +267,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 						case SCHUELER_ID -> {
 							final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryList("SELECT e FROM DTOViewGostSchuelerAbiturjahrgang e WHERE e.Abiturjahr = ?1 AND e.ID = ?2",
 									DTOViewGostSchuelerAbiturjahrgang.class, blockung.Abi_Jahrgang, tmp);
-							if ((schueler == null) || (schueler.size() == 0))
+							if ((schueler == null) || (schueler.isEmpty()))
 								throw OperationError.NOT_FOUND.exception();
 						}
 						case BOOLEAN -> {
@@ -320,7 +318,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			final GostBlockungRegel daten = new GostBlockungRegel();
 			daten.id = id;
 	    	final List<DTOGostBlockungRegelParameter> params = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id", id, DTOGostBlockungRegelParameter.class);
-	    	if ((params == null) || (params.size() < 0))
+	    	if (params == null)
 	    		throw OperationError.NOT_FOUND.exception();
 	    	params.sort((a, b) -> Integer.compare(a.Nummer, b.Nummer));
 			for (final DTOGostBlockungRegelParameter param : params)
@@ -348,7 +346,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 * @return die Liste der Blockungsregeln
 	 */
 	public static List<GostBlockungRegel> getBlockungsregeln(final List<DTOGostBlockungRegel> regeln, final List<DTOGostBlockungRegelParameter> parameter) {
-		if ((regeln == null) || (parameter == null) || (regeln.size() == 0))
+		if ((regeln == null) || (parameter == null) || (regeln.isEmpty()))
 			return Collections.emptyList();
 		final Map<Long, List<DTOGostBlockungRegelParameter>> mapParameter = parameter.stream().collect(Collectors.groupingBy(r -> r.Regel_ID));
 		// Erzeuge die Liste der Core-Types

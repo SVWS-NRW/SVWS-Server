@@ -58,7 +58,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostBlockungSchiene} in einen Core-DTO {@link GostBlockungSchiene}.
 	 */
-	public static Function<DTOGostBlockungSchiene, GostBlockungSchiene> dtoMapper = (final DTOGostBlockungSchiene schiene) -> {
+	public static final Function<DTOGostBlockungSchiene, GostBlockungSchiene> dtoMapper = (final DTOGostBlockungSchiene schiene) -> {
 		final GostBlockungSchiene daten = new GostBlockungSchiene();
 		daten.id = schiene.ID;
 		daten.nummer = schiene.Nummer;
@@ -113,7 +113,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	    			}
 	    			case "nummer" -> {
 						final Integer patch_nummer = JSONMapper.convertToInteger(value, true);
-	    				if ((patch_nummer == null) || (patch_nummer != schiene.Nummer))
+	    				if ((patch_nummer == null) || (!patch_nummer.equals(schiene.Nummer)))
 	    					throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			default -> throw OperationError.BAD_REQUEST.exception();
@@ -156,7 +156,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			DTOGostBlockungZwischenergebnisKursSchiene.class,
 			vorlage.ID, schiene.ID
     	);
-        if (kurse.size() > 0)
+        if (!kurse.isEmpty())
         	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht entfernt werden, da der Schiene bereits Kurse zugeordnet sind. Diese müssen zuerst entfernt werden.");
         final GostBlockungSchiene daten = dtoMapper.apply(schiene);
 
@@ -175,7 +175,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		// Bestimme alle Regeln der Blockung
 		final List<DTOGostBlockungRegel> dtoRegeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", schiene.Blockung_ID, DTOGostBlockungRegel.class);
 		final Map<Long, DTOGostBlockungRegel> mapDTORegeln = dtoRegeln.stream().collect(Collectors.toMap(r -> r.ID, r -> r));
-		if (dtoRegeln.size() > 0) {
+		if (!dtoRegeln.isEmpty()) {
 			final List<Long> regelIDs = dtoRegeln.stream().map(r -> r.ID).toList();
 			// Bestimme die RegelParameter dieser Regeln
 			final List<DTOGostBlockungRegelParameter> dtoRegelParameter = conn
@@ -185,10 +185,10 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			final List<GostBlockungRegel> regeln = DataGostBlockungRegel.getBlockungsregeln(dtoRegeln, dtoRegelParameter);
 			// Übertrage die Anpassungen in die Datenbank
 			for (final GostBlockungRegel regel : regeln) {
-				if (regel.parameter.size() == 0)
+				if (regel.parameter.isEmpty())
 					continue;
 				final List<DTOGostBlockungRegelParameter> dtoParams = mapParameter.get(regel.id);
-				if ((dtoParams == null) || (dtoParams.size() == 0))
+				if ((dtoParams == null) || (dtoParams.isEmpty()))
 					throw OperationError.INTERNAL_SERVER_ERROR.exception();
 				final Map<Integer, DTOGostBlockungRegelParameter> mapParam = dtoParams.stream().collect(Collectors.toMap(p -> p.Nummer, p -> p));
 				final long[] newParams = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(regel, daten.nummer);
@@ -262,7 +262,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			// Ermittle, ob bereits Schienen existieren
 			final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
 	    	int schienennummer = 1;
-	    	if ((schienen != null) && (schienen.size() > 0)) { // Bestimme die erste freie Schienennummer
+	    	if ((schienen != null) && (!schienen.isEmpty())) { // Bestimme die erste freie Schienennummer
 	    		final Set<Integer> schienenIDs = schienen.stream().map(e -> e.Nummer).collect(Collectors.toSet());
 	    		while (schienenIDs.contains(schienennummer))
 	    			schienennummer++;
@@ -274,8 +274,8 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
-				throw OperationError.NOT_FOUND.exception();
+			if (exception instanceof final IllegalArgumentException)
+				return OperationError.NOT_FOUND.getResponse();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
 			throw exception;
@@ -296,7 +296,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
 	    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
-	    	if ((schienen == null) || (schienen.size() == 0))
+	    	if ((schienen == null) || (schienen.isEmpty()))
 	    		throw OperationError.NOT_FOUND.exception();
 	    	final DTOGostBlockungSchiene schiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer)).get();
             final GostBlockungSchiene daten = _delete(schiene);
