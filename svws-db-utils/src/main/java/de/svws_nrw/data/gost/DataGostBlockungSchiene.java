@@ -274,7 +274,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException)
+			if (exception instanceof IllegalArgumentException)
 				return OperationError.NOT_FOUND.getResponse();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
