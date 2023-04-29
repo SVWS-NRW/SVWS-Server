@@ -39,7 +39,7 @@ public final class DataOrte extends DataManager<Long> {
 		daten.ortsname = k.Bezeichnung;
 		daten.kreis = k.Kreis;
 		daten.kuerzelBundesland = k.Land;
-		daten.sortierung = k.Sortierung;
+		daten.sortierung = k.Sortierung == null ? 32000 : k.Sortierung;
 		daten.istSichtbar = k.Sichtbar;
 		daten.istAenderbar = k.Aenderbar;
 		return daten;

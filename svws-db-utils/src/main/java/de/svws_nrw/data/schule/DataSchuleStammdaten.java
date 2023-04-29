@@ -2,17 +2,22 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
+import de.svws_nrw.core.types.fach.Fachgruppe;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.core.types.schule.Herkunftsschulnummern;
 import de.svws_nrw.core.types.schule.Religion;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
@@ -23,10 +28,13 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogDatenschutz;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
@@ -366,9 +374,103 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         schulgliederung.Schulform2 = sgl.daten.kuerzel + ": " + sgl.daten.beschreibung;
         conn.persist(schulgliederung);
 
-		// TODO Grundlegende Fächer - je nach Schulform - einrichten
+		// Grundlegende Fächer - je nach Schulform - einrichten
+        final List<ZulaessigesFach> faecher = switch (eigeneSchule.Schulform) {
+            case BK, SB -> Arrays.asList(ZulaessigesFach.D, ZulaessigesFach.E, ZulaessigesFach.M);
+            case G -> Arrays.asList(ZulaessigesFach.KR, ZulaessigesFach.ER, ZulaessigesFach.D, ZulaessigesFach.D, ZulaessigesFach.D,
+                    ZulaessigesFach.E, ZulaessigesFach.M, ZulaessigesFach.SU, ZulaessigesFach.SP, ZulaessigesFach.MU, ZulaessigesFach.KU);
+            case GE, GY -> Arrays.asList(ZulaessigesFach.D, ZulaessigesFach.E, ZulaessigesFach.F, ZulaessigesFach.L, ZulaessigesFach.S,
+                    ZulaessigesFach.KU, ZulaessigesFach.MU, ZulaessigesFach.LI, ZulaessigesFach.EK, ZulaessigesFach.GE,
+                    ZulaessigesFach.SW, ZulaessigesFach.PL, ZulaessigesFach.PA, ZulaessigesFach.ER, ZulaessigesFach.KR,
+                    ZulaessigesFach.M, ZulaessigesFach.BI, ZulaessigesFach.CH, ZulaessigesFach.PH, ZulaessigesFach.IF, ZulaessigesFach.SP);
+            default -> Arrays.asList(ZulaessigesFach.D, ZulaessigesFach.E, ZulaessigesFach.M);
+        };
+        final ArrayList<DTOFach> dtoFaecher = new ArrayList<>();
+        int iDeutsch = 1;
+        for (int i = 0; i < faecher.size(); i++) {
+            final ZulaessigesFach fach = faecher.get(i);
+            final DTOFach dto = new DTOFach(i + 1L);
+            String kuerzel = fach.daten.kuerzel;
+            String bezeichnung = fach.daten.bezeichnung;
+            if ((eigeneSchule.Schulform == Schulform.G) && (fach == ZulaessigesFach.D)) {
+                if (iDeutsch == 1) {
+                    kuerzel = "SG";
+                    bezeichnung = "Sprachgebrauch";
+                } else if (iDeutsch == 2) {
+                    kuerzel = "LE";
+                    bezeichnung = "Lesen";
+                } else if (iDeutsch == 3) {
+                    kuerzel = "RS";
+                    bezeichnung = "Rechtschreibung";
+                }
+                iDeutsch++;
+            }
+            dto.Kuerzel = kuerzel;
+            dto.Bezeichnung = bezeichnung;
+            dto.BezeichnungZeugnis = bezeichnung;
+            dto.BezeichnungUeberweisungsZeugnis = bezeichnung;
+            final Fachgruppe gruppe = fach.getFachgruppe();
+            final Integer gruppeSchildID = gruppe == null ? null : gruppe.daten.idSchild;
+            dto.Zeugnisdatenquelle_ID = gruppeSchildID == null ? null : gruppeSchildID.longValue();
+            dto.StatistikFach = fach;
+            dto.IstFremdsprache = fach.daten.istFremdsprache;
+            dto.SortierungAllg = i * 100;
+            dto.SortierungSekII = i * 100;
+            dto.IstNachpruefungErlaubt = (fach == ZulaessigesFach.D) || (fach == ZulaessigesFach.M) || (fach == ZulaessigesFach.E);
+            dto.Sichtbar = true;
+            dto.Aenderbar = true;
+            dto.Gewichtung = 1;
+            dto.Unterichtssprache = "D";
+            dto.IstSchriftlichZK = (fach == ZulaessigesFach.D) || (fach == ZulaessigesFach.M) || (fach == ZulaessigesFach.E);
+            dto.IstSchriftlichBA = false;
+            dto.AufZeugnis = true;
+            dto.Lernfelder = null;
+            // nur für GymOb
+            final boolean istOberstufenfach = eigeneSchule.Schulform.daten.hatGymOb;
+            dto.IstOberstufenFach = istOberstufenfach;
+            dto.IstMoeglichAbiLK = istOberstufenfach;
+            dto.IstMoeglichAbiGK = istOberstufenfach;
+            dto.IstMoeglichEF1 = istOberstufenfach;
+            dto.IstMoeglichEF2 = istOberstufenfach;
+            dto.IstMoeglichQ11 = istOberstufenfach;
+            dto.IstMoeglichQ12 = istOberstufenfach;
+            dto.IstMoeglichQ21 = istOberstufenfach;
+            dto.IstMoeglichQ22 = istOberstufenfach;
+            dto.IstMoeglichAlsNeueFremdspracheInSekII = false;
+            dto.ProjektKursLeitfach1_ID = null;
+            dto.ProjektKursLeitfach2_ID = null;
+            // nur für WBK
+            dto.WochenstundenEF1 = (eigeneSchule.Schulform == Schulform.WB) ? 3 : null;
+            dto.WochenstundenEF2 = (eigeneSchule.Schulform == Schulform.WB) ? 3 : null;
+            dto.WochenstundenQualifikationsphase = (eigeneSchule.Schulform == Schulform.WB) ? 3 : null;
+            dto.MussSchriftlichEF1 = (eigeneSchule.Schulform == Schulform.WB);
+            dto.MussSchriftlichEF2 = (eigeneSchule.Schulform == Schulform.WB);
+            dto.MussMuendlich = false;
+            // ...
+            dto.Aufgabenfeld = fach.daten.aufgabenfeld == null ? null : "" + fach.daten.aufgabenfeld;
+            dto.AbgeschlFaecherHolen = true;
+            dto.GewichtungFHR = 1;
+            dto.MaxBemZeichen = null;
+            dtoFaecher.add(dto);
+        }
+        conn.persistRange(dtoFaecher, 0, dtoFaecher.size() - 1);
 
-		// TODO Kursarten - je nach Schulform - einrichten
+		// Kursarten - je nach Schulform - einrichten
+        final ArrayList<DTOKursarten> dtoKursarten = new ArrayList<>();
+        final List<ZulaessigeKursart> kursarten = ZulaessigeKursart.get(eigeneSchule.Schulform);
+        for (int i = 0; i < kursarten.size(); i++) {
+            final ZulaessigeKursart kursart = kursarten.get(i);
+            final DTOKursarten dto = new DTOKursarten((long) i + 1);
+            dto.Bezeichnung = kursart.daten.bezeichnung;
+            dto.InternBez = kursart.daten.kuerzel;
+            dto.Kursart = kursart.daten.kuerzel;
+            dto.KursartAllg = kursart.daten.kuerzelAllg;
+            dto.Sortierung = i * 100;
+            dto.Sichtbar = true;
+            dto.Aenderbar = true;
+            dtoKursarten.add(dto);
+        }
+        conn.persistRange(dtoKursarten, 0, dtoKursarten.size() - 1);
 
 		// Einrichten der Jahrgänge - je nach Schulform
         final ArrayList<DTOJahrgang> dtoJahrgaenge = new ArrayList<>();
@@ -385,20 +487,20 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         	dto.Sortierung = i + 1;
         	dto.IstChronologisch = true;
         	dto.Kurzbezeichnung = jg.daten.kuerzel;
-        	dto.Sekundarstufe = null;        // TODO Core-Type Jahrgaenge erweitern?
-        	dto.Gliederung = null;           // TODO
-        	dto.AnzahlRestabschnitte = null; // TODO Core-Type Jahrgaenge erweitern?
-        	dto.Folgejahrgang_ID = null;     // TODO Core-Type Jahrgaenge erweitern?
+            dto.Gliederung = null;
+        	dto.Sekundarstufe = null;
+        	dto.AnzahlRestabschnitte = null;
+        	dto.Folgejahrgang_ID = null;
         	dtoJahrgaenge.add(dto);
         }
         conn.persistRange(dtoJahrgaenge, 0, dtoJahrgaenge.size() - 1);
 
-		// TODO K_Adressart mit Betrieb füllen
+		// K_Adressart mit Betrieb füllen
         final DTOKatalogAdressart addressart = new DTOKatalogAdressart(1L, "Betrieb");
         addressart.Sortierung = 1;
         conn.persist(addressart);
 
-		// TODO K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
+		// K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
         final ArrayList<DTOBeschaeftigungsart> beschaeftigungsart = new ArrayList<>();
         beschaeftigungsart.add(new DTOBeschaeftigungsart(1L, "Ausbildung"));
         beschaeftigungsart.add(new DTOBeschaeftigungsart(2L, "Praktikum"));
@@ -406,7 +508,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
           	beschaeftigungsart.get(i).Sortierung = i + 1;
         conn.persistRange(beschaeftigungsart, 0, 1);
 
-		// TODO K_Datenschutz mit Verwendung Foto
+		// K_Datenschutz mit Verwendung Foto
         final DTOKatalogDatenschutz foto = new DTOKatalogDatenschutz(1L, "Verwendung Foto", true, 32000);
         foto.Schluessel = "FOTO";
         foto.PersonArt = "S";
@@ -468,7 +570,21 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         }
         conn.persistRange(dtoKonfession, 0, dtoKonfession.size() - 1);
 
-        // TODO K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
+        // K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
+        final ArrayList<DTOSchuleNRW> dtoSchulen = new ArrayList<>();
+        final Herkunftsschulnummern[] schulnummern = Herkunftsschulnummern.values();
+        for (int i = 0; i < schulnummern.length; i++) {
+            final Herkunftsschulnummern snr = schulnummern[i];
+            final DTOSchuleNRW dto = new DTOSchuleNRW((long) i + 1, "" + (200000 + i + 1));
+            dto.SchulNr_SIM = "" + snr.daten.schulnummer;
+            dto.Name = snr.daten.bezeichnung;
+            dto.Sortierung = i + 1;
+            dto.Sichtbar = true;
+            dto.Aenderbar = true;
+            dto.KurzBez = snr.daten.bezeichnung;
+            dtoSchulen.add(dto);
+        }
+        conn.persistRange(dtoSchulen, 0, dtoSchulen.size() - 1);
 
         // K_Schwerpunkte befüllen
         final ArrayList<DTOSchwerpunkt> schwerpunkte = new ArrayList<>();
