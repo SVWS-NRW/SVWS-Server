@@ -510,8 +510,10 @@ public final class DBMigrationManager {
 					int i = 0;
 					for (final Field f : fields)
 						f.set(entity, obj[i++]);
-					for (final Field f : missing_fields)
-						f.set(entity, tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null).getDefaultWertConverted());
+					for (final Field f : missing_fields) {
+						final SchemaTabelleSpalte column = tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
+						f.set(entity, column == null ? null : column.getDefaultWertConverted());
+					}
 					list.add(entity);
 				}
 				return list;

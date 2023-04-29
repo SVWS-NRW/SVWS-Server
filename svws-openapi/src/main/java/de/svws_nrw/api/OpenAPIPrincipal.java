@@ -23,7 +23,7 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 	private static final long serialVersionUID = -6227920753748399662L;
 
 	/** Das zu dem Principal gehörende {@link Benutzer}-Objekt für den Datenbankzugriff */
-	private final Benutzer user;
+	private final transient Benutzer user;
 
 
 	/**
@@ -117,9 +117,6 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("db".equals(pathelements[1])))
 				schema = pathelements[2];
 		}
-		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
-		if (config == null)
-			isAnonymous = true;
 
 		// Erzeuge ggf. einen anonymen Principal
 		if (isAnonymous && (!isDBMSRootAuthentication))
@@ -143,8 +140,10 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 			return new OpenAPIPrincipal(benutzer);
 		}
 
+		// Existiert keine Konfiguration zu dem Schema so liegt immer einer anonymer Zugriff vor -> anonymer Principal
+		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
 		if (config == null)
-			return null;
+			return new OpenAPIPrincipal();
 
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if ((config.getDBSchema() != null) && SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
