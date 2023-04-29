@@ -47,10 +47,7 @@ public final class DTOGostJahrgangBeratungslehrerPK implements Serializable {
 		DTOGostJahrgangBeratungslehrerPK other = (DTOGostJahrgangBeratungslehrerPK) obj;
 		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
-
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

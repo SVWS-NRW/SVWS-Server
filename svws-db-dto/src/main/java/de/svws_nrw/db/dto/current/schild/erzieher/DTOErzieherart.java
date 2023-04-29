@@ -112,9 +112,7 @@ public final class DTOErzieherart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOErzieherart other = (DTOErzieherart) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

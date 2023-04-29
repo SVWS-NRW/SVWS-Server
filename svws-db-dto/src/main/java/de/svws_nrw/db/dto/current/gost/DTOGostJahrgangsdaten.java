@@ -114,9 +114,7 @@ public final class DTOGostJahrgangsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangsdaten other = (DTOGostJahrgangsdaten) obj;
-		if (Abi_Jahrgang != other.Abi_Jahrgang)
-			return false;
-		return true;
+		return Abi_Jahrgang == other.Abi_Jahrgang;
 	}
 
 	@Override

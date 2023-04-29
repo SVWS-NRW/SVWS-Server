@@ -112,9 +112,7 @@ public final class DTOCredentials {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOCredentials other = (DTOCredentials) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

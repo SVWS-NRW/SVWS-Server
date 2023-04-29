@@ -79,9 +79,7 @@ public final class DTOGostKlausurenRaeume {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenRaeume other = (DTOGostKlausurenRaeume) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

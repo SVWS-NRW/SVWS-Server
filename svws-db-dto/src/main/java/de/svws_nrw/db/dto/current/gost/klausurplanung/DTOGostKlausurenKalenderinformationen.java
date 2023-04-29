@@ -138,9 +138,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenKalenderinformationen other = (DTOGostKlausurenKalenderinformationen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

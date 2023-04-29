@@ -105,9 +105,7 @@ public final class DTOSchwerpunkt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchwerpunkt other = (DTOSchwerpunkt) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

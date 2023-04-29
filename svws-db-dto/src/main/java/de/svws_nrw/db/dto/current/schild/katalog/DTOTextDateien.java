@@ -106,9 +106,7 @@ public final class DTOTextDateien {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOTextDateien other = (DTOTextDateien) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

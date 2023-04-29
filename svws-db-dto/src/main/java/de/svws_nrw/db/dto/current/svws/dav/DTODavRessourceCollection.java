@@ -136,9 +136,7 @@ public final class DTODavRessourceCollection {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavRessourceCollection other = (DTODavRessourceCollection) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

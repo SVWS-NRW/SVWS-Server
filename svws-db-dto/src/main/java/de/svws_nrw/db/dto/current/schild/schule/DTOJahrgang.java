@@ -171,9 +171,7 @@ public final class DTOJahrgang {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOJahrgang other = (DTOJahrgang) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

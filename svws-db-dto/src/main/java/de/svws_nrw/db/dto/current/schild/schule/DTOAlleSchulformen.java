@@ -123,9 +123,7 @@ public final class DTOAlleSchulformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAlleSchulformen other = (DTOAlleSchulformen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

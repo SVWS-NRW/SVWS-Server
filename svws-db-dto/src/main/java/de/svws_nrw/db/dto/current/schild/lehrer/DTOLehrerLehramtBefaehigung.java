@@ -77,7 +77,6 @@ public final class DTOLehrerLehramtBefaehigung {
 		DTOLehrerLehramtBefaehigung other = (DTOLehrerLehramtBefaehigung) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
-
 		if (LehrbefKrz == null) {
 			if (other.LehrbefKrz != null)
 				return false;

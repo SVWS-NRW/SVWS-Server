@@ -135,10 +135,7 @@ public final class DTOLehrerLernplattform {
 		DTOLehrerLernplattform other = (DTOLehrerLernplattform) obj;
 		if (LehrerID != other.LehrerID)
 			return false;
-
-		if (LernplattformID != other.LernplattformID)
-			return false;
-		return true;
+		return LernplattformID == other.LernplattformID;
 	}
 
 	@Override

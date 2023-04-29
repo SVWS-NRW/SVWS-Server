@@ -1101,9 +1101,7 @@ public final class DTOSchueler {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchueler other = (DTOSchueler) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

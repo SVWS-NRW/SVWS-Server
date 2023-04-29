@@ -105,9 +105,7 @@ public final class DTOFahrschuelerart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFahrschuelerart other = (DTOFahrschuelerart) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

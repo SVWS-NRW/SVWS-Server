@@ -325,9 +325,7 @@ public final class DTOSchuelerLeistungsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerLeistungsdaten other = (DTOSchuelerLeistungsdaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

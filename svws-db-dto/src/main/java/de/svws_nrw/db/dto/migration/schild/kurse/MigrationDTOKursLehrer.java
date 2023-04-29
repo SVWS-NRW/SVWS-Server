@@ -95,7 +95,6 @@ public final class MigrationDTOKursLehrer {
 				return false;
 		} else if (!Kurs_ID.equals(other.Kurs_ID))
 			return false;
-
 		if (Lehrer_ID == null) {
 			if (other.Lehrer_ID != null)
 				return false;

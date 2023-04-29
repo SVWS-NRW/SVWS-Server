@@ -56,7 +56,6 @@ public final class MigrationDTOProtokollLoginPK implements Serializable {
 				return false;
 		} else if (!LI_UserID.equals(other.LI_UserID))
 			return false;
-
 		if (LI_LoginTime == null) {
 			if (other.LI_LoginTime != null)
 				return false;

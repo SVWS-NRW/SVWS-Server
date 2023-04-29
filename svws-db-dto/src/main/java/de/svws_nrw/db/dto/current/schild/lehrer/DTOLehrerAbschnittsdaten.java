@@ -139,9 +139,7 @@ public final class DTOLehrerAbschnittsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerAbschnittsdaten other = (DTOLehrerAbschnittsdaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

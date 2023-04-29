@@ -105,9 +105,7 @@ public final class DTOKatalogAdressart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogAdressart other = (DTOKatalogAdressart) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

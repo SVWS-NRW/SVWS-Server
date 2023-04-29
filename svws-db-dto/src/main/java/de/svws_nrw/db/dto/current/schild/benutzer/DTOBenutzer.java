@@ -123,9 +123,7 @@ public final class DTOBenutzer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzer other = (DTOBenutzer) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -109,9 +109,7 @@ public final class DTOSchuelerPSFachBemerkungen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerPSFachBemerkungen other = (DTOSchuelerPSFachBemerkungen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -58,9 +58,7 @@ public final class DTOKAoAAnschlussoptionKeys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKAoAAnschlussoptionKeys other = (DTOKAoAAnschlussoptionKeys) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

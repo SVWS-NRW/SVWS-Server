@@ -128,9 +128,7 @@ public final class DTOZuordnungReportvorlagen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOZuordnungReportvorlagen other = (DTOZuordnungReportvorlagen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

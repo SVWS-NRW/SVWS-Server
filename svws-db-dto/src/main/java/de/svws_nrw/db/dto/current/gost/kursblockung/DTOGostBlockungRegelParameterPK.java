@@ -47,10 +47,7 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 		DTOGostBlockungRegelParameterPK other = (DTOGostBlockungRegelParameterPK) obj;
 		if (Regel_ID != other.Regel_ID)
 			return false;
-
-		if (Nummer != other.Nummer)
-			return false;
-		return true;
+		return Nummer == other.Nummer;
 	}
 
 	@Override

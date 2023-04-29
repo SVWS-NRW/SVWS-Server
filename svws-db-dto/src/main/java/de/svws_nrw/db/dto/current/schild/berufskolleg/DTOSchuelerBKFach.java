@@ -201,9 +201,7 @@ public final class DTOSchuelerBKFach {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerBKFach other = (DTOSchuelerBKFach) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

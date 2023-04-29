@@ -105,9 +105,7 @@ public final class DTOVermerkArt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOVermerkArt other = (DTOVermerkArt) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

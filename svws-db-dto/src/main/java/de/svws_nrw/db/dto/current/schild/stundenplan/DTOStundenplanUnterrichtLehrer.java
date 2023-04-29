@@ -76,9 +76,7 @@ public final class DTOStundenplanUnterrichtLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanUnterrichtLehrer other = (DTOStundenplanUnterrichtLehrer) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

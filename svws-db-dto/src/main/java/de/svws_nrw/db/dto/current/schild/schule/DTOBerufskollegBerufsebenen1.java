@@ -96,9 +96,7 @@ public final class DTOBerufskollegBerufsebenen1 {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBerufskollegBerufsebenen1 other = (DTOBerufskollegBerufsebenen1) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -172,7 +172,6 @@ public final class DTOEigeneImporteTabellen {
 		DTOEigeneImporteTabellen other = (DTOEigeneImporteTabellen) obj;
 		if (Import_ID != other.Import_ID)
 			return false;
-
 		if (TableName == null) {
 			if (other.TableName != null)
 				return false;

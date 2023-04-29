@@ -50,7 +50,6 @@ public final class DTOEigeneImporteTabellenPK implements Serializable {
 		DTOEigeneImporteTabellenPK other = (DTOEigeneImporteTabellenPK) obj;
 		if (Import_ID != other.Import_ID)
 			return false;
-
 		if (TableName == null) {
 			if (other.TableName != null)
 				return false;

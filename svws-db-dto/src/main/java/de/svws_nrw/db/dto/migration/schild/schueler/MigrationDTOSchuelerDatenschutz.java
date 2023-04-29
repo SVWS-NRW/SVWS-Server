@@ -134,7 +134,6 @@ public final class MigrationDTOSchuelerDatenschutz {
 				return false;
 		} else if (!Schueler_ID.equals(other.Schueler_ID))
 			return false;
-
 		if (Datenschutz_ID == null) {
 			if (other.Datenschutz_ID != null)
 				return false;

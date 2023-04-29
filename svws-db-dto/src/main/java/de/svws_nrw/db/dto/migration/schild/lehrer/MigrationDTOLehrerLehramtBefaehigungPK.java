@@ -56,7 +56,6 @@ public final class MigrationDTOLehrerLehramtBefaehigungPK implements Serializabl
 				return false;
 		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
 			return false;
-
 		if (LehrbefKrz == null) {
 			if (other.LehrbefKrz != null)
 				return false;

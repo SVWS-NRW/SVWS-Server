@@ -156,21 +156,33 @@ public final class DTOCreatorTable {
 		sb.append("\t\tif (getClass() != obj.getClass())" + System.lineSeparator());
 		sb.append("\t\t\treturn false;" + System.lineSeparator());
 		sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
-		sb.append(pkspalten.stream().map(col -> {
-					final String colname = getJavaAttributeName(col);
-					if (colname == null)
-						return null;
-					if (col.datentyp().isJavaPrimitiveType(rev != 0 && col.notNull()))
-						return "\t\tif (" + colname + " != other." + colname + ")" + System.lineSeparator()
-							+ "\t\t\treturn false;" + System.lineSeparator();
-					return "\t\tif (" + colname + " == null) {" + System.lineSeparator()
-						+ "\t\t\tif (other." + colname + " != null)" + System.lineSeparator()
-						+ "\t\t\t\treturn false;" + System.lineSeparator()
-						+ "\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator()
-						+ "\t\t\treturn false;" + System.lineSeparator();
-				}).filter(Objects::nonNull)
-				.collect(Collectors.joining(System.lineSeparator())));
-		sb.append("\t\treturn true;" + System.lineSeparator());
+		int i = 0;
+		boolean combinedReturn = false;
+		for (final SchemaTabelleSpalte col : pkspalten) {
+			final String colname = getJavaAttributeName(col);
+			if (colname == null) {
+				i++;
+				continue;
+			}
+			if (col.datentyp().isJavaPrimitiveType(rev != 0 && col.notNull())) {
+				if (i == pkspalten.size() - 1) {
+					sb.append("\t\treturn " + colname + " == other." + colname + ";" + System.lineSeparator());
+					combinedReturn = true;
+				} else {
+					sb.append("\t\tif (" + colname + " != other." + colname + ")" + System.lineSeparator());
+					sb.append("\t\t\treturn false;" + System.lineSeparator());
+				}
+			} else {
+				sb.append("\t\tif (" + colname + " == null) {" + System.lineSeparator());
+				sb.append("\t\t\tif (other." + colname + " != null)" + System.lineSeparator());
+				sb.append("\t\t\t\treturn false;" + System.lineSeparator());
+				sb.append("\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator());
+				sb.append("\t\t\treturn false;" + System.lineSeparator());
+			}
+			i++;
+		}
+		if (!combinedReturn)
+			sb.append("\t\treturn true;" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("\t@Override" + System.lineSeparator());

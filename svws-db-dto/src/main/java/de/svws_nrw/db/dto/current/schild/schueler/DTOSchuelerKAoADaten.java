@@ -125,9 +125,7 @@ public final class DTOSchuelerKAoADaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerKAoADaten other = (DTOSchuelerKAoADaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

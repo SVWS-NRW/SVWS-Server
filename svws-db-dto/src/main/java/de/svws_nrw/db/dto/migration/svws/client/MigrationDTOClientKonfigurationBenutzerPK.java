@@ -64,13 +64,11 @@ public final class MigrationDTOClientKonfigurationBenutzerPK implements Serializ
 				return false;
 		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
 			return false;
-
 		if (AppName == null) {
 			if (other.AppName != null)
 				return false;
 		} else if (!AppName.equals(other.AppName))
 			return false;
-
 		if (Schluessel == null) {
 			if (other.Schluessel != null)
 				return false;

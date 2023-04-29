@@ -56,7 +56,6 @@ public final class MigrationDTOLehrerLehramtPK implements Serializable {
 				return false;
 		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
 			return false;
-
 		if (LehramtKrz == null) {
 			if (other.LehramtKrz != null)
 				return false;

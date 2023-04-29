@@ -47,10 +47,7 @@ public final class DTOGostJahrgangFaecherPK implements Serializable {
 		DTOGostJahrgangFaecherPK other = (DTOGostJahrgangFaecherPK) obj;
 		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
-
-		if (Fach_ID != other.Fach_ID)
-			return false;
-		return true;
+		return Fach_ID == other.Fach_ID;
 	}
 
 	@Override

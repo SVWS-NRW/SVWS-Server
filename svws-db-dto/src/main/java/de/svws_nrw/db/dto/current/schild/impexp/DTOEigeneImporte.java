@@ -153,9 +153,7 @@ public final class DTOEigeneImporte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneImporte other = (DTOEigeneImporte) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

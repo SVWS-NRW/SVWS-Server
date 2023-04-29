@@ -47,10 +47,7 @@ public final class DTOBenutzerKompetenzPK implements Serializable {
 		DTOBenutzerKompetenzPK other = (DTOBenutzerKompetenzPK) obj;
 		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
-
-		if (Kompetenz_ID != other.Kompetenz_ID)
-			return false;
-		return true;
+		return Kompetenz_ID == other.Kompetenz_ID;
 	}
 
 	@Override

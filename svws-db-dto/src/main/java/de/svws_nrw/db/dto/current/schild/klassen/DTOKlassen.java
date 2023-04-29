@@ -224,9 +224,7 @@ public final class DTOKlassen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKlassen other = (DTOKlassen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

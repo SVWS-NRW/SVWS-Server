@@ -99,7 +99,6 @@ public final class DTOHerkunftsartSchulformen {
 		DTOHerkunftsartSchulformen other = (DTOHerkunftsartSchulformen) obj;
 		if (Herkunftsart_ID != other.Herkunftsart_ID)
 			return false;
-
 		if (Schulform_Kuerzel == null) {
 			if (other.Schulform_Kuerzel != null)
 				return false;

@@ -58,9 +58,7 @@ public final class DTOKAoAMerkmalKeys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKAoAMerkmalKeys other = (DTOKAoAMerkmalKeys) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -534,9 +534,7 @@ public final class DTOLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrer other = (DTOLehrer) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

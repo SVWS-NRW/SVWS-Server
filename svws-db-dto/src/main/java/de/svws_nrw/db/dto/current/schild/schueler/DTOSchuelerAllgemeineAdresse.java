@@ -162,9 +162,7 @@ public final class DTOSchuelerAllgemeineAdresse {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAllgemeineAdresse other = (DTOSchuelerAllgemeineAdresse) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

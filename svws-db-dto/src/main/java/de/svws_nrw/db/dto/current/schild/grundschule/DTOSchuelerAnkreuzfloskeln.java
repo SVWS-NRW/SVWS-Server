@@ -134,9 +134,7 @@ public final class DTOSchuelerAnkreuzfloskeln {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAnkreuzfloskeln other = (DTOSchuelerAnkreuzfloskeln) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

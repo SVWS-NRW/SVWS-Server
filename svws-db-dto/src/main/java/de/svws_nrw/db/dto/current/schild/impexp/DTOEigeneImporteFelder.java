@@ -195,7 +195,6 @@ public final class DTOEigeneImporteFelder {
 		DTOEigeneImporteFelder other = (DTOEigeneImporteFelder) obj;
 		if (Import_ID != other.Import_ID)
 			return false;
-
 		if (Field_ID == null) {
 			if (other.Field_ID != null)
 				return false;

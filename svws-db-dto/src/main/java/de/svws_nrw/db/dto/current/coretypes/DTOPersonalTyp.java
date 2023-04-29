@@ -86,9 +86,7 @@ public final class DTOPersonalTyp {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOPersonalTyp other = (DTOPersonalTyp) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

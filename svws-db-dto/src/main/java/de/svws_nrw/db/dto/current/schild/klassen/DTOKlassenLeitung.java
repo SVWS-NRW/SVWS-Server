@@ -81,10 +81,7 @@ public final class DTOKlassenLeitung {
 		DTOKlassenLeitung other = (DTOKlassenLeitung) obj;
 		if (Klassen_ID != other.Klassen_ID)
 			return false;
-
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

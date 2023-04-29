@@ -72,10 +72,7 @@ public final class DTOKursSchueler {
 		DTOKursSchueler other = (DTOKursSchueler) obj;
 		if (Kurs_ID != other.Kurs_ID)
 			return false;
-
-		if (Schueler_ID != other.Schueler_ID)
-			return false;
-		return true;
+		return Schueler_ID == other.Schueler_ID;
 	}
 
 	@Override

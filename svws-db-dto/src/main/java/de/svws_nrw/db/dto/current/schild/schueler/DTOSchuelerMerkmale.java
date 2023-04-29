@@ -102,9 +102,7 @@ public final class DTOSchuelerMerkmale {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerMerkmale other = (DTOSchuelerMerkmale) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -81,9 +81,7 @@ public final class DTOLehrerEntlastungsstunde {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerEntlastungsstunde other = (DTOLehrerEntlastungsstunde) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

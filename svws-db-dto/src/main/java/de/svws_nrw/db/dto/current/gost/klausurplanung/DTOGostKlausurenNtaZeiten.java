@@ -88,10 +88,7 @@ public final class DTOGostKlausurenNtaZeiten {
 		DTOGostKlausurenNtaZeiten other = (DTOGostKlausurenNtaZeiten) obj;
 		if (Schueler_ID != other.Schueler_ID)
 			return false;
-
-		if (Vorgabe_ID != other.Vorgabe_ID)
-			return false;
-		return true;
+		return Vorgabe_ID == other.Vorgabe_ID;
 	}
 
 	@Override

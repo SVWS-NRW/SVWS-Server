@@ -130,9 +130,7 @@ public final class DTOEnmLernabschnittsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEnmLernabschnittsdaten other = (DTOEnmLernabschnittsdaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

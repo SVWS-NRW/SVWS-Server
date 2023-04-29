@@ -104,10 +104,7 @@ public final class DTOLehrerDatenschutz {
 		DTOLehrerDatenschutz other = (DTOLehrerDatenschutz) obj;
 		if (LehrerID != other.LehrerID)
 			return false;
-
-		if (DatenschutzID != other.DatenschutzID)
-			return false;
-		return true;
+		return DatenschutzID == other.DatenschutzID;
 	}
 
 	@Override

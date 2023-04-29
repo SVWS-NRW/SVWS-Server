@@ -56,7 +56,6 @@ public final class MigrationDTOErzieherDatenschutzPK implements Serializable {
 				return false;
 		} else if (!ErzieherID.equals(other.ErzieherID))
 			return false;
-
 		if (DatenschutzID == null) {
 			if (other.DatenschutzID != null)
 				return false;

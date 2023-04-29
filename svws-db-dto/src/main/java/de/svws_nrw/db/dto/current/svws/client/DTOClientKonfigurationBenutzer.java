@@ -100,13 +100,11 @@ public final class DTOClientKonfigurationBenutzer {
 		DTOClientKonfigurationBenutzer other = (DTOClientKonfigurationBenutzer) obj;
 		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
-
 		if (AppName == null) {
 			if (other.AppName != null)
 				return false;
 		} else if (!AppName.equals(other.AppName))
 			return false;
-
 		if (Schluessel == null) {
 			if (other.Schluessel != null)
 				return false;

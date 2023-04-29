@@ -185,7 +185,6 @@ public final class MigrationDTOFachgliederungen {
 				return false;
 		} else if (!Fach_ID.equals(other.Fach_ID))
 			return false;
-
 		if (Fachklasse_ID == null) {
 			if (other.Fachklasse_ID != null)
 				return false;

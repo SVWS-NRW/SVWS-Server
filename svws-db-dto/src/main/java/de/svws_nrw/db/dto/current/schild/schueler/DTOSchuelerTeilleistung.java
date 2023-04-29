@@ -113,9 +113,7 @@ public final class DTOSchuelerTeilleistung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerTeilleistung other = (DTOSchuelerTeilleistung) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

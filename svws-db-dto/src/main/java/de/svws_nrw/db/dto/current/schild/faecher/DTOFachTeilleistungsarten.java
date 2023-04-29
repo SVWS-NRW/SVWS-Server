@@ -80,10 +80,8 @@ public final class DTOFachTeilleistungsarten {
 		DTOFachTeilleistungsarten other = (DTOFachTeilleistungsarten) obj;
 		if (Teilleistungsart_ID != other.Teilleistungsart_ID)
 			return false;
-
 		if (Fach_ID != other.Fach_ID)
 			return false;
-
 		if (Kursart == null) {
 			if (other.Kursart != null)
 				return false;

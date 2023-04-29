@@ -88,7 +88,6 @@ public final class MigrationDTOSchuelerIndividuelleGruppeSchueler {
 				return false;
 		} else if (!Liste_ID.equals(other.Liste_ID))
 			return false;
-
 		if (Schueler_ID == null) {
 			if (other.Schueler_ID != null)
 				return false;

@@ -119,9 +119,7 @@ public final class DTOOrtsteil {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOOrtsteil other = (DTOOrtsteil) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

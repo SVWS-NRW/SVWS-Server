@@ -81,10 +81,7 @@ public final class DTOGostBlockungRegelParameter {
 		DTOGostBlockungRegelParameter other = (DTOGostBlockungRegelParameter) obj;
 		if (Regel_ID != other.Regel_ID)
 			return false;
-
-		if (Nummer != other.Nummer)
-			return false;
-		return true;
+		return Nummer == other.Nummer;
 	}
 
 	@Override

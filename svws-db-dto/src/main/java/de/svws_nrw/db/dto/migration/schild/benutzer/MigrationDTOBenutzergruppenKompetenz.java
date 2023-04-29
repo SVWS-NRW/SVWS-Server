@@ -81,7 +81,6 @@ public final class MigrationDTOBenutzergruppenKompetenz {
 				return false;
 		} else if (!Gruppe_ID.equals(other.Gruppe_ID))
 			return false;
-
 		if (Kompetenz_ID == null) {
 			if (other.Kompetenz_ID != null)
 				return false;

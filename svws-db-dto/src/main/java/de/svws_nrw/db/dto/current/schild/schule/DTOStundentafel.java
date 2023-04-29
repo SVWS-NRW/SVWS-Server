@@ -123,9 +123,7 @@ public final class DTOStundentafel {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundentafel other = (DTOStundentafel) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

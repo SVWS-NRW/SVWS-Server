@@ -72,10 +72,7 @@ public final class DTOBenutzergruppenMitglied {
 		DTOBenutzergruppenMitglied other = (DTOBenutzergruppenMitglied) obj;
 		if (Gruppe_ID != other.Gruppe_ID)
 			return false;
-
-		if (Benutzer_ID != other.Benutzer_ID)
-			return false;
-		return true;
+		return Benutzer_ID == other.Benutzer_ID;
 	}
 
 	@Override

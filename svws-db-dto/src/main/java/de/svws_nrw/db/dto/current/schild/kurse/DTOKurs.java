@@ -211,9 +211,7 @@ public final class DTOKurs {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKurs other = (DTOKurs) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

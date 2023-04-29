@@ -72,10 +72,7 @@ public final class DTOSchuelerIndividuelleGruppeSchueler {
 		DTOSchuelerIndividuelleGruppeSchueler other = (DTOSchuelerIndividuelleGruppeSchueler) obj;
 		if (Liste_ID != other.Liste_ID)
 			return false;
-
-		if (Schueler_ID != other.Schueler_ID)
-			return false;
-		return true;
+		return Schueler_ID == other.Schueler_ID;
 	}
 
 	@Override

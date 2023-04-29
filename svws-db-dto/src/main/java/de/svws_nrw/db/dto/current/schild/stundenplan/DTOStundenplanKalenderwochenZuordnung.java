@@ -94,9 +94,7 @@ public final class DTOStundenplanKalenderwochenZuordnung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanKalenderwochenZuordnung other = (DTOStundenplanKalenderwochenZuordnung) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -56,7 +56,6 @@ public final class MigrationDTOErzieherLernplattformPK implements Serializable {
 				return false;
 		} else if (!ErzieherID.equals(other.ErzieherID))
 			return false;
-
 		if (LernplattformID == null) {
 			if (other.LernplattformID != null)
 				return false;

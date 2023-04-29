@@ -113,9 +113,7 @@ public final class DTOSchuelerTelefon {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerTelefon other = (DTOSchuelerTelefon) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

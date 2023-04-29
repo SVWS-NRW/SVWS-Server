@@ -140,9 +140,7 @@ public final class DTOSchuelerWiedervorlage {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerWiedervorlage other = (DTOSchuelerWiedervorlage) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

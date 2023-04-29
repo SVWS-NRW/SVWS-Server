@@ -123,9 +123,7 @@ public final class DTOStundenplanZeitraster {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanZeitraster other = (DTOStundenplanZeitraster) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

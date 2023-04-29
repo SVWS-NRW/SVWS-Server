@@ -110,10 +110,7 @@ public final class DTOSchuelerDatenschutz {
 		DTOSchuelerDatenschutz other = (DTOSchuelerDatenschutz) obj;
 		if (Schueler_ID != other.Schueler_ID)
 			return false;
-
-		if (Datenschutz_ID != other.Datenschutz_ID)
-			return false;
-		return true;
+		return Datenschutz_ID == other.Datenschutz_ID;
 	}
 
 	@Override

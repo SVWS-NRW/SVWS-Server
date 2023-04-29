@@ -154,9 +154,7 @@ public final class DTOAnkreuzfloskeln {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAnkreuzfloskeln other = (DTOAnkreuzfloskeln) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

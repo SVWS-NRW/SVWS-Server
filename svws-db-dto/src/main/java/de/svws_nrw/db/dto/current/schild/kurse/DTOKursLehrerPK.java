@@ -47,10 +47,7 @@ public final class DTOKursLehrerPK implements Serializable {
 		DTOKursLehrerPK other = (DTOKursLehrerPK) obj;
 		if (Kurs_ID != other.Kurs_ID)
 			return false;
-
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

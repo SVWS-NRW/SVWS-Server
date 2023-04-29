@@ -50,7 +50,6 @@ public final class DTOProtokollLoginPK implements Serializable {
 		DTOProtokollLoginPK other = (DTOProtokollLoginPK) obj;
 		if (LI_UserID != other.LI_UserID)
 			return false;
-
 		if (LI_LoginTime == null) {
 			if (other.LI_LoginTime != null)
 				return false;

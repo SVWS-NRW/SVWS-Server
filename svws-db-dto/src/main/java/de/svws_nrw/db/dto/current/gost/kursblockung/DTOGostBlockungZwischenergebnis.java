@@ -99,9 +99,7 @@ public final class DTOGostBlockungZwischenergebnis {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungZwischenergebnis other = (DTOGostBlockungZwischenergebnis) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -100,9 +100,7 @@ public final class DTOAnkreuzdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAnkreuzdaten other = (DTOAnkreuzdaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

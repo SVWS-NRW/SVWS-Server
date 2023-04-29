@@ -242,10 +242,7 @@ public final class DTOGostSchuelerFachbelegungen {
 		DTOGostSchuelerFachbelegungen other = (DTOGostSchuelerFachbelegungen) obj;
 		if (Schueler_ID != other.Schueler_ID)
 			return false;
-
-		if (Fach_ID != other.Fach_ID)
-			return false;
-		return true;
+		return Fach_ID == other.Fach_ID;
 	}
 
 	@Override

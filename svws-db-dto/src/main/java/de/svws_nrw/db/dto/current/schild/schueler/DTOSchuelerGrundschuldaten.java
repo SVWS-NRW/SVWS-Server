@@ -195,9 +195,7 @@ public final class DTOSchuelerGrundschuldaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerGrundschuldaten other = (DTOSchuelerGrundschuldaten) obj;
-		if (Schueler_ID != other.Schueler_ID)
-			return false;
-		return true;
+		return Schueler_ID == other.Schueler_ID;
 	}
 
 	@Override

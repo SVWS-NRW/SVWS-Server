@@ -56,7 +56,6 @@ public final class MigrationDTOEigeneImporteTabellenPK implements Serializable {
 				return false;
 		} else if (!Import_ID.equals(other.Import_ID))
 			return false;
-
 		if (TableName == null) {
 			if (other.TableName != null)
 				return false;

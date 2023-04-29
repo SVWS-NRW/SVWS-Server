@@ -72,10 +72,7 @@ public final class DTOBenutzerKompetenz {
 		DTOBenutzerKompetenz other = (DTOBenutzerKompetenz) obj;
 		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
-
-		if (Kompetenz_ID != other.Kompetenz_ID)
-			return false;
-		return true;
+		return Kompetenz_ID == other.Kompetenz_ID;
 	}
 
 	@Override

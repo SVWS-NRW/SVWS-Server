@@ -77,7 +77,6 @@ public final class DTOLehrerLehramtFachrichtung {
 		DTOLehrerLehramtFachrichtung other = (DTOLehrerLehramtFachrichtung) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
-
 		if (FachrKrz == null) {
 			if (other.FachrKrz != null)
 				return false;

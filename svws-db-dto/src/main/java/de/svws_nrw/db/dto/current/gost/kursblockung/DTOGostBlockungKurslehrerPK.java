@@ -47,10 +47,7 @@ public final class DTOGostBlockungKurslehrerPK implements Serializable {
 		DTOGostBlockungKurslehrerPK other = (DTOGostBlockungKurslehrerPK) obj;
 		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
 			return false;
-
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

@@ -50,7 +50,6 @@ public final class DTOEigeneImporteFelderPK implements Serializable {
 		DTOEigeneImporteFelderPK other = (DTOEigeneImporteFelderPK) obj;
 		if (Import_ID != other.Import_ID)
 			return false;
-
 		if (Field_ID == null) {
 			if (other.Field_ID != null)
 				return false;

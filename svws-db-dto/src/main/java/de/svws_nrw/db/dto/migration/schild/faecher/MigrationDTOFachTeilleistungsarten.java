@@ -101,13 +101,11 @@ public final class MigrationDTOFachTeilleistungsarten {
 				return false;
 		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
 			return false;
-
 		if (Fach_ID == null) {
 			if (other.Fach_ID != null)
 				return false;
 		} else if (!Fach_ID.equals(other.Fach_ID))
 			return false;
-
 		if (Kursart == null) {
 			if (other.Kursart != null)
 				return false;

@@ -77,7 +77,6 @@ public final class DTOLehrerLehramt {
 		DTOLehrerLehramt other = (DTOLehrerLehramt) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
-
 		if (LehramtKrz == null) {
 			if (other.LehramtKrz != null)
 				return false;

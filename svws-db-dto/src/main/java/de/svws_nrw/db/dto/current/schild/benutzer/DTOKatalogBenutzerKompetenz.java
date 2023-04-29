@@ -79,9 +79,7 @@ public final class DTOKatalogBenutzerKompetenz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogBenutzerKompetenz other = (DTOKatalogBenutzerKompetenz) obj;
-		if (KO_ID != other.KO_ID)
-			return false;
-		return true;
+		return KO_ID == other.KO_ID;
 	}
 
 	@Override

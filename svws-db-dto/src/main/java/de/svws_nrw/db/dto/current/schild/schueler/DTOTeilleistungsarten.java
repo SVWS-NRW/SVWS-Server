@@ -97,9 +97,7 @@ public final class DTOTeilleistungsarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOTeilleistungsarten other = (DTOTeilleistungsarten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

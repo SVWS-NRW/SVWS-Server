@@ -58,9 +58,7 @@ public final class DTOKAoAKategorieKeys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKAoAKategorieKeys other = (DTOKAoAKategorieKeys) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

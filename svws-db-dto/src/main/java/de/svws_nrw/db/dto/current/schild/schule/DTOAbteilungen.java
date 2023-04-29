@@ -132,9 +132,7 @@ public final class DTOAbteilungen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAbteilungen other = (DTOAbteilungen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

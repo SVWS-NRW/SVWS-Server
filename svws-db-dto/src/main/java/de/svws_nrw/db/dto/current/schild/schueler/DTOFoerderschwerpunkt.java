@@ -112,9 +112,7 @@ public final class DTOFoerderschwerpunkt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFoerderschwerpunkt other = (DTOFoerderschwerpunkt) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

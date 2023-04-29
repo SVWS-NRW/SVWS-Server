@@ -105,9 +105,7 @@ public final class DTOErzieherfunktion {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOErzieherfunktion other = (DTOErzieherfunktion) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

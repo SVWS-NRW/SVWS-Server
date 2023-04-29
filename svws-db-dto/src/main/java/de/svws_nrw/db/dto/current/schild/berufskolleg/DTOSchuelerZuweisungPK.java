@@ -47,10 +47,7 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 		DTOSchuelerZuweisungPK other = (DTOSchuelerZuweisungPK) obj;
 		if (Abschnitt_ID != other.Abschnitt_ID)
 			return false;
-
-		if (Fach_ID != other.Fach_ID)
-			return false;
-		return true;
+		return Fach_ID == other.Fach_ID;
 	}
 
 	@Override

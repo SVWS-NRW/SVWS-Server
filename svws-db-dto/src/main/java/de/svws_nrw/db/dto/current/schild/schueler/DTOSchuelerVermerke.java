@@ -113,9 +113,7 @@ public final class DTOSchuelerVermerke {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerVermerke other = (DTOSchuelerVermerke) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

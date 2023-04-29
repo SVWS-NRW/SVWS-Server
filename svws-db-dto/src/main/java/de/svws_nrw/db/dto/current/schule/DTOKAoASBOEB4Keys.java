@@ -58,9 +58,7 @@ public final class DTOKAoASBOEB4Keys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKAoASBOEB4Keys other = (DTOKAoASBOEB4Keys) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

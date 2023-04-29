@@ -90,9 +90,7 @@ public final class DTOSchuljahresabschnitte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuljahresabschnitte other = (DTOSchuljahresabschnitte) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

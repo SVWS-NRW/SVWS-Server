@@ -114,9 +114,7 @@ public final class DTOStundenplanPausenzeit {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanPausenzeit other = (DTOStundenplanPausenzeit) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

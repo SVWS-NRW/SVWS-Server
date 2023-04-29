@@ -105,7 +105,6 @@ public final class MigrationDTOHerkunftsartSchulformen {
 				return false;
 		} else if (!Herkunftsart_ID.equals(other.Herkunftsart_ID))
 			return false;
-
 		if (Schulform_Kuerzel == null) {
 			if (other.Schulform_Kuerzel != null)
 				return false;

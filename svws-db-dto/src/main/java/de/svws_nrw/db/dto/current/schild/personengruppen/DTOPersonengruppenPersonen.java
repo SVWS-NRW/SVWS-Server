@@ -198,9 +198,7 @@ public final class DTOPersonengruppenPersonen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOPersonengruppenPersonen other = (DTOPersonengruppenPersonen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

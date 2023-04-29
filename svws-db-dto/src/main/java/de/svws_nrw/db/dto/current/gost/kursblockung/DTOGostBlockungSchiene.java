@@ -97,9 +97,7 @@ public final class DTOGostBlockungSchiene {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungSchiene other = (DTOGostBlockungSchiene) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

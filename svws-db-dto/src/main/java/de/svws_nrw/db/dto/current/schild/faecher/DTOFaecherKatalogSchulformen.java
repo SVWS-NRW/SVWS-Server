@@ -88,13 +88,11 @@ public final class DTOFaecherKatalogSchulformen {
 		DTOFaecherKatalogSchulformen other = (DTOFaecherKatalogSchulformen) obj;
 		if (Fach_ID != other.Fach_ID)
 			return false;
-
 		if (Schulform_Kuerzel == null) {
 			if (other.Schulform_Kuerzel != null)
 				return false;
 		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
 			return false;
-
 		if (Schulgliederung_Kuerzel == null) {
 			if (other.Schulgliederung_Kuerzel != null)
 				return false;

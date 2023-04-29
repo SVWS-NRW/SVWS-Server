@@ -190,9 +190,7 @@ public final class DTOGostKlausurenVorgaben {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenVorgaben other = (DTOGostKlausurenVorgaben) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

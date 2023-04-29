@@ -56,7 +56,6 @@ public final class MigrationDTOSchuelerReportvorlagenPK implements Serializable 
 				return false;
 		} else if (!User_ID.equals(other.User_ID))
 			return false;
-
 		if (Reportvorlage == null) {
 			if (other.Reportvorlage != null)
 				return false;

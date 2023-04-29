@@ -72,10 +72,7 @@ public final class DTOBenutzergruppenKompetenz {
 		DTOBenutzergruppenKompetenz other = (DTOBenutzergruppenKompetenz) obj;
 		if (Gruppe_ID != other.Gruppe_ID)
 			return false;
-
-		if (Kompetenz_ID != other.Kompetenz_ID)
-			return false;
-		return true;
+		return Kompetenz_ID == other.Kompetenz_ID;
 	}
 
 	@Override

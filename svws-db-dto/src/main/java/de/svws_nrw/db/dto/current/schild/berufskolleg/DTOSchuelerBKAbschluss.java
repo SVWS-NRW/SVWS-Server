@@ -188,9 +188,7 @@ public final class DTOSchuelerBKAbschluss {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerBKAbschluss other = (DTOSchuelerBKAbschluss) obj;
-		if (Schueler_ID != other.Schueler_ID)
-			return false;
-		return true;
+		return Schueler_ID == other.Schueler_ID;
 	}
 
 	@Override

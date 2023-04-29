@@ -330,9 +330,7 @@ public final class DTOSchuelerFHR {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerFHR other = (DTOSchuelerFHR) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

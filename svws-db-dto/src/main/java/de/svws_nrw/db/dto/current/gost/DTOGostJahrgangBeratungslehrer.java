@@ -72,10 +72,7 @@ public final class DTOGostJahrgangBeratungslehrer {
 		DTOGostJahrgangBeratungslehrer other = (DTOGostJahrgangBeratungslehrer) obj;
 		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
-
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

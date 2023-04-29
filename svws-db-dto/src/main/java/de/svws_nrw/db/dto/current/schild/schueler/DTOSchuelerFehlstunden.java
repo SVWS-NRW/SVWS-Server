@@ -140,9 +140,7 @@ public final class DTOSchuelerFehlstunden {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerFehlstunden other = (DTOSchuelerFehlstunden) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -82,13 +82,9 @@ public final class DTOGostBlockungZwischenergebnisKursSchueler {
 		DTOGostBlockungZwischenergebnisKursSchueler other = (DTOGostBlockungZwischenergebnisKursSchueler) obj;
 		if (Zwischenergebnis_ID != other.Zwischenergebnis_ID)
 			return false;
-
 		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
 			return false;
-
-		if (Schueler_ID != other.Schueler_ID)
-			return false;
-		return true;
+		return Schueler_ID == other.Schueler_ID;
 	}
 
 	@Override

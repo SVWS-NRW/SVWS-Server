@@ -109,9 +109,7 @@ public final class DTOGostKlausurenRaeumeStundenAufsichten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenRaeumeStundenAufsichten other = (DTOGostKlausurenRaeumeStundenAufsichten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

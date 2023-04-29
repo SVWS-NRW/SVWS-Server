@@ -79,9 +79,7 @@ public final class DTOSchuleCredentials {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuleCredentials other = (DTOSchuleCredentials) obj;
-		if (Schulnummer != other.Schulnummer)
-			return false;
-		return true;
+		return Schulnummer == other.Schulnummer;
 	}
 
 	@Override

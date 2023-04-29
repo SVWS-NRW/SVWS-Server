@@ -56,7 +56,6 @@ public final class MigrationDTOBenutzergruppenMitgliedPK implements Serializable
 				return false;
 		} else if (!Gruppe_ID.equals(other.Gruppe_ID))
 			return false;
-
 		if (Benutzer_ID == null) {
 			if (other.Benutzer_ID != null)
 				return false;

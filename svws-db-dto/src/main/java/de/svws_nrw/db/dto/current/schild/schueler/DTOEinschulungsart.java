@@ -105,9 +105,7 @@ public final class DTOEinschulungsart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEinschulungsart other = (DTOEinschulungsart) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

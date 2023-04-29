@@ -70,9 +70,7 @@ public final class DTODavSyncTokenLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavSyncTokenLehrer other = (DTODavSyncTokenLehrer) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

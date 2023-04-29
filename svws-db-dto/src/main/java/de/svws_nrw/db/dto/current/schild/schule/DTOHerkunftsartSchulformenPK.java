@@ -50,7 +50,6 @@ public final class DTOHerkunftsartSchulformenPK implements Serializable {
 		DTOHerkunftsartSchulformenPK other = (DTOHerkunftsartSchulformenPK) obj;
 		if (Herkunftsart_ID != other.Herkunftsart_ID)
 			return false;
-
 		if (Schulform_Kuerzel == null) {
 			if (other.Schulform_Kuerzel != null)
 				return false;

@@ -91,9 +91,7 @@ public final class DTOKursFortschreibungsart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKursFortschreibungsart other = (DTOKursFortschreibungsart) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

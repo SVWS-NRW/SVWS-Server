@@ -50,7 +50,6 @@ public final class DTOSchuelerReportvorlagenPK implements Serializable {
 		DTOSchuelerReportvorlagenPK other = (DTOSchuelerReportvorlagenPK) obj;
 		if (User_ID != other.User_ID)
 			return false;
-
 		if (Reportvorlage == null) {
 			if (other.Reportvorlage != null)
 				return false;

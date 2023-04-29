@@ -105,9 +105,7 @@ public final class DTOSportbefreiung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSportbefreiung other = (DTOSportbefreiung) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

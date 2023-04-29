@@ -92,10 +92,7 @@ public final class DTOErzieherDatenschutz {
 		DTOErzieherDatenschutz other = (DTOErzieherDatenschutz) obj;
 		if (ErzieherID != other.ErzieherID)
 			return false;
-
-		if (DatenschutzID != other.DatenschutzID)
-			return false;
-		return true;
+		return DatenschutzID == other.DatenschutzID;
 	}
 
 	@Override

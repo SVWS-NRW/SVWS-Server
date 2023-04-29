@@ -50,7 +50,6 @@ public final class DTOLehrerLehramtPK implements Serializable {
 		DTOLehrerLehramtPK other = (DTOLehrerLehramtPK) obj;
 		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
-
 		if (LehramtKrz == null) {
 			if (other.LehramtKrz != null)
 				return false;

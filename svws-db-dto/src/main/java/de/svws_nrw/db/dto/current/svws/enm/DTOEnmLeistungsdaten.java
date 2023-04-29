@@ -118,9 +118,7 @@ public final class DTOEnmLeistungsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEnmLeistungsdaten other = (DTOEnmLeistungsdaten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

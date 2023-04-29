@@ -264,9 +264,7 @@ public final class DTOSchuelerErzieherAdresse {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerErzieherAdresse other = (DTOSchuelerErzieherAdresse) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

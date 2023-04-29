@@ -90,9 +90,7 @@ public final class DTOSchulfunktion {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchulfunktion other = (DTOSchulfunktion) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

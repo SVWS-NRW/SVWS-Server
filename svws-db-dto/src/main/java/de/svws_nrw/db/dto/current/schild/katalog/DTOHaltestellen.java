@@ -112,9 +112,7 @@ public final class DTOHaltestellen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOHaltestellen other = (DTOHaltestellen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

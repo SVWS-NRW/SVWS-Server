@@ -56,7 +56,6 @@ public final class MigrationDTOSchuelerZuweisungPK implements Serializable {
 				return false;
 		} else if (!Abschnitt_ID.equals(other.Abschnitt_ID))
 			return false;
-
 		if (Fach_ID == null) {
 			if (other.Fach_ID != null)
 				return false;

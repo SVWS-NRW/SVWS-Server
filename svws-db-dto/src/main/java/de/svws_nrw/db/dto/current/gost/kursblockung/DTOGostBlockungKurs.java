@@ -150,9 +150,7 @@ public final class DTOGostBlockungKurs {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungKurs other = (DTOGostBlockungKurs) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

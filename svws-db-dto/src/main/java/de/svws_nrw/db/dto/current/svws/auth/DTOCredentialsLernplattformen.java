@@ -121,9 +121,7 @@ public final class DTOCredentialsLernplattformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOCredentialsLernplattformen other = (DTOCredentialsLernplattformen) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

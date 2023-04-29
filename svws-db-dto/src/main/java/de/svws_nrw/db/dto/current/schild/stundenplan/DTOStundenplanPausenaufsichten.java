@@ -85,9 +85,7 @@ public final class DTOStundenplanPausenaufsichten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanPausenaufsichten other = (DTOStundenplanPausenaufsichten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

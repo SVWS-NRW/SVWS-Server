@@ -56,7 +56,6 @@ public final class MigrationDTOEigeneImporteFelderPK implements Serializable {
 				return false;
 		} else if (!Import_ID.equals(other.Import_ID))
 			return false;
-
 		if (Field_ID == null) {
 			if (other.Field_ID != null)
 				return false;

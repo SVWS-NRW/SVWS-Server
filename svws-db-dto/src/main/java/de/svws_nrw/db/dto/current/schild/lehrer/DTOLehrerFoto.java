@@ -65,9 +65,7 @@ public final class DTOLehrerFoto {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerFoto other = (DTOLehrerFoto) obj;
-		if (Lehrer_ID != other.Lehrer_ID)
-			return false;
-		return true;
+		return Lehrer_ID == other.Lehrer_ID;
 	}
 
 	@Override

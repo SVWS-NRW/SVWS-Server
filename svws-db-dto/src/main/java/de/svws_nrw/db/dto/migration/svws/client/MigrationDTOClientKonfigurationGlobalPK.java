@@ -56,7 +56,6 @@ public final class MigrationDTOClientKonfigurationGlobalPK implements Serializab
 				return false;
 		} else if (!AppName.equals(other.AppName))
 			return false;
-
 		if (Schluessel == null) {
 			if (other.Schluessel != null)
 				return false;

@@ -112,9 +112,7 @@ public final class DTOSchildAuswahlFilter {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchildAuswahlFilter other = (DTOSchildAuswahlFilter) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

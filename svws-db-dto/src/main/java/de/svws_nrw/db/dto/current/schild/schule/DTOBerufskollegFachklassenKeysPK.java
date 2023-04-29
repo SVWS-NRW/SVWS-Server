@@ -58,13 +58,11 @@ public final class DTOBerufskollegFachklassenKeysPK implements Serializable {
 		DTOBerufskollegFachklassenKeysPK other = (DTOBerufskollegFachklassenKeysPK) obj;
 		if (FachklassenIndex != other.FachklassenIndex)
 			return false;
-
 		if (Schluessel == null) {
 			if (other.Schluessel != null)
 				return false;
 		} else if (!Schluessel.equals(other.Schluessel))
 			return false;
-
 		if (Schluessel2 == null) {
 			if (other.Schluessel2 != null)
 				return false;

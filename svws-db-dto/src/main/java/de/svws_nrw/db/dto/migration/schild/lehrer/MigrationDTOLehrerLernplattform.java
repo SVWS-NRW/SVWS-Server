@@ -156,7 +156,6 @@ public final class MigrationDTOLehrerLernplattform {
 				return false;
 		} else if (!LehrerID.equals(other.LehrerID))
 			return false;
-
 		if (LernplattformID == null) {
 			if (other.LernplattformID != null)
 				return false;

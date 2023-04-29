@@ -93,7 +93,6 @@ public final class MigrationDTOKlassenLeitung {
 				return false;
 		} else if (!Klassen_ID.equals(other.Klassen_ID))
 			return false;
-
 		if (Lehrer_ID == null) {
 			if (other.Lehrer_ID != null)
 				return false;

@@ -72,10 +72,7 @@ public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 		DTOGostKlausurenSchuelerklausurenRaeumeStunden other = (DTOGostKlausurenSchuelerklausurenRaeumeStunden) obj;
 		if (Schuelerklausur_ID != other.Schuelerklausur_ID)
 			return false;
-
-		if (KlausurRaumStunde_ID != other.KlausurRaumStunde_ID)
-			return false;
-		return true;
+		return KlausurRaumStunde_ID == other.KlausurRaumStunde_ID;
 	}
 
 	@Override

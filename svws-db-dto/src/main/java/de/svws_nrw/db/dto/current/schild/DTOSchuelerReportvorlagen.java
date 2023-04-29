@@ -77,7 +77,6 @@ public final class DTOSchuelerReportvorlagen {
 		DTOSchuelerReportvorlagen other = (DTOSchuelerReportvorlagen) obj;
 		if (User_ID != other.User_ID)
 			return false;
-
 		if (Reportvorlage == null) {
 			if (other.Reportvorlage != null)
 				return false;

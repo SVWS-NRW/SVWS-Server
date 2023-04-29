@@ -47,10 +47,7 @@ public final class DTOLehrerDatenschutzPK implements Serializable {
 		DTOLehrerDatenschutzPK other = (DTOLehrerDatenschutzPK) obj;
 		if (LehrerID != other.LehrerID)
 			return false;
-
-		if (DatenschutzID != other.DatenschutzID)
-			return false;
-		return true;
+		return DatenschutzID == other.DatenschutzID;
 	}
 
 	@Override

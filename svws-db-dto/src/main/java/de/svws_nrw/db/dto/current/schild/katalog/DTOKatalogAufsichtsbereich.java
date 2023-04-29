@@ -82,9 +82,7 @@ public final class DTOKatalogAufsichtsbereich {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogAufsichtsbereich other = (DTOKatalogAufsichtsbereich) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

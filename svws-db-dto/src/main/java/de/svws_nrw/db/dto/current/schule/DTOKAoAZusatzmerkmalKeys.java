@@ -58,9 +58,7 @@ public final class DTOKAoAZusatzmerkmalKeys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKAoAZusatzmerkmalKeys other = (DTOKAoAZusatzmerkmalKeys) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

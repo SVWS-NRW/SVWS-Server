@@ -47,10 +47,7 @@ public final class DTOErzieherLernplattformPK implements Serializable {
 		DTOErzieherLernplattformPK other = (DTOErzieherLernplattformPK) obj;
 		if (ErzieherID != other.ErzieherID)
 			return false;
-
-		if (LernplattformID != other.LernplattformID)
-			return false;
-		return true;
+		return LernplattformID == other.LernplattformID;
 	}
 
 	@Override

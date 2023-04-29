@@ -96,9 +96,7 @@ public final class DTOHerkunft {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOHerkunft other = (DTOHerkunft) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

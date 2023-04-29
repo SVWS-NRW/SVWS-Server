@@ -47,10 +47,7 @@ public final class DTOFachgliederungenPK implements Serializable {
 		DTOFachgliederungenPK other = (DTOFachgliederungenPK) obj;
 		if (Fach_ID != other.Fach_ID)
 			return false;
-
-		if (Fachklasse_ID != other.Fachklasse_ID)
-			return false;
-		return true;
+		return Fachklasse_ID == other.Fachklasse_ID;
 	}
 
 	@Override

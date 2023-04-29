@@ -213,9 +213,7 @@ public final class DTOSchuelerAbgaenge {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAbgaenge other = (DTOSchuelerAbgaenge) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

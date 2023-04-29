@@ -56,7 +56,6 @@ public final class MigrationDTOLehrerDatenschutzPK implements Serializable {
 				return false;
 		} else if (!LehrerID.equals(other.LehrerID))
 			return false;
-
 		if (DatenschutzID == null) {
 			if (other.DatenschutzID != null)
 				return false;

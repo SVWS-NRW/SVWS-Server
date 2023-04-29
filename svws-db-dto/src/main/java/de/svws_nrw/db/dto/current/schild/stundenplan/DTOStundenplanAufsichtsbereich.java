@@ -91,9 +91,7 @@ public final class DTOStundenplanAufsichtsbereich {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanAufsichtsbereich other = (DTOStundenplanAufsichtsbereich) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

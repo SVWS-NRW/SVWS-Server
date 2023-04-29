@@ -117,9 +117,7 @@ public final class DTOBenutzerMail {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzerMail other = (DTOBenutzerMail) obj;
-		if (Benutzer_ID != other.Benutzer_ID)
-			return false;
-		return true;
+		return Benutzer_ID == other.Benutzer_ID;
 	}
 
 	@Override

@@ -97,9 +97,7 @@ public final class DTOSchultexte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchultexte other = (DTOSchultexte) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

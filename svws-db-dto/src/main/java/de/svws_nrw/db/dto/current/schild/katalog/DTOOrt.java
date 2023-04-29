@@ -131,9 +131,7 @@ public final class DTOOrt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOOrt other = (DTOOrt) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

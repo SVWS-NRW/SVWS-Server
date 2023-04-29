@@ -105,9 +105,7 @@ public final class DTOEntlassarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEntlassarten other = (DTOEntlassarten) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

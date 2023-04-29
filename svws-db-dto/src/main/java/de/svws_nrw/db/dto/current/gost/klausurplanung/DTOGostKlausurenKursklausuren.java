@@ -101,9 +101,7 @@ public final class DTOGostKlausurenKursklausuren {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenKursklausuren other = (DTOGostKlausurenKursklausuren) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

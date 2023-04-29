@@ -177,9 +177,7 @@ public final class DTOSchuelerSprachenfolge {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerSprachenfolge other = (DTOSchuelerSprachenfolge) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -89,9 +89,7 @@ public final class DTOGostBlockungRegel {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungRegel other = (DTOGostBlockungRegel) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -78,9 +78,7 @@ public final class DTODBVersion {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODBVersion other = (DTODBVersion) obj;
-		if (Revision != other.Revision)
-			return false;
-		return true;
+		return Revision == other.Revision;
 	}
 
 	@Override

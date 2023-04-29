@@ -81,9 +81,7 @@ public final class DTOLehrerAnrechnungsstunde {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerAnrechnungsstunde other = (DTOLehrerAnrechnungsstunde) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override

@@ -88,9 +88,7 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogBenutzerKompetenzGruppe other = (DTOKatalogBenutzerKompetenzGruppe) obj;
-		if (KG_ID != other.KG_ID)
-			return false;
-		return true;
+		return KG_ID == other.KG_ID;
 	}
 
 	@Override

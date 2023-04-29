@@ -442,9 +442,7 @@ public final class DTOSchuelerAbiturFach {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAbiturFach other = (DTOSchuelerAbiturFach) obj;
-		if (ID != other.ID)
-			return false;
-		return true;
+		return ID == other.ID;
 	}
 
 	@Override
