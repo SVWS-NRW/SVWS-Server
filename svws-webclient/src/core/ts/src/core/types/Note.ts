@@ -127,7 +127,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	public static readonly NICHT_TEILGENOMMEN : Note = new Note("NICHT_TEILGENOMMEN", 21, 20, 4010, null, "NT", "(nicht teilgenommen)", "--------------------", null, null);
 
 	/**
-	 * Der Noteneintrag "kann nicht beurteilt werdent" mit dem Wert NB.
+	 * Der Noteneintrag "kann nicht beurteilt werden" mit dem Wert NB.
 	 */
 	public static readonly NICHT_BEURTEILT : Note = new Note("NICHT_BEURTEILT", 22, 21, 4000, null, "NB", "(kann nicht beurteilt werden)", "--------------------", null, null);
 
@@ -182,7 +182,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	public readonly textZeugnis : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * Gibt an, in welchem Schuljahr die Note eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
@@ -205,7 +205,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	 * @param kuerzel         die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)
 	 * @param text            die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)
 	 * @param textZeugnis     die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird
-	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	private constructor(name : string, ordinal : number, id : number, sortierung : number, notenpunkte : number | null, kuerzel : string, text : string, textZeugnis : string, gueltigVon : number | null, gueltigBis : number | null) {
@@ -270,7 +270,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	}
 
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück.
+	 * Gibt die Note anhand der angegebenen Notenpunkte zurück.
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird
 	 *
@@ -335,7 +335,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	}
 
 	/**
-	 * Gibt die Note bzw. Pseudonote anhand des angebenen Kürzels zurück.
+	 * Gibt die Note bzw. Pseudonote anhand des angegebenen Kürzels zurück.
 	 *
 	 * @param kuerzel   das Kürzel anhand derer die Note ermittelt wird
 	 *
@@ -428,7 +428,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	}
 
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String
+	 * Gibt die Note anhand der angegebenen Notenpunkte zurück, welche als String
 	 * übergeben werden.
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String

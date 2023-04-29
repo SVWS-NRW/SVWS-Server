@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -24,6 +25,9 @@ public class KlausurblockungSchienenDynDaten {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
+
+	/** Ein {@link Logger}-Objekt für Debug-Zwecke. */
+	private final @NotNull Logger _logger;
 
 	/** Mapping, um eine Sammlung von Long-Werten in laufende Integer-Werte umzuwandeln. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Integer> _mapKlausurZuNummer = new HashMap<>();
@@ -55,8 +59,6 @@ public class KlausurblockungSchienenDynDaten {
 	/** Bestimmt, ob ein Klausurnummer-Paar am selben Termin bevorzugt wird. */
 	private final @NotNull int @NotNull [] @NotNull [] _bevorzugt;
 
-	// TODO Malus2 für Klausur-Paar (falls beide Klausuren die gleiche zugeordnete Kurs-Schiene haben)
-
 	/** Die Anzahl der derzeitigen verwendeten Schienen. */
 	private int _schienenAnzahl = 0;
 	private int _schienenAnzahl1 = SCHIENEN_MAX_ANZAHL; // Speicherzustand 1
@@ -65,11 +67,13 @@ public class KlausurblockungSchienenDynDaten {
 	/** Der Konstruktor konvertiert die Eingabedaten der GUI in eine dynamische Datenstruktur als Basis für die
 	 * Algorithmen zur schnellen Manipulation.
 	 *
+	 * @param pLogger Ein {@link Logger}-Objekt für Debug-Zwecke.
 	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	KlausurblockungSchienenDynDaten(final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput) {
+	KlausurblockungSchienenDynDaten(final @NotNull Logger pLogger, final @NotNull Random pRandom, final @NotNull List<@NotNull GostKursklausur> pInput) {
 		_random = pRandom;
+		_logger = pLogger;
 
 		initialisiereMapSchueler(pInput);
 		initialisiereMapKlausuren(pInput);
@@ -586,7 +590,7 @@ public class KlausurblockungSchienenDynDaten {
 	void aktionZustand2Speichern() {
 		_schienenAnzahl2 = _schienenAnzahl;
 		System.arraycopy(_klausurZuSchiene, 0, _klausurZuSchiene2, 0, _klausurenAnzahl);
-		// debug("BESSER, bevorzugtSumme = "+gibSchienenBevorzugt(_klausurZuSchiene));
+		_logger.logLn("BESSER, bevorzugtSumme = " + gibSchienenBevorzugt(_klausurZuSchiene));
 	}
 
 	/**
@@ -719,26 +723,24 @@ public class KlausurblockungSchienenDynDaten {
 	 *
 	 * @param header Überschrift der Debug-Ausgabe.
 	 */
-	void debug(final String header) {
-		System.out.println();
-		System.out.println(header);
+	void debug(final @NotNull String header) {
+		_logger.logLn("");
+		_logger.logLn(header);
 
 		for (int s = 0; s < _schienenAnzahl; s++) {
-			@NotNull StringBuilder line = new StringBuilder();
-			line.append("    Schiene " + (s + 1) + ": ");
+			_logger.log("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuSchiene[nr] == s) {
 					final GostKursklausur gostKlausur = _mapNummerZuKlausur.get(nr);
 					if (gostKlausur == null)
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
-					line.append(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
+					_logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
-			System.out.println(line.toString());
+			_logger.logLn("");
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			if (_klausurZuSchiene[nr] < 0)
-				throw new DeveloperNotificationException("Klausur " + (nr + 1) + " --> ohne Schiene!");
+			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuSchiene[nr] < 0);
 	}
 
 	/**

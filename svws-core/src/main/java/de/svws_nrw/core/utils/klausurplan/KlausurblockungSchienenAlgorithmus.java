@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,11 +17,23 @@ public class KlausurblockungSchienenAlgorithmus {
 
 	private static final @NotNull Random _random = new Random();
 
+	/** Ein Logger für Debug-Zwecke. */
+	private final @NotNull Logger _logger;
+
 	/**
-	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.
+	 * Der Konstruktor.
 	 */
 	public KlausurblockungSchienenAlgorithmus() {
-		// no implementation
+		_logger = new Logger();
+	}
+
+	/**
+	 * Der Konstruktor.
+	 *
+	 * @param pLogger  Ein Logger für Debug-Zwecke.
+	 */
+	public KlausurblockungSchienenAlgorithmus(final @NotNull Logger pLogger) {
+		_logger = pLogger;
 	}
 
 	/**
@@ -38,7 +51,7 @@ public class KlausurblockungSchienenAlgorithmus {
 		final @NotNull Random random = new Random(seed);
 
 		// Konvertierung: KlausurblockungSchienenInput --> KlausurblockungSchienenDynDaten
-		final KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(random, pInput);
+		final KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(_logger, random, pInput);
 
 		// Algorithmen erzeugen
 		final @NotNull KlausurblockungSchienenAlgorithmusAbstract @NotNull [] algorithmen = new KlausurblockungSchienenAlgorithmusAbstract @NotNull [] {
@@ -62,8 +75,6 @@ public class KlausurblockungSchienenAlgorithmus {
 
 		long zeitProAlgorithmus = 10L; // Weniger ist nicht gut.
 		do {
-			// System.out.println("zeitProAlgorithmus --> " + zeitProAlgorithmus);
-
 			// Alle Algorithmus starten (pro Algorithmus ggf. auch mehrfach).
 			for (int iAlgo = 0; iAlgo < algorithmen.length; iAlgo++) {
 				final long zeitEndeRunde = System.currentTimeMillis() + zeitProAlgorithmus;

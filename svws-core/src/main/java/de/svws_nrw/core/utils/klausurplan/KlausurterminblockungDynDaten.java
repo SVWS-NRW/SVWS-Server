@@ -143,7 +143,7 @@ public class KlausurterminblockungDynDaten {
 		for (final @NotNull GostKursklausur gostKursklausur : pInput) {
 			final @NotNull Integer klausurNr = gibKlausurNrOrException(gostKursklausur);
 
-			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR besser?
+			final long schienenID = gostKursklausur.kursSchiene.length < 1 ? -1 : gostKursklausur.kursSchiene[0]; // TODO BAR Wie wählt man bei Multi-Schienen?
 			if (schienenID < 0) {
 				// Ohne schienenID --> Erzeuge eigene Gruppe
 				final @NotNull ArrayList<@NotNull Integer> gruppe = new ArrayList<>();

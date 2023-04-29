@@ -77,7 +77,7 @@ public enum Note {
 	/** Der Noteneintrag "nicht teilgenommen" mit dem Wert NT.*/
 	NICHT_TEILGENOMMEN(20, 4010, null, "NT", "(nicht teilgenommen)", "--------------------", null, null),
 
-	/** Der Noteneintrag "kann nicht beurteilt werdent" mit dem Wert NB.*/
+	/** Der Noteneintrag "kann nicht beurteilt werden" mit dem Wert NB.*/
 	NICHT_BEURTEILT(21, 4000, null, "NB", "(kann nicht beurteilt werden)", "--------------------", null, null),
 
 	/** Der Noteneintrag "nicht erteilt" mit dem Wert NE.*/
@@ -112,7 +112,7 @@ public enum Note {
 	/** Die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird. */
 	public final @NotNull String textZeugnis;
 
-	/** Gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	/** Gibt an, in welchem Schuljahr die Note eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	public final Integer gueltigVon;
 
 	/** Gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
@@ -131,7 +131,7 @@ public enum Note {
 	 * @param kuerzel         die Kurzschreibweise der Note als Zahl ggf. mit Tendenz (+/-)
 	 * @param text            die Note in ausführlicher Textform ggf. mit Tendenz (plus/minus)
 	 * @param textZeugnis     die Note in ausführlicher Textform, wie sie auf einem Zeugnis dargestellt wird
-	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon      gibt an, in welchem Schuljahr die Note eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis      gibt an, bis zu welchem Schuljahr die Note gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	Note(final int id, final int sortierung, final Integer notenpunkte, final @NotNull String kuerzel, final @NotNull String text, final @NotNull String textZeugnis, final Integer gueltigVon, final Integer gueltigBis) {
@@ -181,7 +181,7 @@ public enum Note {
 
 
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück.
+	 * Gibt die Note anhand der angegebenen Notenpunkte zurück.
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird
 	 *
@@ -214,7 +214,7 @@ public enum Note {
 
 
 	/**
-	 * Gibt die Note bzw. Pseudonote anhand des angebenen Kürzels zurück.
+	 * Gibt die Note bzw. Pseudonote anhand des angegebenen Kürzels zurück.
 	 *
 	 * @param kuerzel   das Kürzel anhand derer die Note ermittelt wird
 	 *
@@ -256,7 +256,7 @@ public enum Note {
 
 
 	/**
-	 * Gibt die Note anhand der angebenen Notenpunkte zurück, welche als String
+	 * Gibt die Note anhand der angegebenen Notenpunkte zurück, welche als String
 	 * übergeben werden.
 	 *
 	 * @param notenpunkte   die Notenpunkte anhand derer die Note ermittelt wird als String

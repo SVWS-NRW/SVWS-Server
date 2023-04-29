@@ -6,6 +6,7 @@ import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklaus
 import { KlausurblockungSchienenAlgorithmusGreedy5 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy5';
 import { KlausurblockungSchienenAlgorithmusGreedy4 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy4';
 import { KlausurblockungSchienenAlgorithmusGreedy1 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy1';
+import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../core/logger/Logger';
 import { KlausurblockungSchienenAlgorithmusGreedy7 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy7';
 import { KlausurblockungSchienenAlgorithmusGreedy6 } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy6';
 import { System } from '../../../java/lang/System';
@@ -19,12 +20,35 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 
 	private static readonly _random : Random = new Random();
 
+	/**
+	 * Ein Logger für Debug-Zwecke.
+	 */
+	private readonly _logger : Logger;
+
 
 	/**
-	 * Der Konstruktor ist leer und erstellt auch keine Datenstrukturen.
+	 * Der Konstruktor.
 	 */
-	public constructor() {
+	public constructor();
+
+	/**
+	 * Der Konstruktor.
+	 *
+	 * @param pLogger  Ein Logger für Debug-Zwecke.
+	 */
+	public constructor(pLogger : Logger);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0? : Logger) {
 		super();
+		if ((typeof __param0 === "undefined")) {
+			this._logger = new Logger();
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.Logger'))))) {
+			const pLogger : Logger = cast_de_svws_nrw_core_logger_Logger(__param0);
+			this._logger = pLogger;
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
@@ -36,7 +60,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		const zeitEndeGesamt : number = System.currentTimeMillis() + pMaxTimeMillis;
 		const seed : number = KlausurblockungSchienenAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
-		const dynDaten : KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(random, pInput);
+		const dynDaten : KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(this._logger, random, pInput);
 		const algorithmen : Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten)];
 		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
