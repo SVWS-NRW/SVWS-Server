@@ -55,13 +55,13 @@ public final class DTODavRessourceCollection {
 	/** Die ID des Benutzers, zu dem der Datensatz gehört */
 	@Column(name = "Benutzer_ID")
 	@JsonProperty
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/** ID der WebDav-Ressourcensammlung */
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Gibt den Typ dieser Sammlung an, bspw Adressbuch oder Kalender */
 	@Column(name = "Typ")
@@ -112,18 +112,9 @@ public final class DTODavRessourceCollection {
 	 * @param Anzeigename   der Wert für das Attribut Anzeigename
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
-	public DTODavRessourceCollection(final Long Benutzer_ID, final Long ID, final DavRessourceCollectionTyp Typ, final String Anzeigename, final String SyncToken) {
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
+	public DTODavRessourceCollection(final long Benutzer_ID, final long ID, final DavRessourceCollectionTyp Typ, final String Anzeigename, final String SyncToken) {
 		this.Benutzer_ID = Benutzer_ID;
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
 		this.ID = ID;
-		if (Typ == null) {
-			throw new NullPointerException("Typ must not be null");
-		}
 		this.Typ = Typ;
 		if (Anzeigename == null) {
 			throw new NullPointerException("Anzeigename must not be null");
@@ -145,10 +136,7 @@ public final class DTODavRessourceCollection {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavRessourceCollection other = (DTODavRessourceCollection) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -157,7 +145,7 @@ public final class DTODavRessourceCollection {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

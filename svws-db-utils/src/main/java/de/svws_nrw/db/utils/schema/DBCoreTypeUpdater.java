@@ -158,7 +158,7 @@ public class DBCoreTypeUpdater {
 			if (!tab.hasCoreType())
 				continue;
 			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tab.name());
-			if ((v == null) || (v.Version == null))
+			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
@@ -166,7 +166,7 @@ public class DBCoreTypeUpdater {
 		// TODO unten deprecated, oben aktuell
 		for (final CoreTypeTable entry : tables) {
 			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(entry.name);
-			if ((v == null) || (v.Version == null))
+			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(entry.version, v.Version) < 0)
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
@@ -889,7 +889,7 @@ public class DBCoreTypeUpdater {
 	 */
 	private boolean pruefeVersion(final String tabname, final long version) {
 		final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
-		if ((v == null) || (v.Version == null))
+		if (v == null)
 			return false;
 		return v.Version == version;
 	}

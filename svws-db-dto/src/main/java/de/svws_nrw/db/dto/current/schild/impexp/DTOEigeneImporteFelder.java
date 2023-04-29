@@ -73,7 +73,7 @@ public final class DTOEigeneImporteFelder {
 	@Id
 	@Column(name = "Import_ID")
 	@JsonProperty
-	public Integer Import_ID;
+	public int Import_ID;
 
 	/** externen Textimport Felder */
 	@Id
@@ -179,10 +179,7 @@ public final class DTOEigeneImporteFelder {
 	 * Erstellt ein neues Objekt der Klasse DTOEigeneImporteFelder ohne eine Initialisierung der Attribute.
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 */
-	public DTOEigeneImporteFelder(final Integer Import_ID) {
-		if (Import_ID == null) {
-			throw new NullPointerException("Import_ID must not be null");
-		}
+	public DTOEigeneImporteFelder(final int Import_ID) {
 		this.Import_ID = Import_ID;
 	}
 
@@ -196,10 +193,7 @@ public final class DTOEigeneImporteFelder {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneImporteFelder other = (DTOEigeneImporteFelder) obj;
-		if (Import_ID == null) {
-			if (other.Import_ID != null)
-				return false;
-		} else if (!Import_ID.equals(other.Import_ID))
+		if (Import_ID != other.Import_ID)
 			return false;
 
 		if (Field_ID == null) {
@@ -214,7 +208,7 @@ public final class DTOEigeneImporteFelder {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Import_ID == null) ? 0 : Import_ID.hashCode());
+		result = prime * result + Integer.hashCode(Import_ID);
 
 		result = prime * result + ((Field_ID == null) ? 0 : Field_ID.hashCode());
 		return result;

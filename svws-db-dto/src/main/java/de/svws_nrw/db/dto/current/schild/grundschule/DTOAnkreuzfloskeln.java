@@ -59,7 +59,7 @@ public final class DTOAnkreuzfloskeln {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** FachID zu der die Ankreuzfloskel gehört, null für individuelle Ankreuzfloskeln bzw. siehe Spalte IstASV */
 	@Column(name = "Fach_ID")
@@ -69,7 +69,7 @@ public final class DTOAnkreuzfloskeln {
 	/** Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzfloskel um eine Floskel zum Arbeits- und Sozialverhalten handelt (1) oder nicht (0). */
 	@Column(name = "IstASV")
 	@JsonProperty
-	public Integer IstASV;
+	public int IstASV;
 
 	/** Jahrgang zu der die Ankreuzfloskel gehört */
 	@Column(name = "Jahrgang")
@@ -131,14 +131,8 @@ public final class DTOAnkreuzfloskeln {
 	 * @param Jahrgang   der Wert für das Attribut Jahrgang
 	 * @param FloskelText   der Wert für das Attribut FloskelText
 	 */
-	public DTOAnkreuzfloskeln(final Long ID, final Integer IstASV, final String Jahrgang, final String FloskelText) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOAnkreuzfloskeln(final long ID, final int IstASV, final String Jahrgang, final String FloskelText) {
 		this.ID = ID;
-		if (IstASV == null) {
-			throw new NullPointerException("IstASV must not be null");
-		}
 		this.IstASV = IstASV;
 		if (Jahrgang == null) {
 			throw new NullPointerException("Jahrgang must not be null");
@@ -160,10 +154,7 @@ public final class DTOAnkreuzfloskeln {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAnkreuzfloskeln other = (DTOAnkreuzfloskeln) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -172,7 +163,7 @@ public final class DTOAnkreuzfloskeln {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

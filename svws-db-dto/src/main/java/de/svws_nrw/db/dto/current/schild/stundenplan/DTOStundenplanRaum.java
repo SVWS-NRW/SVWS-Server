@@ -39,12 +39,12 @@ public final class DTOStundenplanRaum {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Stundenplans, dem dieser Raumeintrag zugeordnet wird */
 	@Column(name = "Stundenplan_ID")
 	@JsonProperty
-	public Long Stundenplan_ID;
+	public long Stundenplan_ID;
 
 	/** Das Kürzel des Raums */
 	@Column(name = "Kuerzel")
@@ -59,7 +59,7 @@ public final class DTOStundenplanRaum {
 	/** Die Größe des Raumes, d.h. wie viele Schüler hier max. Platz haben */
 	@Column(name = "Groesse")
 	@JsonProperty
-	public Integer Groesse;
+	public int Groesse;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanRaum ohne eine Initialisierung der Attribute.
@@ -76,14 +76,8 @@ public final class DTOStundenplanRaum {
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 * @param Groesse   der Wert für das Attribut Groesse
 	 */
-	public DTOStundenplanRaum(final Long ID, final Long Stundenplan_ID, final String Kuerzel, final String Beschreibung, final Integer Groesse) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanRaum(final long ID, final long Stundenplan_ID, final String Kuerzel, final String Beschreibung, final int Groesse) {
 		this.ID = ID;
-		if (Stundenplan_ID == null) {
-			throw new NullPointerException("Stundenplan_ID must not be null");
-		}
 		this.Stundenplan_ID = Stundenplan_ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -93,9 +87,6 @@ public final class DTOStundenplanRaum {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
-		if (Groesse == null) {
-			throw new NullPointerException("Groesse must not be null");
-		}
 		this.Groesse = Groesse;
 	}
 
@@ -109,10 +100,7 @@ public final class DTOStundenplanRaum {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanRaum other = (DTOStundenplanRaum) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -121,7 +109,7 @@ public final class DTOStundenplanRaum {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

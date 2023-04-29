@@ -43,7 +43,7 @@ public final class DTOBenutzergruppe {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die Bezeichnung der Benutzergruppe */
 	@Column(name = "Bezeichnung")
@@ -71,18 +71,12 @@ public final class DTOBenutzergruppe {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
-	public DTOBenutzergruppe(final Long ID, final String Bezeichnung, final Boolean IstAdmin) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOBenutzergruppe(final long ID, final String Bezeichnung, final Boolean IstAdmin) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (IstAdmin == null) {
-			throw new NullPointerException("IstAdmin must not be null");
-		}
 		this.IstAdmin = IstAdmin;
 	}
 
@@ -96,10 +90,7 @@ public final class DTOBenutzergruppe {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzergruppe other = (DTOBenutzergruppe) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -108,7 +99,7 @@ public final class DTOBenutzergruppe {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

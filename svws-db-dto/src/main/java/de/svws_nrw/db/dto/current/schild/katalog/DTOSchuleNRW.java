@@ -79,7 +79,7 @@ public final class DTOSchuleNRW {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Schulnummer des Eintrags der Schulen */
 	@Column(name = "SchulNr")
@@ -199,10 +199,7 @@ public final class DTOSchuleNRW {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param SchulNr   der Wert für das Attribut SchulNr
 	 */
-	public DTOSchuleNRW(final Long ID, final String SchulNr) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuleNRW(final long ID, final String SchulNr) {
 		this.ID = ID;
 		if (SchulNr == null) {
 			throw new NullPointerException("SchulNr must not be null");
@@ -220,10 +217,7 @@ public final class DTOSchuleNRW {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuleNRW other = (DTOSchuleNRW) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -232,7 +226,7 @@ public final class DTOSchuleNRW {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

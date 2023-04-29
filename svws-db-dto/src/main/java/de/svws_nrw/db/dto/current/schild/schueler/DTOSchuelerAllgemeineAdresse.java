@@ -64,17 +64,17 @@ public final class DTOSchuelerAllgemeineAdresse {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** SchülerID des Betriebeeintrags beim Schüler */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** AdressID des Betriebeeintrags beim Schüler */
 	@Column(name = "Adresse_ID")
 	@JsonProperty
-	public Long Adresse_ID;
+	public long Adresse_ID;
 
 	/** VertragsArtID des Betriebeeintrags beim Schüler */
 	@Column(name = "Vertragsart_ID")
@@ -146,18 +146,9 @@ public final class DTOSchuelerAllgemeineAdresse {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Adresse_ID   der Wert für das Attribut Adresse_ID
 	 */
-	public DTOSchuelerAllgemeineAdresse(final Long ID, final Long Schueler_ID, final Long Adresse_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerAllgemeineAdresse(final long ID, final long Schueler_ID, final long Adresse_ID) {
 		this.ID = ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
-		if (Adresse_ID == null) {
-			throw new NullPointerException("Adresse_ID must not be null");
-		}
 		this.Adresse_ID = Adresse_ID;
 	}
 
@@ -171,10 +162,7 @@ public final class DTOSchuelerAllgemeineAdresse {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAllgemeineAdresse other = (DTOSchuelerAllgemeineAdresse) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -183,7 +171,7 @@ public final class DTOSchuelerAllgemeineAdresse {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

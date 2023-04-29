@@ -37,7 +37,7 @@ public final class DTOProtokollLogin {
 	@Id
 	@Column(name = "LI_UserID")
 	@JsonProperty
-	public Long LI_UserID;
+	public long LI_UserID;
 
 	/** Login Zeit */
 	@Id
@@ -61,10 +61,7 @@ public final class DTOProtokollLogin {
 	 * Erstellt ein neues Objekt der Klasse DTOProtokollLogin ohne eine Initialisierung der Attribute.
 	 * @param LI_UserID   der Wert für das Attribut LI_UserID
 	 */
-	public DTOProtokollLogin(final Long LI_UserID) {
-		if (LI_UserID == null) {
-			throw new NullPointerException("LI_UserID must not be null");
-		}
+	public DTOProtokollLogin(final long LI_UserID) {
 		this.LI_UserID = LI_UserID;
 	}
 
@@ -78,10 +75,7 @@ public final class DTOProtokollLogin {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOProtokollLogin other = (DTOProtokollLogin) obj;
-		if (LI_UserID == null) {
-			if (other.LI_UserID != null)
-				return false;
-		} else if (!LI_UserID.equals(other.LI_UserID))
+		if (LI_UserID != other.LI_UserID)
 			return false;
 
 		if (LI_LoginTime == null) {
@@ -96,7 +90,7 @@ public final class DTOProtokollLogin {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((LI_UserID == null) ? 0 : LI_UserID.hashCode());
+		result = prime * result + Long.hashCode(LI_UserID);
 
 		result = prime * result + ((LI_LoginTime == null) ? 0 : LI_LoginTime.hashCode());
 		return result;

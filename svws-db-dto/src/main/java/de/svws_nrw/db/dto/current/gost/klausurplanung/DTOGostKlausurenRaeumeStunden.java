@@ -35,17 +35,17 @@ public final class DTOGostKlausurenRaeumeStunden {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID des Klausurraums */
 	@Column(name = "Klausurraum_ID")
 	@JsonProperty
-	public Long Klausurraum_ID;
+	public long Klausurraum_ID;
 
 	/** ID des Zeitrasters */
 	@Column(name = "Zeitraster_ID")
 	@JsonProperty
-	public Long Zeitraster_ID;
+	public long Zeitraster_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenRaeumeStunden ohne eine Initialisierung der Attribute.
@@ -60,18 +60,9 @@ public final class DTOGostKlausurenRaeumeStunden {
 	 * @param Klausurraum_ID   der Wert für das Attribut Klausurraum_ID
 	 * @param Zeitraster_ID   der Wert für das Attribut Zeitraster_ID
 	 */
-	public DTOGostKlausurenRaeumeStunden(final Long ID, final Long Klausurraum_ID, final Long Zeitraster_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenRaeumeStunden(final long ID, final long Klausurraum_ID, final long Zeitraster_ID) {
 		this.ID = ID;
-		if (Klausurraum_ID == null) {
-			throw new NullPointerException("Klausurraum_ID must not be null");
-		}
 		this.Klausurraum_ID = Klausurraum_ID;
-		if (Zeitraster_ID == null) {
-			throw new NullPointerException("Zeitraster_ID must not be null");
-		}
 		this.Zeitraster_ID = Zeitraster_ID;
 	}
 
@@ -85,10 +76,7 @@ public final class DTOGostKlausurenRaeumeStunden {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenRaeumeStunden other = (DTOGostKlausurenRaeumeStunden) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -97,7 +85,7 @@ public final class DTOGostKlausurenRaeumeStunden {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -37,13 +37,13 @@ public final class DTOFachTeilleistungsarten {
 	@Id
 	@Column(name = "Teilleistung_ID")
 	@JsonProperty
-	public Long Teilleistungsart_ID;
+	public long Teilleistungsart_ID;
 
 	/** Die eindeutige ID des Faches – verweist auf das Fach */
 	@Id
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Gibt an, bei welcher Kursart die Teilleistungsart zugeordnet werden soll */
 	@Id
@@ -63,14 +63,8 @@ public final class DTOFachTeilleistungsarten {
 	 * @param Teilleistungsart_ID   der Wert für das Attribut Teilleistungsart_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOFachTeilleistungsarten(final Long Teilleistungsart_ID, final Long Fach_ID) {
-		if (Teilleistungsart_ID == null) {
-			throw new NullPointerException("Teilleistungsart_ID must not be null");
-		}
+	public DTOFachTeilleistungsarten(final long Teilleistungsart_ID, final long Fach_ID) {
 		this.Teilleistungsart_ID = Teilleistungsart_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -84,16 +78,10 @@ public final class DTOFachTeilleistungsarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFachTeilleistungsarten other = (DTOFachTeilleistungsarten) obj;
-		if (Teilleistungsart_ID == null) {
-			if (other.Teilleistungsart_ID != null)
-				return false;
-		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
+		if (Teilleistungsart_ID != other.Teilleistungsart_ID)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 
 		if (Kursart == null) {
@@ -108,9 +96,9 @@ public final class DTOFachTeilleistungsarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
+		result = prime * result + Long.hashCode(Teilleistungsart_ID);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 
 		result = prime * result + ((Kursart == null) ? 0 : Kursart.hashCode());
 		return result;

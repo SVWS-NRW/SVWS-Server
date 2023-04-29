@@ -45,7 +45,7 @@ public final class DTOBenutzerMail {
 	@Id
 	@Column(name = "Benutzer_ID")
 	@JsonProperty
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/** Die EMail-Adresse des Benutzers, zu dem der Datensatz gehört  */
 	@Column(name = "Email")
@@ -95,10 +95,7 @@ public final class DTOBenutzerMail {
 	 * @param Email   der Wert für das Attribut Email
 	 * @param EmailName   der Wert für das Attribut EmailName
 	 */
-	public DTOBenutzerMail(final Long Benutzer_ID, final String Email, final String EmailName) {
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
+	public DTOBenutzerMail(final long Benutzer_ID, final String Email, final String EmailName) {
 		this.Benutzer_ID = Benutzer_ID;
 		if (Email == null) {
 			throw new NullPointerException("Email must not be null");
@@ -120,10 +117,7 @@ public final class DTOBenutzerMail {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzerMail other = (DTOBenutzerMail) obj;
-		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
-				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
 		return true;
 	}
@@ -132,7 +126,7 @@ public final class DTOBenutzerMail {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Benutzer_ID == null) ? 0 : Benutzer_ID.hashCode());
+		result = prime * result + Long.hashCode(Benutzer_ID);
 		return result;
 	}
 

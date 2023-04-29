@@ -59,7 +59,7 @@ public final class DTONote {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Das Kürzel der Note */
 	@Column(name = "Kuerzel")
@@ -108,7 +108,7 @@ public final class DTONote {
 	/** Eine Default-Sortierung der Noten */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public int Sortierung;
 
 	/** Der Datensatz ist gültig ab dem Schuljahr */
 	@Column(name = "gueltigVon")
@@ -136,30 +136,15 @@ public final class DTONote {
 	 * @param AufLaufbahnSII   der Wert für das Attribut AufLaufbahnSII
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
-	public DTONote(final Long ID, final String Kuerzel, final Boolean IstTendenznote, final Boolean AufZeugnis, final Boolean AufLaufbahnSII, final Integer Sortierung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTONote(final long ID, final String Kuerzel, final Boolean IstTendenznote, final Boolean AufZeugnis, final Boolean AufLaufbahnSII, final int Sortierung) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (IstTendenznote == null) {
-			throw new NullPointerException("IstTendenznote must not be null");
-		}
 		this.IstTendenznote = IstTendenznote;
-		if (AufZeugnis == null) {
-			throw new NullPointerException("AufZeugnis must not be null");
-		}
 		this.AufZeugnis = AufZeugnis;
-		if (AufLaufbahnSII == null) {
-			throw new NullPointerException("AufLaufbahnSII must not be null");
-		}
 		this.AufLaufbahnSII = AufLaufbahnSII;
-		if (Sortierung == null) {
-			throw new NullPointerException("Sortierung must not be null");
-		}
 		this.Sortierung = Sortierung;
 	}
 
@@ -173,10 +158,7 @@ public final class DTONote {
 		if (getClass() != obj.getClass())
 			return false;
 		DTONote other = (DTONote) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -185,7 +167,7 @@ public final class DTONote {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

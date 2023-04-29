@@ -37,12 +37,12 @@ public final class DTOLehrerAnrechnungsstunde {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** Anrechnungsstundentext  für die Anrechnungsstunden */
 	@Column(name = "AnrechnungsgrundKrz")
@@ -66,14 +66,8 @@ public final class DTOLehrerAnrechnungsstunde {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 */
-	public DTOLehrerAnrechnungsstunde(final Long ID, final Long Abschnitt_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOLehrerAnrechnungsstunde(final long ID, final long Abschnitt_ID) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
 	}
 
@@ -87,10 +81,7 @@ public final class DTOLehrerAnrechnungsstunde {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerAnrechnungsstunde other = (DTOLehrerAnrechnungsstunde) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -99,7 +90,7 @@ public final class DTOLehrerAnrechnungsstunde {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

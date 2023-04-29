@@ -41,12 +41,12 @@ public final class DTOSchulleitung {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Schulleitungsfunktion (Fremdschlüssel aus der Tabelle SchulleitungFunktion) */
 	@Column(name = "LeitungsfunktionID")
 	@JsonProperty
-	public Long LeitungsfunktionID;
+	public long LeitungsfunktionID;
 
 	/** Beschreibung der Funktion (Default Text aus SchulleitungFunktion aber änderbar) */
 	@Column(name = "Funktionstext")
@@ -56,7 +56,7 @@ public final class DTOSchulleitung {
 	/** ID des Lehrerdatensatzes */
 	@Column(name = "LehrerID")
 	@JsonProperty
-	public Long LehrerID;
+	public long LehrerID;
 
 	/** Beginndatum */
 	@Column(name = "Von")
@@ -82,22 +82,13 @@ public final class DTOSchulleitung {
 	 * @param Funktionstext   der Wert für das Attribut Funktionstext
 	 * @param LehrerID   der Wert für das Attribut LehrerID
 	 */
-	public DTOSchulleitung(final Long ID, final Long LeitungsfunktionID, final String Funktionstext, final Long LehrerID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchulleitung(final long ID, final long LeitungsfunktionID, final String Funktionstext, final long LehrerID) {
 		this.ID = ID;
-		if (LeitungsfunktionID == null) {
-			throw new NullPointerException("LeitungsfunktionID must not be null");
-		}
 		this.LeitungsfunktionID = LeitungsfunktionID;
 		if (Funktionstext == null) {
 			throw new NullPointerException("Funktionstext must not be null");
 		}
 		this.Funktionstext = Funktionstext;
-		if (LehrerID == null) {
-			throw new NullPointerException("LehrerID must not be null");
-		}
 		this.LehrerID = LehrerID;
 	}
 
@@ -111,10 +102,7 @@ public final class DTOSchulleitung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchulleitung other = (DTOSchulleitung) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -123,7 +111,7 @@ public final class DTOSchulleitung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

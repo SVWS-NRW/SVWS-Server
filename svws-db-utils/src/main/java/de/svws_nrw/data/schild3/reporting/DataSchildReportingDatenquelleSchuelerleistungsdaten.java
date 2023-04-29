@@ -49,7 +49,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
         final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", params, DTOSchuelerLeistungsdaten.class);
         if (leistungsdaten == null || leistungsdaten.isEmpty())
         	return result;
-        final List<Long> idFaecher = leistungsdaten.stream().filter(l -> l.Fach_ID != null).map(l -> l.Fach_ID).distinct().toList();
+        final List<Long> idFaecher = leistungsdaten.stream().map(l -> l.Fach_ID).distinct().toList();
         final Map<Long, DTOFach> mapFaecher = (idFaecher.isEmpty()) ? Collections.emptyMap()
         		: conn.queryNamed("DTOFach.id.multiple", idFaecher, DTOFach.class)
         			.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
@@ -62,17 +62,17 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
         		: conn.queryNamed("DTOKurs.id.multiple", idKurse, DTOKurs.class)
         			.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 
-		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %s konnte nicht für die Leistungsdaten mit der ID %s gefunden werden.";
+		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %d konnte nicht für die Leistungsdaten mit der ID %d gefunden werden.";
 
         for (final DTOSchuelerLeistungsdaten dto : leistungsdaten) {
 			final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
             if (dtoFach == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID.toString(), dto.ID.toString()));
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID, dto.ID));
             String lehrerKuerzel = null;
             if (dto.Fachlehrer_ID != null) {
 	        	final DTOLehrer dtoLehrer = mapLehrer.get(dto.Fachlehrer_ID);
 	            if (dtoLehrer == null)
-	                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID.toString(), dto.ID.toString()));
+	                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID, dto.ID));
 	            lehrerKuerzel = dtoLehrer.Kuerzel;
             }
         	final DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);

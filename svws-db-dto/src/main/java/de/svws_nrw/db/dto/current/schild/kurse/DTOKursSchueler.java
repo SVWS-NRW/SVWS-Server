@@ -35,13 +35,13 @@ public final class DTOKursSchueler {
 	@Id
 	@Column(name = "Kurs_ID")
 	@JsonProperty
-	public Long Kurs_ID;
+	public long Kurs_ID;
 
 	/** Die eindeutige ID des Schülers – verweist auf den Schüler */
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchueler ohne eine Initialisierung der Attribute.
@@ -55,14 +55,8 @@ public final class DTOKursSchueler {
 	 * @param Kurs_ID   der Wert für das Attribut Kurs_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
-	public DTOKursSchueler(final Long Kurs_ID, final Long Schueler_ID) {
-		if (Kurs_ID == null) {
-			throw new NullPointerException("Kurs_ID must not be null");
-		}
+	public DTOKursSchueler(final long Kurs_ID, final long Schueler_ID) {
 		this.Kurs_ID = Kurs_ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
 	}
 
@@ -76,16 +70,10 @@ public final class DTOKursSchueler {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKursSchueler other = (DTOKursSchueler) obj;
-		if (Kurs_ID == null) {
-			if (other.Kurs_ID != null)
-				return false;
-		} else if (!Kurs_ID.equals(other.Kurs_ID))
+		if (Kurs_ID != other.Kurs_ID)
 			return false;
 
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 		return true;
 	}
@@ -94,9 +82,9 @@ public final class DTOKursSchueler {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Kurs_ID == null) ? 0 : Kurs_ID.hashCode());
+		result = prime * result + Long.hashCode(Kurs_ID);
 
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 		return result;
 	}
 

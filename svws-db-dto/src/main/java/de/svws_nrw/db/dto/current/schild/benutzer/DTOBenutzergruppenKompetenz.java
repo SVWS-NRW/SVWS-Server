@@ -35,13 +35,13 @@ public final class DTOBenutzergruppenKompetenz {
 	@Id
 	@Column(name = "Gruppe_ID")
 	@JsonProperty
-	public Long Gruppe_ID;
+	public long Gruppe_ID;
 
 	/** Die ID der zugeordneten Kompetenz */
 	@Id
 	@Column(name = "Kompetenz_ID")
 	@JsonProperty
-	public Long Kompetenz_ID;
+	public long Kompetenz_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOBenutzergruppenKompetenz ohne eine Initialisierung der Attribute.
@@ -55,14 +55,8 @@ public final class DTOBenutzergruppenKompetenz {
 	 * @param Gruppe_ID   der Wert für das Attribut Gruppe_ID
 	 * @param Kompetenz_ID   der Wert für das Attribut Kompetenz_ID
 	 */
-	public DTOBenutzergruppenKompetenz(final Long Gruppe_ID, final Long Kompetenz_ID) {
-		if (Gruppe_ID == null) {
-			throw new NullPointerException("Gruppe_ID must not be null");
-		}
+	public DTOBenutzergruppenKompetenz(final long Gruppe_ID, final long Kompetenz_ID) {
 		this.Gruppe_ID = Gruppe_ID;
-		if (Kompetenz_ID == null) {
-			throw new NullPointerException("Kompetenz_ID must not be null");
-		}
 		this.Kompetenz_ID = Kompetenz_ID;
 	}
 
@@ -76,16 +70,10 @@ public final class DTOBenutzergruppenKompetenz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzergruppenKompetenz other = (DTOBenutzergruppenKompetenz) obj;
-		if (Gruppe_ID == null) {
-			if (other.Gruppe_ID != null)
-				return false;
-		} else if (!Gruppe_ID.equals(other.Gruppe_ID))
+		if (Gruppe_ID != other.Gruppe_ID)
 			return false;
 
-		if (Kompetenz_ID == null) {
-			if (other.Kompetenz_ID != null)
-				return false;
-		} else if (!Kompetenz_ID.equals(other.Kompetenz_ID))
+		if (Kompetenz_ID != other.Kompetenz_ID)
 			return false;
 		return true;
 	}
@@ -94,9 +82,9 @@ public final class DTOBenutzergruppenKompetenz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Gruppe_ID == null) ? 0 : Gruppe_ID.hashCode());
+		result = prime * result + Long.hashCode(Gruppe_ID);
 
-		result = prime * result + ((Kompetenz_ID == null) ? 0 : Kompetenz_ID.hashCode());
+		result = prime * result + Long.hashCode(Kompetenz_ID);
 		return result;
 	}
 

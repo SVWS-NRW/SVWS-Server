@@ -51,7 +51,7 @@ public final class DTOGostJahrgangsdaten {
 	@Id
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Legt fest, ob ein Zusatzkurs in Geschichte angeboten wird */
 	@Column(name = "ZusatzkursGEVorhanden")
@@ -100,10 +100,7 @@ public final class DTOGostJahrgangsdaten {
 	 * Erstellt ein neues Objekt der Klasse DTOGostJahrgangsdaten ohne eine Initialisierung der Attribute.
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 */
-	public DTOGostJahrgangsdaten(final Integer Abi_Jahrgang) {
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
+	public DTOGostJahrgangsdaten(final int Abi_Jahrgang) {
 		this.Abi_Jahrgang = Abi_Jahrgang;
 	}
 
@@ -117,10 +114,7 @@ public final class DTOGostJahrgangsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangsdaten other = (DTOGostJahrgangsdaten) obj;
-		if (Abi_Jahrgang == null) {
-			if (other.Abi_Jahrgang != null)
-				return false;
-		} else if (!Abi_Jahrgang.equals(other.Abi_Jahrgang))
+		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
 		return true;
 	}
@@ -129,7 +123,7 @@ public final class DTOGostJahrgangsdaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Abi_Jahrgang == null) ? 0 : Abi_Jahrgang.hashCode());
+		result = prime * result + Integer.hashCode(Abi_Jahrgang);
 		return result;
 	}
 

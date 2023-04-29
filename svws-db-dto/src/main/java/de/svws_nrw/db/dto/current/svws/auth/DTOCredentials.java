@@ -45,7 +45,7 @@ public final class DTOCredentials {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Benutzername für den Credential-Datensatz */
 	@Column(name = "Benutzername")
@@ -94,10 +94,7 @@ public final class DTOCredentials {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Benutzername   der Wert für das Attribut Benutzername
 	 */
-	public DTOCredentials(final Long ID, final String Benutzername) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOCredentials(final long ID, final String Benutzername) {
 		this.ID = ID;
 		if (Benutzername == null) {
 			throw new NullPointerException("Benutzername must not be null");
@@ -115,10 +112,7 @@ public final class DTOCredentials {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOCredentials other = (DTOCredentials) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -127,7 +121,7 @@ public final class DTOCredentials {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

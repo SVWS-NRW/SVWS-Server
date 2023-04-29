@@ -47,12 +47,12 @@ public final class DTOCredentialsLernplattformen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Lernplattform */
 	@Column(name = "LernplattformID")
 	@JsonProperty
-	public Long LernplattformID;
+	public long LernplattformID;
 
 	/** Benutzername für den Credential-Datensatz */
 	@Column(name = "Benutzername")
@@ -102,14 +102,8 @@ public final class DTOCredentialsLernplattformen {
 	 * @param LernplattformID   der Wert für das Attribut LernplattformID
 	 * @param Benutzername   der Wert für das Attribut Benutzername
 	 */
-	public DTOCredentialsLernplattformen(final Long ID, final Long LernplattformID, final String Benutzername) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOCredentialsLernplattformen(final long ID, final long LernplattformID, final String Benutzername) {
 		this.ID = ID;
-		if (LernplattformID == null) {
-			throw new NullPointerException("LernplattformID must not be null");
-		}
 		this.LernplattformID = LernplattformID;
 		if (Benutzername == null) {
 			throw new NullPointerException("Benutzername must not be null");
@@ -127,10 +121,7 @@ public final class DTOCredentialsLernplattformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOCredentialsLernplattformen other = (DTOCredentialsLernplattformen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -139,7 +130,7 @@ public final class DTOCredentialsLernplattformen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

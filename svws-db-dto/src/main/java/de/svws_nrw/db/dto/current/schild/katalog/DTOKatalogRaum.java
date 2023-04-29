@@ -37,7 +37,7 @@ public final class DTOKatalogRaum {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Das Kürzel des Raums - auch eindeutig */
 	@Column(name = "Kuerzel")
@@ -52,7 +52,7 @@ public final class DTOKatalogRaum {
 	/** Die Größe des Raumes, d.h. wie viele Schüler hier max. Platz haben */
 	@Column(name = "Groesse")
 	@JsonProperty
-	public Integer Groesse;
+	public int Groesse;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKatalogRaum ohne eine Initialisierung der Attribute.
@@ -68,10 +68,7 @@ public final class DTOKatalogRaum {
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 * @param Groesse   der Wert für das Attribut Groesse
 	 */
-	public DTOKatalogRaum(final Long ID, final String Kuerzel, final String Beschreibung, final Integer Groesse) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKatalogRaum(final long ID, final String Kuerzel, final String Beschreibung, final int Groesse) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -81,9 +78,6 @@ public final class DTOKatalogRaum {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
-		if (Groesse == null) {
-			throw new NullPointerException("Groesse must not be null");
-		}
 		this.Groesse = Groesse;
 	}
 
@@ -97,10 +91,7 @@ public final class DTOKatalogRaum {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogRaum other = (DTOKatalogRaum) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -109,7 +100,7 @@ public final class DTOKatalogRaum {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

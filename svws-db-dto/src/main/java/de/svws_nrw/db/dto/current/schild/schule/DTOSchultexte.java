@@ -47,7 +47,7 @@ public final class DTOSchultexte {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Kürzel des Schultextes */
 	@Column(name = "Kuerzel")
@@ -83,10 +83,7 @@ public final class DTOSchultexte {
 	 * Erstellt ein neues Objekt der Klasse DTOSchultexte ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOSchultexte(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchultexte(final long ID) {
 		this.ID = ID;
 	}
 
@@ -100,10 +97,7 @@ public final class DTOSchultexte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchultexte other = (DTOSchultexte) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -112,7 +106,7 @@ public final class DTOSchultexte {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

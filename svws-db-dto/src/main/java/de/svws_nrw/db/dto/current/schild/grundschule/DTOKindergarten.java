@@ -61,7 +61,7 @@ public final class DTOKindergarten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Bezeichnung des Kindergartens */
 	@Column(name = "Bezeichnung")
@@ -132,10 +132,7 @@ public final class DTOKindergarten {
 	 * Erstellt ein neues Objekt der Klasse DTOKindergarten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOKindergarten(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKindergarten(final long ID) {
 		this.ID = ID;
 	}
 
@@ -149,10 +146,7 @@ public final class DTOKindergarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKindergarten other = (DTOKindergarten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -161,7 +155,7 @@ public final class DTOKindergarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

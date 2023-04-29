@@ -167,7 +167,7 @@ public class APISchema {
     public Long revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
-	    	if ((version == null) || (version.Revision == null))
+	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return version.Revision;
     	}
@@ -198,7 +198,7 @@ public class APISchema {
     public boolean isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
 	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
-	    	if ((version == null) || (version.Revision == null))
+	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
 	    	return version.IsTainted;
     	}

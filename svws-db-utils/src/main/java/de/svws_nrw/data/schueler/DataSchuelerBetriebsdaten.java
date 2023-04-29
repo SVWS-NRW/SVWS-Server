@@ -119,14 +119,12 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						case "betrieb_id" -> {
 
 							final Long betrieb_id = JSONMapper.convertToLong(value, true);
-							if (betrieb_id == null) {	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
-								s_betrieb.Adresse_ID = null;
-							} else {
-								final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
-								if (betrieb == null)
-									throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
-								s_betrieb.Adresse_ID = betrieb_id;
-							}
+							if (betrieb_id == null)
+								throw OperationError.BAD_REQUEST.exception("Es muss eine ID für den Betrieb angegeben werden.");
+							final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+							if (betrieb == null)
+								throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
+							s_betrieb.Adresse_ID = betrieb_id;
 						}
 						case "beschaeftigungsart_id" -> {
 							final Long art_id = JSONMapper.convertToLong(value, true);
@@ -274,8 +272,6 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						}
 						case "betrieb_id" -> {
 							final Long bid = JSONMapper.convertToLong(value, true);
-							if (bid == null)
-								s_betrieb.Adresse_ID = null;
 							if ((bid == null) || (bid != betrieb_id))
 								throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
 						}

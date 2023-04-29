@@ -63,7 +63,7 @@ public final class DTOEigeneImporte {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Integer ID;
+	public int ID;
 
 	/** Bezeichnung des Schemas */
 	@Column(name = "Title")
@@ -139,10 +139,7 @@ public final class DTOEigeneImporte {
 	 * Erstellt ein neues Objekt der Klasse DTOEigeneImporte ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOEigeneImporte(final Integer ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOEigeneImporte(final int ID) {
 		this.ID = ID;
 	}
 
@@ -156,10 +153,7 @@ public final class DTOEigeneImporte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneImporte other = (DTOEigeneImporte) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -168,7 +162,7 @@ public final class DTOEigeneImporte {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Integer.hashCode(ID);
 		return result;
 	}
 

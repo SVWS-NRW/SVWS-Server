@@ -49,12 +49,12 @@ public final class DTOAnsprechpartnerAllgemeineAdresse {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID des Betriebs (der Adresse) aus der Tabelle AllgAdresse */
 	@Column(name = "Adresse_ID")
 	@JsonProperty
-	public Long Adresse_ID;
+	public long Adresse_ID;
 
 	/** Name des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2 */
 	@Column(name = "Name")
@@ -108,14 +108,8 @@ public final class DTOAnsprechpartnerAllgemeineAdresse {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Adresse_ID   der Wert für das Attribut Adresse_ID
 	 */
-	public DTOAnsprechpartnerAllgemeineAdresse(final Long ID, final Long Adresse_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOAnsprechpartnerAllgemeineAdresse(final long ID, final long Adresse_ID) {
 		this.ID = ID;
-		if (Adresse_ID == null) {
-			throw new NullPointerException("Adresse_ID must not be null");
-		}
 		this.Adresse_ID = Adresse_ID;
 	}
 
@@ -129,10 +123,7 @@ public final class DTOAnsprechpartnerAllgemeineAdresse {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAnsprechpartnerAllgemeineAdresse other = (DTOAnsprechpartnerAllgemeineAdresse) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -141,7 +132,7 @@ public final class DTOAnsprechpartnerAllgemeineAdresse {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

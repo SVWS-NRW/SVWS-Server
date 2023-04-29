@@ -49,12 +49,12 @@ public final class DTOStundenplan {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Schuljahresabschnittes des Stundenplans als Fremdschlüssel auf die Tabelle Schuljahresabschnitte */
 	@Column(name = "Schuljahresabschnitts_ID")
 	@JsonProperty
-	public Long Schuljahresabschnitts_ID;
+	public long Schuljahresabschnitts_ID;
 
 	/** Das Datum, ab dem der Stundenplan gültig ist */
 	@Column(name = "Beginn")
@@ -80,7 +80,7 @@ public final class DTOStundenplan {
 	/** Gibt das Modell für die Wochen an, d.h. ob es sich um einen Stundenplan für jede Woche handelt (0) oder ob es sich um einen unterschiedliche Stundenpläne in Abhängigkeit des Wochentyps handelt - z.B. A-/B-Wochen (2) handelt. Hier wird dann die Anzahl der unterschiedlichen Wochentypen festgelegt. */
 	@Column(name = "WochentypModell")
 	@JsonProperty
-	public Integer WochentypModell;
+	public int WochentypModell;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplan ohne eine Initialisierung der Attribute.
@@ -97,14 +97,8 @@ public final class DTOStundenplan {
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 * @param WochentypModell   der Wert für das Attribut WochentypModell
 	 */
-	public DTOStundenplan(final Long ID, final Long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung, final Integer WochentypModell) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplan(final long ID, final long Schuljahresabschnitts_ID, final String Beginn, final String Beschreibung, final int WochentypModell) {
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) {
-			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
-		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
 		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
@@ -114,9 +108,6 @@ public final class DTOStundenplan {
 			throw new NullPointerException("Beschreibung must not be null");
 		}
 		this.Beschreibung = Beschreibung;
-		if (WochentypModell == null) {
-			throw new NullPointerException("WochentypModell must not be null");
-		}
 		this.WochentypModell = WochentypModell;
 	}
 
@@ -130,10 +121,7 @@ public final class DTOStundenplan {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplan other = (DTOStundenplan) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -142,7 +130,7 @@ public final class DTOStundenplan {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

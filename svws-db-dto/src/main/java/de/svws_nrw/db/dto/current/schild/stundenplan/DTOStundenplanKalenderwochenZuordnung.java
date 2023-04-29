@@ -39,27 +39,27 @@ public final class DTOStundenplanKalenderwochenZuordnung {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Stundenplans, dem die Kalenderwochenzuordnung zugeordnet ist */
 	@Column(name = "Stundenplan_ID")
 	@JsonProperty
-	public Long Stundenplan_ID;
+	public long Stundenplan_ID;
 
 	/** Das Jahr (nicht Schuljahr) zu dem die Kalenderwoche gehört. */
 	@Column(name = "Jahr")
 	@JsonProperty
-	public Integer Jahr;
+	public int Jahr;
 
 	/** Die Kalenderwoche im Jahr. */
 	@Column(name = "KW")
 	@JsonProperty
-	public Integer KW;
+	public int KW;
 
 	/** Gibt den Wochentyp an, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2) */
 	@Column(name = "Wochentyp")
 	@JsonProperty
-	public Integer Wochentyp;
+	public int Wochentyp;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanKalenderwochenZuordnung ohne eine Initialisierung der Attribute.
@@ -76,26 +76,11 @@ public final class DTOStundenplanKalenderwochenZuordnung {
 	 * @param KW   der Wert für das Attribut KW
 	 * @param Wochentyp   der Wert für das Attribut Wochentyp
 	 */
-	public DTOStundenplanKalenderwochenZuordnung(final Long ID, final Long Stundenplan_ID, final Integer Jahr, final Integer KW, final Integer Wochentyp) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanKalenderwochenZuordnung(final long ID, final long Stundenplan_ID, final int Jahr, final int KW, final int Wochentyp) {
 		this.ID = ID;
-		if (Stundenplan_ID == null) {
-			throw new NullPointerException("Stundenplan_ID must not be null");
-		}
 		this.Stundenplan_ID = Stundenplan_ID;
-		if (Jahr == null) {
-			throw new NullPointerException("Jahr must not be null");
-		}
 		this.Jahr = Jahr;
-		if (KW == null) {
-			throw new NullPointerException("KW must not be null");
-		}
 		this.KW = KW;
-		if (Wochentyp == null) {
-			throw new NullPointerException("Wochentyp must not be null");
-		}
 		this.Wochentyp = Wochentyp;
 	}
 
@@ -109,10 +94,7 @@ public final class DTOStundenplanKalenderwochenZuordnung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanKalenderwochenZuordnung other = (DTOStundenplanKalenderwochenZuordnung) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -121,7 +103,7 @@ public final class DTOStundenplanKalenderwochenZuordnung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

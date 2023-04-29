@@ -45,13 +45,13 @@ public final class DTOErzieherDatenschutz {
 	@Id
 	@Column(name = "ErzieherID")
 	@JsonProperty
-	public Long ErzieherID;
+	public long ErzieherID;
 
 	/** DatenschutzID des Eintrags */
 	@Id
 	@Column(name = "DatenschutzID")
 	@JsonProperty
-	public Long DatenschutzID;
+	public long DatenschutzID;
 
 	/** Status des Datenschutz-Eintrags (true/false) */
 	@Column(name = "Status")
@@ -74,18 +74,9 @@ public final class DTOErzieherDatenschutz {
 	 * @param DatenschutzID   der Wert für das Attribut DatenschutzID
 	 * @param Status   der Wert für das Attribut Status
 	 */
-	public DTOErzieherDatenschutz(final Long ErzieherID, final Long DatenschutzID, final Boolean Status) {
-		if (ErzieherID == null) {
-			throw new NullPointerException("ErzieherID must not be null");
-		}
+	public DTOErzieherDatenschutz(final long ErzieherID, final long DatenschutzID, final Boolean Status) {
 		this.ErzieherID = ErzieherID;
-		if (DatenschutzID == null) {
-			throw new NullPointerException("DatenschutzID must not be null");
-		}
 		this.DatenschutzID = DatenschutzID;
-		if (Status == null) {
-			throw new NullPointerException("Status must not be null");
-		}
 		this.Status = Status;
 	}
 
@@ -99,16 +90,10 @@ public final class DTOErzieherDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOErzieherDatenschutz other = (DTOErzieherDatenschutz) obj;
-		if (ErzieherID == null) {
-			if (other.ErzieherID != null)
-				return false;
-		} else if (!ErzieherID.equals(other.ErzieherID))
+		if (ErzieherID != other.ErzieherID)
 			return false;
 
-		if (DatenschutzID == null) {
-			if (other.DatenschutzID != null)
-				return false;
-		} else if (!DatenschutzID.equals(other.DatenschutzID))
+		if (DatenschutzID != other.DatenschutzID)
 			return false;
 		return true;
 	}
@@ -117,9 +102,9 @@ public final class DTOErzieherDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ErzieherID == null) ? 0 : ErzieherID.hashCode());
+		result = prime * result + Long.hashCode(ErzieherID);
 
-		result = prime * result + ((DatenschutzID == null) ? 0 : DatenschutzID.hashCode());
+		result = prime * result + Long.hashCode(DatenschutzID);
 		return result;
 	}
 

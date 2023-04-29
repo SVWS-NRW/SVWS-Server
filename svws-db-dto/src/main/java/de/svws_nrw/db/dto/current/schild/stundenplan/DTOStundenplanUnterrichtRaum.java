@@ -35,17 +35,17 @@ public final class DTOStundenplanUnterrichtRaum {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Unterricht-Eintrages im Stundenplan */
 	@Column(name = "Unterricht_ID")
 	@JsonProperty
-	public Long Unterricht_ID;
+	public long Unterricht_ID;
 
 	/** Die ID des zugewiesenen Raumes. Sollten ggf. mehrere Räume zugwiesen werden, so müssen für eine Unterricht-ID mehrere Datensätze vorliegen */
 	@Column(name = "Raum_ID")
 	@JsonProperty
-	public Long Raum_ID;
+	public long Raum_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanUnterrichtRaum ohne eine Initialisierung der Attribute.
@@ -60,18 +60,9 @@ public final class DTOStundenplanUnterrichtRaum {
 	 * @param Unterricht_ID   der Wert für das Attribut Unterricht_ID
 	 * @param Raum_ID   der Wert für das Attribut Raum_ID
 	 */
-	public DTOStundenplanUnterrichtRaum(final Long ID, final Long Unterricht_ID, final Long Raum_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanUnterrichtRaum(final long ID, final long Unterricht_ID, final long Raum_ID) {
 		this.ID = ID;
-		if (Unterricht_ID == null) {
-			throw new NullPointerException("Unterricht_ID must not be null");
-		}
 		this.Unterricht_ID = Unterricht_ID;
-		if (Raum_ID == null) {
-			throw new NullPointerException("Raum_ID must not be null");
-		}
 		this.Raum_ID = Raum_ID;
 	}
 
@@ -85,10 +76,7 @@ public final class DTOStundenplanUnterrichtRaum {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanUnterrichtRaum other = (DTOStundenplanUnterrichtRaum) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -97,7 +85,7 @@ public final class DTOStundenplanUnterrichtRaum {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

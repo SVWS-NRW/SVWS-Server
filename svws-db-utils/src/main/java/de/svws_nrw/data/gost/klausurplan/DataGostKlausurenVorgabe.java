@@ -350,7 +350,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		if (vorgabenVorlage == null)
 			throw new NullPointerException();
-		if (vorgabenVorlage.size() > 0) {
+		if (!vorgabenVorlage.isEmpty()) {
 			final ArrayList<DTOGostKlausurenVorgaben> gostVorgaben = new ArrayList<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
@@ -358,7 +358,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
 				boolean exists = false;
 				for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
-					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal.equals(v.Quartal) && vorgabe.Fach_ID.equals(v.Fach_ID) && vorgabe.Kursart.equals(v.Kursart)) {
+					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal == v.Quartal && vorgabe.Fach_ID == v.Fach_ID && vorgabe.Kursart.equals(v.Kursart)) {
 						exists = true;
 						break;
 					}

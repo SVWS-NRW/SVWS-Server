@@ -67,7 +67,7 @@ public final class DTOSchuelerBKAbschluss {
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** ID des Schuljahresabschnittes aus der Tabelle Schuljahresabschnitte */
 	@Column(name = "Schuljahresabschnitts_ID")
@@ -174,10 +174,7 @@ public final class DTOSchuelerBKAbschluss {
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerBKAbschluss ohne eine Initialisierung der Attribute.
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
-	public DTOSchuelerBKAbschluss(final Long Schueler_ID) {
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
+	public DTOSchuelerBKAbschluss(final long Schueler_ID) {
 		this.Schueler_ID = Schueler_ID;
 	}
 
@@ -191,10 +188,7 @@ public final class DTOSchuelerBKAbschluss {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerBKAbschluss other = (DTOSchuelerBKAbschluss) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 		return true;
 	}
@@ -203,7 +197,7 @@ public final class DTOSchuelerBKAbschluss {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 		return result;
 	}
 

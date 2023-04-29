@@ -47,7 +47,7 @@ public final class DTOEntlassarten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Bezeichnung des Entlassgrundes */
 	@Column(name = "Bezeichnung")
@@ -87,10 +87,7 @@ public final class DTOEntlassarten {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOEntlassarten(final Long ID, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOEntlassarten(final long ID, final String Bezeichnung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -108,10 +105,7 @@ public final class DTOEntlassarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEntlassarten other = (DTOEntlassarten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -120,7 +114,7 @@ public final class DTOEntlassarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

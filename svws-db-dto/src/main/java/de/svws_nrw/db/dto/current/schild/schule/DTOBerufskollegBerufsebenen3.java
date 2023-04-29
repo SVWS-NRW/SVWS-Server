@@ -39,7 +39,7 @@ public final class DTOBerufskollegBerufsebenen3 {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Kürzel der Berufsebene */
 	@Column(name = "Kuerzel")
@@ -74,10 +74,7 @@ public final class DTOBerufskollegBerufsebenen3 {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOBerufskollegBerufsebenen3(final Long ID, final String Kuerzel, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOBerufskollegBerufsebenen3(final long ID, final String Kuerzel, final String Bezeichnung) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -99,10 +96,7 @@ public final class DTOBerufskollegBerufsebenen3 {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBerufskollegBerufsebenen3 other = (DTOBerufskollegBerufsebenen3) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -111,7 +105,7 @@ public final class DTOBerufskollegBerufsebenen3 {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

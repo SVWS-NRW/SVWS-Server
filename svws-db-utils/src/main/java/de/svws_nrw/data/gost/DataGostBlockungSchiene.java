@@ -166,7 +166,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		for (final DTOGostBlockungSchiene tmp : schienen) {
 		    if (daten.id == tmp.ID) {
 	            conn.transactionRemove(tmp); // Entferne die Schiene
-		    } else if (tmp.Nummer.intValue() > daten.nummer) {
+		    } else if (tmp.Nummer > daten.nummer) {
 		        tmp.Nummer--; // Reduziere die Nummer dieser Schiene aufgrund der entfernten Schiene
 		        conn.transactionPersist(tmp);
 		    }

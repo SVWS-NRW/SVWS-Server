@@ -47,17 +47,17 @@ public final class DTOGostKlausurenKursklausuren {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Klausurvorgaben */
 	@Column(name = "Vorgabe_ID")
 	@JsonProperty
-	public Long Vorgabe_ID;
+	public long Vorgabe_ID;
 
 	/** Kurs_ID der Klausur */
 	@Column(name = "Kurs_ID")
 	@JsonProperty
-	public Long Kurs_ID;
+	public long Kurs_ID;
 
 	/** ID des Klausurtermins */
 	@Column(name = "Termin_ID")
@@ -85,18 +85,9 @@ public final class DTOGostKlausurenKursklausuren {
 	 * @param Vorgabe_ID   der Wert für das Attribut Vorgabe_ID
 	 * @param Kurs_ID   der Wert für das Attribut Kurs_ID
 	 */
-	public DTOGostKlausurenKursklausuren(final Long ID, final Long Vorgabe_ID, final Long Kurs_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenKursklausuren(final long ID, final long Vorgabe_ID, final long Kurs_ID) {
 		this.ID = ID;
-		if (Vorgabe_ID == null) {
-			throw new NullPointerException("Vorgabe_ID must not be null");
-		}
 		this.Vorgabe_ID = Vorgabe_ID;
-		if (Kurs_ID == null) {
-			throw new NullPointerException("Kurs_ID must not be null");
-		}
 		this.Kurs_ID = Kurs_ID;
 	}
 
@@ -110,10 +101,7 @@ public final class DTOGostKlausurenKursklausuren {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenKursklausuren other = (DTOGostKlausurenKursklausuren) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -122,7 +110,7 @@ public final class DTOGostKlausurenKursklausuren {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

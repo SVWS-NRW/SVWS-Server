@@ -13,10 +13,10 @@ public final class DTOGostSchuelerFachbelegungenPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: ID des Schülers in der Schuelertabelle */
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** Gymnasiale Oberstufe - Schülerdaten - Fachwahlen: ID des Faches in der Fächertabelle */
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostSchuelerFachbelegungenPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostSchuelerFachbelegungenPK implements Serializable {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOGostSchuelerFachbelegungenPK(final Long Schueler_ID, final Long Fach_ID) {
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
+	public DTOGostSchuelerFachbelegungenPK(final long Schueler_ID, final long Fach_ID) {
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostSchuelerFachbelegungenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostSchuelerFachbelegungenPK other = (DTOGostSchuelerFachbelegungenPK) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostSchuelerFachbelegungenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 		return result;
 	}
 }

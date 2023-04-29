@@ -50,13 +50,13 @@ public final class DTOSchuelerDatenschutz {
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** Fremdschlüssel auf den Katalog der DSGVO-Merkmale */
 	@Id
 	@Column(name = "Datenschutz_ID")
 	@JsonProperty
-	public Long Datenschutz_ID;
+	public long Datenschutz_ID;
 
 	/** Gibt an ob eine Zustimmung zum Merkmal vorliegt. */
 	@Column(name = "Status")
@@ -88,22 +88,13 @@ public final class DTOSchuelerDatenschutz {
 	 * @param Status   der Wert für das Attribut Status
 	 * @param Abgefragt   der Wert für das Attribut Abgefragt
 	 */
-	public DTOSchuelerDatenschutz(final Long Schueler_ID, final Long Datenschutz_ID, final Boolean Status, final Boolean Abgefragt) {
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
+	public DTOSchuelerDatenschutz(final long Schueler_ID, final long Datenschutz_ID, final Boolean Status, final Boolean Abgefragt) {
 		this.Schueler_ID = Schueler_ID;
-		if (Datenschutz_ID == null) {
-			throw new NullPointerException("Datenschutz_ID must not be null");
-		}
 		this.Datenschutz_ID = Datenschutz_ID;
 		if (Status == null) {
 			throw new NullPointerException("Status must not be null");
 		}
 		this.Status = Status;
-		if (Abgefragt == null) {
-			throw new NullPointerException("Abgefragt must not be null");
-		}
 		this.Abgefragt = Abgefragt;
 	}
 
@@ -117,16 +108,10 @@ public final class DTOSchuelerDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerDatenschutz other = (DTOSchuelerDatenschutz) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 
-		if (Datenschutz_ID == null) {
-			if (other.Datenschutz_ID != null)
-				return false;
-		} else if (!Datenschutz_ID.equals(other.Datenschutz_ID))
+		if (Datenschutz_ID != other.Datenschutz_ID)
 			return false;
 		return true;
 	}
@@ -135,9 +120,9 @@ public final class DTOSchuelerDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 
-		result = prime * result + ((Datenschutz_ID == null) ? 0 : Datenschutz_ID.hashCode());
+		result = prime * result + Long.hashCode(Datenschutz_ID);
 		return result;
 	}
 

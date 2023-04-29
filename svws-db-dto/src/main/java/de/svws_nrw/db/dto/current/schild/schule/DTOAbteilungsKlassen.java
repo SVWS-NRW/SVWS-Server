@@ -45,17 +45,17 @@ public final class DTOAbteilungsKlassen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Abteilung in der übergeordneten Tabelle */
 	@Column(name = "Abteilung_ID")
 	@JsonProperty
-	public Long Abteilung_ID;
+	public long Abteilung_ID;
 
 	/** ID der Klasse die zur Abteilung gehört */
 	@Column(name = "Klassen_ID")
 	@JsonProperty
-	public Long Klassen_ID;
+	public long Klassen_ID;
 
 	/** steuert die Sichtbarkeit der Klasse zur Abteilung */
 	@Column(name = "Sichtbar")
@@ -78,18 +78,9 @@ public final class DTOAbteilungsKlassen {
 	 * @param Abteilung_ID   der Wert für das Attribut Abteilung_ID
 	 * @param Klassen_ID   der Wert für das Attribut Klassen_ID
 	 */
-	public DTOAbteilungsKlassen(final Long ID, final Long Abteilung_ID, final Long Klassen_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOAbteilungsKlassen(final long ID, final long Abteilung_ID, final long Klassen_ID) {
 		this.ID = ID;
-		if (Abteilung_ID == null) {
-			throw new NullPointerException("Abteilung_ID must not be null");
-		}
 		this.Abteilung_ID = Abteilung_ID;
-		if (Klassen_ID == null) {
-			throw new NullPointerException("Klassen_ID must not be null");
-		}
 		this.Klassen_ID = Klassen_ID;
 	}
 
@@ -103,10 +94,7 @@ public final class DTOAbteilungsKlassen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAbteilungsKlassen other = (DTOAbteilungsKlassen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -115,7 +103,7 @@ public final class DTOAbteilungsKlassen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

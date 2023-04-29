@@ -13,10 +13,10 @@ public final class DTOGostJahrgangFaecherPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Schuljahr, in welchem der Jahrgang das Abitur macht */
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** ID des Faches in der Fächertabelle */
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostJahrgangFaecherPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostJahrgangFaecherPK implements Serializable {
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOGostJahrgangFaecherPK(final Integer Abi_Jahrgang, final Long Fach_ID) {
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
+	public DTOGostJahrgangFaecherPK(final int Abi_Jahrgang, final long Fach_ID) {
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostJahrgangFaecherPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangFaecherPK other = (DTOGostJahrgangFaecherPK) obj;
-		if (Abi_Jahrgang == null) {
-			if (other.Abi_Jahrgang != null)
-				return false;
-		} else if (!Abi_Jahrgang.equals(other.Abi_Jahrgang))
+		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostJahrgangFaecherPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Abi_Jahrgang == null) ? 0 : Abi_Jahrgang.hashCode());
+		result = prime * result + Integer.hashCode(Abi_Jahrgang);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 		return result;
 	}
 }

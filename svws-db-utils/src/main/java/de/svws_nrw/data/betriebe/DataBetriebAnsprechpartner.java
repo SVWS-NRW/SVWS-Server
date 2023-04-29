@@ -99,14 +99,12 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 						}
 						case "betrieb_id" -> {
 							final Long betrieb_id = JSONMapper.convertToLong(value, true);
-							if (betrieb_id == null) {
-								ansprechpartner.Adresse_ID = null;
-							} else {
-								final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
-								if (betrieb == null)
-									throw OperationError.NOT_FOUND.exception();
-								ansprechpartner.Adresse_ID = betrieb.ID;
-							}
+							if (betrieb_id == null)
+								throw OperationError.BAD_REQUEST.exception();
+							final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+							if (betrieb == null)
+								throw OperationError.NOT_FOUND.exception();
+							ansprechpartner.Adresse_ID = betrieb.ID;
 						}
 						case "titel" -> ansprechpartner.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Titel.datenlaenge());
 						case "anrede" -> ansprechpartner.Anrede = JSONMapper.convertToString(value, true, true, Schema.tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge());

@@ -96,7 +96,7 @@ public final class DBUtilsGost {
 	 * @return das voraussichtliche Jahr des Abiturs
 	 */
 	public static Integer getAbiturjahr(final Schulform schulform, final DTOSchuelerLernabschnittsdaten lernabschnitt, final int schuljahr) {
-		if ((lernabschnitt == null) || (lernabschnitt.Schuljahresabschnitts_ID == null))
+		if (lernabschnitt == null)
 			return null;
 		return GostAbiturjahrUtils.getGostAbiturjahr(schulform, lernabschnitt.Schulgliederung, schuljahr, lernabschnitt.ASDJahrgang);
 	}
@@ -132,7 +132,7 @@ public final class DBUtilsGost {
 				.sorted((l1, l2) -> {
 					final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 					final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
-					return (!a1.Jahr.equals(a2.Jahr)) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
+					return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 				})
 				.toList();
 
@@ -264,7 +264,7 @@ public final class DBUtilsGost {
 					.sorted((l1, l2) -> {
 						final DTOSchuljahresabschnitte a1 = schuljahresabschnitte.get(l1.Schuljahresabschnitts_ID);
 						final DTOSchuljahresabschnitte a2 = schuljahresabschnitte.get(l2.Schuljahresabschnitts_ID);
-						return (!a1.Jahr.equals(a2.Jahr)) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
+						return (a1.Jahr != a2.Jahr) ? Integer.compare(a1.Jahr, a2.Jahr) : Integer.compare(a1.Abschnitt, a2.Abschnitt);
 					})
 					.toList();
 

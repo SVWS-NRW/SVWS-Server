@@ -37,12 +37,12 @@ public final class DTOStundenplanAufsichtsbereich {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Stundenplans, dem dieser Aufsichtsbereicheintrag zugeordnet wird */
 	@Column(name = "Stundenplan_ID")
 	@JsonProperty
-	public Long Stundenplan_ID;
+	public long Stundenplan_ID;
 
 	/** Die Kurzbezeichnung des Aufsichtsbereichs */
 	@Column(name = "Kuerzel")
@@ -68,14 +68,8 @@ public final class DTOStundenplanAufsichtsbereich {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 */
-	public DTOStundenplanAufsichtsbereich(final Long ID, final Long Stundenplan_ID, final String Kuerzel, final String Beschreibung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanAufsichtsbereich(final long ID, final long Stundenplan_ID, final String Kuerzel, final String Beschreibung) {
 		this.ID = ID;
-		if (Stundenplan_ID == null) {
-			throw new NullPointerException("Stundenplan_ID must not be null");
-		}
 		this.Stundenplan_ID = Stundenplan_ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -97,10 +91,7 @@ public final class DTOStundenplanAufsichtsbereich {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanAufsichtsbereich other = (DTOStundenplanAufsichtsbereich) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -109,7 +100,7 @@ public final class DTOStundenplanAufsichtsbereich {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

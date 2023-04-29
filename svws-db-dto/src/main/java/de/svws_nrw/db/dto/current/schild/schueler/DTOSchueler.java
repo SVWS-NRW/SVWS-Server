@@ -311,7 +311,7 @@ public final class DTOSchueler {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID des Schuljahresabschnittes aus der Tabelle Schuljahresabschnitte */
 	@Column(name = "Schuljahresabschnitts_ID")
@@ -1082,18 +1082,12 @@ public final class DTOSchueler {
 	 * @param GU_ID   der Wert für das Attribut GU_ID
 	 * @param NeuZugewandert   der Wert für das Attribut NeuZugewandert
 	 */
-	public DTOSchueler(final Long ID, final String GU_ID, final Boolean NeuZugewandert) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchueler(final long ID, final String GU_ID, final Boolean NeuZugewandert) {
 		this.ID = ID;
 		if (GU_ID == null) {
 			throw new NullPointerException("GU_ID must not be null");
 		}
 		this.GU_ID = GU_ID;
-		if (NeuZugewandert == null) {
-			throw new NullPointerException("NeuZugewandert must not be null");
-		}
 		this.NeuZugewandert = NeuZugewandert;
 	}
 
@@ -1107,10 +1101,7 @@ public final class DTOSchueler {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchueler other = (DTOSchueler) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -1119,7 +1110,7 @@ public final class DTOSchueler {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

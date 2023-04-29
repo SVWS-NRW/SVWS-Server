@@ -37,7 +37,7 @@ public final class DTOFaecherKatalogSchulformen {
 	@Id
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** das Kürzel der Schulform */
 	@Id
@@ -64,10 +64,7 @@ public final class DTOFaecherKatalogSchulformen {
 	 * @param Schulform_Kuerzel   der Wert für das Attribut Schulform_Kuerzel
 	 * @param Schulgliederung_Kuerzel   der Wert für das Attribut Schulgliederung_Kuerzel
 	 */
-	public DTOFaecherKatalogSchulformen(final Long Fach_ID, final String Schulform_Kuerzel, final String Schulgliederung_Kuerzel) {
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
+	public DTOFaecherKatalogSchulformen(final long Fach_ID, final String Schulform_Kuerzel, final String Schulgliederung_Kuerzel) {
 		this.Fach_ID = Fach_ID;
 		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
@@ -89,10 +86,7 @@ public final class DTOFaecherKatalogSchulformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFaecherKatalogSchulformen other = (DTOFaecherKatalogSchulformen) obj;
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 
 		if (Schulform_Kuerzel == null) {
@@ -113,7 +107,7 @@ public final class DTOFaecherKatalogSchulformen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 
 		result = prime * result + ((Schulform_Kuerzel == null) ? 0 : Schulform_Kuerzel.hashCode());
 

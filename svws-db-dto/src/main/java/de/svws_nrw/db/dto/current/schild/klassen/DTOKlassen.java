@@ -80,12 +80,12 @@ public final class DTOKlassen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID des Schuljahresabschnittes aus der Tabelle Schuljahresabschnitte */
 	@Column(name = "Schuljahresabschnitts_ID")
 	@JsonProperty
-	public Long Schuljahresabschnitts_ID;
+	public long Schuljahresabschnitts_ID;
 
 	/** Bezeichnender Text für die Klasse */
 	@Column(name = "Bezeichnung")
@@ -205,14 +205,8 @@ public final class DTOKlassen {
 	 * @param Schuljahresabschnitts_ID   der Wert für das Attribut Schuljahresabschnitts_ID
 	 * @param Klasse   der Wert für das Attribut Klasse
 	 */
-	public DTOKlassen(final Long ID, final Long Schuljahresabschnitts_ID, final String Klasse) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKlassen(final long ID, final long Schuljahresabschnitts_ID, final String Klasse) {
 		this.ID = ID;
-		if (Schuljahresabschnitts_ID == null) {
-			throw new NullPointerException("Schuljahresabschnitts_ID must not be null");
-		}
 		this.Schuljahresabschnitts_ID = Schuljahresabschnitts_ID;
 		if (Klasse == null) {
 			throw new NullPointerException("Klasse must not be null");
@@ -230,10 +224,7 @@ public final class DTOKlassen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKlassen other = (DTOKlassen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -242,7 +233,7 @@ public final class DTOKlassen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

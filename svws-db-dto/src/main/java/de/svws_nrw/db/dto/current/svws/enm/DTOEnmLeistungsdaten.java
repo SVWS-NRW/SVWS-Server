@@ -41,7 +41,7 @@ public final class DTOEnmLeistungsdaten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Zeitstempel der letzten Änderung an der Note. */
 	@Column(name = "tsNotenKrz")
@@ -84,10 +84,7 @@ public final class DTOEnmLeistungsdaten {
 	 * @param tsLernentw   der Wert für das Attribut tsLernentw
 	 * @param tsWarnung   der Wert für das Attribut tsWarnung
 	 */
-	public DTOEnmLeistungsdaten(final Long ID, final String tsNotenKrz, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOEnmLeistungsdaten(final long ID, final String tsNotenKrz, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
 		this.ID = ID;
 		if (tsNotenKrz == null) {
 			throw new NullPointerException("tsNotenKrz must not be null");
@@ -121,10 +118,7 @@ public final class DTOEnmLeistungsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEnmLeistungsdaten other = (DTOEnmLeistungsdaten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -133,7 +127,7 @@ public final class DTOEnmLeistungsdaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

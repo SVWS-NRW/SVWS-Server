@@ -37,7 +37,7 @@ public final class DTOBerufskollegFachklassenKeys {
 	@Id
 	@Column(name = "FachklassenIndex")
 	@JsonProperty
-	public Integer FachklassenIndex;
+	public int FachklassenIndex;
 
 	/** Der erste Teil des Fachklassenschlüssels (FKS, dreistellig)  */
 	@Id
@@ -64,10 +64,7 @@ public final class DTOBerufskollegFachklassenKeys {
 	 * @param Schluessel   der Wert für das Attribut Schluessel
 	 * @param Schluessel2   der Wert für das Attribut Schluessel2
 	 */
-	public DTOBerufskollegFachklassenKeys(final Integer FachklassenIndex, final String Schluessel, final String Schluessel2) {
-		if (FachklassenIndex == null) {
-			throw new NullPointerException("FachklassenIndex must not be null");
-		}
+	public DTOBerufskollegFachklassenKeys(final int FachklassenIndex, final String Schluessel, final String Schluessel2) {
 		this.FachklassenIndex = FachklassenIndex;
 		if (Schluessel == null) {
 			throw new NullPointerException("Schluessel must not be null");
@@ -89,10 +86,7 @@ public final class DTOBerufskollegFachklassenKeys {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBerufskollegFachklassenKeys other = (DTOBerufskollegFachklassenKeys) obj;
-		if (FachklassenIndex == null) {
-			if (other.FachklassenIndex != null)
-				return false;
-		} else if (!FachklassenIndex.equals(other.FachklassenIndex))
+		if (FachklassenIndex != other.FachklassenIndex)
 			return false;
 
 		if (Schluessel == null) {
@@ -113,7 +107,7 @@ public final class DTOBerufskollegFachklassenKeys {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((FachklassenIndex == null) ? 0 : FachklassenIndex.hashCode());
+		result = prime * result + Integer.hashCode(FachklassenIndex);
 
 		result = prime * result + ((Schluessel == null) ? 0 : Schluessel.hashCode());
 

@@ -13,10 +13,10 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** LernabschnittsID  der Zuweisung (E G Kurse GE und PS SK) */
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** FachID der Zuweisung */
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerZuweisungPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOSchuelerZuweisungPK(final Long Abschnitt_ID, final Long Fach_ID) {
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
+	public DTOSchuelerZuweisungPK(final long Abschnitt_ID, final long Fach_ID) {
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerZuweisungPK other = (DTOSchuelerZuweisungPK) obj;
-		if (Abschnitt_ID == null) {
-			if (other.Abschnitt_ID != null)
-				return false;
-		} else if (!Abschnitt_ID.equals(other.Abschnitt_ID))
+		if (Abschnitt_ID != other.Abschnitt_ID)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOSchuelerZuweisungPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Abschnitt_ID == null) ? 0 : Abschnitt_ID.hashCode());
+		result = prime * result + Long.hashCode(Abschnitt_ID);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 		return result;
 	}
 }

@@ -63,7 +63,7 @@ public final class DTOFachgruppen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Fachbereich (Nr) der Fachgruppe aus Lupo */
 	@Column(name = "Fachbereich")
@@ -141,18 +141,12 @@ public final class DTOFachgruppen {
 	 * @param FG_Bezeichnung   der Wert für das Attribut FG_Bezeichnung
 	 * @param FuerZeugnis   der Wert für das Attribut FuerZeugnis
 	 */
-	public DTOFachgruppen(final Long ID, final String FG_Bezeichnung, final Boolean FuerZeugnis) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOFachgruppen(final long ID, final String FG_Bezeichnung, final Boolean FuerZeugnis) {
 		this.ID = ID;
 		if (FG_Bezeichnung == null) {
 			throw new NullPointerException("FG_Bezeichnung must not be null");
 		}
 		this.FG_Bezeichnung = FG_Bezeichnung;
-		if (FuerZeugnis == null) {
-			throw new NullPointerException("FuerZeugnis must not be null");
-		}
 		this.FuerZeugnis = FuerZeugnis;
 	}
 
@@ -166,10 +160,7 @@ public final class DTOFachgruppen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFachgruppen other = (DTOFachgruppen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -178,7 +169,7 @@ public final class DTOFachgruppen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -69,7 +69,7 @@ public final class DTOEigeneImporteTabellen {
 	@Id
 	@Column(name = "Import_ID")
 	@JsonProperty
-	public Integer Import_ID;
+	public int Import_ID;
 
 	/** externen Textimport Tabellen */
 	@Id
@@ -156,10 +156,7 @@ public final class DTOEigeneImporteTabellen {
 	 * Erstellt ein neues Objekt der Klasse DTOEigeneImporteTabellen ohne eine Initialisierung der Attribute.
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 */
-	public DTOEigeneImporteTabellen(final Integer Import_ID) {
-		if (Import_ID == null) {
-			throw new NullPointerException("Import_ID must not be null");
-		}
+	public DTOEigeneImporteTabellen(final int Import_ID) {
 		this.Import_ID = Import_ID;
 	}
 
@@ -173,10 +170,7 @@ public final class DTOEigeneImporteTabellen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneImporteTabellen other = (DTOEigeneImporteTabellen) obj;
-		if (Import_ID == null) {
-			if (other.Import_ID != null)
-				return false;
-		} else if (!Import_ID.equals(other.Import_ID))
+		if (Import_ID != other.Import_ID)
 			return false;
 
 		if (TableName == null) {
@@ -191,7 +185,7 @@ public final class DTOEigeneImporteTabellen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Import_ID == null) ? 0 : Import_ID.hashCode());
+		result = prime * result + Integer.hashCode(Import_ID);
 
 		result = prime * result + ((TableName == null) ? 0 : TableName.hashCode());
 		return result;

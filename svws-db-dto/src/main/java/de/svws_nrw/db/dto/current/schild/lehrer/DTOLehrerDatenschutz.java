@@ -47,13 +47,13 @@ public final class DTOLehrerDatenschutz {
 	@Id
 	@Column(name = "LehrerID")
 	@JsonProperty
-	public Long LehrerID;
+	public long LehrerID;
 
 	/** DatenschutzID des Eintrags */
 	@Id
 	@Column(name = "DatenschutzID")
 	@JsonProperty
-	public Long DatenschutzID;
+	public long DatenschutzID;
 
 	/** Status des Datenschutz-Eintrags (true/false) */
 	@Column(name = "Status")
@@ -85,22 +85,10 @@ public final class DTOLehrerDatenschutz {
 	 * @param Status   der Wert für das Attribut Status
 	 * @param Abgefragt   der Wert für das Attribut Abgefragt
 	 */
-	public DTOLehrerDatenschutz(final Long LehrerID, final Long DatenschutzID, final Boolean Status, final Boolean Abgefragt) {
-		if (LehrerID == null) {
-			throw new NullPointerException("LehrerID must not be null");
-		}
+	public DTOLehrerDatenschutz(final long LehrerID, final long DatenschutzID, final Boolean Status, final Boolean Abgefragt) {
 		this.LehrerID = LehrerID;
-		if (DatenschutzID == null) {
-			throw new NullPointerException("DatenschutzID must not be null");
-		}
 		this.DatenschutzID = DatenschutzID;
-		if (Status == null) {
-			throw new NullPointerException("Status must not be null");
-		}
 		this.Status = Status;
-		if (Abgefragt == null) {
-			throw new NullPointerException("Abgefragt must not be null");
-		}
 		this.Abgefragt = Abgefragt;
 	}
 
@@ -114,16 +102,10 @@ public final class DTOLehrerDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerDatenschutz other = (DTOLehrerDatenschutz) obj;
-		if (LehrerID == null) {
-			if (other.LehrerID != null)
-				return false;
-		} else if (!LehrerID.equals(other.LehrerID))
+		if (LehrerID != other.LehrerID)
 			return false;
 
-		if (DatenschutzID == null) {
-			if (other.DatenschutzID != null)
-				return false;
-		} else if (!DatenschutzID.equals(other.DatenschutzID))
+		if (DatenschutzID != other.DatenschutzID)
 			return false;
 		return true;
 	}
@@ -132,9 +114,9 @@ public final class DTOLehrerDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((LehrerID == null) ? 0 : LehrerID.hashCode());
+		result = prime * result + Long.hashCode(LehrerID);
 
-		result = prime * result + ((DatenschutzID == null) ? 0 : DatenschutzID.hashCode());
+		result = prime * result + Long.hashCode(DatenschutzID);
 		return result;
 	}
 

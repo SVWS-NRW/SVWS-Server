@@ -137,7 +137,7 @@ public final class DBSchemaStatus {
 			dto = conn.queryNative(sql, DTODBVersion.class).stream().findFirst().orElse(null);
 		}
 		Long revision = null;
-		if ((dto != null) && (dto.Revision != null) && (dto.Revision >= 0))
+		if ((dto != null) && (dto.Revision >= 0))
 			revision = dto.Revision;
 		final boolean isTainted = (dto == null) || dto.IsTainted;
 		return new DBSchemaVersion(revision, isTainted);

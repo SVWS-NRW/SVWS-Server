@@ -39,18 +39,18 @@ public final class DTOGostKlausurenNtaZeiten {
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** ID der Klausurvorgaben */
 	@Id
 	@Column(name = "Vorgabe_ID")
 	@JsonProperty
-	public Long Vorgabe_ID;
+	public long Vorgabe_ID;
 
 	/** Das Dauer der Zeitzugabe in Minuten */
 	@Column(name = "Zeitzugabe")
 	@JsonProperty
-	public Integer Zeitzugabe;
+	public int Zeitzugabe;
 
 	/** Text für Ergänzungen/Bemerkungen zum Nachteilsausgleich */
 	@Column(name = "Bemerkungen")
@@ -70,18 +70,9 @@ public final class DTOGostKlausurenNtaZeiten {
 	 * @param Vorgabe_ID   der Wert für das Attribut Vorgabe_ID
 	 * @param Zeitzugabe   der Wert für das Attribut Zeitzugabe
 	 */
-	public DTOGostKlausurenNtaZeiten(final Long Schueler_ID, final Long Vorgabe_ID, final Integer Zeitzugabe) {
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
+	public DTOGostKlausurenNtaZeiten(final long Schueler_ID, final long Vorgabe_ID, final int Zeitzugabe) {
 		this.Schueler_ID = Schueler_ID;
-		if (Vorgabe_ID == null) {
-			throw new NullPointerException("Vorgabe_ID must not be null");
-		}
 		this.Vorgabe_ID = Vorgabe_ID;
-		if (Zeitzugabe == null) {
-			throw new NullPointerException("Zeitzugabe must not be null");
-		}
 		this.Zeitzugabe = Zeitzugabe;
 	}
 
@@ -95,16 +86,10 @@ public final class DTOGostKlausurenNtaZeiten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenNtaZeiten other = (DTOGostKlausurenNtaZeiten) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 
-		if (Vorgabe_ID == null) {
-			if (other.Vorgabe_ID != null)
-				return false;
-		} else if (!Vorgabe_ID.equals(other.Vorgabe_ID))
+		if (Vorgabe_ID != other.Vorgabe_ID)
 			return false;
 		return true;
 	}
@@ -113,9 +98,9 @@ public final class DTOGostKlausurenNtaZeiten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 
-		result = prime * result + ((Vorgabe_ID == null) ? 0 : Vorgabe_ID.hashCode());
+		result = prime * result + Long.hashCode(Vorgabe_ID);
 		return result;
 	}
 

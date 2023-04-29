@@ -35,13 +35,13 @@ public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 	@Id
 	@Column(name = "Schuelerklausur_ID")
 	@JsonProperty
-	public Long Schuelerklausur_ID;
+	public long Schuelerklausur_ID;
 
 	/** ID der Klausurraumstunde */
 	@Id
 	@Column(name = "KlausurRaumStunde_ID")
 	@JsonProperty
-	public Long KlausurRaumStunde_ID;
+	public long KlausurRaumStunde_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausurenRaeumeStunden ohne eine Initialisierung der Attribute.
@@ -55,14 +55,8 @@ public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 	 * @param Schuelerklausur_ID   der Wert für das Attribut Schuelerklausur_ID
 	 * @param KlausurRaumStunde_ID   der Wert für das Attribut KlausurRaumStunde_ID
 	 */
-	public DTOGostKlausurenSchuelerklausurenRaeumeStunden(final Long Schuelerklausur_ID, final Long KlausurRaumStunde_ID) {
-		if (Schuelerklausur_ID == null) {
-			throw new NullPointerException("Schuelerklausur_ID must not be null");
-		}
+	public DTOGostKlausurenSchuelerklausurenRaeumeStunden(final long Schuelerklausur_ID, final long KlausurRaumStunde_ID) {
 		this.Schuelerklausur_ID = Schuelerklausur_ID;
-		if (KlausurRaumStunde_ID == null) {
-			throw new NullPointerException("KlausurRaumStunde_ID must not be null");
-		}
 		this.KlausurRaumStunde_ID = KlausurRaumStunde_ID;
 	}
 
@@ -76,16 +70,10 @@ public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenSchuelerklausurenRaeumeStunden other = (DTOGostKlausurenSchuelerklausurenRaeumeStunden) obj;
-		if (Schuelerklausur_ID == null) {
-			if (other.Schuelerklausur_ID != null)
-				return false;
-		} else if (!Schuelerklausur_ID.equals(other.Schuelerklausur_ID))
+		if (Schuelerklausur_ID != other.Schuelerklausur_ID)
 			return false;
 
-		if (KlausurRaumStunde_ID == null) {
-			if (other.KlausurRaumStunde_ID != null)
-				return false;
-		} else if (!KlausurRaumStunde_ID.equals(other.KlausurRaumStunde_ID))
+		if (KlausurRaumStunde_ID != other.KlausurRaumStunde_ID)
 			return false;
 		return true;
 	}
@@ -94,9 +82,9 @@ public final class DTOGostKlausurenSchuelerklausurenRaeumeStunden {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schuelerklausur_ID == null) ? 0 : Schuelerklausur_ID.hashCode());
+		result = prime * result + Long.hashCode(Schuelerklausur_ID);
 
-		result = prime * result + ((KlausurRaumStunde_ID == null) ? 0 : KlausurRaumStunde_ID.hashCode());
+		result = prime * result + Long.hashCode(KlausurRaumStunde_ID);
 		return result;
 	}
 

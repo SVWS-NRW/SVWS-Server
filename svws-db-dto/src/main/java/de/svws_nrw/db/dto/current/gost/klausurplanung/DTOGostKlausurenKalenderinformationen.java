@@ -59,7 +59,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Text für Bezeichnung der Kalenderinformation */
 	@Column(name = "Bezeichnung")
@@ -123,14 +123,8 @@ public final class DTOGostKlausurenKalenderinformationen {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param IstSperrtermin   der Wert für das Attribut IstSperrtermin
 	 */
-	public DTOGostKlausurenKalenderinformationen(final Long ID, final Boolean IstSperrtermin) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenKalenderinformationen(final long ID, final Boolean IstSperrtermin) {
 		this.ID = ID;
-		if (IstSperrtermin == null) {
-			throw new NullPointerException("IstSperrtermin must not be null");
-		}
 		this.IstSperrtermin = IstSperrtermin;
 	}
 
@@ -144,10 +138,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenKalenderinformationen other = (DTOGostKlausurenKalenderinformationen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -156,7 +147,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

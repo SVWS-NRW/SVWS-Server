@@ -53,7 +53,7 @@ public final class DTOKursarten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Bezeichnung des Kursarteneintrags IT.NRW */
 	@Column(name = "Bezeichnung")
@@ -107,10 +107,7 @@ public final class DTOKursarten {
 	 * Erstellt ein neues Objekt der Klasse DTOKursarten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOKursarten(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKursarten(final long ID) {
 		this.ID = ID;
 	}
 
@@ -124,10 +121,7 @@ public final class DTOKursarten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKursarten other = (DTOKursarten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -136,7 +130,7 @@ public final class DTOKursarten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

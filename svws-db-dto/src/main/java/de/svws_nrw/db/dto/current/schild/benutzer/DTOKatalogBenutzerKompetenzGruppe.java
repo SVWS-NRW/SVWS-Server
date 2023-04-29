@@ -37,7 +37,7 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 	@Id
 	@Column(name = "KG_ID")
 	@JsonProperty
-	public Long KG_ID;
+	public long KG_ID;
 
 	/** Bezeichnung der Kompetenzgruppe */
 	@Column(name = "KG_Bezeichnung")
@@ -47,12 +47,12 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 	/** Spalte in der Benutzerverwaltung für die Kompetenzgruppe */
 	@Column(name = "KG_Spalte")
 	@JsonProperty
-	public Long KG_Spalte;
+	public long KG_Spalte;
 
 	/** Zeile in der Benutzerverwaltung für die Kompetenzgruppe */
 	@Column(name = "KG_Zeile")
 	@JsonProperty
-	public Long KG_Zeile;
+	public long KG_Zeile;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKatalogBenutzerKompetenzGruppe ohne eine Initialisierung der Attribute.
@@ -68,22 +68,13 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 	 * @param KG_Spalte   der Wert für das Attribut KG_Spalte
 	 * @param KG_Zeile   der Wert für das Attribut KG_Zeile
 	 */
-	public DTOKatalogBenutzerKompetenzGruppe(final Long KG_ID, final String KG_Bezeichnung, final Long KG_Spalte, final Long KG_Zeile) {
-		if (KG_ID == null) {
-			throw new NullPointerException("KG_ID must not be null");
-		}
+	public DTOKatalogBenutzerKompetenzGruppe(final long KG_ID, final String KG_Bezeichnung, final long KG_Spalte, final long KG_Zeile) {
 		this.KG_ID = KG_ID;
 		if (KG_Bezeichnung == null) {
 			throw new NullPointerException("KG_Bezeichnung must not be null");
 		}
 		this.KG_Bezeichnung = KG_Bezeichnung;
-		if (KG_Spalte == null) {
-			throw new NullPointerException("KG_Spalte must not be null");
-		}
 		this.KG_Spalte = KG_Spalte;
-		if (KG_Zeile == null) {
-			throw new NullPointerException("KG_Zeile must not be null");
-		}
 		this.KG_Zeile = KG_Zeile;
 	}
 
@@ -97,10 +88,7 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogBenutzerKompetenzGruppe other = (DTOKatalogBenutzerKompetenzGruppe) obj;
-		if (KG_ID == null) {
-			if (other.KG_ID != null)
-				return false;
-		} else if (!KG_ID.equals(other.KG_ID))
+		if (KG_ID != other.KG_ID)
 			return false;
 		return true;
 	}
@@ -109,7 +97,7 @@ public final class DTOKatalogBenutzerKompetenzGruppe {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((KG_ID == null) ? 0 : KG_ID.hashCode());
+		result = prime * result + Long.hashCode(KG_ID);
 		return result;
 	}
 

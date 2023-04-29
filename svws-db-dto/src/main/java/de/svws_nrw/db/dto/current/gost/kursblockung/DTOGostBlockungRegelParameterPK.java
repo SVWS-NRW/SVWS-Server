@@ -13,10 +13,10 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** ID des Regel-Parameters */
-	public Long Regel_ID;
+	public long Regel_ID;
 
 	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
-	public Integer Nummer;
+	public int Nummer;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungRegelParameterPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 	 * @param Regel_ID   der Wert für das Attribut Regel_ID
 	 * @param Nummer   der Wert für das Attribut Nummer
 	 */
-	public DTOGostBlockungRegelParameterPK(final Long Regel_ID, final Integer Nummer) {
-		if (Regel_ID == null) {
-			throw new NullPointerException("Regel_ID must not be null");
-		}
+	public DTOGostBlockungRegelParameterPK(final long Regel_ID, final int Nummer) {
 		this.Regel_ID = Regel_ID;
-		if (Nummer == null) {
-			throw new NullPointerException("Nummer must not be null");
-		}
 		this.Nummer = Nummer;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungRegelParameterPK other = (DTOGostBlockungRegelParameterPK) obj;
-		if (Regel_ID == null) {
-			if (other.Regel_ID != null)
-				return false;
-		} else if (!Regel_ID.equals(other.Regel_ID))
+		if (Regel_ID != other.Regel_ID)
 			return false;
 
-		if (Nummer == null) {
-			if (other.Nummer != null)
-				return false;
-		} else if (!Nummer.equals(other.Nummer))
+		if (Nummer != other.Nummer)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostBlockungRegelParameterPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Regel_ID == null) ? 0 : Regel_ID.hashCode());
+		result = prime * result + Long.hashCode(Regel_ID);
 
-		result = prime * result + ((Nummer == null) ? 0 : Nummer.hashCode());
+		result = prime * result + Integer.hashCode(Nummer);
 		return result;
 	}
 }

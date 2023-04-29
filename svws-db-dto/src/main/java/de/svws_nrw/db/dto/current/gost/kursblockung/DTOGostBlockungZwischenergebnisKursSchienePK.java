@@ -13,13 +13,13 @@ public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Seria
 	private static final long serialVersionUID = 1L;
 
 	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Zwischenergebnisses */
-	public Long Zwischenergebnis_ID;
+	public long Zwischenergebnis_ID;
 
 	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID des Kurses */
-	public Long Blockung_Kurs_ID;
+	public long Blockung_Kurs_ID;
 
 	/** Kurs-Schienen-Zuordnung eines Zwischenergebnisses: ID der Schiene aus der Blockung */
-	public Long Schienen_ID;
+	public long Schienen_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungZwischenergebnisKursSchienePK ohne eine Initialisierung der Attribute.
@@ -34,18 +34,9 @@ public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Seria
 	 * @param Blockung_Kurs_ID   der Wert für das Attribut Blockung_Kurs_ID
 	 * @param Schienen_ID   der Wert für das Attribut Schienen_ID
 	 */
-	public DTOGostBlockungZwischenergebnisKursSchienePK(final Long Zwischenergebnis_ID, final Long Blockung_Kurs_ID, final Long Schienen_ID) {
-		if (Zwischenergebnis_ID == null) {
-			throw new NullPointerException("Zwischenergebnis_ID must not be null");
-		}
+	public DTOGostBlockungZwischenergebnisKursSchienePK(final long Zwischenergebnis_ID, final long Blockung_Kurs_ID, final long Schienen_ID) {
 		this.Zwischenergebnis_ID = Zwischenergebnis_ID;
-		if (Blockung_Kurs_ID == null) {
-			throw new NullPointerException("Blockung_Kurs_ID must not be null");
-		}
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Schienen_ID == null) {
-			throw new NullPointerException("Schienen_ID must not be null");
-		}
 		this.Schienen_ID = Schienen_ID;
 	}
 
@@ -59,22 +50,13 @@ public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Seria
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungZwischenergebnisKursSchienePK other = (DTOGostBlockungZwischenergebnisKursSchienePK) obj;
-		if (Zwischenergebnis_ID == null) {
-			if (other.Zwischenergebnis_ID != null)
-				return false;
-		} else if (!Zwischenergebnis_ID.equals(other.Zwischenergebnis_ID))
+		if (Zwischenergebnis_ID != other.Zwischenergebnis_ID)
 			return false;
 
-		if (Blockung_Kurs_ID == null) {
-			if (other.Blockung_Kurs_ID != null)
-				return false;
-		} else if (!Blockung_Kurs_ID.equals(other.Blockung_Kurs_ID))
+		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
 			return false;
 
-		if (Schienen_ID == null) {
-			if (other.Schienen_ID != null)
-				return false;
-		} else if (!Schienen_ID.equals(other.Schienen_ID))
+		if (Schienen_ID != other.Schienen_ID)
 			return false;
 		return true;
 	}
@@ -83,11 +65,11 @@ public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Seria
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Zwischenergebnis_ID == null) ? 0 : Zwischenergebnis_ID.hashCode());
+		result = prime * result + Long.hashCode(Zwischenergebnis_ID);
 
-		result = prime * result + ((Blockung_Kurs_ID == null) ? 0 : Blockung_Kurs_ID.hashCode());
+		result = prime * result + Long.hashCode(Blockung_Kurs_ID);
 
-		result = prime * result + ((Schienen_ID == null) ? 0 : Schienen_ID.hashCode());
+		result = prime * result + Long.hashCode(Schienen_ID);
 		return result;
 	}
 }

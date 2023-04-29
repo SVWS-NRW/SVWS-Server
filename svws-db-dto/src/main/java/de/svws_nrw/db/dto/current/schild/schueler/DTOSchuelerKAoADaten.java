@@ -49,12 +49,12 @@ public final class DTOSchuelerKAoADaten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der zugehörigen Schülerlernabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** Jahrgang des KAOA-Eintrags beim Schüler */
 	@Column(name = "Jahrgang")
@@ -64,7 +64,7 @@ public final class DTOSchuelerKAoADaten {
 	/** ID der Kategorie des KAOA-Eintrags beim Schüler FK */
 	@Column(name = "KategorieID")
 	@JsonProperty
-	public Long KategorieID;
+	public long KategorieID;
 
 	/** ID des Merkmal des KAOA-Eintrags beim Schüler FK */
 	@Column(name = "MerkmalID")
@@ -109,18 +109,9 @@ public final class DTOSchuelerKAoADaten {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param KategorieID   der Wert für das Attribut KategorieID
 	 */
-	public DTOSchuelerKAoADaten(final Long ID, final Long Abschnitt_ID, final Long KategorieID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerKAoADaten(final long ID, final long Abschnitt_ID, final long KategorieID) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (KategorieID == null) {
-			throw new NullPointerException("KategorieID must not be null");
-		}
 		this.KategorieID = KategorieID;
 	}
 
@@ -134,10 +125,7 @@ public final class DTOSchuelerKAoADaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerKAoADaten other = (DTOSchuelerKAoADaten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -146,7 +134,7 @@ public final class DTOSchuelerKAoADaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

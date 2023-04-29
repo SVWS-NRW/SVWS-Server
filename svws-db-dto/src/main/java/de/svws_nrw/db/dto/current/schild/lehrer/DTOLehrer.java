@@ -171,7 +171,7 @@ public final class DTOLehrer {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Eindeutige ID Datenbank übergreifend. Wurde früher mal für Logineo genutzt, kann später mal zur Identifizierung genutzt werden. */
 	@Column(name = "GU_ID")
@@ -512,10 +512,7 @@ public final class DTOLehrer {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 * @param Nachname   der Wert für das Attribut Nachname
 	 */
-	public DTOLehrer(final Long ID, final String Kuerzel, final String Nachname) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOLehrer(final long ID, final String Kuerzel, final String Nachname) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -537,10 +534,7 @@ public final class DTOLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrer other = (DTOLehrer) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -549,7 +543,7 @@ public final class DTOLehrer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

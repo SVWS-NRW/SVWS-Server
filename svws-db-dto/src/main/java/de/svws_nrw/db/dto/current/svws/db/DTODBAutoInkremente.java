@@ -38,7 +38,7 @@ public final class DTODBAutoInkremente {
 	/** Die ID des höchsten jemals in die DB geschriebenen ID-Wertes bei der zugehörigen Tabelle */
 	@Column(name = "MaxID")
 	@JsonProperty
-	public Long MaxID;
+	public long MaxID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTODBAutoInkremente ohne eine Initialisierung der Attribute.
@@ -52,14 +52,11 @@ public final class DTODBAutoInkremente {
 	 * @param NameTabelle   der Wert für das Attribut NameTabelle
 	 * @param MaxID   der Wert für das Attribut MaxID
 	 */
-	public DTODBAutoInkremente(final String NameTabelle, final Long MaxID) {
+	public DTODBAutoInkremente(final String NameTabelle, final long MaxID) {
 		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
 		this.NameTabelle = NameTabelle;
-		if (MaxID == null) {
-			throw new NullPointerException("MaxID must not be null");
-		}
 		this.MaxID = MaxID;
 	}
 

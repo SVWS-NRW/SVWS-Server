@@ -481,11 +481,11 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", kurs.id, DTOGostBlockungKurslehrer.class);
 	    		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
 	    		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
-	    			if ((dtoKurslehrer.Reihenfolge != null) && (dtoKurslehrer.Reihenfolge == 1)) {
+	    			if (dtoKurslehrer.Reihenfolge == 1) {
 	    				kurslehrer = dtoKurslehrer;
 	    			} else {
 	    				final DTOKursLehrer kl = new DTOKursLehrer(id, dtoKurslehrer.Lehrer_ID);
-	    				kl.Anteil = dtoKurslehrer.Wochenstunden == null ? null : dtoKurslehrer.Wochenstunden.doubleValue();
+	    				kl.Anteil = (double) dtoKurslehrer.Wochenstunden;
 	    				kursLehrerZusatzkraefte.add(kl);
 	    			}
 	    		}
@@ -502,8 +502,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    		dto.Schienen = (schienen == null) ? null : Arrays.stream(schienen).mapToObj(i -> "" + i)
 	    				.collect(Collectors.joining(","));
 	    		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
-	    		dto.WochenstdKL = ((kurslehrer == null) || (kurslehrer.Wochenstunden == null))
-	    				? null : kurslehrer.Wochenstunden.doubleValue();
+	    		dto.WochenstdKL = (kurslehrer == null) ? null : (double) kurslehrer.Wochenstunden;
 	    		dto.SchulNr = null;
 	    		dto.EpochU = false;
 	    		dto.ZeugnisBez = null;

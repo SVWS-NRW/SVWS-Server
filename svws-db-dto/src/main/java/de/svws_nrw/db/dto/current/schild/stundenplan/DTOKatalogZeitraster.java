@@ -47,17 +47,17 @@ public final class DTOKatalogZeitraster {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Wochentag laut ISO-8601 Standard: (1 - Montag, 2 - Dienstag, ...) */
 	@Column(name = "Tag")
 	@JsonProperty
-	public Integer Tag;
+	public int Tag;
 
 	/** Die Stunde laut Stundenplan (1, 2, ...) */
 	@Column(name = "Stunde")
 	@JsonProperty
-	public Integer Stunde;
+	public int Stunde;
 
 	/** Die Uhrzeit, wann die Stunde beginnt */
 	@Column(name = "Beginn")
@@ -90,18 +90,9 @@ public final class DTOKatalogZeitraster {
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
-	public DTOKatalogZeitraster(final Long ID, final Integer Tag, final Integer Stunde, final String Beginn, final String Ende) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKatalogZeitraster(final long ID, final int Tag, final int Stunde, final String Beginn, final String Ende) {
 		this.ID = ID;
-		if (Tag == null) {
-			throw new NullPointerException("Tag must not be null");
-		}
 		this.Tag = Tag;
-		if (Stunde == null) {
-			throw new NullPointerException("Stunde must not be null");
-		}
 		this.Stunde = Stunde;
 		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
@@ -123,10 +114,7 @@ public final class DTOKatalogZeitraster {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogZeitraster other = (DTOKatalogZeitraster) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -135,7 +123,7 @@ public final class DTOKatalogZeitraster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -13,7 +13,7 @@ public final class DTOEigeneImporteTabellenPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** externen Textimport Tabellen */
-	public Integer Import_ID;
+	public int Import_ID;
 
 	/** externen Textimport Tabellen */
 	public String TableName;
@@ -30,10 +30,7 @@ public final class DTOEigeneImporteTabellenPK implements Serializable {
 	 * @param Import_ID   der Wert für das Attribut Import_ID
 	 * @param TableName   der Wert für das Attribut TableName
 	 */
-	public DTOEigeneImporteTabellenPK(final Integer Import_ID, final String TableName) {
-		if (Import_ID == null) {
-			throw new NullPointerException("Import_ID must not be null");
-		}
+	public DTOEigeneImporteTabellenPK(final int Import_ID, final String TableName) {
 		this.Import_ID = Import_ID;
 		if (TableName == null) {
 			throw new NullPointerException("TableName must not be null");
@@ -51,10 +48,7 @@ public final class DTOEigeneImporteTabellenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneImporteTabellenPK other = (DTOEigeneImporteTabellenPK) obj;
-		if (Import_ID == null) {
-			if (other.Import_ID != null)
-				return false;
-		} else if (!Import_ID.equals(other.Import_ID))
+		if (Import_ID != other.Import_ID)
 			return false;
 
 		if (TableName == null) {
@@ -69,7 +63,7 @@ public final class DTOEigeneImporteTabellenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Import_ID == null) ? 0 : Import_ID.hashCode());
+		result = prime * result + Integer.hashCode(Import_ID);
 
 		result = prime * result + ((TableName == null) ? 0 : TableName.hashCode());
 		return result;

@@ -120,7 +120,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	    		switch (key) {
 					case "id" -> {
 						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != kurslehrer.Lehrer_ID.longValue()))
+						if ((patch_id == null) || (patch_id.longValue() != kurslehrer.Lehrer_ID))
 							throw OperationError.BAD_REQUEST.exception();
 					}
 	    			case "kuerzel" -> throw OperationError.BAD_REQUEST.exception();

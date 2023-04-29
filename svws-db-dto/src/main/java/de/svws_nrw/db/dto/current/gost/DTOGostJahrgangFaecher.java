@@ -61,13 +61,13 @@ public final class DTOGostJahrgangFaecher {
 	@Id
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** ID des Faches in der Fächertabelle */
 	@Id
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Belegung des Faches in der EF.1 möglich: 1 - true, 0 - false  */
 	@Column(name = "WaehlbarEF1")
@@ -158,46 +158,16 @@ public final class DTOGostJahrgangFaecher {
 	 * @param WaehlbarAbiGK   der Wert für das Attribut WaehlbarAbiGK
 	 * @param WaehlbarAbiLK   der Wert für das Attribut WaehlbarAbiLK
 	 */
-	public DTOGostJahrgangFaecher(final Integer Abi_Jahrgang, final Long Fach_ID, final Boolean WaehlbarEF1, final Boolean WaehlbarEF2, final Boolean WaehlbarQ11, final Boolean WaehlbarQ12, final Boolean WaehlbarQ21, final Boolean WaehlbarQ22, final Boolean WaehlbarAbiGK, final Boolean WaehlbarAbiLK) {
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
+	public DTOGostJahrgangFaecher(final int Abi_Jahrgang, final long Fach_ID, final Boolean WaehlbarEF1, final Boolean WaehlbarEF2, final Boolean WaehlbarQ11, final Boolean WaehlbarQ12, final Boolean WaehlbarQ21, final Boolean WaehlbarQ22, final Boolean WaehlbarAbiGK, final Boolean WaehlbarAbiLK) {
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
-		if (WaehlbarEF1 == null) {
-			throw new NullPointerException("WaehlbarEF1 must not be null");
-		}
 		this.WaehlbarEF1 = WaehlbarEF1;
-		if (WaehlbarEF2 == null) {
-			throw new NullPointerException("WaehlbarEF2 must not be null");
-		}
 		this.WaehlbarEF2 = WaehlbarEF2;
-		if (WaehlbarQ11 == null) {
-			throw new NullPointerException("WaehlbarQ11 must not be null");
-		}
 		this.WaehlbarQ11 = WaehlbarQ11;
-		if (WaehlbarQ12 == null) {
-			throw new NullPointerException("WaehlbarQ12 must not be null");
-		}
 		this.WaehlbarQ12 = WaehlbarQ12;
-		if (WaehlbarQ21 == null) {
-			throw new NullPointerException("WaehlbarQ21 must not be null");
-		}
 		this.WaehlbarQ21 = WaehlbarQ21;
-		if (WaehlbarQ22 == null) {
-			throw new NullPointerException("WaehlbarQ22 must not be null");
-		}
 		this.WaehlbarQ22 = WaehlbarQ22;
-		if (WaehlbarAbiGK == null) {
-			throw new NullPointerException("WaehlbarAbiGK must not be null");
-		}
 		this.WaehlbarAbiGK = WaehlbarAbiGK;
-		if (WaehlbarAbiLK == null) {
-			throw new NullPointerException("WaehlbarAbiLK must not be null");
-		}
 		this.WaehlbarAbiLK = WaehlbarAbiLK;
 	}
 
@@ -211,16 +181,10 @@ public final class DTOGostJahrgangFaecher {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangFaecher other = (DTOGostJahrgangFaecher) obj;
-		if (Abi_Jahrgang == null) {
-			if (other.Abi_Jahrgang != null)
-				return false;
-		} else if (!Abi_Jahrgang.equals(other.Abi_Jahrgang))
+		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 		return true;
 	}
@@ -229,9 +193,9 @@ public final class DTOGostJahrgangFaecher {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Abi_Jahrgang == null) ? 0 : Abi_Jahrgang.hashCode());
+		result = prime * result + Integer.hashCode(Abi_Jahrgang);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 		return result;
 	}
 

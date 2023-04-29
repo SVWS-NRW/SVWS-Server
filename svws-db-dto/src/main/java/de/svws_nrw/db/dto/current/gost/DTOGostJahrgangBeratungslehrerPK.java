@@ -13,10 +13,10 @@ public final class DTOGostJahrgangBeratungslehrerPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Gymnasiale Oberstufe - Jahrgangsdaten: Schuljahr, in welchem der Jahrgang das Abitur macht  */
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Gymnasiale Oberstufe - Jahrgangsdaten: ID des Beratungslehrers in der Lehrertabelle */
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostJahrgangBeratungslehrerPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostJahrgangBeratungslehrerPK implements Serializable {
 	 * @param Abi_Jahrgang   der Wert für das Attribut Abi_Jahrgang
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOGostJahrgangBeratungslehrerPK(final Integer Abi_Jahrgang, final Long Lehrer_ID) {
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
+	public DTOGostJahrgangBeratungslehrerPK(final int Abi_Jahrgang, final long Lehrer_ID) {
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostJahrgangBeratungslehrerPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangBeratungslehrerPK other = (DTOGostJahrgangBeratungslehrerPK) obj;
-		if (Abi_Jahrgang == null) {
-			if (other.Abi_Jahrgang != null)
-				return false;
-		} else if (!Abi_Jahrgang.equals(other.Abi_Jahrgang))
+		if (Abi_Jahrgang != other.Abi_Jahrgang)
 			return false;
 
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostJahrgangBeratungslehrerPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Abi_Jahrgang == null) ? 0 : Abi_Jahrgang.hashCode());
+		result = prime * result + Integer.hashCode(Abi_Jahrgang);
 
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 		return result;
 	}
 }

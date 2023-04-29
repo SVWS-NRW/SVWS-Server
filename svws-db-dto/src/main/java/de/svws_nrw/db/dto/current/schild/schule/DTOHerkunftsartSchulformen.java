@@ -39,7 +39,7 @@ public final class DTOHerkunftsartSchulformen {
 	@Id
 	@Column(name = "Herkunftsart_ID")
 	@JsonProperty
-	public Long Herkunftsart_ID;
+	public long Herkunftsart_ID;
 
 	/** das Kürzel der Schulform */
 	@Id
@@ -71,10 +71,7 @@ public final class DTOHerkunftsartSchulformen {
 	 * @param KurzBezeichnung   der Wert für das Attribut KurzBezeichnung
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOHerkunftsartSchulformen(final Long Herkunftsart_ID, final String Schulform_Kuerzel, final String KurzBezeichnung, final String Bezeichnung) {
-		if (Herkunftsart_ID == null) {
-			throw new NullPointerException("Herkunftsart_ID must not be null");
-		}
+	public DTOHerkunftsartSchulformen(final long Herkunftsart_ID, final String Schulform_Kuerzel, final String KurzBezeichnung, final String Bezeichnung) {
 		this.Herkunftsart_ID = Herkunftsart_ID;
 		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
@@ -100,10 +97,7 @@ public final class DTOHerkunftsartSchulformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOHerkunftsartSchulformen other = (DTOHerkunftsartSchulformen) obj;
-		if (Herkunftsart_ID == null) {
-			if (other.Herkunftsart_ID != null)
-				return false;
-		} else if (!Herkunftsart_ID.equals(other.Herkunftsart_ID))
+		if (Herkunftsart_ID != other.Herkunftsart_ID)
 			return false;
 
 		if (Schulform_Kuerzel == null) {
@@ -118,7 +112,7 @@ public final class DTOHerkunftsartSchulformen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Herkunftsart_ID == null) ? 0 : Herkunftsart_ID.hashCode());
+		result = prime * result + Long.hashCode(Herkunftsart_ID);
 
 		result = prime * result + ((Schulform_Kuerzel == null) ? 0 : Schulform_Kuerzel.hashCode());
 		return result;

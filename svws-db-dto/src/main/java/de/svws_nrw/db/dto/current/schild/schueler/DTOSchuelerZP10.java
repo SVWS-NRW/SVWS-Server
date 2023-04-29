@@ -59,12 +59,12 @@ public final class DTOSchuelerZP10 {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Schüler-ID des Facheintrags für den ZP10 Abschluss */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** Schuljahresabschnitt-ID für den Facheintrag des ZP10 Abschlusses */
 	@Column(name = "Schuljahresabschnitts_ID")
@@ -74,7 +74,7 @@ public final class DTOSchuelerZP10 {
 	/** Fach-ID des Facheintrags für den ZP10 Abschluss */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Vornote zum ZP10-Facheintrag */
 	@Column(name = "Vornote")
@@ -130,18 +130,9 @@ public final class DTOSchuelerZP10 {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOSchuelerZP10(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerZP10(final long ID, final long Schueler_ID, final long Fach_ID) {
 		this.ID = ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -155,10 +146,7 @@ public final class DTOSchuelerZP10 {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerZP10 other = (DTOSchuelerZP10) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -167,7 +155,7 @@ public final class DTOSchuelerZP10 {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

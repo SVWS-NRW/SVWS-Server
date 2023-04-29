@@ -33,7 +33,7 @@ public final class DTODavSyncTokenLehrer {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Zeitstempel der letzten Änderung an für einen Card-DAV-Eintrag relevanten Lehrerdaten. */
 	@Column(name = "SyncToken")
@@ -52,10 +52,7 @@ public final class DTODavSyncTokenLehrer {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param SyncToken   der Wert für das Attribut SyncToken
 	 */
-	public DTODavSyncTokenLehrer(final Long ID, final String SyncToken) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTODavSyncTokenLehrer(final long ID, final String SyncToken) {
 		this.ID = ID;
 		if (SyncToken == null) {
 			throw new NullPointerException("SyncToken must not be null");
@@ -73,10 +70,7 @@ public final class DTODavSyncTokenLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavSyncTokenLehrer other = (DTODavSyncTokenLehrer) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -85,7 +79,7 @@ public final class DTODavSyncTokenLehrer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

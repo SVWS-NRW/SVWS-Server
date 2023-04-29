@@ -58,12 +58,12 @@ public final class DTOSchuelerFehlstunden {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** AbschnittsID des zugehörigen Lernabschnitts */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** Datum der Fehlzeit */
 	@Column(name = "Datum")
@@ -81,7 +81,7 @@ public final class DTOSchuelerFehlstunden {
 	/** Anzahl der Fehlstunden */
 	@Column(name = "FehlStd")
 	@JsonProperty
-	public Double FehlStd;
+	public double FehlStd;
 
 	/** Beginn Stunde Fehlzeit */
 	@Column(name = "VonStd")
@@ -120,22 +120,13 @@ public final class DTOSchuelerFehlstunden {
 	 * @param Datum   der Wert für das Attribut Datum
 	 * @param FehlStd   der Wert für das Attribut FehlStd
 	 */
-	public DTOSchuelerFehlstunden(final Long ID, final Long Abschnitt_ID, final String Datum, final Double FehlStd) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerFehlstunden(final long ID, final long Abschnitt_ID, final String Datum, final double FehlStd) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
 		if (Datum == null) {
 			throw new NullPointerException("Datum must not be null");
 		}
 		this.Datum = Datum;
-		if (FehlStd == null) {
-			throw new NullPointerException("FehlStd must not be null");
-		}
 		this.FehlStd = FehlStd;
 	}
 
@@ -149,10 +140,7 @@ public final class DTOSchuelerFehlstunden {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerFehlstunden other = (DTOSchuelerFehlstunden) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -161,7 +149,7 @@ public final class DTOSchuelerFehlstunden {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

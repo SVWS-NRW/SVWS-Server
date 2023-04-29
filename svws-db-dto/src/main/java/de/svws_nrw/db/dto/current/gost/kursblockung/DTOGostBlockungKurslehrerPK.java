@@ -13,10 +13,10 @@ public final class DTOGostBlockungKurslehrerPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** ID des Kurses */
-	public Long Blockung_Kurs_ID;
+	public long Blockung_Kurs_ID;
 
 	/** ID des Lehrers, welcher dem Kurs zugeordnet ist */
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungKurslehrerPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostBlockungKurslehrerPK implements Serializable {
 	 * @param Blockung_Kurs_ID   der Wert für das Attribut Blockung_Kurs_ID
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOGostBlockungKurslehrerPK(final Long Blockung_Kurs_ID, final Long Lehrer_ID) {
-		if (Blockung_Kurs_ID == null) {
-			throw new NullPointerException("Blockung_Kurs_ID must not be null");
-		}
+	public DTOGostBlockungKurslehrerPK(final long Blockung_Kurs_ID, final long Lehrer_ID) {
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostBlockungKurslehrerPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungKurslehrerPK other = (DTOGostBlockungKurslehrerPK) obj;
-		if (Blockung_Kurs_ID == null) {
-			if (other.Blockung_Kurs_ID != null)
-				return false;
-		} else if (!Blockung_Kurs_ID.equals(other.Blockung_Kurs_ID))
+		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
 			return false;
 
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostBlockungKurslehrerPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Blockung_Kurs_ID == null) ? 0 : Blockung_Kurs_ID.hashCode());
+		result = prime * result + Long.hashCode(Blockung_Kurs_ID);
 
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 		return result;
 	}
 }

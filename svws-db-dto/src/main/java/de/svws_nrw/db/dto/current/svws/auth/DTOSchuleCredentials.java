@@ -37,7 +37,7 @@ public final class DTOSchuleCredentials {
 	@Id
 	@Column(name = "Schulnummer")
 	@JsonProperty
-	public Integer Schulnummer;
+	public int Schulnummer;
 
 	/** RSAPublicKey für den Credential-Datensatz einer Schule */
 	@Column(name = "RSAPublicKey")
@@ -65,10 +65,7 @@ public final class DTOSchuleCredentials {
 	 * Erstellt ein neues Objekt der Klasse DTOSchuleCredentials ohne eine Initialisierung der Attribute.
 	 * @param Schulnummer   der Wert für das Attribut Schulnummer
 	 */
-	public DTOSchuleCredentials(final Integer Schulnummer) {
-		if (Schulnummer == null) {
-			throw new NullPointerException("Schulnummer must not be null");
-		}
+	public DTOSchuleCredentials(final int Schulnummer) {
 		this.Schulnummer = Schulnummer;
 	}
 
@@ -82,10 +79,7 @@ public final class DTOSchuleCredentials {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuleCredentials other = (DTOSchuleCredentials) obj;
-		if (Schulnummer == null) {
-			if (other.Schulnummer != null)
-				return false;
-		} else if (!Schulnummer.equals(other.Schulnummer))
+		if (Schulnummer != other.Schulnummer)
 			return false;
 		return true;
 	}
@@ -94,7 +88,7 @@ public final class DTOSchuleCredentials {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schulnummer == null) ? 0 : Schulnummer.hashCode());
+		result = prime * result + Integer.hashCode(Schulnummer);
 		return result;
 	}
 

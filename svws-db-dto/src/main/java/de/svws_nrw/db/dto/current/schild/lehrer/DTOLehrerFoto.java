@@ -33,7 +33,7 @@ public final class DTOLehrerFoto {
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/** Lehrerfoto im Base64-Format */
 	@Column(name = "FotoBase64")
@@ -51,10 +51,7 @@ public final class DTOLehrerFoto {
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerFoto ohne eine Initialisierung der Attribute.
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOLehrerFoto(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
+	public DTOLehrerFoto(final long Lehrer_ID) {
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -68,10 +65,7 @@ public final class DTOLehrerFoto {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerFoto other = (DTOLehrerFoto) obj;
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 		return true;
 	}
@@ -80,7 +74,7 @@ public final class DTOLehrerFoto {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 		return result;
 	}
 

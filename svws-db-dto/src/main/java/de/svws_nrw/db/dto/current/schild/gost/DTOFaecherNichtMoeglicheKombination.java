@@ -44,12 +44,12 @@ public final class DTOFaecherNichtMoeglicheKombination {
 	/** FACH1ID für eine nicht mögliche Kombination */
 	@Column(name = "Fach1_ID")
 	@JsonProperty
-	public Long Fach1_ID;
+	public long Fach1_ID;
 
 	/** FACH2ID für eine nicht mögliche Kombination */
 	@Column(name = "Fach2_ID")
 	@JsonProperty
-	public Long Fach2_ID;
+	public long Fach2_ID;
 
 	/** Kursart Fach1 */
 	@Column(name = "Kursart1")
@@ -95,14 +95,8 @@ public final class DTOFaecherNichtMoeglicheKombination {
 	 * @param Fach2_ID   der Wert für das Attribut Fach2_ID
 	 * @param PK   der Wert für das Attribut PK
 	 */
-	public DTOFaecherNichtMoeglicheKombination(final Long Fach1_ID, final Long Fach2_ID, final String PK) {
-		if (Fach1_ID == null) {
-			throw new NullPointerException("Fach1_ID must not be null");
-		}
+	public DTOFaecherNichtMoeglicheKombination(final long Fach1_ID, final long Fach2_ID, final String PK) {
 		this.Fach1_ID = Fach1_ID;
-		if (Fach2_ID == null) {
-			throw new NullPointerException("Fach2_ID must not be null");
-		}
 		this.Fach2_ID = Fach2_ID;
 		if (PK == null) {
 			throw new NullPointerException("PK must not be null");

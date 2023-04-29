@@ -52,7 +52,7 @@ public final class DTOGostBlockung {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Textuelle Bezeichnung der Blockung */
 	@Column(name = "Name")
@@ -62,7 +62,7 @@ public final class DTOGostBlockung {
 	/** Der Abiturjahrgang, dem die Blockung zugeordnet ist */
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
@@ -95,26 +95,14 @@ public final class DTOGostBlockung {
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param IstAktiv   der Wert für das Attribut IstAktiv
 	 */
-	public DTOGostBlockung(final Long ID, final String Name, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Boolean IstAktiv) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostBlockung(final long ID, final String Name, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final Boolean IstAktiv) {
 		this.ID = ID;
 		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Halbjahr == null) {
-			throw new NullPointerException("Halbjahr must not be null");
-		}
 		this.Halbjahr = Halbjahr;
-		if (IstAktiv == null) {
-			throw new NullPointerException("IstAktiv must not be null");
-		}
 		this.IstAktiv = IstAktiv;
 	}
 
@@ -128,10 +116,7 @@ public final class DTOGostBlockung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockung other = (DTOGostBlockung) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -140,7 +125,7 @@ public final class DTOGostBlockung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

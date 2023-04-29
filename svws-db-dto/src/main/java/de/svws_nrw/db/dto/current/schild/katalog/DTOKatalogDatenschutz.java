@@ -51,7 +51,7 @@ public final class DTOKatalogDatenschutz {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Eine kurze Bezeichnung des DSGVO-Merkmals */
 	@Column(name = "Bezeichnung")
@@ -74,7 +74,7 @@ public final class DTOKatalogDatenschutz {
 	/** Gibt die Reihenfolge der Merkmale bei der Darstellung an. */
 	@Column(name = "Sortierung")
 	@JsonProperty
-	public Integer Sortierung;
+	public int Sortierung;
 
 	/** Eine ausführliche Beschreibung des DSGCO-Merkmals */
 	@Column(name = "Beschreibung")
@@ -100,10 +100,7 @@ public final class DTOKatalogDatenschutz {
 	 * @param Sichtbar   der Wert für das Attribut Sichtbar
 	 * @param Sortierung   der Wert für das Attribut Sortierung
 	 */
-	public DTOKatalogDatenschutz(final Long ID, final String Bezeichnung, final Boolean Sichtbar, final Integer Sortierung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKatalogDatenschutz(final long ID, final String Bezeichnung, final Boolean Sichtbar, final int Sortierung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -113,9 +110,6 @@ public final class DTOKatalogDatenschutz {
 			throw new NullPointerException("Sichtbar must not be null");
 		}
 		this.Sichtbar = Sichtbar;
-		if (Sortierung == null) {
-			throw new NullPointerException("Sortierung must not be null");
-		}
 		this.Sortierung = Sortierung;
 	}
 
@@ -129,10 +123,7 @@ public final class DTOKatalogDatenschutz {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogDatenschutz other = (DTOKatalogDatenschutz) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -141,7 +132,7 @@ public final class DTOKatalogDatenschutz {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

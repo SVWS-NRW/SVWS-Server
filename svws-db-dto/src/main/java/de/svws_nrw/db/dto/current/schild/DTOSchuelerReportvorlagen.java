@@ -37,7 +37,7 @@ public final class DTOSchuelerReportvorlagen {
 	@Id
 	@Column(name = "User_ID")
 	@JsonProperty
-	public Long User_ID;
+	public long User_ID;
 
 	/** Pfad zur Reportvorlage */
 	@Id
@@ -61,10 +61,7 @@ public final class DTOSchuelerReportvorlagen {
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerReportvorlagen ohne eine Initialisierung der Attribute.
 	 * @param User_ID   der Wert für das Attribut User_ID
 	 */
-	public DTOSchuelerReportvorlagen(final Long User_ID) {
-		if (User_ID == null) {
-			throw new NullPointerException("User_ID must not be null");
-		}
+	public DTOSchuelerReportvorlagen(final long User_ID) {
 		this.User_ID = User_ID;
 	}
 
@@ -78,10 +75,7 @@ public final class DTOSchuelerReportvorlagen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerReportvorlagen other = (DTOSchuelerReportvorlagen) obj;
-		if (User_ID == null) {
-			if (other.User_ID != null)
-				return false;
-		} else if (!User_ID.equals(other.User_ID))
+		if (User_ID != other.User_ID)
 			return false;
 
 		if (Reportvorlage == null) {
@@ -96,7 +90,7 @@ public final class DTOSchuelerReportvorlagen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((User_ID == null) ? 0 : User_ID.hashCode());
+		result = prime * result + Long.hashCode(User_ID);
 
 		result = prime * result + ((Reportvorlage == null) ? 0 : Reportvorlage.hashCode());
 		return result;

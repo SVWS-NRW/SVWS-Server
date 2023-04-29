@@ -47,12 +47,12 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Kursklausur */
 	@Column(name = "Kursklausur_ID")
 	@JsonProperty
-	public Long Kursklausur_ID;
+	public long Kursklausur_ID;
 
 	/** ID des Klausurtermins */
 	@Column(name = "Termin_ID")
@@ -62,7 +62,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	/** ID des Schülers */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** Startzeit der Klausur, wenn abweichend von Startzeit der Klausur-Schiene */
 	@Column(name = "Startzeit")
@@ -85,18 +85,9 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	 * @param Kursklausur_ID   der Wert für das Attribut Kursklausur_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
-	public DTOGostKlausurenSchuelerklausuren(final Long ID, final Long Kursklausur_ID, final Long Schueler_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenSchuelerklausuren(final long ID, final long Kursklausur_ID, final long Schueler_ID) {
 		this.ID = ID;
-		if (Kursklausur_ID == null) {
-			throw new NullPointerException("Kursklausur_ID must not be null");
-		}
 		this.Kursklausur_ID = Kursklausur_ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
 	}
 
@@ -110,10 +101,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenSchuelerklausuren other = (DTOGostKlausurenSchuelerklausuren) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -122,7 +110,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

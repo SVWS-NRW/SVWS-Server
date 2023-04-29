@@ -53,7 +53,7 @@ public final class DTOStundentafel {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Bezeichnung der Stundentafel */
 	@Column(name = "Bezeichnung")
@@ -105,10 +105,7 @@ public final class DTOStundentafel {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOStundentafel(final Long ID, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundentafel(final long ID, final String Bezeichnung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -126,10 +123,7 @@ public final class DTOStundentafel {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundentafel other = (DTOStundentafel) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -138,7 +132,7 @@ public final class DTOStundentafel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

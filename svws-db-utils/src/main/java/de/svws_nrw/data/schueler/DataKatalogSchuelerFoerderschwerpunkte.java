@@ -35,7 +35,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 	private final Function<DTOFoerderschwerpunkt, FoerderschwerpunktEintrag> dtoMapper = (final DTOFoerderschwerpunkt k) -> {
 		final FoerderschwerpunktEintrag eintrag = new FoerderschwerpunktEintrag();
 		eintrag.id = k.ID;
-		eintrag.kuerzel = k.ID.toString();
+		eintrag.kuerzel = "" + k.ID;
 		eintrag.text = k.Bezeichnung;
 		eintrag.kuerzelStatistik = k.StatistikKrz;
 		eintrag.istAenderbar = k.Aenderbar;

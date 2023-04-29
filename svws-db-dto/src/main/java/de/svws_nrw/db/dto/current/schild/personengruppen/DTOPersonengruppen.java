@@ -53,7 +53,7 @@ public final class DTOPersonengruppen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Gruppenname der Personengruppe */
 	@Column(name = "Gruppenname")
@@ -108,10 +108,7 @@ public final class DTOPersonengruppen {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Gruppenname   der Wert für das Attribut Gruppenname
 	 */
-	public DTOPersonengruppen(final Long ID, final String Gruppenname) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOPersonengruppen(final long ID, final String Gruppenname) {
 		this.ID = ID;
 		if (Gruppenname == null) {
 			throw new NullPointerException("Gruppenname must not be null");
@@ -129,10 +126,7 @@ public final class DTOPersonengruppen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOPersonengruppen other = (DTOPersonengruppen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -141,7 +135,7 @@ public final class DTOPersonengruppen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

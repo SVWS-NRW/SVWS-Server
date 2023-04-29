@@ -35,7 +35,7 @@ public final class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long
 	private final Function<DTOFahrschuelerart, KatalogEintrag> dtoMapper = (final DTOFahrschuelerart k) -> {
 		final KatalogEintrag eintrag = new KatalogEintrag();
 		eintrag.id = k.ID;
-		eintrag.kuerzel = k.ID.toString();
+		eintrag.kuerzel = "" + k.ID;
 		eintrag.text = k.Bezeichnung;
 		eintrag.istAenderbar = k.Aenderbar;
 		eintrag.istSichtbar = k.Sichtbar;

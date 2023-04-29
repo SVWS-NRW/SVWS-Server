@@ -35,7 +35,7 @@ public final class DTOBenutzerAllgemein {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Anzeigename für den allgemeinen Benutzer */
 	@Column(name = "AnzeigeName")
@@ -58,10 +58,7 @@ public final class DTOBenutzerAllgemein {
 	 * Erstellt ein neues Objekt der Klasse DTOBenutzerAllgemein ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOBenutzerAllgemein(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOBenutzerAllgemein(final long ID) {
 		this.ID = ID;
 	}
 
@@ -75,10 +72,7 @@ public final class DTOBenutzerAllgemein {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzerAllgemein other = (DTOBenutzerAllgemein) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -87,7 +81,7 @@ public final class DTOBenutzerAllgemein {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

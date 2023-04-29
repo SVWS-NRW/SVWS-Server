@@ -39,17 +39,17 @@ public final class DTOGostBlockungSchiene {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
-	public Long Blockung_ID;
+	public long Blockung_ID;
 
 	/** Die Nummer der Schiene, beginnend bei 1 */
 	@Column(name = "Nummer")
 	@JsonProperty
-	public Integer Nummer;
+	public int Nummer;
 
 	/** Bezeichnung der Schiene (z.B. LK Schiene 1) */
 	@Column(name = "Bezeichnung")
@@ -59,7 +59,7 @@ public final class DTOGostBlockungSchiene {
 	/** Die Anzahl der Wochenstunden, welche der Schiene zugeordnet sind */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
-	public Integer Wochenstunden;
+	public int Wochenstunden;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungSchiene ohne eine Initialisierung der Attribute.
@@ -76,26 +76,14 @@ public final class DTOGostBlockungSchiene {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
-	public DTOGostBlockungSchiene(final Long ID, final Long Blockung_ID, final Integer Nummer, final String Bezeichnung, final Integer Wochenstunden) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostBlockungSchiene(final long ID, final long Blockung_ID, final int Nummer, final String Bezeichnung, final int Wochenstunden) {
 		this.ID = ID;
-		if (Blockung_ID == null) {
-			throw new NullPointerException("Blockung_ID must not be null");
-		}
 		this.Blockung_ID = Blockung_ID;
-		if (Nummer == null) {
-			throw new NullPointerException("Nummer must not be null");
-		}
 		this.Nummer = Nummer;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (Wochenstunden == null) {
-			throw new NullPointerException("Wochenstunden must not be null");
-		}
 		this.Wochenstunden = Wochenstunden;
 	}
 
@@ -109,10 +97,7 @@ public final class DTOGostBlockungSchiene {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungSchiene other = (DTOGostBlockungSchiene) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -121,7 +106,7 @@ public final class DTOGostBlockungSchiene {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

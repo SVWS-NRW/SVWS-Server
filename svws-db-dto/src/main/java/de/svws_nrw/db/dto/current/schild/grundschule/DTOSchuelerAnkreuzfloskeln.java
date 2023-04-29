@@ -53,17 +53,17 @@ public final class DTOSchuelerAnkreuzfloskeln {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der zugehörigen Schülerlernabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** ID der Ankreuzfloskel aus dem Katalog */
 	@Column(name = "Floskel_ID")
 	@JsonProperty
-	public Long Floskel_ID;
+	public long Floskel_ID;
 
 	/** Gibt an ob diese Stufe angekreuzt ist */
 	@Column(name = "Stufe1")
@@ -118,18 +118,9 @@ public final class DTOSchuelerAnkreuzfloskeln {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param Floskel_ID   der Wert für das Attribut Floskel_ID
 	 */
-	public DTOSchuelerAnkreuzfloskeln(final Long ID, final Long Abschnitt_ID, final Long Floskel_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerAnkreuzfloskeln(final long ID, final long Abschnitt_ID, final long Floskel_ID) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Floskel_ID == null) {
-			throw new NullPointerException("Floskel_ID must not be null");
-		}
 		this.Floskel_ID = Floskel_ID;
 	}
 
@@ -143,10 +134,7 @@ public final class DTOSchuelerAnkreuzfloskeln {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAnkreuzfloskeln other = (DTOSchuelerAnkreuzfloskeln) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -155,7 +143,7 @@ public final class DTOSchuelerAnkreuzfloskeln {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

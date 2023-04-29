@@ -233,14 +233,14 @@ public final class DavRepository implements IDavRepository {
 		conn.transactionBegin();
 		final DTODavRessourceCollection dtoDavRessourceCollection = conn.queryByKey(DTODavRessourceCollection.class,
 				davRessourceCollectionACLPermissions.getRessourceCollectionId());
-		if (!user.istAdmin() && !dtoDavRessourceCollection.Benutzer_ID.equals(user.getId())) {
+		if (!user.istAdmin() && dtoDavRessourceCollection.Benutzer_ID != user.getId()) {
 			conn.transactionRollback();
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		final List<DTODavRessourceCollectionsACL> dtoACLs = conn
 				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", dtoDavRessourceCollection.ID,
 						DTODavRessourceCollectionsACL.class)
-				.stream().filter(dto -> dto.Benutzer_ID.equals(conn.getUser().getId())).toList();
+				.stream().filter(dto -> dto.Benutzer_ID == conn.getUser().getId()).toList();
 		DTODavRessourceCollectionsACL dtoACL;
 		if (dtoACLs.size() == 1) {
 			dtoACL = dtoACLs.get(0);
@@ -513,7 +513,7 @@ public final class DavRepository implements IDavRepository {
 		final List<DTODavRessourceCollectionsACL> dtoDavRessourceCollectionACLs = conn
 				.queryNamed("DTODavRessourceCollectionsACL.ressourcecollection_id", ressourceCollectionId,
 						DTODavRessourceCollectionsACL.class)
-				.stream().filter(dto -> dto.Benutzer_ID.equals(conn.getUser().getId())).toList();
+				.stream().filter(dto -> dto.Benutzer_ID == conn.getUser().getId()).toList();
 		if (dtoDavRessourceCollectionACLs.size() == 1) {
 			final DTODavRessourceCollectionsACL dtoDavRessourceCollectionsACL = dtoDavRessourceCollectionACLs.get(0);
 			final DavRessourceCollectionACLPermissions davRessourceCollectionACLPermissions = new DavRessourceCollectionACLPermissions(

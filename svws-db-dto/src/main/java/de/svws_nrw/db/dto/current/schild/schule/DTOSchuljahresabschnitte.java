@@ -39,17 +39,17 @@ public final class DTOSchuljahresabschnitte {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Schuljahr des Schuljahresabschnitts (z.B. 2012 für 2012/13) */
 	@Column(name = "Jahr")
 	@JsonProperty
-	public Integer Jahr;
+	public int Jahr;
 
 	/** Abschnitt des Schuljahresabschnitts */
 	@Column(name = "Abschnitt")
 	@JsonProperty
-	public Integer Abschnitt;
+	public int Abschnitt;
 
 	/** ID des vorigen Schuljahresabschnitts */
 	@Column(name = "VorigerAbschnitt_ID")
@@ -74,18 +74,9 @@ public final class DTOSchuljahresabschnitte {
 	 * @param Jahr   der Wert für das Attribut Jahr
 	 * @param Abschnitt   der Wert für das Attribut Abschnitt
 	 */
-	public DTOSchuljahresabschnitte(final Long ID, final Integer Jahr, final Integer Abschnitt) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuljahresabschnitte(final long ID, final int Jahr, final int Abschnitt) {
 		this.ID = ID;
-		if (Jahr == null) {
-			throw new NullPointerException("Jahr must not be null");
-		}
 		this.Jahr = Jahr;
-		if (Abschnitt == null) {
-			throw new NullPointerException("Abschnitt must not be null");
-		}
 		this.Abschnitt = Abschnitt;
 	}
 
@@ -99,10 +90,7 @@ public final class DTOSchuljahresabschnitte {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuljahresabschnitte other = (DTOSchuljahresabschnitte) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -111,7 +99,7 @@ public final class DTOSchuljahresabschnitte {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

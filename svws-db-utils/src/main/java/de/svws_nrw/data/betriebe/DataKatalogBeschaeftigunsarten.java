@@ -45,7 +45,7 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
 	private final Function<DTOBeschaeftigungsart, KatalogEintrag> dtoMapper = (final DTOBeschaeftigungsart k) -> {
 		final KatalogEintrag eintrag = new KatalogEintrag();
 		eintrag.id = k.ID;
-		eintrag.kuerzel = k.ID.toString();
+		eintrag.kuerzel = "" + k.ID;
 		eintrag.text = k.Bezeichnung;
 		eintrag.istSichtbar = true;
 		eintrag.istAenderbar = true;

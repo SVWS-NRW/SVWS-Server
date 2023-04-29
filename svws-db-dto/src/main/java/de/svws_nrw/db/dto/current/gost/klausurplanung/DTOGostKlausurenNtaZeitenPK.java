@@ -13,10 +13,10 @@ public final class DTOGostKlausurenNtaZeitenPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** ID des Schülers */
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** ID der Klausurvorgaben */
-	public Long Vorgabe_ID;
+	public long Vorgabe_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenNtaZeitenPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOGostKlausurenNtaZeitenPK implements Serializable {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Vorgabe_ID   der Wert für das Attribut Vorgabe_ID
 	 */
-	public DTOGostKlausurenNtaZeitenPK(final Long Schueler_ID, final Long Vorgabe_ID) {
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
+	public DTOGostKlausurenNtaZeitenPK(final long Schueler_ID, final long Vorgabe_ID) {
 		this.Schueler_ID = Schueler_ID;
-		if (Vorgabe_ID == null) {
-			throw new NullPointerException("Vorgabe_ID must not be null");
-		}
 		this.Vorgabe_ID = Vorgabe_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOGostKlausurenNtaZeitenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenNtaZeitenPK other = (DTOGostKlausurenNtaZeitenPK) obj;
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 
-		if (Vorgabe_ID == null) {
-			if (other.Vorgabe_ID != null)
-				return false;
-		} else if (!Vorgabe_ID.equals(other.Vorgabe_ID))
+		if (Vorgabe_ID != other.Vorgabe_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOGostKlausurenNtaZeitenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 
-		result = prime * result + ((Vorgabe_ID == null) ? 0 : Vorgabe_ID.hashCode());
+		result = prime * result + Long.hashCode(Vorgabe_ID);
 		return result;
 	}
 }

@@ -51,7 +51,7 @@ public final class DTOSchuelerTeilleistung {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Datum der Teilleistung */
 	@Column(name = "Datum")
@@ -79,7 +79,7 @@ public final class DTOSchuelerTeilleistung {
 	/** LeistungsdatenID der Teilleistung */
 	@Column(name = "Leistung_ID")
 	@JsonProperty
-	public Long Leistung_ID;
+	public long Leistung_ID;
 
 	/** Notenkürzel der Teilleistung */
 	@Column(name = "NotenKrz")
@@ -98,14 +98,8 @@ public final class DTOSchuelerTeilleistung {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Leistung_ID   der Wert für das Attribut Leistung_ID
 	 */
-	public DTOSchuelerTeilleistung(final Long ID, final Long Leistung_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerTeilleistung(final long ID, final long Leistung_ID) {
 		this.ID = ID;
-		if (Leistung_ID == null) {
-			throw new NullPointerException("Leistung_ID must not be null");
-		}
 		this.Leistung_ID = Leistung_ID;
 	}
 
@@ -119,10 +113,7 @@ public final class DTOSchuelerTeilleistung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerTeilleistung other = (DTOSchuelerTeilleistung) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -131,7 +122,7 @@ public final class DTOSchuelerTeilleistung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

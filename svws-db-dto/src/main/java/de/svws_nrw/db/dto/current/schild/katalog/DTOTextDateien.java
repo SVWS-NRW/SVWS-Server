@@ -49,7 +49,7 @@ public final class DTOTextDateien {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Bezeichnungdes Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Column(name = "Bezeichnung")
@@ -59,7 +59,7 @@ public final class DTOTextDateien {
 	/** TextID des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Column(name = "Text_ID")
 	@JsonProperty
-	public Long Text_ID;
+	public long Text_ID;
 
 	/** Text-Body des Textes der zum Ersatz für txt-Dateien genutzt wird */
 	@Column(name = "Text_Body")
@@ -91,14 +91,8 @@ public final class DTOTextDateien {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Text_ID   der Wert für das Attribut Text_ID
 	 */
-	public DTOTextDateien(final Long ID, final Long Text_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOTextDateien(final long ID, final long Text_ID) {
 		this.ID = ID;
-		if (Text_ID == null) {
-			throw new NullPointerException("Text_ID must not be null");
-		}
 		this.Text_ID = Text_ID;
 	}
 
@@ -112,10 +106,7 @@ public final class DTOTextDateien {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOTextDateien other = (DTOTextDateien) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -124,7 +115,7 @@ public final class DTOTextDateien {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

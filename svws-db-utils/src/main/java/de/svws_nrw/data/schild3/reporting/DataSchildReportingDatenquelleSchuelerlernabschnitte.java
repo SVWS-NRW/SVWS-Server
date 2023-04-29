@@ -60,19 +60,19 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
                 .queryNamed("DTOJahrgang.id.multiple", idJahrgaenge, DTOJahrgang.class)
                 .stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
-		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %s konnte nicht für die Lernabschnittsdaten mit der ID %s gefunden werden.";
+		final String meldungsvorlageDatenInkonsistent = "Daten inkonsistent: %s mit der ID %d konnte nicht für die Lernabschnittsdaten mit der ID %d gefunden werden.";
 
         for (final DTOSchuelerLernabschnittsdaten dto : lernabschnittsdaten) {
 			final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
 
             if (dtoSJA == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt",  dto.Schuljahresabschnitts_ID.toString(), dto.ID.toString()));
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt",  dto.Schuljahresabschnitts_ID, dto.ID));
             final DTOKlassen dtoKlasse = mapKlassen.get(dto.Klassen_ID);
             if (dtoKlasse == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID.toString(), dto.ID.toString()));
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID, dto.ID));
             final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(dto.Jahrgang_ID);
             if (dtoJahrgang == null)
-                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID.toString(), dto.ID.toString()));
+                throw OperationError.INTERNAL_SERVER_ERROR.exception(String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID, dto.ID));
             final SchildReportingSchuelerlernabschnitt data = new SchildReportingSchuelerlernabschnitt();
             data.id = dto.ID;
             data.schuelerID = dto.Schueler_ID;

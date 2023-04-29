@@ -37,12 +37,12 @@ public final class DTOLehrerMehrleistung {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** Mehrarbeitsstunden Kürzel */
 	@Column(name = "MehrleistungsgrundKrz")
@@ -67,14 +67,8 @@ public final class DTOLehrerMehrleistung {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param MehrleistungsgrundKrz   der Wert für das Attribut MehrleistungsgrundKrz
 	 */
-	public DTOLehrerMehrleistung(final Long ID, final Long Abschnitt_ID, final String MehrleistungsgrundKrz) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOLehrerMehrleistung(final long ID, final long Abschnitt_ID, final String MehrleistungsgrundKrz) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
 		if (MehrleistungsgrundKrz == null) {
 			throw new NullPointerException("MehrleistungsgrundKrz must not be null");
@@ -92,10 +86,7 @@ public final class DTOLehrerMehrleistung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerMehrleistung other = (DTOLehrerMehrleistung) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -104,7 +95,7 @@ public final class DTOLehrerMehrleistung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

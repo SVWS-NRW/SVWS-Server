@@ -167,7 +167,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 					}
 	    			case "fach_id" -> {
 						final Long patch_fach_id = JSONMapper.convertToLong(value, true);
-						if ((patch_fach_id == null) || (patch_fach_id.longValue() != kurs.Fach_ID.longValue()))
+						if ((patch_fach_id == null) || (patch_fach_id.longValue() != kurs.Fach_ID))
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "kursart" -> {
@@ -177,7 +177,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    			}
 	    			case "nummer" -> {
 	    				final Integer patch_nummer = JSONMapper.convertToInteger(value, true);
-						if ((patch_nummer == null) || (patch_nummer.intValue() != kurs.Kursnummer.intValue()))
+						if ((patch_nummer == null) || (patch_nummer.intValue() != kurs.Kursnummer))
 							throw OperationError.BAD_REQUEST.exception();
 	    			}
 	    			case "istKoopKurs" -> kurs.IstKoopKurs = JSONMapper.convertToBoolean(value, false);
@@ -422,13 +422,13 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			if ((kurs1 == null) || (kurs2 == null))
 				return OperationError.NOT_FOUND.getResponse();
 			// Prüfe, ob die Kurse zu der gleichen Blockung gehören
-			if (!kurs1.Blockung_ID.equals(kurs2.Blockung_ID))
+			if (kurs1.Blockung_ID != kurs2.Blockung_ID)
 	        	throw OperationError.BAD_REQUEST.exception("Die beiden Kurse müssen zur gleichen Blockung gehören.");
 			// Prüfe, ob das Fach übereinstimmt
-			if (!kurs1.Fach_ID.equals(kurs2.Fach_ID))
+			if (kurs1.Fach_ID != kurs2.Fach_ID)
 	        	throw OperationError.BAD_REQUEST.exception("Die Fächer der beiden Kurse müssen übereinstimmen.");
 			// Prüfe, ob die Kursart übereinstimmt
-			if (!kurs1.Kursart.equals(kurs2.Kursart))
+			if (kurs1.Kursart != kurs2.Kursart)
 	        	throw OperationError.BAD_REQUEST.exception("Die Kursarten der beiden Kurse müssen übereinstimmen.");
 	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs1.Blockung_ID);

@@ -60,17 +60,17 @@ public final class DTOGostBlockungKurs {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
-	public Long Blockung_ID;
+	public long Blockung_ID;
 
 	/** ID des Faches */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
 	@Column(name = "Kursart")
@@ -83,7 +83,7 @@ public final class DTOGostBlockungKurs {
 	/** Die Nummer des Kurses in Bezug auf das Fach (Kurse eines Faches sind in einer Blockung üblicherweise von 1 ab durchnummeriert) */
 	@Column(name = "Kursnummer")
 	@JsonProperty
-	public Integer Kursnummer;
+	public int Kursnummer;
 
 	/** Gibt an, ob es sich um einen Kooperations-Kurs mit einer anderen Schule handelt oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstKoopKurs")
@@ -101,12 +101,12 @@ public final class DTOGostBlockungKurs {
 	/** Gibt die Anzahl der Schienen an, die für den Kurs in der Blockung verwendet werden soll (normalerweise 1) */
 	@Column(name = "Schienenanzahl")
 	@JsonProperty
-	public Integer Schienenanzahl;
+	public int Schienenanzahl;
 
 	/** Die Anzahl der Wochenstunden für den Kurs */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
-	public Integer Wochenstunden;
+	public int Wochenstunden;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungKurs ohne eine Initialisierung der Attribute.
@@ -126,38 +126,17 @@ public final class DTOGostBlockungKurs {
 	 * @param Schienenanzahl   der Wert für das Attribut Schienenanzahl
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
-	public DTOGostBlockungKurs(final Long ID, final Long Blockung_ID, final Long Fach_ID, final GostKursart Kursart, final Integer Kursnummer, final Boolean IstKoopKurs, final Integer Schienenanzahl, final Integer Wochenstunden) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostBlockungKurs(final long ID, final long Blockung_ID, final long Fach_ID, final GostKursart Kursart, final int Kursnummer, final Boolean IstKoopKurs, final int Schienenanzahl, final int Wochenstunden) {
 		this.ID = ID;
-		if (Blockung_ID == null) {
-			throw new NullPointerException("Blockung_ID must not be null");
-		}
 		this.Blockung_ID = Blockung_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 		if (Kursart == null) {
 			throw new NullPointerException("Kursart must not be null");
 		}
 		this.Kursart = Kursart;
-		if (Kursnummer == null) {
-			throw new NullPointerException("Kursnummer must not be null");
-		}
 		this.Kursnummer = Kursnummer;
-		if (IstKoopKurs == null) {
-			throw new NullPointerException("IstKoopKurs must not be null");
-		}
 		this.IstKoopKurs = IstKoopKurs;
-		if (Schienenanzahl == null) {
-			throw new NullPointerException("Schienenanzahl must not be null");
-		}
 		this.Schienenanzahl = Schienenanzahl;
-		if (Wochenstunden == null) {
-			throw new NullPointerException("Wochenstunden must not be null");
-		}
 		this.Wochenstunden = Wochenstunden;
 	}
 
@@ -171,10 +150,7 @@ public final class DTOGostBlockungKurs {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungKurs other = (DTOGostBlockungKurs) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -183,7 +159,7 @@ public final class DTOGostBlockungKurs {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

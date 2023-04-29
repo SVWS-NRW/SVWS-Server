@@ -70,12 +70,12 @@ public final class DTOGostKlausurenVorgaben {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Abiturjahrgang, dem die Klausurvorgabe zugeordnet ist */
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Das Halbjahr, welchem die Klausurvorgabe zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
@@ -88,12 +88,12 @@ public final class DTOGostKlausurenVorgaben {
 	/** Das Quartal, in dem die Klausur geschrieben wird. */
 	@Column(name = "Quartal")
 	@JsonProperty
-	public Integer Quartal;
+	public int Quartal;
 
 	/** Fach_ID der Klausurvorgaben */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** ID der Kursart (siehe ID des Core-Types GostKursart) */
 	@Column(name = "Kursart")
@@ -106,12 +106,12 @@ public final class DTOGostKlausurenVorgaben {
 	/** Das Dauer der Klausur/Prüfung in Minuten */
 	@Column(name = "Dauer")
 	@JsonProperty
-	public Integer Dauer;
+	public int Dauer;
 
 	/** Das Dauer der Auswahlzeit in Minuten */
 	@Column(name = "Auswahlzeit")
 	@JsonProperty
-	public Integer Auswahlzeit;
+	public int Auswahlzeit;
 
 	/** Gibt an, ob es sich um eine mündliche Prüfunge handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstMdlPruefung")
@@ -163,50 +163,20 @@ public final class DTOGostKlausurenVorgaben {
 	 * @param IstAudioNotwendig   der Wert für das Attribut IstAudioNotwendig
 	 * @param IstVideoNotwendig   der Wert für das Attribut IstVideoNotwendig
 	 */
-	public DTOGostKlausurenVorgaben(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal, final Long Fach_ID, final GostKursart Kursart, final Integer Dauer, final Integer Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenVorgaben(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal, final long Fach_ID, final GostKursart Kursart, final int Dauer, final int Auswahlzeit, final Boolean IstMdlPruefung, final Boolean IstAudioNotwendig, final Boolean IstVideoNotwendig) {
 		this.ID = ID;
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Halbjahr == null) {
-			throw new NullPointerException("Halbjahr must not be null");
-		}
 		this.Halbjahr = Halbjahr;
-		if (Quartal == null) {
-			throw new NullPointerException("Quartal must not be null");
-		}
 		this.Quartal = Quartal;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 		if (Kursart == null) {
 			throw new NullPointerException("Kursart must not be null");
 		}
 		this.Kursart = Kursart;
-		if (Dauer == null) {
-			throw new NullPointerException("Dauer must not be null");
-		}
 		this.Dauer = Dauer;
-		if (Auswahlzeit == null) {
-			throw new NullPointerException("Auswahlzeit must not be null");
-		}
 		this.Auswahlzeit = Auswahlzeit;
-		if (IstMdlPruefung == null) {
-			throw new NullPointerException("IstMdlPruefung must not be null");
-		}
 		this.IstMdlPruefung = IstMdlPruefung;
-		if (IstAudioNotwendig == null) {
-			throw new NullPointerException("IstAudioNotwendig must not be null");
-		}
 		this.IstAudioNotwendig = IstAudioNotwendig;
-		if (IstVideoNotwendig == null) {
-			throw new NullPointerException("IstVideoNotwendig must not be null");
-		}
 		this.IstVideoNotwendig = IstVideoNotwendig;
 	}
 
@@ -220,10 +190,7 @@ public final class DTOGostKlausurenVorgaben {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenVorgaben other = (DTOGostKlausurenVorgaben) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -232,7 +199,7 @@ public final class DTOGostKlausurenVorgaben {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

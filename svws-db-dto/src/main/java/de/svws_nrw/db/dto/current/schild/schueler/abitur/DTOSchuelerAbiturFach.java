@@ -141,17 +141,17 @@ public final class DTOSchuelerAbiturFach {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die eindeutige ID des Schülers – verweist auf den Schüler */
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/** Die eindeutige ID des Faches – verweist auf das Fach */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Das Kürzel des Faches */
 	@Column(name = "FachKrz")
@@ -426,18 +426,9 @@ public final class DTOSchuelerAbiturFach {
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOSchuelerAbiturFach(final Long ID, final Long Schueler_ID, final Long Fach_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerAbiturFach(final long ID, final long Schueler_ID, final long Fach_ID) {
 		this.ID = ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -451,10 +442,7 @@ public final class DTOSchuelerAbiturFach {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerAbiturFach other = (DTOSchuelerAbiturFach) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -463,7 +451,7 @@ public final class DTOSchuelerAbiturFach {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

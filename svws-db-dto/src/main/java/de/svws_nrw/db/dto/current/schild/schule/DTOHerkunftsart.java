@@ -37,7 +37,7 @@ public final class DTOHerkunftsart {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Das Kürzel der Herkunftsart */
 	@Column(name = "Kuerzel")
@@ -66,10 +66,7 @@ public final class DTOHerkunftsart {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 */
-	public DTOHerkunftsart(final Long ID, final String Kuerzel) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOHerkunftsart(final long ID, final String Kuerzel) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -87,10 +84,7 @@ public final class DTOHerkunftsart {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOHerkunftsart other = (DTOHerkunftsart) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -99,7 +93,7 @@ public final class DTOHerkunftsart {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

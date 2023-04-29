@@ -45,7 +45,7 @@ public final class DTOSchildAuswahlFilter {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Art des Filters */
 	@Column(name = "Art")
@@ -94,10 +94,7 @@ public final class DTOSchildAuswahlFilter {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Name   der Wert für das Attribut Name
 	 */
-	public DTOSchildAuswahlFilter(final Long ID, final String Name) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchildAuswahlFilter(final long ID, final String Name) {
 		this.ID = ID;
 		if (Name == null) {
 			throw new NullPointerException("Name must not be null");
@@ -115,10 +112,7 @@ public final class DTOSchildAuswahlFilter {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchildAuswahlFilter other = (DTOSchildAuswahlFilter) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -127,7 +121,7 @@ public final class DTOSchildAuswahlFilter {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

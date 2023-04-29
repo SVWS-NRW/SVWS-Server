@@ -13,7 +13,7 @@ public final class DTOClientKonfigurationBenutzerPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Die ID des Datenbankbenutzers, für den der Client-Konfigurationsdatensatz gespeichert ist */
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/** Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist */
 	public String AppName;
@@ -34,10 +34,7 @@ public final class DTOClientKonfigurationBenutzerPK implements Serializable {
 	 * @param AppName   der Wert für das Attribut AppName
 	 * @param Schluessel   der Wert für das Attribut Schluessel
 	 */
-	public DTOClientKonfigurationBenutzerPK(final Long Benutzer_ID, final String AppName, final String Schluessel) {
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
+	public DTOClientKonfigurationBenutzerPK(final long Benutzer_ID, final String AppName, final String Schluessel) {
 		this.Benutzer_ID = Benutzer_ID;
 		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
@@ -59,10 +56,7 @@ public final class DTOClientKonfigurationBenutzerPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOClientKonfigurationBenutzerPK other = (DTOClientKonfigurationBenutzerPK) obj;
-		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
-				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
 
 		if (AppName == null) {
@@ -83,7 +77,7 @@ public final class DTOClientKonfigurationBenutzerPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Benutzer_ID == null) ? 0 : Benutzer_ID.hashCode());
+		result = prime * result + Long.hashCode(Benutzer_ID);
 
 		result = prime * result + ((AppName == null) ? 0 : AppName.hashCode());
 

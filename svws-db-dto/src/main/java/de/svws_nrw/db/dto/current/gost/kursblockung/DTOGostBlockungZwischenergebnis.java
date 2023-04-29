@@ -45,12 +45,12 @@ public final class DTOGostBlockungZwischenergebnis {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
-	public Long Blockung_ID;
+	public long Blockung_ID;
 
 	/** Gibt an, ob das Zwischenergebnis von einem Benutzer markiert wurde oder nicht: 1 - true, 0 - false  */
 	@Column(name = "IstMarkiert")
@@ -82,22 +82,10 @@ public final class DTOGostBlockungZwischenergebnis {
 	 * @param IstMarkiert   der Wert für das Attribut IstMarkiert
 	 * @param IstVorlage   der Wert für das Attribut IstVorlage
 	 */
-	public DTOGostBlockungZwischenergebnis(final Long ID, final Long Blockung_ID, final Boolean IstMarkiert, final Boolean IstVorlage) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostBlockungZwischenergebnis(final long ID, final long Blockung_ID, final Boolean IstMarkiert, final Boolean IstVorlage) {
 		this.ID = ID;
-		if (Blockung_ID == null) {
-			throw new NullPointerException("Blockung_ID must not be null");
-		}
 		this.Blockung_ID = Blockung_ID;
-		if (IstMarkiert == null) {
-			throw new NullPointerException("IstMarkiert must not be null");
-		}
 		this.IstMarkiert = IstMarkiert;
-		if (IstVorlage == null) {
-			throw new NullPointerException("IstVorlage must not be null");
-		}
 		this.IstVorlage = IstVorlage;
 	}
 
@@ -111,10 +99,7 @@ public final class DTOGostBlockungZwischenergebnis {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungZwischenergebnis other = (DTOGostBlockungZwischenergebnis) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -123,7 +108,7 @@ public final class DTOGostBlockungZwischenergebnis {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

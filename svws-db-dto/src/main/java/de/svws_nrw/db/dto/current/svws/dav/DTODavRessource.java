@@ -55,12 +55,12 @@ public final class DTODavRessource {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Id der Ressourcensammlung, deren Teil diese Ressource ist */
 	@Column(name = "DavRessourceCollection_ID")
 	@JsonProperty
-	public Long DavRessourceCollection_ID;
+	public long DavRessourceCollection_ID;
 
 	/** Die UID der Ressource */
 	@Column(name = "UID")
@@ -127,14 +127,8 @@ public final class DTODavRessource {
 	 * @param KalenderEnde   der Wert für das Attribut KalenderEnde
 	 * @param ressource   der Wert für das Attribut ressource
 	 */
-	public DTODavRessource(final Long ID, final Long DavRessourceCollection_ID, final String UID, final String lastModified, final String KalenderTyp, final String KalenderStart, final String KalenderEnde, final byte[] ressource) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTODavRessource(final long ID, final long DavRessourceCollection_ID, final String UID, final String lastModified, final String KalenderTyp, final String KalenderStart, final String KalenderEnde, final byte[] ressource) {
 		this.ID = ID;
-		if (DavRessourceCollection_ID == null) {
-			throw new NullPointerException("DavRessourceCollection_ID must not be null");
-		}
 		this.DavRessourceCollection_ID = DavRessourceCollection_ID;
 		if (UID == null) {
 			throw new NullPointerException("UID must not be null");
@@ -172,10 +166,7 @@ public final class DTODavRessource {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavRessource other = (DTODavRessource) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -184,7 +175,7 @@ public final class DTODavRessource {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -56,7 +56,7 @@ public final class DTOBenutzer {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Typ des Benutzers (0 = Allgemeiner Benutzer, 1 = Lehrer bzw. Personal aus K_Lehrer, 2 = Schueler, 3 = Erzieher) */
 	@Column(name = "Typ")
@@ -107,18 +107,9 @@ public final class DTOBenutzer {
 	 * @param Typ   der Wert für das Attribut Typ
 	 * @param IstAdmin   der Wert für das Attribut IstAdmin
 	 */
-	public DTOBenutzer(final Long ID, final BenutzerTyp Typ, final Boolean IstAdmin) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOBenutzer(final long ID, final BenutzerTyp Typ, final Boolean IstAdmin) {
 		this.ID = ID;
-		if (Typ == null) {
-			throw new NullPointerException("Typ must not be null");
-		}
 		this.Typ = Typ;
-		if (IstAdmin == null) {
-			throw new NullPointerException("IstAdmin must not be null");
-		}
 		this.IstAdmin = IstAdmin;
 	}
 
@@ -132,10 +123,7 @@ public final class DTOBenutzer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzer other = (DTOBenutzer) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -144,7 +132,7 @@ public final class DTOBenutzer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

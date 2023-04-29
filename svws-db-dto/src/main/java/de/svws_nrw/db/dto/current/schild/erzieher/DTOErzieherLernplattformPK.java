@@ -13,10 +13,10 @@ public final class DTOErzieherLernplattformPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** ErzieherID für den Lernplattform-Datensatz */
-	public Long ErzieherID;
+	public long ErzieherID;
 
 	/** ID der Lernplattform */
-	public Long LernplattformID;
+	public long LernplattformID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOErzieherLernplattformPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOErzieherLernplattformPK implements Serializable {
 	 * @param ErzieherID   der Wert für das Attribut ErzieherID
 	 * @param LernplattformID   der Wert für das Attribut LernplattformID
 	 */
-	public DTOErzieherLernplattformPK(final Long ErzieherID, final Long LernplattformID) {
-		if (ErzieherID == null) {
-			throw new NullPointerException("ErzieherID must not be null");
-		}
+	public DTOErzieherLernplattformPK(final long ErzieherID, final long LernplattformID) {
 		this.ErzieherID = ErzieherID;
-		if (LernplattformID == null) {
-			throw new NullPointerException("LernplattformID must not be null");
-		}
 		this.LernplattformID = LernplattformID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOErzieherLernplattformPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOErzieherLernplattformPK other = (DTOErzieherLernplattformPK) obj;
-		if (ErzieherID == null) {
-			if (other.ErzieherID != null)
-				return false;
-		} else if (!ErzieherID.equals(other.ErzieherID))
+		if (ErzieherID != other.ErzieherID)
 			return false;
 
-		if (LernplattformID == null) {
-			if (other.LernplattformID != null)
-				return false;
-		} else if (!LernplattformID.equals(other.LernplattformID))
+		if (LernplattformID != other.LernplattformID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOErzieherLernplattformPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ErzieherID == null) ? 0 : ErzieherID.hashCode());
+		result = prime * result + Long.hashCode(ErzieherID);
 
-		result = prime * result + ((LernplattformID == null) ? 0 : LernplattformID.hashCode());
+		result = prime * result + Long.hashCode(LernplattformID);
 		return result;
 	}
 }

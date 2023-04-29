@@ -53,7 +53,7 @@ public final class DTOOrt {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** PLZ des Ortes */
 	@Column(name = "PLZ")
@@ -109,10 +109,7 @@ public final class DTOOrt {
 	 * @param PLZ   der Wert für das Attribut PLZ
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOOrt(final Long ID, final String PLZ, final String Bezeichnung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOOrt(final long ID, final String PLZ, final String Bezeichnung) {
 		this.ID = ID;
 		if (PLZ == null) {
 			throw new NullPointerException("PLZ must not be null");
@@ -134,10 +131,7 @@ public final class DTOOrt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOOrt other = (DTOOrt) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -146,7 +140,7 @@ public final class DTOOrt {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

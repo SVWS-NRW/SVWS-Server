@@ -13,10 +13,10 @@ public final class DTOBenutzergruppenMitgliedPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Die ID der Benutzergruppe */
-	public Long Gruppe_ID;
+	public long Gruppe_ID;
 
 	/** Die ID des Benutzers */
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOBenutzergruppenMitgliedPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOBenutzergruppenMitgliedPK implements Serializable {
 	 * @param Gruppe_ID   der Wert für das Attribut Gruppe_ID
 	 * @param Benutzer_ID   der Wert für das Attribut Benutzer_ID
 	 */
-	public DTOBenutzergruppenMitgliedPK(final Long Gruppe_ID, final Long Benutzer_ID) {
-		if (Gruppe_ID == null) {
-			throw new NullPointerException("Gruppe_ID must not be null");
-		}
+	public DTOBenutzergruppenMitgliedPK(final long Gruppe_ID, final long Benutzer_ID) {
 		this.Gruppe_ID = Gruppe_ID;
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
 		this.Benutzer_ID = Benutzer_ID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOBenutzergruppenMitgliedPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOBenutzergruppenMitgliedPK other = (DTOBenutzergruppenMitgliedPK) obj;
-		if (Gruppe_ID == null) {
-			if (other.Gruppe_ID != null)
-				return false;
-		} else if (!Gruppe_ID.equals(other.Gruppe_ID))
+		if (Gruppe_ID != other.Gruppe_ID)
 			return false;
 
-		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
-				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOBenutzergruppenMitgliedPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Gruppe_ID == null) ? 0 : Gruppe_ID.hashCode());
+		result = prime * result + Long.hashCode(Gruppe_ID);
 
-		result = prime * result + ((Benutzer_ID == null) ? 0 : Benutzer_ID.hashCode());
+		result = prime * result + Long.hashCode(Benutzer_ID);
 		return result;
 	}
 }

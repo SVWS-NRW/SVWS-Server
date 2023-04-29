@@ -112,17 +112,17 @@ public final class DTOSchuelerLeistungsdaten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die eindeutige ID des zugehörigen Lernabschnittes – verweist auf den Lernabschnitt des Schülers */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** Die eindeutige ID des zugehörigen Faches – verweist auf das Fach */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Gibt an ob der Datensatz aus einem vorherigen Abschnitt geholt wurde die Minuszahl gibt die Schritte zurück an */
 	@Column(name = "Hochrechnung")
@@ -309,18 +309,9 @@ public final class DTOSchuelerLeistungsdaten {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOSchuelerLeistungsdaten(final Long ID, final Long Abschnitt_ID, final Long Fach_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOSchuelerLeistungsdaten(final long ID, final long Abschnitt_ID, final long Fach_ID) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -334,10 +325,7 @@ public final class DTOSchuelerLeistungsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerLeistungsdaten other = (DTOSchuelerLeistungsdaten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -346,7 +334,7 @@ public final class DTOSchuelerLeistungsdaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -51,7 +51,7 @@ public final class DTOAlleSchulformen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Kürzel der Schulform */
 	@Column(name = "Kuerzel")
@@ -100,10 +100,7 @@ public final class DTOAlleSchulformen {
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 * @param HatGymOb   der Wert für das Attribut HatGymOb
 	 */
-	public DTOAlleSchulformen(final Long ID, final String Kuerzel, final String Bezeichnung, final Boolean HatGymOb) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOAlleSchulformen(final long ID, final String Kuerzel, final String Bezeichnung, final Boolean HatGymOb) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -113,9 +110,6 @@ public final class DTOAlleSchulformen {
 			throw new NullPointerException("Bezeichnung must not be null");
 		}
 		this.Bezeichnung = Bezeichnung;
-		if (HatGymOb == null) {
-			throw new NullPointerException("HatGymOb must not be null");
-		}
 		this.HatGymOb = HatGymOb;
 	}
 
@@ -129,10 +123,7 @@ public final class DTOAlleSchulformen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOAlleSchulformen other = (DTOAlleSchulformen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -141,7 +132,7 @@ public final class DTOAlleSchulformen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -37,18 +37,18 @@ public final class DTOKlassenLeitung {
 	@Id
 	@Column(name = "Klassen_ID")
 	@JsonProperty
-	public Long Klassen_ID;
+	public long Klassen_ID;
 
 	/** ID des Lehrers */
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/** Die Reihenfolge, in welcher die Klassenlehrer in der Klassen angegeben werden. Kann zur Unterscheidung zwischen Klassenlehrern (1) und deren Stellvertretern (2, ...) genutzt werden, wenn keine alphabetische Reihenfolge gewünscht ist.  */
 	@Column(name = "Reihenfolge")
 	@JsonProperty
-	public Integer Reihenfolge;
+	public int Reihenfolge;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKlassenLeitung ohne eine Initialisierung der Attribute.
@@ -63,18 +63,9 @@ public final class DTOKlassenLeitung {
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 * @param Reihenfolge   der Wert für das Attribut Reihenfolge
 	 */
-	public DTOKlassenLeitung(final Long Klassen_ID, final Long Lehrer_ID, final Integer Reihenfolge) {
-		if (Klassen_ID == null) {
-			throw new NullPointerException("Klassen_ID must not be null");
-		}
+	public DTOKlassenLeitung(final long Klassen_ID, final long Lehrer_ID, final int Reihenfolge) {
 		this.Klassen_ID = Klassen_ID;
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Reihenfolge == null) {
-			throw new NullPointerException("Reihenfolge must not be null");
-		}
 		this.Reihenfolge = Reihenfolge;
 	}
 
@@ -88,16 +79,10 @@ public final class DTOKlassenLeitung {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKlassenLeitung other = (DTOKlassenLeitung) obj;
-		if (Klassen_ID == null) {
-			if (other.Klassen_ID != null)
-				return false;
-		} else if (!Klassen_ID.equals(other.Klassen_ID))
+		if (Klassen_ID != other.Klassen_ID)
 			return false;
 
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 		return true;
 	}
@@ -106,9 +91,9 @@ public final class DTOKlassenLeitung {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Klassen_ID == null) ? 0 : Klassen_ID.hashCode());
+		result = prime * result + Long.hashCode(Klassen_ID);
 
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 		return result;
 	}
 

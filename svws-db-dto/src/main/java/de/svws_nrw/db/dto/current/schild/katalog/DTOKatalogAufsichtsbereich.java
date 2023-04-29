@@ -35,7 +35,7 @@ public final class DTOKatalogAufsichtsbereich {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die Kurzbezeichnung des Aufsichtsbereichs */
 	@Column(name = "Kuerzel")
@@ -60,10 +60,7 @@ public final class DTOKatalogAufsichtsbereich {
 	 * @param Kuerzel   der Wert für das Attribut Kuerzel
 	 * @param Beschreibung   der Wert für das Attribut Beschreibung
 	 */
-	public DTOKatalogAufsichtsbereich(final Long ID, final String Kuerzel, final String Beschreibung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKatalogAufsichtsbereich(final long ID, final String Kuerzel, final String Beschreibung) {
 		this.ID = ID;
 		if (Kuerzel == null) {
 			throw new NullPointerException("Kuerzel must not be null");
@@ -85,10 +82,7 @@ public final class DTOKatalogAufsichtsbereich {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogAufsichtsbereich other = (DTOKatalogAufsichtsbereich) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -97,7 +91,7 @@ public final class DTOKatalogAufsichtsbereich {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -53,7 +53,7 @@ public final class DTOEigeneSchuleKAoADaten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** KAOA Curriculumsangaben */
 	@Column(name = "Curriculum")
@@ -129,10 +129,7 @@ public final class DTOEigeneSchuleKAoADaten {
 	 * @param NutzungEntscheidungskompetenzI   der Wert für das Attribut NutzungEntscheidungskompetenzI
 	 * @param NutzungEntscheidungskompetenzII   der Wert für das Attribut NutzungEntscheidungskompetenzII
 	 */
-	public DTOEigeneSchuleKAoADaten(final Long ID, final Boolean Curriculum, final Boolean Koordinator, final Boolean Berufsorientierungsbuero, final Boolean KooperationsvereinbarungAA, final Boolean NutzungReflexionsworkshop, final Boolean NutzungEntscheidungskompetenzI, final Boolean NutzungEntscheidungskompetenzII) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOEigeneSchuleKAoADaten(final long ID, final Boolean Curriculum, final Boolean Koordinator, final Boolean Berufsorientierungsbuero, final Boolean KooperationsvereinbarungAA, final Boolean NutzungReflexionsworkshop, final Boolean NutzungEntscheidungskompetenzI, final Boolean NutzungEntscheidungskompetenzII) {
 		this.ID = ID;
 		if (Curriculum == null) {
 			throw new NullPointerException("Curriculum must not be null");
@@ -174,10 +171,7 @@ public final class DTOEigeneSchuleKAoADaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEigeneSchuleKAoADaten other = (DTOEigeneSchuleKAoADaten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -186,7 +180,7 @@ public final class DTOEigeneSchuleKAoADaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

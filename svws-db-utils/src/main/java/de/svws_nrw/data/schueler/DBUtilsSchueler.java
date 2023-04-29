@@ -36,7 +36,7 @@ public final class DBUtilsSchueler {
         // Lese die Sprachbelegungen (Sprachenfolge) aus der Datenbank ein
         final List<DTOSchuelerSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOSchuelerSprachenfolge.schueler_id", id, DTOSchuelerSprachenfolge.class);
 		for (final DTOSchuelerSprachenfolge dtoSprachbelegung : dtoSprachenfolge) {
-			if ((dtoSprachbelegung.Schueler_ID == null) || (dtoSprachbelegung.ASDJahrgangVon == null))
+			if (dtoSprachbelegung.ASDJahrgangVon == null)
 				continue;
 			final Sprachbelegung belegung = new Sprachbelegung();
 			belegung.sprache = dtoSprachbelegung.Sprache;
@@ -56,7 +56,7 @@ public final class DBUtilsSchueler {
         // Lese die Sprachprüfungen aus der Datenbank ein
         final List<DTOSchuelerSprachpruefungen> dtoSprachpruefungen = conn.queryNamed("DTOSchuelerSprachpruefungen.schueler_id", id, DTOSchuelerSprachpruefungen.class);
         for (final DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
-            if ((dtoSprachpruefung.Schueler_ID == null) || (dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null) || (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
+            if ((dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null) || (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
                 continue;
             final Sprachpruefung pruefung = new Sprachpruefung();
             pruefung.sprache = dtoSprachpruefung.Sprache;

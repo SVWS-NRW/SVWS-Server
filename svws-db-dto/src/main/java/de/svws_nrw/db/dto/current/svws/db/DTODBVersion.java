@@ -41,7 +41,7 @@ public final class DTODBVersion {
 	@Id
 	@Column(name = "Revision")
 	@JsonProperty
-	public Long Revision;
+	public long Revision;
 
 	/** Gibt an, ob die Datenbank noch für einen Produktivbetrieb zugelassen ist oder durch ein Update auf eine Entwicklerversion eventuell in einem ungültigen Zustand ist */
 	@Column(name = "IsTainted")
@@ -63,14 +63,8 @@ public final class DTODBVersion {
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public DTODBVersion(final Long Revision, final Boolean IsTainted) {
-		if (Revision == null) {
-			throw new NullPointerException("Revision must not be null");
-		}
+	public DTODBVersion(final long Revision, final Boolean IsTainted) {
 		this.Revision = Revision;
-		if (IsTainted == null) {
-			throw new NullPointerException("IsTainted must not be null");
-		}
 		this.IsTainted = IsTainted;
 	}
 
@@ -84,10 +78,7 @@ public final class DTODBVersion {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODBVersion other = (DTODBVersion) obj;
-		if (Revision == null) {
-			if (other.Revision != null)
-				return false;
-		} else if (!Revision.equals(other.Revision))
+		if (Revision != other.Revision)
 			return false;
 		return true;
 	}
@@ -96,7 +87,7 @@ public final class DTODBVersion {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Revision == null) ? 0 : Revision.hashCode());
+		result = prime * result + Long.hashCode(Revision);
 		return result;
 	}
 

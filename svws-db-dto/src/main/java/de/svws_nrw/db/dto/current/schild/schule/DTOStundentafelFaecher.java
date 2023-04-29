@@ -60,17 +60,17 @@ public final class DTOStundentafelFaecher {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der zugehörigen Stundentafel */
 	@Column(name = "Stundentafel_ID")
 	@JsonProperty
-	public Long Stundentafel_ID;
+	public long Stundentafel_ID;
 
 	/** FachID das in der Stundentafel ist */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Kursart des Faches in der Stundentafel */
 	@Column(name = "KursartAllg")
@@ -126,18 +126,9 @@ public final class DTOStundentafelFaecher {
 	 * @param Stundentafel_ID   der Wert für das Attribut Stundentafel_ID
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOStundentafelFaecher(final Long ID, final Long Stundentafel_ID, final Long Fach_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundentafelFaecher(final long ID, final long Stundentafel_ID, final long Fach_ID) {
 		this.ID = ID;
-		if (Stundentafel_ID == null) {
-			throw new NullPointerException("Stundentafel_ID must not be null");
-		}
 		this.Stundentafel_ID = Stundentafel_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -151,10 +142,7 @@ public final class DTOStundentafelFaecher {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundentafelFaecher other = (DTOStundentafelFaecher) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -163,7 +151,7 @@ public final class DTOStundentafelFaecher {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

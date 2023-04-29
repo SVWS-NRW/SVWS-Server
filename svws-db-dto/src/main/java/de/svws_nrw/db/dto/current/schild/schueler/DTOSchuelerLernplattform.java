@@ -53,13 +53,13 @@ public final class DTOSchuelerLernplattform {
 	@Id
 	@Column(name = "SchuelerID")
 	@JsonProperty
-	public Long SchuelerID;
+	public long SchuelerID;
 
 	/** ID der Lernplattform */
 	@Id
 	@Column(name = "LernplattformID")
 	@JsonProperty
-	public Long LernplattformID;
+	public long LernplattformID;
 
 	/** CredentialD für den Lernplattform-Datensatz */
 	@Column(name = "CredentialID")
@@ -114,30 +114,12 @@ public final class DTOSchuelerLernplattform {
 	 * @param EinwilligungAudiokonferenz   der Wert für das Attribut EinwilligungAudiokonferenz
 	 * @param EinwilligungVideokonferenz   der Wert für das Attribut EinwilligungVideokonferenz
 	 */
-	public DTOSchuelerLernplattform(final Long SchuelerID, final Long LernplattformID, final Boolean EinwilligungAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
-		if (SchuelerID == null) {
-			throw new NullPointerException("SchuelerID must not be null");
-		}
+	public DTOSchuelerLernplattform(final long SchuelerID, final long LernplattformID, final Boolean EinwilligungAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
 		this.SchuelerID = SchuelerID;
-		if (LernplattformID == null) {
-			throw new NullPointerException("LernplattformID must not be null");
-		}
 		this.LernplattformID = LernplattformID;
-		if (EinwilligungAbgefragt == null) {
-			throw new NullPointerException("EinwilligungAbgefragt must not be null");
-		}
 		this.EinwilligungAbgefragt = EinwilligungAbgefragt;
-		if (EinwilligungNutzung == null) {
-			throw new NullPointerException("EinwilligungNutzung must not be null");
-		}
 		this.EinwilligungNutzung = EinwilligungNutzung;
-		if (EinwilligungAudiokonferenz == null) {
-			throw new NullPointerException("EinwilligungAudiokonferenz must not be null");
-		}
 		this.EinwilligungAudiokonferenz = EinwilligungAudiokonferenz;
-		if (EinwilligungVideokonferenz == null) {
-			throw new NullPointerException("EinwilligungVideokonferenz must not be null");
-		}
 		this.EinwilligungVideokonferenz = EinwilligungVideokonferenz;
 	}
 
@@ -151,16 +133,10 @@ public final class DTOSchuelerLernplattform {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerLernplattform other = (DTOSchuelerLernplattform) obj;
-		if (SchuelerID == null) {
-			if (other.SchuelerID != null)
-				return false;
-		} else if (!SchuelerID.equals(other.SchuelerID))
+		if (SchuelerID != other.SchuelerID)
 			return false;
 
-		if (LernplattformID == null) {
-			if (other.LernplattformID != null)
-				return false;
-		} else if (!LernplattformID.equals(other.LernplattformID))
+		if (LernplattformID != other.LernplattformID)
 			return false;
 		return true;
 	}
@@ -169,9 +145,9 @@ public final class DTOSchuelerLernplattform {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((SchuelerID == null) ? 0 : SchuelerID.hashCode());
+		result = prime * result + Long.hashCode(SchuelerID);
 
-		result = prime * result + ((LernplattformID == null) ? 0 : LernplattformID.hashCode());
+		result = prime * result + Long.hashCode(LernplattformID);
 		return result;
 	}
 

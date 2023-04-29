@@ -37,17 +37,17 @@ public final class DTODavRessourceCollectionsACL {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Benutzers dieses ACL-Eintrags */
 	@Column(name = "Benutzer_ID")
 	@JsonProperty
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/** Die ID der RessourceCollection dieses ACL-Eintrags */
 	@Column(name = "RessourceCollection_ID")
 	@JsonProperty
-	public Long RessourceCollection_ID;
+	public long RessourceCollection_ID;
 
 	/** Gibt die Berechtigungen dieses ACL-Eintrags wieder, ähnlich einer unix-file permission - bspw. 'r-' für nur Leserecht oder 'rw' für Lese- und Schreibrecht. */
 	@Column(name = "berechtigungen")
@@ -68,18 +68,9 @@ public final class DTODavRessourceCollectionsACL {
 	 * @param RessourceCollection_ID   der Wert für das Attribut RessourceCollection_ID
 	 * @param berechtigungen   der Wert für das Attribut berechtigungen
 	 */
-	public DTODavRessourceCollectionsACL(final Long ID, final Long Benutzer_ID, final Long RessourceCollection_ID, final String berechtigungen) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTODavRessourceCollectionsACL(final long ID, final long Benutzer_ID, final long RessourceCollection_ID, final String berechtigungen) {
 		this.ID = ID;
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
 		this.Benutzer_ID = Benutzer_ID;
-		if (RessourceCollection_ID == null) {
-			throw new NullPointerException("RessourceCollection_ID must not be null");
-		}
 		this.RessourceCollection_ID = RessourceCollection_ID;
 		if (berechtigungen == null) {
 			throw new NullPointerException("berechtigungen must not be null");
@@ -97,10 +88,7 @@ public final class DTODavRessourceCollectionsACL {
 		if (getClass() != obj.getClass())
 			return false;
 		DTODavRessourceCollectionsACL other = (DTODavRessourceCollectionsACL) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -109,7 +97,7 @@ public final class DTODavRessourceCollectionsACL {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

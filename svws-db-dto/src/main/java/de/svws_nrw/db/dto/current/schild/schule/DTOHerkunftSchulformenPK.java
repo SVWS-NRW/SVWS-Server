@@ -13,7 +13,7 @@ public final class DTOHerkunftSchulformenPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** die ID der Herkunft */
-	public Long Herkunft_ID;
+	public long Herkunft_ID;
 
 	/** das Kürzel der Schulform */
 	public String Schulform_Kuerzel;
@@ -30,10 +30,7 @@ public final class DTOHerkunftSchulformenPK implements Serializable {
 	 * @param Herkunft_ID   der Wert für das Attribut Herkunft_ID
 	 * @param Schulform_Kuerzel   der Wert für das Attribut Schulform_Kuerzel
 	 */
-	public DTOHerkunftSchulformenPK(final Long Herkunft_ID, final String Schulform_Kuerzel) {
-		if (Herkunft_ID == null) {
-			throw new NullPointerException("Herkunft_ID must not be null");
-		}
+	public DTOHerkunftSchulformenPK(final long Herkunft_ID, final String Schulform_Kuerzel) {
 		this.Herkunft_ID = Herkunft_ID;
 		if (Schulform_Kuerzel == null) {
 			throw new NullPointerException("Schulform_Kuerzel must not be null");
@@ -51,10 +48,7 @@ public final class DTOHerkunftSchulformenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOHerkunftSchulformenPK other = (DTOHerkunftSchulformenPK) obj;
-		if (Herkunft_ID == null) {
-			if (other.Herkunft_ID != null)
-				return false;
-		} else if (!Herkunft_ID.equals(other.Herkunft_ID))
+		if (Herkunft_ID != other.Herkunft_ID)
 			return false;
 
 		if (Schulform_Kuerzel == null) {
@@ -69,7 +63,7 @@ public final class DTOHerkunftSchulformenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Herkunft_ID == null) ? 0 : Herkunft_ID.hashCode());
+		result = prime * result + Long.hashCode(Herkunft_ID);
 
 		result = prime * result + ((Schulform_Kuerzel == null) ? 0 : Schulform_Kuerzel.hashCode());
 		return result;

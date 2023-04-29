@@ -13,10 +13,10 @@ public final class DTOFachTeilleistungsartenPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** Die eindeutige ID der Teilleistungsart – verweist auf die Teilleistungsart */
-	public Long Teilleistungsart_ID;
+	public long Teilleistungsart_ID;
 
 	/** Die eindeutige ID des Faches – verweist auf das Fach */
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/** Gibt an, bei welcher Kursart die Teilleistungsart zugeordnet werden soll */
 	public String Kursart;
@@ -34,14 +34,8 @@ public final class DTOFachTeilleistungsartenPK implements Serializable {
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 * @param Kursart   der Wert für das Attribut Kursart
 	 */
-	public DTOFachTeilleistungsartenPK(final Long Teilleistungsart_ID, final Long Fach_ID, final String Kursart) {
-		if (Teilleistungsart_ID == null) {
-			throw new NullPointerException("Teilleistungsart_ID must not be null");
-		}
+	public DTOFachTeilleistungsartenPK(final long Teilleistungsart_ID, final long Fach_ID, final String Kursart) {
 		this.Teilleistungsart_ID = Teilleistungsart_ID;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 		if (Kursart == null) {
 			throw new NullPointerException("Kursart must not be null");
@@ -59,16 +53,10 @@ public final class DTOFachTeilleistungsartenPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFachTeilleistungsartenPK other = (DTOFachTeilleistungsartenPK) obj;
-		if (Teilleistungsart_ID == null) {
-			if (other.Teilleistungsart_ID != null)
-				return false;
-		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
+		if (Teilleistungsart_ID != other.Teilleistungsart_ID)
 			return false;
 
-		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
-				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+		if (Fach_ID != other.Fach_ID)
 			return false;
 
 		if (Kursart == null) {
@@ -83,9 +71,9 @@ public final class DTOFachTeilleistungsartenPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Teilleistungsart_ID == null) ? 0 : Teilleistungsart_ID.hashCode());
+		result = prime * result + Long.hashCode(Teilleistungsart_ID);
 
-		result = prime * result + ((Fach_ID == null) ? 0 : Fach_ID.hashCode());
+		result = prime * result + Long.hashCode(Fach_ID);
 
 		result = prime * result + ((Kursart == null) ? 0 : Kursart.hashCode());
 		return result;

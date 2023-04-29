@@ -39,23 +39,23 @@ public final class DTOGostBlockungKurslehrer {
 	@Id
 	@Column(name = "Blockung_Kurs_ID")
 	@JsonProperty
-	public Long Blockung_Kurs_ID;
+	public long Blockung_Kurs_ID;
 
 	/** ID des Lehrers, welcher dem Kurs zugeordnet ist */
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/** Eine Reihenfolge für die Lehrer, z.B. zur Unterscheidung des eigentlichen Kurslehrer (z.B. 1) und einer Zusatzkraft (z.B. 2) */
 	@Column(name = "Reihenfolge")
 	@JsonProperty
-	public Integer Reihenfolge;
+	public int Reihenfolge;
 
 	/** Die Anzahl der Wochenstunden für die der Lehrer in dem Kurs eingesetzt wird */
 	@Column(name = "Wochenstunden")
 	@JsonProperty
-	public Integer Wochenstunden;
+	public int Wochenstunden;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungKurslehrer ohne eine Initialisierung der Attribute.
@@ -71,22 +71,10 @@ public final class DTOGostBlockungKurslehrer {
 	 * @param Reihenfolge   der Wert für das Attribut Reihenfolge
 	 * @param Wochenstunden   der Wert für das Attribut Wochenstunden
 	 */
-	public DTOGostBlockungKurslehrer(final Long Blockung_Kurs_ID, final Long Lehrer_ID, final Integer Reihenfolge, final Integer Wochenstunden) {
-		if (Blockung_Kurs_ID == null) {
-			throw new NullPointerException("Blockung_Kurs_ID must not be null");
-		}
+	public DTOGostBlockungKurslehrer(final long Blockung_Kurs_ID, final long Lehrer_ID, final int Reihenfolge, final int Wochenstunden) {
 		this.Blockung_Kurs_ID = Blockung_Kurs_ID;
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
 		this.Lehrer_ID = Lehrer_ID;
-		if (Reihenfolge == null) {
-			throw new NullPointerException("Reihenfolge must not be null");
-		}
 		this.Reihenfolge = Reihenfolge;
-		if (Wochenstunden == null) {
-			throw new NullPointerException("Wochenstunden must not be null");
-		}
 		this.Wochenstunden = Wochenstunden;
 	}
 
@@ -100,16 +88,10 @@ public final class DTOGostBlockungKurslehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungKurslehrer other = (DTOGostBlockungKurslehrer) obj;
-		if (Blockung_Kurs_ID == null) {
-			if (other.Blockung_Kurs_ID != null)
-				return false;
-		} else if (!Blockung_Kurs_ID.equals(other.Blockung_Kurs_ID))
+		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
 			return false;
 
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 		return true;
 	}
@@ -118,9 +100,9 @@ public final class DTOGostBlockungKurslehrer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Blockung_Kurs_ID == null) ? 0 : Blockung_Kurs_ID.hashCode());
+		result = prime * result + Long.hashCode(Blockung_Kurs_ID);
 
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 		return result;
 	}
 

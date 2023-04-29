@@ -61,12 +61,12 @@ public final class DTOGostKlausurenTermine {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Abiturjahrgang, dem die Klausurvorgabe zugeordnet ist */
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Das Halbjahr, welchem die Klausurvorgabe zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	@Column(name = "Halbjahr")
@@ -79,7 +79,7 @@ public final class DTOGostKlausurenTermine {
 	/** Das Quartal, in dem die Klausur geschrieben wird. */
 	@Column(name = "Quartal")
 	@JsonProperty
-	public Integer Quartal;
+	public int Quartal;
 
 	/** Das Datum des Klausurtermins */
 	@Column(name = "Datum")
@@ -121,22 +121,10 @@ public final class DTOGostKlausurenTermine {
 	 * @param Halbjahr   der Wert für das Attribut Halbjahr
 	 * @param Quartal   der Wert für das Attribut Quartal
 	 */
-	public DTOGostKlausurenTermine(final Long ID, final Integer Abi_Jahrgang, final GostHalbjahr Halbjahr, final Integer Quartal) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostKlausurenTermine(final long ID, final int Abi_Jahrgang, final GostHalbjahr Halbjahr, final int Quartal) {
 		this.ID = ID;
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Halbjahr == null) {
-			throw new NullPointerException("Halbjahr must not be null");
-		}
 		this.Halbjahr = Halbjahr;
-		if (Quartal == null) {
-			throw new NullPointerException("Quartal must not be null");
-		}
 		this.Quartal = Quartal;
 	}
 
@@ -150,10 +138,7 @@ public final class DTOGostKlausurenTermine {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostKlausurenTermine other = (DTOGostKlausurenTermine) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -162,7 +147,7 @@ public final class DTOGostKlausurenTermine {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

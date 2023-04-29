@@ -45,12 +45,12 @@ public final class DTOKatalogPausenzeit {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Wochentag laut ISO-8601 Standard: (1 - Montag, 2 - Dienstag, ...) */
 	@Column(name = "Tag")
 	@JsonProperty
-	public Integer Tag;
+	public int Tag;
 
 	/** Die Uhrzeit, wann die Pausenzeit beginnt */
 	@Column(name = "Beginn")
@@ -82,14 +82,8 @@ public final class DTOKatalogPausenzeit {
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
-	public DTOKatalogPausenzeit(final Long ID, final Integer Tag, final String Beginn, final String Ende) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOKatalogPausenzeit(final long ID, final int Tag, final String Beginn, final String Ende) {
 		this.ID = ID;
-		if (Tag == null) {
-			throw new NullPointerException("Tag must not be null");
-		}
 		this.Tag = Tag;
 		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
@@ -111,10 +105,7 @@ public final class DTOKatalogPausenzeit {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOKatalogPausenzeit other = (DTOKatalogPausenzeit) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -123,7 +114,7 @@ public final class DTOKatalogPausenzeit {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

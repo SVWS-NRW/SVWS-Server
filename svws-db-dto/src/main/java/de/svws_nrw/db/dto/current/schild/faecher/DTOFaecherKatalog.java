@@ -69,7 +69,7 @@ public final class DTOFaecherKatalog {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik */
 	@Column(name = "KuerzelASD")
@@ -188,10 +188,7 @@ public final class DTOFaecherKatalog {
 	 * @param NurSII   der Wert für das Attribut NurSII
 	 * @param ExportASD   der Wert für das Attribut ExportASD
 	 */
-	public DTOFaecherKatalog(final Long ID, final String KuerzelASD, final String Bezeichnung, final String Kuerzel, final Boolean IstFremdsprache, final Boolean IstHKFS, final Boolean IstAusRegUFach, final Boolean IstErsatzPflichtFS, final Boolean IstKonfKoop, final Boolean NurSII, final Boolean ExportASD) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOFaecherKatalog(final long ID, final String KuerzelASD, final String Bezeichnung, final String Kuerzel, final Boolean IstFremdsprache, final Boolean IstHKFS, final Boolean IstAusRegUFach, final Boolean IstErsatzPflichtFS, final Boolean IstKonfKoop, final Boolean NurSII, final Boolean ExportASD) {
 		this.ID = ID;
 		if (KuerzelASD == null) {
 			throw new NullPointerException("KuerzelASD must not be null");
@@ -205,33 +202,12 @@ public final class DTOFaecherKatalog {
 			throw new NullPointerException("Kuerzel must not be null");
 		}
 		this.Kuerzel = Kuerzel;
-		if (IstFremdsprache == null) {
-			throw new NullPointerException("IstFremdsprache must not be null");
-		}
 		this.IstFremdsprache = IstFremdsprache;
-		if (IstHKFS == null) {
-			throw new NullPointerException("IstHKFS must not be null");
-		}
 		this.IstHKFS = IstHKFS;
-		if (IstAusRegUFach == null) {
-			throw new NullPointerException("IstAusRegUFach must not be null");
-		}
 		this.IstAusRegUFach = IstAusRegUFach;
-		if (IstErsatzPflichtFS == null) {
-			throw new NullPointerException("IstErsatzPflichtFS must not be null");
-		}
 		this.IstErsatzPflichtFS = IstErsatzPflichtFS;
-		if (IstKonfKoop == null) {
-			throw new NullPointerException("IstKonfKoop must not be null");
-		}
 		this.IstKonfKoop = IstKonfKoop;
-		if (NurSII == null) {
-			throw new NullPointerException("NurSII must not be null");
-		}
 		this.NurSII = NurSII;
-		if (ExportASD == null) {
-			throw new NullPointerException("ExportASD must not be null");
-		}
 		this.ExportASD = ExportASD;
 	}
 
@@ -245,10 +221,7 @@ public final class DTOFaecherKatalog {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFaecherKatalog other = (DTOFaecherKatalog) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -257,7 +230,7 @@ public final class DTOFaecherKatalog {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -39,7 +39,7 @@ public final class DTOClientKonfigurationBenutzer {
 	@Id
 	@Column(name = "Benutzer_ID")
 	@JsonProperty
-	public Long Benutzer_ID;
+	public long Benutzer_ID;
 
 	/** Der Name der Client-Anwendung, für die der Konfigurationsdatensatz gespeichert ist */
 	@Id
@@ -72,10 +72,7 @@ public final class DTOClientKonfigurationBenutzer {
 	 * @param Schluessel   der Wert für das Attribut Schluessel
 	 * @param Wert   der Wert für das Attribut Wert
 	 */
-	public DTOClientKonfigurationBenutzer(final Long Benutzer_ID, final String AppName, final String Schluessel, final String Wert) {
-		if (Benutzer_ID == null) {
-			throw new NullPointerException("Benutzer_ID must not be null");
-		}
+	public DTOClientKonfigurationBenutzer(final long Benutzer_ID, final String AppName, final String Schluessel, final String Wert) {
 		this.Benutzer_ID = Benutzer_ID;
 		if (AppName == null) {
 			throw new NullPointerException("AppName must not be null");
@@ -101,10 +98,7 @@ public final class DTOClientKonfigurationBenutzer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOClientKonfigurationBenutzer other = (DTOClientKonfigurationBenutzer) obj;
-		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
-				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+		if (Benutzer_ID != other.Benutzer_ID)
 			return false;
 
 		if (AppName == null) {
@@ -125,7 +119,7 @@ public final class DTOClientKonfigurationBenutzer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Benutzer_ID == null) ? 0 : Benutzer_ID.hashCode());
+		result = prime * result + Long.hashCode(Benutzer_ID);
 
 		result = prime * result + ((AppName == null) ? 0 : AppName.hashCode());
 

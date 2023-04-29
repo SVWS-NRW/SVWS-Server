@@ -127,7 +127,7 @@ public final class DTOFach {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Ein eindeutiges Kürzel zur Identifikation des Fach */
 	@Column(name = "FachKrz")
@@ -406,10 +406,7 @@ public final class DTOFach {
 	 * Erstellt ein neues Objekt der Klasse DTOFach ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOFach(final Long ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOFach(final long ID) {
 		this.ID = ID;
 	}
 
@@ -423,10 +420,7 @@ public final class DTOFach {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOFach other = (DTOFach) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -435,7 +429,7 @@ public final class DTOFach {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

@@ -37,7 +37,7 @@ public final class DTOLehrerLehramt {
 	@Id
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/** Lehramtskürzel */
 	@Id
@@ -61,10 +61,7 @@ public final class DTOLehrerLehramt {
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerLehramt ohne eine Initialisierung der Attribute.
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOLehrerLehramt(final Long Lehrer_ID) {
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
+	public DTOLehrerLehramt(final long Lehrer_ID) {
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -78,10 +75,7 @@ public final class DTOLehrerLehramt {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerLehramt other = (DTOLehrerLehramt) obj;
-		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
-				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+		if (Lehrer_ID != other.Lehrer_ID)
 			return false;
 
 		if (LehramtKrz == null) {
@@ -96,7 +90,7 @@ public final class DTOLehrerLehramt {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Lehrer_ID == null) ? 0 : Lehrer_ID.hashCode());
+		result = prime * result + Long.hashCode(Lehrer_ID);
 
 		result = prime * result + ((LehramtKrz == null) ? 0 : LehramtKrz.hashCode());
 		return result;

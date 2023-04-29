@@ -35,17 +35,17 @@ public final class DTOLehrerFunktion {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Lehrerabschnittsdaten */
 	@Column(name = "Abschnitt_ID")
 	@JsonProperty
-	public Long Abschnitt_ID;
+	public long Abschnitt_ID;
 
 	/** ID der schulinternen Funktion */
 	@Column(name = "Funktion_ID")
 	@JsonProperty
-	public Long Funktion_ID;
+	public long Funktion_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOLehrerFunktion ohne eine Initialisierung der Attribute.
@@ -60,18 +60,9 @@ public final class DTOLehrerFunktion {
 	 * @param Abschnitt_ID   der Wert für das Attribut Abschnitt_ID
 	 * @param Funktion_ID   der Wert für das Attribut Funktion_ID
 	 */
-	public DTOLehrerFunktion(final Long ID, final Long Abschnitt_ID, final Long Funktion_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOLehrerFunktion(final long ID, final long Abschnitt_ID, final long Funktion_ID) {
 		this.ID = ID;
-		if (Abschnitt_ID == null) {
-			throw new NullPointerException("Abschnitt_ID must not be null");
-		}
 		this.Abschnitt_ID = Abschnitt_ID;
-		if (Funktion_ID == null) {
-			throw new NullPointerException("Funktion_ID must not be null");
-		}
 		this.Funktion_ID = Funktion_ID;
 	}
 
@@ -85,10 +76,7 @@ public final class DTOLehrerFunktion {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOLehrerFunktion other = (DTOLehrerFunktion) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -97,7 +85,7 @@ public final class DTOLehrerFunktion {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

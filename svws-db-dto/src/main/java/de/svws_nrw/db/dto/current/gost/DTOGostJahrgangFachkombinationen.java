@@ -70,22 +70,22 @@ public final class DTOGostJahrgangFachkombinationen {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Schuljahr, in welchem der Jahrgang das Abitur macht */
 	@Column(name = "Abi_Jahrgang")
 	@JsonProperty
-	public Integer Abi_Jahrgang;
+	public int Abi_Jahrgang;
 
 	/** Die ID des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils */
 	@Column(name = "Fach1_ID")
 	@JsonProperty
-	public Long Fach1_ID;
+	public long Fach1_ID;
 
 	/** Die ID des zweiten Faches der nicht möglichen Fächerkombination / eines Fächerprofils */
 	@Column(name = "Fach2_ID")
 	@JsonProperty
-	public Long Fach2_ID;
+	public long Fach2_ID;
 
 	/** Die Kursart des ersten Faches der nicht möglichen Fächerkombination / eines Fächerprofils */
 	@Column(name = "Kursart1")
@@ -180,50 +180,17 @@ public final class DTOGostJahrgangFachkombinationen {
 	 * @param Typ   der Wert für das Attribut Typ
 	 * @param Hinweistext   der Wert für das Attribut Hinweistext
 	 */
-	public DTOGostJahrgangFachkombinationen(final Long ID, final Integer Abi_Jahrgang, final Long Fach1_ID, final Long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final GostLaufbahnplanungFachkombinationTyp Typ, final String Hinweistext) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostJahrgangFachkombinationen(final long ID, final int Abi_Jahrgang, final long Fach1_ID, final long Fach2_ID, final Boolean EF1, final Boolean EF2, final Boolean Q11, final Boolean Q12, final Boolean Q21, final Boolean Q22, final GostLaufbahnplanungFachkombinationTyp Typ, final String Hinweistext) {
 		this.ID = ID;
-		if (Abi_Jahrgang == null) {
-			throw new NullPointerException("Abi_Jahrgang must not be null");
-		}
 		this.Abi_Jahrgang = Abi_Jahrgang;
-		if (Fach1_ID == null) {
-			throw new NullPointerException("Fach1_ID must not be null");
-		}
 		this.Fach1_ID = Fach1_ID;
-		if (Fach2_ID == null) {
-			throw new NullPointerException("Fach2_ID must not be null");
-		}
 		this.Fach2_ID = Fach2_ID;
-		if (EF1 == null) {
-			throw new NullPointerException("EF1 must not be null");
-		}
 		this.EF1 = EF1;
-		if (EF2 == null) {
-			throw new NullPointerException("EF2 must not be null");
-		}
 		this.EF2 = EF2;
-		if (Q11 == null) {
-			throw new NullPointerException("Q11 must not be null");
-		}
 		this.Q11 = Q11;
-		if (Q12 == null) {
-			throw new NullPointerException("Q12 must not be null");
-		}
 		this.Q12 = Q12;
-		if (Q21 == null) {
-			throw new NullPointerException("Q21 must not be null");
-		}
 		this.Q21 = Q21;
-		if (Q22 == null) {
-			throw new NullPointerException("Q22 must not be null");
-		}
 		this.Q22 = Q22;
-		if (Typ == null) {
-			throw new NullPointerException("Typ must not be null");
-		}
 		this.Typ = Typ;
 		if (Hinweistext == null) {
 			throw new NullPointerException("Hinweistext must not be null");
@@ -241,10 +208,7 @@ public final class DTOGostJahrgangFachkombinationen {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangFachkombinationen other = (DTOGostJahrgangFachkombinationen) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -253,7 +217,7 @@ public final class DTOGostJahrgangFachkombinationen {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

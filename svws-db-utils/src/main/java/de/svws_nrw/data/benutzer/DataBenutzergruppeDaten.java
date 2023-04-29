@@ -448,7 +448,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
             throw OperationError.INTERNAL_SERVER_ERROR.exception("Der aktuelle Benutzer verfügt über keine "
                     + "administrative Berechtigung und darf daher diese API-Methode nicht aufrufen.");
         }
-        if ((bgs.size() == 1) && (bgs.get(0).ID.longValue() == idGruppe)) {
+        if ((bgs.size() == 1) && (bgs.get(0).ID == idGruppe)) {
             // Der aktuelle Benutzer ist nur in genau der administrativen Gruppe,
             // aus der er entfernt werden soll. Dies ist nicht zulässig.
             throw OperationError.FORBIDDEN.exception("Der aktuelle Benutzer bezieht seine administrative Berechtigung über "

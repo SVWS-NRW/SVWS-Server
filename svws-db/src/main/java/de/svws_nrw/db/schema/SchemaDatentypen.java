@@ -177,22 +177,53 @@ public enum SchemaDatentypen {
 	/**
 	 * Der Name des Datentyps für die Verwendung in Java als elementaren Datentyp (ohne Einsatz von JPA-Konvertern)
 	 *
+	 * @param isNotNull   gibt an, ob der Datentyp null annehmen darf oder nicht - also ein primitiver Datentyp
+	 *                    oder ein boxed type verwendet werden soll
+	 *
 	 * @return der Name des unter Java zu verwendenden Datentyps (ohne Einsatz von JPA-Konvertern)
 	 */
-    public String java() {
+    public String java(final boolean isNotNull) {
     	return switch (this) {
-			case BIGINT -> "Long";
+			case BIGINT -> isNotNull ? "long" : "Long";
 			case CHAR -> "String";
 			case DATE -> "String";
 			case DATETIME -> "String";
-			case FLOAT -> "Double";
-			case INT -> "Integer";
+			case FLOAT -> isNotNull ? "double" : "Double";
+			case INT -> isNotNull ? "int" : "Integer";
 			case LONGBLOB -> "byte[]";
-			case SMALLINT -> "Integer";
+			case SMALLINT -> isNotNull ? "int" : "Integer";
 			case TEXT -> "String";
 			case VARCHAR -> "String";
-			case BOOLEAN -> "Boolean";
+			case BOOLEAN -> isNotNull ? "boolean" : "Boolean";
 			case TIME -> "String";
+		};
+    }
+
+
+    /**
+     * Gibt zurück, ob der Datentype ein primitiver Datentyp in Java
+     * ist oder nicht.
+     *
+     * @param isNotNull   gibt an, ob der Datentyp als NotNull gekennzeichnet ist
+     *
+     * @return true, wenn der Datentype primitiv ist und ansonsten false
+     */
+    public boolean isJavaPrimitiveType(final boolean isNotNull) {
+    	if (!isNotNull)
+    		return false;
+    	return switch (this) {
+			case BIGINT -> true;
+			case CHAR -> false;
+			case DATE -> false;
+			case DATETIME -> false;
+			case FLOAT -> true;
+			case INT -> true;
+			case LONGBLOB -> false;
+			case SMALLINT -> true;
+			case TEXT -> false;
+			case VARCHAR -> false;
+			case BOOLEAN -> true;
+			case TIME -> false;
 		};
     }
 

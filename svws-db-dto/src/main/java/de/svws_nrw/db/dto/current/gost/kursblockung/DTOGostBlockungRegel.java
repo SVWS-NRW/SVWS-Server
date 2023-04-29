@@ -45,12 +45,12 @@ public final class DTOGostBlockungRegel {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** ID der Blockung */
 	@Column(name = "Blockung_ID")
 	@JsonProperty
-	public Long Blockung_ID;
+	public long Blockung_ID;
 
 	/** Die ID des Typs der Regeldefinition (siehe Core-Type GostKursblockungRegeltyp) */
 	@Column(name = "Typ")
@@ -73,18 +73,9 @@ public final class DTOGostBlockungRegel {
 	 * @param Blockung_ID   der Wert für das Attribut Blockung_ID
 	 * @param Typ   der Wert für das Attribut Typ
 	 */
-	public DTOGostBlockungRegel(final Long ID, final Long Blockung_ID, final GostKursblockungRegelTyp Typ) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOGostBlockungRegel(final long ID, final long Blockung_ID, final GostKursblockungRegelTyp Typ) {
 		this.ID = ID;
-		if (Blockung_ID == null) {
-			throw new NullPointerException("Blockung_ID must not be null");
-		}
 		this.Blockung_ID = Blockung_ID;
-		if (Typ == null) {
-			throw new NullPointerException("Typ must not be null");
-		}
 		this.Typ = Typ;
 	}
 
@@ -98,10 +89,7 @@ public final class DTOGostBlockungRegel {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungRegel other = (DTOGostBlockungRegel) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -110,7 +98,7 @@ public final class DTOGostBlockungRegel {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

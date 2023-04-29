@@ -35,17 +35,17 @@ public final class DTOStundenplanUnterrichtLehrer {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Unterricht-Eintrages im Stundenplan */
 	@Column(name = "Unterricht_ID")
 	@JsonProperty
-	public Long Unterricht_ID;
+	public long Unterricht_ID;
 
 	/** Die ID der unterrichtenden Lehrers. Im Falle von Team-Teaching werden für eine Unterricht-ID einfach mehrere Datensätze erzeugt */
 	@Column(name = "Lehrer_ID")
 	@JsonProperty
-	public Long Lehrer_ID;
+	public long Lehrer_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanUnterrichtLehrer ohne eine Initialisierung der Attribute.
@@ -60,18 +60,9 @@ public final class DTOStundenplanUnterrichtLehrer {
 	 * @param Unterricht_ID   der Wert für das Attribut Unterricht_ID
 	 * @param Lehrer_ID   der Wert für das Attribut Lehrer_ID
 	 */
-	public DTOStundenplanUnterrichtLehrer(final Long ID, final Long Unterricht_ID, final Long Lehrer_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanUnterrichtLehrer(final long ID, final long Unterricht_ID, final long Lehrer_ID) {
 		this.ID = ID;
-		if (Unterricht_ID == null) {
-			throw new NullPointerException("Unterricht_ID must not be null");
-		}
 		this.Unterricht_ID = Unterricht_ID;
-		if (Lehrer_ID == null) {
-			throw new NullPointerException("Lehrer_ID must not be null");
-		}
 		this.Lehrer_ID = Lehrer_ID;
 	}
 
@@ -85,10 +76,7 @@ public final class DTOStundenplanUnterrichtLehrer {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanUnterrichtLehrer other = (DTOStundenplanUnterrichtLehrer) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -97,7 +85,7 @@ public final class DTOStundenplanUnterrichtLehrer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

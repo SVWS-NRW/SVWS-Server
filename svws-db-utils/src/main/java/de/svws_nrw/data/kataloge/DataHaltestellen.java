@@ -35,7 +35,7 @@ public final class DataHaltestellen extends DataManager<Long> {
 	private final Function<DTOHaltestellen, KatalogEintrag> dtoMapper = (final DTOHaltestellen k) -> {
 		final KatalogEintrag daten = new KatalogEintrag();
 		daten.id = k.ID;
-		daten.kuerzel = k.ID.toString();
+		daten.kuerzel = "" + k.ID;
 		daten.text = k.Bezeichnung;
 		daten.istSichtbar = true;
 		daten.istAenderbar = true;

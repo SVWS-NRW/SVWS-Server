@@ -13,10 +13,10 @@ public final class DTOSchuelerLernplattformPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** SchülerID für den Lernplattform-Datensatz */
-	public Long SchuelerID;
+	public long SchuelerID;
 
 	/** ID der Lernplattform */
-	public Long LernplattformID;
+	public long LernplattformID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerLernplattformPK ohne eine Initialisierung der Attribute.
@@ -30,14 +30,8 @@ public final class DTOSchuelerLernplattformPK implements Serializable {
 	 * @param SchuelerID   der Wert für das Attribut SchuelerID
 	 * @param LernplattformID   der Wert für das Attribut LernplattformID
 	 */
-	public DTOSchuelerLernplattformPK(final Long SchuelerID, final Long LernplattformID) {
-		if (SchuelerID == null) {
-			throw new NullPointerException("SchuelerID must not be null");
-		}
+	public DTOSchuelerLernplattformPK(final long SchuelerID, final long LernplattformID) {
 		this.SchuelerID = SchuelerID;
-		if (LernplattformID == null) {
-			throw new NullPointerException("LernplattformID must not be null");
-		}
 		this.LernplattformID = LernplattformID;
 	}
 
@@ -51,16 +45,10 @@ public final class DTOSchuelerLernplattformPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerLernplattformPK other = (DTOSchuelerLernplattformPK) obj;
-		if (SchuelerID == null) {
-			if (other.SchuelerID != null)
-				return false;
-		} else if (!SchuelerID.equals(other.SchuelerID))
+		if (SchuelerID != other.SchuelerID)
 			return false;
 
-		if (LernplattformID == null) {
-			if (other.LernplattformID != null)
-				return false;
-		} else if (!LernplattformID.equals(other.LernplattformID))
+		if (LernplattformID != other.LernplattformID)
 			return false;
 		return true;
 	}
@@ -69,9 +57,9 @@ public final class DTOSchuelerLernplattformPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((SchuelerID == null) ? 0 : SchuelerID.hashCode());
+		result = prime * result + Long.hashCode(SchuelerID);
 
-		result = prime * result + ((LernplattformID == null) ? 0 : LernplattformID.hashCode());
+		result = prime * result + Long.hashCode(LernplattformID);
 		return result;
 	}
 }

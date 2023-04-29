@@ -45,7 +45,7 @@ public final class DTOCoreTypeVersion {
 	/** Die Version, in welcher der Core-Type in der DB vorliegt */
 	@Column(name = "Version")
 	@JsonProperty
-	public Long Version;
+	public long Version;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOCoreTypeVersion ohne eine Initialisierung der Attribute.
@@ -60,7 +60,7 @@ public final class DTOCoreTypeVersion {
 	 * @param Name   der Wert für das Attribut Name
 	 * @param Version   der Wert für das Attribut Version
 	 */
-	public DTOCoreTypeVersion(final String NameTabelle, final String Name, final Long Version) {
+	public DTOCoreTypeVersion(final String NameTabelle, final String Name, final long Version) {
 		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
@@ -69,9 +69,6 @@ public final class DTOCoreTypeVersion {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
-		if (Version == null) {
-			throw new NullPointerException("Version must not be null");
-		}
 		this.Version = Version;
 	}
 

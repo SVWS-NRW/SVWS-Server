@@ -138,7 +138,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 								}
 								case KURS_ID -> {
 									final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, pvalue);
-									if ((kurs == null) || (!kurs.Blockung_ID.equals(regel.Blockung_ID)))
+									if ((kurs == null) || (kurs.Blockung_ID != regel.Blockung_ID))
 										throw OperationError.BAD_REQUEST.exception();
 								}
 								case SCHIENEN_NR -> {

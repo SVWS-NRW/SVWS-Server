@@ -43,7 +43,7 @@ public final class DTOEnmLernabschnittsdaten {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Der Zeitstempel der letzten Änderung an der Summe der Fehlstunden. */
 	@Column(name = "tsSumFehlStd")
@@ -92,10 +92,7 @@ public final class DTOEnmLernabschnittsdaten {
 	 * @param tsAUE   der Wert für das Attribut tsAUE
 	 * @param tsBemerkungVersetzung   der Wert für das Attribut tsBemerkungVersetzung
 	 */
-	public DTOEnmLernabschnittsdaten(final Long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOEnmLernabschnittsdaten(final long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
 		this.ID = ID;
 		if (tsSumFehlStd == null) {
 			throw new NullPointerException("tsSumFehlStd must not be null");
@@ -133,10 +130,7 @@ public final class DTOEnmLernabschnittsdaten {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOEnmLernabschnittsdaten other = (DTOEnmLernabschnittsdaten) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -145,7 +139,7 @@ public final class DTOEnmLernabschnittsdaten {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

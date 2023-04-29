@@ -39,17 +39,17 @@ public final class DTOStundenplanUnterricht {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des belegten Zeitraster-Eintrags */
 	@Column(name = "Zeitraster_ID")
 	@JsonProperty
-	public Long Zeitraster_ID;
+	public long Zeitraster_ID;
 
 	/** Gibt an, ob es sich um einen Eintrag für jede Woche handelt (0) oder ob es sich um einen unterschiedlichen (!) Eintrag für eine A- bzw. B-Wochen (1 bzw. 2) handelt */
 	@Column(name = "Wochentyp")
 	@JsonProperty
-	public Integer Wochentyp;
+	public int Wochentyp;
 
 	/** Die ID des Kurses, falls der Unterricht nicht im Klassenverband stattfindet */
 	@Column(name = "Kurs_ID")
@@ -59,7 +59,7 @@ public final class DTOStundenplanUnterricht {
 	/** Die ID des Faches, in dem der Unterricht stattfindet */
 	@Column(name = "Fach_ID")
 	@JsonProperty
-	public Long Fach_ID;
+	public long Fach_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanUnterricht ohne eine Initialisierung der Attribute.
@@ -75,22 +75,10 @@ public final class DTOStundenplanUnterricht {
 	 * @param Wochentyp   der Wert für das Attribut Wochentyp
 	 * @param Fach_ID   der Wert für das Attribut Fach_ID
 	 */
-	public DTOStundenplanUnterricht(final Long ID, final Long Zeitraster_ID, final Integer Wochentyp, final Long Fach_ID) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanUnterricht(final long ID, final long Zeitraster_ID, final int Wochentyp, final long Fach_ID) {
 		this.ID = ID;
-		if (Zeitraster_ID == null) {
-			throw new NullPointerException("Zeitraster_ID must not be null");
-		}
 		this.Zeitraster_ID = Zeitraster_ID;
-		if (Wochentyp == null) {
-			throw new NullPointerException("Wochentyp must not be null");
-		}
 		this.Wochentyp = Wochentyp;
-		if (Fach_ID == null) {
-			throw new NullPointerException("Fach_ID must not be null");
-		}
 		this.Fach_ID = Fach_ID;
 	}
 
@@ -104,10 +92,7 @@ public final class DTOStundenplanUnterricht {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanUnterricht other = (DTOStundenplanUnterricht) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -116,7 +101,7 @@ public final class DTOStundenplanUnterricht {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

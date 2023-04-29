@@ -35,13 +35,13 @@ public final class DTOSchuelerIndividuelleGruppeSchueler {
 	@Id
 	@Column(name = "Liste_ID")
 	@JsonProperty
-	public Long Liste_ID;
+	public long Liste_ID;
 
 	/** SchülerID des Schülers der zur individuellen Schülerliste gehört */
 	@Id
 	@Column(name = "Schueler_ID")
 	@JsonProperty
-	public Long Schueler_ID;
+	public long Schueler_ID;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerIndividuelleGruppeSchueler ohne eine Initialisierung der Attribute.
@@ -55,14 +55,8 @@ public final class DTOSchuelerIndividuelleGruppeSchueler {
 	 * @param Liste_ID   der Wert für das Attribut Liste_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
 	 */
-	public DTOSchuelerIndividuelleGruppeSchueler(final Long Liste_ID, final Long Schueler_ID) {
-		if (Liste_ID == null) {
-			throw new NullPointerException("Liste_ID must not be null");
-		}
+	public DTOSchuelerIndividuelleGruppeSchueler(final long Liste_ID, final long Schueler_ID) {
 		this.Liste_ID = Liste_ID;
-		if (Schueler_ID == null) {
-			throw new NullPointerException("Schueler_ID must not be null");
-		}
 		this.Schueler_ID = Schueler_ID;
 	}
 
@@ -76,16 +70,10 @@ public final class DTOSchuelerIndividuelleGruppeSchueler {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOSchuelerIndividuelleGruppeSchueler other = (DTOSchuelerIndividuelleGruppeSchueler) obj;
-		if (Liste_ID == null) {
-			if (other.Liste_ID != null)
-				return false;
-		} else if (!Liste_ID.equals(other.Liste_ID))
+		if (Liste_ID != other.Liste_ID)
 			return false;
 
-		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
-				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+		if (Schueler_ID != other.Schueler_ID)
 			return false;
 		return true;
 	}
@@ -94,9 +82,9 @@ public final class DTOSchuelerIndividuelleGruppeSchueler {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Liste_ID == null) ? 0 : Liste_ID.hashCode());
+		result = prime * result + Long.hashCode(Liste_ID);
 
-		result = prime * result + ((Schueler_ID == null) ? 0 : Schueler_ID.hashCode());
+		result = prime * result + Long.hashCode(Schueler_ID);
 		return result;
 	}
 

@@ -359,7 +359,7 @@ public final class ABPSchueler {
 			final GostLeistungen gostLeistungen = gostInfo.get(schueler.ID);
 			final ABPSchueler eintrag = new ABPSchueler();
 			eintrag.ID = i + 1;
-			eintrag.Schild_ID = schueler.ID.intValue();
+			eintrag.Schild_ID = (int) schueler.ID;
 			eintrag.GU_ID = schueler.GU_ID;
 			eintrag.Name = schueler.Nachname;
 			eintrag.Vorname = schueler.Vorname;

@@ -49,22 +49,22 @@ public final class DTOStundenplanZeitraster {
 	@Id
 	@Column(name = "ID")
 	@JsonProperty
-	public Long ID;
+	public long ID;
 
 	/** Die ID des Stundenplans, dem dieses Zeitraster zugeordnet ist */
 	@Column(name = "Stundenplan_ID")
 	@JsonProperty
-	public Long Stundenplan_ID;
+	public long Stundenplan_ID;
 
 	/** Der Wochentag laut ISO-8601 Standard: (1 - Montag, 2 - Dienstag, ...) */
 	@Column(name = "Tag")
 	@JsonProperty
-	public Integer Tag;
+	public int Tag;
 
 	/** Die Stunde laut Stundenplan (1, 2, ...) */
 	@Column(name = "Stunde")
 	@JsonProperty
-	public Integer Stunde;
+	public int Stunde;
 
 	/** Die Uhrzeit, wann die Stunde beginnt */
 	@Column(name = "Beginn")
@@ -98,22 +98,10 @@ public final class DTOStundenplanZeitraster {
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
-	public DTOStundenplanZeitraster(final Long ID, final Long Stundenplan_ID, final Integer Tag, final Integer Stunde, final String Beginn, final String Ende) {
-		if (ID == null) {
-			throw new NullPointerException("ID must not be null");
-		}
+	public DTOStundenplanZeitraster(final long ID, final long Stundenplan_ID, final int Tag, final int Stunde, final String Beginn, final String Ende) {
 		this.ID = ID;
-		if (Stundenplan_ID == null) {
-			throw new NullPointerException("Stundenplan_ID must not be null");
-		}
 		this.Stundenplan_ID = Stundenplan_ID;
-		if (Tag == null) {
-			throw new NullPointerException("Tag must not be null");
-		}
 		this.Tag = Tag;
-		if (Stunde == null) {
-			throw new NullPointerException("Stunde must not be null");
-		}
 		this.Stunde = Stunde;
 		if (Beginn == null) {
 			throw new NullPointerException("Beginn must not be null");
@@ -135,10 +123,7 @@ public final class DTOStundenplanZeitraster {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOStundenplanZeitraster other = (DTOStundenplanZeitraster) obj;
-		if (ID == null) {
-			if (other.ID != null)
-				return false;
-		} else if (!ID.equals(other.ID))
+		if (ID != other.ID)
 			return false;
 		return true;
 	}
@@ -147,7 +132,7 @@ public final class DTOStundenplanZeitraster {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ID == null) ? 0 : ID.hashCode());
+		result = prime * result + Long.hashCode(ID);
 		return result;
 	}
 

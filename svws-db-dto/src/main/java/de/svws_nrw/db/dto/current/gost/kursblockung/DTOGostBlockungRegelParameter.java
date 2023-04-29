@@ -37,18 +37,18 @@ public final class DTOGostBlockungRegelParameter {
 	@Id
 	@Column(name = "Regel_ID")
 	@JsonProperty
-	public Long Regel_ID;
+	public long Regel_ID;
 
 	/** Die Nummer des Parameters der Regel, beginnend bei 1 */
 	@Id
 	@Column(name = "Nummer")
 	@JsonProperty
-	public Integer Nummer;
+	public int Nummer;
 
 	/** Der Wert des Parameters der Regel (hängt vom Typ der Regel ab) */
 	@Column(name = "Parameter")
 	@JsonProperty
-	public Long Parameter;
+	public long Parameter;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostBlockungRegelParameter ohne eine Initialisierung der Attribute.
@@ -63,18 +63,9 @@ public final class DTOGostBlockungRegelParameter {
 	 * @param Nummer   der Wert für das Attribut Nummer
 	 * @param Parameter   der Wert für das Attribut Parameter
 	 */
-	public DTOGostBlockungRegelParameter(final Long Regel_ID, final Integer Nummer, final Long Parameter) {
-		if (Regel_ID == null) {
-			throw new NullPointerException("Regel_ID must not be null");
-		}
+	public DTOGostBlockungRegelParameter(final long Regel_ID, final int Nummer, final long Parameter) {
 		this.Regel_ID = Regel_ID;
-		if (Nummer == null) {
-			throw new NullPointerException("Nummer must not be null");
-		}
 		this.Nummer = Nummer;
-		if (Parameter == null) {
-			throw new NullPointerException("Parameter must not be null");
-		}
 		this.Parameter = Parameter;
 	}
 
@@ -88,16 +79,10 @@ public final class DTOGostBlockungRegelParameter {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostBlockungRegelParameter other = (DTOGostBlockungRegelParameter) obj;
-		if (Regel_ID == null) {
-			if (other.Regel_ID != null)
-				return false;
-		} else if (!Regel_ID.equals(other.Regel_ID))
+		if (Regel_ID != other.Regel_ID)
 			return false;
 
-		if (Nummer == null) {
-			if (other.Nummer != null)
-				return false;
-		} else if (!Nummer.equals(other.Nummer))
+		if (Nummer != other.Nummer)
 			return false;
 		return true;
 	}
@@ -106,9 +91,9 @@ public final class DTOGostBlockungRegelParameter {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Regel_ID == null) ? 0 : Regel_ID.hashCode());
+		result = prime * result + Long.hashCode(Regel_ID);
 
-		result = prime * result + ((Nummer == null) ? 0 : Nummer.hashCode());
+		result = prime * result + Integer.hashCode(Nummer);
 		return result;
 	}
 
