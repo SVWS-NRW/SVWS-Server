@@ -208,7 +208,7 @@ public enum DBDriver {
 	 *
 	 * @return true, falls die Treiber übereinstimmen und ansonsten false
 	 */
-	public boolean equals(final String driverName) {
+	public boolean is(final String driverName) {
 		return this == fromString(driverName);
 	}
 
