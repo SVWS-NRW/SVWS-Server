@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -201,7 +202,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 						if (newTermin != null) {
 							final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
 							final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
-							if (termin.Quartal != vorgabe.Quartal)
+							if (!Objects.equals(termin.Quartal, vorgabe.Quartal))
 								throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
 						}
 						kursklausur.Termin_ID = newTermin;

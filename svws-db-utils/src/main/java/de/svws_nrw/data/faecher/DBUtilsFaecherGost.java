@@ -125,7 +125,7 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
-	public static GostFaecherManager getFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
+	public static @NotNull GostFaecherManager getFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();

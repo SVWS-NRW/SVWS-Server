@@ -31,16 +31,11 @@ public enum DBDriver {
 	 *         wird und ansonsten false
 	 */
 	public boolean hasSupportSVWSDB() {
-		switch (this) {
-			case MSSQL:
-			case MYSQL:
-			case MARIA_DB:
-			case SQLITE:
-				return true;
-			case MDB:
-			default:
-				return false;
-		}
+		return switch (this) {
+			case MSSQL, MYSQL, MARIA_DB, SQLITE -> true;
+			case MDB -> false;
+			default -> false;
+		};
 	}
 
 
@@ -50,13 +45,10 @@ public enum DBDriver {
 	 * @return true, falls das DBMS ein einfaches Datei-basiertes DBMS ist und ansonsten false
 	 */
 	public boolean isFileBased() {
-		switch (this) {
-			case MDB:
-			case SQLITE:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case MDB, SQLITE -> true;
+			default -> false;
+		};
 	}
 
 
@@ -66,14 +58,10 @@ public enum DBDriver {
 	 * @return true, falls das DBMS eine Unterstützung für mehrere Schemata hat und ansonsten false
 	 */
 	public boolean hasMultiSchemaSupport() {
-		switch (this) {
-			case MSSQL:
-			case MYSQL:
-			case MARIA_DB:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case MSSQL, MYSQL, MARIA_DB -> true;
+			default -> false;
+		};
 	}
 
 
@@ -83,13 +71,10 @@ public enum DBDriver {
 	 * @return true, falls es keine Unterstützung hat und ansonsten false
 	 */
 	public boolean noUserAuthenticationSupport() {
-		switch (this) {
-			case MDB:
-			case SQLITE:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case MDB, SQLITE -> true;
+			default -> false;
+		};
 	}
 
 
@@ -100,14 +85,10 @@ public enum DBDriver {
 	 * @return true, falls "IF EXISTS" unterstützt wird und ansonsten false
 	 */
 	public boolean supportsIfExists() {
-		switch (this) {
-			case MYSQL:
-			case MARIA_DB:
-			case SQLITE:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case MYSQL, MARIA_DB, SQLITE -> true;
+			default -> false;
+		};
 	}
 
 
@@ -208,19 +189,14 @@ public enum DBDriver {
 	 * @return das Treiber-Objekt dieser Aufzählung
 	 */
 	public static DBDriver fromString(final String driverName) {
-		switch (driverName.toUpperCase()) {
-			case "MDB":
-				return MDB;
-			case "MSSQL":
-				return MSSQL;
-			case "MYSQL":
-				return MYSQL;
-			case "MARIA_DB":
-				return MARIA_DB;
-			case "SQLITE":
-				return SQLITE;
-		}
-		return null;
+		return switch (driverName.toUpperCase()) {
+			case "MDB" -> MDB;
+			case "MSSQL" -> MSSQL;
+			case "MYSQL" -> MYSQL;
+			case "MARIA_DB" -> MARIA_DB;
+			case "SQLITE" -> SQLITE;
+			default -> null;
+		};
 	}
 
 

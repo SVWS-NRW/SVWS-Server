@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schueler;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.data.jahrgaenge.DBUtilsJahrgaenge;
 import de.svws_nrw.data.klassen.DBUtilsKlassen;
@@ -138,10 +139,10 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			return false;
 		final List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr IS NULL AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
-		if (schuljahresabschnitte.size() == 0)
+		if (schuljahresabschnitte.isEmpty())
 			return false;
 		return conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", schuljahresabschnitte, DTOSchuljahresabschnitte.class).stream()
-				.anyMatch(sja -> sja.Abschnitt == schuljahresabschnitt.Abschnitt && sja.Jahr != schuljahresabschnitt.Abschnitt);
+				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.Abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.Abschnitt));
 	}
 
 
@@ -190,7 +191,8 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 				final DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
 				final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
 				sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
-				sla.Schulbesuchsjahre = (slaPrev.Schulbesuchsjahre == null) ? null : (schuljahrNeu ? slaPrev.Schulbesuchsjahre + 1 : slaPrev.Schulbesuchsjahre);
+				if (slaPrev.Schulbesuchsjahre != null)
+					sla.Schulbesuchsjahre = schuljahrNeu ? slaPrev.Schulbesuchsjahre + 1 : slaPrev.Schulbesuchsjahre;
 				sla.BilingualerZweig = slaPrev.BilingualerZweig;
 				sla.Schwerbehinderung = slaPrev.Schwerbehinderung;
 				sla.Foerderschwerpunkt_ID = slaPrev.Foerderschwerpunkt_ID;
@@ -202,12 +204,12 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 				sla.Folgeklasse_ID = null;
 				sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
 				if (!conn.transactionPersist(sla))
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts " + schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt + " des Schülers " + idSchueler + " in die Datenbank");
+		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 		        if (!conn.transactionCommit())
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts " + schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt + " des Schülers " + idSchueler + " in die Datenbank");
+		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 		        return sla;
 			}
-        	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts " + schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt + " des Schülers " + idSchueler + ". Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.");
+        	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 		} catch (final Exception e) {
 			if (!conn.transactionRollback())
 	        	throw OperationError.INTERNAL_SERVER_ERROR.exception(e);

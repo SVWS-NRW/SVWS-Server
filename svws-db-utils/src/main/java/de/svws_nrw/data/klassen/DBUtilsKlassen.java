@@ -1,6 +1,7 @@
 package de.svws_nrw.data.klassen;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -32,7 +33,7 @@ public final class DBUtilsKlassen {
 	    	throw OperationError.NOT_FOUND.exception("Die ID einer Klasse darf nicht null sein.");
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
-	    	throw OperationError.NOT_FOUND.exception("Konnte die Klasse mit der ID " + idKlasse + " nicht finden.");
+	    	throw OperationError.NOT_FOUND.exception("Konnte die Klasse mit der ID %d nicht finden.".formatted(idKlasse));
 		return klasse;
 	}
 
@@ -54,12 +55,12 @@ public final class DBUtilsKlassen {
 			throw OperationError.BAD_REQUEST.exception("Die ID des Schuljahresabschnittes darf nicht null sein.");
 		if (klasse == null)
 			throw OperationError.BAD_REQUEST.exception("Die Klasse darf nicht null sein.");
-		if (klasse.Schuljahresabschnitts_ID == idSchuljahresabschnitt)
+		if (Objects.equals(klasse.Schuljahresabschnitts_ID, idSchuljahresabschnitt))
 			return klasse;
 		List<DTOKlassen> klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Klasse = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOKlassen.class, klasse.Klasse, idSchuljahresabschnitt);
-		if (klassen.size() == 0) {
+		if (klassen.isEmpty()) {
 			klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.ASDKlasse = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOKlassen.class, klasse.ASDKlasse, idSchuljahresabschnitt);
-			if (klassen.size() == 0)
+			if (klassen.isEmpty())
 	        	throw OperationError.NOT_FOUND.exception("Konnte die Klasse " + klasse.Klasse + " des vorigen Abschnitts für den Schuljahresabschnitts mit der ID " + idSchuljahresabschnitt + " nicht finden.");
 		}
 		return klassen.get(0);
@@ -83,7 +84,7 @@ public final class DBUtilsKlassen {
 		if (klasse.FKlasse == null)
 			throw OperationError.BAD_REQUEST.exception("Die Klasse " + klasse.Klasse + " hat keine Folge-Klasse zugewiesen.");
 		final List<DTOKlassen> klassen = conn.queryList("SELECT e FROM DTOKlassen e WHERE e.Klasse = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOKlassen.class, klasse.FKlasse, klasse.Schuljahresabschnitts_ID);
-		if (klassen.size() == 0)
+		if (klassen.isEmpty())
         	throw OperationError.NOT_FOUND.exception("Konnte die Folge-Klasse " + klasse.FKlasse + " in dem Schuljahresabschnitts mit der ID " + klasse.Schuljahresabschnitts_ID + " nicht finden.");
 		return klassen.get(0);
 	}

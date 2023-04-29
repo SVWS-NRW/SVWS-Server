@@ -169,6 +169,16 @@ public final class DBMigrationManager {
 	private final HashSet<Long> erzieherIDs = new HashSet<>();
 
 
+	private static final String strOK = "[OK]";
+	private static final String strFehler = "[Fehler]";
+
+	private static final String strFehlerKeinLernabschnitt = "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.";
+	private static final String strFehlerLernabschnittUngueltigNull = "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.";
+	private static final String strFehlerLernabschnittUngueltig = "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.";
+
+	private static final String strFehlerKeinLehrer = "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.";
+
+	private static final String strFehlerKeineCredentials = "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.";
 
 
 	/**
@@ -253,11 +263,11 @@ public final class DBMigrationManager {
 	private DBSchemaManager getSchemaManager(final DBConfig cfg, final Benutzer user, final boolean isSrc) throws DBException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			if (conn == null) {
-				logger.logLn(0, " [Fehler]");
+				logger.logLn(0, " " + strFehler);
 				logger.log(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
 				throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
 			}
-			logger.logLn(0, " [OK]");
+			logger.logLn(0, " " + strOK);
 			logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')" + System.lineSeparator());
 		}
 		return DBSchemaManager.create(user, true, logger);
@@ -310,10 +320,10 @@ public final class DBMigrationManager {
 					boolean result = tgtManager.createSVWSSchema(0, false);
 					logger.modifyIndent(-2);
 					if (!result) {
-						logger.logLn(" [Fehler]");
+						logger.logLn(" " + strFehler);
 						throw new DBException("Fehler beim Erstelen des Schemas mit der Revision 0");
 					}
-					logger.logLn("[OK]");
+					logger.logLn(strOK);
 
 					try {
 						tgtConn.reconnect();
@@ -326,10 +336,10 @@ public final class DBMigrationManager {
 					result = copy();
 					logger.modifyIndent(-2);
 					if (!result) {
-						logger.logLn(" [Fehler]");
+						logger.logLn(" " + strFehler);
 						throw new DBException("Fehler beim Kopieren der zu migrierenden Daten");
 					}
-					logger.logLn("[OK]");
+					logger.logLn(strOK);
 
 					try {
 						tgtConn.reconnect();
@@ -341,13 +351,13 @@ public final class DBMigrationManager {
 					logger.modifyIndent(2);
 					result = fixSchulform();
 					logger.modifyIndent(-2);
-					logger.logLn(result ? "[OK]" : "[Fehler]");
+					logger.logLn(result ? strOK : strFehler);
 
 					logger.logLn("-> Konvertiere die Bilder als Base64-kodiertes Text-Format...");
 					logger.modifyIndent(2);
 					convertImages();
 					logger.modifyIndent(-2);
-					logger.logLn(result ? "[OK]" : "[Fehler]");
+					logger.logLn(result ? strOK : strFehler);
 
 					if (maxUpdateRevision != 0) {
 						logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
@@ -355,10 +365,10 @@ public final class DBMigrationManager {
 						result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 						logger.modifyIndent(-2);
 						if (!result) {
-							logger.logLn("[Fehler]");
+							logger.logLn(strFehler);
 							throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
 						}
-						logger.logLn("[OK]");
+						logger.logLn(strOK);
 					}
 
 					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
@@ -442,14 +452,13 @@ public final class DBMigrationManager {
 		}
 
 		// Prüfe, ob alle Spalten auch wirklich vorhanden sind...
-		final List<String> spaltenSoll = tab.getSpalten(0).stream().map(col -> col.name()).collect(Collectors.toList());
+		final List<String> spaltenSoll = tab.getSpalten(0).stream().map(col -> col.name()).toList();
 		final List<String> spaltenIst = status.filterColumns(tab.name(), spaltenSoll);
 		// Falls ja, dann kopiere direkt, sofern keine Schulnummer angegeben ist.
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
 			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
-				final List<?> entities = srcConn.queryNamed("" + dtoName + ".all" + ((tab.pkSpalten().size() > 0) ? ".migration" : ""), dtoClass).getResultList();
-				return entities;
+				return srcConn.queryNamed("" + dtoName + ".all" + ((!tab.pkSpalten().isEmpty()) ? ".migration" : ""), dtoClass).getResultList();
 			} catch (final PersistenceException e) {
 				lastError = e.getMessage();
 				return null;
@@ -478,7 +487,7 @@ public final class DBMigrationManager {
 			missing_fields.stream().forEach(f -> f.setAccessible(true));
 			String jpql = "SELECT " + fields.stream().map(f -> "e." + f.getName()).collect(Collectors.joining(",")) + " FROM " + dtoClass.getSimpleName() + " e";
 			if (!tab.pkSpalten().isEmpty()) {
-				final List<SchemaTabelleSpalte> pkSpalten = tab.pkSpalten().stream().filter(col -> spaltenIst.contains(col.name())).collect(Collectors.toList());
+				final List<SchemaTabelleSpalte> pkSpalten = tab.pkSpalten().stream().filter(col -> spaltenIst.contains(col.name())).toList();
 				if (!pkSpalten.isEmpty()) {
 					jpql += " WHERE " + pkSpalten.stream()
 							.map(col -> "e." + col.javaAttributName() + " IS NOT NULL")
@@ -577,7 +586,7 @@ public final class DBMigrationManager {
 		logger.logLn("Bestimme die Schulnummer aus EigeneSchule:");
 		logger.modifyIndent(2);
 		final List<?> tmpSchulen = readAllData(Schema.tab_EigeneSchule);
-		if ((tmpSchulen == null) || (tmpSchulen.size() <= 0)) {
+		if ((tmpSchulen == null) || (tmpSchulen.isEmpty())) {
 			logger.logLn("Kein Eintrag in der Tabelle EigeneSchule gefunden. Datenbank kann nicht migriert werden.");
 			logger.modifyIndent(-2);
 			return false;
@@ -962,39 +971,39 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerLernabschnittsdaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if (daten.Jahr < 1990) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Schuljahre vor 1990 werden nicht übernommen.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Schuljahre vor 1990 werden nicht übernommen.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.Abschnitt < 1) || (daten.Abschnitt > 4)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Abschnitte müssen zwischen 1 und 4 liegen.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Abschnitte müssen zwischen 1 und 4 liegen.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
 			// Prüfe die Fachklasse im Lernabschnitt und setze diese ggf. auf NULL
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
-				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.");
+				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.".formatted(daten.ID));
 				daten.Fachklasse_ID = null;
 			}
 			// Prüfe die Schulgliederung im Lernabschnitt und setze diese ggf. auf NULL
 			if (daten.Schulgliederung != null) {
 				if ("".equals(daten.Schulgliederung)) {
-					logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben einen leeren Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.");
+					logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen leeren Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
 					daten.Schulgliederung = null;
 				} else {
 					final Schulgliederung sgl = Schulgliederung.getByKuerzel(daten.Schulgliederung);
 					if ((sgl == null) || (!sgl.hasSchulform(this.schulform))) {
-						logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: " + daten.ID + "): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.");
+						logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag. Dieser wird auf null gesetzt.".formatted(daten.ID));
 						daten.Schulgliederung = null;
 					}
 				}
@@ -1017,12 +1026,12 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerLeistungsdaten daten = entities.get(i);
 			if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLernabschnitt);
 				entities.remove(i);
 				continue;
 			}
 			if (!faecherIDs.contains(daten.Fach_ID)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Fächer-ID (hier " + daten.Fach_ID + ") muss in der Tabelle EigeneSchule_Faecher definiert sein.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Fächer-ID (hier %d) muss in der Tabelle EigeneSchule_Faecher definiert sein.".formatted(daten.ID, daten.Fach_ID));
 				entities.remove(i);
 				continue;
 			}
@@ -1049,7 +1058,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerPSFachBemerkungen daten = entities.get(i);
 			if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLernabschnitt);
 				entities.remove(i);
 			} else if (localSchuelerLernabschnittsIDs.contains(daten.Abschnitt_ID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Doppelte Lernabschnitt-IDs sind unzulässig.");
@@ -1074,7 +1083,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerBKFach daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID " + daten.ID + "): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Es gibt keinen Schüler mit der angebenen ID in der Datenbank.".formatted(daten.ID));
 				entities.remove(i);
 				continue;
 			}
@@ -1086,7 +1095,6 @@ public final class DBMigrationManager {
 			if (daten.ID < 0) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die ID darf nicht kleiner als 0 sein.");
 				entities.remove(i);
-				continue;
 			}
 		}
 		return true;
@@ -1109,7 +1117,7 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
 				entities.remove(i);
 			} else if ((daten.Abschnitt_ID == null) || (!schuelerLernabschnittsIDs.contains(daten.Abschnitt_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lernabschnitt mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLernabschnitt);
 				entities.remove(i);
 			} else if (localSchuelerLernabschnittsIDs.contains(daten.Abschnitt_ID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Doppelte Lernabschnitt-IDs sind unzulässig.");
@@ -1238,10 +1246,10 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerAbschnittsdaten daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else {
 				lehrerAbschnittsIDs.add(daten.ID);
@@ -1270,13 +1278,13 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerAnrechnungsstunde daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig);
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Anrechnungsgründe bei den gleichen Lehrerabschnittsdaten
@@ -1314,13 +1322,13 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerEntlastungsstunde daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig);
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Entlastungsgründe bei den gleichen Lehrerabschnittsdaten
@@ -1357,13 +1365,13 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerMehrleistung daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig);
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Mehrleistungsgründe bei den gleichen Lehrerabschnittsdaten
@@ -1400,7 +1408,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerFoto daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate mit gleicher ID
@@ -1430,13 +1438,13 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerFunktion daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben - null ist unzulässig.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
 				entities.remove(i);
 			} else if (!lehrerAbschnitte.contains("" + daten.Lehrer_ID + "." + daten.Jahr + "." + daten.Abschnitt)) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Abschnittsdaten müssen einen gültigen Lernabschnitt haben.");
+				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltig);
 				entities.remove(i);
 			} else {
 				// Entferne ggf. Duplikate in Bezug auf die Lehrerfunktion bei den gleichen Lehrerabschnittsdaten
@@ -1471,7 +1479,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerLehramt daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			}
 		}
@@ -1491,7 +1499,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerLehramtFachrichtung daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			}
 		}
@@ -1511,7 +1519,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerLehramtBefaehigung daten = entities.get(i);
 			if ((daten.Lehrer_ID == null) || (!lehrerIDs.contains(daten.Lehrer_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			}
 		}
@@ -1531,7 +1539,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerDatenschutz daten = entities.get(i);
 			if ((daten.LehrerID == null) || (!lehrerIDs.contains(daten.LehrerID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 			}
 		}
@@ -1551,12 +1559,12 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrerLernplattform daten = entities.get(i);
 			if ((daten.LehrerID == null) || (!lehrerIDs.contains(daten.LehrerID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Lehrer mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeinLehrer);
 				entities.remove(i);
 				continue;
 			}
 			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
-				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeineCredentials);
 				daten.CredentialID = null;
 			}
 		}
@@ -1582,7 +1590,7 @@ public final class DBMigrationManager {
 				continue;
 			}
 			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
-				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeineCredentials);
 				daten.CredentialID = null;
 			}
 		}
@@ -1607,7 +1615,7 @@ public final class DBMigrationManager {
 				continue;
 			}
 			if ((daten.CredentialID != null) && (!credentialsLernplattformenIDs.contains(daten.CredentialID))) {
-				logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Entferne den Bezug zu den nicht vorhandenen Credentials.");
+				logger.logLn(LogLevel.ERROR, strFehlerKeineCredentials);
 				daten.CredentialID = null;
 			}
 		}
@@ -1714,7 +1722,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerGrundschuldaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID (" + daten.Schueler_ID + ") in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerGSDaten: Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
 				entities.remove(i);
 			}
 		}
@@ -1734,7 +1742,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerKAoADaten daten = entities.get(i);
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Schüler mit der angebenen ID (" + daten.Schueler_ID + ") in der Datenbank.");
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank.".formatted(daten.Schueler_ID));
 				entities.remove(i);
 				continue;
 			}
@@ -1746,7 +1754,6 @@ public final class DBMigrationManager {
 			if (daten.KategorieID == null) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten: Kategorie muss zugeordnet sein.");
 				entities.remove(i);
-				continue;
 			}
 		}
 		return true;
@@ -2038,7 +2045,7 @@ public final class DBMigrationManager {
 
 			// Lese alle Datensätze aus der Quell-Tabelle
 			logger.log("- Lese Datensätze: ");
-			List<?> entities = readAllData(tab);
+			final List<?> entities = readAllData(tab);
 			if (entities == null) {
 				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
 				logger.logLn(LogLevel.ERROR, srcManager.getLastError());
@@ -2047,7 +2054,7 @@ public final class DBMigrationManager {
 			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 
 			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
-			if (entities.size() == 0) {
+			if (entities.isEmpty()) {
 				if ((lastError != null) && (!"".equals(lastError)))
 					logger.logLn("  Fehler: " + lastError);
 				logger.modifyIndent(-2);
@@ -2057,14 +2064,13 @@ public final class DBMigrationManager {
 			// Prüfe die Entitäten auf fehlerhafte Daten, welche dann gefiltert werden, und ergänze ggf. zusätzliche Informationen während der Migration
 			if (!checkData(entities))
 				return false;
-			if (entities.size() == 0) {
+			if (entities.isEmpty()) {
 				logger.modifyIndent(-2);
 				continue;
 			}
 
 			// Schreibe die Datensätze in die Zieltabelle
 			write(entities);
-			entities = null;
 		}
 		return true;
 	}
@@ -2075,6 +2081,7 @@ public final class DBMigrationManager {
 	 */
 	private void convertImages() {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
+			final String strLogBilderAnzahl = "%d Bilder";
 			logger.log("* Tabelle EigeneSchule...");
 			final List<MigrationDTOEigeneSchule> es_in = conn.queryAll(MigrationDTOEigeneSchule.class);
 			final List<MigrationDTOEigeneSchule> es_out = es_in.stream()
@@ -2083,9 +2090,9 @@ public final class DBMigrationManager {
 							return false;
 						es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
 						return true;
-					}).collect(Collectors.toList());
+					}).toList();
 			conn.persistAll(es_out);
-			logger.logLn("" + es_out.size() + " Bilder");
+			logger.logLn(strLogBilderAnzahl.formatted(es_out.size()));
 
 			logger.log("* Tabelle LehrerFoto...");
 			final List<MigrationDTOLehrerFoto> lf_in = conn.queryAll(MigrationDTOLehrerFoto.class);
@@ -2095,9 +2102,9 @@ public final class DBMigrationManager {
 							return false;
 						lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
 						return true;
-					}).collect(Collectors.toList());
+					}).toList();
 			conn.persistAll(lf_out);
-			logger.logLn("" + lf_out.size() + " Bilder");
+			logger.logLn(strLogBilderAnzahl.formatted(lf_out.size()));
 
 			logger.log("* Tabelle SchuelerFoto...");
 			final List<MigrationDTOSchuelerFoto> sf_in = conn.queryAll(MigrationDTOSchuelerFoto.class);
@@ -2107,9 +2114,9 @@ public final class DBMigrationManager {
 							return false;
 						sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
 						return true;
-					}).collect(Collectors.toList());
+					}).toList();
 			conn.persistAll(sf_out);
-			logger.logLn("" + sf_out.size() + " Bilder");
+			logger.logLn(strLogBilderAnzahl.formatted(sf_out.size()));
 		}
 	}
 

@@ -75,6 +75,13 @@ public class DBCoreTypeUpdater {
 	private final ArrayList<CoreTypeTable> tables = new ArrayList<>();
 
 
+	private static final String strInsertInto = "INSERT INTO ";
+	private static final String strValues = "VALUES (";
+	private static final String strAktualisiereTabelle = "Aktualisiere Core-Type in Tabelle ";
+	private static final String strNullValue = "null,";
+	private static final String strSpaltenNurKuerzel = "(Kuerzel) ";
+
+
 	/**
 	 * Erzeugt einen neuen {@link DBCoreTypeUpdater}.
 	 *
@@ -195,19 +202,14 @@ public class DBCoreTypeUpdater {
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
 			// Aktualisiere ggf. die Daten der einzelnen Core-Types
-			long status_revision;
-			try {
-				status_revision = _status.version.getRevision();
-			} catch (@SuppressWarnings("unused") final Exception e) {
-				status_revision = 0;
-			}
+			final long status_revision = _status.version.getRevisionOrDefault(0);
 			for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
 				if (!tab.hasCoreType())
 					continue;
 				final SchemaTabelleCoreType ct = tab.getCoreType();
 				if (pruefeVersion(tab.name(), ct.getCoreTypeVersion()))
 					continue;
-				_logger.logLn("Aktualisiere Core-Type in Tabelle " + tab.name());
+				_logger.logLn(strAktualisiereTabelle + tab.name());
 				updateCoreTypeTabelle(tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
 			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
@@ -219,10 +221,8 @@ public class DBCoreTypeUpdater {
 			return false;
 		} finally {
 			// Entsperre ggf. das Datenbankschema
-			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName))) {
+			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName)))
 				_logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
-				return false;
-			}
 		}
 	}
 
@@ -272,15 +272,15 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateFachgruppen = (final Logger logger) -> {
 		final String tabname = "Fachgruppen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Fachbereich, SchildFgID, FG_Bezeichnung, FG_Kuerzel, Schulformen, FarbeR, FarbeG, FarbeB, Sortierung, FuerZeugnis, gueltigVon, gueltigBis) ");
 		final Fachgruppe[] values = Fachgruppe.values();
 		for (int i = 0; i < values.length; i++) {
 			final Fachgruppe f = values[i];
-			sql.append(i == 0 ? "VALUES (" : ", (");
+			sql.append(i == 0 ? strValues : ", (");
 			sql.append(f.daten.id).append(",");
 			sql.append(f.daten.nummer).append(",");
 			sql.append(f.daten.idSchild).append(",");
@@ -304,16 +304,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateJahrgaengeKeys = (final Logger logger) -> {
 		final String tabname = "Jahrgaenge_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final Jahrgaenge[] values = Jahrgaenge.values();
 		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet()).toArray(new String[0]);
 		boolean isFirst = true;
 		for (int i = 0; i < jg_kuerzel.length; i++) {
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(jg_kuerzel[i]).append("'").append(")");
 		}
@@ -326,15 +326,15 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateKursFortschreibungsarten = (final Logger logger) -> {
 		final String tabname = "KursFortschreibungsarten";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
 		final KursFortschreibungsart[] values = KursFortschreibungsart.values();
 		for (int i = 0; i < values.length; i++) {
 			final KursFortschreibungsart p = values[i];
-			sql.append(i == 0 ? "VALUES (" : ", (");
+			sql.append(i == 0 ? strValues : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
 			sql.append("'").append(p.beschreibung).append("'").append(",");
@@ -350,16 +350,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateNationalitaeten_Keys = (final Logger logger) -> {
 		final String tabname = "Nationalitaeten_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(DEStatisCode) ");
 		final List<String> codes = Arrays.stream(Nationalitaeten.values()).map(nat -> nat.daten.codeDEStatis).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < codes.size(); i++) {
 			final String code = codes.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(code).append("')");
 		}
@@ -372,9 +372,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateNoten = (final Logger logger) -> {
 		final String tabname = "Noten";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, IstTendenznote, Text, AufZeugnis, Notenpunkte, TextLaufbahnSII, AufLaufbahnSII, Sortierung, gueltigVon, gueltigBis) ");
 		final Note[] values = Note.values();
@@ -383,7 +383,7 @@ public class DBCoreTypeUpdater {
 			final Note n = values[i];
 			if (n == Note.KEINE)
 				continue;
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append(n.id).append(",");
 			sql.append("'").append(n.kuerzel).append("'").append(",");
@@ -396,7 +396,7 @@ public class DBCoreTypeUpdater {
 			else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || n == (Note.E3_TEILGENOMMEN) || (n == Note.ATTEST))
 				sql.append("'").append(n.kuerzel).append("'").append(",");
 			else
-				sql.append("null,");
+				sql.append(strNullValue);
 			sql.append((n.notenpunkte != null) || (n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN)
 					|| (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)).append(",");
 			sql.append(n.sortierung).append(",");
@@ -412,15 +412,15 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updatePersonalTypen = (final Logger logger) -> {
 		final String tabname = "PersonalTypen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Bezeichnung, gueltigVon, gueltigBis) ");
 		final PersonalTyp[] values = PersonalTyp.values();
 		for (int i = 0; i < values.length; i++) {
 			final PersonalTyp p = values[i];
-			sql.append(i == 0 ? "VALUES (" : ", (");
+			sql.append(i == 0 ? strValues : ", (");
 			sql.append(p.id).append(",");
 			sql.append("'").append(p.kuerzel).append("'").append(",");
 			sql.append("'").append(p.bezeichnung).append("'").append(",");
@@ -436,9 +436,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateSchulformen = (final Logger logger) -> {
 		final String tabname = "Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Nummer, Bezeichnung, HatGymOb, gueltigVon, gueltigBis) ");
 		final Schulform[] values = Schulform.values();
@@ -446,12 +446,12 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			final Schulform schulform = values[i];
 			for (final SchulformKatalogEintrag sf : schulform.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
+				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(sf.id).append(",");
 				sql.append("'").append(sf.kuerzel).append("'").append(",");
 				if (sf.nummer == null)
-					sql.append("null,");
+					sql.append(strNullValue);
 				else
 					sql.append("'").append(sf.nummer).append("'").append(",");
 				sql.append("'").append(sf.bezeichnung).append("'").append(",");
@@ -469,9 +469,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkuenfte = (final Logger logger) -> {
 		final String tabname = "Herkunft";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
 		final Herkunft[] values = Herkunft.values();
@@ -479,7 +479,7 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			final Herkunft herkunft = values[i];
 			for (final HerkunftKatalogEintrag h : herkunft.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
+				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(h.id).append(",");
 				sql.append("'").append(h.kuerzel).append("'").append(",");
@@ -497,16 +497,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkuenfteKeys = (final Logger logger) -> {
 		final String tabname = "Herkunft_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -519,9 +519,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkuenfteSchulformen = (final Logger logger) -> {
 		final String tabname = "Herkunft_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(Herkunft_ID, Schulform_Kuerzel) ");
 		final Herkunft[] values = Herkunft.values();
@@ -531,7 +531,7 @@ public class DBCoreTypeUpdater {
 			for (final HerkunftKatalogEintrag h : herkunft.historie) {
 				final List<Schulform> schulformen = h.schulformen.stream().map(Schulform::getByKuerzel).toList();
 				for (final Schulform sf : schulformen) {
-					sql.append(isFirst ? "VALUES (" : ", (");
+					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
 					sql.append(h.id).append(",");
 					sql.append("'").append(sf.daten.kuerzel).append("'").append(")");
@@ -547,9 +547,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkunftsarten = (final Logger logger) -> {
 		final String tabname = "Herkunftsart";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, gueltigVon, gueltigBis) ");
 		final Herkunftsarten[] values = Herkunftsarten.values();
@@ -557,7 +557,7 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			final Herkunftsarten herkunft = values[i];
 			for (final HerkunftsartKatalogEintrag h : herkunft.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
+				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(h.id).append(",");
 				sql.append("'").append(h.kuerzel).append("'").append(",");
@@ -574,16 +574,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkunftsartenKeys = (final Logger logger) -> {
 		final String tabname = "Herkunftsart_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Herkunftsarten.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -596,9 +596,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateHerkunftsartenSchulformen = (final Logger logger) -> {
 		final String tabname = "Herkunftsart_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(Herkunftsart_ID, Schulform_Kuerzel, KurzBezeichnung, Bezeichnung) ");
 		final Herkunftsarten[] values = Herkunftsarten.values();
@@ -607,7 +607,7 @@ public class DBCoreTypeUpdater {
 			final Herkunftsarten herkunftsart = values[i];
 			for (final HerkunftsartKatalogEintrag h : herkunftsart.historie) {
 				for (final HerkunftsartKatalogEintragBezeichnung hb : h.bezeichnungen) {
-					sql.append(isFirst ? "VALUES (" : ", (");
+					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
 					sql.append(h.id).append(",");
 					sql.append("'").append(Schulform.getByKuerzel(hb.schulform).daten.kuerzel).append("'").append(",");
@@ -625,16 +625,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateKlassenartenKeys = (final Logger logger) -> {
 		final String tabname = "KlassenartenKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -647,16 +647,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateKursartenKeys = (final Logger logger) -> {
 		final String tabname = "KursartenKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -669,9 +669,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateZulaessigeFaecher = (final Logger logger) -> {
 		final String tabname = "FachKatalog";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
 		final ZulaessigesFach[] values = ZulaessigesFach.values();
@@ -679,22 +679,22 @@ public class DBCoreTypeUpdater {
 		for (int i = 0; i < values.length; i++) {
 			final ZulaessigesFach fach = values[i];
 			for (final FachKatalogEintrag f : fach.historie) {
-				sql.append(isFirst ? "VALUES (" : ", (");
+				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(f.id).append(",");
 				sql.append("'").append(f.kuerzelASD).append("'").append(",");
 				sql.append("'").append(f.bezeichnung.replace("'", "''")).append("'").append(",");
 				sql.append("'").append(f.kuerzel).append("'").append(",");
 				if (f.aufgabenfeld == null)
-					sql.append("null,");
+					sql.append(strNullValue);
 				else
 					sql.append(f.aufgabenfeld).append(",");
 				if (f.fachgruppe == null)
-					sql.append("null,");
+					sql.append(strNullValue);
 				else
 					sql.append("'").append(f.fachgruppe).append("'").append(",");
 				if (f.abJahrgang == null)
-					sql.append("null,");
+					sql.append(strNullValue);
 				else
 					sql.append("'").append(f.abJahrgang).append("'").append(",");
 				sql.append(f.istFremdsprache ? 1 : 0).append(",");
@@ -717,16 +717,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateZulaessigeFaecherKeys = (final Logger logger) -> {
 		final String tabname = "FachKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -739,9 +739,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateZulaessigeFaecherSchulformen = (final Logger logger) -> {
 		final String tabname = "FachKatalog_Schulformen";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(Fach_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
 		final ZulaessigesFach[] values = ZulaessigesFach.values();
@@ -750,11 +750,11 @@ public class DBCoreTypeUpdater {
 			final ZulaessigesFach fach = values[i];
 			for (final FachKatalogEintrag f : fach.historie) {
 				for (final SchulformSchulgliederung sfsg : f.zulaessig) {
-					sql.append(isFirst ? "VALUES (" : ", (");
+					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
 					sql.append(f.id).append(",");
 					if (sfsg.schulform == null)
-						sql.append("null,");
+						sql.append(strNullValue);
 					else
 						sql.append("'").append(Schulform.getByKuerzel(sfsg.schulform).daten.kuerzel).append("'").append(",");
 					if (sfsg.gliederung == null)
@@ -773,16 +773,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateEinschulungsartenKeys = (final Logger logger) -> {
 		final String tabname = "EinschulungsartKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Einschulungsart.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -795,16 +795,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateReligionenKeys = (final Logger logger) -> {
 		final String tabname = "Religionen_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -817,16 +817,16 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateAllgemeineMerkmaleKeys = (final Logger logger) -> {
 		final String tabname = "AllgemeineMerkmaleKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Arrays.stream(AllgemeineMerkmale.values()).map(h -> h.daten.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -840,11 +840,11 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateOrganisationsformenKeys = (final Logger logger) -> {
 		final String tabname = "OrganisationsformenKatalog_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO ");
+		sql.append(strInsertInto);
 		sql.append(tabname);
-		sql.append("(Kuerzel) ");
+		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Stream.of(
 				Stream.of(BerufskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
 				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
@@ -853,7 +853,7 @@ public class DBCoreTypeUpdater {
 		boolean isFirst = true;
 		for (int i = 0; i < kuerzel.size(); i++) {
 			final String k = kuerzel.get(i);
-			sql.append(isFirst ? "VALUES (" : ", (");
+			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
@@ -870,10 +870,10 @@ public class DBCoreTypeUpdater {
 	 */
 	private final Consumer<Logger> updateLehrerLeitungsfunktionenKeys = (final Logger logger) -> {
 		final String tabname = "LehrerLeitungsfunktion_Keys";
-		logger.logLn("Aktualisiere Core-Type in Tabelle " + tabname);
+		logger.logLn(strAktualisiereTabelle + tabname);
 		updateCoreTypeTabelle(tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
 				Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
-				.collect(Collectors.joining("), (", "INSERT INTO " + tabname + "(ID) VALUES (", ")"))
+				.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (", ")"))
 				);
 	};
 

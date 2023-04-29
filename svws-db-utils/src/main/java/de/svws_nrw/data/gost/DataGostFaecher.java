@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.validation.constraints.NotNull;
@@ -49,7 +50,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 	 *
 	 * @return der Manager für die Liste der Fächer der gymnasialen Oberstufe
 	 */
-	public GostFaecherManager getListInternal() {
+	public @NotNull GostFaecherManager getListInternal() {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
     	if ((schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
     		return null;
@@ -64,8 +65,6 @@ public final class DataGostFaecher extends DataManager<Long> {
 	@Override
 	public Response getList() {
 		final Collection<GostFach> daten = getListInternal().faecher();
-    	if (daten == null)
-    		return OperationError.NOT_FOUND.getResponse();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -167,7 +166,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 			    		switch (key) {
 							case "id" -> {
 								final Long patch_id = JSONMapper.convertToLong(value, true);
-								if ((patch_id == null) || (patch_id != id))
+								if ((patch_id == null) || (!Objects.equals(patch_id, id)))
 									throw OperationError.BAD_REQUEST.exception();
 							}
 			    			// Änderungen von allgemeinen Fachinformationen sind hier nicht erlaubt, nur GOSt-spezifische
