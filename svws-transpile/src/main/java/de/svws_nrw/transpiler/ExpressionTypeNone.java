@@ -71,14 +71,14 @@ public final class ExpressionTypeNone extends ExpressionType implements Primitiv
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionTypeNone other = (ExpressionTypeNone) obj;
 		if (getKind() != other.getKind())
 			return false;
-		if (typeKind != other.typeKind)
-			return false;
-		return true;
+		return typeKind == other.typeKind;
 	}
 
 }

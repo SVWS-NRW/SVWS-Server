@@ -139,7 +139,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 
 	@Override
 	public String toString() {
-		return paramTypes.stream().map(pt -> pt.toString()).collect(Collectors.joining(", ", "(", ")")) + " -> " + (resultType == null ? "void" : resultType.toString());
+		return paramTypes.stream().map(Object::toString).collect(Collectors.joining(", ", "(", ")")) + " -> " + (resultType == null ? "void" : resultType.toString());
 	}
 
 
@@ -147,7 +147,7 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	public int hashCode() {
 		final int prime = 31;
 		int result = getKind().hashCode();
-		result = prime * result + ((paramTypes == null) ? 0 : paramTypes.hashCode());
+		result = prime * result + paramTypes.hashCode();
 		result = prime * result + ((resultType == null) ? 0 : resultType.hashCode());
 		return result;
 	}
@@ -157,15 +157,14 @@ public final class ExpressionTypeLambda extends ExpressionType {
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionTypeLambda other = (ExpressionTypeLambda) obj;
 		if (getKind() != other.getKind())
 			return false;
-		if (paramTypes == null) {
-			if (other.paramTypes != null)
-				return false;
-		} else if (!paramTypes.equals(other.paramTypes))
+		if (!paramTypes.equals(other.paramTypes))
 			return false;
 		if (resultType == null) {
 			if (other.resultType != null)

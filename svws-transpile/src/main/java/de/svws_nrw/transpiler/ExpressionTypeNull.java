@@ -42,12 +42,12 @@ public final class ExpressionTypeNull extends ExpressionType {
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionTypeNull other = (ExpressionTypeNull) obj;
-		if (getKind() != other.getKind())
-			return false;
-		return true;
+		return getKind() == other.getKind();
 	}
 
 }

@@ -89,7 +89,7 @@ public final class ExpressionClassType extends ExpressionType {
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
 		if (type instanceof final DeclaredType dt) {
 			final ExpressionClassType result = new ExpressionClassType(
-				dt.getTypeArguments().size() == 0 ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
+				dt.getTypeArguments().isEmpty() ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
 				getClassName(dt.toString()),
 				getPackageName(dt.toString())
 			);
@@ -102,7 +102,7 @@ public final class ExpressionClassType extends ExpressionType {
 					result.typeArguments.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, typeArg));
 					continue;
 				}
-				if (typeArg instanceof final PrimitiveType pt)
+				if (typeArg instanceof PrimitiveType)
 					throw new TranspilerException("Transpiler Error: Primitive Types cannot be used as type argument");
 				if (typeArg instanceof final ArrayType at) {
 					int dim = 1;
@@ -144,11 +144,10 @@ public final class ExpressionClassType extends ExpressionType {
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeElement elem) {
 		if ((transpiler == null) || (elem == null))
 			throw new NullPointerException();
-		final ExpressionClassType result = new ExpressionClassType(
-			elem.getTypeParameters().size() == 0 ? (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS) : Kind.PARAMETERIZED_TYPE,
-			elem.getSimpleName().toString(),
-			getPackageName(elem.getQualifiedName().toString())
-		);
+		Kind kind = Kind.PARAMETERIZED_TYPE;
+		if (elem.getTypeParameters().isEmpty())
+			kind = (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS);
+		final ExpressionClassType result = new ExpressionClassType(kind, elem.getSimpleName().toString(), getPackageName(elem.getQualifiedName().toString()));
 		for (final TypeParameterElement tpe : elem.getTypeParameters())
 			result.typeArguments.add(ExpressionType.getExpressionType(transpiler, tpe.asType()));
 		return result;
@@ -193,15 +192,11 @@ public final class ExpressionClassType extends ExpressionType {
 				return new ExpressionClassType(
 					Kind.PARAMETERIZED_TYPE,
 					tree.getIdentifier().toString(),
-					ect.getFullQualifiedName().toString()
+					ect.getFullQualifiedName()
 				);
 			}
 		}
-		return new ExpressionClassType(
-			Kind.PARAMETERIZED_TYPE,
-			tree.getIdentifier().toString(),
-			tree.getExpression().toString()
-		);
+		return new ExpressionClassType(Kind.PARAMETERIZED_TYPE, tree.getIdentifier().toString(), tree.getExpression().toString());
 	}
 
 
@@ -215,11 +210,7 @@ public final class ExpressionClassType extends ExpressionType {
 	 * @return the new expression class type instance
 	 */
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final ExpressionClassType clParamType) {
-		final ExpressionClassType result = new ExpressionClassType(
-			Kind.PARAMETERIZED_TYPE,
-			"Class",
-			"java.lang"
-		);
+		final ExpressionClassType result = new ExpressionClassType(Kind.PARAMETERIZED_TYPE, "Class", "java.lang");
 		result.typeArguments.add(clParamType);
 		return result;
 	}
@@ -305,7 +296,7 @@ public final class ExpressionClassType extends ExpressionType {
 	public boolean resolveTypeVariables(final HashMap<String, ExpressionType> knownTypeVars) {
 		// TODO improvement: allow mixed generic parameters with type variables and fixed types
 		// TODO improvement: replace type variables recursively - see comment in Transpiler
-		if (typeArguments.size() > 0)
+		if (!typeArguments.isEmpty())
 			return true;
 		for (int i = 0; i < typeVariables.size(); i++) {
 			final ExpressionType t = knownTypeVars.get(typeVariables.get(i).getName());
@@ -383,7 +374,7 @@ public final class ExpressionClassType extends ExpressionType {
 		if (other instanceof final ExpressionClassType otherClass) {
 			return transpiler.checkForSuperclass(otherClass, this);
 		}
-		if ((other instanceof final ExpressionArrayType otherArray) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName)))
+		if ((other instanceof ExpressionArrayType) && ("Object".equals(this.className)) && ("java.lang".equals(this.packageName)))
 			return 1;
 		if (other instanceof final ExpressionTypeLambda otherLambda) {
 			final List<? extends ExpressionType> paramTypes = otherLambda.getParamTypes();
@@ -395,7 +386,7 @@ public final class ExpressionClassType extends ExpressionType {
 						yield -1;
 					if (paramTypes.size() != 2)
 						yield -1;
-					yield (((paramTypes.get(0).equals(paramTypes.get(1))))) ? 1 : -1;
+					yield paramTypes.get(0).equals(paramTypes.get(1)) ? 1 : -1;
 				}
 				case "java.util.function.Function" -> {
 					if (resultType == null)
@@ -404,9 +395,9 @@ public final class ExpressionClassType extends ExpressionType {
 						yield -1;
 					if (this.typeArguments.size() != 2)
 						yield -1;
-					if (!(this.typeArguments.get(1).isAssignable(transpiler, resultType) >= 0))
+					if (this.typeArguments.get(1).isAssignable(transpiler, resultType) < 0)
 						yield -1;
-					if (!(this.typeArguments.get(0).isAssignable(transpiler, paramTypes.get(0)) >= 0))
+					if (this.typeArguments.get(0).isAssignable(transpiler, paramTypes.get(0)) < 0)
 						yield -1;
 					yield 1;
 				}
@@ -443,8 +434,8 @@ public final class ExpressionClassType extends ExpressionType {
 		int result = getKind().hashCode();
 		result = prime * result + ((className == null) ? 0 : className.hashCode());
 		result = prime * result + ((packageName == null) ? 0 : packageName.hashCode());
-		result = prime * result + ((typeArguments == null) ? 0 : typeArguments.hashCode());
-		result = prime * result + ((typeVariables == null) ? 0 : typeVariables.hashCode());
+		result = prime * result + typeArguments.hashCode();
+		result = prime * result + typeVariables.hashCode();
 		return result;
 	}
 
@@ -453,6 +444,8 @@ public final class ExpressionClassType extends ExpressionType {
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionClassType other = (ExpressionClassType) obj;
@@ -468,17 +461,9 @@ public final class ExpressionClassType extends ExpressionType {
 				return false;
 		} else if (!packageName.equals(other.packageName))
 			return false;
-		if (typeArguments == null) {
-			if (other.typeArguments != null)
-				return false;
-		} else if (!typeArguments.equals(other.typeArguments))
+		if (!typeArguments.equals(other.typeArguments))
 			return false;
-		if (typeVariables == null) {
-			if (other.typeVariables != null)
-				return false;
-		} else if (!typeVariables.equals(other.typeVariables))
-			return false;
-		return true;
+		return (typeVariables.equals(other.typeVariables));
 	}
 
 }

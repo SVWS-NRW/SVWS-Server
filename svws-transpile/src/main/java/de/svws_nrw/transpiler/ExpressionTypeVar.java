@@ -41,7 +41,7 @@ public final class ExpressionTypeVar extends ExpressionType {
 			if (this.name.equals(otherETV.name))
 				return 1;
 		}
-		if (other instanceof final ExpressionTypeNull otherNull) {
+		if (other instanceof ExpressionTypeNull) {
 			// TODO check not null annotations
 			return 2;
 		}
@@ -175,6 +175,8 @@ public final class ExpressionTypeVar extends ExpressionType {
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionTypeVar other = (ExpressionTypeVar) obj;

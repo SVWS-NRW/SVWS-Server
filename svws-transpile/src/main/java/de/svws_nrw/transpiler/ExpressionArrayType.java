@@ -65,7 +65,7 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	 * @return the number of dimensions
 	 */
 	public static int getDimension(final String typeString) {
-		return (typeString.toString().length() - typeString.toString().replace("[]", "").length()) / 2;
+		return (typeString.length() - typeString.replace("[]", "").length()) / 2;
 	}
 
 
@@ -78,11 +78,11 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	 * @return the expression type after using the array subscript operator
 	 */
 	public ExpressionType getAccessed() {
-		long dim = this.dim;
-		dim--;
-		if (dim == 0)
+		long tmpDim = this.dim;
+		tmpDim--;
+		if (tmpDim == 0)
 			return this.type;
-		return new ExpressionArrayType(this.type, dim);
+		return new ExpressionArrayType(this.type, tmpDim);
 	}
 
 
@@ -103,10 +103,10 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 
 	@Override
 	public String toString() {
-		String result = type.toString();
+		final StringBuilder sb = new StringBuilder(type.toString());
 		for (int i = 0; i < dim; i++)
-			result += "[]";
-		return result;
+			sb.append("[]");
+		return sb.toString();
 	}
 
 
@@ -126,6 +126,8 @@ public final class ExpressionArrayType extends ExpressionType implements ArrayTy
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionArrayType other = (ExpressionArrayType) obj;

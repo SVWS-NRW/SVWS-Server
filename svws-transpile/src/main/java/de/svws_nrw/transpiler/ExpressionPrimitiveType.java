@@ -12,6 +12,8 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	/** the {@link TypeKind} of this primitive type */
 	private final TypeKind typeKind;
 
+	private static final String strExceptionNotPrimitive = "Transpiler Error: %s is not a primitive type kind";
+
 	/**
 	 * Creates a primitive expression type instance for the specified {@link TypeKind}.
 	 *
@@ -22,7 +24,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public ExpressionPrimitiveType(final TypeKind typeKind) throws TranspilerException {
 		super(Kind.PRIMITIVE_TYPE);
 		if (!typeKind.isPrimitive())
-			throw new TranspilerException("Transpiler Error: TypeKind " + typeKind + " is not a primitive type kind");
+			throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
 		this.typeKind = typeKind;
 	}
 
@@ -44,7 +46,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	        case "char" -> TypeKind.CHAR;
 	        case "float" -> TypeKind.FLOAT;
 	        case "double" -> TypeKind.DOUBLE;
-			default -> throw new TranspilerException("Transpiler Error: Type " + type + " is not a primitive type kind");
+			default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(type));
 		};
 	}
 
@@ -101,7 +103,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 		        case LONG -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG;
 		        case FLOAT -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG || o.typeKind == TypeKind.FLOAT;
 		        case DOUBLE -> o.typeKind == TypeKind.BYTE || o.typeKind == TypeKind.SHORT || o.typeKind == TypeKind.INT || o.typeKind == TypeKind.LONG || o.typeKind == TypeKind.FLOAT || o.typeKind == TypeKind.DOUBLE;
-		        default -> throw new TranspilerException("Transpiler Error: TypeKind " + typeKind + " is not a primitive type kind");
+		        default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
 			} ? 0 : -1;
 		}
 		return -1;
@@ -123,7 +125,7 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	        case CHAR -> "char";
 	        case FLOAT -> "float";
 	        case DOUBLE -> "double";
-	        default -> throw new TranspilerException("Transpiler Error: TypeKind " + typeKind + " is not a primitive type kind");
+	        default -> throw new TranspilerException(strExceptionNotPrimitive.formatted(typeKind));
 		};
 	}
 
@@ -140,14 +142,14 @@ public final class ExpressionPrimitiveType extends ExpressionType implements Pri
 	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		final ExpressionPrimitiveType other = (ExpressionPrimitiveType) obj;
 		if (getKind() != other.getKind())
 			return false;
-		if (typeKind != other.typeKind)
-			return false;
-		return true;
+		return typeKind == other.typeKind;
 	}
 
 

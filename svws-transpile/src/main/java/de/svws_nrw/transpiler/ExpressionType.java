@@ -221,7 +221,7 @@ public abstract class ExpressionType implements Tree {
 				return new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, baseType), dim);
 			}
 			final List<? extends ExpressionTree> tmp = newArray.getInitializers();
-			if (tmp.size() == 0)
+			if (tmp.isEmpty())
 				return new ExpressionTypeNone(TypeKind.NONE);
 			// TODO improve array initializer analysis - check all list elements and determine a common type
 			return new ExpressionArrayType(transpiler.getExpressionType(tmp.get(0)), 1);

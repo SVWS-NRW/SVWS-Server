@@ -84,15 +84,15 @@ public final class MethodNode {
 		this._class = clazz;
 		this.method = method;
 		this.isEnum = (this._class.getKind() == Tree.Kind.ENUM);
-		final String name = this.method.getName().toString();
-		this.name = "<init>".equals(name) ? "constructor" : "" + name;
+		final String tmpName = this.method.getName().toString();
+		this.name = "<init>".equals(tmpName) ? "constructor" : "" + tmpName;
 		this.indent = indent;
 		this.comment = formatComment(this.plugin.getTranspiler().getComment(method));
 		this.accessModifier = this.plugin.getTranspiler().getAccessModifier(method);
 		this.isStatic = this.plugin.getTranspiler().hasStaticModifier(method);
-		final List<? extends VariableTree> parameters = method.getParameters();
-		for (int i = 0; i < parameters.size(); i++) {
-			final VariableNode varNode = new VariableNode(plugin, parameters.get(i));
+		final List<? extends VariableTree> tmpParameters = method.getParameters();
+		for (int i = 0; i < tmpParameters.size(); i++) {
+			final VariableNode varNode = new VariableNode(plugin, tmpParameters.get(i));
 			this.parameters.add(varNode);
 		}
 		final boolean isNotNull = plugin.getTranspiler().hasNotNullAnnotation(method);
@@ -204,7 +204,7 @@ public final class MethodNode {
 		if (block == null)
 			return null;
 		final List<? extends StatementTree> statements = block.getStatements();
-		if ((statements == null) || (statements.size() < 1))
+		if ((statements == null) || (statements.isEmpty()))
 			return null;
 		final StatementTree firstStatement = statements.get(0);
 		final String stmt = firstStatement.toString();
@@ -266,7 +266,7 @@ public final class MethodNode {
 		final boolean isEnumConstructor = isEnum && isConstructor();
 		if (isEnumConstructor) {
 			sb.append("name : string, ordinal : number");
-			if (parameters.size() > 0)
+			if (!parameters.isEmpty())
 				sb.append(", ");
 		}
 		for (int i = 0; i < parameters.size(); i++) {
@@ -355,7 +355,7 @@ public final class MethodNode {
 		final boolean result = methods.get(0).isStatic;
 		for (int i = 1; i < methods.size(); i++) {
 			if (methods.get(0).isStatic != result)
-				throw new RuntimeException("Methods with the same name must either all be static or none of them.");
+				throw new TranspilerException("Methods with the same name must either all be static or none of them.");
 		}
 		return result;
 	}
@@ -391,18 +391,19 @@ public final class MethodNode {
 	private static String getUnionParamType(final List<MethodNode> methods, final int i) {
 		final TreeSet<String> types = new TreeSet<>();
 		for (final MethodNode m : methods) {
-			final String type = m.getParameter(i) == null ? null : m.getParameter(i).transpileType();
+			final VariableNode vNode = m.getParameter(i);
+			final String type = vNode == null ? null : vNode.transpileType();
 			if (type != null) {
 				final String[] tmpTypesSplit = type.split("\\|");
 				int brackets = 0;
-				String tmpTypeResult = "";
+				final StringBuilder tmpTypeResult = new StringBuilder();
 				for (final String tmpType : tmpTypesSplit) {
 					brackets += tmpType.replace(">", "").length() - tmpType.replace("<", "").length(); // determine the number of open < brackets
 					if (brackets > 0) {
-						tmpTypeResult += tmpType + "|";
+						tmpTypeResult.append(tmpType + "|");
 					} else {
-						types.add((tmpTypeResult + tmpType).trim());
-						tmpTypeResult = "";
+						types.add((tmpTypeResult.toString() + tmpType).trim());
+						tmpTypeResult.setLength(0);
 					}
 				}
 			}
@@ -426,14 +427,14 @@ public final class MethodNode {
 				final String type = m.returnType.transpile(false);
 				final String[] tmpTypesSplit = type.split("\\|");
 				int brackets = 0;
-				String tmpTypeResult = "";
+				final StringBuilder tmpTypeResult = new StringBuilder();
 				for (final String tmpType : tmpTypesSplit) {
 					brackets += tmpType.replace(">", "").length() - tmpType.replace("<", "").length(); // determine the number of open < brackets
 					if (brackets > 0) {
-						tmpTypeResult += tmpType + "|";
+						tmpTypeResult.append(tmpType + "|");
 					} else {
-						types.add((tmpTypeResult + tmpType).trim());
-						tmpTypeResult = "";
+						types.add((tmpTypeResult.toString() + tmpType).trim());
+						tmpTypeResult.setLength(0);
 					}
 				}
 			}
@@ -452,7 +453,10 @@ public final class MethodNode {
 	private String getTypeCheck(final int i) {
 		if (i >= parameters.size())
 			return "(typeof __param" + i + " === \"undefined\")";
-		return "((typeof __param" + i + " !== \"undefined\") && " + getParameter(i).getTypeCheck("__param" + i) + ")";
+		final VariableNode vNode = getParameter(i);
+		if (vNode == null)
+			throw new TranspilerException("Null value not expected here");
+		return "((typeof __param" + i + " !== \"undefined\") && " + vNode.getTypeCheck("__param" + i) + ")";
 	}
 
 
@@ -577,6 +581,8 @@ public final class MethodNode {
 				sb.append(blockIndent);
 				sb.append("\t");
 				final VariableNode param = method.getParameter(i);
+				if (param == null)
+					throw new TranspilerException("Null value not expected here");
 				sb.append(param.isFinal() ? "const " : "let ");
 				sb.append(param.transpile() + " = " + param.getTypeCast("__param" + i) + ";");
 				sb.append(System.lineSeparator());
@@ -640,7 +646,7 @@ public final class MethodNode {
 		final boolean isEnumConstructor = isEnum && isConstructor();
 		if (isEnumConstructor) {
 			sb.append("name : string, ordinal : number");
-			if (parameters.size() > 0)
+			if (!parameters.isEmpty())
 				sb.append(", ");
 		}
 		for (int i = 0; i < parameters.size(); i++) {
@@ -656,7 +662,7 @@ public final class MethodNode {
 			sb.append(returnType.transpile(false));
 		}
 
-		// method block;
+		// method block
 		if (body == null) {
 			sb.append(";");
 		} else {
