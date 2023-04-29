@@ -438,20 +438,11 @@ class TestAVLMapRandom {
 				} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 					// success
 				}
-				try {
-					i1.remove(); // Der erste Aufruf könnte noch klappen.
-					i1.remove();
-					fail("col1.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
+
+				if (isRemoveThrowingException(i1) != isRemoveThrowingException(i2)) {
+					fail("col1.iterator.remove() != col2.iterator.remove()");
 				}
-				try {
-					i2.remove(); // Der erste Aufruf könnte noch klappen.
-					i2.remove();
-					fail("col2.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
+
 			}
 			case 44 -> { // toArray
 				final Object[] arr1 = col1.toArray();
@@ -570,18 +561,8 @@ class TestAVLMapRandom {
 			// #####################################
 			case 53 -> { // first (or Exception)
 				if (set1.isEmpty() || set2.isEmpty()) {
-					try {
-						set1.first();
-						fail("set1.first() --> Sollte eine NoSuchElementException statt " + set1.first() + " werfen!");
-					} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
-						// success
-					}
-					try {
-						set2.first();
-						fail("set2.first() --> Sollte eine NoSuchElementException statt " + set2.first() + " werfen! ");
-					} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
-						// success
-					}
+					if (isFirstThrowingException(set1) != isFirstThrowingException(set2))
+						fail("set1.first() != set2.first()");
 				} else {
 					final int i1 = set1.first();
 					final int i2 = set2.first();
@@ -591,18 +572,8 @@ class TestAVLMapRandom {
 			}
 			case 54 -> { // last (or Exception)
 				if (set1.isEmpty() || set2.isEmpty()) {
-					try {
-						set1.last();
-						fail("set1.last() --> Sollte eine NoSuchElementException statt " + set1.first() + " werfen!");
-					} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
-						// success
-					}
-					try {
-						set2.last();
-						fail("set2.last() --> Sollte eine NoSuchElementException statt " + set2.first() + " werfen! ");
-					} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
-						// success
-					}
+					if (isLastThrowingException(set1) != isFirstThrowingException(set2))
+						fail("set1.last() != set2.last()");
 				} else {
 					final int i1 = set1.last();
 					final int i2 = set2.last();
@@ -873,20 +844,13 @@ class TestAVLMapRandom {
 				} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 					// success
 				}
-				try {
-					i1.remove(); // Der erste Aufruf könnte noch klappen.
-					i1.remove();
-					fail("set1.iterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
-				try {
-					i2.remove(); // Der erste Aufruf könnte noch klappen.
-					i2.remove();
-					fail("set2.iterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
+
+				if (isRemoveThrowingException(i1) != isRemoveThrowingException(i2))
+					fail("set1.iterator.remove() != set2.iterator.remove()");
+
+				if (isRemoveThrowingException(i1) != isRemoveThrowingException(i2))
+					fail("set1.iterator.remove() != set2.iterator.remove()");
+
 			}
 			case 74 -> { // descendingSet
 				final NavigableSet<Integer> s1 = set1.descendingSet();
@@ -928,20 +892,13 @@ class TestAVLMapRandom {
 				} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 					// success
 				}
-				try {
-					i1.remove(); // Der erste Aufruf könnte noch klappen.
-					i1.remove();
-					fail("set1.descendingIterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
-				try {
-					i2.remove(); // Der erste Aufruf könnte noch klappen.
-					i2.remove();
-					fail("set2.descendingIterator.remove() --> Sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
+
+				if (isRemoveThrowingException(i1) != isRemoveThrowingException(i2))
+					fail("set1.descendingIterator.remove() != set2.descendingIterator.remove()");
+
+				if (isRemoveThrowingException(i1) != isRemoveThrowingException(i2))
+					fail("set1.descendingIterator.remove() != set2.descendingIterator.remove()");
+
 			}
 			case 76 -> { // subSet(4 params)
 				final int value1 = RANDOM.nextInt(MAX_VALUE);
@@ -1302,20 +1259,12 @@ class TestAVLMapRandom {
 				} catch (@SuppressWarnings("unused") final NoSuchElementException ex) {
 					// success
 				}
-				try {
-					i1.remove(); // Der erste Aufruf könnte noch klappen.
-					i1.remove();
-					fail("ent1.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
-				try {
-					i2.remove(); // Der erste Aufruf könnte noch klappen.
-					i2.remove();
-					fail("ent2.iterator.remove() --> sollte eine IllegalStateException werfen!");
-				} catch (@SuppressWarnings("unused") final IllegalStateException ex) {
-					// success
-				}
+
+				if (isRemoveEntryThrowingException(i1) != isRemoveEntryThrowingException(i2))
+					fail("set1.iterator.remove() != set2.iterator.remove()");
+
+				if (isRemoveEntryThrowingException(i1) != isRemoveEntryThrowingException(i2))
+					fail("set1.iterator.remove() != set2.iterator.remove()");
 			}
 			case 98 -> { // misc
 				if (!nav1.isEmpty()) {
@@ -1382,6 +1331,42 @@ class TestAVLMapRandom {
 			}
 			default -> { /**/ }
 		} // ... end of switch
+	}
+
+	private static boolean isLastThrowingException(final NavigableSet<Integer> set) {
+		try {
+			set.last();
+			return false;
+		} catch (@SuppressWarnings("unused")  Exception ex) {
+			return true;
+		}
+	}
+
+	private static boolean isFirstThrowingException(final NavigableSet<Integer> set) {
+		try {
+			set.first();
+			return false;
+		} catch (@SuppressWarnings("unused")  Exception ex) {
+			return true;
+		}
+	}
+
+	private static boolean isRemoveThrowingException(final Iterator<Integer> i) {
+		try {
+			i.remove();
+			return false;
+		} catch (@SuppressWarnings("unused")  Exception ex) {
+			return true;
+		}
+	}
+
+	private static boolean isRemoveEntryThrowingException(final Iterator<Entry<Integer, Integer>> i) {
+		try {
+			i.remove();
+			return false;
+		} catch (@SuppressWarnings("unused")  Exception ex) {
+			return true;
+		}
 	}
 
 	private static boolean unequalSets(final Set<Entry<Integer, Integer>> e1, final Set<Entry<Integer, Integer>> e2) {
