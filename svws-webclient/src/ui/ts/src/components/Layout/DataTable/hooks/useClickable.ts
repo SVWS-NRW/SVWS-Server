@@ -9,9 +9,10 @@ interface UseClickableOptions {
 	emit: (v: DataTableItem | null) => void,
 	isActive: () => boolean,
 	canReset: () => boolean,
+	scrollIntoView: () => boolean | undefined,
 }
 
-export default function useClickable({ clickedItem: data, emit, isActive, canReset }: UseClickableOptions) {
+export default function useClickable({ clickedItem: data, emit, isActive, canReset, scrollIntoView }: UseClickableOptions) {
 	// internally, we only work with raw values so we don't run into identity hazard when comparing them
 	const clickedItemRaw = computed(() => (toRaw(data()) ?? null));
 
@@ -48,6 +49,8 @@ export default function useClickable({ clickedItem: data, emit, isActive, canRes
 	}
 
 	function scrollToClickedElement() {
+		if (!scrollIntoView())
+			return;
 		const clickedElementHtml = document.querySelector('.data-table__tr--clicked');
 		const scrollOptions: ScrollIntoViewOptions = { behavior: "smooth", block: "center" };
 		if (clickedElementHtml) {

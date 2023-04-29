@@ -235,6 +235,7 @@
 			disableFooter?: boolean;
 			collapsible?: boolean;
 			noData?: boolean;
+			scrollIntoView?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -255,12 +256,12 @@
 			filterOpen: false,
 			filterHide: true,
 			filtered: false,
-			filterReset: () => {
-			},
+			filterReset: () => {},
 			filterReverse: false,
 			disableFooter: false,
 			collapsible: false,
 			noData: undefined,
+			scrollIntoView: undefined,
 		}
 	);
 
@@ -309,6 +310,7 @@
 		canReset: () => props.allowUnclick,
 		clickedItem: () => props.clicked,
 		emit: (v: DataTableItem | null) => emit('update:clicked', v),
+		scrollIntoView: () => props.scrollIntoView,
 	});
 
 	const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
