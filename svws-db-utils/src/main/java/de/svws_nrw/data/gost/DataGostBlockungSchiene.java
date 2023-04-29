@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -298,7 +299,10 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	    	final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);
 	    	if ((schienen == null) || (schienen.isEmpty()))
 	    		throw OperationError.NOT_FOUND.exception();
-	    	final DTOGostBlockungSchiene schiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer)).get();
+	    	final Optional<DTOGostBlockungSchiene> optSchiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer));
+	    	if (optSchiene.isEmpty())
+	    		throw OperationError.NOT_FOUND.exception();
+	    	final DTOGostBlockungSchiene schiene = optSchiene.get();
             final GostBlockungSchiene daten = _delete(schiene);
     		conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

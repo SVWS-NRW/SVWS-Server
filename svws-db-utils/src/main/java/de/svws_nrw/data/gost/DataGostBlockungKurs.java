@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -483,16 +484,21 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 				throw OperationError.CONFLICT.exception();
 			// Bestimme die Kursart
 			GostKursart kursart = GostKursart.fromID(idKursart);
-			if (kursart == GostKursart.GK)
-				kursart = (fach.StatistikFach == ZulaessigesFach.VX)
-					? GostKursart.VTF
-					: (fach.StatistikFach == ZulaessigesFach.PX) ? GostKursart.PJK : GostKursart.GK;
+			if (kursart == GostKursart.GK) {
+				if (fach.StatistikFach == ZulaessigesFach.VX)
+					kursart = GostKursart.VTF;
+				if (fach.StatistikFach == ZulaessigesFach.PX)
+					kursart = GostKursart.PJK;
+			}
 			// Bestimme die Kurse der Blockung, welche das Kriterium erfüllen und löschen Kurs mit der höchsten Kursnummer
 	    	final String jpql = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1 and e.Fach_ID = ?2 and e.Kursart = ?3";
 	    	final List<DTOGostBlockungKurs> kurse = conn.queryList(jpql, DTOGostBlockungKurs.class, idBlockung, idFach, kursart);
 	    	if ((kurse == null) || (kurse.isEmpty()))
 	    		throw OperationError.NOT_FOUND.exception();
-	    	final DTOGostBlockungKurs kurs = kurse.stream().max((a, b) -> Integer.compare(a.Kursnummer, b.Kursnummer)).get();
+	    	final Optional<DTOGostBlockungKurs> optKurs = kurse.stream().max((a, b) -> Integer.compare(a.Kursnummer, b.Kursnummer));
+	    	if (optKurs.isEmpty())
+	    		throw OperationError.NOT_FOUND.exception();
+	    	final DTOGostBlockungKurs kurs = optKurs.get();
 			final GostBlockungKurs daten = dtoMapper.apply(kurs);
 			if (!conn.transactionRemove(kurs))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
