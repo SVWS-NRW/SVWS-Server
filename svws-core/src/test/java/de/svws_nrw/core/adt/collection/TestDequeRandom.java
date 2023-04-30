@@ -28,116 +28,126 @@ class TestDequeRandom {
 	/**
 	 * Folgende Methoden werden zufällig getestet. <br>
 	 *
+	 * <pre>
+	 * ----- interface Deque<E> -----
+	 * void addFirst(E e);
+	 * void addLast(E e);
+	 * boolean offerFirst(E e);
+	 * boolean offerLast(E e);
+	 * E removeFirst();
+	 * E removeLast();
+	 * E pollFirst();
+	 * E pollLast();
+	 * E getFirst();
+	 * E getLast();
+	 * E peekFirst();
+	 * E peekLast();
+	 * boolean removeFirstOccurrence(Object o);
+	 * boolean removeLastOccurrence(Object o);
+	 * void push(E e);
+	 * E pop();
+	 * TODO iterator.remove() fails on {@link LinkedCollection}
 	 *
-	 * ----- interface Deque<E> ----- void <br>
-	 * addFirst(E e); <br>
-	 * void addLast(E e); <br>
-	 * boolean offerFirst(E e); <br>
-	 * boolean offerLast(E e); <br>
-	 * E removeFirst(); <br>
-	 * E removeLast(); <br>
-	 * E pollFirst(); <br>
-	 * E pollLast(); <br>
-	 * E getFirst(); <br>
-	 * E getLast(); <br>
-	 * E peekFirst(); <br>
-	 * E peekLast(); <br>
-	 * boolean removeFirstOccurrence(Object o); <br>
-	 * boolean removeLastOccurrence(Object o); <br>
-	 * void push(E e); <br>
-	 * E pop(); <br>
-	 * TODO iterator.remove() fails on {@link LinkedCollection} <br>
+	 * ----- interface Queue<E> -----
+	 * E remove();
+	 * E poll();
+	 * E element();
+	 * E peek();
+	 * Iterator<E> descendingIterator();
+	 * boolean offer(E e);
 	 *
 	 *
-	 * ----- interface Queue<E> ----- <br>
-	 * E remove(); <br>
-	 * E poll(); <br>
-	 * E element(); <br>
-	 * E peek(); <br>
-	 * Iterator<E> descendingIterator(); <br>
-	 * boolean offer(E e); <br>
+	 * ----- interface Collection<E> -----
+	 * int size();
+	 * boolean isEmpty();
+	 * boolean contains(Object o);
+	 * Iterator<E> iterator(); --> testEquality
+	 * Object[] toArray();
+	 * <T> T[] toArray(T[] a);
+	 * boolean add(E e);
+	 * boolean remove(Object o);
+	 * boolean containsAll(Collection<?> c);
+	 * boolean addAll(Collection<? extends E> c);
+	 * boolean removeAll(Collection<?> c);
+	 * boolean retainAll(Collection<?> c);
+	 * clear();
+	 * boolean equals(Object o);
+	 * public String toString();
 	 *
-	 *
-	 * ----- interface Collection<E> ----- <br>
-	 * int size(); <br>
-	 * boolean isEmpty(); <br>
-	 * boolean contains(Object o); <br>
-	 * Iterator<E> iterator(); --> testEquality <br>
-	 * Object[] toArray(); <br>
-	 * <T> T[] toArray(T[] a); <br>
-	 * boolean add(E e); <br>
-	 * boolean remove(Object o); <br>
-	 * boolean containsAll(Collection<?> c); boolean addAll(Collection<? extends E> c); <br>
-	 * boolean removeAll(Collection<?> c); <br>
-	 * boolean retainAll(Collection<?> c); <br>
-	 * clear(); <br>
-	 * boolean equals(Object o); <br>
-	 * public String toString(); <br>
+	 * </pre>
 	 *
 	 */
 	@Test
 	@DisplayName("Testet grundlegende Funktionen der {@link LinkedCollection}.")
 	void testeAlles() {
-		for (int i = 0; i < _ROUNDS; i++) {
-			final int type = _random.nextInt(3);
-			if (type == 0) { // Adding
-				switch (_random.nextInt(9)) {
-					case 0 -> testAddFirst();
-					case 1 -> testAddFirst();
-					case 2 -> testAddLast();
-					case 3 -> testOfferFirst();
-					case 4 -> testOfferLast();
-					case 5 -> testAdd();
-					case 6 -> testOffer();
-					case 7 -> testAddAll();
-					case 8 -> testPush();
-					default -> throw new IllegalArgumentException("Unexpected value");
-				}
+		for (int i = 0; i < _ROUNDS; i++)
+			switch (_random.nextInt(3)) {
+				case 0 -> testeAllesAdd();
+				case 1 -> testeAllesRemove();
+				case 2 -> testeAllesMisc();
+				default -> throw new IllegalArgumentException("Unexpected value");
 			}
-			if (type == 1) { // Removing
-				switch (_random.nextInt(15)) {
-					case 0 -> testRemoveFirst();
-					case 1 -> testRemoveLast();
-					case 2 -> testPollFirst();
-					case 3 -> testPollLast();
-					case 4 -> testRemoveFirstOccurrence();
-					case 5 -> testRemoveLastOccurrence();
-					case 6 -> testRemoveToBoolean();
-					case 7 -> testPoll();
-					case 8 -> testPop();
-					case 9 -> testRemoveObject();
-					case 10 -> testRemoveAll();
-					case 11 -> testRetainAll();
-					case 12 -> testRemoveAllSelf();
-					case 13 -> testRetainAllSelfOrNull();
-					case 14 -> testRemoveToElement();
-					default -> throw new IllegalArgumentException("Unexpected value");
-				}
-			}
-			if (type == 2) { // Misc
-				switch (_random.nextInt(19)) {
-					case 0 -> testSize();
-					case 1 -> testGetFirst();
-					case 2 -> testGetLast();
-					case 3 -> testPeekFirst();
-					case 4 -> testPeekLast();
-					case 5 -> testElement();
-					case 6 -> testPeek();
-					case 7 -> testContains();
-					case 8 -> testDescendingIterator();
-					case 9 -> testClear();
-					case 10 -> testIsEmpty();
-					case 11 -> testToArray();
-					case 12 -> testToArrayWithType();
-					case 13 -> testContainsAll();
-					case 14 -> testEquals();
-					case 15 -> testSpecialIndex();
-					case 16 -> testSpecialSort();
-					case 17 -> testToString();
-					case 18 -> testHashCode();
-					default -> throw new IllegalArgumentException("Unexpected value");
-				}
-			}
+	}
+
+	private void testeAllesAdd() {
+		switch (_random.nextInt(9)) {
+			case 0 -> testAddFirst();
+			case 1 -> testAddFirst();
+			case 2 -> testAddLast();
+			case 3 -> testOfferFirst();
+			case 4 -> testOfferLast();
+			case 5 -> testAdd();
+			case 6 -> testOffer();
+			case 7 -> testAddAll();
+			case 8 -> testPush();
+			default -> throw new IllegalArgumentException("Unexpected value");
+		}
+	}
+
+	private void testeAllesRemove() {
+		switch (_random.nextInt(15)) {
+			case 0 -> testRemoveFirst();
+			case 1 -> testRemoveLast();
+			case 2 -> testPollFirst();
+			case 3 -> testPollLast();
+			case 4 -> testRemoveFirstOccurrence();
+			case 5 -> testRemoveLastOccurrence();
+			case 6 -> testRemoveToBoolean();
+			case 7 -> testPoll();
+			case 8 -> testPop();
+			case 9 -> testRemoveObject();
+			case 10 -> testRemoveAll();
+			case 11 -> testRetainAll();
+			case 12 -> testRemoveAllSelf();
+			case 13 -> testRetainAllSelfOrNull();
+			case 14 -> testRemoveToElement();
+			default -> throw new IllegalArgumentException("Unexpected value");
+		}
+	}
+
+
+	private void testeAllesMisc() {
+		switch (_random.nextInt(19)) {
+			case 0 -> testSize();
+			case 1 -> testGetFirst();
+			case 2 -> testGetLast();
+			case 3 -> testPeekFirst();
+			case 4 -> testPeekLast();
+			case 5 -> testElement();
+			case 6 -> testPeek();
+			case 7 -> testContains();
+			case 8 -> testDescendingIterator();
+			case 9 -> testClear();
+			case 10 -> testIsEmpty();
+			case 11 -> testToArray();
+			case 12 -> testToArrayWithType();
+			case 13 -> testContainsAll();
+			case 14 -> testEquals();
+			case 15 -> testSpecialIndex();
+			case 16 -> testSpecialSort();
+			case 17 -> testToString();
+			case 18 -> testHashCode();
+			default -> throw new IllegalArgumentException("Unexpected value");
 		}
 	}
 

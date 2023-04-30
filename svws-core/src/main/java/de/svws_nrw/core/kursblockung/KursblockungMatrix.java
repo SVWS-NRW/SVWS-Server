@@ -133,7 +133,8 @@ public class KursblockungMatrix {
 						if (zuR == -1) {
 							// Gefunden --> Ringtausch
 							vorgaengerCzuR[ueberC] = vonR;
-							for (int c2 = ueberC; c2 >= 0;) {
+							int c2 = ueberC;
+							while (c2 >= 0) {
 								final int r2 = vorgaengerCzuR[c2];
 								final int saveC = r2c[r2];
 								c2r[c2] = r2;

@@ -159,7 +159,6 @@ export class KursblockungAlgorithmusKSatSolver extends KursblockungAlgorithmusK 
 				}
 			}
 		}
-		console.log(JSON.stringify("V=" + ssw.getVarCount() + ", C=" + ssw.getClauseCount()));
 		const satresult : number = ssw.solve(pMaxTimeMillis);
 		if (satresult !== SatSolverA.RESULT_SATISFIABLE)
 			return satresult;

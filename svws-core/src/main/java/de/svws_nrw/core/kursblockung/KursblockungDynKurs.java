@@ -421,19 +421,21 @@ public class KursblockungDynKurs {
 		}
 	}
 
-	/** Debug Ausgabe. Nur für Testzwecke.
+	/**
+	 * Debug Ausgabe. Nur für Testzwecke.
 	 *
-	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen. */
+	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen.
+	 */
 	void debug(final @NotNull KursblockungDynSchueler @NotNull [] schuelerArr) {
-		System.out.println(toString() + " --> " + schuelerAnz + " SuS.");
+		logger.modifyIndent(+4);
+		logger.logLn(toString() + " --> " + schuelerAnz + " SuS.");
 		for (final KursblockungDynSchueler s : schuelerArr) {
 			final @NotNull KursblockungDynKurs[] kurse = s.gibKurswahlen();
-			for (final KursblockungDynKurs kurs : kurse) {
-				if (kurs == this) {
-					System.out.println("        " + s.gibDatenbankID());
-				}
-			}
+			for (final KursblockungDynKurs kurs : kurse)
+				if (kurs == this)
+					logger.logLn("        " + s.gibDatenbankID());
 		}
+		logger.modifyIndent(-4);
 	}
 
 }

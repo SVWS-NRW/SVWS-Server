@@ -3,6 +3,7 @@ package de.svws_nrw.core.kursblockung.satsolver;
 import java.util.Arrays;
 import java.util.Random;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -129,9 +130,8 @@ public final class Heap {
 
 		// Gehe zur Wurzel und ziehe alle Elternteile eine Ebene tiefer.
 		int currentI = pVar.index;
-		if (_data[pVar.index] != pVar) {
-			System.out.println("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!");
-		}
+		DeveloperNotificationException.check("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", _data[pVar.index] != pVar);
+
 		while (currentI > 0) {
 			final int parentI = (currentI - 1) / 2;
 			_data[currentI] = _data[parentI];

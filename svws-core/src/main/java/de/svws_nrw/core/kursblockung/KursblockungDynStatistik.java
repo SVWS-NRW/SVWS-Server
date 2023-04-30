@@ -2,6 +2,7 @@ package de.svws_nrw.core.kursblockung;
 
 import java.util.Arrays;
 
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import jakarta.validation.constraints.NotNull;
 
@@ -12,6 +13,9 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch */
 public class KursblockungDynStatistik {
+
+	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
+	private final @NotNull Logger _logger;
 
 	/**
 	 * In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
@@ -37,9 +41,6 @@ public class KursblockungDynStatistik {
 
 	/** Die aktuelle Bewertung der Fachart-Paare aller Schienen. */
 	private long bewertungFachartPaar;
-
-	//	/** Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Schüler-Ebene. */
-	//	private long bewertungFachartPaarSaveS;
 
 	/** Zum Speichern des Wertes von {@link KursblockungDynStatistik#bewertungFachartPaar} auf Kurs-Ebene. */
 	private long bewertungFachartPaarSaveK;
@@ -78,8 +79,11 @@ public class KursblockungDynStatistik {
 
 	/**
 	 * Initialisiert alle Attribute mit Dummy-Werten.
+	 *
+	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	KursblockungDynStatistik() {
+	KursblockungDynStatistik(final @NotNull Logger pLogger) {
+		_logger = pLogger;
 		clear();
 	}
 
@@ -97,7 +101,6 @@ public class KursblockungDynStatistik {
 		bewertungRegelverletzungenSaveG = 0;
 
 		bewertungFachartPaar = 0;
-		// bewertungFachartPaarSaveS = 0;
 		bewertungFachartPaarSaveK = 0;
 		bewertungFachartPaarSaveG = 0;
 
@@ -153,10 +156,12 @@ public class KursblockungDynStatistik {
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe.
 	 */
 	void debug(final @NotNull String pPrefix) {
-		System.out.println(pPrefix + ", RV = " + bewertungRegelverletzungen
+		_logger.modifyIndent(+4);
+		_logger.logLn(pPrefix + ", RV = " + bewertungRegelverletzungen
 				+ ", NW = " + bewertungNichtwahlen
 				+ ", FW = " + bewertungFachartPaar
 				+ ", KDs = " + bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen));
+		_logger.modifyIndent(-4);
 	}
 
 	/**

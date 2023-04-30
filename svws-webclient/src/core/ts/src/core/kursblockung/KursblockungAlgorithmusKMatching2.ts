@@ -35,20 +35,16 @@ export class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorithmusK 
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	public berechne(pMaxTimeMillis : number) : void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
-		}
 		const timeStart : number = System.currentTimeMillis();
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();
 		let countKeineVerbesserung : number = 0;
-		let runden : number = 0;
 		do {
-			runden++;
 			countKeineVerbesserung = this.verteileKurse() ? 0 : countKeineVerbesserung + 1;
 		} while ((countKeineVerbesserung < KursblockungAlgorithmusKMatching2.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
-		console.log(JSON.stringify("runden = " + runden));
 	}
 
 	/**

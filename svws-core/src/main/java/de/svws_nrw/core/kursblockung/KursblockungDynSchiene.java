@@ -116,12 +116,13 @@ public class KursblockungDynSchiene {
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public void debug(final boolean nurMultikurse) {
+		logger.modifyIndent(+4);
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2))
 				continue;
-			System.out.print("    " + k.toString() + "\n");
+			logger.logLn("    " + k.toString());
 		}
-
+		logger.modifyIndent(-4);
 	}
 
 	/**

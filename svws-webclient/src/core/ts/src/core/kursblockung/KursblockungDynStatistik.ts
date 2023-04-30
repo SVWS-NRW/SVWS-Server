@@ -1,9 +1,15 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { Logger } from '../../core/logger/Logger';
 import { Arrays } from '../../java/util/Arrays';
 import { System } from '../../java/lang/System';
 
 export class KursblockungDynStatistik extends JavaObject {
+
+	/**
+	 * Logger für Benutzerhinweise, Warnungen und Fehler.
+	 */
+	private readonly _logger : Logger;
 
 	/**
 	 *  In der Matrix ist zu jedem Kursart-Paar eine Bewertung die angibt, wie gut es wäre wenn zwei Kurses dieser
@@ -102,9 +108,12 @@ export class KursblockungDynStatistik extends JavaObject {
 
 	/**
 	 * Initialisiert alle Attribute mit Dummy-Werten.
+	 *
+	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
-	constructor() {
+	constructor(pLogger : Logger) {
 		super();
+		this._logger = pLogger;
 		this.clear();
 	}
 
@@ -168,7 +177,9 @@ export class KursblockungDynStatistik extends JavaObject {
 	 * @param pPrefix Ein String-Prefix vor der Ausgabe.
 	 */
 	debug(pPrefix : string) : void {
-		console.log(JSON.stringify(pPrefix! + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!));
+		this._logger.modifyIndent(+4);
+		this._logger.logLn(pPrefix! + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen)!);
+		this._logger.modifyIndent(-4);
 	}
 
 	/**

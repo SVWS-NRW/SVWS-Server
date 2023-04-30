@@ -35,16 +35,15 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	 * wird die Veränderung rückgängig gemacht.
 	 */
 	public berechne(pMaxTimeMillis : number) : void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
 			return;
-		}
 		const timeStart : number = System.currentTimeMillis();
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();
 		let countKeineVerbesserung : number = 0;
 		do {
-			countKeineVerbesserung = this.verteileKurse(pMaxTimeMillis) ? 0 : countKeineVerbesserung + 1;
+			countKeineVerbesserung = this.verteileKurse() ? 0 : countKeineVerbesserung + 1;
 		} while ((countKeineVerbesserung < KursblockungAlgorithmusKmitS.MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
 	}
 
@@ -52,10 +51,9 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
 	 *
-	 * @param pMaxTimeMillis Die maximale Blockungszeit für den S-Algorithmus.
 	 * @return TRUE, falls es zur Verbesserung kam.
 	 */
-	private verteileKurse(pMaxTimeMillis : number) : boolean {
+	private verteileKurse() : boolean {
 		do {
 			this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();

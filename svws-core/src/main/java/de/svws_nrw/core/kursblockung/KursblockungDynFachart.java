@@ -3,6 +3,7 @@ package de.svws_nrw.core.kursblockung;
 import java.util.Random;
 
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
@@ -118,7 +119,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das Array aller Kurse dieser Fachart.
 	 */
-	@NotNull KursblockungDynKurs @NotNull [] gibKurse() {
+	@NotNull
+	KursblockungDynKurs @NotNull [] gibKurse() {
 		return kursArr;
 	}
 
@@ -235,7 +237,8 @@ public class KursblockungDynFachart {
 			final @NotNull KursblockungDynKurs kursL = kursArr[i - 1];
 			final @NotNull KursblockungDynKurs kursR = kursArr[i];
 			final boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl())
+					&& (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				kursArr[i - 1] = kursR;
 				kursArr[i] = kursL;
@@ -253,7 +256,8 @@ public class KursblockungDynFachart {
 			final @NotNull KursblockungDynKurs kursL = kursArr[i - 1];
 			final @NotNull KursblockungDynKurs kursR = kursArr[i];
 			final boolean b1 = kursL.gibSchuelerAnzahl() > kursR.gibSchuelerAnzahl();
-			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl()) && (kursL.gibDatenbankID() > kursR.gibDatenbankID());
+			final boolean b2 = (kursL.gibSchuelerAnzahl() == kursR.gibSchuelerAnzahl())
+					&& (kursL.gibDatenbankID() > kursR.gibDatenbankID());
 			if (b1 || b2) {
 				kursArr[i - 1] = kursR;
 				kursArr[i] = kursL;
@@ -275,7 +279,8 @@ public class KursblockungDynFachart {
 			}
 		}
 
-		System.out.println("aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!");
+		throw new DeveloperNotificationException(
+				"aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!");
 	}
 
 	/** Debug Ausgabe. Nur für Testzwecke.
@@ -292,7 +297,8 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das zugehörige Fach-Objekt.
 	 */
-	@NotNull GostFach gibFach() {
+	@NotNull
+	GostFach gibFach() {
 		return gostFach;
 	}
 
@@ -301,10 +307,9 @@ public class KursblockungDynFachart {
 	 *
 	 * @return Das zugehörige Kursart-Objekt.
 	 */
-	@NotNull GostKursart gibKursart() {
+	@NotNull
+	GostKursart gibKursart() {
 		return gostKursart;
 	}
-
-
 
 }

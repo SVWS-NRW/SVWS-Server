@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,6 +17,9 @@ public class KursblockungDynSchueler {
 
 	/** Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed. */
 	private final @NotNull Random _random;
+
+	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
+	private final @NotNull Logger _logger;
 
 	/** Die ID (von der GUI) des Schülers, beispielsweise 42. */
 	private final long guiID;
@@ -40,11 +45,6 @@ public class KursblockungDynSchueler {
 	/** Die aktuelle Information darüber, ob die Schiene des Schülers belegt ist. */
 	private final @NotNull boolean[] schieneBelegt;
 
-	// /**
-	// * Dies ist ein Dummy, damit das Feld matrix mit einem Nicht-Null-Wert initialisiert wird.
-	// */
-	// private static @NotNull KursblockungMatrix dummy = new KursblockungMatrix(0, 0);
-
 	/** Diese Datenstruktur wird verwendet um bei bestimmten Algorithmus Kurse auf Schienen zu verteilen. */
 	private @NotNull KursblockungMatrix matrix;
 
@@ -55,15 +55,16 @@ public class KursblockungDynSchueler {
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
 	 *
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pLogger         Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pStatistik      Referenz um die Nichtwahlen mitzuteilen.
 	 * @param pSchuelerID     Die ID des Schülers von der GUI/DB.
 	 * @param pSchienenAnzahl Wir benötigt, um {@link #schieneBelegt} zu initialisieren.
 	 * @param pKursAnzahl     Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden
 	 *                        kann.
 	 */
-	KursblockungDynSchueler(final @NotNull Random pRandom, final long pSchuelerID, final @NotNull KursblockungDynStatistik pStatistik,
-			final int pSchienenAnzahl, final int pKursAnzahl) {
+	KursblockungDynSchueler(final @NotNull Logger pLogger, final @NotNull Random pRandom, final long pSchuelerID, final @NotNull KursblockungDynStatistik pStatistik, final int pSchienenAnzahl, final int pKursAnzahl) {
 		_random = pRandom;
+		_logger = pLogger;
 		guiID = pSchuelerID;
 		representation = "Schüler " + pSchuelerID;
 		statistik = pStatistik;
@@ -238,17 +239,15 @@ public class KursblockungDynSchueler {
 
 	private void aktionWaehleKurse(final @NotNull KursblockungDynKurs[] wahl) {
 		aktionKurseAlleEntfernen();
+
 		for (int i = 0; i < fachartZuKurs.length; i++) {
 			final KursblockungDynKurs kurs = wahl[i];
 
-			if (kurs == null) {
+			if (kurs == null)
 				continue;
-			}
 
-			if (kursGesperrt[kurs.gibInternalID()]) {
-				System.out.println(
-						"FEHLER: Schüler " + guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
-			}
+			if (kursGesperrt[kurs.gibInternalID()])
+				throw new DeveloperNotificationException("FEHLER: Schüler " + guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.");
 
 			aktionKursHinzufuegen(i, kurs);
 		}
@@ -394,28 +393,24 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Überspringe, falls bereits zugeordnet oder die Fachart über mehrere Schienen geht.
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
 				continue;
-			}
 
 			// Kein Matching-Partner gefunden?
 			final int c = r2c[r];
-			if (c < 0) {
+			if (c < 0)
 				continue;
-			}
 
 			// Matching ungültig?
-			if (data[r][c] == _INFINITY) {
+			if (data[r][c] == _INFINITY)
 				continue;
-			}
 
 			// Zuordnen
 			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
-			if (kursGefunden != null) {
+			if (kursGefunden != null)
 				aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				System.out.println("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
-			}
+			else
+				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
 
 		}
 
@@ -455,23 +450,20 @@ public class KursblockungDynSchueler {
 		for (int r = 0; r < fachartArr.length; r++) {
 
 			// Kurs bereits zugeordnet ODER Multikurs? --> Zeile überspringen
-			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs()) {
+			if ((fachartZuKurs[r] != null) || fachartArr[r].gibHatMultikurs())
 				continue;
-			}
 
 			// Keinen Matching-Partner gefunden?
 			final int c = r2c[r];
-			if (c == -1) {
+			if (c == -1)
 				continue;
-			}
 
 			// Zuordnen
 			final KursblockungDynKurs kursGefunden = fachartArr[r].gibKleinstenKursInSchiene(c, kursGesperrt);
-			if (kursGefunden != null) {
+			if (kursGefunden != null)
 				aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				System.out.println("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
-			}
+			else
+				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!");
 
 		}
 
@@ -609,9 +601,7 @@ public class KursblockungDynSchueler {
 		statistik.aktionNichtwahlenVeraendern(-1);
 		nichtwahlen--;
 		for (final int nr : kurs.gibSchienenLage()) {
-			if (schieneBelegt[nr]) {
-				System.out.println("FEHLER: Schienen-Doppelbelegung! " + representation);
-			}
+			DeveloperNotificationException.check("FEHLER: Schienen-Doppelbelegung! " + representation, schieneBelegt[nr]);
 			schieneBelegt[nr] = true;
 		}
 		fachartZuKurs[fachartIndex] = kurs;
@@ -622,9 +612,7 @@ public class KursblockungDynSchueler {
 		statistik.aktionNichtwahlenVeraendern(+1);
 		nichtwahlen++;
 		for (final int nr : kurs.gibSchienenLage()) {
-			if (!schieneBelegt[nr]) {
-				System.out.println("FEHLER: Kurs ist gar nicht in Schiene ! " + representation);
-			}
+			DeveloperNotificationException.check("FEHLER: Kurs ist gar nicht in Schiene ! " + representation, !schieneBelegt[nr]);
 			schieneBelegt[nr] = false;
 		}
 		fachartZuKurs[fachartIndex] = null;
@@ -648,23 +636,22 @@ public class KursblockungDynSchueler {
 	 * Ausgabe der aktuellen Kurslage zum debuggen.
 	 */
 	public void debugKurswahlen() {
-		System.out.println();
-		System.out.println(representation);
+		_logger.modifyIndent(+4);
+		_logger.logLn("");
+		_logger.logLn(representation);
 		final HashSet<Integer> setSchienenLage = new HashSet<>();
 		for (int i = 0; i < fachartZuKurs.length; i++) {
 			final KursblockungDynKurs kurs = fachartZuKurs[i];
 			if (kurs == null)
 				continue;
-			System.out.println("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
-			for (final int schiene : kurs.gibSchienenLage()) {
+			_logger.logLn("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
+			for (final int schiene : kurs.gibSchienenLage())
 				if (!setSchienenLage.add(schiene)) {
-					System.out.println("Kollision");
+					_logger.logLn("Kollision");
 					return;
 				}
-
-			}
 		}
-
+		_logger.modifyIndent(-4);
 	}
 
 }

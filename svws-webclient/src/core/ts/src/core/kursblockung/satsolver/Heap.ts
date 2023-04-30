@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Variable } from '../../../core/kursblockung/satsolver/Variable';
 import { Random } from '../../../java/util/Random';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class Heap extends JavaObject {
@@ -109,9 +110,7 @@ export class Heap extends JavaObject {
 			return;
 		}
 		let currentI : number = pVar.index;
-		if (this._data[pVar.index] as unknown !== pVar as unknown) {
-			console.log(JSON.stringify("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!"));
-		}
+		DeveloperNotificationException.check("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", this._data[pVar.index] as unknown !== pVar as unknown);
 		while (currentI > 0) {
 			const parentI : number = Math.trunc((currentI - 1) / 2);
 			this._data[currentI] = this._data[parentI];

@@ -28,8 +28,7 @@ public final class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorit
 	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pDynDat Die dynamischen Blockungsdaten.
 	 */
-	public KursblockungAlgorithmusKMatching2(final @NotNull Random pRandom, final @NotNull Logger pLogger,
-			final @NotNull KursblockungDynDaten pDynDat) {
+	public KursblockungAlgorithmusKMatching2(final @NotNull Random pRandom, final @NotNull Logger pLogger, final @NotNull KursblockungDynDaten pDynDat) {
 		super(pRandom, pLogger, pDynDat);
 		schuelerAlle = dynDaten.gibSchuelerArray(false);
 	}
@@ -41,10 +40,9 @@ public final class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorit
 	 */
 	@Override
 	public void berechne(final long pMaxTimeMillis) {
-		// Keine Kurverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
+		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
-		}
 
 		// Startzeit speichern.
 		final long timeStart = System.currentTimeMillis();
@@ -60,14 +58,10 @@ public final class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorit
 
 		// Optimiere die Kurse. Bricht ab, wenn die Zeit vorbei ist, oder mehrfach keine Verbesserung erfolgt.
 		int countKeineVerbesserung = 0;
-		int runden = 0;
 		do {
-			runden++;
 			countKeineVerbesserung = verteileKurse() ? 0 : countKeineVerbesserung + 1;
-		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
-				&& (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
+		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
 
-		System.out.println("runden = " + runden);
 	}
 
 	/**
@@ -89,10 +83,8 @@ public final class KursblockungAlgorithmusKMatching2 extends KursblockungAlgorit
 			verteileSuS();
 
 			// Besser? --> Speichern.
-			final boolean b1 = (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
-					&& (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >= 0);
-			final boolean b2 = (dynDaten.gibCompareZustandK_NW_KD_FW() >= 0)
-					&& (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() > 0);
+			final boolean b1 = (dynDaten.gibCompareZustandK_NW_KD_FW() >  0) && (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >= 0);
+			final boolean b2 = (dynDaten.gibCompareZustandK_NW_KD_FW() >= 0) && (dynDaten.gibBewertungK_FW_NW_KD_JetztBesser() >  0);
 			if (b1 || b2) {
 				dynDaten.aktionZustandSpeichernK();
 				return true;

@@ -44,9 +44,8 @@ public final class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK
 	@Override
 	public void berechne(final long pMaxTimeMillis) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
 			return;
-		}
 
 		// Startzeit speichern.
 		final long timeStart = System.currentTimeMillis();
@@ -63,19 +62,17 @@ public final class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK
 		// Optimiere die Kurse. Bricht ab, wenn die Zeit vorbei ist, oder mehrfach keine Verbesserung erfolgt.
 		int countKeineVerbesserung = 0;
 		do {
-			countKeineVerbesserung = verteileKurse(pMaxTimeMillis) ? 0 : countKeineVerbesserung + 1;
-		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG)
-				&& (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
+			countKeineVerbesserung = verteileKurse() ? 0 : countKeineVerbesserung + 1;
+		} while ((countKeineVerbesserung < MAX_RUNDEN_IN_FOLGE_OHNE_VERBESSERUNG) && (System.currentTimeMillis() - timeStart < pMaxTimeMillis));
 	}
 
 	/**
 	 * Die Lage einiger Kurse wird verändert. Falls sich die Bewertung verschlechtert, wird die Veränderung rückgängig
 	 * gemacht.
 	 *
-	 * @param pMaxTimeMillis Die maximale Blockungszeit für den S-Algorithmus.
 	 * @return TRUE, falls es zur Verbesserung kam.
 	 */
-	private boolean verteileKurse(final long pMaxTimeMillis) {
+	private boolean verteileKurse() {
 		// Ein 1-* Kurse wandern zufällig in eine andere Schiene.
 		do {
 			// Entferne SuS, sonst dürfen Kurse nicht die Schiene wechseln.

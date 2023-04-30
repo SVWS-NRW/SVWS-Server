@@ -2,11 +2,13 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
+import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { Logger } from '../../core/logger/Logger';
+import { System } from '../../java/lang/System';
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
-import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { Arrays } from '../../java/util/Arrays';
-import { System } from '../../java/lang/System';
 import { HashSet } from '../../java/util/HashSet';
 
 export class KursblockungDynSchueler extends JavaObject {
@@ -15,6 +17,11 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
 	 */
 	private readonly _random : Random;
+
+	/**
+	 * Logger für Benutzerhinweise, Warnungen und Fehler.
+	 */
+	private readonly _logger : Logger;
 
 	/**
 	 * Die ID (von der GUI) des Schülers, beispielsweise 42.
@@ -72,15 +79,17 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Im Konstruktor wird {@code pSchueler} in ein Objekt dieser Klasse umgewandelt.
 	 *
 	 * @param pRandom         Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param pLogger         Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @param pStatistik      Referenz um die Nichtwahlen mitzuteilen.
 	 * @param pSchuelerID     Die ID des Schülers von der GUI/DB.
 	 * @param pSchienenAnzahl Wir benötigt, um {@link #schieneBelegt} zu initialisieren.
 	 * @param pKursAnzahl     Die Anzahl aller Kurse. Wird benötigt, damit {@link #kursGesperrt} initialisiert werden
 	 *                        kann.
 	 */
-	constructor(pRandom : Random, pSchuelerID : number, pStatistik : KursblockungDynStatistik, pSchienenAnzahl : number, pKursAnzahl : number) {
+	constructor(pLogger : Logger, pRandom : Random, pSchuelerID : number, pStatistik : KursblockungDynStatistik, pSchienenAnzahl : number, pKursAnzahl : number) {
 		super();
 		this._random = pRandom;
+		this._logger = pLogger;
 		this.guiID = pSchuelerID;
 		this.representation = "Schüler " + pSchuelerID;
 		this.statistik = pStatistik;
@@ -251,12 +260,10 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.aktionKurseAlleEntfernen();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
 			const kurs : KursblockungDynKurs | null = wahl[i];
-			if (kurs === null) {
+			if (kurs === null)
 				continue;
-			}
-			if (this.kursGesperrt[kurs.gibInternalID()]) {
-				console.log(JSON.stringify("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen."));
-			}
+			if (this.kursGesperrt[kurs.gibInternalID()])
+				throw new DeveloperNotificationException("FEHLER: Schüler " + this.guiID + " darf den Kurs " + kurs.gibDatenbankID() + " nicht wählen.")
 			this.aktionKursHinzufuegen(i, kurs);
 		}
 	}
@@ -365,22 +372,18 @@ export class KursblockungDynSchueler extends JavaObject {
 		}
 		const r2c : Array<number> = this.matrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs())
 				continue;
-			}
 			const c : number = r2c[r];
-			if (c < 0) {
+			if (c < 0)
 				continue;
-			}
-			if (data[r][c] === _INFINITY) {
+			if (data[r][c] === _INFINITY)
 				continue;
-			}
 			const kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
-			if (kursGefunden !== null) {
+			if (kursGefunden !== null)
 				this.aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				console.log(JSON.stringify("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!"));
-			}
+			else
+				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!")
 		}
 	}
 
@@ -407,19 +410,16 @@ export class KursblockungDynSchueler extends JavaObject {
 		}
 		const r2c : Array<number> = this.matrix.gibMaximalesBipartitesMatching(true);
 		for (let r : number = 0; r < this.fachartArr.length; r++) {
-			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs()) {
+			if ((this.fachartZuKurs[r] !== null) || this.fachartArr[r].gibHatMultikurs())
 				continue;
-			}
 			const c : number = r2c[r];
-			if (c === -1) {
+			if (c === -1)
 				continue;
-			}
 			const kursGefunden : KursblockungDynKurs | null = this.fachartArr[r].gibKleinstenKursInSchiene(c, this.kursGesperrt);
-			if (kursGefunden !== null) {
+			if (kursGefunden !== null)
 				this.aktionKursHinzufuegen(r, kursGefunden);
-			} else {
-				console.log(JSON.stringify("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!"));
-			}
+			else
+				throw new DeveloperNotificationException("FEHLER: Kein Kurs in [" + r + "/" + c + "] gefunden!")
 		}
 	}
 
@@ -513,9 +513,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.statistik.aktionNichtwahlenVeraendern(-1);
 		this.nichtwahlen--;
 		for (const nr of kurs.gibSchienenLage()) {
-			if (this.schieneBelegt[nr]) {
-				console.log(JSON.stringify("FEHLER: Schienen-Doppelbelegung! " + this.representation!));
-			}
+			DeveloperNotificationException.check("FEHLER: Schienen-Doppelbelegung! " + this.representation!, this.schieneBelegt[nr]);
 			this.schieneBelegt[nr] = true;
 		}
 		this.fachartZuKurs[fachartIndex] = kurs;
@@ -526,9 +524,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.statistik.aktionNichtwahlenVeraendern(+1);
 		this.nichtwahlen++;
 		for (const nr of kurs.gibSchienenLage()) {
-			if (!this.schieneBelegt[nr]) {
-				console.log(JSON.stringify("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation!));
-			}
+			DeveloperNotificationException.check("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation!, !this.schieneBelegt[nr]);
 			this.schieneBelegt[nr] = false;
 		}
 		this.fachartZuKurs[fachartIndex] = null;
@@ -552,21 +548,22 @@ export class KursblockungDynSchueler extends JavaObject {
 	 * Ausgabe der aktuellen Kurslage zum debuggen.
 	 */
 	public debugKurswahlen() : void {
-		console.log();
-		console.log(JSON.stringify(this.representation));
+		this._logger.modifyIndent(+4);
+		this._logger.logLn("");
+		this._logger.logLn(this.representation);
 		const setSchienenLage : HashSet<number | null> | null = new HashSet();
 		for (let i : number = 0; i < this.fachartZuKurs.length; i++) {
 			const kurs : KursblockungDynKurs | null = this.fachartZuKurs[i];
 			if (kurs === null)
 				continue;
-			console.log(JSON.stringify("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!));
-			for (const schiene of kurs.gibSchienenLage()) {
+			this._logger.logLn("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!);
+			for (const schiene of kurs.gibSchienenLage())
 				if (!setSchienenLage.add(schiene)) {
-					console.log(JSON.stringify("Kollision"));
+					this._logger.logLn("Kollision");
 					return;
 				}
-			}
 		}
+		this._logger.modifyIndent(-4);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -455,20 +455,20 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Debug Ausgabe. Nur für Testzwecke.
+	 * Debug Ausgabe. Nur für Testzwecke.
 	 *
 	 * @param schuelerArr Nötig, um den Kursen SuS zuzuordnen.
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
-		console.log(JSON.stringify(this.toString()! + " --> " + this.schuelerAnz + " SuS."));
+		this.logger.modifyIndent(+4);
+		this.logger.logLn(this.toString()! + " --> " + this.schuelerAnz + " SuS.");
 		for (const s of schuelerArr) {
 			const kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
-			for (const kurs of kurse) {
-				if (kurs as unknown === this as unknown) {
-					console.log(JSON.stringify("        " + s.gibDatenbankID()));
-				}
-			}
+			for (const kurs of kurse)
+				if (kurs as unknown === this as unknown)
+					this.logger.logLn("        " + s.gibDatenbankID());
 		}
+		this.logger.modifyIndent(-4);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

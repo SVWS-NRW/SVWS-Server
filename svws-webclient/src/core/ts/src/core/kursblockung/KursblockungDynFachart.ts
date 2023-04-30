@@ -5,6 +5,7 @@ import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 
 export class KursblockungDynFachart extends JavaObject {
@@ -301,7 +302,7 @@ export class KursblockungDynFachart extends JavaObject {
 				return;
 			}
 		}
-		console.log(JSON.stringify("aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!"));
+		throw new DeveloperNotificationException("aktionZufaelligerKursWandertNachSchiene: THIS SHOULD NOT BE REACHED!!!")
 	}
 
 	/**

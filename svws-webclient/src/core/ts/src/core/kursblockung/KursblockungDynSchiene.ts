@@ -112,11 +112,13 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @param nurMultikurse Falls TRUE, werden nur Multikurse angezeigt.
 	 */
 	public debug(nurMultikurse : boolean) : void {
+		this.logger.modifyIndent(+4);
 		for (const k of this.kursMap.values()) {
 			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2))
 				continue;
-			console.log(JSON.stringify("    " + k.toString()! + "\n"));
+			this.logger.logLn("    " + k.toString()!);
 		}
+		this.logger.modifyIndent(-4);
 	}
 
 	/**

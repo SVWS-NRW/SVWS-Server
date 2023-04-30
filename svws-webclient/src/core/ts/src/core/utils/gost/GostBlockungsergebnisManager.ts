@@ -7,6 +7,7 @@ import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungs
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
@@ -1799,18 +1800,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Nur für Debug-Zwecke.
+	 * Eine Logger-Ausgabe für Debug-Zwecke.
+	 *
+	 * @param pLogger Ein Logger für Debug-Zwecke.
 	 */
-	public debug() : void {
-		console.log(JSON.stringify("----- Kurse sortiert nach Fachart -----"));
+	public debug(pLogger : Logger) : void {
+		pLogger.modifyIndent(+4);
+		pLogger.logLn("----- Kurse sortiert nach Fachart -----");
 		for (const fachartID of this._map_fachartID_kurse.keySet()) {
-			console.log(JSON.stringify("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")"));
+			pLogger.logLn("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
 			for (const kurs of this.getOfFachartKursmenge(fachartID!)) {
-				console.log(JSON.stringify("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS"));
+				pLogger.logLn("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS");
 			}
 		}
-		console.log(JSON.stringify("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax));
-		console.log(JSON.stringify("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!));
+		pLogger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
+		pLogger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
+		pLogger.modifyIndent(-4);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

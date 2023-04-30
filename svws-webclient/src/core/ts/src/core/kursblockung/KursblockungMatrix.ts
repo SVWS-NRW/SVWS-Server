@@ -150,7 +150,8 @@ export class KursblockungMatrix extends JavaObject {
 						const zuR : number = this.c2r[ueberC];
 						if (zuR === -1) {
 							this.vorgaengerCzuR[ueberC] = vonR;
-							for (let c2 : number = ueberC; c2 >= 0; ) {
+							let c2 : number = ueberC;
+							while (c2 >= 0) {
 								const r2 : number = this.vorgaengerCzuR[c2];
 								const saveC : number = this.r2c[r2];
 								this.c2r[c2] = r2;

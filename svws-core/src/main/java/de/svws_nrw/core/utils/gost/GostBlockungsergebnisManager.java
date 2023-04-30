@@ -25,6 +25,7 @@ import de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import jakarta.validation.constraints.NotNull;
@@ -1904,19 +1905,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Nur für Debug-Zwecke.
+	 * Eine Logger-Ausgabe für Debug-Zwecke.
+	 *
+	 * @param pLogger Ein Logger für Debug-Zwecke.
 	 */
-	public void debug() {
-		//  TODO BAR Weitere Bewertungskriterien überprüfen (auch nach Entfernen).
-		System.out.println("----- Kurse sortiert nach Fachart -----");
+	public void debug(final @NotNull Logger pLogger) {
+		pLogger.modifyIndent(+4);
+		pLogger.logLn("----- Kurse sortiert nach Fachart -----");
 		for (final @NotNull Long fachartID : _map_fachartID_kurse.keySet()) {
-			System.out.println("FachartID = " + fachartID + " (KD = " + getOfFachartKursdifferenz(fachartID) + ")");
+			pLogger.logLn("FachartID = " + fachartID + " (KD = " + getOfFachartKursdifferenz(fachartID) + ")");
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfFachartKursmenge(fachartID)) {
-				System.out.println("    " + getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
+				pLogger.logLn("    " + getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
 			}
 		}
-		System.out.println("KursdifferenzMax = " + _ergebnis.bewertung.kursdifferenzMax);
-		System.out.println("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
+		pLogger.logLn("KursdifferenzMax = " + _ergebnis.bewertung.kursdifferenzMax);
+		pLogger.logLn("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
+		pLogger.modifyIndent(-4);
 	}
 
 
