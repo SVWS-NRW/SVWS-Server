@@ -5141,7 +5141,7 @@ public enum ZulaessigesFach {
 	 */
 	public @NotNull String getHMTLFarbeRGBA(final double alpha) {
 		final @NotNull RGBFarbe farbe = getFarbe();
-		final double a = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+		final double a = Math.min(Math.max(alpha, 0.0), 1.0);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

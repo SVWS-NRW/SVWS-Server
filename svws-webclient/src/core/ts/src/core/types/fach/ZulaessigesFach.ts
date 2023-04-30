@@ -1618,7 +1618,7 @@ export class ZulaessigesFach extends JavaObject implements JavaEnum<ZulaessigesF
 	 */
 	public getHMTLFarbeRGBA(alpha : number) : string {
 		const farbe : RGBFarbe = this.getFarbe();
-		const a : number = (alpha < 0.0) ? 0.0 : ((alpha > 1.0) ? 1.0 : alpha);
+		const a : number = Math.min(Math.max(alpha, 0.0), 1.0);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

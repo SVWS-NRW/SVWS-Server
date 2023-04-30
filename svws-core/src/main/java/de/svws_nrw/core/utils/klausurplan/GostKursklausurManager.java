@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
@@ -173,16 +174,11 @@ public class GostKursklausurManager {
 			long oldTerminId = -2;
 
 			// aus _mapTerminKursklausuren löschen
-			// for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> entry : _mapTerminKursklausuren.entrySet()) {
-			for (final @NotNull Long key : _mapTerminKursklausuren.keySet()) {
-				final ArrayList<@NotNull GostKursklausur> entry = _mapTerminKursklausuren.get(key);
-				if (entry == null) {
-					// TODO Fehler, denn kann eigentlich nicht sein.
-					continue;
-				}
-				if (entry.contains(klausur)) {
-					oldTerminId = key;
-					entry.remove(klausur);
+			for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> e : _mapTerminKursklausuren.entrySet()) {
+				@NotNull ArrayList<@NotNull GostKursklausur> list = e.getValue();
+				if (list.contains(klausur)) {
+					oldTerminId = e.getKey();
+					list.remove(klausur);
 				}
 			}
 

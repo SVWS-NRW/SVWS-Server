@@ -165,14 +165,11 @@ export class GostKursklausurManager extends JavaObject {
 		const terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin === null ? -1 : klausur.idTermin);
 		if (terminNeuKlausuren === null || !terminNeuKlausuren.contains(klausur)) {
 			let oldTerminId : number = -2;
-			for (const key of this._mapTerminKursklausuren.keySet()) {
-				const entry : ArrayList<GostKursklausur> | null = this._mapTerminKursklausuren.get(key);
-				if (entry === null) {
-					continue;
-				}
-				if (entry.contains(klausur)) {
-					oldTerminId = key.valueOf();
-					entry.remove(klausur);
+			for (const e of this._mapTerminKursklausuren.entrySet()) {
+				let list : ArrayList<GostKursklausur> = e.getValue();
+				if (list.contains(klausur)) {
+					oldTerminId = e.getKey().valueOf();
+					list.remove(klausur);
 				}
 			}
 			const quartalMap : HashMap<number, ArrayList<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
