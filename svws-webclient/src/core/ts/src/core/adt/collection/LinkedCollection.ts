@@ -190,14 +190,9 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	public remove(__param0? : null | unknown) : E | boolean {
 		if (((typeof __param0 !== "undefined") && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
 			const obj : unknown | null = (__param0 instanceof JavaObject) ? cast_java_lang_Object(__param0) : __param0;
-			if (this.isEmpty())
-				return false;
-			return this.removeElement(this.findFirst(obj));
+			return this.removeFirstOccurrence(obj);
 		} else if ((typeof __param0 === "undefined")) {
-			const value : E | null = this.poll();
-			if (value === null)
-				throw new NoSuchElementException()
-			return value;
+			return this.pop();
 		} else throw new Error('invalid method overload');
 	}
 
@@ -486,9 +481,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	public element() : E {
-		if (this._head === null)
-			throw new NoSuchElementException()
-		return this._head.getValue();
+		return this.getFirst();
 	}
 
 	public peek() : E | null {

@@ -203,9 +203,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 
 	@Override
 	public boolean remove(final Object obj) {
-		if (this.isEmpty())
-			return false;
-		return this.removeElement(findFirst(obj));
+		return removeFirstOccurrence(obj);
 	}
 
 	@Override
@@ -510,10 +508,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 
 	@Override
 	public @NotNull E remove() {
-		final E value = this.poll();
-		if (value == null)
-			throw new NoSuchElementException();
-		return value;
+		return pop();
 	}
 
 	@Override
@@ -533,9 +528,7 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 
 	@Override
 	public @NotNull E element() {
-		if (this._head == null)
-			throw new NoSuchElementException();
-		return this._head.getValue();
+		return this.getFirst();
 	}
 
 	@Override

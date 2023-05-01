@@ -86,7 +86,6 @@ class LinkedCollectionDescendingIterator<@NotNull E> implements Iterator<@NotNul
 		return result;
 	}
 
-
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException("remove");

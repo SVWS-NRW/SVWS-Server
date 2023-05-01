@@ -48,7 +48,7 @@ class LinkedCollectionElement<@NotNull E> {
 	/** Referenz auf das vorige Element. */
 	private LinkedCollectionElement<@NotNull E> _prev = null;
 
-	/** Referenzt auf das nachfolgende Element. */
+	/** Referenz auf das nachfolgende Element. */
 	private LinkedCollectionElement<@NotNull E> _next = null;
 
 	/**

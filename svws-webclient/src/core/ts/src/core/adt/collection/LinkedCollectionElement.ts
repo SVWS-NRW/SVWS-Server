@@ -13,7 +13,7 @@ export class LinkedCollectionElement<E> extends JavaObject {
 	private _prev : LinkedCollectionElement<E> | null = null;
 
 	/**
-	 * Referenzt auf das nachfolgende Element.
+	 * Referenz auf das nachfolgende Element.
 	 */
 	private _next : LinkedCollectionElement<E> | null = null;
 
