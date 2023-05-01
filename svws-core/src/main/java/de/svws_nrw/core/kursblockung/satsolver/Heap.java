@@ -130,7 +130,7 @@ public final class Heap {
 
 		// Gehe zur Wurzel und ziehe alle Elternteile eine Ebene tiefer.
 		int currentI = pVar.index;
-		DeveloperNotificationException.check("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", _data[pVar.index] != pVar);
+		DeveloperNotificationException.ifTrue("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", _data[pVar.index] != pVar);
 
 		while (currentI > 0) {
 			final int parentI = (currentI - 1) / 2;

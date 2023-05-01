@@ -139,8 +139,8 @@ public class KlausurblockungSchienenDynDaten {
 			final @NotNull LinkedCollection<@NotNull Long> list = e.getValue();
 			for (final @NotNull Long klausurID1 : list)
 				for (final @NotNull Long klausurID2 : list) {
-					final @NotNull Integer klausurNr1 = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")", _mapKlausurZuNummer.get(klausurID1));
-					final @NotNull Integer klausurNr2 = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")", _mapKlausurZuNummer.get(klausurID2));
+					final @NotNull Integer klausurNr1 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")", _mapKlausurZuNummer.get(klausurID1));
+					final @NotNull Integer klausurNr2 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2 + ")", _mapKlausurZuNummer.get(klausurID2));
 					_verboten[klausurNr1][klausurNr2] = true;
 				}
 		}
@@ -220,8 +220,8 @@ public class KlausurblockungSchienenDynDaten {
 			final @NotNull Long klausurID = e.getKey();
 			final @NotNull Integer klausurNr = e.getValue();
 			final int schiene = _klausurZuSchiene[klausurNr];
-			DeveloperNotificationException.check("schiene(" + schiene + ") < 0", schiene < 0);
-			DeveloperNotificationException.check("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= _schienenAnzahl);
+			DeveloperNotificationException.ifTrue("schiene(" + schiene + ") < 0", schiene < 0);
+			DeveloperNotificationException.ifTrue("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= _schienenAnzahl);
 			// Schienen-Klausur-Zuordnung
 			out.get(schiene).add(klausurID);
 		}
@@ -740,7 +740,7 @@ public class KlausurblockungSchienenDynDaten {
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuSchiene[nr] < 0);
+			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuSchiene[nr] < 0);
 	}
 
 	/**

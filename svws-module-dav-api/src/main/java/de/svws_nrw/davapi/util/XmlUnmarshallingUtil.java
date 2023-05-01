@@ -133,7 +133,7 @@ public final class XmlUnmarshallingUtil {
 	}
 
 	/**
-	 * Konvetiert einen InputStream in einen String.
+	 * Konvertiert einen InputStream in einen String.
 	 *
 	 * @param inputstream InputStream
 	 * @return String-Repräsentation des InputStreams

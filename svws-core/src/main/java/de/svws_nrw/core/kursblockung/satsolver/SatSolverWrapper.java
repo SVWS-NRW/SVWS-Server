@@ -179,7 +179,7 @@ public final class SatSolverWrapper extends SatSolverA {
 	public void c_exactly_GENERIC(final @NotNull LinkedCollection<@NotNull Integer> pList, final int pAmount) {
 		final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>(pList);
 		// Error?
-		DeveloperNotificationException.check("FEHLER: c_exactly_GENERIC --> amount > list.size()", pAmount > list.size());
+		DeveloperNotificationException.ifTrue("FEHLER: c_exactly_GENERIC --> amount > list.size()", pAmount > list.size());
 
 		// special case: 0
 		if (pAmount == 0) {
@@ -393,7 +393,7 @@ public final class SatSolverWrapper extends SatSolverA {
 	}
 
 	private void c_bitonic_comparator(final @NotNull LinkedCollection<@NotNull Integer> result, final int i1, final int i2) {
-		DeveloperNotificationException.check("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!", i1 >= i2);
+		DeveloperNotificationException.ifTrue("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!", i1 >= i2);
 
 		final int a = result.get(i1);
 		final int b = result.get(i2);

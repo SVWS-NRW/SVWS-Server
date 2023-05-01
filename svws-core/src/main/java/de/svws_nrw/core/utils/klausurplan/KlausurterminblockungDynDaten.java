@@ -100,7 +100,7 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private @NotNull Integer gibKlausurNrOrException(final @NotNull GostKursklausur pGostKursklausur) {
-		return DeveloperNotificationException.checkNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", _mapKlausurZuNummer.get(pGostKursklausur.id));
+		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", _mapKlausurZuNummer.get(pGostKursklausur.id));
 	}
 
 	private void initialisiereKlausurgruppenNormal(final @NotNull List<@NotNull GostKursklausur> pInput) {
@@ -547,8 +547,8 @@ public class KlausurterminblockungDynDaten {
 			final @NotNull Long klausurID = e.getKey();
 			final @NotNull Integer klausurNr = e.getValue();
 			final int terminNr = _klausurZuTermin[klausurNr];
-			DeveloperNotificationException.check("terminNr(" + terminNr + ") < 0", terminNr < 0);
-			DeveloperNotificationException.check("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= _terminAnzahl);
+			DeveloperNotificationException.ifTrue("terminNr(" + terminNr + ") < 0", terminNr < 0);
+			DeveloperNotificationException.ifTrue("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= _terminAnzahl);
 			// Termin-Klausur-Zuordnung
 			out.get(terminNr).add(klausurID);
 		}
@@ -670,14 +670,14 @@ public class KlausurterminblockungDynDaten {
 			_logger.log("    Schiene " + (s + 1) + ": ");
 			for (int nr = 0; nr < _klausurenAnzahl; nr++)
 				if (_klausurZuTermin[nr] == s) {
-					final @NotNull GostKursklausur gostKlausur = DeveloperNotificationException.checkNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", _mapNummerZuKlausur.get(nr));
+					final @NotNull GostKursklausur gostKlausur = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", _mapNummerZuKlausur.get(nr));
 					_logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
 			_logger.logLn("");
 		}
 
 		for (int nr = 0; nr < _klausurenAnzahl; nr++)
-			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuTermin[nr] < 0);
+			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuTermin[nr] < 0);
 
 		_logger.modifyIndent(-4);
 	}

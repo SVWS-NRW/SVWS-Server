@@ -30,12 +30,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Ein Comparator für Schienen der Blockung
 	 */
-	private static readonly compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => JavaInteger.compare(a.nummer, b.nummer) };
+	private static readonly _compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => JavaInteger.compare(a.nummer, b.nummer) };
 
 	/**
 	 * Ein Comparator für Regeln der Blockung
 	 */
-	private static readonly compRegel : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
+	private static readonly _compRegel : Comparator<GostBlockungRegel> = { compare : (a: GostBlockungRegel, b: GostBlockungRegel) => {
 		const result : number = JavaInteger.compare(a.typ, b.typ);
 		if (result !== 0)
 			return result;
@@ -45,7 +45,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Ein Comparator für die Lehrkräfte eines Kurses
 	 */
-	private static readonly compLehrkraefte : Comparator<GostBlockungKursLehrer> = { compare : (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
+	private static readonly _compLehrkraefte : Comparator<GostBlockungKursLehrer> = { compare : (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
 		const result : number = JavaInteger.compare(a.reihenfolge, b.reihenfolge);
 		if (result !== 0)
 			return result;
@@ -440,7 +440,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die übergebene ID ungültig bzw. negativ ist.
 	 */
 	public setID(pBlockungsID : number) : void {
-		DeveloperNotificationException.check("pBlockungsID < 0", pBlockungsID < 0);
+		DeveloperNotificationException.ifInvalidID("pBlockungsID", pBlockungsID);
 		this._daten.id = pBlockungsID;
 	}
 
@@ -460,7 +460,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls der übergebene String leer ist.
 	 */
 	public setName(pName : string) : void {
-		UserNotificationException.check("Ein leerer Name ist für die Blockung nicht zulässig.", JavaObject.equalsTranspiler("", (pName)));
+		UserNotificationException.ifTrue("Ein leerer Name ist für die Blockung nicht zulässig.", JavaObject.equalsTranspiler("", (pName)));
 		this._daten.name = pName;
 	}
 
@@ -483,10 +483,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private addErgebnisOhneSortierung(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
-		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 1", pErgebnis.id < 1);
-		DeveloperNotificationException.check("_mapErgebnis.containsKey(" + pErgebnis.id + ")", this._mapErgebnis.containsKey(pErgebnis.id));
-		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 1", pErgebnis.blockungID < 1);
-		DeveloperNotificationException.check("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ") == null", GostHalbjahr.fromID(pErgebnis.gostHalbjahr) === null);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
+		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ")", GostHalbjahr.fromID(pErgebnis.gostHalbjahr));
+		DeveloperNotificationException.ifDuplicate("_mapErgebnis", this._mapErgebnis, pErgebnis.id);
 		this._daten.ergebnisse.add(pErgebnis);
 		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
 	}
@@ -524,7 +524,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getErgebnis(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
 		const e : GostBlockungsergebnisListeneintrag | null = this._mapErgebnis.get(pErgebnisID);
-		return DeveloperNotificationException.checkNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
+		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
 	}
 
 	/**
@@ -566,8 +566,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
 	 */
 	public updateErgebnisBewertung(pErgebnis : GostBlockungsergebnis) : void {
-		DeveloperNotificationException.check("pErgebnis.id(" + pErgebnis.id + ") < 0", pErgebnis.id < 0);
-		DeveloperNotificationException.check("pErgebnis.blockungID(" + pErgebnis.blockungID + ") < 0", pErgebnis.blockungID < 0);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
 		for (const eintrag of this._daten.ergebnisse)
 			if (eintrag.id === pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
@@ -576,14 +576,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private addKursOhneSortierung(pKurs : GostBlockungKurs) : void {
 		const nSchienen : number = this.getSchienenAnzahl();
-		DeveloperNotificationException.check("pKurs.id(" + pKurs.id + ") < 0", pKurs.id < 0);
-		DeveloperNotificationException.check("pKurs.wochenstunden(" + pKurs.wochenstunden + ") < 0", pKurs.wochenstunden < 0);
-		DeveloperNotificationException.check("_mapKurse.containsKey(" + pKurs.id + ")", this._mapKurse.containsKey(pKurs.id));
-		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") < 1", pKurs.anzahlSchienen < 1);
-		DeveloperNotificationException.check("pKurs.anzahlSchienen(" + pKurs.anzahlSchienen + ") > nSchienen(" + nSchienen + ")", pKurs.anzahlSchienen > nSchienen);
-		DeveloperNotificationException.check("pKurs.nummer(" + pKurs.nummer + ") < 1", pKurs.nummer < 1);
-		DeveloperNotificationException.check("_faecherManager.get(" + pKurs.fach_id + ") == null", this._faecherManager.get(pKurs.fach_id) === null);
-		DeveloperNotificationException.check("GostKursart.fromIDorNull(" + pKurs.kursart + ") == null", GostKursart.fromIDorNull(pKurs.kursart) === null);
+		DeveloperNotificationException.ifInvalidID("pKurs.id", pKurs.id);
+		DeveloperNotificationException.ifDuplicate("_mapKurse", this._mapKurse, pKurs.id);
+		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", this._faecherManager.get(pKurs.fach_id));
+		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(pKurs.kursart));
+		DeveloperNotificationException.ifSmaller("pKurs.wochenstunden", pKurs.wochenstunden, 0);
+		DeveloperNotificationException.ifSmaller("pKurs.anzahlSchienen", pKurs.anzahlSchienen, 1);
+		DeveloperNotificationException.ifGreater("pKurs.anzahlSchienen", pKurs.anzahlSchienen, nSchienen);
+		DeveloperNotificationException.ifSmaller("pKurs.nummer", pKurs.nummer, 1);
 		this._daten.kurse.add(pKurs);
 		this._mapKurse.put(pKurs.id, pKurs);
 		this._kurse_sortiert_fach_kursart_kursnummer.add(pKurs);
@@ -623,8 +623,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public getKurs(pKursID : number) : GostBlockungKurs {
-		const kurs : GostBlockungKurs | null = this._mapKurse.get(pKursID);
-		return DeveloperNotificationException.checkNull("Kurs(" + pKursID + ") existiert nicht in der Blockung!", kurs);
+		return DeveloperNotificationException.ifNull("_mapKurse.get(" + pKursID + ")", this._mapKurse.get(pKursID));
 	}
 
 	/**
@@ -724,7 +723,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls es sich derzeit nicht um die Blockungsvorlage handelt.
 	 */
 	public removeKursByID(pKursID : number) : void {
-		DeveloperNotificationException.check("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const kurs : GostBlockungKurs = this.getKurs(pKursID);
 		this._kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 		this._kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
@@ -828,11 +827,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.getKurs(pKursID);
 		const lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (const lehrkraft of lehrer) {
-			DeveloperNotificationException.check("Kurs (" + pKursID + ") hat bereits Lehrkraft (" + pKursLehrer.id + ")!", lehrkraft.id === pKursLehrer.id);
-			DeveloperNotificationException.check("Kurs (" + pKursID + ") hat bereits eine Lehrkraft mit ReihenfolgeNr. (" + pKursLehrer.reihenfolge + ")!", lehrkraft.reihenfolge === pKursLehrer.reihenfolge);
+			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === pKursLehrer.id);
+			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === pKursLehrer.reihenfolge);
 		}
 		lehrer.add(pKursLehrer);
-		lehrer.sort(GostBlockungsdatenManager.compLehrkraefte);
+		lehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
 	}
 
 	/**
@@ -851,15 +850,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 				lehrer.remove(lehrer.get(i));
 				return;
 			}
-		throw new DeveloperNotificationException("Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!")
+		throw new DeveloperNotificationException("patchOfKursRemoveLehrkraft: Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!")
 	}
 
 	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {
-		DeveloperNotificationException.check("GostBlockungSchiene.id =  " + pSchiene.id + " --> zu klein!", pSchiene.id < 1);
-		DeveloperNotificationException.check("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (pSchiene.bezeichnung)));
-		DeveloperNotificationException.check("GostBlockungSchiene.nummer =  " + pSchiene.nummer + " --> zu klein!", pSchiene.nummer < 1);
-		DeveloperNotificationException.check("GostBlockungSchiene.wochenstunden =  " + pSchiene.wochenstunden + " --> zu klein!", pSchiene.wochenstunden < 1);
-		DeveloperNotificationException.check("GostBlockungSchiene " + pSchiene.id + " doppelt!", this._mapSchienen.containsKey(pSchiene.id));
+		DeveloperNotificationException.ifInvalidID("GostBlockungSchiene.id", pSchiene.id);
+		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (pSchiene.bezeichnung)));
+		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", pSchiene.nummer, 1);
+		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", pSchiene.wochenstunden, 1);
+		DeveloperNotificationException.ifDuplicate("mapSchienen", this._mapSchienen, pSchiene.id);
 		this._mapSchienen.put(pSchiene.id, pSchiene);
 		this._daten.schienen.add(pSchiene);
 	}
@@ -872,7 +871,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addSchiene(pSchiene : GostBlockungSchiene) : void {
 		this.addSchieneOhneSortierung(pSchiene);
-		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
+		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
 	/**
@@ -884,7 +883,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public addSchienListe(pSchienen : List<GostBlockungSchiene>) : void {
 		for (const schiene of pSchienen)
 			this.addSchieneOhneSortierung(schiene);
-		this._daten.schienen.sort(GostBlockungsdatenManager.compSchiene);
+		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
 	/**
@@ -895,8 +894,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht in der Blockung existiert.
 	 */
 	public getSchiene(pSchienenID : number) : GostBlockungSchiene {
-		const schiene : GostBlockungSchiene | null = this._mapSchienen.get(pSchienenID);
-		return DeveloperNotificationException.checkNull("Schiene (" + pSchienenID + ") existiert nicht in der Blockung!", schiene);
+		return DeveloperNotificationException.ifNull("_mapSchienen.get(" + pSchienenID + ")", this._mapSchienen.get(pSchienenID));
 	}
 
 	/**
@@ -953,7 +951,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
 	 */
 	public removeSchieneByID(pSchienenID : number) : void {
-		DeveloperNotificationException.check("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
 		this._mapSchienen.remove(pSchienenID);
 		this._daten.schienen.remove(schieneR);
@@ -961,7 +959,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (schiene.nummer > schieneR.nummer)
 				schiene.nummer--;
 		for (let index : number = 0; index < this._daten.schienen.size(); index++)
-			DeveloperNotificationException.check("Schiene am Index " + index + " hat nicht Nr. " + (index + 1) + "!", this._daten.schienen.get(index).nummer !== index + 1);
+			DeveloperNotificationException.ifTrue("Schiene am Index " + index + " hat nicht Nr. " + (index + 1) + "!", this._daten.schienen.get(index).nummer !== index + 1);
 		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
 		if (iRegel === null)
 			return;
@@ -997,9 +995,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
-		DeveloperNotificationException.check("Regel.id =  " + pRegel.id + " --> zu klein!", pRegel.id < 1);
-		DeveloperNotificationException.check("Regel.id = " + pRegel.id + " --> doppelt!", this._mapRegeln.containsKey(pRegel.id));
-		DeveloperNotificationException.check("Regel.typ = " + pRegel.typ + " --> unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
+		DeveloperNotificationException.ifDuplicate("_mapRegeln", this._mapRegeln, pRegel.id);
+		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
 		this._daten.regeln.add(pRegel);
 		this._mapRegeln.put(pRegel.id, pRegel);
 	}
@@ -1012,7 +1010,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addRegel(pRegel : GostBlockungRegel) : void {
 		this.addRegelOhneSortierung(pRegel);
-		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
+		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
 	}
 
 	/**
@@ -1024,7 +1022,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public addRegelListe(pRegeln : List<GostBlockungRegel>) : void {
 		for (const regel of pRegeln)
 			this.addRegelOhneSortierung(regel);
-		this._daten.regeln.sort(GostBlockungsdatenManager.compRegel);
+		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
 	}
 
 	/**
@@ -1035,8 +1033,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Regel nicht in der Blockung existiert.
 	 */
 	public getRegel(pRegelID : number) : GostBlockungRegel {
-		const regel : GostBlockungRegel | null = this._mapRegeln.get(pRegelID);
-		return DeveloperNotificationException.checkNull("Regel.id (" + pRegelID + ") existiert nicht in der Blockung!", regel);
+		return DeveloperNotificationException.ifNull("_mapRegeln.get(" + pRegelID + ")", this._mapRegeln.get(pRegelID));
 	}
 
 	/**
@@ -1090,7 +1087,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public removeRegelByID(pRegelID : number) : void {
-		UserNotificationException.check("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const regel : GostBlockungRegel = this.getRegel(pRegelID);
 		this._mapRegeln.remove(pRegelID);
 		this._daten.regeln.remove(regel);
@@ -1115,9 +1112,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
 	public addSchueler(pSchueler : Schueler) : void {
-		UserNotificationException.check("Schueler.id =  " + pSchueler.id + " --> zu klein!", pSchueler.id < 1);
-		UserNotificationException.check("Schueler.id =  " + pSchueler.id + " --> doppelt!", this._map_id_schueler.containsKey(pSchueler.id));
-		UserNotificationException.check("Schueler.geschlecht =  " + pSchueler.geschlecht + " --> zu klein!", pSchueler.geschlecht < 0);
+		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
+		DeveloperNotificationException.ifDuplicate("_map_id_schueler", this._map_id_schueler, pSchueler.id);
+		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
 		this._daten.schueler.add(pSchueler);
 		this._map_id_schueler.put(pSchueler.id, pSchueler);
 		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
@@ -1146,8 +1143,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls die Schüler-ID unbekannt ist.
 	 */
 	public getSchueler(pSchuelerID : number) : Schueler {
-		const schueler : Schueler | null = this._map_id_schueler.get(pSchuelerID);
-		return DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") existiert nicht!", schueler);
+		return DeveloperNotificationException.ifNull("_map_id_schueler.get(" + pSchuelerID + ")", this._map_id_schueler.get(pSchuelerID));
 	}
 
 	/**
@@ -1205,8 +1201,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public getOfSchuelerOfFachFachwahl(pSchuelerID : number, pFachID : number) : GostFachwahl {
-		const mapFachFachwahl : HashMap<number, GostFachwahl> = DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") unbekannt!", this._map_schulerID_fachID_fachwahl.get(pSchuelerID));
-		return DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + "), Fach-ID (" + pFachID + ") unbekannt!", mapFachFachwahl.get(pFachID));
+		const mapFachFachwahl : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + pSchuelerID + ")", this._map_schulerID_fachID_fachwahl.get(pSchuelerID));
+		return DeveloperNotificationException.ifNull("mapFachFachwahl.get(" + pFachID + ")", mapFachFachwahl.get(pFachID));
 	}
 
 	/**
@@ -1217,8 +1213,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
-		const fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pSchuelerID);
-		return DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") unbekannt!", fachwahlenDesSchuelers);
+		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_schuelerID_fachwahlen.get(pSchuelerID));
 	}
 
 	/**
@@ -1231,7 +1226,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public getOfSchuelerHatFachart(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
-		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.checkNull("Schüler-ID (" + pSchuelerID + ") unbekannt!", this._map_schulerID_fachID_fachwahl.get(pSchuelerID));
+		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + pSchuelerID + ")", this._map_schulerID_fachID_fachwahl.get(pSchuelerID));
 		const wahl : GostFachwahl | null = map.get(pFach);
 		return (wahl !== null) && (wahl.kursartID === pKursart);
 	}

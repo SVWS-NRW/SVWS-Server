@@ -114,7 +114,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private gibKlausurNrOrException(pGostKursklausur : GostKursklausur) : number {
-		return DeveloperNotificationException.checkNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", this._mapKlausurZuNummer.get(pGostKursklausur.id));
+		return DeveloperNotificationException.ifNull("Kein Mapping zu gostKursklausur.id(" + pGostKursklausur.id + ")", this._mapKlausurZuNummer.get(pGostKursklausur.id));
 	}
 
 	private initialisiereKlausurgruppenNormal(pInput : List<GostKursklausur>) : void {
@@ -522,8 +522,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			const klausurID : number = e.getKey();
 			const klausurNr : number = e.getValue();
 			const terminNr : number = this._klausurZuTermin[klausurNr.valueOf()];
-			DeveloperNotificationException.check("terminNr(" + terminNr + ") < 0", terminNr < 0);
-			DeveloperNotificationException.check("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= this._terminAnzahl);
+			DeveloperNotificationException.ifTrue("terminNr(" + terminNr + ") < 0", terminNr < 0);
+			DeveloperNotificationException.ifTrue("terminNr(" + terminNr + ") >= _terminAnzahl", terminNr >= this._terminAnzahl);
 			out.get(terminNr).add(klausurID);
 		}
 		return out;
@@ -635,13 +635,13 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			this._logger.log("    Schiene " + (s + 1) + ": ");
 			for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
 				if (this._klausurZuTermin[nr] === s) {
-					const gostKlausur : GostKursklausur = DeveloperNotificationException.checkNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
+					const gostKlausur : GostKursklausur = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
 					this._logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene)!);
 				}
 			this._logger.logLn("");
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuTermin[nr] < 0);
+			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuTermin[nr] < 0);
 		this._logger.modifyIndent(-4);
 	}
 

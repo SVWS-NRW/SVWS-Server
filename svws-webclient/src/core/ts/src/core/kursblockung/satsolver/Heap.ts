@@ -110,7 +110,7 @@ export class Heap extends JavaObject {
 			return;
 		}
 		let currentI : number = pVar.index;
-		DeveloperNotificationException.check("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", this._data[pVar.index] as unknown !== pVar as unknown);
+		DeveloperNotificationException.ifTrue("FEHLER: Die Variable " + pVar + " ist nicht beim Index " + pVar.index + "!", this._data[pVar.index] as unknown !== pVar as unknown);
 		while (currentI > 0) {
 			const parentI : number = Math.trunc((currentI - 1) / 2);
 			this._data[currentI] = this._data[parentI];

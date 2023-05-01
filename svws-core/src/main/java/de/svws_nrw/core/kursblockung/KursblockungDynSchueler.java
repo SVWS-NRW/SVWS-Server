@@ -601,7 +601,7 @@ public class KursblockungDynSchueler {
 		statistik.aktionNichtwahlenVeraendern(-1);
 		nichtwahlen--;
 		for (final int nr : kurs.gibSchienenLage()) {
-			DeveloperNotificationException.check("FEHLER: Schienen-Doppelbelegung! " + representation, schieneBelegt[nr]);
+			DeveloperNotificationException.ifTrue("FEHLER: Schienen-Doppelbelegung! " + representation, schieneBelegt[nr]);
 			schieneBelegt[nr] = true;
 		}
 		fachartZuKurs[fachartIndex] = kurs;
@@ -612,7 +612,7 @@ public class KursblockungDynSchueler {
 		statistik.aktionNichtwahlenVeraendern(+1);
 		nichtwahlen++;
 		for (final int nr : kurs.gibSchienenLage()) {
-			DeveloperNotificationException.check("FEHLER: Kurs ist gar nicht in Schiene ! " + representation, !schieneBelegt[nr]);
+			DeveloperNotificationException.ifTrue("FEHLER: Kurs ist gar nicht in Schiene ! " + representation, !schieneBelegt[nr]);
 			schieneBelegt[nr] = false;
 		}
 		fachartZuKurs[fachartIndex] = null;

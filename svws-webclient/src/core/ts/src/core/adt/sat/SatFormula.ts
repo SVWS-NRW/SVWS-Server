@@ -68,9 +68,9 @@ export class SatFormula extends JavaObject {
 	 */
 	public addClause(pVars : Array<number>) : void {
 		for (const v of pVars) {
-			DeveloperNotificationException.check("Variable 0 ist nicht erlaubt!", v === 0);
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", v === 0);
 			const absV : number = Math.abs(v);
-			DeveloperNotificationException.check("Variable " + absV + " wurde vorher nicht erzeugt!", absV > this._nVars);
+			DeveloperNotificationException.ifTrue("Variable " + absV + " wurde vorher nicht erzeugt!", absV > this._nVars);
 		}
 		this._clauses.add(pVars);
 	}

@@ -155,8 +155,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			const list : LinkedCollection<number> = e.getValue();
 			for (const klausurID1 of list)
 				for (const klausurID2 of list) {
-					const klausurNr1 : number = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1! + ")", this._mapKlausurZuNummer.get(klausurID1));
-					const klausurNr2 : number = DeveloperNotificationException.checkNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2! + ")", this._mapKlausurZuNummer.get(klausurID2));
+					const klausurNr1 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1! + ")", this._mapKlausurZuNummer.get(klausurID1));
+					const klausurNr2 : number = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID2(" + klausurID2! + ")", this._mapKlausurZuNummer.get(klausurID2));
 					this._verboten[klausurNr1.valueOf()][klausurNr2.valueOf()] = true;
 				}
 		}
@@ -228,8 +228,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			const klausurID : number = e.getKey();
 			const klausurNr : number = e.getValue();
 			const schiene : number = this._klausurZuSchiene[klausurNr.valueOf()];
-			DeveloperNotificationException.check("schiene(" + schiene + ") < 0", schiene < 0);
-			DeveloperNotificationException.check("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= this._schienenAnzahl);
+			DeveloperNotificationException.ifTrue("schiene(" + schiene + ") < 0", schiene < 0);
+			DeveloperNotificationException.ifTrue("schiene(" + schiene + ") >= _schienenAnzahl", schiene >= this._schienenAnzahl);
 			out.get(schiene).add(klausurID);
 		}
 		return out;
@@ -696,7 +696,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 			this._logger.logLn("");
 		}
 		for (let nr : number = 0; nr < this._klausurenAnzahl; nr++)
-			DeveloperNotificationException.check("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuSchiene[nr] < 0);
+			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuSchiene[nr] < 0);
 	}
 
 	/**

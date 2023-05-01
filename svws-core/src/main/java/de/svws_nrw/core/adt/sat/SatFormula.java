@@ -78,9 +78,9 @@ public final class SatFormula {
 	public void addClause(final @NotNull int[] pVars) throws DeveloperNotificationException {
 
 		for (final int v : pVars) {
-			DeveloperNotificationException.check("Variable 0 ist nicht erlaubt!", v == 0);
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", v == 0);
 			final int absV = Math.abs(v);
-			DeveloperNotificationException.check("Variable " + absV + " wurde vorher nicht erzeugt!", absV > _nVars);
+			DeveloperNotificationException.ifTrue("Variable " + absV + " wurde vorher nicht erzeugt!", absV > _nVars);
 		}
 
 		_clauses.add(pVars);

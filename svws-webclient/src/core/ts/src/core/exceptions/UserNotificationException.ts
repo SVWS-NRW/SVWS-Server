@@ -20,7 +20,7 @@ export class UserNotificationException extends RuntimeException {
 	 * @param pBeschreibung Die Beschreibung der Bedingung.
 	 * @param pErfuellt     Falls TRUE, wird eine UserNotificationException geworfen.
 	 */
-	public static check(pBeschreibung : string, pErfuellt : boolean) : void {
+	public static ifTrue(pBeschreibung : string, pErfuellt : boolean) : void {
 		if (pErfuellt)
 			throw new UserNotificationException(pBeschreibung)
 	}
