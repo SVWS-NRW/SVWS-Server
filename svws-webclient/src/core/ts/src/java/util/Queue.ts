@@ -1,5 +1,3 @@
-import { JavaIterable } from '../../java/lang/JavaIterable';
-
 import { JavaIterator } from './JavaIterator';
 import { Collection } from './Collection';
 

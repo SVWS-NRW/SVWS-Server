@@ -12,7 +12,7 @@ import { Serializable } from '../../java/io/Serializable';
 
 export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable, Serializable {
 
-	private readonly _set : Set<E>;
+	protected readonly _set : Set<E>;
 
 	public constructor(c? : Collection<E>) {
 		super();

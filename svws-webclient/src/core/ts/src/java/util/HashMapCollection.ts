@@ -10,22 +10,22 @@ import { JavaMapEntry } from './JavaMapEntry';
 
 export class HashMapCollection<K, V> implements Collection<V> {
 
-	readonly #_map : Map<K, JavaMapEntry<K, V>>;
+	protected readonly _map : Map<K, JavaMapEntry<K, V>>;
 
 	public constructor(map : Map<K, JavaMapEntry<K, V>>) {
-		this.#_map = map;
+		this._map = map;
 	}
 
 	size(): number {
-		return this.#_map.size;
+		return this._map.size;
 	}
 
 	isEmpty(): boolean {
-		return this.#_map.size === 0;
+		return this._map.size === 0;
 	}
 
 	contains(value: any): boolean {
-		for (const [k, e] of this.#_map) {
+		for (const [k, e] of this._map) {
 			const v : V = e.getValue();
 			if (v === value)
 				return true;
@@ -128,9 +128,9 @@ export class HashMapCollection<K, V> implements Collection<V> {
 
 	toString(): string | null {
 		let res = '[';
-		this.#_map.forEach(e => res + (e.getValue() as unknown as JavaObject).toString() + ', ');
+		this._map.forEach(e => res + (e.getValue() as unknown as JavaObject).toString() + ', ');
 		res = res.substring(-2, 0);
-		res + ']';
+		res = res + ']';
 		return res;
 	}
 

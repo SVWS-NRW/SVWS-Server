@@ -1,6 +1,5 @@
 import { Comparator } from './Comparator';
 import { JavaIterator } from './JavaIterator';
-import { JavaSet } from './JavaSet';
 import { SortedSet } from './SortedSet';
 
 export interface NavigableSet<E> extends SortedSet<E> {

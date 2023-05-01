@@ -1,7 +1,6 @@
 import { Collection } from './Collection';
 import { Comparator } from './Comparator';
 import { JavaSet } from './JavaSet';
-import { JavaMap } from './JavaMap';
 import { JavaMapEntry } from './JavaMapEntry';
 import { NavigableSet } from './NavigableSet';
 import { SortedMap } from './SortedMap';

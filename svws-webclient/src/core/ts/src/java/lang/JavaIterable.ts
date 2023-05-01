@@ -6,7 +6,7 @@ export interface JavaIterable<T> extends TranspiledObject {
 
 	[Symbol.iterator](): Iterator<T>;
 
-    iterator() : JavaIterator<T>;
+	iterator() : JavaIterator<T>;
 
 }
 

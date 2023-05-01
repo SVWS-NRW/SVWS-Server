@@ -4,10 +4,10 @@ import { JavaMapEntry } from './JavaMapEntry';
 export class HashMapEntry<K, V> extends JavaMapEntry<K, V> {
 
 	/** Der Schlüsselwert. */
-	private _key : K;
+	protected _key : K;
 
 	/** Der zugeordnete Wert. */
-	private _val : V;
+	protected _val : V;
 
 
 	/**

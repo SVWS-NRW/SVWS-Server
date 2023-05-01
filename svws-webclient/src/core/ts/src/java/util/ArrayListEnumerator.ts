@@ -4,7 +4,7 @@ import { ArrayList } from "./ArrayList";
 
 export class ArrayListEnumerator<E> implements Enumeration<E> {
 
-	private _list : ArrayList<E>;
+	protected _list : ArrayList<E>;
 	public count : number = 0;
 
 	public constructor(list : ArrayList<E>) {

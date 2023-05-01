@@ -121,7 +121,7 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
      *
      * @returns true if the elements are equal and false otherwise
      */
-	private equalElements(e1 : E, e2 : E) : boolean {
+	protected equalElements(e1 : E, e2 : E) : boolean {
 		if ((e1 === null) && (e2 === null))
 			return true;
 		if ((e1 === null) || (e2 === null))
@@ -488,9 +488,9 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
 		if (action === null)
 			throw new NullPointerException();
 		const expectedModCount : number = this.modCount;
-		for (let i : number = 0; i < this.elementData.length; i++) {
-			action.accept(this.elementData[i]);
-			if (this.modCount != expectedModCount)
+		for (const data of this.elementData) {
+			action.accept(data);
+			if (this.modCount !== expectedModCount)
 				throw new ConcurrentModificationException();
 		}
 	}

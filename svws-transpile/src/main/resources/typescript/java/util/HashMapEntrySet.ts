@@ -8,23 +8,23 @@ import { UnsupportedOperationException } from '../lang/UnsupportedOperationExcep
 
 export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMapEntry<K, V>> {
 
-	readonly #_map : Map<K, JavaMapEntry<K, V>>;
+	protected readonly _map : Map<K, JavaMapEntry<K, V>>;
 
 	public constructor(map : Map<K, JavaMapEntry<K, V>>) {
 		super();
-		this.#_map = map;
+		this._map = map;
 	}
 
 	size(): number {
-		return this.#_map.size;
+		return this._map.size;
 	}
 
 	isEmpty(): boolean {
-		return this.#_map.size === 0;
+		return this._map.size === 0;
 	}
 
 	contains(entry: any): boolean {
-		for (const [k, e] of this.#_map) {
+		for (const [k, e] of this._map) {
 			if (e === entry)
 				return true;
 			if ((e instanceof JavaMapEntry) && (e.equals(entry)))
@@ -55,7 +55,7 @@ export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMap
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
 		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
 			const r : Array<JavaMapEntry<K,V>> = [];
-			for (const [k, e] of this.#_map)
+			for (const [k, e] of this._map)
 				r.push(e);
 			return r;
 		} else if (Array.isArray(__param0)) {
@@ -89,11 +89,11 @@ export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMap
 	}
 
 	clear(): void {
-		this.#_map.clear();
+		this._map.clear();
 	}
 
 	[Symbol.iterator](): Iterator<JavaMapEntry<K, V>, any, undefined> {
-		return this.#_map.values();
+		return this._map.values();
 	}
 
 }

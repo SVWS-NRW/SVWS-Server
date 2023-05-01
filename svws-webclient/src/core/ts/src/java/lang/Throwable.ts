@@ -17,7 +17,7 @@ function prepareAttributeOrderForStringify() {
 
 export class Throwable extends Error implements TranspiledObject {
 
-	private _cause : Throwable | null = null;
+	protected _cause : Throwable | null = null;
 
 	constructor(param1? : Throwable | string | null, param2? : Throwable) {
 		super(typeof param1 === "string" ? param1 : param1?.toString());
@@ -63,7 +63,7 @@ export class Throwable extends Error implements TranspiledObject {
 	}
 
 	public equals(obj : any) : boolean {
-		if (!(typeof obj === "object"))
+		if (typeof obj !== "object")
 			return false;
 		if (!(obj instanceof Throwable))
 			return false;

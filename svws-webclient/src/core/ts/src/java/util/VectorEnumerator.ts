@@ -4,7 +4,7 @@ import { Vector } from "./Vector";
 
 export class VectorEnumerator<E> implements Enumeration<E> {
 
-	private vector : Vector<E>;
+	protected vector : Vector<E>;
 	public count : number = 0;
 
 	public constructor(vector : Vector<E>) {

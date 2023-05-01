@@ -3,7 +3,7 @@ import { TranspiledObject } from './TranspiledObject';
 
 export class Class<T extends TranspiledObject> implements TranspiledObject {
 
-	private simplename : string;
+	protected simplename : string;
 
 	public constructor(obj : T) {
 		if (obj instanceof Class)
@@ -51,7 +51,7 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
 
 
 	public equals(obj : any) : boolean {
-		if (!(typeof obj === "object"))
+		if (typeof obj !== "object")
 			return false;
 		if (obj instanceof Class)
 			return obj.simplename === this.simplename;

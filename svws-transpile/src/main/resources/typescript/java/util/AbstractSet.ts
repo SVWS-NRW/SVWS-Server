@@ -16,7 +16,7 @@ export abstract class AbstractSet<E> extends AbstractCollection<E> implements Ja
 			return true;
 		if (!(obj instanceof JavaObject))
 			return false;
-		const javaObject : JavaObject = obj as JavaObject;
+		const javaObject : JavaObject = obj;
 		if (!javaObject.isTranspiledInstanceOf('java.util.JavaSet'))
 			return false;
 		const coll : Collection<unknown> = cast_java_util_Collection(javaObject);

@@ -3,7 +3,6 @@ import { JavaMap } from './JavaMap';
 import { JavaMapEntry } from './JavaMapEntry';
 import { JavaSet } from './JavaSet';
 import { HashMapCollection } from './HashMapCollection';
-import { HashSet } from './HashSet';
 
 import { Cloneable } from '../../java/lang/Cloneable';
 import { JavaObject } from '../../java/lang/JavaObject';
@@ -16,7 +15,7 @@ import { HashMapKeySet } from './HashMapKeySet';
 
 export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneable, Serializable {
 
-	private readonly _map : Map<K, JavaMapEntry<K, V>> = new Map();
+	protected readonly _map : Map<K, JavaMapEntry<K, V>> = new Map();
 
 	public constructor() {
 		super();

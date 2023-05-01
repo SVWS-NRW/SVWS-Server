@@ -18,9 +18,6 @@ function prepareAttributeOrderForStringify() {
 
 export abstract class JavaObject implements TranspiledObject {
 
-	public constructor() {
-	}
-
 	public getClass<T extends TranspiledObject>() : Class<T> {
 		return new Class(this);
 	}
@@ -39,7 +36,7 @@ export abstract class JavaObject implements TranspiledObject {
 	}
 
 	public equals(obj : any) : boolean {
-		if (!(typeof obj === "object"))
+		if (typeof obj !== "object")
 			return false;
 		if (!(obj instanceof JavaObject))
 			return false;

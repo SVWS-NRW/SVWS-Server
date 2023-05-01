@@ -65,7 +65,8 @@ export abstract class JavaString {
 			return result;
 		}
 		// TODO Erweiterung der Methode um argument_index und weitere conversion - Möglichkeiten laut https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax
-		const regex = /%(-)?(0?[0-9]+)?([.][0-9]+)?([#][0-9]+)?([scfpexd%])/g;
+		const regex = /%(-)?(0?\d+)?([.]\d+)?(#\d+)?([scfpexd%])/g;
+
 		return s.replace(regex, handleParam);
 	}
 
