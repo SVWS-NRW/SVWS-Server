@@ -419,7 +419,7 @@ public class APIGost {
                description = "Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines "
                            + "Abitur-Jahrganges der gymnasialen Oberstufe zurück."
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. ",
+    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBelegpruefungsErgebnisse.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.")
     @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
@@ -450,7 +450,7 @@ public class APIGost {
                description = "Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines "
                            + "Abitur-Jahrganges der gymnasialen Oberstufe zurück."
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.")
-    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. ",
+    @ApiResponse(responseCode = "200", description = "Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBelegpruefungsErgebnisse.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.")
     @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")

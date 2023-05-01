@@ -2335,7 +2335,7 @@ export class ApiServer extends BaseApi {
 	 * Gibt die (Fehler-)Rückmeldungen der EF1-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostBelegpruefungsErgebnisse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.
@@ -2344,7 +2344,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 *
-	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 */
 	public async getGostAbiturjahrgangBelegpruefungsergebnisseEF1(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/EF1"
@@ -2364,7 +2364,7 @@ export class ApiServer extends BaseApi {
 	 * Gibt die (Fehler-)Rückmeldungen der Gesamt-Belegprüfung zu den Schüler-Laufbahnen eines Abitur-Jahrganges der gymnasialen Oberstufe zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung dazu hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 *   Code 200: Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostBelegpruefungsErgebnisse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Rückmeldungen abzufragen.
@@ -2373,7 +2373,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 *
-	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern. 
+	 * @returns Eine Liste mit den Schülern und den zugehörigen Belegprüfungsfehlern.
 	 */
 	public async getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(schema : string, abiturjahr : number) : Promise<List<GostBelegpruefungsErgebnisse>> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/belegpruefung/gesamt"
