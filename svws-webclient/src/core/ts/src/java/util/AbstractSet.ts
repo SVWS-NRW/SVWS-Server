@@ -1,8 +1,9 @@
-import { AbstractCollection } from './AbstractCollection';
-import { Collection, cast_java_util_Collection } from './Collection';
-import { JavaIterator } from './JavaIterator';
-import { JavaSet } from './JavaSet';
+import type { Collection} from './Collection';
+import type { JavaIterator } from './JavaIterator';
+import type { JavaSet } from './JavaSet';
 
+import { AbstractCollection } from './AbstractCollection';
+import { cast_java_util_Collection } from './Collection';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { NullPointerException } from '../../java/lang/NullPointerException';
 

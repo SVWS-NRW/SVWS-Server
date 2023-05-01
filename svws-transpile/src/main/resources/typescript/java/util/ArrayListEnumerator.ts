@@ -1,6 +1,7 @@
-import { Enumeration } from "./Enumeration";
+import type { Enumeration } from "./Enumeration";
+import type { ArrayList } from "./ArrayList";
+
 import { NoSuchElementException } from './NoSuchElementException';
-import { ArrayList } from "./ArrayList";
 
 export class ArrayListEnumerator<E> implements Enumeration<E> {
 

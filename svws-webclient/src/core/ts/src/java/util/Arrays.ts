@@ -1,6 +1,6 @@
-import { List } from './List';
-import { ArrayList } from './ArrayList';
+import type { List } from './List';
 
+import { ArrayList } from './ArrayList';
 import { JavaObject } from '../../java/lang/JavaObject';
 
 

@@ -1,5 +1,3 @@
-import { Consumer } from "./function/Consumer";
-
 export interface JavaIterator<E> {
 
     hasNext() : boolean;

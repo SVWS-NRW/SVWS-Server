@@ -1,14 +1,14 @@
+import type { Collection } from './Collection';
+import type { JavaIterator } from './JavaIterator';
+import type { List } from './List';
+import type { ListIterator } from './ListIterator';
+import type { Comparator } from './Comparator';
+
 import { AbstractCollection } from './AbstractCollection';
 import { AbstractListListIterator } from './AbstractListListIterator';
-import { Collection } from './Collection';
-import { JavaIterator } from './JavaIterator';
-import { List } from './List';
-import { ListIterator } from './ListIterator';
-
 import { IndexOutOfBoundsException } from '../../java/lang/IndexOutOfBoundsException';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
-import { Comparator } from './Comparator';
 import { NullPointerException } from '../lang/NullPointerException';
 
 
@@ -162,8 +162,8 @@ export abstract class AbstractList<E> extends AbstractCollection<E> implements L
      * @param {Comparator<E>} c
      */
     public sort(c: Comparator<E>): void {
-    	const a = super.toArray() as E[];
-    	const sorted = a.sort(c.compare);
+    	const sorted = super.toArray() as E[];
+    	sorted.sort(c.compare);
     	this.clear();
     	for (const e of sorted) {
     		this.add(e);

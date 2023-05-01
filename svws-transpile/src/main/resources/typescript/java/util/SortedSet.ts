@@ -1,5 +1,5 @@
-import { JavaSet } from './JavaSet';
-import { Comparator } from './Comparator';
+import type { JavaSet } from './JavaSet';
+import type { Comparator } from './Comparator';
 
 export interface SortedSet<E> extends JavaSet<E> {
 

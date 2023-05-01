@@ -1,13 +1,14 @@
-import { AbstractSet } from './AbstractSet';
-import { Collection, cast_java_util_Collection } from './Collection';
-import { HashSetIterator } from './HashSetIterator';
-import { JavaIterator } from './JavaIterator';
-import { JavaSet } from './JavaSet';
+import type { Collection} from './Collection';
+import type { JavaIterator } from './JavaIterator';
+import type { JavaSet } from './JavaSet';
+import type { Cloneable } from '../../java/lang/Cloneable';
+import type { Serializable } from '../../java/io/Serializable';
 
-import { Cloneable } from '../../java/lang/Cloneable';
+import { AbstractSet } from './AbstractSet';
+import { cast_java_util_Collection } from './Collection';
+import { HashSetIterator } from './HashSetIterator';
 import { JavaObject } from '../../java/lang/JavaObject';
 
-import { Serializable } from '../../java/io/Serializable';
 
 
 export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable, Serializable {

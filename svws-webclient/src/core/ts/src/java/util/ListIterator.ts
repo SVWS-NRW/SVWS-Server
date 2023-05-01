@@ -1,4 +1,4 @@
-import { JavaIterator } from './JavaIterator';
+import type { JavaIterator } from './JavaIterator';
 
 export interface ListIterator<E> extends JavaIterator<E> {
 

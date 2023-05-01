@@ -1,6 +1,6 @@
+import type { TranspiledObject } from './TranspiledObject';
 import { Class } from './Class';
 import { JavaObject } from './JavaObject';
-import { TranspiledObject } from './TranspiledObject';
 
 
 function prepareAttributeOrderForStringify() {

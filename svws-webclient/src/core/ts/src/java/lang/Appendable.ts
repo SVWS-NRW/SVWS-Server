@@ -1,4 +1,4 @@
-import { CharSequence } from './CharSequence';
+import type { CharSequence } from './CharSequence';
 
 export interface Appendable {
 

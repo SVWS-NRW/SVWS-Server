@@ -1,8 +1,8 @@
-import { Collection } from './Collection';
-import { Comparator } from './Comparator';
-import { JavaSet } from './JavaSet';
-import { JavaMap } from './JavaMap';
-import { JavaMapEntry } from './JavaMapEntry';
+import type { Collection } from './Collection';
+import type { Comparator } from './Comparator';
+import type { JavaSet } from './JavaSet';
+import type { JavaMap } from './JavaMap';
+import type { JavaMapEntry } from './JavaMapEntry';
 
 export interface SortedMap<K, V> extends JavaMap<K, V> {
 

@@ -1,22 +1,18 @@
+import type { Collection } from './Collection';
+import type { Enumeration } from './Enumeration';
+import type { List } from './List';
+import type { RandomAccess } from './RandomAccess';
+import type { Consumer } from './function/Consumer';
+import type { Cloneable } from '../../java/lang/Cloneable';
+
 import { AbstractList } from './AbstractList';
-import { Collection } from './Collection';
 import { ConcurrentModificationException } from './ConcurrentModificationException';
-import { Enumeration } from './Enumeration';
-import { List } from './List';
 import { NoSuchElementException } from './NoSuchElementException';
-import { RandomAccess } from './RandomAccess';
 import { ArrayListEnumerator } from './ArrayListEnumerator';
-
-import { Consumer } from './function/Consumer';
-
 import { ArrayIndexOutOfBoundsException } from '../../java/lang/ArrayIndexOutOfBoundsException';
-import { Cloneable } from '../../java/lang/Cloneable';
 import { IndexOutOfBoundsException } from '../../java/lang/IndexOutOfBoundsException';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { NullPointerException } from '../lang/NullPointerException';
-
-
-
 
 
 export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAccess, Cloneable {

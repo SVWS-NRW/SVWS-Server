@@ -1,9 +1,9 @@
-import { AbstractList } from './AbstractList';
+import type { AbstractList } from './AbstractList';
+import type { ListIterator } from './ListIterator';
+
 import { AbstractListIterator } from './AbstractListIterator';
 import { ConcurrentModificationException } from './ConcurrentModificationException';
-import { ListIterator } from './ListIterator';
 import { NoSuchElementException } from './NoSuchElementException';
-
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
 
 

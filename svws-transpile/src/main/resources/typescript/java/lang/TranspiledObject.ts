@@ -1,4 +1,4 @@
-import { Class } from './Class';
+import type { Class } from './Class';
 
 export interface TranspiledObject {
     getClass<T extends TranspiledObject>() : Class<T>;

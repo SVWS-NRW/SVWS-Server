@@ -1,7 +1,7 @@
-import { JavaIterator } from './JavaIterator';
-import { ListIterator } from './ListIterator';
-import { Collection } from './Collection';
-import { Comparator } from './Comparator';
+import type { JavaIterator } from './JavaIterator';
+import type { ListIterator } from './ListIterator';
+import type { Collection } from './Collection';
+import type { Comparator } from './Comparator';
 
 export interface List<E> extends Collection<E> {
 

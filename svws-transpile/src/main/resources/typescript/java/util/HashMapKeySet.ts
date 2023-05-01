@@ -1,9 +1,9 @@
-import { JavaSet } from './JavaSet';
-import { JavaMapEntry } from './JavaMapEntry';
+import type { JavaSet } from './JavaSet';
+import type { JavaMapEntry } from './JavaMapEntry';
+import type { Collection } from './Collection';
+import type { JavaIterator } from './JavaIterator';
 
 import { JavaObject } from '../../java/lang/JavaObject';
-import { Collection } from './Collection';
-import { JavaIterator } from './JavaIterator';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
 
 export class HashMapKeySet<K, V> extends JavaObject implements JavaSet<K> {

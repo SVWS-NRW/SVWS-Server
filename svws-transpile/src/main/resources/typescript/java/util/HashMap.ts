@@ -1,17 +1,17 @@
-import { Collection } from './Collection';
-import { JavaMap } from './JavaMap';
-import { JavaMapEntry } from './JavaMapEntry';
-import { JavaSet } from './JavaSet';
+import type { Collection } from './Collection';
+import type { JavaMap } from './JavaMap';
+import type { JavaMapEntry } from './JavaMapEntry';
+import type { JavaSet } from './JavaSet';
+import type { Cloneable } from '../../java/lang/Cloneable';
+import type { Serializable } from '../../java/io/Serializable';
+
 import { HashMapCollection } from './HashMapCollection';
-
-import { Cloneable } from '../../java/lang/Cloneable';
 import { JavaObject } from '../../java/lang/JavaObject';
-
-import { Serializable } from '../../java/io/Serializable';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
 import { HashMapEntrySet } from './HashMapEntrySet';
 import { HashMapEntry } from './HashMapEntry';
 import { HashMapKeySet } from './HashMapKeySet';
+
 
 export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneable, Serializable {
 

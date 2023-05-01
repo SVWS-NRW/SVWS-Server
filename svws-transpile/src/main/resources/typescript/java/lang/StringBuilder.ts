@@ -1,6 +1,6 @@
+import type { CharSequence } from './CharSequence';
+import type { Comparable } from './Comparable';
 import { AbstractStringBuilder } from './AbstractStringBuilder';
-import { CharSequence } from './CharSequence';
-import { Comparable } from './Comparable';
 
 export class StringBuilder extends AbstractStringBuilder implements Comparable<StringBuilder>, CharSequence {
 

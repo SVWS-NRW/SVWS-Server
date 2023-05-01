@@ -1,5 +1,5 @@
-import { JavaIterable } from '../../java/lang/JavaIterable';
-import { JavaIterator } from './JavaIterator';
+import type { JavaIterable } from '../../java/lang/JavaIterable';
+import type { JavaIterator } from './JavaIterator';
 
 export interface Collection<E> extends JavaIterable<E> {
 

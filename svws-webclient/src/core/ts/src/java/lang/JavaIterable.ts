@@ -1,6 +1,5 @@
-import { JavaIterator } from '../../java/util/JavaIterator';
-
-import { TranspiledObject } from './TranspiledObject';
+import type { JavaIterator } from '../../java/util/JavaIterator';
+import type { TranspiledObject } from './TranspiledObject';
 
 export interface JavaIterable<T> extends TranspiledObject {
 

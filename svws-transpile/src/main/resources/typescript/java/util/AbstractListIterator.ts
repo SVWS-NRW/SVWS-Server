@@ -1,10 +1,9 @@
-import { AbstractList } from './AbstractList';
+import type { AbstractList } from './AbstractList';
+import type { JavaIterator } from './JavaIterator';
+import type { Consumer } from './function/Consumer';
+
 import { ConcurrentModificationException } from './ConcurrentModificationException';
-import { JavaIterator } from './JavaIterator';
 import { NoSuchElementException } from './NoSuchElementException';
-
-import { Consumer } from './function/Consumer';
-
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { JavaObject } from '../../java/lang/JavaObject';
 

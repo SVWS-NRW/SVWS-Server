@@ -1,4 +1,4 @@
-import { TranspiledObject } from './TranspiledObject';
+import type { TranspiledObject } from './TranspiledObject';
 
 
 export class Class<T extends TranspiledObject> implements TranspiledObject {

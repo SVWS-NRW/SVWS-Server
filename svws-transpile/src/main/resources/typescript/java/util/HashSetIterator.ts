@@ -1,10 +1,9 @@
+import type { HashSet } from './HashSet';
+import type { JavaIterator } from './JavaIterator';
+import type { Consumer } from '../../java/util/function/Consumer';
+
 import { ConcurrentModificationException } from './ConcurrentModificationException';
-import { HashSet } from './HashSet';
-import { JavaIterator } from './JavaIterator';
 import { NoSuchElementException } from './NoSuchElementException';
-
-import { Consumer } from '../../java/util/function/Consumer';
-
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { JavaObject } from '../../java/lang/JavaObject';
 

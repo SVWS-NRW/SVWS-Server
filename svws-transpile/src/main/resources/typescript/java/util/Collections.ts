@@ -1,8 +1,8 @@
-import { JavaMap } from './JavaMap';
-import { JavaSet } from './JavaSet';
-import { List } from './List';
-import { ArrayList } from './ArrayList';
+import type { JavaMap } from './JavaMap';
+import type { JavaSet } from './JavaSet';
+import type { List } from './List';
 
+import { ArrayList } from './ArrayList';
 import { JavaObject } from '../../java/lang/JavaObject';
 
 

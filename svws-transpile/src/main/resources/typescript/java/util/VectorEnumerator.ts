@@ -1,6 +1,6 @@
-import { Enumeration } from "./Enumeration";
+import type { Enumeration } from "./Enumeration";
+import type { Vector } from "./Vector";
 import { NoSuchElementException } from './NoSuchElementException';
-import { Vector } from "./Vector";
 
 export class VectorEnumerator<E> implements Enumeration<E> {
 

@@ -1,6 +1,6 @@
+import type { TranspiledObject } from './TranspiledObject';
 import { Class } from './Class';
 import { Throwable } from './Throwable';
-import { TranspiledObject } from './TranspiledObject';
 
 
 function prepareAttributeOrderForStringify() {

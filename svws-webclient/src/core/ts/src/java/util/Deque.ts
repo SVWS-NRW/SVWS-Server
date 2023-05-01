@@ -1,6 +1,6 @@
-import { JavaIterator } from './JavaIterator';
-import { Collection } from './Collection';
-import { Queue } from './Queue';
+import type { JavaIterator } from './JavaIterator';
+import type { Collection } from './Collection';
+import type { Queue } from './Queue';
 
 export interface Deque<E> extends Queue<E> {
 

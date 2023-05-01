@@ -1,10 +1,10 @@
-import { Collection } from './Collection';
-import { JavaIterator } from './JavaIterator';
+import type { Collection } from './Collection';
+import type { JavaIterator } from './JavaIterator';
+import type { Consumer } from './function/Consumer';
 
 import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
 import { NullPointerException } from '../../java/lang/NullPointerException';
-import { Consumer } from './function/Consumer';
 
 
 export abstract class AbstractCollection<E> extends JavaObject implements Collection<E> {

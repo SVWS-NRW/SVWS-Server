@@ -1,5 +1,5 @@
-import { Appendable } from './Appendable';
-import { CharSequence } from './CharSequence';
+import type { Appendable } from './Appendable';
+import type { CharSequence } from './CharSequence';
 import { IndexOutOfBoundsException } from './IndexOutOfBoundsException';
 import { JavaObject } from './JavaObject';
 import { StringIndexOutOfBoundsException } from './StringIndexOutOfBoundsException';

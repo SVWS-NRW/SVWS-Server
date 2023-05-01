@@ -1,6 +1,6 @@
-import { Collection } from './Collection';
-import { JavaSet } from './JavaSet';
-import { JavaMapEntry } from './JavaMapEntry';
+import type { Collection } from './Collection';
+import type { JavaSet } from './JavaSet';
+import type { JavaMapEntry } from './JavaMapEntry';
 
 
 export interface JavaMap<K, V> {

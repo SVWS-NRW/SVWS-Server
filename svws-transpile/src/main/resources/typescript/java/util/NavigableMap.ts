@@ -1,9 +1,9 @@
-import { Collection } from './Collection';
-import { Comparator } from './Comparator';
-import { JavaSet } from './JavaSet';
-import { JavaMapEntry } from './JavaMapEntry';
-import { NavigableSet } from './NavigableSet';
-import { SortedMap } from './SortedMap';
+import type { Collection } from './Collection';
+import type { Comparator } from './Comparator';
+import type { JavaSet } from './JavaSet';
+import type { JavaMapEntry } from './JavaMapEntry';
+import type { NavigableSet } from './NavigableSet';
+import type { SortedMap } from './SortedMap';
 
 export interface NavigableMap<K, V> extends SortedMap<K, V> {
 
