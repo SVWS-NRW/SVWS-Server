@@ -3,6 +3,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import { List } from '../../../java/util/List';
 import { JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
@@ -366,6 +367,208 @@ export class Jahrgaenge extends JavaObject implements JavaEnum<Jahrgaenge> {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
+	 * dieses Jahrgangs ist.
+	 *
+	 * @param jgVorher     der zu prüfende Jahrgang
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 *
+	 * @return true, falls jgVorher ein gültiger Vorgänger-Jahrgang dieses Jahrgangs ist.
+	 */
+	public isVorgaenger(jgVorher : Jahrgaenge | null, schulform : Schulform | null, gliederung : Schulgliederung | null) : boolean {
+		if (schulform === null)
+			return false;
+		if (!this.hasSchulform(schulform) || ((jgVorher !== null) && (!jgVorher.hasSchulform(schulform))))
+			return false;
+		const gl : Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
+		switch (this) {
+			case Jahrgaenge.JG_00: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_01: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_02: {
+				return jgVorher as unknown === Jahrgaenge.JG_01 as unknown;
+			}
+			case Jahrgaenge.JG_03: {
+				return (jgVorher as unknown === Jahrgaenge.JG_02 as unknown) || (jgVorher as unknown === Jahrgaenge.JG_E2 as unknown) || (jgVorher as unknown === Jahrgaenge.JG_E3 as unknown);
+			}
+			case Jahrgaenge.JG_04: {
+				return (jgVorher as unknown === Jahrgaenge.JG_03 as unknown);
+			}
+			case Jahrgaenge.JG_05: {
+				return (jgVorher as unknown === Jahrgaenge.JG_04 as unknown);
+			}
+			case Jahrgaenge.JG_06: {
+				return (jgVorher as unknown === Jahrgaenge.JG_05 as unknown);
+			}
+			case Jahrgaenge.JG_07: {
+				return (jgVorher as unknown === Jahrgaenge.JG_06 as unknown);
+			}
+			case Jahrgaenge.JG_08: {
+				return (jgVorher as unknown === Jahrgaenge.JG_07 as unknown);
+			}
+			case Jahrgaenge.JG_09: {
+				return (jgVorher as unknown === Jahrgaenge.JG_08 as unknown);
+			}
+			case Jahrgaenge.JG_10: {
+				return (jgVorher as unknown === Jahrgaenge.JG_09 as unknown);
+			}
+			case Jahrgaenge.JG_11: {
+				return (jgVorher as unknown === Jahrgaenge.JG_10 as unknown);
+			}
+			case Jahrgaenge.JG_12: {
+				return (jgVorher as unknown === Jahrgaenge.JG_11 as unknown);
+			}
+			case Jahrgaenge.JG_13: {
+				return (jgVorher as unknown === Jahrgaenge.JG_12 as unknown);
+			}
+			case Jahrgaenge.JG_71: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_85: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_86: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_90: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_91: {
+				return jgVorher === null;
+			}
+			case Jahrgaenge.JG_92: {
+				return jgVorher as unknown === Jahrgaenge.JG_91 as unknown;
+			}
+			case Jahrgaenge.JG_E1: {
+				return (jgVorher as unknown === Jahrgaenge.JG_00 as unknown) || (jgVorher === null);
+			}
+			case Jahrgaenge.JG_E2: {
+				return jgVorher as unknown === Jahrgaenge.JG_E1 as unknown;
+			}
+			case Jahrgaenge.JG_E3: {
+				return jgVorher as unknown === Jahrgaenge.JG_E2 as unknown;
+			}
+			case Jahrgaenge.JG_EF: {
+				return (gl as unknown === Schulgliederung.GY8 as unknown) ? (jgVorher as unknown === Jahrgaenge.JG_09 as unknown) : (jgVorher as unknown === Jahrgaenge.JG_10 as unknown);
+			}
+			case Jahrgaenge.JG_Q1: {
+				return jgVorher as unknown === Jahrgaenge.JG_EF as unknown;
+			}
+			case Jahrgaenge.JG_Q2: {
+				return jgVorher as unknown === Jahrgaenge.JG_Q1 as unknown;
+			}
+			default: {
+				return false;
+			}
+		}
+	}
+
+	/**
+	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
+	 * dieses Jahrgangs ist.
+	 *
+	 * @param jgNachher    der zu prüfende Jahrgang
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 *
+	 * @return true, falls jgNachher ein gültiger Nachfolger-Jahrgang dieses Jahrgangs ist.
+	 */
+	public isNachfolger(jgNachher : Jahrgaenge | null, schulform : Schulform | null, gliederung : Schulgliederung | null) : boolean {
+		if (schulform === null)
+			return false;
+		if (!this.hasSchulform(schulform) || ((jgNachher !== null) && (!jgNachher.hasSchulform(schulform))))
+			return false;
+		const gl : Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
+		switch (this) {
+			case Jahrgaenge.JG_00: {
+				return jgNachher as unknown === Jahrgaenge.JG_01 as unknown;
+			}
+			case Jahrgaenge.JG_01: {
+				return jgNachher as unknown === Jahrgaenge.JG_02 as unknown;
+			}
+			case Jahrgaenge.JG_02: {
+				return jgNachher as unknown === Jahrgaenge.JG_03 as unknown;
+			}
+			case Jahrgaenge.JG_03: {
+				return jgNachher as unknown === Jahrgaenge.JG_04 as unknown;
+			}
+			case Jahrgaenge.JG_04: {
+				return jgNachher as unknown === Jahrgaenge.JG_05 as unknown;
+			}
+			case Jahrgaenge.JG_05: {
+				return jgNachher as unknown === Jahrgaenge.JG_06 as unknown;
+			}
+			case Jahrgaenge.JG_06: {
+				return jgNachher as unknown === Jahrgaenge.JG_07 as unknown;
+			}
+			case Jahrgaenge.JG_07: {
+				return jgNachher as unknown === Jahrgaenge.JG_08 as unknown;
+			}
+			case Jahrgaenge.JG_08: {
+				return jgNachher as unknown === Jahrgaenge.JG_09 as unknown;
+			}
+			case Jahrgaenge.JG_09: {
+				return (jgNachher as unknown === Jahrgaenge.JG_10 as unknown) || ((schulform as unknown === Schulform.GY as unknown) && ((gl as unknown === Schulgliederung.GY8 as unknown) || (gl as unknown === Schulgliederung.DEFAULT as unknown)) && (jgNachher as unknown === Jahrgaenge.JG_EF as unknown));
+			}
+			case Jahrgaenge.JG_10: {
+				return (jgNachher as unknown === Jahrgaenge.JG_11 as unknown) || ((schulform.daten.hatGymOb) && (jgNachher as unknown === Jahrgaenge.JG_EF as unknown));
+			}
+			case Jahrgaenge.JG_11: {
+				return (jgNachher as unknown === Jahrgaenge.JG_11 as unknown);
+			}
+			case Jahrgaenge.JG_12: {
+				return (jgNachher as unknown === Jahrgaenge.JG_12 as unknown);
+			}
+			case Jahrgaenge.JG_13: {
+				return (jgNachher === null);
+			}
+			case Jahrgaenge.JG_71: {
+				return jgNachher === null;
+			}
+			case Jahrgaenge.JG_85: {
+				return jgNachher === null;
+			}
+			case Jahrgaenge.JG_86: {
+				return jgNachher === null;
+			}
+			case Jahrgaenge.JG_90: {
+				return jgNachher === null;
+			}
+			case Jahrgaenge.JG_91: {
+				return (jgNachher as unknown === Jahrgaenge.JG_92 as unknown);
+			}
+			case Jahrgaenge.JG_92: {
+				return jgNachher === null;
+			}
+			case Jahrgaenge.JG_E1: {
+				return jgNachher as unknown === Jahrgaenge.JG_E2 as unknown;
+			}
+			case Jahrgaenge.JG_E2: {
+				return (jgNachher as unknown === Jahrgaenge.JG_E3 as unknown) || (jgNachher as unknown === Jahrgaenge.JG_03 as unknown);
+			}
+			case Jahrgaenge.JG_E3: {
+				return jgNachher as unknown === Jahrgaenge.JG_03 as unknown;
+			}
+			case Jahrgaenge.JG_EF: {
+				return jgNachher as unknown === Jahrgaenge.JG_Q1 as unknown;
+			}
+			case Jahrgaenge.JG_Q1: {
+				return jgNachher as unknown === Jahrgaenge.JG_Q2 as unknown;
+			}
+			case Jahrgaenge.JG_Q2: {
+				return jgNachher === null;
+			}
+			default: {
+				return false;
+			}
+		}
 	}
 
 	/**

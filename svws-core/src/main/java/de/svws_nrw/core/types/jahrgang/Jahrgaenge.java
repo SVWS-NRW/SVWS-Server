@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag;
 import de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintragBezeichnung;
 import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -656,6 +657,156 @@ public enum Jahrgaenge {
 			}
 		}
 		return false;
+	}
+
+
+	/**
+	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
+	 * dieses Jahrgangs ist.
+	 *
+	 * @param jgVorher     der zu prüfende Jahrgang
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 *
+	 * @return true, falls jgVorher ein gültiger Vorgänger-Jahrgang dieses Jahrgangs ist.
+	 */
+	public boolean isVorgaenger(final Jahrgaenge jgVorher, final Schulform schulform, final Schulgliederung gliederung) {
+		if (schulform == null)
+			return false;
+		if (!this.hasSchulform(schulform) || ((jgVorher != null) && (!jgVorher.hasSchulform(schulform))))
+			return false;
+		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
+		switch (this) {
+			case JG_00:
+				return jgVorher == null;
+			case JG_01:
+				return jgVorher == null;
+			case JG_02:
+				return jgVorher == JG_01;
+			case JG_03:
+				return (jgVorher == JG_02) || (jgVorher == JG_E2) || (jgVorher == JG_E3);
+			case JG_04:
+				return (jgVorher == JG_03);
+			case JG_05:
+				return (jgVorher == JG_04);
+			case JG_06:
+				return (jgVorher == JG_05);
+			case JG_07:
+				return (jgVorher == JG_06);
+			case JG_08:
+				return (jgVorher == JG_07);
+			case JG_09:
+				return (jgVorher == JG_08);
+			case JG_10:
+				return (jgVorher == JG_09);
+			case JG_11:
+				return (jgVorher == JG_10);
+			case JG_12:
+				return (jgVorher == JG_11);
+			case JG_13:
+				return (jgVorher == JG_12);
+			case JG_71:
+				return jgVorher == null;
+			case JG_85:
+				return jgVorher == null;
+			case JG_86:
+				return jgVorher == null;
+			case JG_90:
+				return jgVorher == null;
+			case JG_91:
+				return jgVorher == null;
+			case JG_92:
+				return jgVorher == JG_91;
+			case JG_E1:
+				return (jgVorher == JG_00) || (jgVorher == null);
+			case JG_E2:
+				return jgVorher == JG_E1;
+			case JG_E3:
+				return jgVorher == JG_E2;
+			case JG_EF:
+				return (gl == Schulgliederung.GY8) ? (jgVorher == JG_09) : (jgVorher == JG_10);
+			case JG_Q1:
+				return jgVorher == JG_EF;
+			case JG_Q2:
+				return jgVorher == JG_Q1;
+			default:
+				return false;
+		}
+	}
+
+
+	/**
+	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
+	 * dieses Jahrgangs ist.
+	 *
+	 * @param jgNachher    der zu prüfende Jahrgang
+	 * @param schulform    die Schulform
+	 * @param gliederung   die Schulgliederung
+	 *
+	 * @return true, falls jgNachher ein gültiger Nachfolger-Jahrgang dieses Jahrgangs ist.
+	 */
+	public boolean isNachfolger(final Jahrgaenge jgNachher, final Schulform schulform, final Schulgliederung gliederung) {
+		if (schulform == null)
+			return false;
+		if (!this.hasSchulform(schulform) || ((jgNachher != null) && (!jgNachher.hasSchulform(schulform))))
+			return false;
+		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
+		switch (this) {
+			case JG_00:
+				return jgNachher == JG_01;
+			case JG_01:
+				return jgNachher == JG_02;
+			case JG_02:
+				return jgNachher == JG_03;
+			case JG_03:
+				return jgNachher == JG_04;
+			case JG_04:
+				return jgNachher == JG_05;
+			case JG_05:
+				return jgNachher == JG_06;
+			case JG_06:
+				return jgNachher == JG_07;
+			case JG_07:
+				return jgNachher == JG_08;
+			case JG_08:
+				return jgNachher == JG_09;
+			case JG_09:
+				return (jgNachher == JG_10) || ((schulform == Schulform.GY) && ((gl == Schulgliederung.GY8) || (gl == Schulgliederung.DEFAULT)) && (jgNachher == JG_EF));
+			case JG_10:
+				return (jgNachher == JG_11) || ((schulform.daten.hatGymOb) && (jgNachher == JG_EF));
+			case JG_11:
+				return (jgNachher == JG_11);
+			case JG_12:
+				return (jgNachher == JG_12);
+			case JG_13:
+				return (jgNachher == null);
+			case JG_71:
+				return jgNachher == null;
+			case JG_85:
+				return jgNachher == null;
+			case JG_86:
+				return jgNachher == null;
+			case JG_90:
+				return jgNachher == null;
+			case JG_91:
+				return (jgNachher == JG_92);
+			case JG_92:
+				return jgNachher == null;
+			case JG_E1:
+				return jgNachher == JG_E2;
+			case JG_E2:
+				return (jgNachher == JG_E3) || (jgNachher == JG_03);
+			case JG_E3:
+				return jgNachher == JG_03;
+			case JG_EF:
+				return jgNachher == JG_Q1;
+			case JG_Q1:
+				return jgNachher == JG_Q2;
+			case JG_Q2:
+				return jgNachher == null;
+			default:
+				return false;
+		}
 	}
 
 }
