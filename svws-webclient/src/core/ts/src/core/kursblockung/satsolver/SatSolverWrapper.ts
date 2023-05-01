@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SatSolverA } from '../../../core/kursblockung/satsolver/SatSolverA';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { JavaIterator } from '../../../java/util/JavaIterator';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class SatSolverWrapper extends SatSolverA {
 
@@ -169,19 +170,15 @@ export class SatSolverWrapper extends SatSolverA {
 			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			const pAmount : number = __param1 as number;
 			const list : LinkedCollection<number> = new LinkedCollection(pList);
-			if (pAmount > list.size()) {
-				console.log(JSON.stringify("FEHLER: c_exactly_GENERIC --> amount > list.size()"));
-			}
+			DeveloperNotificationException.check("FEHLER: c_exactly_GENERIC --> amount > list.size()", pAmount > list.size());
 			if (pAmount === 0) {
-				for (const x of list) {
+				for (const x of list)
 					this.c_1(-x);
-				}
 				return;
 			}
 			if (pAmount === list.size()) {
-				for (const x of list) {
+				for (const x of list)
 					this.c_1(+x);
-				}
 				return;
 			}
 			if (pAmount === 1) {
@@ -357,9 +354,7 @@ export class SatSolverWrapper extends SatSolverA {
 	}
 
 	private c_bitonic_comparator(result : LinkedCollection<number>, i1 : number, i2 : number) : void {
-		if (i1 >= i2) {
-			console.log(JSON.stringify("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!"));
-		}
+		DeveloperNotificationException.check("c_bitonic_comparator: " + i1 + "," + i2 + " <-- ERROR!!!", i1 >= i2);
 		const a : number = result.get(i1).valueOf();
 		const b : number = result.get(i2).valueOf();
 		result.set(i1, this.c_new_var_OR(a, b));
