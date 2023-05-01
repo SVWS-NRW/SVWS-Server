@@ -46,5 +46,8 @@
 		"npm": ">=8.0.0",
 		"node": ">=18.8.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@floating-ui/vue": "^1.0.0"
+	}
 }
