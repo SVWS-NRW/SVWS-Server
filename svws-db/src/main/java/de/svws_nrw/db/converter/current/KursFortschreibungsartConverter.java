@@ -16,7 +16,7 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 public final class KursFortschreibungsartConverter extends DBAttributeConverter<KursFortschreibungsart, String> {
 
 	/** Die Instanz des Konverters */
-	public static KursFortschreibungsartConverter instance = new KursFortschreibungsartConverter();
+	public static final KursFortschreibungsartConverter instance = new KursFortschreibungsartConverter();
 
 	@Override
 	public String convertToDatabaseColumn(final KursFortschreibungsart attribute) {

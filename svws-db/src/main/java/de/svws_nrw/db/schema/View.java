@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.SQLiteUtils;
@@ -34,10 +35,10 @@ public class View {
     final @NotNull String sql;
 
     /** Eine Liste der Spalten der View*/
-    public final @NotNull ArrayList<@NotNull ViewSpalte> spalten = new ArrayList<>();
+    public final @NotNull List<@NotNull ViewSpalte> spalten = new ArrayList<>();
 
     /** Eine Liste der Spalten, welcher als Primärschlüssel der View geeignet ist */
-    public final @NotNull ArrayList<@NotNull ViewSpalte> pkSpalten = new ArrayList<>();
+    public final @NotNull List<@NotNull ViewSpalte> pkSpalten = new ArrayList<>();
 
 
     /**
@@ -134,7 +135,7 @@ public class View {
 	 * @return true, falls der Java-DTO einen einfachen Primary-Key hat
 	 */
 	public boolean hasSimplePrimaryKey() {
-		if (pkSpalten.size() <= 0)
+		if (pkSpalten.isEmpty())
 			throw new IllegalStateException("Ein Java-DTO für die View " + name + " muss einen Primary-Key haben");
 		return pkSpalten.size() == 1;
 	}

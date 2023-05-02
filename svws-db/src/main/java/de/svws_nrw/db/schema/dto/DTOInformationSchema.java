@@ -1,9 +1,12 @@
 package de.svws_nrw.db.schema.dto;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.svws_nrw.db.DBEntityManager;
 import jakarta.persistence.Cacheable;
@@ -56,26 +59,20 @@ public final class DTOInformationSchema {
 	 * @return die Map mit den Schemata-DTOs, welche den Schema-Namen in Kleinschreibung zugeordnet sind.
 	 */
 	public static Map<String, DTOInformationSchema> query(final DBEntityManager conn) {
-		List<DTOInformationSchema> results = null;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				results = conn.queryNamed("DTOInformationSchema.mysql", DTOInformationSchema.class).getResultList();
-				break;
-			case MDB:
-				results = conn.queryNamed("DTOInformationSchema.mdb", DTOInformationSchema.class).getResultList();
-				break;
-			case MSSQL:
-				results = conn.queryNamed("DTOInformationSchema.mssql", DTOInformationSchema.class).getResultList();
-				break;
-			case SQLITE:
-				results = conn.queryNamed("DTOInformationSchema.sqlite", DTOInformationSchema.class).getResultList();
-				break;
-		}
-		if (results == null)
-			return null;
+		final List<DTOInformationSchema> results = switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchema.mysql", DTOInformationSchema.class).getResultList();
+			case MDB -> conn.queryNamed("DTOInformationSchema.mdb", DTOInformationSchema.class).getResultList();
+			case MSSQL -> conn.queryNamed("DTOInformationSchema.mssql", DTOInformationSchema.class).getResultList();
+			case SQLITE -> conn.queryNamed("DTOInformationSchema.sqlite", DTOInformationSchema.class).getResultList();
+			default -> Collections.emptyList();
+		};
 		return results.stream().collect(Collectors.toMap(e -> e.Name.toLowerCase(), e -> e));
 	}
+
+
+	private static final Set<String> setSystemSchemaMariaDB = Stream.of("information_schema", "mysql", "performance_schema").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemSchemaMySQL = Stream.of("information_schema", "mysql", "performance_schema", "sys").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemSchemaMSSQL = Stream.of("master", "tempdb",  "model", "msdb").collect(Collectors.toCollection(HashSet::new));
 
 
 	/**
@@ -86,47 +83,17 @@ public final class DTOInformationSchema {
 	 *
 	 * @return die Liste mit den Schemanamen in Kleinschreibung
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<String> queryNames(final DBEntityManager conn) {
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter(name -> {
-					switch (name.toLowerCase()) {
-						case "information_schema":
-						case "mysql":
-						case "performance_schema":
-							return false;
-					}
-					return true;
-				}).map(name -> name.toLowerCase()).collect(Collectors.toList());
-			case MYSQL:
-				return conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream().filter(name -> {
-					switch (name.toLowerCase()) {
-						case "information_schema":
-						case "mysql":
-						case "performance_schema":
-						case "sys":
-							return false;
-					}
-					return true;
-				}).map(name -> name.toLowerCase()).collect(Collectors.toList());
-			case MDB:
-				return Collections.EMPTY_LIST;
-			case MSSQL:
-				return conn.queryNamed("DTOInformationSchema.mssql", String.class).getResultList().stream().filter(name -> {
-					switch (name) {
-						case "master":
-						case "tempdb":
-						case "model":
-						case "msdb":
-							return false;
-					}
-					return true;
-				}).map(name -> name.toLowerCase()).collect(Collectors.toList());
-			case SQLITE:
-				return Collections.EMPTY_LIST;
-		}
-		return null;
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB -> conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream()
+				.filter(name -> !setSystemSchemaMariaDB.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+			case MYSQL -> conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream()
+				.filter(name -> !setSystemSchemaMySQL.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+			case MSSQL -> conn.queryNamed("DTOInformationSchema.mssql", String.class).getResultList().stream()
+				.filter(name -> !setSystemSchemaMSSQL.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+			case SQLITE, MDB -> Collections.emptyList();
+			default -> Collections.emptyList();
+		};
 	}
 
 

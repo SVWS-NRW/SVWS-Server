@@ -117,11 +117,9 @@ public class DTOCreatorView {
 	/**
 	 * Ermittelt die Attribut-Konverter {@link DBAttributeConverter}, die für diese View definiert wurden.
 	 *
-	 * @param rev   die DB-Revision, für welche die Attribut-Konverter bestimmt werden sollen
-	 *
 	 * @return eine Liste mit den Attribut-Konvertern.
 	 */
-	private List<? extends DBAttributeConverter<?, ?>> getAttributeConverter(final long rev) {
+	private List<? extends DBAttributeConverter<?, ?>> getAttributeConverter() {
 		return view.spalten.stream()
 				.filter(spalte -> spalte.converter != null)
 				.map(spalte -> DBAttributeConverter.getByClass(spalte.converter))
@@ -203,12 +201,11 @@ public class DTOCreatorView {
 	 * repräsentiert. <br>
 	 *
 	 * @param spalte            die Spalte für die das Java-Attribut generiert wird
-	 * @param rev               die DB Revision, für welche das Attribut erzeugt wird.
 	 * @param withAnnotations   gibt an, ob auch Annotationen für die Spalte generiert werden sollen.
 	 *
 	 * @return der Java-Code für das Attribut für die DB-Spalte
 	 */
-	private String getCode4Attributes(final ViewSpalte spalte, final long rev, final boolean withAnnotations) {
+	private String getCode4Attributes(final ViewSpalte spalte, final boolean withAnnotations) {
 		final StringBuilder sb = new StringBuilder();
 		if (spalte.beschreibung != null)
 			sb.append("\t/** " + spalte.beschreibung + " */" + System.lineSeparator());
@@ -238,7 +235,7 @@ public class DTOCreatorView {
 	 * @return der Java-Code für die DTO-Klasse in der angegebenen Revision.
 	 */
 	public String getCode(final long rev) {
-		final var acs = getAttributeConverter(rev);
+		final var acs = getAttributeConverter();
 		final String className = getJavaKlasse(rev);
 
 		final StringBuilder sb = new StringBuilder();
@@ -293,7 +290,7 @@ public class DTOCreatorView {
 		sb.append("public final class " + className + " {" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(view.spalten.stream()
-				.map(spalte -> getCode4Attributes(spalte, rev, true))
+				.map(spalte -> getCode4Attributes(spalte, true))
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append(System.lineSeparator());
@@ -359,7 +356,7 @@ public class DTOCreatorView {
 		sb.append("\tprivate static final long serialVersionUID = 1L;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(view.pkSpalten.stream()
-				.map(col -> getCode4Attributes(col, rev, false))
+				.map(col -> getCode4Attributes(col, false))
 				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append(System.lineSeparator());

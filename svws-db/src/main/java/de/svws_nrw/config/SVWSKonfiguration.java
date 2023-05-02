@@ -337,7 +337,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Ein Default-Pfad, in welchem die Client-Dateien gesucht werden, falls in der Konfigurationsdatei keiner angegeben ist. */
-	public static String default_webclient_path = "webclient";
+	public static final String default_webclient_path = "webclient";
 
 	/**
 	 * Gibt den Pfad zu den Webclient-Dateien zurück.
@@ -405,7 +405,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Gibt den Default HTTP-Port des Servers an, sofern TLS deaktiviert wurde */
-	public static int default_PortHTTP = 8080;
+	public static final int default_PortHTTP = 8080;
 
 	/**
 	 * Gibt den HTTP-Port des Servers zurück, sofern TLS deaktiviert wurde
@@ -418,7 +418,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Gibt an, dass die HTTP-Version 1.1 statt 2 als Default genutzt wird */
-	public static boolean default_useHTTPDefaultv11 = false;
+	public static final boolean default_useHTTPDefaultv11 = false;
 
 	/**
 	 * Gibt zurück, ob HTTP-Version 1.1 statt 2 als Default genutzt wird.
@@ -431,7 +431,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Gibt den Default HTTPS-Port des Servers an */
-	public static int default_PortHTTPS = 443;
+	public static final int default_PortHTTPS = 443;
 
 	/**
 	 * Gibt den HTTPS-Port des Servers zurück
@@ -444,7 +444,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Gibt an, das CORS-Header als Default verwendet werden, wenn nichts dazu in der Konfiguration angegeben ist. */
-	public static boolean default_use_cors_header = true;
+	public static final boolean default_use_cors_header = true;
 
 	/**
 	 * Gibt an, ob CORS-Header verwendet werden sollen oder nicht.
@@ -517,7 +517,7 @@ public final class SVWSKonfiguration {
 	 * @return der Name des konfigurierten Default-Schemas
 	 */
 	public String getDefaultSchema() {
-		if ((dto == null) || (dto.dbKonfiguration.schemata.size() == 0))
+		if ((dto == null) || (dto.dbKonfiguration.schemata.isEmpty()))
 			return null;
 		if ((dto.dbKonfiguration.defaultschema == null) || ("".equals(dto.dbKonfiguration.defaultschema)))
 			return dto.dbKonfiguration.schemata.get(0).name;
@@ -724,7 +724,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Ein Default-Alias, welcher für den SVWS-Server-Key im keystore genutzt wird. */
-	public static String default_tls_key_alias = "selfsigned";
+	public static final String default_tls_key_alias = "selfsigned";
 
 	/**
 	 * Gibt den Alias des SVWS-Server-Keys zurück.
@@ -748,7 +748,7 @@ public final class SVWSKonfiguration {
 
 
 	/** Ein Default-Kennwort, welches für den keystore genutzt wird, falls in der Konfigurationsdatei keines angegeben ist. */
-	public static String default_tls_keystore_password = "svwskeystore";
+	public static final String default_tls_keystore_password = "svwskeystore";
 
 	/**
 	 * Gibt das Kennwort für Keystore an, der für die TLS-Verbindung genutzt wird.

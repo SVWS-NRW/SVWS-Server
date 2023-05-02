@@ -3,6 +3,7 @@ package de.svws_nrw.db.schema;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -252,7 +253,7 @@ public class SchemaTabelle {
 	 *
 	 * @return das Set der Primärschlüsselpalten
 	 */
-	public LinkedHashSet<SchemaTabelleSpalte> pkSpalten() {
+	public Set<SchemaTabelleSpalte> pkSpalten() {
 		return _pkSpalten;
 	}
 
@@ -461,7 +462,7 @@ public class SchemaTabelle {
      * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
     }
 
 
@@ -477,7 +478,7 @@ public class SchemaTabelle {
     	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
     	return _spalten.stream()
     			.filter(sp -> (revision >= sp.revision().revision) && ((sp.veraltet().revision < 0) || (revision < sp.veraltet().revision)))
-    			.sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    			.sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
     }
 
 
@@ -689,7 +690,7 @@ public class SchemaTabelle {
 	 * @return der SQL-String für das Erstellen des Primärschlüssels
 	 */
 	public String getPrimaerschluesselSQL() {
-		if (_pkSpalten.size() <= 0)
+		if (_pkSpalten.isEmpty())
 			return "";
 		return _pkSpalten.stream().map(spalte -> spalte.name()).collect(Collectors.joining(", ", "CONSTRAINT PK_" + this._name + " PRIMARY KEY (", ")"));
 	}
@@ -707,7 +708,7 @@ public class SchemaTabelle {
 	 */
 	public String getPrimaerschluesselTriggerSQL(final DBDriver dbms, final int rev, final boolean create) {
     	final var triggerList = getPrimaerschluesselTriggerSQLList(dbms, rev, create);
-    	if (triggerList.size() <= 0)
+    	if (triggerList.isEmpty())
     		return "";
     	final var newline = System.lineSeparator();
     	if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {

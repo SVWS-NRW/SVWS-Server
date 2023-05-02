@@ -409,8 +409,7 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 		    	break;
 		    case LONGBLOB:
 		    	return null;
-		    case SMALLINT:
-		    case INT:
+		    case SMALLINT, INT:
 		    	if ("".equals(_default.trim()))
 		    		return null;
 		    	result = NumberUtils.toInt(_default);
@@ -418,13 +417,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 		    case BOOLEAN:
 		    	if ("".equals(_default.trim()))
 		    		return null;
-			    result = _default.toLowerCase().equals("true");
+			    result = _default.equalsIgnoreCase("true");
 		    	break;
-		    case CHAR:
-		    case DATE:
-		    case DATETIME:
-		    case TEXT:
-		    case VARCHAR:
+		    case CHAR, DATE, DATETIME, TEXT, VARCHAR:
 			    result = _default;
 			    break;
 			default: // unbekannter Typ
@@ -474,17 +469,11 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der SQL-Drop-Befehl
 	 */
 	public String getSQLDrop(final DBDriver dbms) {
-		switch (dbms) {
-			case SQLITE:
-				// TODO SQLite - Currently not supported
-				return null;
-			case MARIA_DB:
-			case MYSQL:
-			case MDB:
-			case MSSQL:
-			default:
-				return "ALTER TABLE "  + this._tabelle.name() + " DROP COLUMN " + this.name() + ";";
-		}
+		return switch (dbms) {
+			case SQLITE -> null; // SQLite - Currently not supported
+			case MARIA_DB, MYSQL, MDB, MSSQL -> "ALTER TABLE "  + this._tabelle.name() + " DROP COLUMN " + this.name() + ";";
+			default -> null;
+		};
 	}
 
 
@@ -502,17 +491,11 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 			|| (!this._tabelle.pkAutoIncrement())
 			|| (!this._datentyp.isIntType()))
 			return "";
-		switch (dbms) {
-			case MARIA_DB:
-			case MSSQL:
-			case MYSQL:
-			case SQLITE:
-				return " DEFAULT -1";
-			case MDB:
-				return " AUTOINCREMENT";
-			default:
-				return "";
-		}
+		return switch (dbms) {
+			case MARIA_DB, MSSQL, MYSQL, SQLITE -> " DEFAULT -1";
+			case MDB -> " AUTOINCREMENT";
+			default -> "";
+		};
 	}
 
 
@@ -558,7 +541,6 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 			default -> "";
 		};
 	}
-
 
 	@Override
 	public int compareTo(final SchemaTabelleSpalte other) {

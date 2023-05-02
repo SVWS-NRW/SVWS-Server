@@ -451,7 +451,7 @@ public final class DTOCreatorTable {
 		}
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
-		final Collection<SchemaTabelleSpalte> tmpPkSpalten = tabelle.pkSpalten().size() <= 0 ? tabelle.getSpalten(rev) : tabelle.pkSpalten();
+		final Collection<SchemaTabelleSpalte> tmpPkSpalten = tabelle.pkSpalten().isEmpty() ? tabelle.getSpalten(rev) : tabelle.pkSpalten();
 		sb.append(getCode4EqualsAndHashcode(tabelle.getJavaKlasse(rev), tmpPkSpalten, rev));
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());

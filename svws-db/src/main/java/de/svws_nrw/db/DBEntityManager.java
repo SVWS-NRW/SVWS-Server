@@ -589,7 +589,7 @@ public final class DBEntityManager implements AutoCloseable {
 	@SuppressWarnings("resource")
 	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst, final int indexLast) {
 		if ((entities == null) || (colnames == null) || (tablename == null)
-				|| (colnames.size() == 0) || (entities.size() == 0))
+				|| (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
@@ -773,7 +773,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public <T> T querySingle(final Class<T> cl) {
 		final List<T> entries = queryAll(cl);
-		return ((entries == null) || (entries.size() == 0)) ? null : entries.get(0);
+		return ((entries == null) || (entries.isEmpty())) ? null : entries.get(0);
 	}
 
 

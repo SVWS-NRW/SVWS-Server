@@ -73,6 +73,9 @@ public final class SQLiteUtils {
 						} else
 							result.append(tmp.substring(0, matcher.end()));
 					}
+					default -> {
+						// do nothing
+					}
 				}
 				tmp = tmp.substring(matcher.end());
 				if (countBraces == 0) {
