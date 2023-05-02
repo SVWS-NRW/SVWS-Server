@@ -53,7 +53,7 @@ public class Tabelle_Kompetenzen extends SchemaTabelle {
 		setJavaSubPackage("schild.benutzer");
 		setJavaClassName("DTOKatalogBenutzerKompetenz");
 		setJavaComment("Rechte für die Benutzerverwaltung von Schild-NRW");
-        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenz.class, BenutzerKompetenz.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenz.class, BenutzerKompetenz.VERSION, rev -> Arrays
             .stream(BenutzerKompetenz.values())
             .map(k -> k.daten.id + "," + k.daten.gruppe_id + ",'" + k.daten.bezeichnung + "'")
             .toList()));

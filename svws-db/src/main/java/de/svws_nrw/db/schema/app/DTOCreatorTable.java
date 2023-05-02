@@ -216,8 +216,7 @@ public final class DTOCreatorTable {
 	private List<DBAttributeConverter<?, ?>> getAttributeConverter(final long rev) {
 		return tabelle.getSpalten(rev).stream()
 				.map(spalte -> spalte.javaConverter(rev))
-				.filter(conv -> conv != null)
-				.filter(ac -> ac != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 
@@ -407,7 +406,7 @@ public final class DTOCreatorTable {
 		sb.append(System.lineSeparator());
 		sb.append(tabelle.getSpalten(rev).stream()
 				.map(spalte -> getCode4Attributes(spalte, rev, true))
-				.filter(code -> code != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append(System.lineSeparator());
 		sb.append("\t/**" + System.lineSeparator());

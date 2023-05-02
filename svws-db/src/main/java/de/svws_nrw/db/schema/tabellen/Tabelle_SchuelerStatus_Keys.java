@@ -31,7 +31,7 @@ public class Tabelle_SchuelerStatus_Keys extends SchemaTabelle {
 		setJavaSubPackage("schueler");
 		setJavaClassName("DTOSchuelerStatus");
 		setJavaComment("Tabelle für die Schlüsselwerte des Core-Types SchuelerStatus");
-        setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.VERSION, (rev) ->
+        setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.VERSION, rev ->
             Arrays.stream(SchuelerStatus.values()).map(s -> "" + s.id).toList()));
 	}
 

@@ -56,7 +56,7 @@ public class Tabelle_Berufskolleg_Anlagen extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegAnlagen");
 		setJavaComment("Informationen Anlagen des Berufskollegs");
-        setCoreType(new SchemaTabelleCoreType(this, BerufskollegAnlage.class, BerufskollegAnlage.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegAnlage.class, BerufskollegAnlage.VERSION, rev -> Arrays
             .stream(BerufskollegAnlage.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)

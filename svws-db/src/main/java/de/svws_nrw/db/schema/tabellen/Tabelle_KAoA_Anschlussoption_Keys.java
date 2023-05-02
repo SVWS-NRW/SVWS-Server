@@ -30,7 +30,7 @@ public class Tabelle_KAoA_Anschlussoption_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAAnschlussoptionKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Anschlussoptionen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAAnschlussoptionen.class, KAOAAnschlussoptionen.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, KAOAAnschlussoptionen.class, KAOAAnschlussoptionen.VERSION, rev -> Arrays
             .stream(KAOAAnschlussoptionen.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> "" + h.id)

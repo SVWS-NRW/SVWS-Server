@@ -61,20 +61,11 @@ public final class DBConfig {
 		this.db_driver = (dbDriver == null) ? DEFAULT_DB_DRIVER : dbDriver;
 		this.db_location = ((dbLocation == null) || "".equals(dbLocation.trim())) ? DEFAULT_DB_LOCATION : dbLocation;
 		switch (this.db_driver) {
-			case MSSQL:
+			case MSSQL, MARIA_DB, MYSQL:
 				this.db_schema = ((dbSchema == null) || "".equals(dbSchema.trim())) ? this.db_driver.getRootSchema() : dbSchema;
 				this.create_db_file = false;
 				break;
-			case MDB:
-				this.db_schema = this.db_driver.getRootSchema();
-				this.create_db_file = createDBFile;
-				break;
-			case MARIA_DB:
-			case MYSQL:
-				this.db_schema = ((dbSchema == null) || "".equals(dbSchema.trim())) ? this.db_driver.getRootSchema() : dbSchema;
-				this.create_db_file = false;
-				break;
-			case SQLITE:
+			case MDB, SQLITE:
 			default:
 				this.db_schema = this.db_driver.getRootSchema();
 				this.create_db_file = createDBFile;

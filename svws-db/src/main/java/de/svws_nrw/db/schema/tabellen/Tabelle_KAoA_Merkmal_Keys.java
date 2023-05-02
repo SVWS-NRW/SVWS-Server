@@ -30,7 +30,7 @@ public class Tabelle_KAoA_Merkmal_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAMerkmalKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Merkmalen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAMerkmal.class, KAOAMerkmal.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, KAOAMerkmal.class, KAOAMerkmal.VERSION, rev -> Arrays
             .stream(KAOAMerkmal.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> "" + h.id)

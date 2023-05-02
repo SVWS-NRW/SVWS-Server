@@ -24,7 +24,7 @@ public final class ConnectionManager {
 	/* Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten Datenbank-Verbindungen,
 	 * d.h. die zugehörigen {@link EntityManagerFactory} zu schließen. */
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> { ConnectionManager.closeAll(); }));
+		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager::closeAll));
 	}
 
 	/** Eine HashMap für den Zugriff auf einen Connection-Manager, der einer Datenbank-Konfiguration zugeordnet ist  */

@@ -433,33 +433,33 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
                         UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
                     END IF;
                 ELSE
-            		IF NEW.Lehrer_ID IS NULL AND OLD.Lehrer_ID IS NOT NULL THEN
-	                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
-	                    IF token IS NULL THEN
-	                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
-	                    ELSE
-	                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
-	                    END IF;
-            		ELSE
-		                IF OLD.Lehrer_ID <> NEW.Lehrer_ID THEN
-		                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
-		                    IF token IS NULL THEN
-		                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
-		                    ELSE
-		                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
-		                    END IF;
-		                END IF;
-		                IF OLD.ID <> NEW.ID OR OLD.Lehrer_ID <> NEW.Lehrer_ID
-		                        OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID
-		                        OR OLD.ASDJahrgang <> NEW.ASDJahrgang THEN
-		                    SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.Lehrer_ID);
-		                    IF token IS NULL THEN
-		                        INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (NEW.Lehrer_ID, CURTIME(3));
-		                    ELSE
-		                        UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
-		                    END IF;
-		                END IF;
-            		END IF;
+                    IF NEW.Lehrer_ID IS NULL AND OLD.Lehrer_ID IS NOT NULL THEN
+                        SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
+                        IF token IS NULL THEN
+                            INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
+                        ELSE
+                            UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
+                        END IF;
+                    ELSE
+                        IF OLD.Lehrer_ID <> NEW.Lehrer_ID THEN
+                            SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = OLD.Lehrer_ID);
+                            IF token IS NULL THEN
+                                INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (OLD.Lehrer_ID, CURTIME(3));
+                            ELSE
+                                UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = OLD.Lehrer_ID;
+                            END IF;
+                        END IF;
+                        IF OLD.ID <> NEW.ID OR OLD.Lehrer_ID <> NEW.Lehrer_ID
+                                OR OLD.KurzBez <> NEW.KurzBez OR OLD.Jahrgang_ID <> NEW.Jahrgang_ID
+                                OR OLD.ASDJahrgang <> NEW.ASDJahrgang THEN
+                            SET token := (SELECT SyncToken FROM DavSyncTokenLehrer WHERE ID = NEW.Lehrer_ID);
+                            IF token IS NULL THEN
+                                INSERT INTO DavSyncTokenLehrer(ID, SyncToken) VALUES (NEW.Lehrer_ID, CURTIME(3));
+                            ELSE
+                                UPDATE DavSyncTokenLehrer SET SyncToken = CURTIME(3) WHERE ID = NEW.Lehrer_ID;
+                            END IF;
+                        END IF;
+                    END IF;
                 END IF;
             END
             """,

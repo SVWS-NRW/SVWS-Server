@@ -45,7 +45,7 @@ public class Tabelle_Kompetenzgruppen extends SchemaTabelle {
 		setJavaSubPackage("schild.benutzer");
 		setJavaClassName("DTOKatalogBenutzerKompetenzGruppe");
 		setJavaComment("definierte Usergruppen, die wiederum die Kompetenzen enthält");
-        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenzGruppe.class, BenutzerKompetenzGruppe.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, BenutzerKompetenzGruppe.class, BenutzerKompetenzGruppe.VERSION, rev -> Arrays
             .stream(BenutzerKompetenzGruppe.values())
             .map(k -> k.daten.id + ",'" + k.daten.bezeichnung + "'" + "," + k.daten.spalte + "," + k.daten.zeile)
             .toList()));

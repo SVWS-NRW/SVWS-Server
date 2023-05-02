@@ -49,7 +49,7 @@ public class Tabelle_Berufskolleg_Berufsebenen3 extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegBerufsebenen3");
 		setJavaComment("Informationen Berufsebenen der Ebene 3 des Berufskollegs");
-        setCoreType(new SchemaTabelleCoreType(this, BerufskollegBerufsebene3.class, BerufskollegBerufsebene3.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegBerufsebene3.class, BerufskollegBerufsebene3.VERSION, rev -> Arrays
             .stream(BerufskollegBerufsebene3.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)

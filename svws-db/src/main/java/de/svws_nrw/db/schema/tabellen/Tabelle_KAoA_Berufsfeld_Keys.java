@@ -30,7 +30,7 @@ public class Tabelle_KAoA_Berufsfeld_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoABerufsfeldKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Berufsfeldern");
-        setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.VERSION, rev -> Arrays
             .stream(KAOABerufsfeld.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> "" + h.id)

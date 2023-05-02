@@ -617,7 +617,6 @@ public final class DBEntityManager implements AutoCloseable {
 					prepared.addBatch();
 				}
 				prepared.executeBatch();
-				prepared.close();
 			}
 			if (this.transactionCommit())
 				return true;

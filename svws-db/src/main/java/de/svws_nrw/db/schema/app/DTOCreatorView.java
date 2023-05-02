@@ -139,7 +139,7 @@ public class DTOCreatorView {
 		if (acs.isEmpty())
 			return "";
 		String result = "import "
-			+ acs.stream().map(ac -> ac.getClass().getName()).filter(cn -> cn != null).sorted().distinct()
+			+ acs.stream().map(ac -> ac.getClass().getName()).filter(Objects::nonNull).sorted().distinct()
 				.collect(Collectors.joining(";" + System.lineSeparator() + "import "))
 		    + ";" + System.lineSeparator()
             + System.lineSeparator();

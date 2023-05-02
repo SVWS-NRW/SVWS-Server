@@ -77,7 +77,11 @@ public class DTOCreator {
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
 
 		// Generiere den Code für die Java DTO-Klasse
-		final String dtosClassname = ((rev > 0) ? "Dev" : ((rev == 0) ? "Migration" : "")) + "DTOs";
+		String dtosClassname = "DTOs";
+		if (rev > 0)
+			dtosClassname = "DevDTOs";
+		else if (rev == 0)
+			dtosClassname = "MigrationDTOs";
 		final File dtosFile = new File(packageDir, dtosClassname + ".java");
 		String codeDTOImports = "";
 		String codeMapDTOName2DTOClass = "";

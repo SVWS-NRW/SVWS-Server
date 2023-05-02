@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -320,9 +319,9 @@ public final class SVWSKonfiguration {
 	 * @return der Dateiname
 	 */
 	public String getFilename() {
-		return ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString())))
-			? (dto == null || !dto.isXMLConfig ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML)
-			: dto.filepath.toString();
+		if ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString())))
+			return (dto == null || !dto.isXMLConfig ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
+		return dto.filepath.toString();
 	}
 
 
@@ -332,7 +331,7 @@ public final class SVWSKonfiguration {
 	 * @param filename    der Dateiname
 	 */
 	public void setFilename(final String filename) {
-		this.dto.filepath = ((dto == null) || ("".equals(filename))) ? null : Paths.get(filename);
+		this.dto.filepath = ("".equals(filename)) ? null : Paths.get(filename);
 	}
 
 
@@ -349,7 +348,7 @@ public final class SVWSKonfiguration {
 	}
 
 
-	private static boolean default_enableClientProtection = false;
+	private static final boolean default_enableClientProtection = false;
 
 	/**
 	 * Gibt an, ob der Zugriff auf Dateien des SVWS-Clients auch über die Authentifikation des Servers geschützt werden
@@ -363,7 +362,7 @@ public final class SVWSKonfiguration {
 
 
 
-	private static boolean default_disableDBRootAccess = false;
+	private static final boolean default_disableDBRootAccess = false;
 
 	/**
 	 * Gibt an, ob der Zugriff auf Schema-Operation, die einen root-Zugriff auf die SVWS benötigen deaktiviert werden soll.
@@ -376,7 +375,7 @@ public final class SVWSKonfiguration {
 
 
 
-	private static boolean default_disableAutoUpdates = false;
+	private static final boolean default_disableAutoUpdates = false;
 
 	/**
 	 * Gibt an, ob die Auto Updates auf alle Schemata zu Beginn des Server-Starts deaktiviert
@@ -390,7 +389,7 @@ public final class SVWSKonfiguration {
 
 
 
-	private static boolean default_disableTLS = false;
+	private static final boolean default_disableTLS = false;
 
 	/**
 	 * Gibt an, ob beim Server TLS deaktiviert werden soll und HTTP statt HTTPS verwendet
@@ -601,7 +600,7 @@ public final class SVWSKonfiguration {
     				result.name = s;
     				result.isDefault = (defaultSchema != null) && (defaultSchema.equals(s));
     				return result;
-    			}).collect(Collectors.toList());
+    			}).toList();
 
 	}
 
@@ -796,8 +795,8 @@ public final class SVWSKonfiguration {
 	    	final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final KeyStore keystore = getKeystore();
 			final Key key = keystore.getKey(config.getTLSKeyAlias(), config.getTLSKeystorePassword().toCharArray());
-			if (key instanceof PrivateKey)
-				return (PrivateKey) key;
+			if (key instanceof final PrivateKey privateKey)
+				return privateKey;
 			throw new KeyStoreException("Konnte keinen privaten Schlüssel auslesen.");
 		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
 			throw new KeyStoreException("", e);

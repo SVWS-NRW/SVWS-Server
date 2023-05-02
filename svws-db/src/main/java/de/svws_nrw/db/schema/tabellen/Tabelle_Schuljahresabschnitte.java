@@ -44,15 +44,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON EigeneSchule FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Schuljahr IS NOT NULL AND NEW.SchuljahrAbschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Schuljahr AND Schuljahresabschnitte.Abschnitt = NEW.SchuljahrAbschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Schuljahr, NEW.SchuljahrAbschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Schuljahr AND Schuljahresabschnitte.Abschnitt = NEW.SchuljahrAbschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-	    		END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Schuljahr IS NOT NULL AND NEW.SchuljahrAbschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Schuljahr AND Schuljahresabschnitte.Abschnitt = NEW.SchuljahrAbschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Schuljahr, NEW.SchuljahrAbschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Schuljahr AND Schuljahresabschnitte.Abschnitt = NEW.SchuljahrAbschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_EigeneSchule)
@@ -65,15 +65,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON Schueler FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.AktSchuljahr IS NOT NULL AND NEW.AktAbschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.AktSchuljahr AND Schuljahresabschnitte.Abschnitt = NEW.AktAbschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.AktSchuljahr, NEW.AktAbschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.AktSchuljahr AND Schuljahresabschnitte.Abschnitt = NEW.AktAbschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.AktSchuljahr IS NOT NULL AND NEW.AktAbschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.AktSchuljahr AND Schuljahresabschnitte.Abschnitt = NEW.AktAbschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.AktSchuljahr, NEW.AktAbschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.AktSchuljahr AND Schuljahresabschnitte.Abschnitt = NEW.AktAbschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_Schueler)
@@ -86,15 +86,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerLernabschnittsdaten FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten)
@@ -107,15 +107,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerAbitur FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerAbitur)
@@ -128,17 +128,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerAnkreuzfloskeln FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerAnkreuzfloskeln)
@@ -151,15 +151,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerBKAbschluss FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerBKAbschluss)
@@ -172,15 +172,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerBKFaecher FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerBKFaecher)
@@ -193,17 +193,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerFoerderempfehlungen FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerFoerderempfehlungen)
@@ -216,17 +216,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON SchuelerKAoADaten FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT SchuelerLernabschnittsdaten.ID FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.Schueler_ID = NEW.Schueler_ID AND SchuelerLernabschnittsdaten.Jahr = NEW.Jahr AND SchuelerLernabschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_SchuelerKAoADaten)
@@ -239,15 +239,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON LehrerAbschnittsdaten FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_LehrerAbschnittsdaten)
@@ -260,17 +260,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON LehrerAnrechnung FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_LehrerAnrechnung)
@@ -283,17 +283,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON LehrerEntlastung FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_LehrerEntlastung)
@@ -306,17 +306,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON LehrerFunktionen FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_LehrerFunktionen)
@@ -329,17 +329,17 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON LehrerMehrleistung FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-					END IF;
-					SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
-					IF id IS NOT NULL THEN
-						SET NEW.Abschnitt_ID = id;
-					END IF;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			        END IF;
+			        SET id := (SELECT LehrerAbschnittsdaten.ID FROM LehrerAbschnittsdaten WHERE LehrerAbschnittsdaten.Lehrer_ID = NEW.Lehrer_ID AND LehrerAbschnittsdaten.Jahr = NEW.Jahr AND LehrerAbschnittsdaten.Abschnitt = NEW.Abschnitt);
+			        IF id IS NOT NULL THEN
+			            SET NEW.Abschnitt_ID = id;
+			        END IF;
+			    END IF;
 			END
 			""",
 			Schema.tab_LehrerMehrleistung)
@@ -352,15 +352,15 @@ public class Tabelle_Schuljahresabschnitte extends SchemaTabelle {
 			"""
 			BEFORE INSERT ON Kurse FOR EACH ROW
 			BEGIN
-				DECLARE id INTEGER;
-				IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
-					SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					IF id IS NULL THEN
-						INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
-						SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
-					END IF;
-					SET NEW.Schuljahresabschnitts_ID = id;
-				END IF;
+			    DECLARE id INTEGER;
+			    IF NEW.Jahr IS NOT NULL AND NEW.Abschnitt IS NOT NULL THEN
+			        SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        IF id IS NULL THEN
+			            INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt) VALUES (NEW.Jahr, NEW.Abschnitt);
+			            SET id := (SELECT Schuljahresabschnitte.ID FROM Schuljahresabschnitte WHERE Schuljahresabschnitte.Jahr = NEW.Jahr AND Schuljahresabschnitte.Abschnitt = NEW.Abschnitt);
+			        END IF;
+			        SET NEW.Schuljahresabschnitts_ID = id;
+			    END IF;
 			END
 			""",
 			Schema.tab_Kurse)

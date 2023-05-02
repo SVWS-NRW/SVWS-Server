@@ -18,7 +18,9 @@ public final class AbiturKursMarkierungConverter extends DBAttributeConverter<Ab
 	public String convertToDatabaseColumn(final AbiturKursMarkierung value) {
 		if (value == null)
 			return "-";
-		return value.aufAbiturZeugnis ? (value.fuerBerechnung ? "+" : "-") : "/";
+		if (value.aufAbiturZeugnis)
+			return value.fuerBerechnung ? "+" : "-";
+		return "/";
 	}
 
 	@Override

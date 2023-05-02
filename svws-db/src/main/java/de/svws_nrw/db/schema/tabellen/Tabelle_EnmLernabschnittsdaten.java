@@ -69,12 +69,12 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 
     /** Trigger t_INSERT_EnmLernabschnittsdaten */
     public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLernabschnittsdaten = addTrigger(
-    		"t_INSERT_EnmLernabschnittsdaten",
-    		DBDriver.MARIA_DB,
-    		"""
-    		AFTER INSERT ON SchuelerLernabschnittsdaten FOR EACH ROW
-    		INSERT INTO EnmLernabschnittsdaten(ID, tsSumFehlStd, tsSumFehlStdU, tsZeugnisBem, tsASV, tsAUE, tsBemerkungVersetzung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
-    		""", Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EnmLernabschnittsdaten);
+			"t_INSERT_EnmLernabschnittsdaten",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON SchuelerLernabschnittsdaten FOR EACH ROW
+			INSERT INTO EnmLernabschnittsdaten(ID, tsSumFehlStd, tsSumFehlStdU, tsZeugnisBem, tsASV, tsAUE, tsBemerkungVersetzung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
+			""", Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_EnmLernabschnittsdaten);
 
 
     /** Trigger t_UPDATE_EnmLernabschnittsdaten */

@@ -41,7 +41,7 @@ public class Tabelle_Berufskolleg_Fachklassen_Keys extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegFachklassenKeys");
 		setJavaComment("Die Schlüssel von Fachklassen des Berufskollegs - auch von mittlerweile ausgelaufenen Fachklassen");
-        setCoreType(new SchemaTabelleCoreType(this, BerufskollegFachklassenManager.class, JsonDaten.fachklassenManager.getVersion(), (rev) ->
+        setCoreType(new SchemaTabelleCoreType(this, BerufskollegFachklassenManager.class, JsonDaten.fachklassenManager.getVersion(), rev ->
             JsonDaten.fachklassenManager.getKatalog().indizes.stream()
             .map(i -> i.fachklassen.stream()
                 .map(f -> i.index + ",'" + f.schluessel + "','" + f.schluessel2 + "'")

@@ -30,7 +30,7 @@ public class Tabelle_KAoA_Zusatzmerkmal_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAZusatzmerkmalKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Zusatzmerkmalen");
-        setCoreType(new SchemaTabelleCoreType(this, KAOAZusatzmerkmal.class, KAOAZusatzmerkmal.VERSION, (rev) -> Arrays
+        setCoreType(new SchemaTabelleCoreType(this, KAOAZusatzmerkmal.class, KAOAZusatzmerkmal.VERSION, rev -> Arrays
             .stream(KAOAZusatzmerkmal.values())
             .map(a -> Arrays.stream(a.historie)
                 .map(h -> "" + h.id)
