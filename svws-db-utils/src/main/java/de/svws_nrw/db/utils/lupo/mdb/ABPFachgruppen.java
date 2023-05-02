@@ -23,6 +23,13 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
  */
 public final class ABPFachgruppen {
 
+    private static final String fieldFach = "Fach";
+    private static final String fieldBezeichnung = "Bezeichnung";
+    private static final String fieldFachgruppeKrz = "FachgruppeKrz";
+    private static final String fieldAufgabenfeld = "Aufgabenfeld";
+    private static final String fieldSortierung = "Sortierung";
+
+
 	/** Das Fachkürzel */
 	public String Fach = null;
 
@@ -66,11 +73,11 @@ public final class ABPFachgruppen {
 			final Table table = db.getTable("ABP_Fachgruppen");
 			for (final Row r : table) {
 				final ABPFachgruppen fach = new ABPFachgruppen();
-				fach.Fach = r.getString("Fach");
-				fach.Bezeichnung = r.getString("Bezeichnung");
-				fach.FachgruppeKrz = r.getString("FachgruppeKrz");
-				fach.Aufgabenfeld = (r.getInt("Aufgabenfeld") == null) ? 0 : r.getInt("Aufgabenfeld");
-				fach.Sortierung = (r.getInt("Sortierung") == null) ? 0 : r.getInt("Sortierung");
+				fach.Fach = r.getString(fieldFach);
+				fach.Bezeichnung = r.getString(fieldBezeichnung);
+				fach.FachgruppeKrz = r.getString(fieldFachgruppeKrz);
+				fach.Aufgabenfeld = (r.getInt(fieldAufgabenfeld) == null) ? 0 : r.getInt(fieldAufgabenfeld);
+				fach.Sortierung = (r.getInt(fieldSortierung) == null) ? 0 : r.getInt(fieldSortierung);
 				zuordnung.put(fach.Fach, fach);
 			}
 			return zuordnung;
@@ -89,11 +96,11 @@ public final class ABPFachgruppen {
 	public static void write(final Database db, final Map<String, ABPFachgruppen> zuordnung) {
 		try {
 			final Table table = new TableBuilder("ABP_Fachgruppen")
-			     .addColumn(new ColumnBuilder("Fach", DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder("Bezeichnung", DataType.TEXT).setLengthInUnits(80))
-			     .addColumn(new ColumnBuilder("FachgruppeKrz", DataType.TEXT).setLengthInUnits(2))
-			     .addColumn(new ColumnBuilder("Aufgabenfeld", DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
-			     .addColumn(new ColumnBuilder("Sortierung", DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+			     .addColumn(new ColumnBuilder(fieldFach, DataType.TEXT).setLengthInUnits(2))
+			     .addColumn(new ColumnBuilder(fieldBezeichnung, DataType.TEXT).setLengthInUnits(80))
+			     .addColumn(new ColumnBuilder(fieldFachgruppeKrz, DataType.TEXT).setLengthInUnits(2))
+			     .addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
+			     .addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 			     .toTable(db);
 			for (final ABPFachgruppen fach: zuordnung.values().stream().sorted((fg1, fg2) -> fg1.Fach.compareToIgnoreCase(fg2.Fach)).toList()) {
 				table.addRow(
