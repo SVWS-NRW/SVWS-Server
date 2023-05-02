@@ -1,5 +1,5 @@
 //TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
-def svwsArtifactVersion = "0.5.6"
+def svwsArtifactVersion = project.ext.latestRelease
 def appArtifactsDir ="$projectDir/../download/svws"
 
 subprojects {
@@ -7,8 +7,8 @@ subprojects {
 	project.ext.svwsArtifactVersion = svwsArtifactVersion
 
 	dependencies {
-		implementation "de.nrw.schule.svws:svws-server-app:${svwsArtifactVersion}"
-		implementation "de.nrw.schule.svws:svws-client:${svwsArtifactVersion}"
+		implementation "de.svws-nrw:svws-server-app:${svwsArtifactVersion}"
+		implementation "de.svws-nrw:svws-client:${svwsArtifactVersion}"
 	}
 
 	repositories {

@@ -1,0 +1,65 @@
+def linuxfileAppDir = "$projectDir/svws/app"
+
+/*
+ Task lädt die SVWS-Artefakte einer angegebenen Version
+ aus dem Package-Repository von GitHub und speichert diese
+ für die Integration in der tar.gz des SVWSs.
+ */
+task copyPublishedArtifacts(type: Copy) {
+	dependsOn downloadPublishedArtifacts
+	def appArtifactsDir = project.ext.appArtifactsDir
+	copy {
+		from ("${appArtifactsDir}") {
+			exclude "svws-*.jar"
+			exclude "svws-*.zip"
+		}
+		into "${linuxfileAppDir}/lib"
+	}
+	copy {
+		from ("${appArtifactsDir}") {
+			include "svws-*"+project.ext.svwsArtifactVersion+".jar"
+			include "svws-*"+project.ext.svwsArtifactVersion+".zip"
+		}
+		into "${linuxfileAppDir}"
+	}
+}
+
+
+/*
+ Verpackt die SVWS-Artefakte als tar.gz
+ */
+task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {
+	archiveFileName = "linux-installer-"+project.ext.svwsArtifactVersion+".tar.gz"
+	from ("$projectDir/svws"){
+		into "svws"
+	}
+	from ("$projectDir/init-scripts"){
+		into "init-scripts"
+	}
+	extension 'tar.gz'
+	compression = Compression.GZIP
+}
+
+
+task replacePlaceholder(type: Copy, dependsOn: linuxZipBuild) {
+	from "$projectDir/install.sh"
+
+	def placeholder_name = 'LINUX_INSTALLER_FILE_NAME'
+	def filename = "linux-installer-"+project.ext.svwsArtifactVersion+".tar.gz"
+	filter { String line -> line.replaceAll(placeholder_name, filename) }
+
+	def placeholder_dl = 'BASE_DOWNLOAD_URL'
+	def baseUrl = "https://www.svws.nrw.de/uploads/media/linux/"+project.ext.svwsArtifactVersion
+	filter { String line -> line.replaceAll(placeholder_dl, baseUrl) }
+
+	into "$buildDir/distributions"
+}
+
+task buildLinuxInstaller() {
+	dependsOn('replacePlaceholder')
+	group "build"
+}
+
+clean.doLast {
+	file("${linuxfileAppDir}").deleteDir()
+}
