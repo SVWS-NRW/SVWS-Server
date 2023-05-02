@@ -52,6 +52,17 @@ public final class ABPNichtMoeglAbiFachKombi {
 	public String Typ = null;
 
 
+	private static final String fieldFach1_Krz = "Fach1_Krz";
+	private static final String fieldFach1_ID = "Fach1_ID";
+	private static final String fieldFach2_Krz = "Fach2_Krz";
+	private static final String fieldFach2_ID = "Fach2_ID";
+	private static final String fieldKursart1 = "Kursart1";
+	private static final String fieldKursart2 = "Kursart2";
+	private static final String fieldPhase = "Phase";
+	private static final String fieldPK = "PK";
+	private static final String fieldTyp = "Typ";
+
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Lehrer" aus der LuPO-Datei ein.
 	 *
@@ -65,15 +76,15 @@ public final class ABPNichtMoeglAbiFachKombi {
 			final Table table = db.getTable("ABP_NichtMoeglAbiFachKombi");
 			for (final Row r : table) {
 				final ABPNichtMoeglAbiFachKombi zuordnung = new ABPNichtMoeglAbiFachKombi();
-				zuordnung.Fach1_Krz = r.getString("Fach1_Krz");
-				zuordnung.Fach1_ID = r.getInt("Fach1_ID");
-				zuordnung.Fach2_Krz = r.getString("Fach2_Krz");
-				zuordnung.Fach2_ID = r.getInt("Fach2_ID");
-				zuordnung.Kursart1 = r.getString("Kursart1");
-				zuordnung.Kursart2 = r.getString("Kursart2");
-				zuordnung.Phase = r.getString("Phase");
-				zuordnung.PK = r.getString("PK");
-				zuordnung.Typ = r.getString("Typ");
+				zuordnung.Fach1_Krz = r.getString(fieldFach1_Krz);
+				zuordnung.Fach1_ID = r.getInt(fieldFach1_ID);
+				zuordnung.Fach2_Krz = r.getString(fieldFach2_Krz);
+				zuordnung.Fach2_ID = r.getInt(fieldFach2_ID);
+				zuordnung.Kursart1 = r.getString(fieldKursart1);
+				zuordnung.Kursart2 = r.getString(fieldKursart2);
+				zuordnung.Phase = r.getString(fieldPhase);
+				zuordnung.PK = r.getString(fieldPK);
+				zuordnung.Typ = r.getString(fieldTyp);
 				liste.add(zuordnung);
 			}
 			return liste;
@@ -92,16 +103,16 @@ public final class ABPNichtMoeglAbiFachKombi {
 	public static void write(final Database db, final List<ABPNichtMoeglAbiFachKombi> list) {
 		try {
 			final Table table = new TableBuilder("ABP_NichtMoeglAbiFachKombi")
-				.addColumn(new ColumnBuilder("Fach1_Krz", DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder("Fach1_ID", DataType.LONG))
-				.addColumn(new ColumnBuilder("Fach2_Krz", DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder("Fach2_ID", DataType.LONG))
-				.addColumn(new ColumnBuilder("Kursart1", DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder("Kursart2", DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder("Phase", DataType.TEXT).setLengthInUnits(10).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
-				.addColumn(new ColumnBuilder("PK", DataType.TEXT).setLengthInUnits(30))
-				.addColumn(new ColumnBuilder("Typ", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns("PK").setPrimaryKey())
+				.addColumn(new ColumnBuilder(fieldFach1_Krz, DataType.TEXT).setLengthInUnits(20))
+				.addColumn(new ColumnBuilder(fieldFach1_ID, DataType.LONG))
+				.addColumn(new ColumnBuilder(fieldFach2_Krz, DataType.TEXT).setLengthInUnits(20))
+				.addColumn(new ColumnBuilder(fieldFach2_ID, DataType.LONG))
+				.addColumn(new ColumnBuilder(fieldKursart1, DataType.TEXT).setLengthInUnits(5))
+				.addColumn(new ColumnBuilder(fieldKursart2, DataType.TEXT).setLengthInUnits(5))
+				.addColumn(new ColumnBuilder(fieldPhase, DataType.TEXT).setLengthInUnits(10).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
+				.addColumn(new ColumnBuilder(fieldPK, DataType.TEXT).setLengthInUnits(30))
+				.addColumn(new ColumnBuilder(fieldTyp, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'-'"))
+			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldPK).setPrimaryKey())
 			    .toTable(db);
 			for (final ABPNichtMoeglAbiFachKombi zuordnung: list) {
 				table.addRow(
@@ -163,8 +174,7 @@ public final class ABPNichtMoeglAbiFachKombi {
 	 * @return der Standard-Eintrag für die Tabelle ABPNichtMoeglAbiFachKombi
 	 */
 	public static List<ABPNichtMoeglAbiFachKombi> getDefault() {
-		final List<ABPNichtMoeglAbiFachKombi> nichtMoeglAbiFachKombi = new ArrayList<>();
-		return nichtMoeglAbiFachKombi;
+		return new ArrayList<>();
 	}
 
 

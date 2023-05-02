@@ -18,10 +18,6 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
  */
 public class CreateLuPOMDB {
 
-
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -36,31 +32,19 @@ public class CreateLuPOMDB {
 	 * @return die Antwort - true oder false
 	 */
 	private static boolean konsoleFrageJaNein(final String text, final Scanner scan) {
-		boolean antwort = false;
-		System.out.print(text);
-		boolean habeAntwort = false;
-		while (!habeAntwort) {
+		logger.logLn(text);
+		while (true) {
 			final String input = scan.nextLine();
 			if (input == null)
 				continue;
-			habeAntwort = true;
 			switch (input.toUpperCase()) {
-				case "JA":
-				case "J":
-				case "YES":
-				case "Y":
-					antwort = true;
-					break;
-				case "NEIN":
-				case "N":
-				case "NO":
-					antwort = false;
-					break;
+				case "JA", "J", "YES", "Y":
+					return true;
+				case "NEIN", "N", "NO":
+					return false;
 				default:
-					habeAntwort = false;
 			}
 		}
-		return antwort;
 	}
 
 
@@ -71,11 +55,10 @@ public class CreateLuPOMDB {
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */
 	public static void main(final String[] args) {
-		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args);
+		final CommandLineParser cmdLine = new CommandLineParser(args);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
@@ -90,11 +73,9 @@ public class CreateLuPOMDB {
 						antwort_ja = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren. Fortfahren? (J/N) ", scan);
 						if (!antwort_ja) {
 							cmdLine.printOptionsAndExit(2, "Die LuPO-Datei darf nicht überschrieben werden und kann daher nicht neu erzeugt werden. Breche ab.");
-							scan.close();
 							System.exit(1);
 						}
 					}
-					scan.close();
 				}
 			}
 

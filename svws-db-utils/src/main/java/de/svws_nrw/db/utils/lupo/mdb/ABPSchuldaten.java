@@ -40,22 +40,22 @@ public final class ABPSchuldaten {
 	/** Der dritte Teil der Bezeichnung der Schule. */
 	public String Bezeichnung3 = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public String Kennwort = null;
 
 	/** Die Prüfungsordung für die Oberstufe der Schule. */
 	public String PruefOrdnung = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public String PruefPhase = null;
 
 	/** Die bilinguale Sprache, falls es an der Schule bilingualen Sachunterricht gibt. */
 	public String BilingualSprachen = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public String Beratungslehrer = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public String BeratungslehrerEMail = null;
 
 	/** Legt fest, ob eine Schule Zusatzkurse im Fach Geschichte anbietet */
@@ -70,7 +70,7 @@ public final class ABPSchuldaten {
 	/** Der Jahrgang in dem die Zusatzkurse in Sozialwissenschaften beginnen (normalerweise Q2.1) */
 	public GostHalbjahr ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	boolean AusdruckAlleFaecher = true;
 
 	/** Das Halbjahr für das die Schüler aktuell beraten werden. */
@@ -85,10 +85,10 @@ public final class ABPSchuldaten {
 	/** Der Text der auf den LuPO-Bögen gesetzt wird, wenn eine Email von Lupo generiert wird. */
 	public String MailTextBoegen = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public String FS_NurMitSF = null;
 
-	/** TODO ??? */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht verwendet */
 	public Boolean Komprimieren = false;
 
 	/** Gibt an, ob Änderungen an den Datensätzen erlaubt sind. */
@@ -119,6 +119,38 @@ public final class ABPSchuldaten {
 	public String SMTP_StartTLS = null;
 
 
+	private static final String fieldSchulnr = "Schulnr";
+	private static final String fieldSchulformKrz = "SchulformKrz";
+	private static final String fieldSchulformBez = "SchulformBez";
+	private static final String fieldBezeichnung1 = "Bezeichnung1";
+	private static final String fieldBezeichnung2 = "Bezeichnung2";
+	private static final String fieldBezeichnung3 = "Bezeichnung3";
+	private static final String fieldKennwort = "Kennwort";
+	private static final String fieldPruefOrdnung = "PruefOrdnung";
+	private static final String fieldPruefPhase = "PruefPhase";
+	private static final String fieldBilingualSprachen = "BilingualSprachen";
+	private static final String fieldBeratungslehrer = "Beratungslehrer";
+	private static final String fieldBeratungslehrerEMail = "BeratungslehrerEMail";
+	private static final String fieldZK_Beginn_GE = "ZK_Beginn_GE";
+	private static final String fieldZK_Beginn_SW = "ZK_Beginn_SW";
+	private static final String fieldAusdruckAlleFaecher = "AusdruckAlleFaecher";
+	private static final String fieldBeratungshalbjahr = "Beratungshalbjahr";
+	private static final String fieldBeratungsText = "BeratungsText";
+	private static final String fieldMailText = "MailText";
+	private static final String fieldMailTextBoegen = "MailTextBoegen";
+	private static final String fieldFS_NurMitSF = "FS_NurMitSF";
+	private static final String fieldKomprimieren = "Komprimieren";
+	private static final String fieldAenderungenErlauben = "AenderungenErlauben";
+	private static final String fieldAutoPruefModus = "AutoPruefModus";
+	private static final String fieldDauerUnterrichtseinheit = "DauerUnterrichtseinheit";
+	private static final String fieldSMTP_User = "SMTP_User";
+	private static final String fieldSMTP_Password = "SMTP_Password";
+	private static final String fieldSMTP_Server = "SMTP_Server";
+	private static final String fieldSMTP_Port = "SMTP_Port";
+	private static final String fieldSMTP_SSL = "SMTP_SSL";
+	private static final String fieldSMTP_StartTLS = "SMTP_StartTLS";
+
+
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schuldaten" aus der LuPO-Datei ein.
@@ -135,19 +167,19 @@ public final class ABPSchuldaten {
 			final Table table = db.getTable("ABP_Schuldaten");
 			for (final Row r : table) {
 				final ABPSchuldaten zuordnung = new ABPSchuldaten();
-				zuordnung.Schulnr = r.getString("Schulnr");
-				zuordnung.SchulformKrz = r.getString("SchulformKrz");
-				zuordnung.SchulformBez = r.getString("SchulformBez");
-				zuordnung.Bezeichnung1 = r.getString("Bezeichnung1");
-				zuordnung.Bezeichnung2 = r.getString("Bezeichnung2");
-				zuordnung.Bezeichnung3 = r.getString("Bezeichnung3");
-				zuordnung.Kennwort = r.getString("Kennwort");
-				zuordnung.PruefOrdnung = r.getString("PruefOrdnung");
-				zuordnung.PruefPhase = r.getString("PruefPhase");
-				zuordnung.BilingualSprachen = r.getString("BilingualSprachen");
-				zuordnung.Beratungslehrer = r.getString("Beratungslehrer");
-				zuordnung.BeratungslehrerEMail = r.getString("BeratungslehrerEMail");
-				zkGeBeginn = r.getString("ZK_Beginn_GE");
+				zuordnung.Schulnr = r.getString(fieldSchulnr);
+				zuordnung.SchulformKrz = r.getString(fieldSchulformKrz);
+				zuordnung.SchulformBez = r.getString(fieldSchulformBez);
+				zuordnung.Bezeichnung1 = r.getString(fieldBezeichnung1);
+				zuordnung.Bezeichnung2 = r.getString(fieldBezeichnung2);
+				zuordnung.Bezeichnung3 = r.getString(fieldBezeichnung3);
+				zuordnung.Kennwort = r.getString(fieldKennwort);
+				zuordnung.PruefOrdnung = r.getString(fieldPruefOrdnung);
+				zuordnung.PruefPhase = r.getString(fieldPruefPhase);
+				zuordnung.BilingualSprachen = r.getString(fieldBilingualSprachen);
+				zuordnung.Beratungslehrer = r.getString(fieldBeratungslehrer);
+				zuordnung.BeratungslehrerEMail = r.getString(fieldBeratungslehrerEMail);
+				zkGeBeginn = r.getString(fieldZK_Beginn_GE);
 				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkGeBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkGeBeginn)) {
 					zuordnung.ZusatzkursGeschichteVorhanden = true;
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.fromKuerzelAlt(zkGeBeginn);
@@ -155,7 +187,7 @@ public final class ABPSchuldaten {
 					zuordnung.ZusatzkursGeschichteVorhanden = false;
 					zuordnung.ZusatzkursGeschichteBeginn = GostHalbjahr.Q21;
 				}
-				zkSoWiBeginn = r.getString("ZK_Beginn_SW");
+				zkSoWiBeginn = r.getString(fieldZK_Beginn_SW);
 				if (GostHalbjahr.Q11.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q12.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q21.kuerzelAlt.equals(zkSoWiBeginn) || GostHalbjahr.Q22.kuerzelAlt.equals(zkSoWiBeginn)) {
 					zuordnung.ZusatzkursSoWiVorhanden = true;
 					zuordnung.ZusatzkursSoWiBeginn = GostHalbjahr.fromKuerzelAlt(zkSoWiBeginn);
@@ -163,22 +195,22 @@ public final class ABPSchuldaten {
 					zuordnung.ZusatzkursSoWiVorhanden = false;
 					zuordnung.ZusatzkursSoWiBeginn = GostHalbjahr.Q21;
 				}
-				zuordnung.AusdruckAlleFaecher = "J".equals(r.getString("AusdruckAlleFaecher"));
-				zuordnung.Beratungshalbjahr = r.getString("Beratungshalbjahr");
-				zuordnung.BeratungsText = r.getString("BeratungsText");
-				zuordnung.MailText = r.getString("MailText");
-				zuordnung.MailTextBoegen = r.getString("MailTextBoegen");
-				zuordnung.FS_NurMitSF = r.getString("FS_NurMitSF");
-				zuordnung.Komprimieren = (r.getString("Komprimieren") == null) ? null : "N".equals(r.getString("Komprimieren"));
-				zuordnung.AenderungenErlauben = r.getString("AenderungenErlauben");
-				zuordnung.AutoPruefModus = "J".equals(r.getString("AutoPruefModus"));
-				zuordnung.DauerUnterrichtseinheit = (r.getInt("DauerUnterrichtseinheit") == null) ? 45 : r.getInt("DauerUnterrichtseinheit");
-				zuordnung.SMTP_User = r.getString("SMTP_User");
-				zuordnung.SMTP_Password = r.getString("SMTP_Password");
-				zuordnung.SMTP_Server = r.getString("SMTP_Server");
-				zuordnung.SMTP_Port = r.getString("SMTP_Port");
-				zuordnung.SMTP_SSL = r.getString("SMTP_SSL");
-				zuordnung.SMTP_StartTLS = r.getString("SMTP_StartTLS");
+				zuordnung.AusdruckAlleFaecher = "J".equals(r.getString(fieldAusdruckAlleFaecher));
+				zuordnung.Beratungshalbjahr = r.getString(fieldBeratungshalbjahr);
+				zuordnung.BeratungsText = r.getString(fieldBeratungsText);
+				zuordnung.MailText = r.getString(fieldMailText);
+				zuordnung.MailTextBoegen = r.getString(fieldMailTextBoegen);
+				zuordnung.FS_NurMitSF = r.getString(fieldFS_NurMitSF);
+				zuordnung.Komprimieren = (r.getString(fieldKomprimieren) == null) ? null : "N".equals(r.getString(fieldKomprimieren));
+				zuordnung.AenderungenErlauben = r.getString(fieldAenderungenErlauben);
+				zuordnung.AutoPruefModus = "J".equals(r.getString(fieldAutoPruefModus));
+				zuordnung.DauerUnterrichtseinheit = (r.getInt(fieldDauerUnterrichtseinheit) == null) ? 45 : r.getInt(fieldDauerUnterrichtseinheit);
+				zuordnung.SMTP_User = r.getString(fieldSMTP_User);
+				zuordnung.SMTP_Password = r.getString(fieldSMTP_Password);
+				zuordnung.SMTP_Server = r.getString(fieldSMTP_Server);
+				zuordnung.SMTP_Port = r.getString(fieldSMTP_Port);
+				zuordnung.SMTP_SSL = r.getString(fieldSMTP_SSL);
+				zuordnung.SMTP_StartTLS = r.getString(fieldSMTP_StartTLS);
 				liste.add(zuordnung);
 			}
 			return liste;
@@ -187,6 +219,9 @@ public final class ABPSchuldaten {
 		}
 	}
 
+	private static String toStringJN(final boolean value) {
+		return value ? "J" : "N";
+	}
 
 	/**
 	 * Schreibt die angegebenen Kursarten in die übergebene Datenbank
@@ -197,36 +232,36 @@ public final class ABPSchuldaten {
 	public static void write(final Database db, final List<ABPSchuldaten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Schuldaten")
-				.addColumn(new ColumnBuilder("Schulnr", DataType.TEXT).setLengthInUnits(6))
-				.addColumn(new ColumnBuilder("SchulformKrz", DataType.TEXT).setLengthInUnits(3))
-				.addColumn(new ColumnBuilder("SchulformBez", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("Bezeichnung1", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("Bezeichnung2", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("Bezeichnung3", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("Kennwort", DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder("PruefOrdnung", DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder("PruefPhase", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("BilingualSprachen", DataType.TEXT).setLengthInUnits(10))
-				.addColumn(new ColumnBuilder("Beratungslehrer", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("BeratungslehrerEMail", DataType.TEXT).setLengthInUnits(100))
-				.addColumn(new ColumnBuilder("ZK_Beginn_GE", DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
-				.addColumn(new ColumnBuilder("ZK_Beginn_SW", DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
-				.addColumn(new ColumnBuilder("AusdruckAlleFaecher", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Beratungshalbjahr", DataType.TEXT).setLengthInUnits(5).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'EF.1'"))
-				.addColumn(new ColumnBuilder("BeratungsText", DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder("MailText", DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder("MailTextBoegen", DataType.MEMO).setLengthInUnits(16777216))
-				.addColumn(new ColumnBuilder("FS_NurMitSF", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("Komprimieren", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("AenderungenErlauben", DataType.TEXT).setLengthInUnits(6))
-				.addColumn(new ColumnBuilder("AutoPruefModus", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("DauerUnterrichtseinheit", DataType.LONG))
-				.addColumn(new ColumnBuilder("SMTP_User", DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder("SMTP_Password", DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder("SMTP_Server", DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder("SMTP_Port", DataType.LONG))
-				.addColumn(new ColumnBuilder("SMTP_SSL", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("SMTP_StartTLS", DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldSchulnr, DataType.TEXT).setLengthInUnits(6))
+				.addColumn(new ColumnBuilder(fieldSchulformKrz, DataType.TEXT).setLengthInUnits(3))
+				.addColumn(new ColumnBuilder(fieldSchulformBez, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldBezeichnung1, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldBezeichnung2, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldBezeichnung3, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
+				.addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
+				.addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldBilingualSprachen, DataType.TEXT).setLengthInUnits(10))
+				.addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldBeratungslehrerEMail, DataType.TEXT).setLengthInUnits(100))
+				.addColumn(new ColumnBuilder(fieldZK_Beginn_GE, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
+				.addColumn(new ColumnBuilder(fieldZK_Beginn_SW, DataType.TEXT).setLengthInUnits(2).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'Q3'"))
+				.addColumn(new ColumnBuilder(fieldAusdruckAlleFaecher, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldBeratungshalbjahr, DataType.TEXT).setLengthInUnits(5).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'EF.1'"))
+				.addColumn(new ColumnBuilder(fieldBeratungsText, DataType.MEMO).setLengthInUnits(16777216))
+				.addColumn(new ColumnBuilder(fieldMailText, DataType.MEMO).setLengthInUnits(16777216))
+				.addColumn(new ColumnBuilder(fieldMailTextBoegen, DataType.MEMO).setLengthInUnits(16777216))
+				.addColumn(new ColumnBuilder(fieldFS_NurMitSF, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldKomprimieren, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldAenderungenErlauben, DataType.TEXT).setLengthInUnits(6))
+				.addColumn(new ColumnBuilder(fieldAutoPruefModus, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldDauerUnterrichtseinheit, DataType.LONG))
+				.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
+				.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
+				.addColumn(new ColumnBuilder(fieldSMTP_Server, DataType.TEXT).setLengthInUnits(255))
+				.addColumn(new ColumnBuilder(fieldSMTP_Port, DataType.LONG))
+				.addColumn(new ColumnBuilder(fieldSMTP_SSL, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldSMTP_StartTLS, DataType.TEXT).setLengthInUnits(1))
 			    .toTable(db);
 
 			for (final ABPSchuldaten zuordnung: list) {
@@ -245,15 +280,15 @@ public final class ABPSchuldaten {
 					zuordnung.BeratungslehrerEMail,
 					(!zuordnung.ZusatzkursGeschichteVorhanden) ? "N" : zuordnung.ZusatzkursGeschichteBeginn.kuerzelAlt,
 					(!zuordnung.ZusatzkursSoWiVorhanden) ? "N" : zuordnung.ZusatzkursSoWiBeginn.kuerzelAlt,
-					zuordnung.AusdruckAlleFaecher ? "J" : "N",
+					toStringJN(zuordnung.AusdruckAlleFaecher),
 					zuordnung.Beratungshalbjahr,
 					zuordnung.BeratungsText,
 					zuordnung.MailText,
 					zuordnung.MailTextBoegen,
 					zuordnung.FS_NurMitSF,
-					zuordnung.Komprimieren == null ? null : (zuordnung.Komprimieren ? "J" : "N"),
+					zuordnung.Komprimieren == null ? null : toStringJN(zuordnung.Komprimieren),
 					zuordnung.AenderungenErlauben,
-					zuordnung.AutoPruefModus ? "J" : "N",
+					toStringJN(zuordnung.AutoPruefModus),
 					zuordnung.DauerUnterrichtseinheit,
 					zuordnung.SMTP_User,
 					zuordnung.SMTP_Password,

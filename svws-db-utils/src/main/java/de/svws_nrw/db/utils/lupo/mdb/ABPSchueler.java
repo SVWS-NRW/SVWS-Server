@@ -128,10 +128,10 @@ public final class ABPSchueler {
 	/** Die Anzahl der Kurse in der Summe */
 	public String AnzK_Summe = null;
 
-	/** TODO: Klären */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht mehr genutzt */
 	public String PruefPhase = null;
 
-	/** TODO: Klären */
+	/** Deprecated: Wird in der aktuellen Laufbahnplanung nicht mehr genutzt */
 	public LocalDateTime Zeitstempel = null;
 
 	/** Die Gliederung */
@@ -156,6 +156,48 @@ public final class ABPSchueler {
 	public Boolean FS2_SekI_manuell = null;
 
 
+    private static final String fieldID = "ID";
+    private static final String fieldSchild_ID = "Schild_ID";
+    private static final String fieldGU_ID = "GU_ID";
+    private static final String fieldName = "Name";
+    private static final String fieldVorname = "Vorname";
+    private static final String fieldGeburtsdatum = "Geburtsdatum";
+    private static final String fieldGeschlecht = "Geschlecht";
+    private static final String fieldDatumBeratung = "DatumBeratung";
+    private static final String fieldDatumRuecklauf = "DatumRuecklauf";
+    private static final String fieldKlasse = "Klasse";
+    private static final String fieldSPP = "SPP";
+    private static final String fieldBilingual = "Bilingual";
+    private static final String fieldLatein = "Latein";
+    private static final String fieldSportattest = "Sportattest";
+    private static final String fieldKommentar = "Kommentar";
+    private static final String fieldPruefOrdnung = "PruefOrdnung";
+    private static final String fieldEmail = "Email";
+    private static final String fieldBeratungslehrer = "Beratungslehrer";
+    private static final String fieldAnzK_E1 = "AnzK_E1";
+    private static final String fieldAnzK_E2 = "AnzK_E2";
+    private static final String fieldAnzK_Q1 = "AnzK_Q1";
+    private static final String fieldAnzK_Q2 = "AnzK_Q2";
+    private static final String fieldAnzK_Q3 = "AnzK_Q3";
+    private static final String fieldAnzK_Q4 = "AnzK_Q4";
+    private static final String fieldAnzS_E1 = "AnzS_E1";
+    private static final String fieldAnzS_E2 = "AnzS_E2";
+    private static final String fieldAnzS_Q1 = "AnzS_Q1";
+    private static final String fieldAnzS_Q2 = "AnzS_Q2";
+    private static final String fieldAnzS_Q3 = "AnzS_Q3";
+    private static final String fieldAnzS_Q4 = "AnzS_Q4";
+    private static final String fieldAnzS_Summe = "AnzS_Summe";
+    private static final String fieldAnzK_Summe = "AnzK_Summe";
+    private static final String fieldPruefPhase = "PruefPhase";
+    private static final String fieldZeitstempel = "Zeitstempel";
+    private static final String fieldGliederung = "Gliederung";
+    private static final String fieldKonfession = "Konfession";
+    private static final String fieldEinsprachler_S1 = "Einsprachler_S1";
+    private static final String fieldBLL_Art = "BLL_Art";
+    private static final String fieldZulassung = "Zulassung";
+    private static final String fieldBLL_Punkte = "BLL_Punkte";
+    private static final String fieldFS2_SekI_manuell = "FS2_SekI_manuell";
+
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schueler" aus der LuPO-Datei ein.
@@ -170,53 +212,61 @@ public final class ABPSchueler {
 			final Table table = db.getTable("ABP_Schueler");
 			for (final Row r : table) {
 				final ABPSchueler schueler = new ABPSchueler();
-				schueler.ID = r.getInt("ID");
-				schueler.Schild_ID = r.getInt("Schild_ID");
-				schueler.GU_ID = r.getString("GU_ID");
-				schueler.Name = r.getString("Name");
-				schueler.Vorname = r.getString("Vorname");
-				schueler.Geburtsdatum = r.getLocalDateTime("Geburtsdatum");
-				schueler.geschlecht = (r.getByte("Geschlecht") == null) ? Geschlecht.X.id : Geschlecht.fromValue(r.getByte("Geschlecht") == null ? null : (int) r.getByte("Geschlecht")).id;
-				schueler.DatumBeratung = r.getLocalDateTime("DatumBeratung");
-				schueler.DatumRuecklauf = r.getLocalDateTime("DatumRuecklauf");
-				schueler.Klasse = r.getString("Klasse");
-				schueler.SPP = "J".equals(r.getString("SPP"));
-				schueler.Bilingual = r.getString("Bilingual");
-				schueler.Latein = "J".equals(r.getString("Latein"));
-				schueler.Sportattest = r.getString("Sportattest");
-				schueler.Kommentar = r.getString("Kommentar");
-				schueler.PruefOrdnung = r.getString("PruefOrdnung");
-				schueler.Email = r.getString("Email");
-				schueler.Beratungslehrer = r.getString("Beratungslehrer");
-				schueler.AnzK_E1 = r.getInt("AnzK_E1");
-				schueler.AnzK_E2 = r.getInt("AnzK_E1");
-				schueler.AnzK_Q1 = r.getInt("AnzK_Q2");
-				schueler.AnzK_Q2 = r.getInt("AnzK_Q2");
-				schueler.AnzK_Q3 = r.getInt("AnzK_Q3");
-				schueler.AnzK_Q4 = r.getInt("AnzK_Q4");
-				schueler.AnzS_E1 = r.getInt("AnzS_E1");
-				schueler.AnzS_E2 = r.getInt("AnzS_E2");
-				schueler.AnzS_Q1 = r.getInt("AnzS_Q1");
-				schueler.AnzS_Q2 = r.getInt("AnzS_Q2");
-				schueler.AnzS_Q3 = r.getInt("AnzS_Q3");
-				schueler.AnzS_Q4 = r.getInt("AnzS_Q4");
-				schueler.AnzS_Summe = r.getString("AnzS_Summe");
-				schueler.AnzK_Summe = r.getString("AnzK_Summe");
-				schueler.PruefPhase = r.getString("PruefPhase");
-				schueler.Zeitstempel = r.getLocalDateTime("Zeitstempel");
-				schueler.Gliederung = r.getString("Gliederung");
-				schueler.Konfession = r.getString("Konfession");
-				schueler.Einsprachler_S1 = r.getString("Einsprachler_S1") == null ? null : "J".equals(r.getString("Einsprachler_S1"));
-				schueler.BLL_Art = r.getString("BLL_Art");
-				schueler.Zulassung = r.getString("Zulassung") == null ? null : "J".equals(r.getString("Zulassung"));
-				schueler.BLL_Punkte = r.getInt("BLL_Punkte");
-				schueler.FS2_SekI_manuell = r.getString("FS2_SekI_manuell") == null ? null : "J".equals(r.getString("FS2_SekI_manuell"));
+				schueler.ID = r.getInt(fieldID);
+				schueler.Schild_ID = r.getInt(fieldSchild_ID);
+				schueler.GU_ID = r.getString(fieldGU_ID);
+				schueler.Name = r.getString(fieldName);
+				schueler.Vorname = r.getString(fieldVorname);
+				schueler.Geburtsdatum = r.getLocalDateTime(fieldGeburtsdatum);
+				if (r.getByte(fieldGeschlecht) == null)
+					schueler.geschlecht = Geschlecht.X.id;
+				else
+					schueler.geschlecht = Geschlecht.fromValue((int) r.getByte(fieldGeschlecht)).id;
+				schueler.DatumBeratung = r.getLocalDateTime(fieldDatumBeratung);
+				schueler.DatumRuecklauf = r.getLocalDateTime(fieldDatumRuecklauf);
+				schueler.Klasse = r.getString(fieldKlasse);
+				schueler.SPP = "J".equals(r.getString(fieldSPP));
+				schueler.Bilingual = r.getString(fieldBilingual);
+				schueler.Latein = "J".equals(r.getString(fieldLatein));
+				schueler.Sportattest = r.getString(fieldSportattest);
+				schueler.Kommentar = r.getString(fieldKommentar);
+				schueler.PruefOrdnung = r.getString(fieldPruefOrdnung);
+				schueler.Email = r.getString(fieldEmail);
+				schueler.Beratungslehrer = r.getString(fieldBeratungslehrer);
+				schueler.AnzK_E1 = r.getInt(fieldAnzK_E1);
+				schueler.AnzK_E2 = r.getInt(fieldAnzK_E2);
+				schueler.AnzK_Q1 = r.getInt(fieldAnzK_Q1);
+				schueler.AnzK_Q2 = r.getInt(fieldAnzK_Q2);
+				schueler.AnzK_Q3 = r.getInt(fieldAnzK_Q3);
+				schueler.AnzK_Q4 = r.getInt(fieldAnzK_Q4);
+				schueler.AnzS_E1 = r.getInt(fieldAnzS_E1);
+				schueler.AnzS_E2 = r.getInt(fieldAnzS_E2);
+				schueler.AnzS_Q1 = r.getInt(fieldAnzS_Q1);
+				schueler.AnzS_Q2 = r.getInt(fieldAnzS_Q2);
+				schueler.AnzS_Q3 = r.getInt(fieldAnzS_Q3);
+				schueler.AnzS_Q4 = r.getInt(fieldAnzS_Q4);
+				schueler.AnzS_Summe = r.getString(fieldAnzS_Summe);
+				schueler.AnzK_Summe = r.getString(fieldAnzK_Summe);
+				schueler.PruefPhase = r.getString(fieldPruefPhase);
+				schueler.Zeitstempel = r.getLocalDateTime(fieldZeitstempel);
+				schueler.Gliederung = r.getString(fieldGliederung);
+				schueler.Konfession = r.getString(fieldKonfession);
+				schueler.Einsprachler_S1 = r.getString(fieldEinsprachler_S1) == null ? null : "J".equals(r.getString(fieldEinsprachler_S1));
+				schueler.BLL_Art = r.getString(fieldBLL_Art);
+				schueler.Zulassung = r.getString(fieldZulassung) == null ? null : "J".equals(r.getString(fieldZulassung));
+				schueler.BLL_Punkte = r.getInt(fieldBLL_Punkte);
+				schueler.FS2_SekI_manuell = r.getString(fieldFS2_SekI_manuell) == null ? null : "J".equals(r.getString(fieldFS2_SekI_manuell));
 				liste.add(schueler);
 			}
 			return liste;
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			return Collections.emptyList();
 		}
+	}
+
+
+	private static String toStringJN(final boolean value) {
+		return value ? "J" : "N";
 	}
 
 
@@ -229,48 +279,48 @@ public final class ABPSchueler {
 	public static void write(final Database db, final List<ABPSchueler> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Schueler")
-			     .addColumn(new ColumnBuilder("ID", DataType.LONG))
-			     .addColumn(new ColumnBuilder("Schild_ID", DataType.LONG))
-			     .addColumn(new ColumnBuilder("GU_ID", DataType.TEXT).setLengthInUnits(40))
-			     .addColumn(new ColumnBuilder("Name", DataType.TEXT).setLengthInUnits(50))
-			     .addColumn(new ColumnBuilder("Vorname", DataType.TEXT).setLengthInUnits(50))
-			     .addColumn(new ColumnBuilder("Geburtsdatum", DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder("Geschlecht", DataType.INT).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
-				 .addColumn(new ColumnBuilder("DatumBeratung", DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder("DatumRuecklauf", DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder("Klasse", DataType.TEXT).setLengthInUnits(15))
-				 .addColumn(new ColumnBuilder("SPP", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Bilingual", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Latein", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Sportattest", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Kommentar", DataType.MEMO).setLengthInUnits(16777216))
-				 .addColumn(new ColumnBuilder("PruefOrdnung", DataType.TEXT).setLengthInUnits(20))
-				 .addColumn(new ColumnBuilder("Email", DataType.TEXT).setLengthInUnits(100))
-				 .addColumn(new ColumnBuilder("Beratungslehrer", DataType.TEXT).setLengthInUnits(50))
-				 .addColumn(new ColumnBuilder("AnzK_E1", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzK_E2", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzK_Q1", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzK_Q2", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzK_Q3", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzK_Q4", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_E1", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_E2", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_Q1", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_Q2", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_Q3", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_Q4", DataType.LONG))
-				 .addColumn(new ColumnBuilder("AnzS_Summe", DataType.TEXT).setLengthInUnits(5))
-				 .addColumn(new ColumnBuilder("AnzK_Summe", DataType.TEXT).setLengthInUnits(5))
-				 .addColumn(new ColumnBuilder("PruefPhase", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Zeitstempel", DataType.SHORT_DATE_TIME))
-				 .addColumn(new ColumnBuilder("Gliederung", DataType.TEXT).setLengthInUnits(3))
-				 .addColumn(new ColumnBuilder("Konfession", DataType.TEXT).setLengthInUnits(2))
-				 .addColumn(new ColumnBuilder("Einsprachler_S1", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("BLL_Art", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("Zulassung", DataType.TEXT).setLengthInUnits(1))
-				 .addColumn(new ColumnBuilder("BLL_Punkte", DataType.LONG))
-				 .addColumn(new ColumnBuilder("FS2_SekI_manuell", DataType.TEXT).setLengthInUnits(1))
-			     .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns("ID").setPrimaryKey())
+			     .addColumn(new ColumnBuilder(fieldID, DataType.LONG))
+			     .addColumn(new ColumnBuilder(fieldSchild_ID, DataType.LONG))
+			     .addColumn(new ColumnBuilder(fieldGU_ID, DataType.TEXT).setLengthInUnits(40))
+			     .addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
+			     .addColumn(new ColumnBuilder(fieldVorname, DataType.TEXT).setLengthInUnits(50))
+			     .addColumn(new ColumnBuilder(fieldGeburtsdatum, DataType.SHORT_DATE_TIME))
+				 .addColumn(new ColumnBuilder(fieldGeschlecht, DataType.INT).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "4"))
+				 .addColumn(new ColumnBuilder(fieldDatumBeratung, DataType.SHORT_DATE_TIME))
+				 .addColumn(new ColumnBuilder(fieldDatumRuecklauf, DataType.SHORT_DATE_TIME))
+				 .addColumn(new ColumnBuilder(fieldKlasse, DataType.TEXT).setLengthInUnits(15))
+				 .addColumn(new ColumnBuilder(fieldSPP, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldBilingual, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldLatein, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldSportattest, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldKommentar, DataType.MEMO).setLengthInUnits(16777216))
+				 .addColumn(new ColumnBuilder(fieldPruefOrdnung, DataType.TEXT).setLengthInUnits(20))
+				 .addColumn(new ColumnBuilder(fieldEmail, DataType.TEXT).setLengthInUnits(100))
+				 .addColumn(new ColumnBuilder(fieldBeratungslehrer, DataType.TEXT).setLengthInUnits(50))
+				 .addColumn(new ColumnBuilder(fieldAnzK_E1, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzK_E2, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzK_Q1, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzK_Q2, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzK_Q3, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzK_Q4, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_E1, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_E2, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_Q1, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_Q2, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_Q3, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_Q4, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldAnzS_Summe, DataType.TEXT).setLengthInUnits(5))
+				 .addColumn(new ColumnBuilder(fieldAnzK_Summe, DataType.TEXT).setLengthInUnits(5))
+				 .addColumn(new ColumnBuilder(fieldPruefPhase, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldZeitstempel, DataType.SHORT_DATE_TIME))
+				 .addColumn(new ColumnBuilder(fieldGliederung, DataType.TEXT).setLengthInUnits(3))
+				 .addColumn(new ColumnBuilder(fieldKonfession, DataType.TEXT).setLengthInUnits(2))
+				 .addColumn(new ColumnBuilder(fieldEinsprachler_S1, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldBLL_Art, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldZulassung, DataType.TEXT).setLengthInUnits(1))
+				 .addColumn(new ColumnBuilder(fieldBLL_Punkte, DataType.LONG))
+				 .addColumn(new ColumnBuilder(fieldFS2_SekI_manuell, DataType.TEXT).setLengthInUnits(1))
+			     .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldID).setPrimaryKey())
 			     .toTable(db);
 			for (final ABPSchueler schueler: list) {
 				table.addRow(
@@ -284,9 +334,9 @@ public final class ABPSchueler {
 					schueler.DatumBeratung,
 					schueler.DatumRuecklauf,
 					schueler.Klasse,
-					schueler.SPP ? "J" : "N",
+					toStringJN(schueler.SPP),
 					schueler.Bilingual,
-					schueler.Latein ? "J" : "N",
+					toStringJN(schueler.Latein),
 					schueler.Sportattest,
 					schueler.Kommentar,
 					schueler.PruefOrdnung,
@@ -310,11 +360,11 @@ public final class ABPSchueler {
 					schueler.Zeitstempel,
 					schueler.Gliederung,
 					schueler.Konfession,
-					schueler.Einsprachler_S1 == null ? null : (schueler.Einsprachler_S1 ? "J" : "N"),
+					schueler.Einsprachler_S1 == null ? null : toStringJN(schueler.Einsprachler_S1),
 					schueler.BLL_Art,
-					schueler.Zulassung == null ? null : (schueler.Zulassung ? "J" : "N"),
+					schueler.Zulassung == null ? null : toStringJN(schueler.Zulassung),
 					schueler.BLL_Punkte,
-					schueler.FS2_SekI_manuell == null ? null : (schueler.FS2_SekI_manuell ? "J" : "N")
+					schueler.FS2_SekI_manuell == null ? null : toStringJN(schueler.FS2_SekI_manuell)
 				);
 			}
 		} catch (final IOException e) {
@@ -329,8 +379,7 @@ public final class ABPSchueler {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchueler
 	 */
 	public static List<ABPSchueler> getDefault() {
-		final List<ABPSchueler> schuelerliste = new ArrayList<>();
-		return schuelerliste;
+		return new ArrayList<>();
 	}
 
 
@@ -373,7 +422,7 @@ public final class ABPSchueler {
 				eintrag.DatumBeratung = (lupoSchueler.DatumBeratung == null) ? null : LocalDateTime.parse(lupoSchueler.DatumBeratung);
 				eintrag.DatumRuecklauf = (lupoSchueler.DatumRuecklauf == null) ? null : LocalDateTime.parse(lupoSchueler.DatumRuecklauf);
 				eintrag.SPP = false; // TODO Bestimme über: SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten()), Problem SprachDatenManager nuss zuvor geladen werden...
-				eintrag.Sportattest = lupoSchueler.HatSportattest == null ? null : lupoSchueler.HatSportattest ? "J" : "N";
+				eintrag.Sportattest = lupoSchueler.HatSportattest == null ? null : toStringJN(lupoSchueler.HatSportattest);
 				eintrag.Kommentar = lupoSchueler.Kommentar;
 				final DTOLehrer beratungslehrer = mapLehrer.get(lupoSchueler.Beratungslehrer_ID);
 				eintrag.Beratungslehrer = beratungslehrer == null ? null : (beratungslehrer.Nachname + ", " + beratungslehrer.Vorname);

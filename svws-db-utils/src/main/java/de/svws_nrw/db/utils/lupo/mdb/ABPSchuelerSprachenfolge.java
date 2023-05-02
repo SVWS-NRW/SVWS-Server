@@ -45,6 +45,16 @@ public final class ABPSchuelerSprachenfolge {
 	public String StatistikKrz = null;
 
 
+	private static final String fieldSchueler_ID = "Schueler_ID";
+	private static final String fieldFachKrz = "FachKrz";
+	private static final String fieldJahrgangVon = "JahrgangVon";
+	private static final String fieldJahrgangBis = "JahrgangBis";
+	private static final String fieldReihenfolge = "Reihenfolge";
+	private static final String fieldAbschnittVon = "AbschnittVon";
+	private static final String fieldAbschnittBis = "AbschnittBis";
+	private static final String fieldStatistikKrz = "StatistikKrz";
+
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerSprachenfolge" aus der LuPO-Datei ein.
 	 *
@@ -58,14 +68,14 @@ public final class ABPSchuelerSprachenfolge {
 			final Table table = db.getTable("ABP_SchuelerSprachenfolge");
 			for (final Row r : table) {
 				final ABPSchuelerSprachenfolge zuordnung = new ABPSchuelerSprachenfolge();
-				zuordnung.Schueler_ID = r.getInt("Schueler_ID");
-				zuordnung.FachKrz = r.getString("FachKrz");
-				zuordnung.JahrgangVon = r.getShort("JahrgangVon");
-				zuordnung.JahrgangBis = r.getShort("JahrgangBis");
-				zuordnung.Reihenfolge = r.getString("Reihenfolge");
-				zuordnung.AbschnittVon = r.getShort("AbschnittVon");
-				zuordnung.AbschnittBis = r.getShort("AbschnittBis");
-				zuordnung.StatistikKrz = r.getString("StatistikKrz");
+				zuordnung.Schueler_ID = r.getInt(fieldSchueler_ID);
+				zuordnung.FachKrz = r.getString(fieldFachKrz);
+				zuordnung.JahrgangVon = r.getShort(fieldJahrgangVon);
+				zuordnung.JahrgangBis = r.getShort(fieldJahrgangBis);
+				zuordnung.Reihenfolge = r.getString(fieldReihenfolge);
+				zuordnung.AbschnittVon = r.getShort(fieldAbschnittVon);
+				zuordnung.AbschnittBis = r.getShort(fieldAbschnittBis);
+				zuordnung.StatistikKrz = r.getString(fieldStatistikKrz);
 				liste.add(zuordnung);
 			}
 			return liste;
@@ -84,15 +94,15 @@ public final class ABPSchuelerSprachenfolge {
 	public static void write(final Database db, final List<ABPSchuelerSprachenfolge> list) {
 		try {
 			final Table table = new TableBuilder("ABP_SchuelerSprachenfolge")
-				.addColumn(new ColumnBuilder("Schueler_ID", DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-				.addColumn(new ColumnBuilder("FachKrz", DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
-				.addColumn(new ColumnBuilder("JahrgangVon", DataType.INT))
-				.addColumn(new ColumnBuilder("JahrgangBis", DataType.INT))
-				.addColumn(new ColumnBuilder("Reihenfolge", DataType.TEXT).setLengthInUnits(1))
-				.addColumn(new ColumnBuilder("AbschnittVon", DataType.INT))
-				.addColumn(new ColumnBuilder("AbschnittBis", DataType.INT))
-				.addColumn(new ColumnBuilder("StatistikKrz", DataType.TEXT).setLengthInUnits(2))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns("Schueler_ID", "FachKrz").setPrimaryKey())
+				.addColumn(new ColumnBuilder(fieldSchueler_ID, DataType.LONG).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
+				.addColumn(new ColumnBuilder(fieldFachKrz, DataType.TEXT).setLengthInUnits(20).putProperty(PropertyMap.REQUIRED_PROP, DataType.BOOLEAN, true))
+				.addColumn(new ColumnBuilder(fieldJahrgangVon, DataType.INT))
+				.addColumn(new ColumnBuilder(fieldJahrgangBis, DataType.INT))
+				.addColumn(new ColumnBuilder(fieldReihenfolge, DataType.TEXT).setLengthInUnits(1))
+				.addColumn(new ColumnBuilder(fieldAbschnittVon, DataType.INT))
+				.addColumn(new ColumnBuilder(fieldAbschnittBis, DataType.INT))
+				.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).setLengthInUnits(2))
+			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldSchueler_ID, fieldFachKrz).setPrimaryKey())
 			    .toTable(db);
 			if (list == null)
 				return;
@@ -120,8 +130,7 @@ public final class ABPSchuelerSprachenfolge {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerSprachenfolge
 	 */
 	public static List<ABPSchuelerSprachenfolge> getDefault() {
-		final List<ABPSchuelerSprachenfolge> sprachenfolgen = new ArrayList<>();
-		return sprachenfolgen;
+		return new ArrayList<>();
 	}
 
 

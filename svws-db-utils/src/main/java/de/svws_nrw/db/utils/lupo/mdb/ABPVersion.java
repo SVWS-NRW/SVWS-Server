@@ -19,7 +19,7 @@ import com.healthmarketscience.jackcess.TableBuilder;
 public final class ABPVersion {
 
 	/** Die Version der LuPO-MDB als Datum in der Form yyyyMMdd */
-	public String Version = "20210307"; // versionDateFormatter.format(LocalDate.now());
+	public String Version = "20210307";
 
 
 	/**

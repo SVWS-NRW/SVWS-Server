@@ -35,6 +35,13 @@ public final class ABPLehrer {
 	public String SMTP_Password = null;
 
 
+	private static final String fieldName = "Name";
+	private static final String fieldEMail = "EMail";
+	private static final String fieldKennwort = "Kennwort";
+	private static final String fieldSMTP_User = "SMTP_User";
+	private static final String fieldSMTP_Password = "SMTP_Password";
+
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Lehrer" aus der LuPO-Datei ein.
 	 *
@@ -48,11 +55,11 @@ public final class ABPLehrer {
 			final Table table = db.getTable("ABP_Lehrer");
 			for (final Row r : table) {
 				final ABPLehrer zuordnung = new ABPLehrer();
-				zuordnung.Name = r.getString("Name");
-				zuordnung.EMail = r.getString("EMail");
-				zuordnung.Kennwort = r.getString("Kennwort");
-				zuordnung.SMTP_User = r.getString("SMTP_User");
-				zuordnung.SMTP_Password = r.getString("SMTP_Password");
+				zuordnung.Name = r.getString(fieldName);
+				zuordnung.EMail = r.getString(fieldEMail);
+				zuordnung.Kennwort = r.getString(fieldKennwort);
+				zuordnung.SMTP_User = r.getString(fieldSMTP_User);
+				zuordnung.SMTP_Password = r.getString(fieldSMTP_Password);
 				liste.add(zuordnung);
 			}
 			return liste;
@@ -71,12 +78,12 @@ public final class ABPLehrer {
 	public static void write(final Database db, final List<ABPLehrer> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Lehrer")
-				.addColumn(new ColumnBuilder("Name", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("EMail", DataType.TEXT).setLengthInUnits(100))
-				.addColumn(new ColumnBuilder("Kennwort", DataType.TEXT).setLengthInUnits(20))
-				.addColumn(new ColumnBuilder("SMTP_User", DataType.TEXT).setLengthInUnits(255))
-				.addColumn(new ColumnBuilder("SMTP_Password", DataType.TEXT).setLengthInUnits(255))
-			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns("Name").setPrimaryKey())
+				.addColumn(new ColumnBuilder(fieldName, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldEMail, DataType.TEXT).setLengthInUnits(100))
+				.addColumn(new ColumnBuilder(fieldKennwort, DataType.TEXT).setLengthInUnits(20))
+				.addColumn(new ColumnBuilder(fieldSMTP_User, DataType.TEXT).setLengthInUnits(255))
+				.addColumn(new ColumnBuilder(fieldSMTP_Password, DataType.TEXT).setLengthInUnits(255))
+			    .addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).addColumns(fieldName).setPrimaryKey())
 			    .toTable(db);
 			for (final ABPLehrer zuordnung: list) {
 				table.addRow(
@@ -99,8 +106,7 @@ public final class ABPLehrer {
 	 * @return der Standard-Eintrag für die Tabelle ABPLehrer
 	 */
 	public static List<ABPLehrer> getDefault() {
-		final List<ABPLehrer> lehrer = new ArrayList<>();
-		return lehrer;
+		return new ArrayList<>();
 	}
 
 

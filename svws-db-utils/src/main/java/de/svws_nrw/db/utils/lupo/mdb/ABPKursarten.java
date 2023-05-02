@@ -48,6 +48,17 @@ public final class ABPKursarten {
 	@JsonProperty public int Sortierung = 32000;
 
 
+	private static final String fieldKursart = "Kursart";
+	private static final String fieldKlartext = "Klartext";
+	private static final String fieldE1 = "E1";
+	private static final String fieldE2 = "E2";
+	private static final String fieldQ1 = "Q1";
+	private static final String fieldQ2 = "Q2";
+	private static final String fieldQ3 = "Q3";
+	private static final String fieldQ4 = "Q4";
+	private static final String fieldSortierung = "Sortierung";
+
+
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Kursarten" aus der LuPO-Datei ein.
 	 *
@@ -61,15 +72,15 @@ public final class ABPKursarten {
 			final Table table = db.getTable("ABP_Kursarten");
 			for (final Row r : table) {
 				final ABPKursarten zuordnung = new ABPKursarten();
-				zuordnung.Kursart = r.getString("Kursart");
-				zuordnung.Klartext = r.getString("Klartext");
-				zuordnung.E1 = "J".equals(r.getString("E1"));
-				zuordnung.E2 = "J".equals(r.getString("E2"));
-				zuordnung.Q1 = "J".equals(r.getString("Q1"));
-				zuordnung.Q2 = "J".equals(r.getString("Q2"));
-				zuordnung.Q3 = "J".equals(r.getString("Q3"));
-				zuordnung.Q4 = "J".equals(r.getString("Q4"));
-				zuordnung.Sortierung = (r.getInt("Sortierung") == null) ? 32000 : r.getInt("Sortierung");
+				zuordnung.Kursart = r.getString(fieldKursart);
+				zuordnung.Klartext = r.getString(fieldKlartext);
+				zuordnung.E1 = "J".equals(r.getString(fieldE1));
+				zuordnung.E2 = "J".equals(r.getString(fieldE2));
+				zuordnung.Q1 = "J".equals(r.getString(fieldQ1));
+				zuordnung.Q2 = "J".equals(r.getString(fieldQ2));
+				zuordnung.Q3 = "J".equals(r.getString(fieldQ3));
+				zuordnung.Q4 = "J".equals(r.getString(fieldQ4));
+				zuordnung.Sortierung = (r.getInt(fieldSortierung) == null) ? 32000 : r.getInt(fieldSortierung);
 				liste.add(zuordnung);
 			}
 			return liste;
@@ -88,15 +99,15 @@ public final class ABPKursarten {
 	public static void write(final Database db, final List<ABPKursarten> list) {
 		try {
 			final Table table = new TableBuilder("ABP_Kursarten")
-				.addColumn(new ColumnBuilder("Kursart", DataType.TEXT).setLengthInUnits(5))
-				.addColumn(new ColumnBuilder("Klartext", DataType.TEXT).setLengthInUnits(50))
-				.addColumn(new ColumnBuilder("E1", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("E2", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Q1", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Q2", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Q3", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldKursart, DataType.TEXT).setLengthInUnits(5))
+				.addColumn(new ColumnBuilder(fieldKlartext, DataType.TEXT).setLengthInUnits(50))
+				.addColumn(new ColumnBuilder(fieldE1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldE2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldQ1, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldQ2, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
+				.addColumn(new ColumnBuilder(fieldQ3, DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
 				.addColumn(new ColumnBuilder("Q4", DataType.TEXT).setLengthInUnits(1).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "'J'"))
-				.addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
+				.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG))
 			    .toTable(db);
 			for (final ABPKursarten zuordnung: list) {
 				table.addRow(
