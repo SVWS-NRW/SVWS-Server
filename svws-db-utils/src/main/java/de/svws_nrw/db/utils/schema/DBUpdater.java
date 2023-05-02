@@ -2,7 +2,6 @@ package de.svws_nrw.db.utils.schema;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
@@ -283,7 +282,7 @@ public class DBUpdater {
 			final List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
 					.flatMap(tab -> tab.trigger().stream())
 					.filter(trig -> trig.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			if ((trigger == null) || (trigger.size() <= 0)) {
 				logger.logLn(0, "0 Trigger");
 				return true;
@@ -322,7 +321,7 @@ public class DBUpdater {
 			final List<SchemaTabelleIndex> indizesVeraltet = Schema.tabellen.values().stream()
 					.flatMap(tab -> tab.indizes().stream())
 					.filter(idx -> idx.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			if ((indizesVeraltet == null) || (indizesVeraltet.size() <= 0)) {
 				logger.logLn(0, "0 Indizes");
 				return true;
@@ -364,7 +363,7 @@ public class DBUpdater {
 			final List<SchemaTabelleUniqueIndex> ucs = Schema.tabellen.values().stream()
 					.flatMap(tab -> tab.unique().stream())
 					.filter(uc -> uc.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			if ((ucs == null) || (ucs.size() <= 0)) {
 				logger.logLn(0, "0 Unique-Constraints");
 				return true;
@@ -406,7 +405,7 @@ public class DBUpdater {
 			final List<SchemaTabelleFremdschluessel> fks = Schema.tabellen.values().stream()
 					.flatMap(tab -> tab.fremdschluessel().stream())
 					.filter(fk -> fk.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			if ((fks == null) || (fks.size() <= 0)) {
 				logger.logLn(0, "0 Fremdschlüssel");
 				return true;
@@ -451,7 +450,7 @@ public class DBUpdater {
 					.filter(tab -> tab.veraltet().revision != veraltet)
 					.flatMap(tab -> tab.getSpalten().stream())
 					.filter(col -> col.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			if ((cols == null) || (cols.size() <= 0)) {
 				logger.logLn(0, "0 Spalten");
 				return true;
@@ -492,7 +491,7 @@ public class DBUpdater {
 			logger.log("- Verwerfe: ");
 			final List<SchemaTabelle> tabs = Schema.getTabellen(veraltet - 1).stream()
 					.filter(tab -> tab.veraltet().revision == veraltet)
-					.collect(Collectors.toList());
+					.toList();
 			Collections.reverse(tabs);
 			if ((tabs == null) || (tabs.size() <= 0)) {
 				logger.logLn(0, "0 Tabellen");
@@ -567,7 +566,7 @@ public class DBUpdater {
 				logger.logLn(0, "Fehler: Eine Aktualisierung auf Revision 0 ergibt keinen Sinn, weshalb keine Tabellen erstellt werden.");
 				return false;
 			}
-			final List<SchemaTabelle> tabs = Schema.getTabellen(revision).stream().filter(tab -> tab.revision().revision == revision).collect(Collectors.toList());
+			final List<SchemaTabelle> tabs = Schema.getTabellen(revision).stream().filter(tab -> tab.revision().revision == revision).toList();
 			if ((tabs == null) || (tabs.size() <= 0)) {
 				logger.logLn(0, "0 Tabellen");
 				return true;
@@ -661,7 +660,7 @@ public class DBUpdater {
 					.filter(tab -> tab.revision().revision < revision)
 					.flatMap(tab -> tab.getSpalten().stream())
 					.filter(col -> col.revision().revision == revision)
-					.collect(Collectors.toList());
+					.toList();
 			if ((cols == null) || (cols.size() <= 0)) {
 				logger.logLn(0, "0 Spalten");
 				return true;
@@ -704,7 +703,7 @@ public class DBUpdater {
 					.filter(tab -> tab.revision().revision < revision)
 					.flatMap(tab -> tab.fremdschluessel().stream())
 					.filter(fk -> fk.revision().revision == revision)
-					.collect(Collectors.toList());
+					.toList();
 			if ((fks == null) || (fks.size() <= 0)) {
 				logger.logLn(0, "0 Fremdschlüssel");
 				return true;
@@ -747,7 +746,7 @@ public class DBUpdater {
 					.filter(tab -> tab.revision().revision < revision)
 					.flatMap(tab -> tab.unique().stream())
 					.filter(uc -> uc.revision().revision == revision)
-					.collect(Collectors.toList());
+					.toList();
 			if ((ucs == null) || (ucs.size() <= 0)) {
 				logger.logLn(0, "0 Unique-Constraints");
 				return true;
@@ -790,7 +789,7 @@ public class DBUpdater {
 					.filter(tab -> tab.revision().revision < revision)
 					.flatMap(tab -> tab.indizes().stream())
 					.filter(idx -> idx.revision().revision == revision)
-					.collect(Collectors.toList());
+					.toList();
 			if ((indizes == null) || (indizes.size() <= 0)) {
 				logger.logLn(0, "0 Indizes");
 				return true;
@@ -889,7 +888,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.trigger().stream())
 					.filter(trig -> trig.dbms() == dbms)
 					.filter(trig -> trig.revision().revision == revision)
-					.collect(Collectors.toList());
+					.toList();
 			if ((trigger == null) || (trigger.size() <= 0)) {
 				logger.logLn(0, "0 Trigger");
 				return true;

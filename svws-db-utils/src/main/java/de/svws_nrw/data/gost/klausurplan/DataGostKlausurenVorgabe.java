@@ -1,11 +1,11 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,7 +74,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
 				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(v -> dtoMapper.apply(v))
 //				.filter(v -> quartal > 0 ? v.quartal == quartal : true)
-				.collect(Collectors.toList());
+				.toList();
 		if (vorgaben == null)
 			throw new NullPointerException();
 		if (vorgaben.isEmpty())
@@ -83,7 +83,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
 
 		final List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
-				vorgaben.stream().map(v -> v.idVorgabe).collect(Collectors.toList()), DTOGostKlausurenKursklausuren.class);
+				vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
 		final Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
 				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
 

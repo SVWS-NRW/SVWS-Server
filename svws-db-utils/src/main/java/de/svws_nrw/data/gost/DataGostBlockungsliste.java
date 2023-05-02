@@ -3,7 +3,6 @@ package de.svws_nrw.data.gost;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -56,7 +55,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	final var daten = blockungen.stream().map(dtoMapper).collect(Collectors.toList());
+    	final var daten = blockungen.stream().map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -76,7 +75,7 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
 		if (blockungen == null)
 			return OperationError.NOT_FOUND.getResponse();
-    	final var daten = blockungen.stream().map(dtoMapper).collect(Collectors.toList());
+    	final var daten = blockungen.stream().map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

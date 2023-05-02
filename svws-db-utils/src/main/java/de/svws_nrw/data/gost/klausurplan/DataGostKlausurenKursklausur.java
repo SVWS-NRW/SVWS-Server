@@ -1,11 +1,11 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -78,7 +78,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		}
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).collect(Collectors.toList()), DTOGostKlausurenSchuelerklausuren.class)
+				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).toList(), DTOGostKlausurenSchuelerklausuren.class)
 				.stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
 
 		if (mapSchuelerklausuren.isEmpty()) {
@@ -161,7 +161,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.istVideoNotwendig = v.istVideoNotwendig;
 		kk.startzeit = k.Startzeit;
 		if (sKlausuren != null)
-			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).collect(Collectors.toList());
+			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();
 		return kk;
 	};
 

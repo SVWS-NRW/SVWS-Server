@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.SchuelerStatus;
@@ -25,6 +22,9 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -109,7 +109,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Befüllen des Core-DTOs Schueler aus DTOSchueler
 	 */
-	public static Function<DTOSchueler, Schueler> mapToSchueler = (final DTOSchueler dto) -> {
+	public static final Function<DTOSchueler, Schueler> mapToSchueler = (final DTOSchueler dto) -> {
 		final Schueler schueler = new Schueler();
 		schueler.id = dto.ID;
 		schueler.nachname = dto.Nachname;
@@ -123,7 +123,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link SchuelerListeEintrag}.
 	 */
-	public static Comparator<SchuelerListeEintrag> dataComparator = (a, b) -> {
+	public static final Comparator<SchuelerListeEintrag> dataComparator = (a, b) -> {
 		if ((a.idKlasse == null) && (b.idKlasse != null))
 			return -1;
 		else if ((a.idKlasse != null) && (b.idKlasse == null))
@@ -162,8 +162,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 *  @param schuljahresabschnittsID   die ID des Schuljahrsabschnitts
 	 */
 	private void getSchuelerKurse(final List<SchuelerListeEintrag> schuelerListe, final Long schuljahresabschnittsID) {
-		if (schuelerListe.size() > 0) {
-			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).collect(Collectors.toList());
+		if (!schuelerListe.isEmpty()) {
+			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
 			Map<Long, List<DTOKursSchueler>> kursSchueler;
 			if (schuljahresabschnittsID == null) {
 				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids";
@@ -183,7 +183,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			}
 	    	for (final SchuelerListeEintrag eintrag : schuelerListe) {
 	    		final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
-	    		if ((kurs_schueler != null) && (kurs_schueler.size() > 0))
+	    		if ((kurs_schueler != null) && (!kurs_schueler.isEmpty()))
 	    			for (final DTOKursSchueler ks : kurs_schueler)
 	    				eintrag.kurse.add(ks.Kurs_ID);
 	    	}
@@ -215,7 +215,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	if (schueler == null)
     		throw OperationError.NOT_FOUND.exception();
     	// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
-    	final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).collect(Collectors.toList());
+    	final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
 		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte =
 			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr IS NULL",
 				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
@@ -227,7 +227,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
     		.map(s -> erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID)))
     		.sorted(dataComparator)
-	    	.collect(Collectors.toList());
+	    	.toList();
     	// Ermittle die Kurse, welche von den Schülern belegt wurden.
     	getSchuelerKurse(schuelerListe, abschnitt);
     	// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.

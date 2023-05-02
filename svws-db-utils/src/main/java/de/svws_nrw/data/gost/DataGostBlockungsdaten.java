@@ -112,7 +112,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		if (blockung == null)
 			throw OperationError.NOT_FOUND.exception("Blockung nicht gefunden.");
 		final List<DTOGostBlockungZwischenergebnis> ergebnisse = conn.queryNamed("DTOGostBlockungZwischenergebnis.blockung_id", blockung.ID, DTOGostBlockungZwischenergebnis.class);
-		if ((ergebnisse == null) || (ergebnisse.size() == 0))
+		if ((ergebnisse == null) || (ergebnisse.isEmpty()))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Kein Vorlage-Ergebnis für die Blockung in der Datenbank vorhanden.");
 		if (ergebnisse.size() > 1)
 			return null;
@@ -154,10 +154,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		// Kurs-Lehrer hinzufügen
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
-		if (kursIDs.size() > 0) {
+		if (!kursIDs.isEmpty()) {
 			final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDs, DTOGostBlockungKurslehrer.class);
 			final List<Long> kurslehrerIDs = kurslehrerListe.stream().map(kl -> kl.Lehrer_ID).distinct().toList();
-			if (kurslehrerIDs.size() > 0) {
+			if (!kurslehrerIDs.isEmpty()) {
 				final Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", kurslehrerIDs, DTOLehrer.class)
 						.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 				for (final DTOGostBlockungKurslehrer kurslehrer : kurslehrerListe) {
@@ -179,8 +179,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		// Regeln hinzufügen.
 		final List<DTOGostBlockungRegel> regeln = conn.queryNamed("DTOGostBlockungRegel.blockung_id", blockung.ID, DTOGostBlockungRegel.class);
-		if (regeln.size() > 0) {
-			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).collect(Collectors.toList());
+		if (!regeln.isEmpty()) {
+			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
 			final List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryNamed(
 					"DTOGostBlockungRegelParameter.regel_id.multiple", regelIDs, DTOGostBlockungRegelParameter.class);
 			final Map<Long, List<DTOGostBlockungRegelParameter>> regelParams = regelParamsDB.stream()
@@ -190,9 +190,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				eintrag.id = regel.ID;
 				eintrag.typ = regel.Typ.typ;
 				final List<DTOGostBlockungRegelParameter> p = regelParams.get(eintrag.id);
-				if ((p != null) && (p.size() > 0))
+				if ((p != null) && (!p.isEmpty()))
 					eintrag.parameter.addAll(p.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer))
-							.map(r -> r.Parameter).collect(Collectors.toList()));
+							.map(r -> r.Parameter).toList());
 				manager.addRegel(eintrag);
 			}
 		}
@@ -205,7 +205,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
             daten.vorname = dto.Vorname;
             daten.geschlecht = dto.Geschlecht.id;
             return daten;
-        }).collect(Collectors.toList());
+        }).toList();
         manager.addSchuelerListe(schueler);
 
         // Schüler-Fachwahl-Menge hinzufügen.
@@ -553,7 +553,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final HashMap<Long, Long> mapKursIDs = new HashMap<>();
 			final List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungKurs.class);
-			final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
+			final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).toList();
 			for (final DTOGostBlockungKurs kursOriginal : kurseOriginal) {
 				final DTOGostBlockungKurs kursDuplikat = new DTOGostBlockungKurs(idKursDuplikat, idBlockungDuplikat, kursOriginal.Fach_ID,
 						kursOriginal.Kursart, kursOriginal.Kursnummer, kursOriginal.IstKoopKurs, kursOriginal.Schienenanzahl, kursOriginal.Wochenstunden);
@@ -563,7 +563,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idKursDuplikat++;
 			}
 			// Dupliziere die KursLehrer
-			if (kursIDsOriginal.size() > 0) {
+			if (!kursIDsOriginal.isEmpty()) {
 				final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDsOriginal, DTOGostBlockungKurslehrer.class);
 				for (final DTOGostBlockungKurslehrer kurslehrerOriginal : kurslehrerListeOriginal) {
 					idKursDuplikat = mapKursIDs.get(kurslehrerOriginal.Blockung_Kurs_ID);
@@ -579,7 +579,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
 			final List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungRegel.class);
-			final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
+			final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
 			for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
 			    mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
 				final DTOGostBlockungRegel regelDuplikat = new DTOGostBlockungRegel(idRegelDuplikat, idBlockungDuplikat, regelOriginal.Typ);
@@ -588,7 +588,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idRegelDuplikat++;
 			}
 			// Dupliziere die RegelParameter
-			if (regelIDsOriginal.size() > 0) {
+			if (!regelIDsOriginal.isEmpty()) {
 				final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDsOriginal, DTOGostBlockungRegelParameter.class);
 				for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
 					idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
@@ -634,7 +634,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			return get(idBlockungDuplikat);
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
+			if (exception instanceof IllegalArgumentException)
 				throw OperationError.NOT_FOUND.exception();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
@@ -698,7 +698,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final HashMap<Long, DTOGostBlockungKurs> mapKurseHochgeschrieben = new HashMap<>();
 			final List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungKurs.class);
-			final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
+			final List<Long> kursIDsOriginal = kurseOriginal.stream().map(k -> k.ID).toList();
 			for (final DTOGostBlockungKurs kursOriginal : kurseOriginal) {
 				final DTOGostBlockungKurs kursDuplikat = new DTOGostBlockungKurs(idKursDuplikat, idBlockungDuplikat, kursOriginal.Fach_ID,
 						kursOriginal.Kursart, kursOriginal.Kursnummer, kursOriginal.IstKoopKurs, kursOriginal.Schienenanzahl, kursOriginal.Wochenstunden);
@@ -709,7 +709,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idKursDuplikat++;
 			}
 			// Dupliziere die KursLehrer
-			if (kursIDsOriginal.size() > 0) {
+			if (!kursIDsOriginal.isEmpty()) {
 				final List<DTOGostBlockungKurslehrer> kurslehrerListeOriginal = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id.multiple", kursIDsOriginal, DTOGostBlockungKurslehrer.class);
 				for (final DTOGostBlockungKurslehrer kurslehrerOriginal : kurslehrerListeOriginal) {
 					idKursDuplikat = mapKursIDs.get(kurslehrerOriginal.Blockung_Kurs_ID);
@@ -725,7 +725,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
 			final List<DTOGostBlockungRegel> regelnOriginal = conn.queryNamed("DTOGostBlockungRegel.blockung_id", ergebnisOriginal.Blockung_ID,
 					DTOGostBlockungRegel.class);
-			final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).collect(Collectors.toList());
+			final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
 			for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
 			    mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
 				final DTOGostBlockungRegel regelDuplikat = new DTOGostBlockungRegel(idRegelDuplikat, idBlockungDuplikat, regelOriginal.Typ);
@@ -734,7 +734,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idRegelDuplikat++;
 			}
 			// Dupliziere die RegelParameter
-			if (regelIDsOriginal.size() > 0) {
+			if (!regelIDsOriginal.isEmpty()) {
 				final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryNamed("DTOGostBlockungRegelParameter.regel_id.multiple", regelIDsOriginal, DTOGostBlockungRegelParameter.class);
 				for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
 					idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
@@ -786,7 +786,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			return get(idBlockungDuplikat);
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
+			if (exception instanceof IllegalArgumentException)
 				throw OperationError.NOT_FOUND.exception();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
@@ -966,7 +966,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			return get(idBlockung);
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
+			if (exception instanceof IllegalArgumentException)
 				throw OperationError.NOT_FOUND.exception();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();

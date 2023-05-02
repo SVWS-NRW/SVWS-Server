@@ -2,11 +2,11 @@ package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import com.healthmarketscience.jackcess.DataType;
@@ -230,7 +230,7 @@ public class LupoMDB {
 					.setParameter("status", SchuelerStatus.AKTIV)
 					.setParameter("jahrgang", jahrgang)
 					.getResultList();
-			final List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).collect(Collectors.toList());
+			final List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).toList();
 			final Map<Long, GostLeistungen> gostLeistungen = DBUtilsGost.getLeistungsdaten(conn, schuelerIDs);
 			final Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 			final Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
@@ -308,8 +308,8 @@ public class LupoMDB {
 
 		logger.logLn("- die Beratungslehrer anhand der Klassenlehrerinformationen...");
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", abschnitt.ID, DTOKlassen.class)
-				.stream().filter(kl -> kl.Klasse.equals(klasse)).collect(Collectors.toList());
-    	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).collect(Collectors.toList());
+				.stream().filter(kl -> kl.Klasse.equals(klasse)).toList();
+    	final List<Long> klassenIDs = klassen.stream().map(kl -> kl.ID).toList();
 		final Map<Long, List<DTOKlassenLeitung>> mapKlassenLeitung = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class)
 				.stream().collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 
@@ -345,7 +345,7 @@ public class LupoMDB {
 
 		logger.logLn("- die nicht möglichen Abitur-Fachkombinationen für den Jahrgang");
 		logger.modifyIndent(2);
-		if (nichtMoeglicheKombinationen.size() > 0) {
+		if (!nichtMoeglicheKombinationen.isEmpty()) {
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
@@ -429,7 +429,7 @@ public class LupoMDB {
 				sf.add(abpSchuelerFaecher);
 			}
 			logger.logLn("  - Bestimme die zu bearbeitende Schüler-Menge aus der LuPO-Datei...");
-			final List<Long> schuelerIDs = schueler.stream().filter(s -> s.Schild_ID != null).map(s -> (long) s.Schild_ID).collect(Collectors.toList());
+			final List<Long> schuelerIDs = schueler.stream().filter(s -> s.Schild_ID != null).map(s -> (long) s.Schild_ID).toList();
 			logger.logLn("  - Lese Schüler aus der DB ein, um diese mit den Daten der LuPO-Datei abzugleichen...");
 			final Map<Long, DTOSchueler> dtoSchuelerMap = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 			logger.logLn("  - Lese die aktuellen Lernabschnitt der Schüler aus der DB ein, um davon Daten mit den Daten aus der LuPO-Datei abzugleichen...");

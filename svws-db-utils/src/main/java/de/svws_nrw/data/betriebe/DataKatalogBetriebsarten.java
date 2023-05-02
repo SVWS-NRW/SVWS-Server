@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.data.DataManager;
@@ -66,7 +65,7 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
 		final List<DTOKatalogAdressart> katalog = conn.queryAll(DTOKatalogAdressart.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

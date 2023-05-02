@@ -3,16 +3,15 @@ package de.svws_nrw.data.jahrgaenge;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -50,7 +49,7 @@ public final class DataJahrgangsliste extends DataManager<Long> {
     	final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
     	if (jahrgaenge == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<JahrgangsListeEintrag> daten = jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).collect(Collectors.toList());
+    	final List<JahrgangsListeEintrag> daten = jahrgaenge.stream().map(dtoMapperJahrgang).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

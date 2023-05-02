@@ -290,14 +290,14 @@ public final class DataENMDaten extends DataManager<Long> {
 	// TODO Optimierung: Lese nur die aktiven Lehrer aus der Datenbank aus.
 	private Map<Long, DTOLehrer> getLehrerListe() {
 		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
-		if (lehrer.size() == 0)
+		if (lehrer.isEmpty())
 			throw OperationError.NOT_FOUND.exception();
 		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
 	}
 
 	private Map<Long, DTOSchueler> getSchuelerListe(final DTOEigeneSchule schule) {
 		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOSchueler.class);
-		if (schueler.size() == 0)
+		if (schueler.isEmpty())
 			throw OperationError.NOT_FOUND.exception();
 		return schueler.stream()
 				.filter(s -> s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN)
@@ -306,27 +306,27 @@ public final class DataENMDaten extends DataManager<Long> {
 
 	private Map<Long, DTOFach> getFaecherListe() {
 		final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
-		if (faecher.size() == 0)
+		if (faecher.isEmpty())
 			throw OperationError.NOT_FOUND.exception();
 		return faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 	}
 
 	private Map<Long, DTOJahrgang> getJahrgangsListe() {
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if (jahrgaenge.size() == 0)
+		if (jahrgaenge.isEmpty())
 			throw OperationError.NOT_FOUND.exception();
 		return jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 	}
 
 	private Map<String, DTOKlassen> getKlassenListe(final DTOEigeneSchule schule) {
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", schule.Schuljahresabschnitts_ID, DTOKlassen.class);
-		if (klassen.size() == 0)
+		if (klassen.isEmpty())
 			throw OperationError.NOT_FOUND.exception();
 		return klassen.stream().collect(Collectors.toMap(e -> e.Klasse, e -> e));
 	}
 
 	private Map<Long, List<DTOKlassenLeitung>> getKlassenleitungen(final Map<String, DTOKlassen> mapKlassen) {
-		final List<Long> klassenIDs = mapKlassen.values().stream().map(kl -> kl.ID).collect(Collectors.toList());
+		final List<Long> klassenIDs = mapKlassen.values().stream().map(kl -> kl.ID).toList();
 		return conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class).stream()
 				.collect(Collectors.groupingBy(kl -> kl.Klassen_ID));
 	}

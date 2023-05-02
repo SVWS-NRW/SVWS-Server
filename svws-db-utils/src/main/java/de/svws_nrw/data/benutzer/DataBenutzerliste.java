@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -48,7 +47,7 @@ public final class DataBenutzerliste extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle die Benutzerliste und sortiere sie
 		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
-				.collect(Collectors.toList());
+				.toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -64,14 +63,14 @@ public final class DataBenutzerliste extends DataManager<Long> {
 		final List<Long> benutzerIDs = conn
 				.queryNamed("DTOBenutzergruppenMitglied.gruppe_id", benutzergruppe.ID, DTOBenutzergruppenMitglied.class)
 				.stream().map(g -> g.Benutzer_ID).sorted().toList();
-		final List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.size() == 0)
+		final List<DTOViewBenutzerdetails> benutzer = (benutzerIDs.isEmpty())
 		        ? Collections.emptyList()
 		        : conn.queryNamed("DTOViewBenutzerdetails.id.multiple", benutzerIDs, DTOViewBenutzerdetails.class);
 		if (benutzer == null)
 			throw OperationError.NOT_FOUND.exception();
 		// Erstelle die Benutzerliste und sortiere sie
 		final List<BenutzerListeEintrag> daten = benutzer.stream().map(dtoMapper).sorted(dataComparator)
-				.collect(Collectors.toList());
+				.toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

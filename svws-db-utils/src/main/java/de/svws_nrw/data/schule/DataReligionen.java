@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.core.types.schule.Religion;
@@ -21,6 +16,10 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -57,7 +56,7 @@ public final class DataReligionen extends DataManager<Long> {
     	final List<DTOKonfession> katalog = conn.queryAll(DTOKonfession.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<ReligionEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
+    	final List<ReligionEintrag> daten = katalog.stream().map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

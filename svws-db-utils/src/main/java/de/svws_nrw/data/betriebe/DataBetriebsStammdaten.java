@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -131,9 +130,9 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 
 		final List<DTOKatalogAllgemeineAdresse> betriebe = conn.queryList("SELECT dtoa FROM DTOKatalogAllgemeineAdresse dtoa, DTOSchuelerAllgemeineAdresse dtos WHERE dtoa.ID=dtos.Adresse_ID and dtos.Schueler_ID = ?1 ", DTOKatalogAllgemeineAdresse.class, schueler_id);
 
-		if (betriebe == null || betriebe.size() < 1)
+		if (betriebe == null || betriebe.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("Schüler mit der ID" + schueler_id + " hat keine Betriebe");
-		final List<BetriebStammdaten> daten = betriebe.stream().map(dtoMapper).collect(Collectors.toList());
+		final List<BetriebStammdaten> daten = betriebe.stream().map(dtoMapper).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -147,7 +146,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
      * @return die HTTP-Antwort mit dem neuen bzw. angepassten Betrieb.
 	 */
 
-	public Response  persistDTO(final InputStream is, final DTOKatalogAllgemeineAdresse betrieb, final Long id) {
+	public Response persistDTO(final InputStream is, final DTOKatalogAllgemeineAdresse betrieb, final Long id) {
 	    final Map<String, Object> map = JSONMapper.toMap(is);
 	    if (map.size() > 0) {
             try {

@@ -216,7 +216,7 @@ public final class DBSchemaStatus {
 			final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
 			if (spalten == null)
 				return null;
-			return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).collect(Collectors.toList());
+			return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
 		}
 	}
 

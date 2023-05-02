@@ -1,11 +1,11 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -66,14 +66,14 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.size() <= 0))
+		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
 			return OperationError.NOT_FOUND.getResponse();
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final ArrayList<GostJahrgang> daten = new ArrayList<>();
 		List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
 		if (dtos != null) {
-			dtos = dtos.stream().sorted((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).collect(Collectors.toList());
+			dtos = dtos.stream().sorted((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).toList();
 			for (final DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
 				if (jahrgangsdaten.Abi_Jahrgang < 0)
 					continue;
@@ -177,14 +177,14 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			gostFach.WochenstundenQPhase = fach.WochenstundenQualifikationsphase;
 			gostFaecher.add(gostFach);
 		}
-		if ((gostFaecher.size() > 0) && (!conn.persistAll(gostFaecher)))
+		if ((!gostFaecher.isEmpty()) && (!conn.persistAll(gostFaecher)))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		// Kopiere die Informationen zu nicht möglichen und geforderten
 		// Fachkombinationen aus der Vorlage
 		final List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
 		if (faecherKombis == null)
 			throw new NullPointerException();
-		if (faecherKombis.size() > 0) {
+		if (!faecherKombis.isEmpty()) {
 			final ArrayList<DTOGostJahrgangFachkombinationen> gostFaecherKombis = new ArrayList<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
@@ -206,7 +206,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 			final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
-			if ((schueler != null) && (schueler.size() > 0)) {
+			if ((schueler != null) && (!schueler.isEmpty())) {
 				final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
 				final List<Integer> abschnitte = schule.AnzahlAbschnitte == 4 ? Arrays.asList(2, 4) : Arrays.asList(1, 2);
 				final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
@@ -222,14 +222,14 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 				for (final long schueler_id : schuelerIDs) {
 					final List<DTOSchuelerLernabschnittsdaten> slas = mapLernabschnitte.get(schueler_id);
-					if ((slas == null) || (slas.size() == 0))
+					if ((slas == null) || (slas.isEmpty()))
 						continue;
 					final HashMap<Long, DTOGostSchuelerFachbelegungen> fachbelegungen = new HashMap<>();
 					final DTOGostSchuelerFachbelegungen[] abifach = new DTOGostSchuelerFachbelegungen[4];
 					final GostHalbjahr[] abifachHalbjahr = new GostHalbjahr[4];
 					for (final DTOSchuelerLernabschnittsdaten sla : slas) {
 						final List<DTOSchuelerLeistungsdaten> slds = mapLeistungsdaten.get(sla.ID);
-						if ((slds == null) || (slds.size() == 0))
+						if ((slds == null) || (slds.isEmpty()))
 							continue;
 						final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
 						if (schuljahresabschnitt == null)

@@ -3,16 +3,15 @@ package de.svws_nrw.data.schueler;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -47,7 +46,7 @@ public final class DataKatalogSchuelerFahrschuelerarten extends DataManager<Long
 		final List<DTOFahrschuelerart> katalog = conn.queryAll(DTOFahrschuelerart.class);
     	if (katalog == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
+    	final List<KatalogEintrag> daten = katalog.stream().map(dtoMapper).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

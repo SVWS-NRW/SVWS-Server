@@ -4,15 +4,14 @@ import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -73,7 +72,7 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 		final List<DTOSchuljahresabschnitte> abschnitte = conn.queryAll(DTOSchuljahresabschnitte.class);
     	if (abschnitte == null)
     		return null;
-    	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 
 	@Override

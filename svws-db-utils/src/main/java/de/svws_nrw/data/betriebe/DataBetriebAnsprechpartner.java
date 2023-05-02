@@ -2,7 +2,6 @@ package de.svws_nrw.data.betriebe;
 
 import java.io.InputStream;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -60,7 +59,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 		final List<DTOAnsprechpartnerAllgemeineAdresse> katalog = conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class);
 		if (katalog == null)
 			return OperationError.NOT_FOUND.getResponse();
-		final List<BetriebAnsprechpartner> daten = katalog.stream().map(dtoMapper).collect(Collectors.toList());
+		final List<BetriebAnsprechpartner> daten = katalog.stream().map(dtoMapper).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

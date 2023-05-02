@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -541,7 +540,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                         user_admingruppen_ids.add(id);
 
                 //Lese aus den bgids die ids der administrativen Benutzergruppen vom User.
-                final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).collect(Collectors.toList());
+                final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).toList();
 
                 if (user_admingruppen_ids_request.size() == user_admingruppen_ids.size())
                     throw OperationError.BAD_REQUEST.exception("Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");

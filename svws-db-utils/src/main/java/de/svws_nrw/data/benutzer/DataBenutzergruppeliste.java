@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -47,7 +46,7 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
     	if (benutzergruppe == null)
     		throw OperationError.NOT_FOUND.exception();
     	// Erstelle die Benutzerliste und sortiere sie
-    	final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+    	final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -61,13 +60,13 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
         final List<Long> gruppenIDs = conn
                 .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", id, DTOBenutzergruppenMitglied.class).stream()
                 .map(g -> g.Gruppe_ID).toList();
-        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.size() == 0)
+        final List<DTOBenutzergruppe> gruppen = (gruppenIDs.isEmpty())
                 ? new ArrayList<>()
                 : conn.queryNamed("DTOBenutzergruppe.id.multiple", gruppenIDs, DTOBenutzergruppe.class);
 
         // Erstelle die Benutzerliste und sortiere sie
      // Erstelle die Benutzerliste und sortiere sie
-        final List<BenutzergruppeListeEintrag> daten = gruppen.stream().map(dtoMapper).sorted(dataComparator).collect(Collectors.toList());
+        final List<BenutzergruppeListeEintrag> daten = gruppen.stream().map(dtoMapper).sorted(dataComparator).toList();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 

@@ -1,10 +1,10 @@
 package de.svws_nrw.data.kurse;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,12 +70,12 @@ public final class DataKursliste extends DataManager<Long> {
     	if (kurse == null)
     		return OperationError.NOT_FOUND.getResponse();
     	// Erstelle die Liste der Kurse
-    	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).collect(Collectors.toList());
+    	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
     	// Ergänze die Liste der Schüler in den Kursen
     	final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
     	final List<DTOKursSchueler> listKursSchueler = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
-    	final Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || (schuelerIDs.size() == 0)) ? new HashMap<>()
+    	final Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new HashMap<>()
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
     	final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
     	for (final DTOKursSchueler ks : listKursSchueler) {
