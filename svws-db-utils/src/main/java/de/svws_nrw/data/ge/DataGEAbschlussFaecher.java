@@ -114,7 +114,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 
 		// Bestimme die Leistungsdaten aus dem Lernabschnitt
 		final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
-		if ((leistungen == null) || (leistungen.size() == 0))
+		if ((leistungen == null) || (leistungen.isEmpty()))
     		return OperationError.NOT_FOUND.getResponse();
 
 		final GEAbschlussFaecher daten = new GEAbschlussFaecher();

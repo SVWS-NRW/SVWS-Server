@@ -154,7 +154,7 @@ public final class DBSchemaStatus {
 	 */
 	public boolean hasTable(final String tabname) {
 		for (final String nameTabelle : tabellen)
-			if (nameTabelle.toLowerCase().equals(tabname.toLowerCase()))
+			if (nameTabelle.equalsIgnoreCase(tabname))
 				return true;
 		return false;
 	}

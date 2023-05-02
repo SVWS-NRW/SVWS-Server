@@ -84,7 +84,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.size() <= 0))
+		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
     		return OperationError.NOT_FOUND.getResponse();
 
     	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor

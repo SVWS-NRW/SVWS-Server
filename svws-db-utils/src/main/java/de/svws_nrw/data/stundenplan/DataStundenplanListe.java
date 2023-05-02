@@ -64,7 +64,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		final List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null)
 			? conn.queryAll(DTOStundenplan.class)
 			: conn.queryNamed("DTOStundenplan.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOStundenplan.class);
-		if (plaene.size() == 0)
+		if (plaene.isEmpty())
 			//throw OperationError.NOT_FOUND.exception("Keine Stundenpläne gefunden.");
 			return daten;
 		final List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();

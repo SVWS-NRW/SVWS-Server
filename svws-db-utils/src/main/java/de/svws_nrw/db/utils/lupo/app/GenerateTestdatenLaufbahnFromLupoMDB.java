@@ -104,7 +104,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 
 			// Lese die Fächerdaten aus der Lupo-Datei und generiere die Testdateien - Fasse dabei alle Daten der Datei zu einem Jahrgang zusammen
 			final List<GostFach> gostFaecher = lupoMDB.retrieveGostFaecher();
-			if ((gostFaecher == null) || (gostFaecher.size() == 0))
+			if ((gostFaecher == null) || (gostFaecher.isEmpty()))
 				throw new DeveloperNotificationException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
 			final String strJahrgangID = String.format("%02d", jahrgangID++);
 

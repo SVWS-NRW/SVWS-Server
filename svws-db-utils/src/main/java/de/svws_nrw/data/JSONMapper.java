@@ -303,7 +303,7 @@ public final class JSONMapper {
 		List<? extends Boolean> params = (List<? extends Boolean>) obj;
 		if ((size != null) && (size != params.size()))
 			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
-		if ((params.size() == 0) && ((size == null) || (size == 0)))
+		if ((params.isEmpty()) && ((size == null) || (size == 0)))
 			return new Boolean[0];
 		final Boolean[] result = new Boolean[params.size()];
 		for (int i = 0; i < params.size(); i++) {
@@ -337,7 +337,7 @@ public final class JSONMapper {
 		List<? extends String> params = (List<? extends String>) obj;
 		if ((size != null) && (size != params.size()))
 			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
-		if ((params.size() == 0) && ((size == null) || (size == 0)))
+		if ((params.isEmpty()) && ((size == null) || (size == 0)))
 			return new String[0];
 		final String[] result = new String[params.size()];
 		for (int i = 0; i < params.size(); i++) {

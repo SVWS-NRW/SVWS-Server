@@ -70,7 +70,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception();
 		if (idLehrer == null) {
 			final List<DTOGostBlockungKurslehrer> tmp = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class);
-			if (tmp.size() == 0)
+			if (tmp.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
 			if (tmp.size() > 1)
 				throw OperationError.CONFLICT.exception();

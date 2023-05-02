@@ -61,8 +61,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	// Bestimme den aktuellen Lernabschnitt
     	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr IS NULL";
     	final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
-    	if ((lernabschnittsdaten == null) || lernabschnittsdaten.size() <= 0)
-			return OperationError.NOT_FOUND.getResponse();
+    	if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
+    		return OperationError.NOT_FOUND.getResponse();
     	if (lernabschnittsdaten.size() > 1)
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     	final DTOSchuelerLernabschnittsdaten aktuell = lernabschnittsdaten.get(0);
@@ -161,7 +161,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     		}
     	}
     	daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem;
-    	if (bemerkungen.size() > 0) {
+    	if (!bemerkungen.isEmpty()) {
     		final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
 	    	daten.bemerkungen.zeugnisASV = b.ASV;
 	    	daten.bemerkungen.zeugnisLELS = b.LELS;

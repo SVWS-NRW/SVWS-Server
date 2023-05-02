@@ -278,7 +278,7 @@ public class DBBackupManager {
 			logger.logLn(0, entities.size() + " Datensätze eingelesen (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
 
 			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
-			if (entities.size() == 0) {
+			if (entities.isEmpty()) {
 				logger.modifyIndent(-2);
 				continue;
 			}

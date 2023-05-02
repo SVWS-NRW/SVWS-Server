@@ -283,7 +283,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.trigger().stream())
 					.filter(trig -> trig.veraltet().revision == veraltet)
 					.toList();
-			if ((trigger == null) || (trigger.size() <= 0)) {
+			if ((trigger == null) || (trigger.isEmpty())) {
 				logger.logLn(0, "0 Trigger");
 				return true;
 			}
@@ -322,7 +322,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.indizes().stream())
 					.filter(idx -> idx.veraltet().revision == veraltet)
 					.toList();
-			if ((indizesVeraltet == null) || (indizesVeraltet.size() <= 0)) {
+			if ((indizesVeraltet == null) || (indizesVeraltet.isEmpty())) {
 				logger.logLn(0, "0 Indizes");
 				return true;
 			}
@@ -364,7 +364,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.unique().stream())
 					.filter(uc -> uc.veraltet().revision == veraltet)
 					.toList();
-			if ((ucs == null) || (ucs.size() <= 0)) {
+			if ((ucs == null) || (ucs.isEmpty())) {
 				logger.logLn(0, "0 Unique-Constraints");
 				return true;
 			}
@@ -406,7 +406,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.fremdschluessel().stream())
 					.filter(fk -> fk.veraltet().revision == veraltet)
 					.toList();
-			if ((fks == null) || (fks.size() <= 0)) {
+			if ((fks == null) || (fks.isEmpty())) {
 				logger.logLn(0, "0 Fremdschlüssel");
 				return true;
 			}
@@ -451,7 +451,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.getSpalten().stream())
 					.filter(col -> col.veraltet().revision == veraltet)
 					.toList();
-			if ((cols == null) || (cols.size() <= 0)) {
+			if ((cols == null) || (cols.isEmpty())) {
 				logger.logLn(0, "0 Spalten");
 				return true;
 			}
@@ -493,7 +493,7 @@ public class DBUpdater {
 					.filter(tab -> tab.veraltet().revision == veraltet)
 					.toList();
 			Collections.reverse(tabs);
-			if ((tabs == null) || (tabs.size() <= 0)) {
+			if ((tabs == null) || (tabs.isEmpty())) {
 				logger.logLn(0, "0 Tabellen");
 				return true;
 			}
@@ -528,7 +528,7 @@ public class DBUpdater {
 		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
 			logger.log("- Verwerfe: ");
 			final List<View> views = DBSchemaViews.getInstance().getViewsDeprecated(veraltet);
-			if ((views == null) || (views.size() <= 0)) {
+			if ((views == null) || (views.isEmpty())) {
 				logger.logLn(0, "0 Views");
 				return true;
 			}
@@ -567,7 +567,7 @@ public class DBUpdater {
 				return false;
 			}
 			final List<SchemaTabelle> tabs = Schema.getTabellen(revision).stream().filter(tab -> tab.revision().revision == revision).toList();
-			if ((tabs == null) || (tabs.size() <= 0)) {
+			if ((tabs == null) || (tabs.isEmpty())) {
 				logger.logLn(0, "0 Tabellen");
 				return true;
 			}
@@ -587,7 +587,7 @@ public class DBUpdater {
 						break;
 				} else {
 					final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
-					if (pkTrigger.size() > 0) {
+					if (!pkTrigger.isEmpty()) {
 						logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
 						for (final String scriptTrigger : pkTrigger) {
 							if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
@@ -621,7 +621,7 @@ public class DBUpdater {
 				return false;
 			}
 			final List<View> views = DBSchemaViews.getInstance().getViewsCreated(revision);
-			if ((views == null) || (views.size() <= 0)) {
+			if ((views == null) || (views.isEmpty())) {
 				logger.logLn(0, "0 Tabellen");
 				return true;
 			}
@@ -661,7 +661,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.getSpalten().stream())
 					.filter(col -> col.revision().revision == revision)
 					.toList();
-			if ((cols == null) || (cols.size() <= 0)) {
+			if ((cols == null) || (cols.isEmpty())) {
 				logger.logLn(0, "0 Spalten");
 				return true;
 			}
@@ -704,7 +704,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.fremdschluessel().stream())
 					.filter(fk -> fk.revision().revision == revision)
 					.toList();
-			if ((fks == null) || (fks.size() <= 0)) {
+			if ((fks == null) || (fks.isEmpty())) {
 				logger.logLn(0, "0 Fremdschlüssel");
 				return true;
 			}
@@ -747,7 +747,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.unique().stream())
 					.filter(uc -> uc.revision().revision == revision)
 					.toList();
-			if ((ucs == null) || (ucs.size() <= 0)) {
+			if ((ucs == null) || (ucs.isEmpty())) {
 				logger.logLn(0, "0 Unique-Constraints");
 				return true;
 			}
@@ -790,7 +790,7 @@ public class DBUpdater {
 					.flatMap(tab -> tab.indizes().stream())
 					.filter(idx -> idx.revision().revision == revision)
 					.toList();
-			if ((indizes == null) || (indizes.size() <= 0)) {
+			if ((indizes == null) || (indizes.isEmpty())) {
 				logger.logLn(0, "0 Indizes");
 				return true;
 			}
@@ -889,7 +889,7 @@ public class DBUpdater {
 					.filter(trig -> trig.dbms() == dbms)
 					.filter(trig -> trig.revision().revision == revision)
 					.toList();
-			if ((trigger == null) || (trigger.size() <= 0)) {
+			if ((trigger == null) || (trigger.isEmpty())) {
 				logger.logLn(0, "0 Trigger");
 				return true;
 			}
