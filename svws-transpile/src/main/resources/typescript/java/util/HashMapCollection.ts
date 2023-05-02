@@ -107,12 +107,13 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	}
 
 	[Symbol.iterator](): Iterator<V> {
-		const iter : JavaIterator<V> = this.iterator();
+		const iter = this._map[Symbol.iterator]();
 		const result : Iterator<V> = {
 			next() : IteratorResult<V> {
-				if (iter.hasNext())
-					return { value : iter.next(), done : false };
-				return { value : null, done : true };
+				const result : IteratorResult<[K, JavaMapEntry<K, V>], any> = iter.next();
+				if (result.done === true)
+					return { value : null, done : true };
+				return { value : result.value[1].getValue(), done : false };
 			}
 		};
 		return result;
