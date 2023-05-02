@@ -492,7 +492,6 @@ public class DBUpdater {
 			final List<SchemaTabelle> tabs = Schema.getTabellen(veraltet - 1).stream()
 					.filter(tab -> tab.veraltet().revision == veraltet)
 					.toList();
-			Collections.reverse(tabs);
 			if ((tabs == null) || (tabs.isEmpty())) {
 				logger.logLn(0, "0 Tabellen");
 				return true;
@@ -501,7 +500,8 @@ public class DBUpdater {
 			logger.logLn(0, tabs.size() + " Tabellen...");
 			logger.modifyIndent(2);
 			final var dbms = conn.getDBDriver();
-			for (final SchemaTabelle tab : tabs) {
+			for (int i = tabs.size() - 1; i >= 0; i--) {
+				final SchemaTabelle tab = tabs.get(i);
 				final String sql = tab.getSQLDrop(dbms);
 				logger.logLn(tab.name());
 				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
