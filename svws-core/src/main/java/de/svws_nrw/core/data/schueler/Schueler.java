@@ -2,6 +2,8 @@ package de.svws_nrw.core.data.schueler;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.core.types.SchuelerStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -26,11 +28,11 @@ public class Schueler {
 	@Schema(description = "der Vorname", example = "Max")
 	public @NotNull String vorname = "";
 
-	/** Der Status des Schülerdatensatzes. */
+	/** Der Status des Schülerdatensatzes. Gültige Werte sind im Enum-Typ {@link SchuelerStatus} definiert. */
 	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example = "8")
 	public int status;
 
-	/** Die ID des Geschlechtes */
+	/** Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert. */
 	@Schema(description = "die ID des Geschlechtes", example = "3")
 	public int geschlecht;
 

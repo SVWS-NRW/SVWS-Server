@@ -18,12 +18,12 @@ export class Schueler extends JavaObject {
 	public vorname : string = "";
 
 	/**
-	 * Der Status des Schülerdatensatzes.
+	 * Der Status des Schülerdatensatzes. Gültige Werte sind im Enum-Typ {@link SchuelerStatus} definiert.
 	 */
 	public status : number = 0;
 
 	/**
-	 * Die ID des Geschlechtes
+	 * Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert.
 	 */
 	public geschlecht : number = 0;
 
