@@ -1,4 +1,4 @@
-import type { GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, List } from "@svws-nrw/svws-core";
+import type { GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, List, Schueler } from "@svws-nrw/svws-core";
 import type { Config } from "~/components/Config";
 
 export interface GostLaufbahnplanungProps {
@@ -6,4 +6,5 @@ export interface GostLaufbahnplanungProps {
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
 	belegpruefungsart: () => GostBelegpruefungsArt;
 	setBelegpruefungsart: (belegpruefungsart: GostBelegpruefungsArt) => Promise<void>;
+	gotoLaufbahnplanung: (d: number) => Promise<void>;
 }

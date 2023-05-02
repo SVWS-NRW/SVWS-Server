@@ -1,6 +1,6 @@
 <template>
 	<div class="app-container">
-		<s-card-gost-laufbahnplanung :list-belegpruefungs-ergebnisse="listBelegpruefungsErgebnisse" :config="config" :set-belegpruefungsart="setBelegpruefungsart" :belegpruefungsart="belegpruefungsart" />
+		<s-card-gost-laufbahnplanung :list-belegpruefungs-ergebnisse="listBelegpruefungsErgebnisse" :config="config" :set-belegpruefungsart="setBelegpruefungsart" :belegpruefungsart="belegpruefungsart" :goto-laufbahnplanung="gotoLaufbahnplanung" />
 	</div>
 </template>
 

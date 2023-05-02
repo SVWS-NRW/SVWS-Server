@@ -17,7 +17,6 @@
 	const props = defineProps<{
 		regeln: GostBlockungRegel[];
 	}>();
-	console.log(props.regeln)
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;

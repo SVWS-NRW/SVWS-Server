@@ -6,7 +6,9 @@ import { ConfigElement } from "~/components/Config";
 import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
 import { api } from "~/router/Api";
 import type { RouteGost } from "~/router/apps/RouteGost";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
+import { routeSchuelerLaufbahnplanung } from "../schueler/RouteSchuelerLaufbahnplanung";
 
 
 interface RouteStateDataGostLaufbahnplanung {
@@ -68,6 +70,9 @@ export class RouteDataGostLaufbahnplanung  {
 		this.setPatchedState({ belegpruefungsart });
 	}
 
+	gotoLaufbahnplanung = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+	}
 }
 
 const SGostLaufbahnplanung = () => import("~/components/gost/laufbahnplanung/SGostLaufbahnplanung.vue");
@@ -128,6 +133,7 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
 			belegpruefungsart: () => this.data.belegpruefungsart,
 			setBelegpruefungsart: this.data.setBelegpruefungsart,
+			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
 		};
 	}
 

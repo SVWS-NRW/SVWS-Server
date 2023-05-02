@@ -54,11 +54,10 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFach, GostFachwahl, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
-	import {ArrayList} from "@svws-nrw/svws-core";
 	import type {DataTableColumn} from "@ui";
 
 	type DndData = { id: number, fachID: number, kursart: number };
@@ -110,15 +109,9 @@
 		void props.gotoLaufbahnplanung(props.schueler.id);
 	}
 
-	function routeSchueler() {
-		void props.gotoSchueler(props.schueler.id);
-	}
-
 	function updateDragAndDropData(data: DndData | undefined) {
 		dragAndDropData.value = data;
 	}
-
-	/*const getSchieneKurse: ComputedRef<ArrayList<GostBlockungsergebnisKurs>> = computed(()=> props.schiene.kurse)*/
 
 	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
 		let max = 0;
