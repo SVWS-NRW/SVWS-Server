@@ -35,7 +35,7 @@ public final class VerkehrssprachenConverterSerializer extends StdSerializer<Ver
 
 	@Override
 	public void serialize(final Verkehrssprache value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-		gen.writeString(VerkehrssprachenConverter.instance.convertToDatabaseColumn(value).toString());
+		gen.writeString(VerkehrssprachenConverter.instance.convertToDatabaseColumn(value));
 	}
 
 }

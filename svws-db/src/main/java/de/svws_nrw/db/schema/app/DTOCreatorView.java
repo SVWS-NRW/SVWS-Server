@@ -2,6 +2,7 @@ package de.svws_nrw.db.schema.app;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -59,7 +60,7 @@ public class DTOCreatorView {
     @JsonIgnore
     public String getJavaKlasse(final long rev) {
     	if (rev == 0)
-			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
+    		throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
 		return (rev > 0) ? "Dev" + view.dtoName : view.dtoName;
 	}
 
@@ -85,13 +86,13 @@ public class DTOCreatorView {
 		sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
 		sb.append(pkspalten.stream()
 				.map(col -> col.name)
-				.filter(name -> name != null)
+				.filter(Objects::nonNull)
 				.map(colname -> "\t\tif (" + colname + " == null) {" + System.lineSeparator()
 					+ "\t\t\tif (other." + colname + " != null)" + System.lineSeparator()
 					+ "\t\t\t\treturn false;" + System.lineSeparator()
 					+ "\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator()
 					+ "\t\t\treturn false;" + System.lineSeparator())
-				.filter(code -> code != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append("\t\treturn true;" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
@@ -102,9 +103,9 @@ public class DTOCreatorView {
 		sb.append("\t\tint result = 1;" + System.lineSeparator());
 		sb.append(pkspalten.stream()
 				.map(col -> col.name)
-				.filter(name -> name != null)
+				.filter(Objects::nonNull)
 				.map(colname -> "\t\tresult = prime * result + ((" + colname + " == null) ? 0 : " + colname + ".hashCode());" + System.lineSeparator())
-				.filter(code -> code != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append("\t\treturn result;" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
@@ -120,12 +121,12 @@ public class DTOCreatorView {
 	 *
 	 * @return eine Liste mit den Attribut-Konvertern.
 	 */
-	private List<DBAttributeConverter<?, ?>> getAttributeConverter(final long rev) {
+	private List<? extends DBAttributeConverter<?, ?>> getAttributeConverter(final long rev) {
 		return view.spalten.stream()
 				.filter(spalte -> spalte.converter != null)
 				.map(spalte -> DBAttributeConverter.getByClass(spalte.converter))
-				.filter(ac -> ac != null)
-				.collect(Collectors.toList());
+				.filter(Objects::nonNull)
+				.toList();
 	}
 
 
@@ -136,8 +137,8 @@ public class DTOCreatorView {
 	 *
 	 * @return der Java-Code für den Import der Attribut-Konverter
 	 */
-	private static String getCodeImportConverter(final List<DBAttributeConverter<?, ?>> acs) {
-		if (acs.size() == 0)
+	private static String getCodeImportConverter(final List<? extends DBAttributeConverter<?, ?>> acs) {
+		if (acs.isEmpty())
 			return "";
 		String result = "import "
 			+ acs.stream().map(ac -> ac.getClass().getName()).filter(cn -> cn != null).sorted().distinct()
@@ -145,7 +146,7 @@ public class DTOCreatorView {
 		    + ";" + System.lineSeparator()
             + System.lineSeparator();
 		final String resultTypeImports = acs.stream().map(ac -> ac.getResultType().getName())
-				.filter(cntt -> cntt != null).filter(cntt -> !cntt.startsWith("java.lang")).sorted().distinct()
+				.filter(Objects::nonNull).filter(cntt -> !cntt.startsWith("java.lang")).sorted().distinct()
 				.collect(Collectors.joining(";" + System.lineSeparator() + "import "));
 		if (!"".equals(resultTypeImports))
 			result += "import "
@@ -167,31 +168,32 @@ public class DTOCreatorView {
 	private String getCode4NamedQueries(final long rev) {
 		final String className = getJavaKlasse(rev);
 		// alle Views: Generiere Code für eine NamedQuery auf alle Datensätze der View
-		String code = "@NamedQuery(name = \"" + className + ".all\", query = \"SELECT e FROM " + className + " e\")" + System.lineSeparator();
+		final StringBuilder sb = new StringBuilder();
+		sb.append("@NamedQuery(name = \"" + className + ".all\", query = \"SELECT e FROM " + className + " e\")" + System.lineSeparator());
 		// alle Views: Generiere Annotationen für NamedQueries für einzelne Attribute der View
 		for (final ViewSpalte spalte : view.spalten) {
 			if (spalte.name.startsWith("-"))
 				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
-			code += "@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + "\", query = \"SELECT e FROM " + className + " e WHERE "
+			sb.append("@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + "\", query = \"SELECT e FROM " + className + " e WHERE "
 				 + "e." + spalte.name + " = :value"
-				 + "\")" + System.lineSeparator();
-			code += "@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + ".multiple\", query = \"SELECT e FROM " + className + " e WHERE "
+				 + "\")" + System.lineSeparator());
+			sb.append("@NamedQuery(name = \"" + className + "." + spalte.name.toLowerCase() + ".multiple\", query = \"SELECT e FROM " + className + " e WHERE "
 					 + "e." + spalte.name + " IN :value"
-					 + "\")" + System.lineSeparator();
+					 + "\")" + System.lineSeparator());
 		}
 		// nur für Views mit Primärschlüssel...
-		if (view.pkSpalten.size() > 0) {
+		if (!view.pkSpalten.isEmpty()) {
 			// Generiere Code für eine parametrisierte NamedQuery mit den Spalten des Primärschlüssels als Parameter
-			code += "@NamedQuery(name = \"" + className + ".primaryKeyQuery\", query = \"SELECT e FROM " + className + " e WHERE ";
+			sb.append("@NamedQuery(name = \"" + className + ".primaryKeyQuery\", query = \"SELECT e FROM " + className + " e WHERE ");
 			for (int i = 0; i < view.pkSpalten.size(); i++) {
 				final ViewSpalte col = view.pkSpalten.get(i);
 				if (i > 0)
-					code += " AND ";
-				code += "e." + col.name + " = ?" + (i + 1);
+					sb.append(" AND ");
+				sb.append("e." + col.name + " = ?" + (i + 1));
 			}
-			code += "\")" + System.lineSeparator();
+			sb.append("\")" + System.lineSeparator());
 		}
-		return code;
+		return sb.toString();
 	}
 
 
@@ -211,18 +213,16 @@ public class DTOCreatorView {
 		if (spalte.beschreibung != null)
 			sb.append("\t/** " + spalte.beschreibung + " */" + System.lineSeparator());
 		if (withAnnotations) {
-			if ((view.pkSpalten.size() <= 0) || view.pkSpalten.contains(spalte))
+			if ((view.pkSpalten.isEmpty()) || view.pkSpalten.contains(spalte))
 				sb.append("\t@Id" + System.lineSeparator());
 			sb.append("\t@Column(name = \"" + spalte.name + "\")" + System.lineSeparator());
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
-		if (spalte.converter != null) {
-			if (withAnnotations) {
-				final var simpleConverterClassName = DBAttributeConverter.getByClass(spalte.converter).getClass().getSimpleName();
-				sb.append("\t@Convert(converter = " + simpleConverterClassName + ".class)" + System.lineSeparator());
-				sb.append("\t@JsonSerialize(using = " + simpleConverterClassName + "Serializer.class)" + System.lineSeparator());
-				sb.append("\t@JsonDeserialize(using = " + simpleConverterClassName + "Deserializer.class)" + System.lineSeparator());
-			}
+		if ((spalte.converter != null) && (withAnnotations)) {
+			final var simpleConverterClassName = DBAttributeConverter.getByClass(spalte.converter).getClass().getSimpleName();
+			sb.append("\t@Convert(converter = " + simpleConverterClassName + ".class)" + System.lineSeparator());
+			sb.append("\t@JsonSerialize(using = " + simpleConverterClassName + "Serializer.class)" + System.lineSeparator());
+			sb.append("\t@JsonDeserialize(using = " + simpleConverterClassName + "Deserializer.class)" + System.lineSeparator());
 		}
 		sb.append("\tpublic " + spalte.datentyp + " " + spalte.name + ";" + System.lineSeparator());
 		return sb.toString();
@@ -245,13 +245,13 @@ public class DTOCreatorView {
 		sb.append("package " + getPackageName(rev) + ";" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("import de.svws_nrw.db.DBEntityManager;" + System.lineSeparator());
-		if (acs.size() != 0)
+		if (!acs.isEmpty())
 			sb.append(getCodeImportConverter(acs));
 		sb.append(System.lineSeparator());
 
 		sb.append("import jakarta.persistence.Cacheable;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Column;" + System.lineSeparator());
-		if (acs.size() != 0)
+		if (!acs.isEmpty())
 			sb.append("import jakarta.persistence.Convert;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Entity;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
@@ -263,12 +263,12 @@ public class DTOCreatorView {
 
 		sb.append("import com.fasterxml.jackson.annotation.JsonProperty;" + System.lineSeparator());
 		sb.append("import com.fasterxml.jackson.annotation.JsonPropertyOrder;" + System.lineSeparator());
-		if (acs.size() != 0) {
+		if (!acs.isEmpty()) {
 			sb.append("import com.fasterxml.jackson.databind.annotation.JsonDeserialize;" + System.lineSeparator());
 			sb.append("import com.fasterxml.jackson.databind.annotation.JsonSerialize;" + System.lineSeparator());
 			final String csvImportConverter = acs.stream()
 					.map(ac -> ac.getClass().getName())
-					.filter(cn -> cn != null).sorted().distinct()
+					.filter(Objects::nonNull).sorted().distinct()
 					.map(cn -> cn.replace(".db.", ".csv.") + "Serializer;" + System.lineSeparator() + "import " + cn.replace(".db.", ".csv.") + "Deserializer")
 					.collect(Collectors.joining(";" + System.lineSeparator() + "import "));
 			sb.append("import " + csvImportConverter + ";" + System.lineSeparator());
@@ -294,7 +294,7 @@ public class DTOCreatorView {
 		sb.append(System.lineSeparator());
 		sb.append(view.spalten.stream()
 				.map(spalte -> getCode4Attributes(spalte, rev, true))
-				.filter(code -> code != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append(System.lineSeparator());
 		sb.append("\t/**" + System.lineSeparator());
@@ -303,7 +303,7 @@ public class DTOCreatorView {
 		sb.append("\tprivate " + className + "() {" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
-		final Collection<ViewSpalte> tmpPkSpalten = view.pkSpalten.size() <= 0 ? view.spalten : view.pkSpalten;
+		final Collection<ViewSpalte> tmpPkSpalten = view.pkSpalten.isEmpty() ? view.spalten : view.pkSpalten;
 		sb.append(getCode4EqualsAndHashcode(className, tmpPkSpalten));
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -360,7 +360,7 @@ public class DTOCreatorView {
 		sb.append(System.lineSeparator());
 		sb.append(view.pkSpalten.stream()
 				.map(col -> getCode4Attributes(col, rev, false))
-				.filter(code -> code != null)
+				.filter(Objects::nonNull)
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append(System.lineSeparator());
 		sb.append("\t/**" + System.lineSeparator());
@@ -372,9 +372,7 @@ public class DTOCreatorView {
 		sb.append(System.lineSeparator());
 		sb.append("\t/**" + System.lineSeparator());
 		sb.append("\t * Erstellt ein neues Objekt der Klasse " + className + "PK." + System.lineSeparator());
-		view.pkSpalten.stream().forEach(spalte -> {
-			sb.append("\t * @param " + spalte.name + "   der Wert für das Attribut " + spalte.name + "" + System.lineSeparator());
-		});
+		view.pkSpalten.stream().forEach(spalte -> sb.append("\t * @param " + spalte.name + "   der Wert für das Attribut " + spalte.name + "" + System.lineSeparator()));
 		sb.append("\t */" + System.lineSeparator());
 		sb.append("\tpublic " + className + "PK(");
 		sb.append(view.pkSpalten.stream()

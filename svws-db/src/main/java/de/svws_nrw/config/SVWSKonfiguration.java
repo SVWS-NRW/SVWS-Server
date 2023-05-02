@@ -699,7 +699,7 @@ public final class SVWSKonfiguration {
 	 * @return true, falls dass Logging aktiviert ist, sonst false
 	 */
 	public boolean isLoggingEnabled() {
-		return (dto == null) || (dto.loggingEnabled == null) ? false : dto.loggingEnabled;
+		return (dto != null) && (dto.loggingEnabled != null) && dto.loggingEnabled;
 	}
 
 

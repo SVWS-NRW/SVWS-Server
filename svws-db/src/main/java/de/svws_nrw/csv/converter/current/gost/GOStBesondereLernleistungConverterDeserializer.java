@@ -3,7 +3,6 @@ package de.svws_nrw.csv.converter.current.gost;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -35,7 +34,7 @@ public final class GOStBesondereLernleistungConverterDeserializer extends StdDes
 	}
 
 	@Override
-	public GostBesondereLernleistung deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public GostBesondereLernleistung deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		return GOStBesondereLernleistungConverter.instance.convertToEntityAttribute(p.getText());
 	}
 

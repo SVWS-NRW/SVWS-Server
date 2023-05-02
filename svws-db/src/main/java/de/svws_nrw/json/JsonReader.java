@@ -18,10 +18,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Diese Klasse stellt Hilfsmethoden zum Zugriff auf JSON-Dateien zur Verfügung.
  */
-public class JsonReader {
+public final class JsonReader {
+
+	private JsonReader() {
+	}
 
 	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
-	public static ObjectMapper mapper = new ObjectMapper();
+	public static final ObjectMapper mapper = new ObjectMapper();
 
 	/** Eine HashMap zum Zwischenspeicher von Dateisystemen zum Zugriff auf Zip-Ressourcen */
 	private static HashMap<String, FileSystem> mapFilesystems = new HashMap<>();

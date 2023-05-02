@@ -7,7 +7,10 @@ import java.util.regex.Pattern;
  * Diese Klasse stellt Hilfsmethoden für die spezielle
  * Handhabung von SQL für SQLite zur Verfügung.
  */
-public class SQLiteUtils {
+public final class SQLiteUtils {
+
+	private SQLiteUtils() {
+	}
 
 	private static final Pattern patternConcat = Pattern.compile(Pattern.quote("concat"), Pattern.CASE_INSENSITIVE);
 	private static final Pattern patternBraceCommaOrQuote = Pattern.compile("[\'\\(\\),]");

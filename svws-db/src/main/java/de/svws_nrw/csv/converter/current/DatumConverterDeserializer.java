@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -35,7 +34,7 @@ public final class DatumConverterDeserializer extends StdDeserializer<String> {
 	}
 
 	@Override
-	public String deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public String deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		try {
 			return DatumConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
 		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) {

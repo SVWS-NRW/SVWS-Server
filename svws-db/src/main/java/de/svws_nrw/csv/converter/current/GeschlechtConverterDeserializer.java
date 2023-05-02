@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -39,7 +38,7 @@ public final class GeschlechtConverterDeserializer extends StdDeserializer<Gesch
 	}
 
 	@Override
-	public Geschlecht deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Geschlecht deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		return GeschlechtConverter.instance.convertToEntityAttribute(NumberUtils.toInt(p.getText(), Geschlecht.X.id));
 	}
 

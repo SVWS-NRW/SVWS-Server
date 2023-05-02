@@ -101,11 +101,11 @@ public final class DBSchemaViews {
 	 * @return die Liste der Views, welche in der angegebenen Revision aktiv sind.
 	 */
 	public List<View> getViewsActive(final long revision) {
-		final ArrayList<View> views = new ArrayList<>();
+		final ArrayList<View> result = new ArrayList<>();
 		for (final View v : allViews)
 			if ((revision >= v.revision) && ((v.veraltet == null) || (revision < v.veraltet)))
-				views.add(v);
-		return views;
+				result.add(v);
+		return result;
 	}
 
 
@@ -136,10 +136,10 @@ public final class DBSchemaViews {
 			  SELECT Benutzer.ID, Concat(Schueler.Vorname, ' ', Schueler.Name) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN Schueler ON Benutzer.Schueler_ID = Schueler.ID JOIN Credentials ON Schueler.CredentialID = Credentials.ID
 			  UNION
 			  SELECT Benutzer.ID, Concat(SchuelerErzAdr.Vorname1, ' ', SchuelerErzAdr.Name1) AS AnzeigeName, Credentials.Benutzername, Credentials.PasswordHash FROM Benutzer JOIN SchuelerErzAdr ON Benutzer.Erzieher_ID = SchuelerErzAdr.ID JOIN Credentials ON SchuelerErzAdr.CredentialID = Credentials.ID
-		    ) creds JOIN (
-		      SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin FROM Benutzer LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
-		      GROUP BY Benutzer.ID
-		    ) admins ON creds.ID = admins.ID
+			) creds JOIN (
+			  SELECT Benutzer.ID, CASE WHEN max(Benutzer.IstAdmin) = 1 OR max(Benutzergruppen.IstAdmin) = 1 THEN 1 ELSE 0 END AS IstAdmin FROM Benutzer LEFT JOIN BenutzergruppenMitglieder ON Benutzer.ID = BenutzergruppenMitglieder.Benutzer_ID LEFT JOIN Benutzergruppen ON Benutzergruppen.ID = BenutzergruppenMitglieder.Gruppe_ID
+			  GROUP BY Benutzer.ID
+			) admins ON creds.ID = admins.ID
 			"""
 		).add("ID", "Die eindeutige ID des Benutzers", "Long", "creds.ID", null, true)
 		 .add("AnzeigeName", "Der Anzeige-Name des Benutzers (z.B. Max Mustermann)", "String", "creds.AnzeigeName", null, false)

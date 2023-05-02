@@ -3,7 +3,6 @@ package de.svws_nrw.csv.converter.current;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -35,7 +34,7 @@ public final  class BooleanPlusMinusDefaultPlusConverterDeserializer extends Std
 	}
 
 	@Override
-	public Boolean deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public Boolean deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		return BooleanPlusMinusDefaultPlusConverter.instance.convertToEntityAttribute(p.getText());
 	}
 

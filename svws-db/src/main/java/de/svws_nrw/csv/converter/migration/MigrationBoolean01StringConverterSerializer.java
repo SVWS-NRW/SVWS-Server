@@ -34,7 +34,7 @@ public final class MigrationBoolean01StringConverterSerializer extends StdSerial
 
 	@Override
 	public void serialize(final Boolean value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-		gen.writeString(Boolean01StringConverter.instance.convertToDatabaseColumn(value).toString());
+		gen.writeString(Boolean01StringConverter.instance.convertToDatabaseColumn(value));
 	}
 
 }

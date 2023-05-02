@@ -34,7 +34,7 @@ public final class Boolean01StringConverterSerializer extends StdSerializer<Bool
 
 	@Override
 	public void serialize(final Boolean value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-		gen.writeString(Boolean01StringConverter.instance.convertToDatabaseColumn(value).toString());
+		gen.writeString(Boolean01StringConverter.instance.convertToDatabaseColumn(value));
 	}
 
 }

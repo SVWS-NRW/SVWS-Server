@@ -3,7 +3,6 @@ package de.svws_nrw.csv.converter.current.statkue;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
@@ -34,7 +33,7 @@ public final class ZulaessigesFachKuerzelASDConverterDeserializer extends StdDes
 	}
 
 	@Override
-	public ZulaessigesFach deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public ZulaessigesFach deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		return ZulaessigesFach.getByKuerzelASD(p.getText());
 	}
 

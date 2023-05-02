@@ -2,8 +2,8 @@ package de.svws_nrw.db.schema;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgAdrAnsprechpartner;
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog_Keys;
@@ -225,7 +225,10 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_ZuordnungReportvorlagen;
 /**
  * Diese Klasse stellt alle Tabellen des Schemas zur Verfügung.
  */
-public class Schema {
+public final class Schema {
+
+	private Schema() {
+	}
 
 	/** Das übergeordnete Java-Paket, welches die Klassen für die SVWS-Datenbank beinhaltet */
 	public static final String javaPackage = "de.svws_nrw.db";
@@ -234,7 +237,7 @@ public class Schema {
 	public static final String javaDTOPackage = "dto";
 
 	/** Eine Map von dem Namen der Tabelle auf die einzelnen Tabellen. */
-	public static final LinkedHashMap<String, SchemaTabelle> tabellen = new LinkedHashMap<>();
+	public static final Map<String, SchemaTabelle> tabellen = new LinkedHashMap<>();
 
 	/**
 	 * Fügt eine Tabelle zu dem Schema hinzu.
@@ -907,7 +910,7 @@ public class Schema {
      *
      * @return eine Liste mit den SQL-Befehlen
      */
-    public static final List<String> getCreateBenutzerSQL(final long rev) {
+    public static List<String> getCreateBenutzerSQL(final long rev) {
     	final ArrayList<String> result = new ArrayList<>();
     	if (rev == 0) {
     		result.add("INSERT INTO Users(ID,US_Name,US_LoginName,US_UserGroups,US_Privileges) VALUES "
@@ -943,11 +946,11 @@ public class Schema {
      *
      * @return eine Liste mit den definierten Tabellen
      */
-    public static final List<SchemaTabelle> getTabellen(final long rev) {
+    public static List<SchemaTabelle> getTabellen(final long rev) {
     	return tabellen.values().stream()
     			.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
     					|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
-    			.collect(Collectors.toList());
+    			.toList();
     }
 
 }

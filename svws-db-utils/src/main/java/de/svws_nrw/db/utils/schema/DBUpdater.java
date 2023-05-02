@@ -2,6 +2,7 @@ package de.svws_nrw.db.utils.schema;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
@@ -444,7 +445,7 @@ public class DBUpdater {
 	private boolean dropColumns(final long veraltet) {
 		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
 			logger.log("- Verwerfe: ");
-			final List<SchemaTabelle> tabs = Schema.getTabellen(veraltet - 1);
+			final List<SchemaTabelle> tabs = new ArrayList<>(Schema.getTabellen(veraltet - 1));
 			Collections.reverse(tabs);
 			final List<SchemaTabelleSpalte> cols = tabs.stream()
 					.filter(tab -> tab.veraltet().revision != veraltet)

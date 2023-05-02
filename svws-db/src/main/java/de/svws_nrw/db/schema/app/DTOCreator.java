@@ -42,18 +42,17 @@ public class DTOCreator {
 	 * Erstellt das Verzeichnis für die DTO-Packages
 	 *
 	 * @param baseDir   das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
-	 * @param rev        die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
 	 *
 	 * @return das {@link File}-Objekt, falls das Verzeichnis erstellt wurde, im Fehlerfall null
 	 */
-	private static File createPackageDirectory(final String baseDir, final long rev) {
+	private static File createPackageDirectory(final String baseDir) {
 		try {
 			// Erstelle das Verzeichnis für das Package
 			final String pack = Schema.javaPackage + "." + Schema.javaDTOPackage;
 			logger.logLn("Erzeuge Package " + pack);
 			String packPath = pack.replace(".", "/");
 			if ((baseDir != null) && !baseDir.isEmpty())
-				packPath = baseDir + ((baseDir.endsWith("/") ? "" : "/")) + packPath;
+				packPath = baseDir + (baseDir.endsWith("/") ? "" : "/") + packPath;
 			final Path dir = Paths.get(packPath);
 			Files.createDirectories(dir);
 			return dir.toFile();
@@ -73,7 +72,7 @@ public class DTOCreator {
 	 * @return das {@link File}-Objekt für das Package-Verzeichnis
 	 */
 	private static File createJavaCode(final String baseDir, final long rev) {
-		final File packageDir = createPackageDirectory(baseDir, rev);
+		final File packageDir = createPackageDirectory(baseDir);
 		if (packageDir == null)
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
 
@@ -339,44 +338,45 @@ public class DTOCreator {
 
 	private static void createPersistenceXml(final String pathxml) {
 		final Path p = Paths.get(pathxml);
-		String xml = """
-                     <?xml version="1.0" encoding="UTF-8"?>
-                     <persistence version="2.1"
-                         xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-                         <persistence-unit name="SVWSDB" transaction-type="RESOURCE_LOCAL">
-                             <class>de.svws_nrw.db.converter.BenutzerKompetenzConverter</class>
-                             <class>de.svws_nrw.db.converter.Boolean01Converter</class>
-                             <class>de.svws_nrw.db.converter.Boolean01StringConverter</class>
-                             <class>de.svws_nrw.db.converter.BooleanPlusMinusConverter</class>
-                             <class>de.svws_nrw.db.converter.DatumConverter</class>
-                             <class>de.svws_nrw.db.converter.EigeneSchuleEinstellungenConverter</class>
-                             <class>de.svws_nrw.db.converter.GeschlechtConverter</class>
-                             <class>de.svws_nrw.db.converter.GeschlechtConverterFromString</class>
-                             <class>de.svws_nrw.db.converter.KursFortschreibungsartConverter</class>
-                             <class>de.svws_nrw.db.converter.NoteConverterFromInteger</class>
-                             <class>de.svws_nrw.db.converter.NoteConverterFromKuerzel</class>
-                             <class>de.svws_nrw.db.converter.NoteConverterFromNotenpunkte</class>
-                             <class>de.svws_nrw.db.converter.NoteConverterFromNotenpunkteString</class>
-                             <class>de.svws_nrw.db.converter.PersonalTypConverter</class>
-                             <class>de.svws_nrw.db.converter.SchuelerStatusConverter</class>
-                             <class>de.svws_nrw.db.converter.StringToIntegerConverter</class>
-                             <class>de.svws_nrw.db.converter.gost.AbiturBelegungsartConverter</class>
-                             <class>de.svws_nrw.db.converter.gost.AbiturKursMarkierungConverter</class>
-                             <class>de.svws_nrw.db.converter.gost.GOStAbiturFachConverter</class>
-                             <class>de.svws_nrw.db.converter.gost.GOStBesondereLernleistungConverter</class>
-                             <class>de.svws_nrw.db.converter.gost.GOStKursartConverter</class>
-                             <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
-                     """;
+		final StringBuilder sb = new StringBuilder();
+		sb.append("""
+                  <?xml version="1.0" encoding="UTF-8"?>
+                  <persistence version="2.1"
+                      xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+                      <persistence-unit name="SVWSDB" transaction-type="RESOURCE_LOCAL">
+                          <class>de.svws_nrw.db.converter.BenutzerKompetenzConverter</class>
+                          <class>de.svws_nrw.db.converter.Boolean01Converter</class>
+                          <class>de.svws_nrw.db.converter.Boolean01StringConverter</class>
+                          <class>de.svws_nrw.db.converter.BooleanPlusMinusConverter</class>
+                          <class>de.svws_nrw.db.converter.DatumConverter</class>
+                          <class>de.svws_nrw.db.converter.EigeneSchuleEinstellungenConverter</class>
+                          <class>de.svws_nrw.db.converter.GeschlechtConverter</class>
+                          <class>de.svws_nrw.db.converter.GeschlechtConverterFromString</class>
+                          <class>de.svws_nrw.db.converter.KursFortschreibungsartConverter</class>
+                          <class>de.svws_nrw.db.converter.NoteConverterFromInteger</class>
+                          <class>de.svws_nrw.db.converter.NoteConverterFromKuerzel</class>
+                          <class>de.svws_nrw.db.converter.NoteConverterFromNotenpunkte</class>
+                          <class>de.svws_nrw.db.converter.NoteConverterFromNotenpunkteString</class>
+                          <class>de.svws_nrw.db.converter.PersonalTypConverter</class>
+                          <class>de.svws_nrw.db.converter.SchuelerStatusConverter</class>
+                          <class>de.svws_nrw.db.converter.StringToIntegerConverter</class>
+                          <class>de.svws_nrw.db.converter.gost.AbiturBelegungsartConverter</class>
+                          <class>de.svws_nrw.db.converter.gost.AbiturKursMarkierungConverter</class>
+                          <class>de.svws_nrw.db.converter.gost.GOStAbiturFachConverter</class>
+                          <class>de.svws_nrw.db.converter.gost.GOStBesondereLernleistungConverter</class>
+                          <class>de.svws_nrw.db.converter.gost.GOStKursartConverter</class>
+                          <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
+                  """);
 		for (final String cl : allClasses)
-			xml += "        <class>" + cl + "</class>" + System.lineSeparator();
-		xml += """
-                        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-                    </persistence-unit>
-               </persistence>
-               """;
+			sb.append("        <class>" + cl + "</class>" + System.lineSeparator());
+		sb.append("""
+                           <exclude-unlisted-classes>false</exclude-unlisted-classes>
+                       </persistence-unit>
+                  </persistence>
+                  """);
 		try {
-			Files.writeString(p, xml, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			Files.writeString(p, sb.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben der persistence.xml in die Datei " + pathxml);
 		}

@@ -35,7 +35,7 @@ public final class NationalitaetenConverterSerializer extends StdSerializer<Nati
 
 	@Override
 	public void serialize(final Nationalitaeten value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
-		gen.writeString(NationalitaetenConverter.instance.convertToDatabaseColumn(value).toString());
+		gen.writeString(NationalitaetenConverter.instance.convertToDatabaseColumn(value));
 	}
 
 }

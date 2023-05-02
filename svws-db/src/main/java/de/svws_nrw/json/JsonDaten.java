@@ -10,7 +10,10 @@ import de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager;
  * Diese Klasse dient dem Zugriff auf Daten aus JSON-Dateien.
  * Hierfür wird die Klasse {@link JsonReader} genutzt.
  */
-public class JsonDaten {
+public final class JsonDaten {
+
+	private JsonDaten() {
+	}
 
 	/**
 	 * Liest den Katalog der Abgangsarten an allgemeinbildenden Schulformen ein.
