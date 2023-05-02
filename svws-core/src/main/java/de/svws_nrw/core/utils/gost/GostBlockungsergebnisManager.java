@@ -897,7 +897,7 @@ public class GostBlockungsergebnisManager {
 	public boolean getOfSchuelerHatNichtwahl(final long pSchuelerID) {
 		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(pSchuelerID);
 
-		for (@NotNull Entry<@NotNull Long, @NotNull GostBlockungsergebnisKurs> e : map.entrySet())
+		for (@NotNull final Entry<@NotNull Long, @NotNull GostBlockungsergebnisKurs> e : map.entrySet())
 			if (e.getValue() == null)
 				return true;
 
@@ -1800,9 +1800,8 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void setMergeKurseByID(final long pKursID1keep, final long pKursID2delete) {
 		// 1) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
-		@NotNull
-		final GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
-		for (final @NotNull Long schuelerID : kurs2.schueler) {
+		@NotNull final GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
+		for (final @NotNull Long schuelerID : new ArrayList<>(kurs2.schueler)) {
 			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
 			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);
 		}

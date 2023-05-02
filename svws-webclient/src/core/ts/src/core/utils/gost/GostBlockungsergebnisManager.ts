@@ -852,7 +852,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerHatNichtwahl(pSchuelerID : number) : boolean {
 		const map : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
-		for (let e of map.entrySet())
+		for (const e of map.entrySet())
 			if (e.getValue() === null)
 				return true;
 		return false;
@@ -1714,7 +1714,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setMergeKurseByID(pKursID1keep : number, pKursID2delete : number) : void {
 		const kurs2 : GostBlockungsergebnisKurs = this.getKursE(pKursID2delete);
-		for (const schuelerID of kurs2.schueler) {
+		for (const schuelerID of new ArrayList(kurs2.schueler)) {
 			this.stateSchuelerKursEntfernen(schuelerID!, pKursID2delete);
 			this.stateSchuelerKursHinzufuegen(schuelerID!, pKursID1keep);
 		}
