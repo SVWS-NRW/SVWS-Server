@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -527,7 +528,7 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
-	 * Führt den SQL-Befehlt direkt auf der JDBC-Connection (siehe {@link Connection}) aus.
+	 * Führt den SQL-Befehl direkt auf der JDBC-Connection (siehe {@link Connection}) aus.
 	 * Die zugehörige Transaktion wird durch diese Methode gehandhabt.
 	 *
 	 * @param query   der SQL-Befehl
@@ -550,6 +551,40 @@ public final class DBEntityManager implements AutoCloseable {
 		} catch (@SuppressWarnings("unused") final SQLException e) {
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
+	 * Führt die übergebenen SQL-Befehle direkt auf der JDBC-Connection (siehe {@link Connection}) aus.
+	 * Die zugehörige Transaktion wird durch diese Methode gehandhabt.
+	 *
+	 * @param queries   die Liste der SQL-Befehle
+	 *
+	 * @return die Anzahl der aktualisierten Entities, 0 falls die Befehle keine Rückgabe haben
+	 *
+	 * @throws DBException im Fehlerfall
+	 */
+	@SuppressWarnings("resource")
+	public int executeBatchWithJDBCConnection(final List<String> queries) throws DBException {
+		try {
+			this.lock();
+			this.transactionBegin();
+			final Connection conn = em.unwrap(Connection.class);
+			try (Statement stmt = conn.createStatement()) {
+				for (final String query : queries)
+					stmt.addBatch(query);
+				final int[] count = stmt.executeBatch();
+				if (this.transactionCommit())
+					return Arrays.stream(count).sum();
+				this.transactionRollback();
+			}
+			throw new DBException("Fehler beim Ausführen der SQL-Befehle");
+		} catch (final SQLException e) {
+			this.transactionRollback();
+			throw new DBException(e);
 		} finally {
 			this.unlock();
 		}

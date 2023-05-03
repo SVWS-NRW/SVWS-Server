@@ -245,6 +245,29 @@ public final class DBMigrationManager {
 
 
 	/**
+	 * Diese Methode führt eine Migration von der durch srcConfig beschriebene Schild2-Datenbank in die durch tgtConfig beschriebene
+	 * SVWS-Server-Datenbank durch. Das Ziel-Schema muss dabei bereits exitistieren.
+	 *
+	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
+	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
+	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
+	 * @param schulNr              die Schulnummer, für welche die Daten migriert werden sollen (null, wenn alle Daten gelesen werden sollen).
+	 * @param logger               ein Logger, welcher die Migration loggt.
+	 *
+	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
+	 */
+	public static boolean migrateInto(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+		final Benutzer tgtUser = Benutzer.create(tgtConfig);
+		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
+		if (!tgtManager.dropSVWSSchema())
+			return false;
+		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+		return migrationManager.doMigrate();
+	}
+
+
+	/**
 	 * Diese Methode führt eine Migration von der durch srcConfig beschriebene Schild2-Datenbank in die durch tgtConfig beschriebene SVWS-Server-Datenbank
 	 * durch.
 	 *
@@ -260,9 +283,9 @@ public final class DBMigrationManager {
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
 	public static boolean migrate(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
 		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
 			return false;
+		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
 		return migrationManager.doMigrate();
 	}
 

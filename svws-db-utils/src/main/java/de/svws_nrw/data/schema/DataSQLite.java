@@ -16,7 +16,7 @@ import jakarta.ws.rs.core.StreamingOutput;
 
 /**
  * Diese Klasse stellt Methoden für den Import und Export von SQLite-Datenbanken
- * zur Vefügung.
+ * zur Verfügung.
  */
 public final class DataSQLite {
 

@@ -1,5 +1,6 @@
 package de.svws_nrw.db.utils.schema;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.svws.db.DTODBVersion;
 import de.svws_nrw.db.schema.DBSchemaViews;
 import de.svws_nrw.db.schema.Schema;
@@ -490,7 +492,25 @@ public final class DBSchemaManager {
 			final DBDriver driver = conn.getDBDriver();
 			if ((driver == DBDriver.MDB) || (driver == DBDriver.SQLITE)) {
 				success = dropSVWSSchemaMultipleStatements(conn, driver);
-			} else if ((driver == DBDriver.MARIA_DB) || (driver == DBDriver.MYSQL) || (driver == DBDriver.MSSQL)) {
+			} else if ((driver == DBDriver.MARIA_DB) || (driver == DBDriver.MYSQL)) {
+				// drop all existing in one statement - we do not need to cope with foreign key constraints
+				final List<String> tableNames = status.getTabellen();
+				if (!tableNames.isEmpty()) {
+					logger.log("alle auf einmal... ");
+					final List<String> sql = new ArrayList<>();
+					sql.add("SET foreign_key_checks = 0");
+					sql.add(status.getTabellen().stream().collect(Collectors.joining(",", "DROP TABLE IF EXISTS ", ";")));
+					sql.add("SET foreign_key_checks = 1");
+					try {
+						conn.executeBatchWithJDBCConnection(sql);
+						logger.logLn(0, " " + strOK);
+					} catch (final DBException e) {
+						e.printStackTrace();
+						logger.logLn(0, " " + strError);
+						success = false;
+					}
+				}
+			} else if (driver == DBDriver.MSSQL) {
 				// drop all existing in one statement - we do not need to cope with foreign key constraints
 				final List<String> tableNames = status.getTabellen();
 				if (!tableNames.isEmpty()) {
