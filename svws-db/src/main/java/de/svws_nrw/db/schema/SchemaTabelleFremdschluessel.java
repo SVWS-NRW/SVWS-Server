@@ -187,7 +187,7 @@ public class SchemaTabelleFremdschluessel {
      * @return die Tabellenspalten des Fremdschlüssels in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
     }
 
 
@@ -220,10 +220,7 @@ public class SchemaTabelleFremdschluessel {
 			case SQLITE:
 				// TODO currently not supported
 				return null;
-			case MDB:
-			case MARIA_DB:
-			case MYSQL:
-			case MSSQL:
+			case MDB, MARIA_DB, MYSQL, MSSQL:
 			default:
 				return "ALTER TABLE " + this._tabelle.name() + " ADD " + this.getSQL();
 		}
@@ -238,18 +235,13 @@ public class SchemaTabelleFremdschluessel {
 	 * @return der SQL-Drop-Befehl
 	 */
 	public String getSQLDrop(final DBDriver dbms) {
-		switch (dbms) {
-			case SQLITE:
-				// TODO SQLite - Currently not supported
-				return null;
-			case MARIA_DB:
-			case MYSQL:
-			default:
-				return "ALTER TABLE " + this._tabelle.name() + " DROP FOREIGN KEY " + this._name + ";";
-			case MDB:
-			case MSSQL:
-				return "ALTER TABLE " + this._tabelle.name() + " DROP CONSTRAINT " + this._name + ";";
-		}
+		return switch (dbms) {
+			// TODO SQLite - Currently not supported
+			case SQLITE -> null;
+			case MARIA_DB, MYSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP FOREIGN KEY " + this._name + ";";
+			case MDB, MSSQL -> "ALTER TABLE " + this._tabelle.name() + " DROP CONSTRAINT " + this._name + ";";
+			default -> "ALTER TABLE " + this._tabelle.name() + " DROP FOREIGN KEY " + this._name + ";";
+		};
 	}
 
 }

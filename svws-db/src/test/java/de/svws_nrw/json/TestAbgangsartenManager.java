@@ -14,7 +14,7 @@ import de.svws_nrw.core.utils.schule.AbgangsartenManager;
  * JSON-Dateien hinterlegt sind. Hierbei werden die Daten auch vereinzelt
  * auf Korrektheit geprüft.
  */
-public class TestAbgangsartenManager {
+class TestAbgangsartenManager {
 
 	/**
 	 * Prüft die Einträge der beiden Kataloge für die Abgangsarten

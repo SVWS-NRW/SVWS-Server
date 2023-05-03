@@ -462,7 +462,7 @@ public class SchemaTabelle {
      * @return die Tabellenspalten in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
     }
 
 
@@ -478,7 +478,7 @@ public class SchemaTabelle {
     	final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
     	return _spalten.stream()
     			.filter(sp -> (revision >= sp.revision().revision) && ((sp.veraltet().revision < 0) || (revision < sp.veraltet().revision)))
-    			.sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
+    			.sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
     }
 
 
@@ -554,7 +554,7 @@ public class SchemaTabelle {
     	return _fremdschluessel.stream()
 			.filter(fk -> ((rev == -1) && (fk.veraltet().revision == -1))
 				|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
-			.collect(Collectors.toList());
+			.toList();
     }
 
 

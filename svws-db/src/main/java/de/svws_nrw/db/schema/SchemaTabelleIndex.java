@@ -132,7 +132,7 @@ public class SchemaTabelleIndex {
      * @return die Tabellenspalten des Index in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).toList();
     }
 
 
