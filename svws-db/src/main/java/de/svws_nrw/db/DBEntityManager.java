@@ -42,10 +42,10 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/** Formatiert ein Datum als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
-	private static DateTimeFormatter date_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	/** Formatiert ein Datum mit Zeitangabe als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
-	private static DateTimeFormatter datetime_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	/** Der Datenbank-Benutzer, der dieser Verbindung zugeordnet ist. */
 	private final Benutzer user;
@@ -200,7 +200,6 @@ public final class DBEntityManager implements AutoCloseable {
 	public void transactionBegin() {
 		this.lock();
 		em.getTransaction().begin();
-		// TODO Handle Exceptions
 	}
 
 
@@ -641,10 +640,10 @@ public final class DBEntityManager implements AutoCloseable {
 				for (int i = first; i <= last; i++) {
 					final Object[] data = entities.get(i);
 					for (int j = 0; j < colnames.size(); j++) {
-						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Timestamp)) {
-							prepared.setString(j + 1, datetime_formatter.format(((Timestamp) data[j]).toLocalDateTime()));
-						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof Date)) {
-							prepared.setString(j + 1, date_formatter.format(((Date) data[j]).toLocalDate()));
+						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Timestamp timestamp)) {
+							prepared.setString(j + 1, datetimeFormatter.format(timestamp.toLocalDateTime()));
+						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Date date)) {
+							prepared.setString(j + 1, dateFormatter.format(date.toLocalDate()));
 						} else {
 							prepared.setObject(j + 1, data[j]);
 						}
@@ -789,8 +788,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return die Liste mit den einzelnen Datensätzen
 	 */
 	public <T> List<T> queryAll(final Class<T> cl) {
-		final var result = queryNamed(cl.getSimpleName() + ".all", cl).getResultList();
-		return result;
+		return queryNamed(cl.getSimpleName() + ".all", cl).getResultList();
 	}
 
 

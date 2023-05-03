@@ -16,7 +16,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -52,7 +52,7 @@ public final class DataKursliste extends DataManager<Long> {
 			eintrag.idJahrgaenge.add(k.Jahrgang_ID);
 		if (k.Jahrgaenge != null)
 			for (final String jahrgang : k.Jahrgaenge.split(","))
-				if (jahrgang.matches("^[0-9]+$"))
+				if (jahrgang.matches("^\\d+$"))
 					eintrag.idJahrgaenge.add(Long.parseLong(jahrgang));
 		eintrag.idFach = k.Fach_ID;
 		eintrag.lehrer = k.Lehrer_ID;
@@ -62,13 +62,12 @@ public final class DataKursliste extends DataManager<Long> {
 	};
 
 
-	@Override
-	public Response getAll() {
-    	final List<DTOKurs> kurse = (abschnitt == null)
+	private @NotNull List<@NotNull KursListeEintrag> getKursListenFuerAbschnitt() {
+    	final @NotNull List<@NotNull DTOKurs> kurse = (abschnitt == null)
     		? conn.queryAll(DTOKurs.class)
     		: conn.queryNamed("DTOKurs.schuljahresabschnitts_id", abschnitt, DTOKurs.class);
-    	if (kurse == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    	if (kurse.isEmpty())
+    		return new ArrayList<>();
     	// Erstelle die Liste der Kurse
     	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
     	// Ergänze die Liste der Schüler in den Kursen
@@ -94,6 +93,13 @@ public final class DataKursliste extends DataManager<Long> {
     		if (listSchueler != null)
     			eintrag.schueler.addAll(listSchueler);
     	}
+    	return daten;
+	}
+
+
+	@Override
+	public Response getAll() {
+		final @NotNull List<@NotNull KursListeEintrag> daten = getKursListenFuerAbschnitt();
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

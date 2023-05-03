@@ -2,6 +2,7 @@ package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -216,6 +217,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
     		throw OperationError.NOT_FOUND.exception();
     	// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
     	final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
+    	if (schuelerIDs.isEmpty())
+    		return new ArrayList<>();
 		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte =
 			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr IS NULL",
 				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
