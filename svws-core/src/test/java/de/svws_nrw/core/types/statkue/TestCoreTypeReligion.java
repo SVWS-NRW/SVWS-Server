@@ -32,17 +32,17 @@ class TestCoreTypeReligion {
     	assertEquals(Religion.XO, Religion.getByKuerzel("XO"));
     	assertEquals(Religion.XR, Religion.getByKuerzel("XR"));
 
-    	assertEquals(Religion.AR.daten.bezeichnung, "alevitisch");
-    	assertEquals(Religion.ER.daten.bezeichnung, "evangelisch");
-    	assertEquals(Religion.HR.daten.bezeichnung, "jüdisch");
-    	assertEquals(Religion.IR.daten.bezeichnung, "islamisch");
-    	assertEquals(Religion.KR.daten.bezeichnung, "katholisch");
-    	assertEquals(Religion.ME.daten.bezeichnung, "mennonitische BG NRW");
-    	assertEquals(Religion.OH.daten.bezeichnung, "ohne Bekenntnis");
-    	assertEquals(Religion.OR.daten.bezeichnung, "griechisch-orthodox");
-    	assertEquals(Religion.SO.daten.bezeichnung, "syrisch-orthodox");
-    	assertEquals(Religion.XO.daten.bezeichnung, "sonstige orthodoxe");
-    	assertEquals(Religion.XR.daten.bezeichnung, "andere Religionen");
+    	assertEquals("alevitisch", Religion.AR.daten.bezeichnung);
+    	assertEquals("evangelisch", Religion.ER.daten.bezeichnung);
+    	assertEquals("jüdisch", Religion.HR.daten.bezeichnung);
+    	assertEquals("islamisch", Religion.IR.daten.bezeichnung);
+    	assertEquals("katholisch", Religion.KR.daten.bezeichnung);
+    	assertEquals("mennonitische BG NRW", Religion.ME.daten.bezeichnung);
+    	assertEquals("ohne Bekenntnis", Religion.OH.daten.bezeichnung);
+    	assertEquals("griechisch-orthodox", Religion.OR.daten.bezeichnung);
+    	assertEquals("syrisch-orthodox", Religion.SO.daten.bezeichnung);
+    	assertEquals("sonstige orthodoxe", Religion.XO.daten.bezeichnung);
+    	assertEquals("andere Religionen", Religion.XR.daten.bezeichnung);
     }
 
 	// TODO add additional tests

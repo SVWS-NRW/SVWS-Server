@@ -31,16 +31,16 @@ class TestCoreTypeLehrerRechtsverhaeltnis {
     	assertEquals(LehrerRechtsverhaeltnis.S, LehrerRechtsverhaeltnis.getByKuerzel("S"));
     	assertEquals(LehrerRechtsverhaeltnis.X, LehrerRechtsverhaeltnis.getByKuerzel("X"));
 
-    	assertEquals(LehrerRechtsverhaeltnis.L.daten.text, "Beamter auf Lebenszeit");
-    	assertEquals(LehrerRechtsverhaeltnis.P.daten.text, "Beamter auf Probe");
-    	assertEquals(LehrerRechtsverhaeltnis.A.daten.text, "Beamter auf Probe zur Anstellung");
-    	assertEquals(LehrerRechtsverhaeltnis.N.daten.text, "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)");
-    	assertEquals(LehrerRechtsverhaeltnis.W.daten.text, "Beamter auf Widerruf (LAA)");
-    	assertEquals(LehrerRechtsverhaeltnis.U.daten.text, "Angestellte, unbefristet (BAT-Vertrag)");
-    	assertEquals(LehrerRechtsverhaeltnis.B.daten.text, "Angestellte, befristet (BAT-Vertrag)");
-    	assertEquals(LehrerRechtsverhaeltnis.J.daten.text, "Angestellte, nicht BAT-Vertrag");
-    	assertEquals(LehrerRechtsverhaeltnis.S.daten.text, "Gestellungsvertrag");
-    	assertEquals(LehrerRechtsverhaeltnis.X.daten.text, "Unentgeltlich Beschäftigte");
+    	assertEquals("Beamter auf Lebenszeit", LehrerRechtsverhaeltnis.L.daten.text);
+    	assertEquals("Beamter auf Probe", LehrerRechtsverhaeltnis.P.daten.text);
+    	assertEquals("Beamter auf Probe zur Anstellung", LehrerRechtsverhaeltnis.A.daten.text);
+    	assertEquals("Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)", LehrerRechtsverhaeltnis.N.daten.text);
+    	assertEquals("Beamter auf Widerruf (LAA)", LehrerRechtsverhaeltnis.W.daten.text);
+    	assertEquals("Angestellte, unbefristet (BAT-Vertrag)", LehrerRechtsverhaeltnis.U.daten.text);
+    	assertEquals("Angestellte, befristet (BAT-Vertrag)", LehrerRechtsverhaeltnis.B.daten.text);
+    	assertEquals("Angestellte, nicht BAT-Vertrag", LehrerRechtsverhaeltnis.J.daten.text);
+    	assertEquals("Gestellungsvertrag", LehrerRechtsverhaeltnis.S.daten.text);
+    	assertEquals("Unentgeltlich Beschäftigte", LehrerRechtsverhaeltnis.X.daten.text);
     }
 
 	// TODO add additional tests

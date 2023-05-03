@@ -448,13 +448,13 @@ class TestMinHeap {
 	 */
 	@Test
 	void testEquals() {
-		assertNotEquals(heap, emptyHeap);
+		assertNotEquals(emptyHeap, heap);
 		assertEquals(heap, heap);
 		assertEquals(heap, new MinHeap<>(heap));
 		emptyHeap.add(42);
-		assertNotEquals(heap, emptyHeap);
-		assertNotEquals(heap, "Irgend etwas");
-		assertNotEquals(heap, null);
+		assertNotEquals(emptyHeap, heap);
+		assertNotEquals("Irgend etwas", heap);
+		assertNotEquals(null, heap);
 	}
 
 }
