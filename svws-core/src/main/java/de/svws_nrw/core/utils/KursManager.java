@@ -31,7 +31,7 @@ public class KursManager {
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Kursen.
-	 * 
+	 *
 	 * @param kurse die Liste mit den Kursen
 	 */
 	public KursManager(final @NotNull List<@NotNull KursListeEintrag> kurse) {
@@ -41,9 +41,9 @@ public class KursManager {
 	/**
 	 * Fügt den übergebenen Kurs zu diesem Manager hinzu. Die interne Sortierung
 	 * wird nicht korrigiert
-	 * 
+	 *
 	 * @param kurs der hinzuzufügende Kurs
-	 * 
+	 *
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 * @throws DeveloperNotificationException Falls die ID des Kurses nagativ ist.
 	 */
@@ -66,9 +66,9 @@ public class KursManager {
 	/**
 	 * Fügt den übergebenen Kurs zu diesem Manager hinzu und passt intern die
 	 * Sortierung der Kurse an.
-	 * 
+	 *
 	 * @param kurs der hinzuzufügende Kurs
-	 * 
+	 *
 	 * @return true, falls der Kurs hinzugefügt wurde
 	 */
 	public boolean add(final @NotNull KursListeEintrag kurs) {
@@ -79,9 +79,9 @@ public class KursManager {
 
 	/**
 	 * Fügt die Kurse in der übergeben Liste zu diesem Manager hinzu.
-	 * 
+	 *
 	 * @param kurse die einzufügenden Kurse
-	 * 
+	 *
 	 * @return true, falls <i>alle</i> Kurse eingefügt wurden, sonst false
 	 */
 	public boolean addAll(final @NotNull Collection<@NotNull KursListeEintrag> kurse) {
@@ -96,7 +96,7 @@ public class KursManager {
 	/**
 	 * Gibt den Kurs mit der angegebenen ID zurück oder null, falls es den Kurs
 	 * nicht gibt.
-	 * 
+	 *
 	 * @param id die ID des gesuchten Kurses
 	 * @return Der Kurs mit der angegebenen ID oder null, falls es den Kurs nicht
 	 *         gibt.
@@ -107,7 +107,7 @@ public class KursManager {
 
 	/**
 	 * Liefert den Kurs mit der angegebenen ID zurück.
-	 * 
+	 *
 	 * @param pKursID die ID des gesuchten Kurses
 	 * @return den Kurs mit der angegebenen ID
 	 * @throws DeveloperNotificationException falls ein Kurs mit der ID nicht
@@ -122,7 +122,7 @@ public class KursManager {
 
 	/**
 	 * Gibt zurück, ob die Liste der Kurse leer ist
-	 * 
+	 *
 	 * @return true, wenn die Liste der Kurse leer ist.
 	 */
 	public boolean isEmpty() {
@@ -131,7 +131,7 @@ public class KursManager {
 
 	/**
 	 * Liefert die interne Liste der Kurse. Diese sollte nicht verändert werden.
-	 * 
+	 *
 	 * @return die interne Liste der Kurse
 	 */
 	public @NotNull List<@NotNull KursListeEintrag> kurse() {
@@ -140,7 +140,7 @@ public class KursManager {
 
 	/**
 	 * Erstellt aus der internen Liste der Kurse ein Array
-	 * 
+	 *
 	 * @return ein Array mit den Kursen
 	 */
 	public @NotNull KursListeEintrag @NotNull [] values() {
@@ -149,7 +149,7 @@ public class KursManager {
 
 	/**
 	 * Erstellt aus der internen Liste einen Vector mit den Daten
-	 * 
+	 *
 	 * @return ein Vector mit den Kursen
 	 */
 	public @NotNull Vector<@NotNull KursListeEintrag> toVector() {
