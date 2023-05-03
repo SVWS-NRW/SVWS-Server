@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, computed, onMounted, watch } from 'vue';
+	import { ref, computed } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
@@ -93,24 +93,6 @@
 			element.value.innerText = newcontent;
 		}
 	}
-
-	onMounted(() => {
-		if (props.autoresize) {
-			updateContent(props.modelValue ?? "");
-		}
-	});
-
-	watch(
-		() => props.modelValue,
-		newval => {
-			if (props.autoresize) {
-				const currentText = element.value?.innerText ?? "";
-				if (newval !== currentText) {
-					updateContent(newval ?? "");
-				}
-			}
-		}
-	);
 </script>
 
 <template>
