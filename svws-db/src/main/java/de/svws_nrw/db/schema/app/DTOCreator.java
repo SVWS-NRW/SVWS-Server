@@ -399,7 +399,7 @@ public class DTOCreator {
 		// Gib das aktuelle Verzeichnis aus
 		logger.logLn("Aktuelles Verzeichnis: " + Paths.get("").toAbsolutePath().toString());
 
-		cmdLine = new CommandLineParser(args);
+		cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Source-Ordner, wo die Java-DTO-Klassen abgelegt werden"));
 			cmdLine.addOption(new CommandLineOption("p", "persistence", true, "Der Dateiname der persistence.xml-Datei"));

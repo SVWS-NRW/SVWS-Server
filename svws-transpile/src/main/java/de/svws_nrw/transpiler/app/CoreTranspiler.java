@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
+import de.svws_nrw.core.logger.LogConsumerConsole;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.transpiler.Transpiler;
 import de.svws_nrw.transpiler.TranspilerException;
 import de.svws_nrw.transpiler.typescript.ApiTranspilerTypeScriptPlugin;
@@ -24,10 +26,6 @@ import de.svws_nrw.transpiler.typescript.TranspilerTypeScriptPlugin;
  */
 public class CoreTranspiler {
 
-	/** Der Parser für die Kommandozeile */
-	private static CommandLineParser cmdLine;
-
-
 	/**
 	 * Starts the transpiler with the above configured input files and output directories
 	 *
@@ -39,7 +37,9 @@ public class CoreTranspiler {
 		String tmpDir = null;
 		String typeScriptOutputDir = null;
 		String typeScriptIgnorePackagePrefix = null;
-		cmdLine = new CommandLineParser(args);
+		final Logger logger = new Logger();
+		logger.addConsumer(new LogConsumerConsole());
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "java", true, "Die Java-Quellcode-Dateien für den Transpiler"));
 			cmdLine.addOption(new CommandLineOption("a", "api", true, "Die Quellcode-Dateien für das Generieren des API-Codes"));

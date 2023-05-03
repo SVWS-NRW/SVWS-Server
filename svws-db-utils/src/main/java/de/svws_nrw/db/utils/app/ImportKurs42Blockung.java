@@ -38,7 +38,7 @@ public class ImportKurs42Blockung {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args);
+		cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
 			cmdLine.addOption(new CommandLineOption("s", "schema", true, "Der Schema-Name für die SVWS-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));

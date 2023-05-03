@@ -2,6 +2,9 @@ package de.svws_nrw.base.shell;
 
 import java.util.HashMap;
 
+import de.svws_nrw.core.logger.Logger;
+import jakarta.validation.constraints.NotNull;
+
 
 /**
  * Diese Klasse dient dem Umgang mit Parametern beim Aufruf von Java-Programmen aus der
@@ -14,6 +17,9 @@ public class CommandLineParser {
 
 	/// Die Kommandozeilen-Parameter als String-Array
 	private final String[] args;
+
+	/// Der Logger für die Ausgabe von Rückmeldungen des Parsers
+	private final @NotNull Logger logger;
 
 
 	/// Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Short-Tags zugeordnet sind
@@ -28,13 +34,15 @@ public class CommandLineParser {
 
 	/**
 	 * Dieser Konstruktor erzeugt einen neuen Parser für die
+	 * Kommandozeile.
 	 *
 	 * @param args   die Kommandozeilenparameter
+	 * @param logger der Logger für Rückmeldungen des Parsers
 	 */
-	public CommandLineParser(final String[] args) {
+	public CommandLineParser(final String[] args, final @NotNull Logger logger) {
 		this.args = args;
+		this.logger = logger;
 	}
-
 
 
 	/**
@@ -155,30 +163,20 @@ public class CommandLineParser {
 
 	/**
 	 * Gibt die übergebene Fehlermeldung und die gültigen Kommandozeilen-Optionen
-	 * auf der Konsole (System.out) aus.
+	 * über den zugeordneten Logger aus.
 	 *
 	 * @param error   die Fehlermeldung, die ausgegeben werden soll
 	 */
 	public void printOptions(final String error) {
-		final StringBuilder sb = new StringBuilder();
 		if (error != null) {
-			sb.append(error);
-			sb.append(System.lineSeparator());
+			logger.logLn(error);
 		}
-		sb.append("Gültige Kommandozeilen-Optionen sind:");
-		sb.append(System.lineSeparator());
+		logger.logLn("Gültige Kommandozeilen-Optionen sind:");
 		for (final CommandLineOption option : options.values()) {
-			sb.append("  -");
-			sb.append(option.getShortTag());
-			sb.append(System.lineSeparator());
-			sb.append("  --");
-			sb.append(option.getLongTag());
-			sb.append(System.lineSeparator());
-			sb.append("        ");
-			sb.append(option.getDescription());
-			sb.append(System.lineSeparator());
+			logger.logLn("  -" + option.getShortTag());
+			logger.logLn("  --" + option.getLongTag());
+			logger.logLn("        " + option.getDescription());
 		}
-		System.out.print(sb.toString());
 	}
 
 

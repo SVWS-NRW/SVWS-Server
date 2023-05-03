@@ -7,6 +7,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.LogConsumerConsole;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBDriver;
 
 /**
@@ -15,10 +17,6 @@ import de.svws_nrw.db.DBDriver;
  */
 public class SVWSConfigFileWriter {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
-
 	/**
 	 * Die Main-Methode zum Starten des Kommandozeilenprogramms zum Erzeugen einer SVWS-Konfiguration mit
 	 * Default-Einstellungen.
@@ -26,8 +24,9 @@ public class SVWSConfigFileWriter {
 	 * @param args   enthält die Kommandozeilen-Parameter zur Angabe von Konfigurationsoptionen
 	 */
 	public static void main(final String[] args) {
-
-		cmdLine = new CommandLineParser(args);
+		final Logger logger = new Logger();
+		logger.addConsumer(new LogConsumerConsole());
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Dateiname mit Pfad von der anzulegenden Konfigurationsdatei"));
 			cmdLine.addOption(new CommandLineOption("c", "clientpath", true, "Der Pfad, in welchem der Server die Dateien für den Webclient sucht"));

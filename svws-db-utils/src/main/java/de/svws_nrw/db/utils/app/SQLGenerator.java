@@ -16,6 +16,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
+import de.svws_nrw.core.logger.LogConsumerConsole;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -28,11 +30,9 @@ import de.svws_nrw.db.schema.SchemaTabelle;
  */
 public class SQLGenerator {
 
+	private static final Logger logger = new Logger();
+
 	private static String dirOutput = "build/sql";
-
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 
 	/**
 	 * Generiert das SQL-Skript zum Erstellen eines Schema für die angebene Revision
@@ -45,15 +45,15 @@ public class SQLGenerator {
 	 */
 	public static String getCreateSchemaSkript(final DBDriver dbms, final long rev) {
 		final String newline = System.lineSeparator();
-		String result = "";
+		final StringBuilder sb = new StringBuilder();
 		for (final SchemaTabelle t : Schema.tabellen.values()) {
-			result += t.getSQL(dbms, rev);
+			sb.append(t.getSQL(dbms, rev));
 			final var sql_indizes = t.getSQLIndizes(rev);
 			if ((sql_indizes != null) && (!"".equals(sql_indizes)))
-				result += newline + newline + sql_indizes;
-			result += newline + newline + newline;
+				sb.append(newline + newline + sql_indizes);
+			sb.append(newline + newline + newline);
 		}
-		result += newline
+		sb.append(newline
 		        + ((dbms == DBDriver.MSSQL) ? "GO" + newline + newline : "")
 		        + Schema.tabellen.values().stream()
 		       		.map(tab -> tab.getSQLTrigger(dbms, rev, true))
@@ -64,8 +64,8 @@ public class SQLGenerator {
 		        + newline
 		        + getInserts(rev)
 		        + newline
-		        + Schema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline;
-		return result;
+		        + Schema.getCreateBenutzerSQL(rev).stream().collect(Collectors.joining(newline + newline)) + newline);
+		return sb.toString();
 	}
 
 
@@ -121,12 +121,11 @@ public class SQLGenerator {
 	 * @throws IOException    tritt auf, wenn die Daten nicht erfolgreich geschrieben werden konnten
 	 */
 	public static void writeTo(final Path file, final String data) throws IOException {
-		System.out.print("  Schreibe " + file + "... ");
+		logger.log("  Schreibe " + file + "... ");
 		try (InputStream in = IOUtils.toInputStream(data, StandardCharsets.UTF_8)) {
 			Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
-			in.close();
 		}
-		System.out.println("[OK]");
+		logger.logLn("[OK]");
 	}
 
 
@@ -141,10 +140,10 @@ public class SQLGenerator {
 	 */
 	private static void writeScript(final Path baseDir, final long revision) throws IOException {
 		// Create- und Drop-Schema-Skripte in Abhängigkeit von dem DBMS
-		System.out.println("- Erzeuge Skripte für die Revision " + revision);
+		logger.logLn("- Erzeuge Skripte für die Revision " + revision);
 		for (final DBDriver driver : DBDriver.values()) {
 			final Path dir = Paths.get(baseDir.toString());
-			System.out.println("Treiber " + driver + " -> " + dir + " : ");
+			logger.logLn("Treiber " + driver + " -> " + dir + " : ");
 			Files.createDirectories(dir);
 
 			final String revStr = (revision == -1) ? "current." : "rev" + revision + ".";
@@ -182,7 +181,8 @@ public class SQLGenerator {
 	 * @throws IOException   tritt auf, wenn die Skripte nicht erfolgreich geschrieben werden konnten
 	 */
 	public static void main(final String[] args) throws IOException {
-		cmdLine = new CommandLineParser(args);
+		logger.addConsumer(new LogConsumerConsole());
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ort, an welchem die Skripte in Unterordnern paltziert werden sollen (Default: " + dirOutput + ")"));
 			cmdLine.addOption(new CommandLineOption("a", "all", false, "Gibt an, dass Skripte für alle Schema-Revision bis zu der mit r angegebenen Revision erstellt werden"));
@@ -190,7 +190,7 @@ public class SQLGenerator {
 
 			// Lese ggf. den Ausgabe-Pfad ein
 			final Path dirScripts = Paths.get(cmdLine.getValue("o", dirOutput));
-			System.out.println("- Ausgabe-Verzeichnis \"" + dirScripts + "\"");
+			logger.logLn("- Ausgabe-Verzeichnis \"" + dirScripts + "\"");
 			Files.createDirectories(dirScripts);
 
 			// Lese optional eine spezielle Revision ein...

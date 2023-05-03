@@ -1155,7 +1155,7 @@ public class MDBtoCSV {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args);
+		cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("i", "input", true, "Der Dateiname der MDB-Datei"));
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ort, wo die CSV-Dateien erzeugt werden sollen"));
