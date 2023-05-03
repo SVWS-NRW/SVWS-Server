@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -365,7 +366,8 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			final List<DTOGostBlockungZwischenergebnisKursSchueler> schuelerListe = conn.queryNamed("DTOGostBlockungZwischenergebnisKursSchueler.blockung_kurs_id", kurs.ID, DTOGostBlockungZwischenergebnisKursSchueler.class);
 			final Map<Long, DTOGostBlockungZwischenergebnisKursSchueler> mapKursSchueler = schuelerListe.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.Schueler_ID).toList();
-			final List<DTOSchueler> listSchuelerDTOs = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
+			final List<DTOSchueler> listSchuelerDTOs = schuelerIDs.isEmpty() ? new ArrayList<>()
+					: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 			final Map<Long, DTOSchueler> mapSchuelerDTOs = listSchuelerDTOs.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 			for (int i = 0; i < schuelerListe.size(); i++) { // Prüfe die Konsistenz der Daten in der Datenbank
 				final DTOGostBlockungZwischenergebnisKursSchueler schueler = schuelerListe.get(i);
