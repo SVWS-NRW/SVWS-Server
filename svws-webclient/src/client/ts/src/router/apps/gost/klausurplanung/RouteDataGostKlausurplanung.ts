@@ -1,4 +1,5 @@
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe } from "@svws-nrw/svws-core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe} from "@svws-nrw/svws-core";
+import { KursManager } from "@svws-nrw/svws-core";
 import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
@@ -22,6 +23,7 @@ interface RouteStateGostKlausurplanung {
 	halbjahr: GostHalbjahr;
 	kursklausurmanager: GostKursklausurManager | undefined;
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
+	kursmanager: KursManager;
 	view: RouteNode<any, any>;
 }
 
@@ -36,6 +38,7 @@ export class RouteDataGostKlausurplanung {
 		halbjahr: GostHalbjahr.EF1,
 		kursklausurmanager: undefined,
 		klausurvorgabenmanager: undefined,
+		kursmanager: new KursManager(),
 		view: routeGostKlausurplanungKlausurdaten,
 	}
 
@@ -83,6 +86,11 @@ export class RouteDataGostKlausurplanung {
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		let view: RouteNode<any, any> = this._state.value.view;
+		console.log("View", view);
+		// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
+		const listKurse = await api.server.getKurse(api.schema);
+		const kursManager = new KursManager(listKurse);
+
 		if (abiturjahr !== -1) {
 			const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 			// Lade die Schülerliste des Abiturjahrgangs
@@ -107,6 +115,7 @@ export class RouteDataGostKlausurplanung {
 			halbjahr: this._state.value.halbjahr,
 			kursklausurmanager: undefined,
 			klausurvorgabenmanager: undefined,
+			kursmanager: kursManager,
 			view: view,
 		};
 	}
@@ -123,6 +132,10 @@ export class RouteDataGostKlausurplanung {
 
 	public get faecherManager() : GostFaecherManager {
 		return this._state.value.faecherManager;
+	}
+
+	public get kursManager() : KursManager {
+		return this._state.value.kursmanager;
 	}
 
 	public get mapLehrer(): Map<number, LehrerListeEintrag> {
@@ -156,6 +169,7 @@ export class RouteDataGostKlausurplanung {
 			halbjahr: halbjahr,
 			kursklausurmanager,
 			klausurvorgabenmanager,
+			kursmanager: this._state.value.kursmanager,
 			view: this._state.value.view,
 		};
 		return true;
@@ -281,7 +295,7 @@ export class RouteDataGostKlausurplanung {
 
 	erzeugeVorgabenAusVorlage = async (): Promise<boolean> => {
 		api.status.start();
-		await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr);
+		await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id);
 		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, this.halbjahr.id);
 		this._state.value.klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
 		this.commit();

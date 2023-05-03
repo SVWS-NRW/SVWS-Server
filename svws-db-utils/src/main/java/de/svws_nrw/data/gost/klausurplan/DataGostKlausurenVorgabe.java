@@ -338,13 +338,13 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		conn.remove(vorgabe);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
-
+	
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang *
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public boolean copyVorgabenToJahrgang() {
+	public boolean copyVorgabenToJahrgang(GostHalbjahr halbjahr) {
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
 		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
 
@@ -356,6 +356,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 			for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
+				if (halbjahr != null && vorgabe.Halbjahr != halbjahr)
+					continue;
 				boolean exists = false;
 				for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
 					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal == v.Quartal && vorgabe.Fach_ID == v.Fach_ID && vorgabe.Kursart.equals(v.Kursart)) {

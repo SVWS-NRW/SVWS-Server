@@ -1,17 +1,17 @@
 <template>
 	<svws-ui-drag-data tag="tr" :class="klausurCssClasses()" :key="props.klausur.id" :data="{...klausur}" @drag-start="dragStatus(klausur)" @drag-end="dragStatus(null)">
-		<td>{{ props.klausur.kursart }}</td>
-		<td>{{ faecherManager.get(props.klausur.idFach)?.kuerzelAnzeige }}</td>
-		<td><!--{{ props.klausur.kursKurzbezeichnung!.match(/(\d+)/)!.slice(-1)[0] }}--></td>
-		<td>{{ mapLehrer.get(props.klausur.idLehrer)?.kuerzel }}</td>
-		<td>{{ props.klausur.schuelerIds.size() }}</td>
-		<td>{{ props.klausur.kursSchiene[0] }}</td>
+		<td>{{ kurs.kuerzel }}</td>
+		<td>{{ mapLehrer.get(kurs.lehrer!)?.kuerzel }}</td>
+		<td class="text-center">{{ props.klausur.schuelerIds.size() + "/" + kurs.schueler.size() }}</td>
+		<td class="text-center">{{ props.klausur.dauer }}</td>
+		<td>&nbsp;</td>
+		<td></td>
 	</svws-ui-drag-data>
 </template>
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, List, GostKursklausurManager } from "@svws-nrw/svws-core";
+	import type { GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, List, GostKursklausurManager, KursListeEintrag, KursManager } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		kursklausurmanager: () => GostKursklausurManager;
@@ -20,8 +20,11 @@
 		alleTermine: List<GostKlausurtermin>;
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		kursmanager: KursManager;
 		dragStatus: (klausur: GostKursklausur | null) => void;
 	}>();
+
+	const kurs: KursListeEintrag = props.kursmanager.get(props.klausur.idKurs)!;
 
 	const klausurCssClasses = () => {
 		let konfliktfreiZuFremdtermin = false;

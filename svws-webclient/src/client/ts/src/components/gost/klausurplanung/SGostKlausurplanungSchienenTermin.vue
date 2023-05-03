@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col border border-blue-900 border-solid w-52">
+	<div class="flex flex-col border border-blue-900 border-solid w-72 shrink-0">
 		<svws-ui-drop-data @drop="setKlausurToTermin" class="h-full">
 			<div class="flex flex-row-reverse">
 				<svws-ui-badge class="-m-2 z-10"
@@ -10,10 +10,11 @@
 				</svws-ui-badge>
 			</div>
 			<table class="w-full">
-				<thead>
+				<thead v-if="termin !== null">
 					<tr>
-						<th colspan="5">{{ terminHeader }}</th>
-						<td class="float-right">
+						<th class="text-left" colspan="2">St HJ{{ termin?.halbjahr }}K{{ termin?.quartal }}</th>
+						<th class="text-right" colspan="4">{{ termin.datum === null ? "Noch kein Datum" : new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</th>
+						<!--						<td class="float-right">
 							<svws-ui-popover v-if="loescheKlausurtermin != undefined" :hover="false" placement="left-end" :disable-click-away="false">
 								<template #trigger>
 									<svws-ui-button class="action-button">
@@ -32,10 +33,11 @@
 									</div>
 								</template>
 							</svws-ui-popover>
-						</td>
+						</td>-->
 					</tr>
-					<tr v-if="termin !== null">
-						<th colspan="6"><svws-ui-text-input placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" /></th>
+					<tr>
+						<th colspan="5"><svws-ui-text-input placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" /></th>
+						<td colspan="1" class="text-right">{{ anzahlSuS }} SuS</td>
 					</tr>
 					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->
 				</thead>
@@ -48,7 +50,8 @@
 						:alle-termine="alleTermine"
 						:faecher-manager="faecherManager"
 						:map-lehrer="mapLehrer"
-						:drag-status="dragStatus" />
+						:drag-status="dragStatus"
+						:kursmanager="kursmanager" />
 				</tbody>
 			</table>
 		</svws-ui-drop-data>
@@ -57,15 +60,18 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List } from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@svws-nrw/svws-core";
+	import { GostJahrgangsdaten } from "@svws-nrw/svws-core";
 	import { computed } from 'vue';
 
 	const props = defineProps<{
+		//		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		termin: GostKlausurtermin | null;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapSchueler: Map<number, SchuelerListeEintrag>;
+		kursmanager: KursManager;
 		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
 		loescheKlausurtermin?: (termin: GostKlausurtermin) => Promise<boolean>;
 		dragStatus: (klausur: GostKursklausur | null) => void;
@@ -124,6 +130,14 @@
 
 	const updateTermin = async() => {
 		console.log("Hallo");
-	}
+	};
+
+	const anzahlSuS = computed(() => {
+		let anzahl = 0;
+		for(const klausur of klausuren.value.toArray() as GostKursklausur[]) {
+			anzahl += klausur.schuelerIds.size();
+		}
+		return anzahl;
+	});
 
 </script>

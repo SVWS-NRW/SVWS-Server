@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostKursklausurManager, Schulform, Vector } from "@svws-nrw/svws-core";
 
 const SGostKlausurplanungPlanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue");
 
@@ -21,7 +21,12 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			faecherManager: routeGostKlausurplanung.data.faecherManager,
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
+			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
+			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
+			kursmanager: routeGostKlausurplanung.data.kursManager,
 		}
 	}
 

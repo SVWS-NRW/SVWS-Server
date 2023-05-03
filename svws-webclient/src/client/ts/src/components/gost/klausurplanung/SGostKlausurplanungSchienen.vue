@@ -52,10 +52,10 @@
 		</svws-ui-modal>
 		<svws-ui-content-card class="pt-8">
 			<div class="flex flex-wrap justify-between items-start">
-				<div class="flex flex-wrap items-center gap-2">
-					<label class="font-bold hidden" for="rgQuartalAuswahl">Quartal:</label>
+				<div class="flex flex-wrap items-center gap-2 border border-solid rounded px-2">
+					<label class="font-bold" for="rgQuartalAuswahl">Quartal:</label>
 					<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide Quartale" value="0" @input="chooseQuartal(0)" model-value="0" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide" value="0" @input="chooseQuartal(0)" model-value="0" />
 						<svws-ui-radio-option name="rgQuartalAuswahl" label="1." value="1" @input="chooseQuartal(1)" />
 						<svws-ui-radio-option name="rgQuartalAuswahl" label="2." value="2" @input="chooseQuartal(2)" />
 					</svws-ui-radio-group>
@@ -76,7 +76,8 @@
 					:map-lehrer="mapLehrer"
 					:set-termin-to-kursklausur="setTerminToKursklausur"
 					:drag-status="dragStatus"
-					:map-schueler="mapSchueler" />
+					:map-schueler="mapSchueler"
+					:kursmanager="kursmanager" />
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
 						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
@@ -91,7 +92,8 @@
 							:drag-klausur="dragKlausur"
 							:map-schueler="mapSchueler"
 							:loesche-klausurtermin="loescheKlausurtermin"
-							:patch-klausurtermin="patchKlausurtermin" />
+							:patch-klausurtermin="patchKlausurtermin"
+							:kursmanager="kursmanager" />
 					</div>
 				</div>
 			</div>

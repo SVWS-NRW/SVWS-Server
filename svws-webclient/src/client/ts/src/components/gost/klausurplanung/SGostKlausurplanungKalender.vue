@@ -34,7 +34,7 @@
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin} from "@svws-nrw/svws-core";
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@svws-nrw/svws-core";
 	import { GostKursklausur, List } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
@@ -42,6 +42,7 @@
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		kursmanager: KursManager;
 		patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 	}>();
 

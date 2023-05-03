@@ -3,6 +3,7 @@ import type {
 	GostKlausurtermin,
 	GostKursklausur,
 	GostKursklausurManager,
+	KursManager,
 	LehrerListeEintrag,
 	SchuelerListeEintrag,
 } from "@svws-nrw/svws-core";
@@ -16,5 +17,6 @@ export interface GostKlausurplanungSchienenProps {
 	loescheKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<boolean>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
+	kursmanager: KursManager;
 	patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 }
