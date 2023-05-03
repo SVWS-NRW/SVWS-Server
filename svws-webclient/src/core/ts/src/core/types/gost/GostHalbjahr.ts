@@ -174,12 +174,40 @@ export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 	}
 
 	/**
+	 * Gibt das nachfolgende Halbjahr zurück.
+	 *
+	 * @return das nachfolgende Halbjahr
+	 *
+	 * @throws NullPointerException wenn es kein nachfolgendes Halbjahr gibt
+	 */
+	public nextOrException() : GostHalbjahr {
+		const hj : GostHalbjahr | null = GostHalbjahr.getMapByID().get(this.id + 1);
+		if (hj === null)
+			throw new NullPointerException()
+		return hj;
+	}
+
+	/**
 	 * Gibt das vorherige Halbjahr zurück.
 	 *
 	 * @return das vorherige Halbjahr oder null, wenn es keines mehr gibt
 	 */
 	public previous() : GostHalbjahr | null {
 		return GostHalbjahr.getMapByID().get(this.id - 1);
+	}
+
+	/**
+	 * Gibt das vorherige Halbjahr zurück.
+	 *
+	 * @return das vorherige Halbjahr
+	 *
+	 * @throws NullPointerException wenn es kein vorheriges Halbjahr gibt
+	 */
+	public previousOrException() : GostHalbjahr {
+		const hj : GostHalbjahr | null = GostHalbjahr.getMapByID().get(this.id - 1);
+		if (hj === null)
+			throw new NullPointerException()
+		return hj;
 	}
 
 	/**

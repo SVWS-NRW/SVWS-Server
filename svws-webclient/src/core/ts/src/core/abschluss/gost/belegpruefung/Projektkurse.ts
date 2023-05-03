@@ -175,39 +175,53 @@ export class Projektkurse extends GostBelegpruefung {
 	 *
 	 * @param projektkurs   die Fachbelegungen des Projektfaches
 	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 * @param halbjahr1     das erste Halbjahr der Belegung des Projektfaches (das zweite ist das nachfolgende)
 	 *
 	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
 	 */
-	private pruefeBelegungLeitfachbelegung(projektkurs : AbiturFachbelegung | null, leitfach : AbiturFachbelegung | null) : boolean {
-		if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-			if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
+	private pruefeBelegungLeitfachbelegungNormal(projektkurs : AbiturFachbelegung, leitfach : AbiturFachbelegung, halbjahr1 : GostHalbjahr) : boolean {
+		if (halbjahr1 as unknown === GostHalbjahr.Q22 as unknown)
+			return false;
+		if (!this.manager.pruefeBelegung(projektkurs, halbjahr1, halbjahr1.nextOrException()))
+			return false;
+		for (let hj : GostHalbjahr = halbjahr1; hj.istQualifikationsphase(); hj = hj.previousOrException())
+			if (this.manager.pruefeBelegung(leitfach, hj, hj.nextOrException()))
 				return true;
-		} else
-			if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-				if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)))
-					return true;
-			} else
-				if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-					if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22))))
-						return true;
-				} else
-					if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11)) {
-						if ((leitfach !== null) && this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11))
-							return true;
-					} else
-						if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12)) {
-							if ((leitfach !== null) && (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12)))
-								return true;
-						} else
-							if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21)) {
-								if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21))))
-									return true;
-							} else
-								if (this.manager.pruefeBelegung(projektkurs, GostHalbjahr.Q22)) {
-									if ((leitfach !== null) && ((this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22)) || (this.manager.pruefeBelegung(leitfach, GostHalbjahr.Q22))))
-										return true;
-								}
 		return false;
+	}
+
+	/**
+	 * Prüft, ob das Leitfach in Bezug auf die Belegung des Projektfaches die korrekten Halbjahresbelegungen hat.
+	 * In dieser Variante wird nur die Belegung eines Projektfaches für ein Halbjahr geprüft. Dies kann z.B.
+	 * der Fall sein, wenn ein Projektkurs nach einem Halbjahr abgebrochen wurde.
+	 *
+	 * @param projektkurs   die Fachbelegungen des Projektfaches
+	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 * @param halbjahr1     das erste Halbjahr der Belegung des Projektfaches (das zweite ist das nachfolgende)
+	 *
+	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
+	 */
+	private pruefeBelegungLeitfachbelegungEinzel(projektkurs : AbiturFachbelegung, leitfach : AbiturFachbelegung, halbjahr1 : GostHalbjahr) : boolean {
+		if (!this.manager.pruefeBelegung(projektkurs, halbjahr1))
+			return false;
+		if (this.manager.pruefeBelegung(leitfach, halbjahr1))
+			return true;
+		for (let hj : GostHalbjahr = halbjahr1.previousOrException(); hj.istQualifikationsphase(); hj = hj.previousOrException())
+			if (this.manager.pruefeBelegung(leitfach, hj, hj.nextOrException()))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Prüft, ob das Leitfach in Bezug auf die Belegung des Projektfaches die korrekten Halbjahresbelegungen hat.
+	 *
+	 * @param projektkurs   die Fachbelegungen des Projektfaches
+	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 *
+	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
+	 */
+	private pruefeBelegungLeitfachbelegung(projektkurs : AbiturFachbelegung, leitfach : AbiturFachbelegung) : boolean {
+		return (this.pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q11) || this.pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q12) || this.pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q21) || this.pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q11) || this.pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q12) || this.pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q21) || this.pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q22));
 	}
 
 	/**

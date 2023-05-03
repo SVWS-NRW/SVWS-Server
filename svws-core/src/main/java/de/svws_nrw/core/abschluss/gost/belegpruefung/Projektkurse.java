@@ -239,45 +239,68 @@ public final class Projektkurse extends GostBelegpruefung {
 	 *
 	 * @param projektkurs   die Fachbelegungen des Projektfaches
 	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 * @param halbjahr1     das erste Halbjahr der Belegung des Projektfaches (das zweite ist das nachfolgende)
 	 *
 	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
 	 */
-	private boolean pruefeBelegungLeitfachbelegung(final AbiturFachbelegung projektkurs, final AbiturFachbelegung leitfach) {
-		// Prüfe, ob eine normale Belegung eines Projektkurse zuvor eine zulässige Leitfachbelegung hatte
-		if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-			if ((leitfach != null) && manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
+	private boolean pruefeBelegungLeitfachbelegungNormal(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach, final @NotNull GostHalbjahr halbjahr1) {
+		// Prüfe zunächst die Belegung des Projektfaches
+		if (halbjahr1 == GostHalbjahr.Q22)
+			return false;
+		if (!manager.pruefeBelegung(projektkurs, halbjahr1, halbjahr1.nextOrException()))
+			return false;
+		// Und dann die Belegung des Leitfaches in der Qualifikationsphase
+		for (@NotNull GostHalbjahr hj = halbjahr1; hj.istQualifikationsphase(); hj = hj.previousOrException())
+			if (manager.pruefeBelegung(leitfach, hj, hj.nextOrException()))
 				return true;
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
-			if ((leitfach != null) && (manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)
-					|| manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21)))
-				return true;
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
-			if ((leitfach != null) && ((manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22))))
-				return true;
-			// Prüfe, ob eine Einzelbelegungen eines Projektkurse zuvor eine zulässige Leitfachbelegung hatte
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q11)) {
-			if ((leitfach != null) && manager.pruefeBelegung(leitfach, GostHalbjahr.Q11))
-				return true;
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q12)) {
-			if ((leitfach != null) && (manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12)
-					|| manager.pruefeBelegung(leitfach, GostHalbjahr.Q12)))
-				return true;
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q21)) {
-			if ((leitfach != null) && ((manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q21))))
-				return true;
-		} else if (manager.pruefeBelegung(projektkurs, GostHalbjahr.Q22)) {
-			// dieser Spezial-Fall muss durch einen anderen Fehlercode korrigiert werden, aber nicht durch die Leitfachbelegung...
-			if ((leitfach != null) && ((manager.pruefeBelegung(leitfach, GostHalbjahr.Q11, GostHalbjahr.Q12))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q12, GostHalbjahr.Q21))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q21, GostHalbjahr.Q22))
-					|| (manager.pruefeBelegung(leitfach, GostHalbjahr.Q22))))
-				return true;
-		}
 		return false;
+	}
+
+
+	/**
+	 * Prüft, ob das Leitfach in Bezug auf die Belegung des Projektfaches die korrekten Halbjahresbelegungen hat.
+	 * In dieser Variante wird nur die Belegung eines Projektfaches für ein Halbjahr geprüft. Dies kann z.B.
+	 * der Fall sein, wenn ein Projektkurs nach einem Halbjahr abgebrochen wurde.
+	 *
+	 * @param projektkurs   die Fachbelegungen des Projektfaches
+	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 * @param halbjahr1     das erste Halbjahr der Belegung des Projektfaches (das zweite ist das nachfolgende)
+	 *
+	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
+	 */
+	private boolean pruefeBelegungLeitfachbelegungEinzel(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach, final @NotNull GostHalbjahr halbjahr1) {
+		// Prüfe zunächst die Belegung des Projektfaches
+		if (!manager.pruefeBelegung(projektkurs, halbjahr1))
+			return false;
+		// Und dann die Belegung des Leitfaches in der Qualifikationsphase
+		if (manager.pruefeBelegung(leitfach, halbjahr1))
+			return true;
+		for (@NotNull GostHalbjahr hj = halbjahr1.previousOrException(); hj.istQualifikationsphase(); hj = hj.previousOrException())
+			if (manager.pruefeBelegung(leitfach, hj, hj.nextOrException()))
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob das Leitfach in Bezug auf die Belegung des Projektfaches die korrekten Halbjahresbelegungen hat.
+	 *
+	 * @param projektkurs   die Fachbelegungen des Projektfaches
+	 * @param leitfach      die Fachbelegungen des Leitfaches
+	 *
+	 * @return true, falls das Leitfach eine geeigneten Belegung aufweist, sonst false
+	 */
+	private boolean pruefeBelegungLeitfachbelegung(final @NotNull AbiturFachbelegung projektkurs, final @NotNull AbiturFachbelegung leitfach) {
+		// Prüfe, ob eine normale Belegung eines Projektkurse zuvor eine zulässige Leitfachbelegung hatte
+		// oder ob eine Einzelbelegungen eines Projektkurse zuvor eine zulässige Leitfachbelegung hatte
+		// der Spezial-Fall einer Einzelbelegung in der Q2.2 muss durch einen anderen Fehlercode korrigiert werden, aber nicht durch die Leitfachbelegung...
+		return (pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q11)
+			|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q12)
+			|| pruefeBelegungLeitfachbelegungNormal(projektkurs, leitfach, GostHalbjahr.Q21)
+			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q11)
+			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q12)
+			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q21)
+			|| pruefeBelegungLeitfachbelegungEinzel(projektkurs, leitfach, GostHalbjahr.Q22));
 	}
 
 

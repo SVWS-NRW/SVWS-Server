@@ -144,6 +144,22 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
 	/**
+	 * Gibt das nachfolgende Halbjahr zurück.
+	 *
+	 * @return das nachfolgende Halbjahr
+	 *
+	 * @throws NullPointerException wenn es kein nachfolgendes Halbjahr gibt
+	 */
+	@JsonIgnore
+	public @NotNull GostHalbjahr nextOrException() {
+		final GostHalbjahr hj = getMapByID().get(this.id + 1);
+		if (hj == null)
+			throw new NullPointerException();
+		return hj;
+	}
+
+
+	/**
 	 * Gibt das vorherige Halbjahr zurück.
 	 *
 	 * @return das vorherige Halbjahr oder null, wenn es keines mehr gibt
@@ -151,6 +167,22 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 	@JsonIgnore
 	public GostHalbjahr previous() {
 		return getMapByID().get(this.id - 1);
+	}
+
+
+	/**
+	 * Gibt das vorherige Halbjahr zurück.
+	 *
+	 * @return das vorherige Halbjahr
+	 *
+	 * @throws NullPointerException wenn es kein vorheriges Halbjahr gibt
+	 */
+	@JsonIgnore
+	public @NotNull GostHalbjahr previousOrException() {
+		final GostHalbjahr hj = getMapByID().get(this.id - 1);
+		if (hj == null)
+			throw new NullPointerException();
+		return hj;
 	}
 
 
