@@ -5,6 +5,9 @@
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
 				<svws-ui-icon @click.stop="gotoLaufbahnplanung(s.id)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon>{{ s.nachname }}, {{ s.vorname }}
+				<svws-ui-badge v-if="s.status !== 2" type="light" size="big" :short="true">
+					{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
+				</svws-ui-badge>
 			</template>
 			<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 				{{ counter(f.fehlercodes) }}
@@ -18,7 +21,7 @@
 
 <script setup lang="ts">
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungsArt, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
-	import { ArrayList, GostBelegungsfehlerArt } from '@svws-nrw/svws-core';
+	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import { toRaw} from 'vue';
 	import { computed, ref } from 'vue';
