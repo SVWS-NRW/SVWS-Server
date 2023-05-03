@@ -131,7 +131,7 @@ public class SchemaTabelleUniqueIndex {
      * @return die Tabellenspalten der Unique-Constraint in der durch das Feld Sortierung definierten Reihenfolge
      */
     public List<SchemaTabelleSpalte> getSpalten() {
-    	return _spalten.stream().sorted((a, b) -> { return Integer.compare(a.sortierung(), b.sortierung()); }).collect(Collectors.toList());
+    	return _spalten.stream().sorted((a, b) -> Integer.compare(a.sortierung(), b.sortierung())).collect(Collectors.toList());
     }
 
 

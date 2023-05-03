@@ -1,5 +1,6 @@
 package de.svws_nrw.db.schema.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -143,35 +144,24 @@ public final class DTOInformationSchemaTableColumn {
 	 * @return die Map mit den Spalten-DTOs, welche den Tabellen-Namen in Kleinschreibung (!) zugeordnet sind.
 	 */
 	public static Map<String, DTOInformationSchemaTableColumn> query(final DBEntityManager conn, final String tabname) {
-		List<DTOInformationSchemaTableColumn> results = null;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				results = conn.queryNamed("DTOInformationSchemaTableColumn.mysql", DTOInformationSchemaTableColumn.class)
+		final List<DTOInformationSchemaTableColumn> results = switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchemaTableColumn.mysql", DTOInformationSchemaTableColumn.class)
 					.setParameter(1, conn.getDBSchema())
 					.setParameter(2, tabname)
 					.getResultList();
-				break;
-			case MDB:
-				results = conn.queryNamed("DTOInformationSchemaTableColumn.mdb", DTOInformationSchemaTableColumn.class)
+			case MDB -> conn.queryNamed("DTOInformationSchemaTableColumn.mdb", DTOInformationSchemaTableColumn.class)
 					.setParameter(1, tabname.toUpperCase())
 					.getResultList();
-				break;
-			case MSSQL:
-				results = conn.queryNamed("DTOInformationSchemaTableColumn.mssql", DTOInformationSchemaTableColumn.class)
+			case MSSQL -> conn.queryNamed("DTOInformationSchemaTableColumn.mssql", DTOInformationSchemaTableColumn.class)
 					.setParameter(1, conn.getDBSchema())
 					.setParameter(2, tabname)
 					.getResultList();
-				break;
-			case SQLITE:
-				results = conn.queryNamed("DTOInformationSchemaTableColumn.sqlite", DTOInformationSchemaTableColumn.class)
+			case SQLITE -> conn.queryNamed("DTOInformationSchemaTableColumn.sqlite", DTOInformationSchemaTableColumn.class)
 					.setParameter(1, tabname)
 					.setParameter(2, tabname)
 					.getResultList();
-				break;
-		}
-		if (results == null)
-			return null;
+			default -> new ArrayList<>();
+		};
 		// TODO Vereinheitlichung der Darstellung aus den Informations-Schemata der unterschiedlichen DBMS
 		return results.stream().collect(Collectors.toMap(e -> e.Name.toLowerCase(), e -> e, (first, duplicate) -> first));
 	}

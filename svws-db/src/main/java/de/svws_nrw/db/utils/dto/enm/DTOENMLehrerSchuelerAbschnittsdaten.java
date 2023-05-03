@@ -185,68 +185,68 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	 * @return eine Liste mit den DTOs
 	 */
 	public static List<DTOENMLehrerSchuelerAbschnittsdaten> query(final DBEntityManager conn, final long schuljahresabschnitt, final String lehrerKrz) {
-		final List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
+		return conn.queryNative(
+				"""
 				SELECT
-					la.Schueler_ID as schuelerID,
-					la.ID as abschnittID,
-					la.Jahrgang_ID as jahrgangID,
-					k.Klasse as klasse,
+				    la.Schueler_ID as schuelerID,
+				    la.ID as abschnittID,
+				    la.Jahrgang_ID as jahrgangID,
+				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-					la.Gesamtnote_GS as lernbereich1note,
-					la.Gesamtnote_NW as lernbereich2note,
-					fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
-					fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
-					la.ZieldifferentesLernen as ZieldifferentesLernen,
-					la.SumFehlStd as fehlstundenSummeGesamt,
-					enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
-					la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
-					enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
-					la.ZeugnisBem as zeugnisBemerkungen,
-					enmla.tsZeugnisBem as tsZeugnisBemerkungen,
-					bem.ASV as ASV,
-					enmla.tsASV as tsASV,
-					bem.LELS as LELS,
-					bem.AUE as AUE,
-					enmla.tsAUE as tsAUE,
-					bem.ESF as ESF,
-					bem.bemerkungFSP as bemerkungFSP,
-					bem.bemerkungVersetzung as bemerkungVersetzung,
-					enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
-					ld.ID as leistungID,
-					ld.NotenKrz as note,
-					enmld.tsNotenKrz as tsNote,
-					ld.Kursart as kursart,
-					ld.Fachlehrer_ID as lehrerID,
-					ld.Kurs_ID as kursID,
-					ld.Fach_ID as fachID,
-					ld.Wochenstunden as wochenstunden,
-					ld.AbiFach as abiturfach,
-					ld.FehlStd as fehlstundenGesamt,
-					enmld.tsFehlStd as tsFehlstundenGesamt,
-					ld.uFehlStd as fehlstundenUnentschuldigt,
-					enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
-					ld.Lernentw as fachbezogeneBemerkungen,
-					enmld.tsLernentw as tsFachbezogeneBemerkungen,
-					ld.Warnung as istGemahnt,
-					enmld.tsWarnung as tsIstGemahnt,
-					ld.Warndatum as mahndatum
+				    la.Gesamtnote_GS as lernbereich1note,
+				    la.Gesamtnote_NW as lernbereich2note,
+				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
+				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
+				    la.ZieldifferentesLernen as ZieldifferentesLernen,
+				    la.SumFehlStd as fehlstundenSummeGesamt,
+				    enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
+				    la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
+				    enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
+				    la.ZeugnisBem as zeugnisBemerkungen,
+				    enmla.tsZeugnisBem as tsZeugnisBemerkungen,
+				    bem.ASV as ASV,
+				    enmla.tsASV as tsASV,
+				    bem.LELS as LELS,
+				    bem.AUE as AUE,
+				    enmla.tsAUE as tsAUE,
+				    bem.ESF as ESF,
+				    bem.bemerkungFSP as bemerkungFSP,
+				    bem.bemerkungVersetzung as bemerkungVersetzung,
+				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
+				    ld.ID as leistungID,
+				    ld.NotenKrz as note,
+				    enmld.tsNotenKrz as tsNote,
+				    ld.Kursart as kursart,
+				    ld.Fachlehrer_ID as lehrerID,
+				    ld.Kurs_ID as kursID,
+				    ld.Fach_ID as fachID,
+				    ld.Wochenstunden as wochenstunden,
+				    ld.AbiFach as abiturfach,
+				    ld.FehlStd as fehlstundenGesamt,
+				    enmld.tsFehlStd as tsFehlstundenGesamt,
+				    ld.uFehlStd as fehlstundenUnentschuldigt,
+				    enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
+				    ld.Lernentw as fachbezogeneBemerkungen,
+				    enmld.tsLernentw as tsFachbezogeneBemerkungen,
+				    ld.Warnung as istGemahnt,
+				    enmld.tsWarnung as tsIstGemahnt,
+				    ld.Warndatum as mahndatum
 				FROM
-					SchuelerLernabschnittsdaten la
-						JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
-					 		AND la.Schuljahresabschnitts_ID = %d
-					 	JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID AND kl.Kuerzel = '%s'
-					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
-					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
-					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
-					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				    SchuelerLernabschnittsdaten la
+				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
+				            AND la.Schuljahresabschnitts_ID = %d
+				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID AND kl.Kuerzel = '%s'
+				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
+				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
+				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
+				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
+				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
-					 la.Schueler_ID, la.ID, ld.ID
-				;""".formatted(schuljahresabschnitt, lehrerKrz),
-				DTOENMLehrerSchuelerAbschnittsdaten.class);
-		return results;
+				     la.Schueler_ID, la.ID, ld.ID
+				;
+				""".formatted(schuljahresabschnitt, lehrerKrz), DTOENMLehrerSchuelerAbschnittsdaten.class);
 	}
 
 
@@ -261,68 +261,68 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	 * @return eine Liste mit den DTOs
 	 */
 	public static List<DTOENMLehrerSchuelerAbschnittsdaten> queryAll(final DBEntityManager conn, final long schuljahresabschnitt) {
-		final List<DTOENMLehrerSchuelerAbschnittsdaten> results = conn.queryNative("""
+		return conn.queryNative(
+				"""
 				SELECT
-					la.Schueler_ID as schuelerID,
-					la.ID as abschnittID,
-					la.Jahrgang_ID as jahrgangID,
-					k.Klasse as klasse,
+				    la.Schueler_ID as schuelerID,
+				    la.ID as abschnittID,
+				    la.Jahrgang_ID as jahrgangID,
+				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-					la.Gesamtnote_GS as lernbereich1note,
-					la.Gesamtnote_NW as lernbereich2note,
-					fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
-					fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
-					la.ZieldifferentesLernen as ZieldifferentesLernen,
-					la.SumFehlStd as fehlstundenSummeGesamt,
-					enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
-					la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
-					enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
-					la.ZeugnisBem as zeugnisBemerkungen,
-					enmla.tsZeugnisBem as tsZeugnisBemerkungen,
-					bem.ASV as ASV,
-					enmla.tsASV as tsASV,
-					bem.LELS as LELS,
-					bem.AUE as AUE,
-					enmla.tsAUE as tsAUE,
-					bem.ESF as ESF,
-					bem.bemerkungFSP as bemerkungFSP,
-					bem.bemerkungVersetzung as bemerkungVersetzung,
-					enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
-					ld.ID as leistungID,
-					ld.NotenKrz as note,
-					enmld.tsNotenKrz as tsNote,
-					ld.Kursart as kursart,
-					ld.Fachlehrer_ID as lehrerID,
-					ld.Kurs_ID as kursID,
-					ld.Fach_ID as fachID,
-					ld.Wochenstunden as wochenstunden,
-					ld.AbiFach as abiturfach,
-					ld.FehlStd as fehlstundenGesamt,
-					enmld.tsFehlStd as tsFehlstundenGesamt,
-					ld.uFehlStd as fehlstundenUnentschuldigt,
-					enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
-					ld.Lernentw as fachbezogeneBemerkungen,
-					enmld.tsLernentw as tsFachbezogeneBemerkungen,
-					ld.Warnung as istGemahnt,
-					enmld.tsWarnung as tsIstGemahnt,
-					ld.Warndatum as mahndatum
+				    la.Gesamtnote_GS as lernbereich1note,
+				    la.Gesamtnote_NW as lernbereich2note,
+				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
+				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
+				    la.ZieldifferentesLernen as ZieldifferentesLernen,
+				    la.SumFehlStd as fehlstundenSummeGesamt,
+				    enmla.tsSumFehlStd as tsFehlstundenSummeGesamt,
+				    la.SumFehlStdU as fehlstundenSummeUnentschuldigt,
+				    enmla.tsSumFehlStdU as tsFehlstundenSummeUnentschuldigt,
+				    la.ZeugnisBem as zeugnisBemerkungen,
+				    enmla.tsZeugnisBem as tsZeugnisBemerkungen,
+				    bem.ASV as ASV,
+				    enmla.tsASV as tsASV,
+				    bem.LELS as LELS,
+				    bem.AUE as AUE,
+				    enmla.tsAUE as tsAUE,
+				    bem.ESF as ESF,
+				    bem.bemerkungFSP as bemerkungFSP,
+				    bem.bemerkungVersetzung as bemerkungVersetzung,
+				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
+				    ld.ID as leistungID,
+				    ld.NotenKrz as note,
+				    enmld.tsNotenKrz as tsNote,
+				    ld.Kursart as kursart,
+				    ld.Fachlehrer_ID as lehrerID,
+				    ld.Kurs_ID as kursID,
+				    ld.Fach_ID as fachID,
+				    ld.Wochenstunden as wochenstunden,
+				    ld.AbiFach as abiturfach,
+				    ld.FehlStd as fehlstundenGesamt,
+				    enmld.tsFehlStd as tsFehlstundenGesamt,
+				    ld.uFehlStd as fehlstundenUnentschuldigt,
+				    enmld.tsuFehlStd as tsFehlstundenUnentschuldigt,
+				    ld.Lernentw as fachbezogeneBemerkungen,
+				    enmld.tsLernentw as tsFachbezogeneBemerkungen,
+				    ld.Warnung as istGemahnt,
+				    enmld.tsWarnung as tsIstGemahnt,
+				    ld.Warndatum as mahndatum
 				FROM
-					SchuelerLernabschnittsdaten la
-						JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
-					 		AND la.Schuljahresabschnitts_ID = %d
-					 	JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
-					 	LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
-					 	LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
-					 	LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
-					 	LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-					 	LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-					 	LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				    SchuelerLernabschnittsdaten la
+				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
+				            AND la.Schuljahresabschnitts_ID = %d
+				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
+				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
+				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
+				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
+				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
+				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
-					 la.Schueler_ID, la.ID, ld.ID
-				;""".formatted(schuljahresabschnitt),
-				DTOENMLehrerSchuelerAbschnittsdaten.class);
-		return results;
+				     la.Schueler_ID, la.ID, ld.ID
+				;
+				""".formatted(schuljahresabschnitt), DTOENMLehrerSchuelerAbschnittsdaten.class);
 	}
 
 

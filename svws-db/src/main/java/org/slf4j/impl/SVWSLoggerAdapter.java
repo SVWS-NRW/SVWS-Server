@@ -14,22 +14,22 @@ public final class SVWSLoggerAdapter implements Logger {
 	private final String _name;
 
 	/** Gibt an, ob Meldungen der Level WARN auf dem Standard-Error- oder dem Standard-Output-Stream ausgegeben werden */
-	private final boolean _mapWarnToError = false;
+	private static final boolean _mapWarnToError = false;
 
 	/** Werden Fehlermeldungen geloggt? */
-	private final boolean _enabledError = true;
+	private static final boolean _enabledError = true;
 
 	/** Werden Warnungen geloggt? */
-	private final boolean _enabledWarn = false;
+	private static final boolean _enabledWarn = false;
 
 	/** Werden Informationen geloggt? */
-	private final boolean _enabledInfo = false;
+	private static final boolean _enabledInfo = false;
 
 	/** Werden Meldungen zum Debuggen geloggt? */
-	private final boolean _enabledDebug = false;
+	private static final boolean _enabledDebug = false;
 
 	/** Werden feinere Meldungen zum Debugging / Tracing geloggt? */
-	private final boolean _enabledTrace = false;
+	private static final boolean _enabledTrace = false;
 
 
 

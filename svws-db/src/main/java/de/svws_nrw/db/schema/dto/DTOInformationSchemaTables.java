@@ -1,5 +1,6 @@
 package de.svws_nrw.db.schema.dto;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -57,28 +58,17 @@ public final class DTOInformationSchemaTables {
 	 * @return die Map mit den Datenbank-Tabellen-DTOs, welche den Tabellen-Namen zugeordnet sind.
 	 */
 	public static Map<String, DTOInformationSchemaTables> query(final DBEntityManager conn) {
-		List<DTOInformationSchemaTables> results = null;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mysql", DTOInformationSchemaTables.class)
+		final List<DTOInformationSchemaTables> results = switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchemaTables.mysql", DTOInformationSchemaTables.class)
 					.setParameter(1, conn.getDBSchema())
 					.getResultList();
-				break;
-			case MDB:
-				results = conn.queryNamed("DTOInformationSchemaTables.mdb", DTOInformationSchemaTables.class).getResultList();
-				break;
-			case MSSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mssql", DTOInformationSchemaTables.class)
+			case MDB -> conn.queryNamed("DTOInformationSchemaTables.mdb", DTOInformationSchemaTables.class).getResultList();
+			case MSSQL -> conn.queryNamed("DTOInformationSchemaTables.mssql", DTOInformationSchemaTables.class)
 					.setParameter(1, conn.getDBSchema())
 					.getResultList();
-				break;
-			case SQLITE:
-				results = conn.queryNamed("DTOInformationSchemaTables.sqlite", DTOInformationSchemaTables.class).getResultList();
-				break;
-		}
-		if (results == null)
-			return null;
+			case SQLITE -> conn.queryNamed("DTOInformationSchemaTables.sqlite", DTOInformationSchemaTables.class).getResultList();
+			default -> new ArrayList<>();
+		};
 		return results.stream().collect(Collectors.toMap(e -> e.Name, e -> e));
 	}
 
@@ -91,27 +81,17 @@ public final class DTOInformationSchemaTables {
 	 * @return die Liste mit den Tabellennamen
 	 */
 	public static List<String> queryNames(final DBEntityManager conn) {
-		List<String> results = null;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mysql", String.class)
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchemaTables.mysql", String.class)
 					.setParameter(1, conn.getDBSchema())
 					.getResultList();
-				break;
-			case MDB:
-				results = conn.queryNamed("DTOInformationSchemaTables.mdb", String.class).getResultList();
-				break;
-			case MSSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mssql", String.class)
+			case MDB -> conn.queryNamed("DTOInformationSchemaTables.mdb", String.class).getResultList();
+			case MSSQL -> conn.queryNamed("DTOInformationSchemaTables.mssql", String.class)
 					.setParameter(1, conn.getDBSchema())
 					.getResultList();
-				break;
-			case SQLITE:
-				results = conn.queryNamed("DTOInformationSchemaTables.sqlite", String.class).getResultList();
-				break;
-		}
-		return results;
+			case SQLITE -> conn.queryNamed("DTOInformationSchemaTables.sqlite", String.class).getResultList();
+			default -> new ArrayList<>();
+		};
 	}
 
 
@@ -125,31 +105,21 @@ public final class DTOInformationSchemaTables {
 	 * @return die Liste mit den Tabellennamen
 	 */
 	public static List<String> queryNames(final DBEntityManager conn, final String schemaName) {
-		List<String> results = null;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mysql", String.class)
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchemaTables.mysql", String.class)
 					.setParameter(1, schemaName)
 					.getResultList();
-				break;
-			case MDB:
-				if (!"PUBLIC".equalsIgnoreCase(schemaName))
-					return Collections.emptyList();
-				results = conn.queryNamed("DTOInformationSchemaTables.mdb", String.class).getResultList();
-				break;
-			case MSSQL:
-				results = conn.queryNamed("DTOInformationSchemaTables.mssql", String.class)
+			case MDB -> (!"PUBLIC".equalsIgnoreCase(schemaName))
+					? Collections.emptyList()
+					: conn.queryNamed("DTOInformationSchemaTables.mdb", String.class).getResultList();
+			case MSSQL -> conn.queryNamed("DTOInformationSchemaTables.mssql", String.class)
 					.setParameter(1, schemaName)
 					.getResultList();
-				break;
-			case SQLITE:
-				if ((schemaName == null) || (!"".equalsIgnoreCase(schemaName)) || (!"master".equalsIgnoreCase(schemaName)))
-					return Collections.emptyList();
-				results = conn.queryNamed("DTOInformationSchemaTables.sqlite", String.class).getResultList();
-				break;
-		}
-		return results;
+			case SQLITE -> ((schemaName == null) || (!"".equalsIgnoreCase(schemaName)) || (!"master".equalsIgnoreCase(schemaName)))
+					? Collections.emptyList()
+					: conn.queryNamed("DTOInformationSchemaTables.sqlite", String.class).getResultList();
+			default -> new ArrayList<>();
+		};
 	}
 
 
