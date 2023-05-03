@@ -97,8 +97,6 @@ public final class DBMigrationManager {
 
 	private final DBConfig srcConfig;
 	private final DBConfig tgtConfig;
-	private final String tgtRootUser;
-	private final String tgtRootPW;
 	private final int maxUpdateRevision;
 	private final boolean devMode;
 	private final Integer filterSchulNummer;
@@ -186,22 +184,63 @@ public final class DBMigrationManager {
 	 *
 	 * @param srcConfig            die Datenbank-Konfiguration für den Zugriff auf die Schild2-Datenbank
 	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
-	 * @param tgtRootUser          der Benutzername eines "root"-Benutzers, der mit den Rechten zur Schemaverwaltung ausgestattet ist
-	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
 	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param schulNr              die Schulnummer, für welche die Daten migriert werden sollen (null, wenn alle Daten gelesen werden sollen).
 	 * @param logger               ein Logger, welcher die Migration loggt.
 	 */
-	private DBMigrationManager(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
+	private DBMigrationManager(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
 		this.srcConfig = srcConfig;
 		this.tgtConfig = tgtConfig;
-		this.tgtRootUser = tgtRootUser;
-		this.tgtRootPW = tgtRootPW;
 		this.maxUpdateRevision = maxUpdateRevision;
 		this.devMode = devMode;
 		this.filterSchulNummer = schulNr;
 		this.logger = logger;
+	}
+
+
+	/**
+	 * Erstellt ein neues Schema für die Migration. Für das Erstellen werden root-Rechte benötigt.
+	 *
+	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param tgtRootUser          der Benutzername eines Benutzers, der mit den Rechten zum Verwalten der Datenbankschemata ausgestattet ist.
+	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
+	 * @param logger               ein Logger, welcher das Erstellen loggt.
+	 *
+	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
+	 */
+	public static boolean createNewTargetSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final Logger logger) {
+		boolean success = true;
+		final String tgtSchema = tgtConfig.getDBSchema();
+		logger.logLn("Erstelle Ziel-Schema für " + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtSchema + ")");
+		logger.modifyIndent(2);
+		try {
+			if ((tgtSchema == null) || "".equals(tgtSchema.trim()))
+				throw new DBException("Ziel-Schemaname darf nicht null oder leer sein");
+
+			if (!SVWSKonfiguration.get().lockSchema(tgtSchema))
+				throw new DBException("Ziel-Schema ist aktuell gesperrt und kann daher nicht überschrieben werden");
+
+			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername())))
+				throw new DBException("Der Benutzer \"root\" ist kein zulässiger SVWS-Admin-Benutzer für MYSQL / MARIA_DB");
+
+			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
+				throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
+
+			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
+				throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
+
+		} catch (final DBException e) {
+			logger.logLn("-> Erstellen fehlgeschlagen! (%s)".formatted(e.getMessage()));
+			success = false;
+		} finally {
+			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
+				logger.logLn("-> Schema ist nicht gesperrt und konnte daher nicht freigegeben werden.");
+				success = false;
+			}
+		}
+		logger.modifyIndent(-2);
+		return success;
 	}
 
 
@@ -221,31 +260,10 @@ public final class DBMigrationManager {
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
 	public static boolean migrate(final DBConfig srcConfig, final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, tgtRootUser, tgtRootPW, maxUpdateRevision, devMode, schulNr, logger);
-		return migrationManager.doMigrate();
-	}
-
-
-	/**
-	 * Prüft die Konfiguration für die Ziel-Datenbank und erstellt das Datenbank-Schema.
-	 *
-	 * @return true im Erfolgsfall
-	 */
-	private boolean createTargetSchema() {
-		try {
-			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername())))
-				throw new DBException("Der Benutzer \"root\" ist kein zulässiger SVWS-Admin-Benutzer für MYSQL / MARIA_DB");
-
-			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
-				throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
-
-			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
-				throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
-			return true;
-		} catch (final DBException e) {
-			logger.logLn("-> Migration fehlgeschlagen! (" + e.getMessage() + ")");
+		final DBMigrationManager migrationManager = new DBMigrationManager(srcConfig, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
 			return false;
-		}
+		return migrationManager.doMigrate();
 	}
 
 
@@ -293,24 +311,18 @@ public final class DBMigrationManager {
 			return false;
 		}
 		if (!SVWSKonfiguration.get().lockSchema(tgtSchema)) {
-			logger.logLn("-> Migration fehlgeschlagen! (Ziel-Schema ist aktuell gesperrt und kann daher nicht überschrieben werden)");
+			logger.logLn("-> Migration fehlgeschlagen! (Ziel-Schema ist aktuell gesperrt und daher kann nicht migriert werden)");
 			logger.modifyIndent(-2);
 			return false;
 		}
 
 		try {
-			success = createTargetSchema();
-			if (!success) {
-				logger.modifyIndent(-2);
-				return false;
-			}
-
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
 			final Benutzer srcUser = Benutzer.create(srcConfig);
 			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
 				srcManager = getSchemaManager(srcConfig, srcUser, true);
 
-				logger.log("-> Verbinde zum Ziel-Schema mit dem Datenbank-Test-Benutzer...");
+				logger.log("-> Verbinde zum Ziel-Schema...");
 				final Benutzer tgtUser = Benutzer.create(tgtConfig);
 				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 					tgtManager = getSchemaManager(tgtConfig, tgtUser, false);
