@@ -5700,14 +5700,15 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateFromMDB(schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateFromMDB(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mdb"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.postMultipart(path, null);
+		const result : string = await super.postMultipart(path, data);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

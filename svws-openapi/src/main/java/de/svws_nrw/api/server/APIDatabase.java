@@ -12,6 +12,7 @@ import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -84,7 +85,8 @@ public class APIDatabase {
 				 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     public Response migrateFromMDB(@PathParam("schema") final String schemaname,
-    		@MultipartForm final DBMultipartBodyDefaultSchema multipart,
+    		@RequestBody(description = "Die MDB-Datei", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
     		return DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword);
