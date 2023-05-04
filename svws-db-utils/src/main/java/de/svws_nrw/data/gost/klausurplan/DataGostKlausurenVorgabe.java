@@ -154,7 +154,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * {@link DTOGostKlausurenVorgaben} in einen Core-DTO
 	 * {@link GostKlausurvorgabe}.
 	 */
-	public static Function<DTOGostKlausurenVorgaben, GostKlausurvorgabe> dtoMapper = (final DTOGostKlausurenVorgaben z) -> {
+	public static final Function<DTOGostKlausurenVorgaben, GostKlausurvorgabe> dtoMapper = (final DTOGostKlausurenVorgaben z) -> {
 		final GostKlausurvorgabe daten = new GostKlausurvorgabe();
 		daten.idVorgabe = z.ID;
 		daten.abiJahrgang = z.Abi_Jahrgang;
@@ -255,7 +255,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	/**
-	 * Erstellt eine neue Gost-Klausurvorgabe *
+	 * Erstellt eine neue Gost-Klausurvorgabe
 	 *
 	 * @param is Das JSON-Objekt mit den Daten
 	 *
@@ -338,13 +338,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		conn.remove(vorgabe);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
-	
+
 	/**
-	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang *
+	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
+	 * @param halbjahr das Gost-Halbjahr
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public boolean copyVorgabenToJahrgang(GostHalbjahr halbjahr) {
+	public boolean copyVorgabenToJahrgang(final GostHalbjahr halbjahr) {
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
 		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
 
