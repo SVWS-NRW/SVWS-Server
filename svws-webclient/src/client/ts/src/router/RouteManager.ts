@@ -2,6 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-rout
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
+import { routeInit } from "./RouteInit";
 import { routeLogin } from "~/router/RouteLogin";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { api } from "./Api";
@@ -29,6 +30,7 @@ export class RouteManager {
 		this.router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized) => RouteManager._instance?.beforeEach(to, from));
 		// Füge die Haupt-Routen hinzu
 		this.router.addRoute(routeLogin.record);
+		this.router.addRoute(routeInit.record);
 		this.router.addRoute(routeApp.record);
 	}
 
@@ -96,6 +98,10 @@ export class RouteManager {
 			return false;
 		if ((from_node === undefined) && (from.fullPath !== "/"))
 			return false;
+		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init")) {
+			await to_node.enter(to_node, to.params);
+			return;
+		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;

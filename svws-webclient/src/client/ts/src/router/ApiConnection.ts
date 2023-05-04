@@ -284,7 +284,6 @@ export class ApiConnection {
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 			await this.getConfig();
-			this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
@@ -295,6 +294,22 @@ export class ApiConnection {
 			this.config.mapUser = new Map();
 			this._stammdaten.value = undefined;
 		}
+	}
+
+	/**
+	 * Initialialisiert die Daten, die beim Login geladen )erden sollen
+	 *
+	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
+	 */
+	init = async (): Promise<boolean> => {
+		try {
+			if (this._api && this._schema)
+				this._stammdaten.value = await this._api.getSchuleStammdaten(this._schema);
+			return true;
+		} catch(error) {
+			this._stammdaten.value = undefined;
+		}
+		return false;
 	}
 
 	/**

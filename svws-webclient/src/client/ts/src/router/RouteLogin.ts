@@ -4,6 +4,7 @@ import SLogin from "~/components/SLogin.vue";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "./Api";
 import { RouteManager } from "./RouteManager";
+import { routeInit } from "./RouteInit";
 
 export class RouteLogin extends RouteNode<unknown, any> {
 
@@ -24,8 +25,10 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
 		await api.login(schema, username, password);
-		if (api.authenticated)
+		if (api.authenticated && await api.init())
 			await RouteManager.doRoute(this.routepath);
+		else if (api.authenticated && api.benutzerIstAdmin)
+			await RouteManager.doRoute(routeInit.name);
 	}
 
 	public logout = async () => {

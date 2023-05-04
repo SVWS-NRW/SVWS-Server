@@ -81,6 +81,15 @@ class Api {
 	}
 
 	/**
+	 * Initialialisiert die Daten, die beim Login geladen )erden sollen
+	 *
+	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
+	 */
+	init = async (): Promise<boolean> => {
+		return await this.conn.init();
+	}
+
+	/**
 	 * Meldet den angemeldeten Benutzer bei der Api ab.
 	 */
 	logout = async (): Promise<void> => {
