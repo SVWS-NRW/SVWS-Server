@@ -16,6 +16,7 @@ import de.svws_nrw.api.server.APIBenutzer;
 import de.svws_nrw.api.server.APIBetrieb;
 import de.svws_nrw.api.server.APIClientConfig;
 import de.svws_nrw.api.server.APIConfig;
+import de.svws_nrw.api.server.APIDatabase;
 import de.svws_nrw.api.server.APIENM;
 import de.svws_nrw.api.server.APIErzieher;
 import de.svws_nrw.api.server.APIFaecher;
@@ -157,6 +158,7 @@ public final class OpenAPIApplication extends Application {
 		this.classes.add(APIBetrieb.class);
 		this.classes.add(APIKataloge.class);
 		this.classes.add(APISchema.class);
+		this.classes.add(APIDatabase.class);
 		this.classes.add(APIStundenplan.class);
         this.classes.add(APISchild.class);
         this.classes.add(APIKAOA.class);

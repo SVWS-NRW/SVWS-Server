@@ -1,7 +1,6 @@
 import { BaseApi } from '../api/BaseApi';
 import { ArrayList } from '../java/util/ArrayList';
 import { List } from '../java/util/List';
-import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 
 export class ApiSchema extends BaseApi {
 
@@ -16,29 +15,6 @@ export class ApiSchema extends BaseApi {
 	public constructor(url : string, username : string, password : string) {
 		super(url, username, password);
 	}
-
-	/**
-	 * Implementierung der GET-Methode exportSQLite für den Zugriff auf die URL https://{hostname}/db/{schema}/api/export/sqlite
-	 *
-	 * Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert administrative Rechte.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Export der SQLite-Datenbank
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Das Schema darf nicht exportiert werden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Export der SQLite-Datenbank
-	 */
-	public async exportSQLite(schema : string) : Promise<Blob> {
-		const path = "/db/{schema}/api/export/sqlite"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const data : Blob = await super.getSQLite(path);
-		return data;
-	}
-
 
 	/**
 	 * Implementierung der GET-Methode isTainted für den Zugriff auf die URL https://{hostname}/db/{schema}/api/isTainted
@@ -61,33 +37,6 @@ export class ApiSchema extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode migrateFromMDB für den Zugriff auf die URL https://{hostname}/db/{schema}/api/migrate/mdb
-	 *
-	 * Migriert die übergebene Datenbank in dieses Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Das Schema darf nicht migriert werden.
-	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
-	 */
-	public async migrateFromMDB(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/api/migrate/mdb"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.postMultipart(path, null);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

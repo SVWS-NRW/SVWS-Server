@@ -1843,6 +1843,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode exportSQLite für den Zugriff auf die URL https://{hostname}/db/{schema}/export/sqlite
+	 *
+	 * Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert administrative Rechte.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Export der SQLite-Datenbank
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Das Schema darf nicht exportiert werden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Export der SQLite-Datenbank
+	 */
+	public async exportSQLite(schema : string) : Promise<Blob> {
+		const path = "/db/{schema}/export/sqlite"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const data : Blob = await super.getSQLite(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer unter Angabe der ID, des Kürzels, des verwendeten Statistik-Kürzels, der Bezeichnung des Faches, ob es ein Fach der Oberstufe ist, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Fächerdaten besitzt.
@@ -5660,6 +5683,33 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateFromMDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mdb
+	 *
+	 * Migriert die übergebene Datenbank in dieses Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der Access-MDB-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
+	 */
+	public async migrateFromMDB(schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mdb"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postMultipart(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
