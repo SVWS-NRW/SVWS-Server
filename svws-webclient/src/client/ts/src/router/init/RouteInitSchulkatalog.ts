@@ -21,7 +21,7 @@ export class RouteInitSchulkatalog extends RouteNode<unknown, RouteInit> {
 			await api.server.initSchule(api.schema, Number(schule.SchulNr));
 			await RouteManager.doRoute(routeApp.getRoute());
 		} catch(error) {
-			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`);
+			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`, error);
 		}
 	}
 

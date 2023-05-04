@@ -7,14 +7,14 @@ import { routeInitSchulkatalog } from "./init/RouteInitSchulkatalog";
 import { routeInitSchild2 } from "./init/RouteInitSchild2";
 import { routeInitBackup } from "./init/RouteInitBackup";
 
-const SInit = () => import("~/components/init/SInit.vue")
+const SInitWrapper = () => import("~/components/init/SInitWrapper.vue")
 
 export class RouteInit extends RouteNode<unknown, any> {
 
 	protected mapRoutes: Map<string, RouteNode<unknown, any>> = new Map();
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init", SInit);
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init", SInitWrapper);
 		super.propHandler = (route) => this.getProps();
 		super.text = "Initialisierung";
 		super.children = [
