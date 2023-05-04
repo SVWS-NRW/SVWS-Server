@@ -301,7 +301,7 @@ if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
 
     # Importiere die Datenbank(en) mittels der MigrateDB Klasse
     echo "Importiere Datenbank: ${MDBFILE} ..."
-    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.nrw.schule.svws.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
+    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
        -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
        -td "MARIA_DB" \
        -tl ${MYSQL_HOST} \

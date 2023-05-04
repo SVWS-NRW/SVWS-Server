@@ -4,7 +4,7 @@ After=mysql.service
 
 [Service]
 WorkingDirectory=${APP_PATH}
-ExecStart=java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.nrw.schule.svws.server.jetty.Main
+ExecStart=java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.server.jetty.Main
 User=svws
 Type=simple
 Restart=on-failure
