@@ -5,8 +5,8 @@ import { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
@@ -183,20 +183,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
 		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
-		const strErrorDoppelteSchienennummer : string | null = "Schienen NR %d doppelt!";
-		const strErrorDoppelteSchienenID : string | null = "Schienen ID %d doppelt!";
 		for (const gSchiene of this._parent.daten().schienen) {
 			const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
 			this._ergebnis.schienen.add(eSchiene);
-			if (this._map_schienenNr_schiene.put(gSchiene.nummer, eSchiene) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienennummer, gSchiene.nummer))
-			if (this._map_schienenID_schiene.put(gSchiene.id, eSchiene) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
-			if (this._map_schienenID_schuelerAnzahl.put(gSchiene.id, 0) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
-			if (this._map_schienenID_kollisionen.put(gSchiene.id, 0) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchienenID, gSchiene.id))
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenNr_schiene, gSchiene.nummer, eSchiene);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_schiene, gSchiene.id, eSchiene);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_schuelerAnzahl, gSchiene.id, 0);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_kollisionen, gSchiene.id, 0);
 		}
 		const strErrorDoppelteKursID : string | null = "Kurs-ID %d doppelt!";
 		for (const gKurs of this._parent.daten().kurse) {
@@ -206,8 +200,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			eKurs.kursart = gKurs.kursart;
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
-			if (this._map_kursID_kurs.put(eKurs.id, eKurs) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_kurs, eKurs.id, eKurs);
 			const newSetSchiene : HashSet<GostBlockungsergebnisSchiene> | null = new HashSet();
 			if (this._map_kursID_schienen.put(eKurs.id, newSetSchiene) !== null)
 				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))

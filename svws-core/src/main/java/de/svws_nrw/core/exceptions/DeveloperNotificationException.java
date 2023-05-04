@@ -66,21 +66,6 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
   	/**
-     * Überprüft, ob ein Schlüssel bereits in einer Map existiert.
-  	 * @param <K> Der Schlüssel-Typ der Map.
-  	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
-	 * @param pMapName Der Name der Map.
-  	 * @param pMap     Die Map.
-  	 * @param pKey     Der Schlüssel der überprüft wird.
-  	 *
-	 * @throws DeveloperNotificationException falls der Schlüssel in der Map bereits existiert.
-	 */
-	public static <@NotNull K, @NotNull V> void ifDuplicate(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
-		if (pMap.containsKey(pKey))
-			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY(" + pKey + ")");
-	}
-
-	/**
 	 * Überprüft, ob eine pWert kleiner ist als pMinimum und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
 	 * @param pVariablenname Der Name der Variablen.
@@ -107,6 +92,39 @@ public class DeveloperNotificationException extends RuntimeException {
 	public static void ifGreater(final @NotNull String pVariablenname, final int pWert, final int pMaximum) throws DeveloperNotificationException {
 		if (pWert > pMaximum)
 			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")"  + " darf nicht größer sein als " + pMaximum + "!");
+	}
+
+	/**
+	 * Überprüft, ob ein Schlüssel bereits in einer Map existiert.
+	 * @param <K> Der Schlüssel-Typ der Map.
+	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
+	 * @param pMapName Der Name der Map.
+	 * @param pMap     Die Map.
+	 * @param pKey     Der Schlüssel der überprüft wird.
+	 *
+	 * @throws DeveloperNotificationException falls der Schlüssel in der Map bereits existiert.
+	 */
+	public static <@NotNull K, @NotNull V> void ifDuplicate(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
+		if (pMap.containsKey(pKey))
+			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY(" + pKey + ")");
+	}
+
+	/**
+	 * Fügt das Mapping 'K pKey' --> 'V pValue' der Map hinzu.
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 *
+	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
+	 * @param pMap   Die Map.
+	 * @param pKey   Der Schlüssel des Mappings K --> V.
+	 * @param pValue Der Wert des Mappings K --> V.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static <@NotNull K, @NotNull V>  void ifMapPutOverwrites(@NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey, final @NotNull V pValue) throws DeveloperNotificationException {
+		if (pMap.containsKey(pKey))
+			throw new DeveloperNotificationException("Hinzufügen von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " existiert!");
+		pMap.put(pKey, pValue);
 	}
 
 }

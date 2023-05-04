@@ -154,8 +154,6 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
 
 		// Schienen von '_parent' kopieren und hinzufügen.
-		final String strErrorDoppelteSchienennummer = "Schienen NR %d doppelt!";
-		final String strErrorDoppelteSchienenID = "Schienen ID %d doppelt!";
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
 			final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
@@ -163,14 +161,10 @@ public class GostBlockungsergebnisManager {
 
 			// Hinzufügen.
 			_ergebnis.schienen.add(eSchiene);
-			if (_map_schienenNr_schiene.put(gSchiene.nummer, eSchiene) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienennummer, gSchiene.nummer));
-			if (_map_schienenID_schiene.put(gSchiene.id, eSchiene) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
-			if (_map_schienenID_schuelerAnzahl.put(gSchiene.id, 0) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
-			if (_map_schienenID_kollisionen.put(gSchiene.id, 0) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteSchienenID, gSchiene.id));
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenNr_schiene, gSchiene.nummer, eSchiene);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenID_schiene, gSchiene.id, eSchiene);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenID_schuelerAnzahl, gSchiene.id, 0);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenID_kollisionen, gSchiene.id, 0);
 		}
 
 		// Kurse von '_parent' kopieren und hinzufügen. Fachart-IDs erzeugen.
@@ -183,8 +177,8 @@ public class GostBlockungsergebnisManager {
 			eKurs.kursart = gKurs.kursart;
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
-			if (_map_kursID_kurs.put(eKurs.id, eKurs) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
+
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_kurs, eKurs.id, eKurs);
 
 			final HashSet<@NotNull GostBlockungsergebnisSchiene> newSetSchiene = new HashSet<>();
 			if (_map_kursID_schienen.put(eKurs.id, newSetSchiene) != null)
