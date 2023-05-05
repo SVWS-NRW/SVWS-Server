@@ -564,6 +564,7 @@ export { SortedMap } from './java/util/SortedMap';
 export { SortedSet } from './java/util/SortedSet';
 export { Vector } from './java/util/Vector';
 export { VectorEnumerator } from './java/util/VectorEnumerator';
+export { BiFunction } from './java/util/function/BiFunction';
 export { Consumer } from './java/util/function/Consumer';
 export { JavaFunction } from './java/util/function/JavaFunction';
 export { Predicate } from './java/util/function/Predicate';
