@@ -6,10 +6,10 @@ export default defineConfig({
     globals: true,
     root: "../../../src",
     reporters: ["default", "junit"],
-    outputFile: "../build/coverage/svws-core/junit.xml",
+    outputFile: "../../../build/coverage/svws-core/junit.xml",
     coverage: {
       provider: "c8",
-      reportsDirectory: "../build/coverage/svws-core",
+      reportsDirectory: "../../../build/coverage/svws-core",
       allowExternal: true,
     },
   },
