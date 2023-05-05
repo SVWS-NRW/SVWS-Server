@@ -219,7 +219,7 @@ public final class DBUtilsGost {
 		}
 		// Sortiere Fächer anhand der SII-Sortierung der Fächer
 		faecher.values().stream()
-			.sorted((a, b) -> { return Integer.compare(a.fach.sortierung, b.fach.sortierung); })
+			.sorted((a, b) -> Integer.compare(a.fach.sortierung, b.fach.sortierung))
 			.forEach(daten.faecher::add);
 		return daten;
 	}

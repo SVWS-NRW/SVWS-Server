@@ -8,10 +8,10 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 public final class DBSchemaVersion implements Comparable<Long> {
 
 	/** die Schema-Revision */
-	private final Long revision;
+	private final Long _revision;
 
 	/** Gibt an, ob das Schema durch eine Entwicklerversion "verdorben" wurde und nicht mehr für den Produktivbetrieb genutzt werden sollte. */
-	private final boolean tainted;
+	private final boolean _tainted;
 
 
 	/**
@@ -23,8 +23,8 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 *                    werden sollte (z.B. aufgrund von Entwicklerversionen des SVWS-Servers)
 	 */
 	public DBSchemaVersion(final Long revision, final boolean isTainted) {
-		this.revision = (revision == null) ? null : ((revision >= 0) ? revision : null);
-		this.tainted = isTainted;
+		this._revision = (revision == null) || (revision < 0) ? null : revision;
+		this._tainted = isTainted;
 	}
 
 
@@ -34,7 +34,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return true, falls sie gültig ist und ansonsten false
 	 */
 	public boolean isValid() {
-		return revision != null;
+		return _revision != null;
 	}
 
 
@@ -46,9 +46,9 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @throws DeveloperNotificationException   tritt auf, wenn das Schema keine gültige Revision hat
 	 */
 	public long getRevision() throws DeveloperNotificationException {
-	  if (revision == null)
+	  if (_revision == null)
 		  throw new DeveloperNotificationException("Das Schema besitzt keine gültige Revision");
-	  return revision;
+	  return _revision;
 	}
 
 
@@ -60,7 +60,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return true, wenn es sich um eine "verdorbene" Datenbank-Revision und ansonsten false
 	 */
 	public boolean isTainted() {
-		return tainted;
+		return _tainted;
 	}
 
 
@@ -73,28 +73,27 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return die Revision des Schemas oder der Default-Wert
 	 */
 	public long getRevisionOrDefault(final long default_revision) {
-		  if (revision == null)
+		  if (_revision == null)
 			  return default_revision;
-		  return revision;
+		  return _revision;
 	}
 
 
 	@Override
 	public int compareTo(final Long otherRevision) {
-		if ((this.revision == null) || this.tainted)
+		if ((this._revision == null) || this._tainted)
 			return (otherRevision == null) ? 0 : -1;
 		if (otherRevision == null)
 			return 1;
-		final int result = revision.compareTo(otherRevision);
-		return result;
+		return Long.compare(_revision, otherRevision);
 	}
 
 
 	@Override
 	public int hashCode() {
-		if (revision == null)
+		if (_revision == null)
 			return Integer.MIN_VALUE;
-		return (int) (tainted ? -revision : revision);
+		return (int) (_tainted ? -_revision : _revision);
 	}
 
 
@@ -107,13 +106,11 @@ public final class DBSchemaVersion implements Comparable<Long> {
 		if (getClass() != obj.getClass())
 			return false;
 		final DBSchemaVersion other = (DBSchemaVersion) obj;
-		if ((revision == null) || (other.revision == null))
+		if ((_revision == null) || (other._revision == null))
 			return false;
-		if (tainted || other.tainted)
+		if (_tainted || other._tainted)
 			return false;
-		if (!revision.equals(other.revision))
-			return false;
-		return true;
+		return _revision.equals(other._revision);
 	}
 
 
@@ -125,13 +122,13 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return true, falls sie übereinstimmen und ansonsten false
 	 */
 	public boolean equals(final int revision) {
-		return (this.revision != null) && (this.revision == revision);
+		return (this._revision != null) && (this._revision == revision);
 	}
 
 
 	@Override
 	public String toString() {
-		return (this.revision == null) ? "unknown" : "" + revision;
+		return (this._revision == null) ? "unknown" : "" + _revision;
 	}
 
 

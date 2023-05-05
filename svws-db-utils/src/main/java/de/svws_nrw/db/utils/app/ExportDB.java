@@ -24,9 +24,6 @@ import de.svws_nrw.db.utils.schema.DBSchemaManager;
  */
 public class ExportDB {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -43,7 +40,7 @@ public class ExportDB {
 	 */
 	private static boolean konsoleFrageJaNein(final String text, final Scanner scan) {
 		boolean antwort = false;
-		System.out.print(text);
+		logger.log(text);
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
 			final String input = scan.nextLine();
@@ -51,16 +48,10 @@ public class ExportDB {
 				continue;
 			habeAntwort = true;
 			switch (input.toUpperCase()) {
-				case "JA":
-				case "J":
-				case "YES":
-				case "Y":
+				case "JA", "J", "YES", "Y":
 					antwort = true;
 					break;
-				case "NEIN":
-				case "N":
-				case "NO":
-					antwort = false;
+				case "NEIN", "N", "NO":
 					break;
 				default:
 					habeAntwort = false;
@@ -79,7 +70,7 @@ public class ExportDB {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet den Hinweise auf das notwendige Löschen der Ziel-DB automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
@@ -99,7 +90,6 @@ public class ExportDB {
 						cmdLine.printOptionsAndExit(2, "Die SQLite-Datei muss für einen problemlosen Export neu angelegt werden. Breche den Export ab.");
 					}
 				}
-				scan.close();
 			}
 
 			// Lade die Konfigurationsdatei für den Datenbankzugriff

@@ -107,8 +107,7 @@ public final class ABPSchuelerFehlermeldungen {
 	 * @return der Standard-Eintrag für die Tabelle ABPSchuelerFehlermeldungen
 	 */
 	public static List<ABPSchuelerFehlermeldungen> getDefault() {
-		final List<ABPSchuelerFehlermeldungen> fehlermeldungen = new ArrayList<>();
-		return fehlermeldungen;
+		return new ArrayList<>();
 	}
 
 

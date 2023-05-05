@@ -78,7 +78,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.religionanmeldung = schueler.Religionsanmeldung;
 		// Daten zum Migrationshintergrund
 		// TODO DB-Converter für boolean statt Boolean beim Migrationshintergrund
-		daten.hatMigrationshintergrund = schueler.Migrationshintergrund == null ? false : schueler.Migrationshintergrund;
+		daten.hatMigrationshintergrund = schueler.Migrationshintergrund != null && schueler.Migrationshintergrund;
 		daten.zuzugsjahr = schueler.JahrZuzug == null ? null : schueler.JahrZuzug.toString();
 		daten.geburtsland = schueler.GeburtslandSchueler == null ? null : schueler.GeburtslandSchueler.daten.iso3;
 		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;

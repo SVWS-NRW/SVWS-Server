@@ -52,9 +52,6 @@ public class GenerateTestdatenLaufbahn {
 
 	private static HashMap<String, String> mapJahrgangIDToJsonGostFaecher = new HashMap<>();
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -68,13 +65,12 @@ public class GenerateTestdatenLaufbahn {
 	 * @throws IOException    tritt auf, wenn die Daten nicht erfolgreich geschrieben werden konnten
 	 */
 	public static void writeTo(final String filename, final String data) throws IOException {
-		System.out.print("  Schreibe " + filename + "... ");
+		logger.log("  Schreibe " + filename + "... ");
 		final Path path = Paths.get(filename);
 		try (InputStream in = IOUtils.toInputStream(data, StandardCharsets.UTF_8)) {
 			Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-			in.close();
 		}
-		System.out.println("[OK]");
+		logger.logLn("[OK]");
 	}
 
 
@@ -87,7 +83,7 @@ public class GenerateTestdatenLaufbahn {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("js", "jahrgangStart", true, "Die ID bei der die Nummerierung der Jahrgänge startet (Default: 1)."));
 			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
@@ -154,7 +150,7 @@ public class GenerateTestdatenLaufbahn {
 						continue;
 					final String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
 					final GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
-					System.out.println("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
+					logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
 					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toList(), GostBelegpruefungsArt.EF1);
 					final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
@@ -165,7 +161,7 @@ public class GenerateTestdatenLaufbahn {
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
 				}
-				System.out.println("Fertig!");
+				logger.logLn("Fertig!");
 			}
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());

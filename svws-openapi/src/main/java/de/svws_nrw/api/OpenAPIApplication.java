@@ -1,6 +1,5 @@
 package de.svws_nrw.api;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -185,9 +184,8 @@ public final class OpenAPIApplication extends Application {
 	 * @return der aktuelle SVWS-Benutzer
 	 */
 	private static Benutzer getSVWSUser(final HttpServletRequest request) {
-		final Principal principal = request.getUserPrincipal();
-		if (principal instanceof OpenAPIPrincipal) {
-			final Benutzer user = ((OpenAPIPrincipal) principal).getUser();
+		if (request.getUserPrincipal() instanceof final OpenAPIPrincipal openAPIPrincipal) {
+			final Benutzer user = openAPIPrincipal.getUser();
 			if (user == null)
 				return null;
 			final DBConfig config = user.connectionManager.getConfig();

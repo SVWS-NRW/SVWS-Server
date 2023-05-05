@@ -1,5 +1,6 @@
 package de.svws_nrw.db.utils.schema;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -118,7 +119,7 @@ public final class DBSchemaStatus {
 	 * @return die Datenbank-Version
 	 */
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
-		if (tabellen.stream().filter(tabname -> "SVWS_DB_Version".equalsIgnoreCase(tabname)).findFirst().orElse(null) == null)
+		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase("SVWS_DB_Version")).findFirst().orElse(null) == null)
 			return null;
 		DTODBVersion dto;
 		final DBDriver dbms = conn.getDBDriver();
@@ -211,11 +212,11 @@ public final class DBSchemaStatus {
 	 */
 	public List<String> filterColumns(final String tabname, final List<String> cols) {
 		if (!hasTable(tabname))
-			return null;
+			return new ArrayList<>();
 		try (DBEntityManager conn = user.getEntityManager()) {
 			final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
 			if (spalten == null)
-				return null;
+				return new ArrayList<>();
 			return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
 		}
 	}

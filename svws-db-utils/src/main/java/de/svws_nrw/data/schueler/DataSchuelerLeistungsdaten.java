@@ -53,17 +53,17 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.kursID = dto.Kurs_ID;
 		daten.kursart = dto.Kursart == null ? ZulaessigeKursart.PUK.daten.kuerzel : dto.Kursart;
 		daten.abifach = dto.AbiFach;
-		daten.istZP10oderZK10 = dto.Prf10Fach == null ? false : dto.Prf10Fach;
+		daten.istZP10oderZK10 = dto.Prf10Fach != null && dto.Prf10Fach;
 		daten.koopSchule = dto.SchulNr;
 		daten.lehrerID = dto.Fachlehrer_ID;
 		daten.wochenstunden = dto.Wochenstunden == null ? 0 : dto.Wochenstunden;
 		daten.zusatzkraftID = dto.Zusatzkraft_ID;
 		daten.zusatzkraftWochenstunden = dto.WochenstdZusatzkraft == null ? 0 : dto.WochenstdZusatzkraft;
-		daten.aufZeugnis = dto.AufZeugnis == null ? true : dto.AufZeugnis;
+		daten.aufZeugnis = dto.AufZeugnis == null || dto.AufZeugnis;
 		daten.note = dto.NotenKrz.kuerzel;
-		daten.istGemahnt = dto.Warnung == null ? false : dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
+		daten.istGemahnt = dto.Warnung != null && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
 		daten.Mahndatum = dto.Warndatum;
-		daten.istEpochal = dto.VorherAbgeschl == null ? false : dto.VorherAbgeschl;
+		daten.istEpochal = dto.VorherAbgeschl != null && dto.VorherAbgeschl;
 		daten.geholtJahrgangAbgeschlossen = dto.AbschlussJahrgang;
 		daten.gewichtungAllgemeinbildend = dto.Gewichtung == null ? 1 : dto.Gewichtung;
 		daten.noteBerufsabschluss = dto.NoteAbschlussBA;
@@ -87,7 +87,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
     	// Bestimme die Leistungsdaten des Lernabschnitts
     	final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", abschnittID, DTOSchuelerLeistungsdaten.class);
     	if (leistungsdaten == null)
-			return false;
+    		return false;
     	// Konvertiere sie und füge sie zur Liste hinzu
     	for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
     		list.add(dtoMapper.apply(l));
@@ -102,7 +102,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
 		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
     	if (dto == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		final SchuelerLeistungsdaten daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

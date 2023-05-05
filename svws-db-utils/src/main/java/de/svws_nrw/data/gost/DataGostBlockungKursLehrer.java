@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -129,7 +130,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	    			case "reihenfolge" -> {
 	    				final int tmp = JSONMapper.convertToInteger(value, false);
 	    				final Set<Integer> reihenfolgen = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class).stream()
-	    					.map(kl -> kl.Reihenfolge).filter(kl -> kl != null).collect(Collectors.toSet());
+	    					.map(kl -> kl.Reihenfolge).filter(Objects::nonNull).collect(Collectors.toSet());
 	    				if (reihenfolgen.contains(tmp))
 	    					throw OperationError.CONFLICT.exception();
 	    				kurslehrer.Reihenfolge = tmp;
@@ -183,7 +184,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 				throw OperationError.CONFLICT.exception();
 			// Bestimme den niedrigsten Wert für Reihenfolge, der noch nicht genutzt ist und setze diese als Default
 			final Set<Integer> reihenfolgen = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class).stream()
-				.map(kl -> kl.Reihenfolge).filter(kl -> kl != null).collect(Collectors.toSet());
+				.map(kl -> kl.Reihenfolge).filter(Objects::nonNull).collect(Collectors.toSet());
 			int min;
 			for (min = 1; true; min++)
 				if (!reihenfolgen.contains(min))
@@ -195,7 +196,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
+			if (exception instanceof IllegalArgumentException)
 				throw OperationError.NOT_FOUND.exception();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();
@@ -233,7 +234,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 			return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();
-			if (exception instanceof final IllegalArgumentException e)
+			if (exception instanceof IllegalArgumentException)
 				throw OperationError.NOT_FOUND.exception();
 			if (exception instanceof final WebApplicationException webex)
 				return webex.getResponse();

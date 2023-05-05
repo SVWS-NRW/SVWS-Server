@@ -716,13 +716,10 @@ public class APISchemaRoot {
 
 	    	// Prüfe das angegebene Datenbanksystem für die Quelldatenbank
 	    	switch (srcDbDriver) {
-				case MARIA_DB:
-				case MSSQL:
-				case MYSQL:
+				case MARIA_DB, MSSQL, MYSQL:
 					logger.logLn("Es wird aus dem Datenbankformat '" + srcDbDriver + "' migriert.");
 					break;
-				case MDB:
-				case SQLITE:
+				case MDB, SQLITE:
 				default:
 					logger.logLn("Eine Migration aus dem angegebenen Datenbankformat '" + srcDbDriver + "' wird über diese Schnittstelle nicht unterstützt.");
 					return simpleResponse(false, log);

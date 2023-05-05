@@ -36,9 +36,6 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
  */
 public class GenerateTestdatenLaufbahnFromLupoMDB {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -52,27 +49,25 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 	 * @throws IOException    tritt auf, wenn die Daten nicht erfolgreich geschrieben werden konnten
 	 */
 	public static void writeTo(final String filename, final String data) throws IOException {
-		System.out.print("  Schreibe " + filename + "... ");
+		logger.log("  Schreibe " + filename + "... ");
 		final Path path = Paths.get(filename);
 		try (InputStream in = IOUtils.toInputStream(data, StandardCharsets.UTF_8)) {
 			Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-			in.close();
 		}
-		System.out.println("[OK]");
+		logger.logLn("[OK]");
 	}
 
 
 	/**
-	 *
+	 * Generiert Testdaten aus einer LuPO-MDB
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */
 	public static void main(final String[] args) {
-		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("js", "jahrgangStart", true, "Die ID bei der die Nummerierung der Jahrgänge startet (Default: 1)."));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
@@ -106,7 +101,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			final List<GostFach> gostFaecher = lupoMDB.retrieveGostFaecher();
 			if ((gostFaecher == null) || (gostFaecher.isEmpty()))
 				throw new DeveloperNotificationException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
-			final String strJahrgangID = String.format("%02d", jahrgangID++);
+			final String strJahrgangID = String.format("%02d", jahrgangID);
 
 			writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", mapper.writeValueAsString(gostFaecher));
 
@@ -114,7 +109,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			final List<Abiturdaten> alleAbiturdaten = lupoMDB.retrieveAbiturdaten();
 			for (final Abiturdaten abiturdaten : alleAbiturdaten) {
 				final String strSchuelerID = String.format("%04d", abiturdaten.schuelerID);
-				System.out.println("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
+				logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
 				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher, GostBelegpruefungsArt.EF1);
 				final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
@@ -125,7 +120,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_EF1.json", mapper.writeValueAsString(ergebnisEF1));
 				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Belegpruefungsergebnis_Gesamt.json", mapper.writeValueAsString(ergebnisGesamt));
 			}
-			System.out.println("Fertig!");
+			logger.logLn("Fertig!");
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		} catch (final IOException e) {

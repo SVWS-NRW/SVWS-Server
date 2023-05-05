@@ -20,9 +20,6 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
  */
 public class ImportLupoMDB {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -36,7 +33,7 @@ public class ImportLupoMDB {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));

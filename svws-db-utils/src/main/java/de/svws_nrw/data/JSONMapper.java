@@ -32,7 +32,7 @@ public final class JSONMapper {
 	}
 
 	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
-	public static ObjectMapper mapper = new ObjectMapper();
+	public static final ObjectMapper mapper = new ObjectMapper();
 
 
 	/**
@@ -103,7 +103,7 @@ public final class JSONMapper {
 		if ((text == null) || "".equals(text) || "null".equals(text))
 			return null;
 	    try {
-			if (rfc8259compliance && !text.matches("-*(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-][0-9]*)?"))
+			if (rfc8259compliance && !text.matches("-*(0|[1-9]\\d*)([.]\\d+)?([eE][+-]\\d*)?"))
 				throw new WebApplicationException("Fehler beim Konvertieren des JSON-Textes nach RFC 8259 in einen Double-Wert", Response.Status.BAD_REQUEST);
 	    	return Double.valueOf(text);
 		} catch (@SuppressWarnings("unused") final NumberFormatException e) {
@@ -300,7 +300,7 @@ public final class JSONMapper {
 			throw new WebApplicationException("Es wurde ein Arrays erwartet, aber keines übergeben.", Response.Status.BAD_REQUEST);
 		@SuppressWarnings("unchecked")
 		final
-		List<? extends Boolean> params = (List<? extends Boolean>) obj;
+		List<Boolean> params = (List<Boolean>) obj;
 		if ((size != null) && (size != params.size()))
 			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
 		if ((params.isEmpty()) && ((size == null) || (size == 0)))
@@ -333,8 +333,7 @@ public final class JSONMapper {
 		if (!(obj instanceof List))
 			throw new WebApplicationException("Es wurde ein Arrays erwartet, aber keines übergeben.", Response.Status.BAD_REQUEST);
 		@SuppressWarnings("unchecked")
-		final
-		List<? extends String> params = (List<? extends String>) obj;
+		final List<String> params = (List<String>) obj;
 		if ((size != null) && (size != params.size()))
 			throw new WebApplicationException("Es wurde ein Array der Länge " + size + " erwartet, aber eines der Länge " + params.size() + " übergeben.", Response.Status.BAD_REQUEST);
 		if ((params.isEmpty()) && ((size == null) || (size == 0)))
@@ -399,7 +398,7 @@ public final class JSONMapper {
 		String text = null;
 		if (data != null) {
 			text = data.toString();
-			if (!text.matches("-*(0|[1-9][0-9]*)([.][0-9]+)?([eE][+-][0-9]*)?"))
+			if (!text.matches("-*(0|[1-9]\\d*)([.]\\d+)?([eE][+-]\\d*)?"))
 				throw new WebApplicationException("Fehler beim Konvertieren des Double-Wertes in einen JSON-Text nach RFC 8259", Response.Status.BAD_REQUEST);
 		}
 		return Response.ok((data == null) ? null : data.toString(), MediaType.APPLICATION_JSON).build();

@@ -72,7 +72,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<GostKursklausur> retKlausuren = new ArrayList<>();
 
 		final List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(v -> dtoMapper.apply(v))
+				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(dtoMapper::apply)
 //				.filter(v -> quartal > 0 ? v.quartal == quartal : true)
 				.toList();
 		if (vorgaben == null)

@@ -11,10 +11,16 @@ import de.svws_nrw.base.ResourceUtils;
 /**
  * Diese Klasse stellt Hilfs-Methoden rund um die SVWS-Version zur Verfügung.
  */
-public class SVWSVersion {
+public final class SVWSVersion {
 
     /** Die Version des SVWS-Servers aus der version.properties (cache-Wert)*/
     private static String _version = null;
+
+
+	private SVWSVersion() {
+		// do nothing
+	}
+
 
     /**
      * Ermittelt die Version des SVWS-Servers anhand der version.properties.

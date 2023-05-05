@@ -270,7 +270,7 @@ public class DBBackupManager {
 			final String sql = tab.getSpalten(rev).stream()
 					.map(t -> t.name())
 					.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));
-			List<Object[]> entities = srcConn.query(sql);
+			final List<Object[]> entities = srcConn.query(sql);
 			if (entities == null) {
 				logger.logLn(LogLevel.ERROR, 0, "[FEHLER] - Kann die Datensätze nicht einlesen - Überspringe die Tabelle");
 				continue;
@@ -327,7 +327,6 @@ public class DBBackupManager {
 			logger.modifyIndent(-2);
 			logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
 			logger.modifyIndent(-2);
-			entities = null;
 			System.gc();
 		}
 		return true;

@@ -367,8 +367,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
 				}
 				for (int i = 1; i <= anzahlGK; i++) {
-					final GostKursart kursart = (zulFach == ZulaessigesFach.VX) ? GostKursart.VTF
-							: (zulFach == ZulaessigesFach.PX) ? GostKursart.PJK : GostKursart.GK;
+					GostKursart kursart = GostKursart.GK;
+					if (zulFach == ZulaessigesFach.VX)
+						kursart = GostKursart.VTF;
+					if (zulFach == ZulaessigesFach.PX)
+						kursart = GostKursart.PJK;
 					int wstd = 3;
 					if ((kursart == GostKursart.GK) && ((Jahrgaenge.JG_EF == zulFach.getJahrgangAb()) || (Jahrgaenge.JG_11 == zulFach.getJahrgangAb()))) {
 						wstd = 4;
@@ -439,15 +442,15 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 				// Kurse <--> Schüler
 				final Map<Long, Set<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
-				for (final long kursID : map_KursID_SchuelerIDs.keySet())
-					for (final long schuelerID : map_KursID_SchuelerIDs.get(kursID))
-						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, kursID, schuelerID));
+				for (final Map.Entry<Long, Set<Long>> entry : map_KursID_SchuelerIDs.entrySet())
+					for (final long schuelerID : entry.getValue())
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, entry.getKey(), schuelerID));
 
 				// Kurse <--> Schienen
 				final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();
-				for (final long kursID : map_KursID_SchienenIDs.keySet())
-					for (@NotNull final GostBlockungsergebnisSchiene schiene : map_KursID_SchienenIDs.get(kursID))
-						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kursID, schiene.id));
+				for (final Map.Entry<Long, Set<GostBlockungsergebnisSchiene>> entry : map_KursID_SchienenIDs.entrySet())
+					for (@NotNull final GostBlockungsergebnisSchiene schiene : entry.getValue())
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, entry.getKey(), schiene.id));
 
 				// Ergänze die ID bei der Liste der berechneten Ergebnisse
 				ergebnisse.add(ergebnisID);
@@ -906,9 +909,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
 				mapKursIDs.put(kurs.ID, idKurs);
 				final String[] strKursnummer = kurs.KurzBez.split("\\D+");
-				final int kursNummer = strKursnummer.length == 0 ? 1
-						: "".equals(strKursnummer[strKursnummer.length - 1]) ? 1
-						: Integer.parseInt(strKursnummer[strKursnummer.length - 1]);
+				int kursNummer = 1;
+				if (strKursnummer.length > 0) {
+					final String tmpNummer = strKursnummer[strKursnummer.length - 1];
+					if (!"".equals(tmpNummer))
+						kursNummer = Integer.parseInt(tmpNummer);
+				}
 				final ArrayList<Long> schienen = new ArrayList<>();
 				if (kurs.Schienen != null) {
 					final String[] strSchienen = kurs.Schienen.split(",");

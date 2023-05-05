@@ -2,6 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
 import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -70,8 +71,8 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
 	public List<Schuljahresabschnitt> getAbschnitte() {
 		// Schuljahresabschnitte aus den Leistungsdaten bestimmen
 		final List<DTOSchuljahresabschnitte> abschnitte = conn.queryAll(DTOSchuljahresabschnitte.class);
-    	if (abschnitte == null)
-    		return null;
+    	if ((abschnitte == null) || abschnitte.isEmpty())
+    		return new ArrayList<>();
     	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 

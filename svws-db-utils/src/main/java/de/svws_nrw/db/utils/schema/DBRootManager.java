@@ -1,8 +1,11 @@
 package de.svws_nrw.db.utils.schema;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogLevel;
@@ -59,6 +62,8 @@ public final class DBRootManager {
 	}
 
 
+	private static final Set<String> _reserverSchemaNames = Set.of("", "information_schema", "mysql", "performance_schema",
+			"sys", "master", "tempdb", "model", "msdb");
 
 	/**
 	 * Prüft, ob der übergebene Name ein reservierter oder ungültiger Schema-Name ist.
@@ -70,22 +75,12 @@ public final class DBRootManager {
 	public static boolean isReservedSchemaName(final String name) {
 		if (name == null)
 			return true;
-		switch (name) {
-			case "":
-			case "information_schema":
-			case "mysql":
-			case "performance_schema":
-			case "sys":
-			case "master":
-			case "tempdb":
-			case "model":
-			case "msdb":
-				return true;
-		}
-		return false;
+		return _reserverSchemaNames.contains(name);
 	}
 
 
+	private static final Set<String> _reserverUserNames = Set.of("", "root", "mysql.infoschema", "mysql.session", "mysql.sys",
+			"sa", "##MS_PolicyTsqlExecutionLogin##", "##MS_PolicyEventProcessingLogin##");
 
 	/**
 	 * Prüft, ob der übergebene Name ein reservierter oder ungültiger DB-Benutzer-Name ist.
@@ -97,18 +92,7 @@ public final class DBRootManager {
 	public static boolean isReservedUserName(final String name) {
 		if (name == null)
 			return true;
-		switch (name) {
-			case "":
-			case "root":
-			case "mysql.infoschema":
-			case "mysql.session":
-			case "mysql.sys":
-			case "sa":
-			case "##MS_PolicyTsqlExecutionLogin##":
-			case "##MS_PolicyEventProcessingLogin##":
-				return true;
-		}
-		return false;
+		return _reserverUserNames.contains(name);
 	}
 
 
@@ -124,20 +108,19 @@ public final class DBRootManager {
 		if ((conn == null) || (nameSchema == null) || "".equals(nameSchema))
 			return false;
 		final String collation = conn.getDBDriver().getCollation();
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> {
 				if ((collation == null) || "".equals(collation))
-					return false;
-				return conn.executeNativeUpdate("CREATE SCHEMA IF NOT EXISTS `" + nameSchema + "` DEFAULT CHARACTER SET 'utf8mb4' DEFAULT COLLATE '" + collation + "'") > Integer.MIN_VALUE;
-			case MSSQL:
+					yield false;
+				yield conn.executeNativeUpdate("CREATE SCHEMA IF NOT EXISTS `" + nameSchema + "` DEFAULT CHARACTER SET 'utf8mb4' DEFAULT COLLATE '" + collation + "'") > Integer.MIN_VALUE;
+			}
+			case MSSQL -> {
 				if ((collation == null) || "".equals(collation))
-					return false;
-				return conn.executeNativeUpdate("CREATE DATABASE [" + nameSchema + "] COLLATE " + collation) > Integer.MIN_VALUE;
-			default:
-				break;
-		}
-		return false;
+					yield false;
+				yield conn.executeNativeUpdate("CREATE DATABASE [" + nameSchema + "] COLLATE " + collation) > Integer.MIN_VALUE;
+			}
+			default -> false;
+		};
 	}
 
 
@@ -161,7 +144,7 @@ public final class DBRootManager {
 				return false;
 			// Prüfe, ob der Benutzer bereits existiert und erstelle nur einen, wenn keiner existiert
 			final List<String> benutzer = DTOInformationUser.queryNames(tmpConn);
-			if (!benutzer.contains(nameUser) && !createDBUser(tmpConn, nameUser, pwUser, nameSchema))
+			if (!benutzer.contains(nameUser) && !createDBUser(tmpConn, nameUser, pwUser))
 				return false;
 
 			// Gibt dem Benutzer administrative Rechte auf das Schema
@@ -179,27 +162,22 @@ public final class DBRootManager {
 	 * @param conn         die Datenbank-Verbindung
 	 * @param nameUser     der Name des zu erstellenden Benutzers
 	 * @param pwUser       das Benutzerkennwort des zu erstellenden Benutzers
-	 * @param nameSchema   das Schema, auf dem der neue Benutzer seine Rechte bekommen soll
 	 *
 	 * @return true im Erfolgsfall
 	 */
-	private static boolean createDBUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema) {
+	private static boolean createDBUser(final DBEntityManager conn, final String nameUser, final String pwUser) {
 		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (pwUser == null))
 			return false;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				// TODO Nutze eine verschlüsselte Form des Kennwortes -> dieses sollte beim Logging nicht erscheinen -> also nicht "IDENTIFIED BY 'USERPASSWORD'"
-				return conn.executeNativeUpdate("CREATE USER IF NOT EXISTS " + nameUser + " IDENTIFIED BY '" + pwUser + "'") > Integer.MIN_VALUE;
-			case MSSQL:
+		// TODO Nutze jeweils eine verschlüsselte Form des Kennwortes -> dieses sollte beim Logging nicht erscheinen -> also nicht "IDENTIFIED BY 'USERPASSWORD'"
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.executeNativeUpdate("CREATE USER IF NOT EXISTS " + nameUser + " IDENTIFIED BY '" + pwUser + "'") > Integer.MIN_VALUE;
+			case MSSQL -> {
 				conn.transactionBegin();
-				// TODO Nutze eine verschlüsselte Form des Kennwortes -> dieses sollte beim Logging nicht erscheinen -> also nicht "WITH PASSWORD = 'USERPASSWORD'"
 				final int c1 = conn.transactionNativeUpdate("CREATE LOGIN " + nameUser + " WITH PASSWORD = '" + pwUser + "'");
-				return conn.transactionCommit() && (c1 > Integer.MIN_VALUE);
-			default:
-				break;
-		}
-		return false;
+				yield conn.transactionCommit() && (c1 > Integer.MIN_VALUE);
+			}
+			default -> false;
+		};
 	}
 
 
@@ -293,18 +271,11 @@ public final class DBRootManager {
 		final List<String> schemata = DTOInformationSchema.queryNames(conn);
 		if (!schemata.contains(nameSchema.toLowerCase()))
 			return true;
-		boolean success;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				success = conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + nameSchema + "`") > Integer.MIN_VALUE;
-				break;
-			case MSSQL:
-				success = conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + nameSchema + "]") > Integer.MIN_VALUE;
-				break;
-			default:
-				return false;
-		}
+		boolean success = switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + nameSchema + "`") > Integer.MIN_VALUE;
+			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + nameSchema + "]") > Integer.MIN_VALUE;
+			default -> false;
+		};
 		// Aktualisieren der DB-Konfiguration
 		if (success)
 			success = SVWSKonfiguration.get().removeSchema(nameSchema);
@@ -343,19 +314,16 @@ public final class DBRootManager {
 		final List<String> benutzer = DTOInformationUser.queryNames(conn);
 		if (!benutzer.contains(nameUser))
 			return true;
-		switch (conn.getDBDriver()) {
-			case MARIA_DB:
-			case MYSQL:
-				return conn.executeNativeDelete("DROP USER IF EXISTS " + nameUser) > Integer.MIN_VALUE;
-			case MSSQL:
+		return switch (conn.getDBDriver()) {
+			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP USER IF EXISTS " + nameUser) > Integer.MIN_VALUE;
+			case MSSQL -> {
 				conn.transactionBegin();
 				final int c1 = conn.transactionNativeDelete("DROP USER IF EXISTS " + nameUser);
 				final int c2 = conn.transactionNativeDelete("DROP LOGIN " + nameUser);
-				return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
-			default:
-				break;
-		}
-		return false;
+				yield conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
+			}
+			default -> false;
+		};
 	}
 
 
@@ -370,24 +338,18 @@ public final class DBRootManager {
 	 * @return true, falls die Datenbank-Datei gelöscht wurde, zuvor nicht existierte oder das DBMS nicht eine einzelne DB-Datei verwendet, sonst false
 	 */
 	private static boolean removeDBFile(final DBDriver driver, final String db_location) {
-		switch (driver) {
-			case MARIA_DB:
-			case MYSQL:
-			case MSSQL:
-			default:
-				return true;
-			case MDB:
-			case SQLITE:
-				break;
-		}
-		final File file = new File(db_location);
-		if (!file.exists())
+		if ((driver != DBDriver.MDB) && (driver != DBDriver.SQLITE))
+			return true;
+		final Path path = Paths.get(db_location);
+		if (!Files.exists(path))
 			return true;
 		try {
-			return file.delete();
-		} catch (@SuppressWarnings("unused") final SecurityException e) {
-			return false;
+			Files.delete(path);
+			return true;
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			// do nothing
 		}
+		return false;
 	}
 
 
@@ -403,18 +365,13 @@ public final class DBRootManager {
 	 * @return die Konfiguration oder null bei einem nicht unterstützten DBMS
 	 */
 	private static DBConfig getDBRootConfig(final DBDriver driver, final String db_location, final String user_root, final String pw_root) {
-		switch (driver) {
-			case MARIA_DB:
-			case MYSQL:
-				return new DBConfig(driver, db_location, "mysql", false, user_root == null ? "root" : user_root, pw_root, true, false);
-			case MDB:
-				return new DBConfig(driver, db_location, null, false, null, "", true, true);
-			case MSSQL:
-				return new DBConfig(driver, db_location, "master", false, user_root == null ? "sa" : user_root, pw_root, true, false);
-			case SQLITE:
-				return new DBConfig(driver, db_location, null, false, null, null, true, true);
-		}
-		return null;
+		return switch (driver) {
+			case MARIA_DB, MYSQL -> new DBConfig(driver, db_location, "mysql", false, user_root == null ? "root" : user_root, pw_root, true, false);
+			case MDB -> new DBConfig(driver, db_location, null, false, null, "", true, true);
+			case MSSQL -> new DBConfig(driver, db_location, "master", false, user_root == null ? "sa" : user_root, pw_root, true, false);
+			case SQLITE -> new DBConfig(driver, db_location, null, false, null, null, true, true);
+			default -> null;
+		};
 	}
 
 

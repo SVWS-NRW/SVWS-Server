@@ -294,8 +294,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 					conn.transactionBegin();
 					if (!conn.transactionPersist(new DTOGostSchueler(schueler_id, false)))
 						return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-					for (final long fach_id : fachbelegungen.keySet()) {
-						if (!conn.transactionPersist(fachbelegungen.get(fach_id)))
+					for (final Map.Entry<Long, DTOGostSchuelerFachbelegungen> entry : fachbelegungen.entrySet()) {
+						if (!conn.transactionPersist(entry.getValue()))
 							return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 					}
 					if (!conn.transactionCommit())

@@ -22,10 +22,6 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
  */
 public class ExportLuPOMDB {
 
-
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -41,7 +37,7 @@ public class ExportLuPOMDB {
 	 */
 	private static boolean konsoleFrageJaNein(final String text, final Scanner scan) {
 		boolean antwort = false;
-		System.out.print(text);
+		logger.log(text);
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
 			final String input = scan.nextLine();
@@ -49,16 +45,10 @@ public class ExportLuPOMDB {
 				continue;
 			habeAntwort = true;
 			switch (input.toUpperCase()) {
-				case "JA":
-				case "J":
-				case "YES":
-				case "Y":
+				case "JA", "J", "YES", "Y":
 					antwort = true;
 					break;
-				case "NEIN":
-				case "N":
-				case "NO":
-					antwort = false;
+				case "NEIN", "N", "NO":
 					break;
 				default:
 					habeAntwort = false;
@@ -79,7 +69,7 @@ public class ExportLuPOMDB {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
 			cmdLine.addOption(new CommandLineOption("k", "jahrgang", true, "Der Jahrgang, für den die LuPO-Datei erzeugt werden soll."));
@@ -101,11 +91,9 @@ public class ExportLuPOMDB {
 						antwort_ja = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren. Fortfahren? (J/N) ", scan);
 						if (!antwort_ja) {
 							cmdLine.printOptionsAndExit(2, "Die LuPO-Datei darf nicht überschrieben werden und kann daher nicht neu erzeugt werden. Breche ab.");
-							scan.close();
 							System.exit(1);
 						}
 					}
-					scan.close();
 				}
 			}
 

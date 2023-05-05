@@ -586,16 +586,16 @@ public class DBUpdater {
 					result = false;
 					if (returnOnError)
 						break;
-				} else {
-					final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
-					if (!pkTrigger.isEmpty()) {
-						logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
-						for (final String scriptTrigger : pkTrigger) {
-							if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
-								result = false;
-								if (returnOnError)
-									break;
-							}
+					continue;
+				}
+				final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
+				if (!pkTrigger.isEmpty()) {
+					logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
+					for (final String scriptTrigger : pkTrigger) {
+						if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
+							result = false;
+							if (returnOnError)
+								break;
 						}
 					}
 				}

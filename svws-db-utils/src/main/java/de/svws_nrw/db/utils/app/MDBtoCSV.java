@@ -33,9 +33,6 @@ import de.svws_nrw.core.logger.Logger;
  */
 public class MDBtoCSV {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -178,9 +175,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 				}).toList();
-			case "AndereGrundschulen" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("SNR"), b.getString("SNR"));
-				}).toList();
+			case "AndereGrundschulen" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("SNR"), b.getString("SNR"))
+				).toList();
 			case "Bereiche" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpInt(a.getInt("ID_Bereich"), b.getInt("ID_Bereich"));
 					if (cmp != 0)
@@ -211,9 +208,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("SF"), b.getString("SF"));
 				}).toList();
-			case "Einschulungsart" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("Art"), b.getString("Art"));
-				}).toList();
+			case "Einschulungsart" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("Art"), b.getString("Art"))
+				).toList();
 			case "Fachklasse" -> table.stream().sorted((a, b) -> {
 					int cmp = cmpString(a.getString("AP"), b.getString("AP"));
 					if (cmp != 0)
@@ -250,9 +247,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 				}).toList();
-			case "Geschlecht" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("Art"), b.getString("Art"));
-				}).toList();
+			case "Geschlecht" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("Art"), b.getString("Art"))
+				).toList();
 			case "Herkunftsart" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Art"), b.getString("Art"));
 					if (cmp != 0)
@@ -283,9 +280,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 				}).toList();
-			case "LehrerAbgang" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"));
-				}).toList();
+			case "LehrerAbgang" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"))
+				).toList();
 			case "LehrerAnrechnung" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerBeschaeftigungsart" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerEinsatzstatus" -> table.stream().sorted(compSortKurztext).toList();
@@ -299,9 +296,9 @@ public class MDBtoCSV {
 			case "LehrerMehrleistung" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerMinderleistung" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerZugang" -> table.stream().sorted(compSortKurztext).toList();
-			case "LetzteAenderung" -> table.stream().sorted((a, b) -> {
-					return cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"));
-				}).toList();
+			case "LetzteAenderung" -> table.stream().sorted((a, b) ->
+					cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"))
+				).toList();
 			case "LetzteAenderung_Schild" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Datum"), b.getString("Datum"));
 					if (cmp != 0)
@@ -386,15 +383,15 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 				}).toList();
-			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
-			case "SchuelerKindergartenbesuch" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
-			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
+			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
+			case "SchuelerKindergartenbesuch" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
+			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
 			case "SchuelerVerkehrssprache" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 					if (cmp != 0)
@@ -542,9 +539,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 				}).toList();
-			case "AndereGrundschulen" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("SNR"), b.getString("SNR"));
-				}).toList();
+			case "AndereGrundschulen" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("SNR"), b.getString("SNR"))
+				).toList();
 			case "Bereiche" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpInt(a.getInt("ID_Bereich"), b.getInt("ID_Bereich"));
 					if (cmp != 0)
@@ -569,9 +566,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("SF"), b.getString("SF"));
 				}).toList();
-			case "Einschulungsart" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("Art"), b.getString("Art"));
-				}).toList();
+			case "Einschulungsart" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("Art"), b.getString("Art"))
+				).toList();
 			case "Fachklasse" -> table.stream().sorted((a, b) -> {
 					int cmp = cmpString(a.getString("AP"), b.getString("AP"));
 					if (cmp != 0)
@@ -608,9 +605,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 				}).toList();
-			case "Geschlecht" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("Art"), b.getString("Art"));
-				}).toList();
+			case "Geschlecht" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("Art"), b.getString("Art"))
+				).toList();
 			case "Herkunftsart" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Art"), b.getString("Art"));
 					if (cmp != 0)
@@ -641,9 +638,9 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 				}).toList();
-			case "LehrerAbgangKat" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"));
-				}).toList();
+			case "LehrerAbgangKat" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"))
+				).toList();
 			case "LehrerAnrechnungKat" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerBeschaeftigungsartKat" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerEinsatzstatusKat" -> table.stream().sorted(compSortKurztext).toList();
@@ -658,9 +655,9 @@ public class MDBtoCSV {
 			case "LehrerMinderleistungKat" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerRechtsverhältnisKat" -> table.stream().sorted(compSortKurztext).toList();
 			case "LehrerZugangKat" -> table.stream().sorted(compSortKurztext).toList();
-			case "LetzteAenderung" -> table.stream().sorted((a, b) -> {
-					return cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"));
-				}).toList();
+			case "LetzteAenderung" -> table.stream().sorted((a, b) ->
+					cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"))
+				).toList();
 			case "LetzteAenderung_Schild" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Datum"), b.getString("Datum"));
 					if (cmp != 0)
@@ -730,15 +727,15 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 				}).toList();
-			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
-			case "SchuelerKindergartenbesuch" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
-			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-				}).toList();
+			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
+			case "SchuelerKindergartenbesuch" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
+			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("Sort"), b.getInt("Sort"))
+				).toList();
 			case "SchuelerVerkehrssprache" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 					if (cmp != 0)
@@ -763,27 +760,27 @@ public class MDBtoCSV {
 						return cmp;
 					return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 				}).toList();
-			case "SVWS_BKAnlagen" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("BKAnlage"), b.getString("BKAnlage"));
-				}).toList();
-			case "SVWS_Fachgruppen" -> table.stream().sorted((a, b) -> {
-					return cmpInt(a.getInt("ID"), b.getInt("ID"));
-				}).toList();
-			case "SVWS_Schulgliederungen" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("SGL"), b.getString("SGL"));
-				}).toList();
-			case "SVWS_ZulaessigeFaecher" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("Fach"), b.getString("Fach"));
-				}).toList();
+			case "SVWS_BKAnlagen" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("BKAnlage"), b.getString("BKAnlage"))
+				).toList();
+			case "SVWS_Fachgruppen" -> table.stream().sorted((a, b) ->
+					cmpInt(a.getInt("ID"), b.getInt("ID"))
+				).toList();
+			case "SVWS_Schulgliederungen" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("SGL"), b.getString("SGL"))
+				).toList();
+			case "SVWS_ZulaessigeFaecher" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("Fach"), b.getString("Fach"))
+				).toList();
 			case "SVWS_ZulaessigeJahrgaenge" -> table.stream().sorted((a, b) -> {
 					final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
 					if (cmp != 0)
 						return cmp;
 					return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 				}).toList();
-			case "SVWS_ZulaessigeKursarten" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("ID"), b.getString("ID"));
-				}).toList();
+			case "SVWS_ZulaessigeKursarten" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("ID"), b.getString("ID"))
+				).toList();
 			case "ZulFächer" -> table.stream().sorted((a, b) -> {
 					int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
 					if (cmp != 0)
@@ -852,12 +849,12 @@ public class MDBtoCSV {
 						return cmpString(a.getString("Schulnr"), b.getString("Schulnr"));
 					return cmpString(a.getString("SchulNr"), b.getString("SchulNr"));
 				}).toList();
-			case "Schulformen" -> table.stream().sorted((a, b) -> {
-					return cmpInt(Integer.parseInt(a.getString("Schulform")), Integer.parseInt(b.getString("Schulform")));
-				}).toList();
-			case "Schultraeger" -> table.stream().sorted((a, b) -> {
-					return cmpString(a.getString("SchulNr"), b.getString("SchulNr"));
-				}).toList();
+			case "Schulformen" -> table.stream().sorted((a, b) ->
+					cmpInt(Integer.parseInt(a.getString("Schulform")), Integer.parseInt(b.getString("Schulform")))
+				).toList();
+			case "Schultraeger" -> table.stream().sorted((a, b) ->
+					cmpString(a.getString("SchulNr"), b.getString("SchulNr"))
+				).toList();
 			case "WeitereSF" -> table.stream().sorted((a, b) -> {
 					int cmp = cmpString(a.getString("SNR"), b.getString("SNR"));
 					if (cmp != 0)
@@ -903,7 +900,7 @@ public class MDBtoCSV {
 	private static List<? extends Column> reorderSchulver(final Table table, final List<? extends Column> cols) {
 		return switch (table.getName()) {
 			case "DBS" -> {
-				final Map<String, ? extends Column> mapCols = cols.stream().collect(Collectors.toMap(c -> c.getName(), c -> c));
+				final Map<String, ? extends Column> mapCols = cols.stream().collect(Collectors.toMap(Column::getName, c -> c));
 				final List<Column> result = new ArrayList<>();
 				if (mapCols.get("SchulNr") == null)
 					result.add(mapCols.get("Schulnr"));
@@ -1123,13 +1120,8 @@ public class MDBtoCSV {
 				final Column col = cols.get(i);
 				final String colName = col.getName();
 				boolean doWrite = true;
-				if (type == MDBType.STATKUE) {
-					switch (col.getName()) {
-						case "geaendert", "Stand", "STAND" -> {
-							doWrite = false;
-						}
-					}
-				}
+				if ((type == MDBType.STATKUE) && ("geaendert".equals(col.getName()) || "Stand".equals(col.getName()) || "STAND".equals(col.getName())))
+					doWrite = false;
 				if (doWrite) {
 					final DataType colType = col.getType();
 					final String output = getCSVOutput(table, r, colType, colName);
@@ -1155,7 +1147,7 @@ public class MDBtoCSV {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("i", "input", true, "Der Dateiname der MDB-Datei"));
 			cmdLine.addOption(new CommandLineOption("o", "output", true, "Der Ort, wo die CSV-Dateien erzeugt werden sollen"));

@@ -26,9 +26,6 @@ import de.svws_nrw.db.utils.schema.DBSchemaManager;
  */
 public class ImportDB {
 
-	/// Der Parser für die Kommandozeile
-	private static CommandLineParser cmdLine;
-
 	/// Der Logger
 	private static Logger logger = new Logger();
 
@@ -45,7 +42,7 @@ public class ImportDB {
 	 */
 	private static boolean konsoleFrageJaNein(final String text, final Scanner scan) {
 		boolean antwort = false;
-		System.out.print(text);
+		logger.log(text);
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
 			final String input = scan.nextLine();
@@ -53,16 +50,10 @@ public class ImportDB {
 				continue;
 			habeAntwort = true;
 			switch (input.toUpperCase()) {
-				case "JA":
-				case "J":
-				case "YES":
-				case "Y":
+				case "JA", "J", "YES", "Y":
 					antwort = true;
 					break;
-				case "NEIN":
-				case "N":
-				case "NO":
-					antwort = false;
+				case "NEIN", "N", "NO":
 					break;
 				default:
 					habeAntwort = false;
@@ -81,7 +72,7 @@ public class ImportDB {
 		logger.addConsumer(new LogConsumerConsole());
 
 		// Lese die Kommandozeilenparameter ein
-		cmdLine = new CommandLineParser(args, logger);
+		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("r", "revision", true, "Gibt die maximale Revision an, bis zu der die migrierte DB maximal aktualsiert wird (Default: -1 für so weit wie möglich)"));
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet den Hinweise auf das notwendige Löschen der Ziel-DB automatisch mit \"Ja\""));
@@ -105,7 +96,6 @@ public class ImportDB {
 						cmdLine.printOptionsAndExit(2, "Die SQLite-Datei muss für einen problemlosen Export neu angelegt werden. Breche den Export ab.");
 					}
 				}
-				scan.close();
 			}
 
 			// Lade die Konfigurationsdatei für den Datenbankzugriff

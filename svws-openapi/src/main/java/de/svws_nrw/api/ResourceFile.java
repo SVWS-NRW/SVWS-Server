@@ -84,7 +84,6 @@ System.out.println("Adding File Resource: " + this.path);
 	public void write(final HttpServletResponse response) throws IOException {
 		try (ServletOutputStream ostream = response.getOutputStream()) {
 			FileUtils.copy(file, ostream);
-			ostream.close();
 		}
 	}
 
