@@ -55,8 +55,18 @@ task replacePlaceholder(type: Copy, dependsOn: linuxZipBuild) {
 	into "$buildDir/distributions"
 }
 
-task buildLinuxInstaller() {
+task removeCR {
 	dependsOn('replacePlaceholder')
+	def inputFile = file("$buildDir/distributions/install.sh")
+	doLast {
+		ant.replace(file: inputFile) {
+			replacefilter(token: '\r', value: '')
+		}
+	}
+}
+
+task buildLinuxInstaller() {
+	dependsOn('removeCR')
 	group "build"
 }
 
