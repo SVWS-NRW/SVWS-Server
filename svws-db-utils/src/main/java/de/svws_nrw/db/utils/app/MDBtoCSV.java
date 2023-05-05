@@ -995,26 +995,22 @@ public class MDBtoCSV {
 
 	private static String renameColumnSchulver(final Table table, final String colname) {
 		return switch (table.getName()) {
-			case "DBS" -> {
-				yield switch (colname) {
-					case "Schulnr" -> "SchulNr";
-					case "Regschl" -> "RegSchl";
-					case "ArtderTrägerschaft" -> "ArtderTraegerschaft";
-					case "SchulträgerNr" -> "SchultraegerNr";
-					case "Fachber hauptamtl" -> "FachberHauptamtl";
-					case "S-Mail" -> "SMail";
-					default -> colname;
-				};
-			}
+			case "DBS" -> switch (colname) {
+				case "Schulnr" -> "SchulNr";
+				case "Regschl" -> "RegSchl";
+				case "ArtderTrägerschaft" -> "ArtderTraegerschaft";
+				case "SchulträgerNr" -> "SchultraegerNr";
+				case "Fachber hauptamtl" -> "FachberHauptamtl";
+				case "S-Mail" -> "SMail";
+				default -> colname;
+			};
 			case "Schulformen" -> colname;
-			case "Schultraeger" -> {
-				yield switch (colname) {
-					case "Schulnr" -> "SchulNr";
-					case "Regschl" -> "RegSchl";
-					case "aktiv" -> "Aktiv";
-					default -> colname;
-				};
-			}
+			case "Schultraeger" -> switch (colname) {
+				case "Schulnr" -> "SchulNr";
+				case "Regschl" -> "RegSchl";
+				case "aktiv" -> "Aktiv";
+				default -> colname;
+			};
 			case "WeitereSF" -> colname;
 			default -> throw new UnsupportedOperationException("Unbekannter Tabellenname " + table.getName() + " in der Schulver-MDB");
 		};

@@ -53,7 +53,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
     	final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
     	if (schule == null)
-			return OperationError.NOT_FOUND.getResponse();
+    		return OperationError.NOT_FOUND.getResponse();
     	return getPrognoseLeistungsdaten(id, schule.Schuljahresabschnitts_ID);
 	}
 

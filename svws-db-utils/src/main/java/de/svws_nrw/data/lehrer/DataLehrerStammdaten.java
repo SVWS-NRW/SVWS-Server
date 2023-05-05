@@ -157,12 +157,8 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 		    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge());
 		    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge());
 		    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge());
-		    			case "wohnortID" -> {
-		    				setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
-		    			}
-		    			case "ortsteilID" -> {
-		    				setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-		    			}
+		    			case "wohnortID" -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
+		    			case "ortsteilID" -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge());
 		    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
 		    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());

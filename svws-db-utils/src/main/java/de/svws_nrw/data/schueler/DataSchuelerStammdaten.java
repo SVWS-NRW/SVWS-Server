@@ -181,12 +181,8 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		    			case "strassenname" -> schueler.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Strassenname.datenlaenge());
 		    			case "hausnummer" -> schueler.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge());
 		    			case "hausnummerZusatz" -> schueler.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge());
-		    			case "wohnortID" -> {
-		    				setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")));
-		    			}
-		    			case "ortsteilID" -> {
-		    				setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-		    			}
+		    			case "wohnortID" -> setWohnort(schueler, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? schueler.Ortsteil_ID : ((Long) map.get("ortsteilID")));
+		    			case "ortsteilID" -> setWohnort(schueler, map.get("wohnortID") == null ? schueler.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 		    			case "telefon" -> schueler.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge());
 		    			case "telefonMobil" -> schueler.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge());
 		    			case "emailPrivat" -> schueler.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge());
@@ -237,7 +233,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		    		        	try {
 		    		        		jahr = Integer.parseUnsignedInt(text);
 		    		        		if ((jahr <= 1900) || (jahr > 3000))   // TODO Bestimme das aktuelle Jahr für die obere Grenze des Bereichs
-		    				    		throw OperationError.BAD_REQUEST.exception();
+		    		        			throw OperationError.BAD_REQUEST.exception();
 		    		        	} catch (@SuppressWarnings("unused") final NumberFormatException e) {
 		    			    		throw OperationError.BAD_REQUEST.exception();
 		    		        	}
@@ -337,9 +333,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		    			    	schueler.Haltestelle_ID = hid;
 	    					}
 		    			}
-		    			case "anmeldedatum" -> {
-		    				schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false, null);
-		    			}
+		    			case "anmeldedatum" -> schueler.AnmeldeDatum = JSONMapper.convertToString(value, false, false, null);
 		    			case "aufnahmedatum" -> {
 		    				final String aufnahmedatum = JSONMapper.convertToString(value, true, true, null);
 		    				schueler.Aufnahmedatum = "".equals(aufnahmedatum) ? null : aufnahmedatum;

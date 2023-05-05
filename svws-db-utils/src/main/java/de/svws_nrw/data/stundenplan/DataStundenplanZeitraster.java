@@ -59,7 +59,7 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 *
 	 * @return das Zeitraster
 	 */
-	public ArrayList<StundenplanZeitraster> getZeitraster() {
+	public List<StundenplanZeitraster> getZeitraster() {
 		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", this.stundenplanID, DTOStundenplanZeitraster.class);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOStundenplanZeitraster z : zeitraster)

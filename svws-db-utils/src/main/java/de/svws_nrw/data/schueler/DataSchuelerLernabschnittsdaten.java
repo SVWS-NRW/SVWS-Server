@@ -57,7 +57,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
     	if (schueler == null)
-			return OperationError.NOT_FOUND.getResponse();
+    		return OperationError.NOT_FOUND.getResponse();
     	// Bestimme den aktuellen Lernabschnitt
     	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr IS NULL";
     	final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
@@ -76,7 +76,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
 		final DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
     	if (aktuell == null)
-			return OperationError.NOT_FOUND.getResponse();
+    		return OperationError.NOT_FOUND.getResponse();
     	// Ermittle die Fachbemerkungen
     	final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
     	if (bemerkungen == null)
@@ -94,8 +94,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	daten.datumKonferenz = aktuell.Konferenzdatum;
     	daten.datumZeugnis = aktuell.ZeugnisDatum;
     	daten.anzahlSchulbesuchsjahre = aktuell.Schulbesuchsjahre;
-    	daten.istGewertet = aktuell.SemesterWertung == null ? true : aktuell.SemesterWertung;
-    	daten.istWiederholung = aktuell.Wiederholung == null ? false : aktuell.Wiederholung;
+    	daten.istGewertet = aktuell.SemesterWertung == null || aktuell.SemesterWertung;
+    	daten.istWiederholung = aktuell.Wiederholung != null && aktuell.Wiederholung;
     	daten.pruefungsOrdnung = aktuell.PruefOrdnung;
     	daten.tutorID = aktuell.Tutor_ID;
     	daten.klassenID = aktuell.Klassen_ID;
@@ -109,10 +109,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	daten.fehlstundenGesamt = aktuell.SumFehlStd == null ? 0 : aktuell.SumFehlStd;
     	daten.fehlstundenUnentschuldigt = aktuell.SumFehlStdU == null ? 0 : aktuell.SumFehlStdU;
     	daten.fehlstundenGrenzwert = aktuell.FehlstundenGrenzwert;
-    	daten.hatSchwerbehinderungsNachweis = aktuell.Schwerbehinderung == null ? false : aktuell.Schwerbehinderung;
-    	daten.hatAOSF = aktuell.AOSF == null ? false : aktuell.AOSF;
-    	daten.hatAutismus = aktuell.Autist == null ? false : aktuell.Autist;
-    	daten.hatZieldifferentenUnterricht = aktuell.ZieldifferentesLernen == null ? false : aktuell.ZieldifferentesLernen;
+    	daten.hatSchwerbehinderungsNachweis = aktuell.Schwerbehinderung != null && aktuell.Schwerbehinderung;
+    	daten.hatAOSF = aktuell.AOSF != null && aktuell.AOSF;
+    	daten.hatAutismus = aktuell.Autist != null && aktuell.Autist;
+    	daten.hatZieldifferentenUnterricht = aktuell.ZieldifferentesLernen != null && aktuell.ZieldifferentesLernen;
     	daten.foerderschwerpunkt1ID = aktuell.Foerderschwerpunkt_ID;
     	daten.foerderschwerpunkt2ID = aktuell.Foerderschwerpunkt2_ID;
     	daten.sonderpaedagogeID = aktuell.Sonderpaedagoge_ID;

@@ -50,7 +50,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostJahrgangFachkombinationen} in einen Core-DTO {@link GostJahrgangFachkombination}.
 	 */
-	public static Function<DTOGostJahrgangFachkombinationen, GostJahrgangFachkombination> dtoMapper = (final DTOGostJahrgangFachkombinationen kombi) -> {
+	public static final Function<DTOGostJahrgangFachkombinationen, GostJahrgangFachkombination> dtoMapper = (final DTOGostJahrgangFachkombinationen kombi) -> {
 		final GostJahrgangFachkombination daten = new GostJahrgangFachkombination();
 		daten.id = kombi.ID;
 		daten.abiturjahr = kombi.Abi_Jahrgang;
@@ -156,9 +156,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		    				kombi.Q22 = data[5];
 		    			}
 		    			case "typ" -> throw OperationError.BAD_REQUEST.exception();
-		    			case "hinweistext" -> {
-		    				kombi.Hinweistext = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Hinweistext.datenlaenge());
-		    			}
+		    			case "hinweistext" -> kombi.Hinweistext = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Jahrgang_Fachkombinationen.col_Hinweistext.datenlaenge());
 		    			default -> throw OperationError.BAD_REQUEST.exception();
 		    		}
 		    	}

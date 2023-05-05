@@ -40,7 +40,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataGostBlockungRegel extends DataManager<Long> {
 
 	/** Ein Mapper von den DB-DTOs der Blockungsregeln ({@link DTOGostBlockungRegel}, {@link DTOGostBlockungRegelParameter}) zu dem Core-Type {@link GostBlockungRegel}. */
-	public static BiFunction<DTOGostBlockungRegel, List<DTOGostBlockungRegelParameter>, GostBlockungRegel> dtoMapper = (regel, params) -> {
+	public static final BiFunction<DTOGostBlockungRegel, List<DTOGostBlockungRegelParameter>, GostBlockungRegel> dtoMapper = (regel, params) -> {
 		final GostBlockungRegel daten = new GostBlockungRegel();
 		daten.id = regel.ID;
 		daten.typ = regel.Typ.typ;

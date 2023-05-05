@@ -103,7 +103,7 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	/**
 	 * Mapt DTOSchuelerKAoADaten auf SchuelerKAoADaten
 	 */
-	public static Function<DTOSchuelerKAoADaten, SchuelerKAoADaten> mapSchuelerKAoADaten = (final DTOSchuelerKAoADaten schuelerKAoADaten) -> {
+	public static final Function<DTOSchuelerKAoADaten, SchuelerKAoADaten> mapSchuelerKAoADaten = (final DTOSchuelerKAoADaten schuelerKAoADaten) -> {
 		final SchuelerKAoADaten result = new SchuelerKAoADaten();
 		result.id = schuelerKAoADaten.ID;
 		result.kategorie = schuelerKAoADaten.KategorieID;

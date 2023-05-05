@@ -44,7 +44,7 @@ public final class DataKursdaten extends DataManager<Long> {
 			daten.idJahrgaenge.add(kurs.Jahrgang_ID);
 		if (kurs.Jahrgaenge != null)
 			for (final String jahrgang : kurs.Jahrgaenge.split(","))
-				if (jahrgang.matches("^[0-9]+$"))
+				if (jahrgang.matches("^\\d+$"))
 					daten.idJahrgaenge.add(Long.parseLong(jahrgang));
 		daten.idFach = kurs.Fach_ID;
 		daten.lehrer = kurs.Lehrer_ID;

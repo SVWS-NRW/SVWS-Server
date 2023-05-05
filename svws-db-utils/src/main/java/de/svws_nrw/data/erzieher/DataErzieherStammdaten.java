@@ -211,18 +211,14 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
                         case "strassenname" -> erzieher.ErzStrassenname = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzStrassenname.datenlaenge());
 		    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNr.datenlaenge());
 		    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNrZusatz.datenlaenge());
-		    			case "wohnortID" -> {
-		    				setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
-		    			}
-		    			case "ortsteilID" -> {
-		    				setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-		    			}
+		    			case "wohnortID" -> setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
+		    			case "ortsteilID" -> setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
 
 		    			case "staatsangehoerigkeitID" -> {
 		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
 		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
                                 if (nr == 1)
-	    						    erzieher.Erz1StaatKrz = null;
+                                	erzieher.Erz1StaatKrz = null;
                                 else
                                     erzieher.Erz2StaatKrz = null;
 	    					} else {
@@ -230,7 +226,7 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		    			    	if (nat == null)
 		    			    		throw OperationError.NOT_FOUND.exception();
                                 if (nr == 1)
-		    					    erzieher.Erz1StaatKrz = nat;
+                                	erzieher.Erz1StaatKrz = nat;
                                 else
                                     erzieher.Erz2StaatKrz = nat;
 	    					}

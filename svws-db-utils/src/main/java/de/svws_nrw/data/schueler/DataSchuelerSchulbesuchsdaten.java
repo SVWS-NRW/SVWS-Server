@@ -55,7 +55,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
     	if (schueler == null)
-			return OperationError.NOT_FOUND.getResponse();
+    		return OperationError.NOT_FOUND.getResponse();
     	final Map<String, DTOEntlassarten> entlassgruende = conn.queryAll(DTOEntlassarten.class).stream().collect(Collectors.toMap(e -> e.Bezeichnung, e -> e));
     	final SchuelerSchulbesuchsdaten daten = new SchuelerSchulbesuchsdaten();
     	// Basisdaten

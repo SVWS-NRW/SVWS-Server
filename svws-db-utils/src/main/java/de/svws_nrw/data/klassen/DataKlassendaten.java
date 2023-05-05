@@ -48,7 +48,7 @@ public final class DataKlassendaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
     	final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
     	if (klasse == null)
-			return OperationError.NOT_FOUND.getResponse();
+    		return OperationError.NOT_FOUND.getResponse();
     	final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
     	// Bestimme die Schüler der Klasse
     	final List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", klasse.ID, DTOSchuelerLernabschnittsdaten.class)

@@ -70,7 +70,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 					.build();
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
-		final ArrayList<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
+		final List<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
 
 		final ArrayList<SchuelerStundenplanUnterricht> spUnterricht = new ArrayList<>();
 
