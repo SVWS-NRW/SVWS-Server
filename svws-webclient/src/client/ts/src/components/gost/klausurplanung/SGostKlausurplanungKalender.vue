@@ -8,11 +8,11 @@
 			<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1" tag="div" :class="dropOverCssClasses()" class="w-1/4" @drop="onDrop($event, null)">
 				<ul class="flex flex-col gap-y-1">
 					<svws-ui-drag-data tag="li" v-for="termin in termineOhne" :key="termin.id" :data="{termin}" @drag-start="dragStatus(termin)" @drag-end="dragStatus(null)">
-						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :termin="termin" />
+						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :termin="termin" :kursmanager="kursmanager" />
 					</svws-ui-drag-data>
 				</ul>
 			</svws-ui-drop-data>
-			<div class="flex flex-row flex-wrap gap-4 w-full">
+			<div class="flex flex-row flex-wrap gap-4 w-full h-full">
 				<calendar-view :display-period-uom="displayPeriodUom" :starting-day-of-week="1" :enable-drag-drop="true" :items="termineMit"
 					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell">
 					<template #header="{ headerProps }">
@@ -20,7 +20,7 @@
 					</template>
 					<template #item="{value, top}">
 						<svws-ui-drag-data :class="dropOverCssClasses()" tag="div" :data="value" @drag-start="dragStatus(value.originalItem)" @drag-end="dragStatus(null)">
-							<s-gost-klausurplanung-kalender-termin :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
+							<s-gost-klausurplanung-kalender-termin :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
 						</svws-ui-drag-data>
 					</template>
 				</calendar-view>

@@ -75,7 +75,6 @@
 					:faecher-manager="faecherManager"
 					:map-lehrer="mapLehrer"
 					:set-termin-to-kursklausur="setTerminToKursklausur"
-					:drag-status="dragStatus"
 					:map-schueler="mapSchueler"
 					:kursmanager="kursmanager" />
 				<div class="flex flex-col">
@@ -88,11 +87,12 @@
 							:faecher-manager="faecherManager"
 							:map-lehrer="mapLehrer"
 							:set-termin-to-kursklausur="setTerminToKursklausur"
-							:drag-status="dragStatus"
 							:drag-klausur="dragKlausur"
 							:map-schueler="mapSchueler"
 							:loesche-klausurtermin="loescheKlausurtermin"
 							:patch-klausurtermin="patchKlausurtermin"
+							@drag-start-klausur="dragStartKlausur"
+							@drag-end-klausur="dragEndKlausur"
 							:kursmanager="kursmanager" />
 					</div>
 				</div>
@@ -104,13 +104,14 @@
 <script setup lang="ts">
 
 	import type { GostKursklausur, GostKlausurtermin} from "@svws-nrw/svws-core";
-	import { KlausurblockungSchienenAlgorithmus, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
-	import { computed, Ref, ref } from 'vue';
+	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
+	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
 	const modal = ref<any>(null);
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
+
 	const loading = ref<boolean>(false);
 
 	const quartal = ref(0);
@@ -118,7 +119,14 @@
 
 	const dragKlausur = ref<GostKursklausur | null>(null);
 
-	const dragStatus = (klausur: GostKursklausur | null) =>	dragKlausur.value = klausur;
+	const dragStartKlausur = (e: DragEvent, klausur: GostKursklausur) =>	{
+		dragKlausur.value = klausur;
+	}
+
+	const dragEndKlausur = (e: DragEvent) =>	{
+		dragKlausur.value = null;
+	}
+
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-success": dragKlausur.value !== null && dragKlausur.value.quartal === termin.quartal,

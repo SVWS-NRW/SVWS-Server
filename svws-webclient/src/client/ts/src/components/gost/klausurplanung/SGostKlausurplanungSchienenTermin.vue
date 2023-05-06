@@ -9,51 +9,16 @@
 					<span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span>
 				</svws-ui-badge>
 			</div>
-			<table class="w-full">
-				<thead v-if="termin !== null">
-					<tr>
-						<th class="text-left" colspan="2">St HJ{{ termin?.halbjahr }}K{{ termin?.quartal }}</th>
-						<th class="text-right" colspan="4">{{ termin.datum === null ? "Noch kein Datum" : new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</th>
-						<!--						<td class="float-right">
-							<svws-ui-popover v-if="loescheKlausurtermin != undefined" :hover="false" placement="left-end" :disable-click-away="false">
-								<template #trigger>
-									<svws-ui-button class="action-button">
-										<i-ri-more2-line />
-									</svws-ui-button>
-								</template>
-								<template #content>
-									<div class="action-items">
-										<div>
-											<svws-ui-button v-if="loescheKlausurtermin != undefined" class="action-item"
-												type="transparent"
-												@click="loescheTermin">
-												Löschen
-											</svws-ui-button>
-										</div>
-									</div>
-								</template>
-							</svws-ui-popover>
-						</td>-->
-					</tr>
-					<tr>
-						<th colspan="5"><svws-ui-text-input placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" /></th>
-						<td colspan="1" class="text-right">{{ anzahlSuS }} SuS</td>
-					</tr>
-					<!--<tr><td colspan="4" class="text-red-600">{{ dropRejectReason }}</td></tr>-->
-				</thead>
-				<tbody>
-					<s-gost-klausurplanung-schienen-klausur v-for="klausur in klausuren"
-						:key="klausur.id"
-						:kursklausurmanager="kursklausurmanager"
-						:klausur="klausur"
-						:termin="termin"
-						:alle-termine="alleTermine"
-						:faecher-manager="faecherManager"
-						:map-lehrer="mapLehrer"
-						:drag-status="dragStatus"
-						:kursmanager="kursmanager" />
-				</tbody>
-			</table>
+			<!--<svws-ui-text-input v-if="termin !== null" placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" />-->
+			<s-gost-klausurplanung-termin-common :kursklausurmanager="kursklausurmanager"
+				:termin="termin"
+				:alle-termine="alleTermine"
+				:map-lehrer="mapLehrer"
+				:kursmanager="kursmanager"
+				:klausur-draggable="true"
+				@drag-start-klausur="dragStartKlausur"
+				@drag-end-klausur="dragEndKlausur"
+				:klausur-css-classes="klausurCssClasses" />
 		</svws-ui-drop-data>
 	</div>
 </template>
@@ -61,11 +26,9 @@
 <script setup lang="ts">
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@svws-nrw/svws-core";
-	import { GostJahrgangsdaten } from "@svws-nrw/svws-core";
 	import { computed } from 'vue';
 
 	const props = defineProps<{
-		//		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		termin: GostKlausurtermin | null;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
@@ -74,12 +37,39 @@
 		kursmanager: KursManager;
 		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
 		loescheKlausurtermin?: (termin: GostKlausurtermin) => Promise<boolean>;
-		dragStatus: (klausur: GostKursklausur | null) => void;
 		patchKlausurtermin?: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
 		quartal?: number;
 		alleTermine: List<GostKlausurtermin>;
 		dragKlausur?: GostKursklausur | null;
 	}>();
+
+	const emit = defineEmits<{
+		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;
+		(e: 'dragEndKlausur', data: DragEvent): void;
+	}>()
+
+	function dragStartKlausur(e: DragEvent, klausur: GostKursklausur) {
+		emit("dragStartKlausur", e, klausur);
+	}
+
+	function dragEndKlausur(e: DragEvent) {
+		emit("dragEndKlausur", e);
+	}
+
+	const klausurCssClasses = (klausur: GostKursklausur) => {
+		let konfliktfreiZuFremdtermin = false;
+		for (const termin of props.alleTermine) {
+			if (termin.id !== klausur.idTermin && termin.quartal === klausur.quartal)
+				konfliktfreiZuFremdtermin = props.kursklausurmanager().gibKonfliktTerminKursklausur(termin.id, klausur.id).isEmpty();
+			if (konfliktfreiZuFremdtermin)
+				break;
+		}
+		const konfliktZuEigenemTermin = props.termin === undefined || props.termin === null || klausur === null ? false : props.kursklausurmanager().gibKonfliktTerminInternKursklausur(props.termin, klausur).size() > 0;
+		return {
+			"bg-success": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
+			"bg-error": konfliktZuEigenemTermin,
+		}
+	};
 
 	const terminHeader = computed(()=>
 		props.termin === null ? "Zu verplanen:" : (props.termin.datum === null ? "Noch kein Datum" : new Date(props.termin.datum).toLocaleString("de-DE").split(",")[0])
@@ -97,24 +87,6 @@
 		const result = await props.setTerminToKursklausur(terminNeu, klausur);
 	}
 
-	// const dropRejectReason = computed(() => {
-	// 	if (props.termin !== null && props.dragKlausur !== null && props.dragKlausur !== undefined) {
-	// 		const konflikte = props.kursklausurmanager().gibKonfliktTerminKursklausur(props.termin.id, props.dragKlausur.id);
-	// 		if (konflikte.size() > 0) {
-	// 			let retVal = "";
-	// 			(konflikte.toArray() as number[]).forEach(k => {
-	// 				const s = props.mapSchueler.get(k);
-	// 				retVal += `${s?.nachname} ${s?.vorname}, `;
-	// 			});
-	// 			return retVal;
-	// 			// return "Konflikte: " + konflikte.toArray().forEach(element => {
-	// 			// 	return "d"
-	// 			// });
-	// 		}
-	// 	}
-	// 	return "";
-	// });
-
 	const konflikteTerminDragKlausur = computed(() =>
 		props.termin !== null && props.dragKlausur !== null ? props.kursklausurmanager().gibKonfliktTerminKursklausur(props.termin.id, props.dragKlausur!.id).size() : -1
 	);
@@ -126,10 +98,6 @@
 	const loescheTermin = async() => {
 		if (props.loescheKlausurtermin != undefined && props.termin != null)
 			await props.loescheKlausurtermin(props.termin);
-	};
-
-	const updateTermin = async() => {
-		console.log("Hallo");
 	};
 
 	const anzahlSuS = computed(() => {
