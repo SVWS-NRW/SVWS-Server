@@ -209,6 +209,7 @@ export { LehrerKatalogZugangsgrundEintrag } from './core/data/lehrer/LehrerKatal
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
+export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
 export { Schild3KatalogEintragAbiturInfos } from './core/data/schild3/Schild3KatalogEintragAbiturInfos';
 export { Schild3KatalogEintragDQRNiveaus } from './core/data/schild3/Schild3KatalogEintragDQRNiveaus';
 export { Schild3KatalogEintragDatenart } from './core/data/schild3/Schild3KatalogEintragDatenart';

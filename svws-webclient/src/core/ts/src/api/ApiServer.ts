@@ -18,6 +18,7 @@ import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
 import { Credentials } from '../core/data/benutzer/Credentials';
+import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
 import { ENMDaten } from '../core/data/enm/ENMDaten';
@@ -5687,6 +5688,66 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode migrateMariaDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mariadb
+	 *
+	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der MariaDB-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
+	 */
+	public async migrateMariaDB(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mariadb"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMariaDBSchulnummer für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mariadb/{schulnummer:\d{6}}
+	 *
+	 * Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der MariaDB-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schulnummer - der Pfad-Parameter schulnummer
+	 *
+	 * @returns Der Log vom Migrieren der MariaDB-Datenbank
+	 */
+	public async migrateMariaDBSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mariadb/{schulnummer:\\d{6}}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode migrateFromMDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mdb
 	 *
 	 * Migriert die übergebene Datenbank in dieses Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.
@@ -5709,6 +5770,126 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/migrate/mdb"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMsSqlServer für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mssql
+	 *
+	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der SQL-Server-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
+	 */
+	public async migrateMsSqlServer(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mssql"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMsSqlServerSchulnummer für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mssql/{schulnummer:\d{6}}
+	 *
+	 * Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der SQL-Server-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schulnummer - der Pfad-Parameter schulnummer
+	 *
+	 * @returns Der Log vom Migrieren der SQL-Server-Datenbank
+	 */
+	public async migrateMsSqlServerSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mssql/{schulnummer:\\d{6}}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMySql für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mysql
+	 *
+	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der MySQL-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Migrieren der MySQL-Datenbank
+	 */
+	public async migrateMySql(data : DatenbankVerbindungsdaten, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mysql"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode migrateMySqlSchulnummer für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mysql/{schulnummer:\d{6}}
+	 *
+	 * Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Migrieren der MySQL-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Das Schema darf nicht migriert werden.
+	 *   Code 500: Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {DatenbankVerbindungsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schulnummer - der Pfad-Parameter schulnummer
+	 *
+	 * @returns Der Log vom Migrieren der MySQL-Datenbank
+	 */
+	public async migrateMySqlSchulnummer(data : DatenbankVerbindungsdaten, schema : string, schulnummer : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/migrate/mysql/{schulnummer:\\d{6}}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schulnummer\s*(:[^}]+)?}/g, schulnummer.toString());
+		const body : string = DatenbankVerbindungsdaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
 	}

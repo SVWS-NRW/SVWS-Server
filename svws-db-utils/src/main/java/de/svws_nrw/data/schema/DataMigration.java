@@ -8,6 +8,7 @@ import java.util.Random;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -108,6 +109,88 @@ public final class DataMigration {
 			Files.delete(Paths.get(mdbdirectory + "/" + mdbFilename));
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			logger.logLn(2, "[FEHLER]");
+		}
+
+		logger.logLn("Migration abgeschlossen.");
+		final SimpleOperationResponse daten = simpleResponse(true, log);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    }
+
+
+
+	/**
+	 * Migriert eine Access-MDB-Datenbank in das angegeben Schema der übergebenen Datenbank-
+	 * Verbindung
+	 *
+	 * @param conn               die Datenbank-Verbindung zum Ziel-Schema
+     * @param schemaname         der Name des Ziel-Schemas, in welches migriert wird
+     * @param srcDBDriver        das DBMS der Quell-Datenbank
+	 * @param verbindungsdaten   die Verbindungsdaten für den Zugriff auf die Quell-Datenbank
+     * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird oder null, falls keine Filterung bezüglich
+     *                           der Schulnummer erfolgen soll
+     *
+	 * @return die HTTP-Response mit dem LOG der Migration
+	 */
+    public static Response migrateDBMS(final DBEntityManager conn, final String schemaname, final DBDriver srcDBDriver, final DatenbankVerbindungsdaten verbindungsdaten, final Integer schulnummer) {
+    	final Logger logger = new Logger();
+    	final LogConsumerList log = new LogConsumerList();
+    	logger.addConsumer(log);
+    	logger.addConsumer(new LogConsumerConsole());
+
+    	if ((srcDBDriver == null) || (srcDBDriver == DBDriver.MDB) || (srcDBDriver == DBDriver.SQLITE)) {
+			logger.logLn("Eine Migration aus dem angegebenen Datenbankformat '" + srcDBDriver + "' wird über diese Schnittstelle nicht unterstützt.");
+			final SimpleOperationResponse daten = simpleResponse(false, log);
+			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    	}
+
+		final DBConfig srcConfig = new DBConfig(srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false, verbindungsdaten.username,
+				verbindungsdaten.password, true, false);
+    	return migrateInto(conn, schemaname, srcConfig, schulnummer);
+    }
+
+
+    /**
+     * Führt eine Migration in das angegebene Ziel-Schema mit den übergebenen Migrations-Informtionen durch.
+     *
+	 * @param conn               die Datenbank-Verbindung zum Ziel-Schema
+     * @param schemaname         der Name des Ziel-Schemas, in welches migriert wird
+     * @param srcConfig          die Konfiguration für die Quell-Datenbank
+     * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird oder null, falls keine Filterung bezüglich
+     *                           der Schulnummer erfolgen soll
+     *
+	 * @return die HTTP-Response mit dem LOG der Migration
+     */
+	private static Response migrateInto(final DBEntityManager conn, final String schemaname, final DBConfig srcConfig, final Integer schulnummer) {
+    	final Logger logger = new Logger();
+    	final LogConsumerList log = new LogConsumerList();
+    	logger.addConsumer(log);
+    	logger.addConsumer(new LogConsumerConsole());
+
+    	// Prüfe das angegebene Datenbanksystem für die Quelldatenbank
+    	if ((srcConfig.getDBDriver() == null) || (srcConfig.getDBDriver() == DBDriver.MDB) || (srcConfig.getDBDriver() == DBDriver.SQLITE)) {
+			logger.logLn("Eine Migration aus dem angegebenen Datenbankformat '" + srcConfig.getDBDriver() + "' wird über diese Schnittstelle nicht unterstützt.");
+			final SimpleOperationResponse daten = simpleResponse(false, log);
+			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    	}
+		logger.logLn("Es wird aus dem Datenbankformat '" + srcConfig.getDBDriver() + "' migriert.");
+
+    	logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
+    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
+
+		// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
+		final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
+		if (tgtConfig == null) {
+			logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration - Ziel-Schema nicht in der Server-Konfiguration gefunden (schema='" + conn.getDBSchema() + "')");
+			final SimpleOperationResponse daten = simpleResponse(false, log);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		}
+
+		// Führe die Migration durch
+		if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, schulnummer, logger)) {
+			logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
+			final SimpleOperationResponse daten = simpleResponse(false, log);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
 
 		logger.logLn("Migration abgeschlossen.");

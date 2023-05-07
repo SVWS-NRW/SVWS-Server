@@ -5,9 +5,11 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.api.schema.DBMultipartBodyDefaultSchema;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.schema.DataMigration;
 import de.svws_nrw.data.schema.DataSQLite;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,16 +64,15 @@ public class APIDatabase {
     }
 
 
-
     /**
      * Die OpenAPI-Methode für das Migrieren einer MDB in dieses Schema. Die existierenden Daten in diesem Schema
      * werden dabei entfernt.
      *
-     * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param schemaname    Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
      * @param multipart     Daten der MDB, MDB-Datenbankkennwort, DB-Username und Passwort
      * @param request       die Informationen zur HTTP-Anfrage
      *
-     * @return              Rückmeldung, ob die Operation erfolgreich war
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
      */
     @POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -90,6 +91,195 @@ public class APIDatabase {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
     		return DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in ein Schema mit angegebenen Namen.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur MariaDB
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mariadb")
+    @Operation(summary = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. "
+	           		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der MariaDB-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMariaDB(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MARIA_DB, verbindungsdaten, null);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in ein Schema mit angegebenen Namen,
+     * wobei nur Daten für die angegebene Schulnummer übertragen werden.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur MariaDB
+     * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mariadb/{schulnummer:\\d{6}}")
+    @Operation(summary = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. "
+               		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der MariaDB-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMariaDBSchulnummer(@PathParam("schema") final String schemaname,
+    		@PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MARIA_DB, verbindungsdaten, schulnummer);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in ein Schema mit angegebenen Namen.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur MySQL-Datenbank
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mysql")
+    @Operation(summary = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. "
+	           		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der MySQL-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMySql(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MYSQL, verbindungsdaten, null);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in ein Schema mit angegebenen Namen,
+     * wobei nur Daten für die angegebene Schulnummer übertragen werden.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur MySQL-Datenbank
+     * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mysql/{schulnummer:\\d{6}}")
+    @Operation(summary = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. "
+               		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der MySQL-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMySqlSchulnummer(@PathParam("schema") final String schemaname,
+    		@PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MYSQL, verbindungsdaten, schulnummer);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden SQL-Server-Datenbank in ein Schema mit angegebenen Namen.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur SQL-Server-Datenbank
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mssql")
+    @Operation(summary = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. "
+	           		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der SQL-Server-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMsSqlServer(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MSSQL, verbindungsdaten, null);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden SQL-Server-Datenbank in ein Schema mit angegebenen Namen,
+     * wobei nur Daten für die angegebene Schulnummer übertragen werden.
+     * Die existierenden Daten in diesem Schema werden dabei entfernt.
+     *
+     * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
+     * @param verbindungsdaten   Die Verbindungsdaten zur SQL-Server-Datenbank
+     * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird.
+     * @param request            die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+    @Path("/migrate/mssql/{schulnummer:\\d{6}}")
+    @Operation(summary = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen.",
+               description = "Migriert die Daten für die übergebene Schulnummer aus der übergebenen Datenbank in das Schema mit dem angegebenen Namen. "
+               		       + "Die Daten in diesem Schema werden ersetzt.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Migrieren der SQL-Server-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
+    @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
+	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response migrateMsSqlServerSchulnummer(@PathParam("schema") final String schemaname,
+    		@PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+        			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MSSQL, verbindungsdaten, schulnummer);
     	}
     }
 
