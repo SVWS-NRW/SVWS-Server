@@ -2,6 +2,7 @@ package de.svws_nrw.core.adt.sat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -17,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @author Benjamin A. Bartsch
  */
-public final class SatFormula {
+public final class SatInput {
 
     /** Die aktuelle Anzahl an Variablen. */
     private int _nVars;
@@ -29,7 +30,7 @@ public final class SatFormula {
     private int _varFALSE;
 
     /** Die aktuelle Anzahl an Variablen. */
-    private final @NotNull ArrayList<@NotNull int[]> _clauses;
+    private final @NotNull List<@NotNull Integer @NotNull[]> _clauses;
 
     /**
      * Erzeugt eine neues Objekt. Anschließend lassen sich Variablen erzeugen und Klauseln hinzufügen.
@@ -47,7 +48,7 @@ public final class SatFormula {
      *     f.addClause(new int[] {x5});          // adds {5}
      * </pre>
      */
-    public SatFormula() {
+    public SatInput() {
         _nVars = 0;
         _clauses = new ArrayList<>();
         _varTRUE = 0;  // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
@@ -55,7 +56,7 @@ public final class SatFormula {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return getDimacsHeader();
     }
 
@@ -95,15 +96,15 @@ public final class SatFormula {
     }
 
     /**
-     * Liefert die interne Anzahl an erzeugten Klauseln.
+     * Liefert die Menge aller Klauseln.
      *
-     * @return Die interne Anzahl an erzeugten Klauseln.
+     * @return die Menge aller Klauseln.
      */
-    public int getClauseCount() {
-        return _clauses.size();
+    public @NotNull List<@NotNull Integer @NotNull[]> getClauses() {
+        return _clauses;
     }
 
-    private String getDimacsHeader() {
+    private @NotNull String getDimacsHeader() {
         return "p cnf " + _nVars + " " + _clauses.size();
     }
 
@@ -121,16 +122,32 @@ public final class SatFormula {
 
     /**
      * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
-     * Siehe auch: {@link SatFormula#create_var()}
+     * Siehe auch: {@link SatInput#create_var()}
      *
      * @param n die Anzahl an zu erzeugenden Variablen.
      *
      * @return ein Array mit den neuen Variablen.
      */
-    public @NotNull int[] create_vars(final int n) {
-        final int[] temp = new int[n];
+    public @NotNull int[] create_vars1D(final int n) {
+        final @NotNull int @NotNull [] temp = new int[n];
         for (int i = 0; i < temp.length; i++)
             temp[i] = create_var();
+        return temp;
+    }
+
+    /**
+     * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
+     * Siehe auch: {@link SatInput#create_var()}
+     *
+     * @param rows die Anzahl an Zeilen eines 2D-Arrays.
+     * @param cols die Anzahl an Spalten eines 2D-Arrays.
+     *
+     * @return ein Array mit den neuen Variablen.
+     */
+    public @NotNull int @NotNull [][] create_vars2D(final int rows, final int cols) {
+        final @NotNull int @NotNull [] @NotNull [] temp = new int[rows][cols];
+        for (int r = 0; r < rows; r++)
+        	temp[r] = create_vars1D(cols);
         return temp;
     }
 
@@ -197,8 +214,8 @@ public final class SatFormula {
 	}
 
 	/**
-     * Hinzufügen einer Klausel. Eine Klausel ist eine Menge von Variablen, die mit einem logischen ODER verknüpft
-     * sind. Die Variablen dürfen negiert sein. <br>
+     * Hinzufügen einer Klausel. Eine Klausel ist eine nicht leere Menge von Variablen,
+     * die mit einem logischen ODER verknüpft sind. Die Variablen dürfen negiert sein. <br>
      * <pre>
      * Das Array [-3, 8, 2]
      * wird als  (NOT x3) OR x8 OR x2 interpretiert.
@@ -206,18 +223,16 @@ public final class SatFormula {
      * Die Menge aller Klauseln sind mit einem AND verknüpft.
      *
      * @param pVars Die Variablen (auch negiert) der Klausel mit den zuvor generierten Variablen.
-     *              Ist das Array leer, passiert nichts.
      *
      * @throws DeveloperNotificationException falls die angegebenen Variablen ungültig sind.
      */
-    public void add_clause(final @NotNull int[] pVars) throws DeveloperNotificationException {
-    	if (pVars.length == 0)
-    		return;
+    public void add_clause(final @NotNull Integer @NotNull[] pVars) throws DeveloperNotificationException {
+        DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
 
-        for (final int v : pVars) {
-            DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", v == 0);
-            final int absV = Math.abs(v);
-            DeveloperNotificationException.ifTrue("Variable " + absV + " wurde vorher nicht erzeugt!", absV > _nVars);
+        for (final int literal : pVars) {
+            DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
+            final int absL = Math.abs(literal);
+            DeveloperNotificationException.ifTrue("Variable " + absL + " wurde vorher nicht erzeugt!", absL > _nVars);
         }
 
         _clauses.add(pVars);
@@ -229,17 +244,17 @@ public final class SatFormula {
      * @param x Die Variable wird auf TRUE gesetzt.
      */
     public void add_clause_1(final int x) {
-        add_clause(new int[] {x});
+        add_clause(new @NotNull Integer @NotNull[] {x});
     }
 
-    /**
+	/**
      * Fügt eine Klausel der Größe 2 hinzu. Forciert damit, dass mindestens eine der beiden Variablen TRUE ist.
      *
      * @param x Die Variable x der Klausel (x OR y).
      * @param y Die Variable y der Klausel (x OR y).
      */
     public void add_clause_2(final int x, final int y) {
-        add_clause(new int[] {x, y});
+        add_clause(new @NotNull Integer @NotNull[] {x, y});
     }
 
     /**
@@ -250,7 +265,7 @@ public final class SatFormula {
      * @param z Die Variable z der Klausel (x OR y OR z).
      */
     public void add_clause_3(final int x, final int y, final int z) {
-        add_clause(new int[] {x, y, z});
+        add_clause(new @NotNull Integer @NotNull[] {x, y, z});
     }
 
     /**
@@ -285,7 +300,35 @@ public final class SatFormula {
 	}
 
 	/**
-	 * Forciert, dass genau {@code amount} Variablen der Variablenliste den Wert TRUE haben.
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Zeile {@code pRow} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pRow    Die Zeile der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public void add_clause_exactly_in_row(final @NotNull int @NotNull [] @NotNull [] pData, final int pRow, final int pAmount) {
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		for (int c = 0; c < pData[pRow].length; c++)
+			pList.add(pData[pRow][c]);
+		add_clause_exactly(pList, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Spalte {@code pCol} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pCol    Die Spalte der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		for (int r = 0; r < pData.length; r++)
+			pList.add(pData[r][pCol]);
+		add_clause_exactly(pList, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Variablenliste den Wert TRUE haben.
 	 *
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
@@ -418,6 +461,33 @@ public final class SatFormula {
 		final int b = result.get(i2);
 		result.set(i1, create_var_OR(a, b));
 		result.set(i2, create_var_AND(a, b));
+	}
+
+	/**
+	 * Überprüft, ob die übergebene Lösung valide ist.
+	 *
+	 * @param solution Die übergebene Lösung.
+	 * @return TRUE, falls die Lösung alle Klauseln des Inputs erfüllt.
+	 */
+	public boolean isValidSolution(final @NotNull int @NotNull[] solution) {
+		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + _nVars + "!", solution.length != _nVars + 1);
+
+		for (final @NotNull Integer @NotNull [] clause : _clauses) {
+			int countTRUE = 0;
+
+			for (final @NotNull int literal : clause) {
+				final int abs = Math.abs(literal);
+				final int assignment = solution[abs];
+				DeveloperNotificationException.ifTrue("x_" + abs + " == 0", assignment == 0);
+				if (assignment == literal)
+					countTRUE++;
+			}
+
+			if (countTRUE == 0)
+				return false;
+		}
+
+		return true;
 	}
 
 }

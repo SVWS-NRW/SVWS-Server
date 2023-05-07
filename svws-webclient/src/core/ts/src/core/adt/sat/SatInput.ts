@@ -2,9 +2,10 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaIterator } from '../../../java/util/JavaIterator';
+import { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
-export class SatFormula extends JavaObject {
+export class SatInput extends JavaObject {
 
 	/**
 	 * Die aktuelle Anzahl an Variablen.
@@ -24,7 +25,7 @@ export class SatFormula extends JavaObject {
 	/**
 	 * Die aktuelle Anzahl an Variablen.
 	 */
-	private readonly _clauses : ArrayList<Array<number> | null>;
+	private readonly _clauses : List<Array<number>>;
 
 
 	/**
@@ -51,7 +52,7 @@ export class SatFormula extends JavaObject {
 		this._varFALSE = 0;
 	}
 
-	public toString() : string | null {
+	public toString() : string {
 		return this.getDimacsHeader();
 	}
 
@@ -91,15 +92,15 @@ export class SatFormula extends JavaObject {
 	}
 
 	/**
-	 * Liefert die interne Anzahl an erzeugten Klauseln.
+	 * Liefert die Menge aller Klauseln.
 	 *
-	 * @return Die interne Anzahl an erzeugten Klauseln.
+	 * @return die Menge aller Klauseln.
 	 */
-	public getClauseCount() : number {
-		return this._clauses.size();
+	public getClauses() : List<Array<number>> {
+		return this._clauses;
 	}
 
-	private getDimacsHeader() : string | null {
+	private getDimacsHeader() : string {
 		return "p cnf " + this._nVars + " " + this._clauses.size();
 	}
 
@@ -117,16 +118,32 @@ export class SatFormula extends JavaObject {
 
 	/**
 	 * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
-	 * Siehe auch: {@link SatFormula#create_var()}
+	 * Siehe auch: {@link SatInput#create_var()}
 	 *
 	 * @param n die Anzahl an zu erzeugenden Variablen.
 	 *
 	 * @return ein Array mit den neuen Variablen.
 	 */
-	public create_vars(n : number) : Array<number> {
-		const temp : Array<number> | null = Array(n).fill(0);
+	public create_vars1D(n : number) : Array<number> {
+		const temp : Array<number> = Array(n).fill(0);
 		for (let i : number = 0; i < temp.length; i++)
 			temp[i] = this.create_var();
+		return temp;
+	}
+
+	/**
+	 * Erzeugt mehrere Variablen auf einmal und liefert ein Array mit diesen zurück. <br>
+	 * Siehe auch: {@link SatInput#create_var()}
+	 *
+	 * @param rows die Anzahl an Zeilen eines 2D-Arrays.
+	 * @param cols die Anzahl an Spalten eines 2D-Arrays.
+	 *
+	 * @return ein Array mit den neuen Variablen.
+	 */
+	public create_vars2D(rows : number, cols : number) : Array<Array<number>> {
+		const temp : Array<Array<number>> = [...Array(rows)].map(e => Array(cols).fill(0));
+		for (let r : number = 0; r < rows; r++)
+			temp[r] = this.create_vars1D(cols);
 		return temp;
 	}
 
@@ -185,8 +202,8 @@ export class SatFormula extends JavaObject {
 	}
 
 	/**
-	 * Hinzufügen einer Klausel. Eine Klausel ist eine Menge von Variablen, die mit einem logischen ODER verknüpft
-	 * sind. Die Variablen dürfen negiert sein. <br>
+	 * Hinzufügen einer Klausel. Eine Klausel ist eine nicht leere Menge von Variablen,
+	 * die mit einem logischen ODER verknüpft sind. Die Variablen dürfen negiert sein. <br>
 	 * <pre>
 	 * Das Array [-3, 8, 2]
 	 * wird als  (NOT x3) OR x8 OR x2 interpretiert.
@@ -194,17 +211,15 @@ export class SatFormula extends JavaObject {
 	 * Die Menge aller Klauseln sind mit einem AND verknüpft.
 	 *
 	 * @param pVars Die Variablen (auch negiert) der Klausel mit den zuvor generierten Variablen.
-	 *              Ist das Array leer, passiert nichts.
 	 *
 	 * @throws DeveloperNotificationException falls die angegebenen Variablen ungültig sind.
 	 */
 	public add_clause(pVars : Array<number>) : void {
-		if (pVars.length === 0)
-			return;
-		for (const v of pVars) {
-			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", v === 0);
-			const absV : number = Math.abs(v);
-			DeveloperNotificationException.ifTrue("Variable " + absV + " wurde vorher nicht erzeugt!", absV > this._nVars);
+		DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length === 0);
+		for (const literal of pVars) {
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal === 0);
+			const absL : number = Math.abs(literal);
+			DeveloperNotificationException.ifTrue("Variable " + absL + " wurde vorher nicht erzeugt!", absL > this._nVars);
 		}
 		this._clauses.add(pVars);
 	}
@@ -271,7 +286,35 @@ export class SatFormula extends JavaObject {
 	}
 
 	/**
-	 * Forciert, dass genau {@code amount} Variablen der Variablenliste den Wert TRUE haben.
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Zeile {@code pRow} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pRow    Die Zeile der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public add_clause_exactly_in_row(pData : Array<Array<number>>, pRow : number, pAmount : number) : void {
+		const pList : LinkedCollection<number> = new LinkedCollection();
+		for (let c : number = 0; c < pData[pRow].length; c++)
+			pList.add(pData[pRow][c]);
+		this.add_clause_exactly(pList, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Spalte {@code pCol} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pCol    Die Spalte der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public add_clause_exactly_in_column(pData : Array<Array<number>>, pCol : number, pAmount : number) : void {
+		const pList : LinkedCollection<number> = new LinkedCollection();
+		for (let r : number = 0; r < pData.length; r++)
+			pList.add(pData[r][pCol]);
+		this.add_clause_exactly(pList, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Variablenliste den Wert TRUE haben.
 	 *
 	 * @param pList   Die Variablenliste.
 	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
@@ -378,12 +421,35 @@ export class SatFormula extends JavaObject {
 		result.set(i2, this.create_var_AND(a, b));
 	}
 
+	/**
+	 * Überprüft, ob die übergebene Lösung valide ist.
+	 *
+	 * @param solution Die übergebene Lösung.
+	 * @return TRUE, falls die Lösung alle Klauseln des Inputs erfüllt.
+	 */
+	public isValidSolution(solution : Array<number>) : boolean {
+		DeveloperNotificationException.ifTrue("Arraygröße " + solution.length + " passt nicht zur Variablenanzahl " + this._nVars + "!", solution.length !== this._nVars + 1);
+		for (const clause of this._clauses) {
+			let countTRUE : number = 0;
+			for (const literal of clause) {
+				const abs : number = Math.abs(literal);
+				const assignment : number = solution[abs];
+				DeveloperNotificationException.ifTrue("x_" + abs + " == 0", assignment === 0);
+				if (assignment === literal)
+					countTRUE++;
+			}
+			if (countTRUE === 0)
+				return false;
+		}
+		return true;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.adt.sat.SatFormula'].includes(name);
+		return ['de.svws_nrw.core.adt.sat.SatInput'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_adt_sat_SatFormula(obj : unknown) : SatFormula {
-	return obj as SatFormula;
+export function cast_de_svws_nrw_core_adt_sat_SatInput(obj : unknown) : SatInput {
+	return obj as SatInput;
 }
