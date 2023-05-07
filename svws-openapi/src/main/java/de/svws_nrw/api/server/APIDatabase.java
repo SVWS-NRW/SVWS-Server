@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.api.schema.DBMultipartBodyDataOnly;
 import de.svws_nrw.api.schema.DBMultipartBodyDefaultSchema;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
@@ -32,7 +33,7 @@ import jakarta.ws.rs.core.Response;
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf Datenbankoperationen ohne Root-Rechte.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/export/... ,
  * https://{Hostname}/db/{schema}/import/...
- * oder https://{Hostname}/db/{schema}/migrate
+ * oder https://{Hostname}/db/{schema}/migrate/...
  */
 @Path("/db/{schema}")
 @Produces(MediaType.APPLICATION_JSON)
@@ -60,7 +61,41 @@ public class APIDatabase {
     			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-		return DataSQLite.exportSQLite(OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN), schemaname);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataSQLite.exportSQLite(conn, schemaname);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für den Import einer SQLite-Datenbank in das aktuellen Schema. Der Aufruf erfordert
+     * administrative Rechte auf dem Schema. Die existierenden Daten in diesem Schema werden dabei entfernt
+     * und durch die Daten der SQLite-Datenbank ersetzt.
+     *
+     * @param schemaname    Name des Schemas, auf welches die Abfrage ausgeführt wird und in das importiert werden soll
+     * @param multipart     Die SQLite-Datenbank
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/import/sqlite")
+    @Operation(summary = "Importiert die übergebene Datenbank in dieses Schema.",
+               description = "Importiert die übergebene Datenbank in dieses Schema. Das "
+               		       + "Schema wird dabei zunächst geleert und vorhanden Daten gehen dabei verloren.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Importieren der SQLite-Datenbank",
+    			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "500", description = "Fehler beim Importieren mit dem Log des fehlgeschlagenen Imports.",
+				 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "In das Schema darf nicht importiert werden.")
+    public Response importSQLite(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die SQLite-Datenbank-Datei", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDataOnly multipart,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+    		return DataSQLite.importSQLite(conn, multipart.database);
+    	}
     }
 
 
@@ -69,7 +104,7 @@ public class APIDatabase {
      * werden dabei entfernt.
      *
      * @param schemaname    Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
-     * @param multipart     Daten der MDB, MDB-Datenbankkennwort, DB-Username und Passwort
+     * @param multipart     die Daten der MDB und das zugehörige Datenbankkennwort
      * @param request       die Informationen zur HTTP-Anfrage
      *
      * @return die Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation

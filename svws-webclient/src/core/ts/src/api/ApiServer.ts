@@ -4714,6 +4714,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode importSQLite für den Zugriff auf die URL https://{hostname}/db/{schema}/import/sqlite
+	 *
+	 * Importiert die übergebene Datenbank in dieses Schema. Das Schema wird dabei zunächst geleert und vorhanden Daten gehen dabei verloren.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Importieren der SQLite-Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: In das Schema darf nicht importiert werden.
+	 *   Code 500: Fehler beim Importieren mit dem Log des fehlgeschlagenen Imports.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Importieren der SQLite-Datenbank
+	 */
+	public async importSQLite(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/import/sqlite"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getJahrgaenge für den Zugriff auf die URL https://{hostname}/db/{schema}/jahrgaenge/
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Jahrgänge unter Angabe der ID, des Kürzels, des verwendeten Statistik-Kürzels, der Bezeichnung des Jahrgangs, die Schulgliederung zu der der Jahrgang gehört, die ID eines Folgejahrgangs, sofern definiert, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Jahrgangsdaten besitzt.
