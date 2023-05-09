@@ -2085,6 +2085,20 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
+		if (unit.superTypes.contains("java.util.Map")) { // TODO check only if the class directly implements Map and not indirectly
+			// TODO determine the name of both type parameter and replace K and V in the following code...
+			sb.append(getIndent()).append("public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tconst v : V | null = this.get(key);").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tif (v != null)").append(System.lineSeparator());
+			sb.append(getIndent()).append("\t\treturn v;").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tconst newValue : V = mappingFunction.apply(key);").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tif (newValue == null)").append(System.lineSeparator());
+			sb.append(getIndent()).append("\t\treturn null;").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tthis.put(key, newValue)").append(System.lineSeparator());
+			sb.append(getIndent()).append("\treturn newValue;").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
 		if ((unit.superTypes.contains("java.lang.Iterable")) && (!unit.superTypes.contains("java.util.AbstractCollection") && (!unit.superTypes.contains("java.util.AbstractList")))) {
 			// TODO Get the type parameter that was passed through inheritance to the Iterable<...> interface
 			final TypeMirror type = unit.getIterableTypeArgument();
@@ -2407,6 +2421,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			entries.add(0, new AbstractMap.SimpleEntry<>(strObject, "java.lang"));
 		if ((unit.isEnum()) && (!unit.imports.containsKey("Enum")))
 			entries.add(0, new AbstractMap.SimpleEntry<>("Enum", "java.lang"));
+		if (unit.superTypes.contains("java.util.Map")) {
+			final String pkg = unit.imports.get("Function");
+			if ((pkg == null) || (!"java.util.function".equals(pkg)))
+				entries.add(0, new AbstractMap.SimpleEntry<>("Function", "java.util.function"));
+		}
 		String result = "";
 		for (final Map.Entry<String, String> entry : entries) {
 			final String key = entry.getKey();

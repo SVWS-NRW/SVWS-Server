@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -1321,12 +1322,11 @@ public class GostBlockungsdatenManager {
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
 	 */
 	public @NotNull List<@NotNull GostFachwahl> getOfFachartMengeFachwahlen(final long pFachartID) {
-		List<@NotNull GostFachwahl> fachwahlenDerFachart = _map_fachartID_fachwahlen.get(pFachartID);
-		if (fachwahlenDerFachart == null) {
-			fachwahlenDerFachart = new ArrayList<>();
-			_map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
-		}
-		return fachwahlenDerFachart;
+		final @NotNull Function<@NotNull Long, @NotNull List<@NotNull GostFachwahl>> itemCreator = (@NotNull final Long key) -> new ArrayList<>();
+		final List<@NotNull GostFachwahl> result = _map_fachartID_fachwahlen.computeIfAbsent(pFachartID, itemCreator);
+		if (result == null)
+			return new ArrayList<>();
+		return result;
 	}
 
 }

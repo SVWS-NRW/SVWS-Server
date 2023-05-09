@@ -1,3 +1,4 @@
+import { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { NavigableSet } from '../../../java/util/NavigableSet';
 import { JavaSet } from '../../../java/util/JavaSet';
@@ -791,6 +792,17 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
+	}
+
+	public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {
+		const v : V | null = this.get(key);
+		if (v != null)
+			return v;
+		const newValue : V = mappingFunction.apply(key);
+		if (newValue == null)
+			return null;
+		this.put(key, newValue)
+		return newValue;
 	}
 
 }

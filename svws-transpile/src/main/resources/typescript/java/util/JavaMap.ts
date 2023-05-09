@@ -1,6 +1,7 @@
 import type { Collection } from './Collection';
 import type { JavaSet } from './JavaSet';
 import type { JavaMapEntry } from './JavaMapEntry';
+import type { JavaFunction } from './function/JavaFunction';
 
 
 export interface JavaMap<K, V> {
@@ -23,6 +24,8 @@ export interface JavaMap<K, V> {
 
     equals(o : any) : boolean;
     hashCode() : number;
+
+    computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null;
 
 }
 

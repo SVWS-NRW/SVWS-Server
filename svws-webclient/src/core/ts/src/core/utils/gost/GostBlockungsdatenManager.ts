@@ -8,6 +8,7 @@ import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
+import { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { List } from '../../../java/util/List';
@@ -1287,12 +1288,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
 	 */
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
-		let fachwahlenDerFachart : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.get(pFachartID);
-		if (fachwahlenDerFachart === null) {
-			fachwahlenDerFachart = new ArrayList();
-			this._map_fachartID_fachwahlen.put(pFachartID, fachwahlenDerFachart);
-		}
-		return fachwahlenDerFachart;
+		const itemCreator : JavaFunction<number, List<GostFachwahl>> = { apply : (key: number) => new ArrayList() };
+		const result : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.computeIfAbsent(pFachartID, itemCreator);
+		if (result === null)
+			return new ArrayList();
+		return result;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -11,6 +11,7 @@ import { UnsupportedOperationException } from '../lang/UnsupportedOperationExcep
 import { HashMapEntrySet } from './HashMapEntrySet';
 import { HashMapEntry } from './HashMapEntry';
 import { HashMapKeySet } from './HashMapKeySet';
+import { JavaFunction } from './function/JavaFunction';
 
 
 export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneable, Serializable {
@@ -96,6 +97,18 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 
 	public hashCode() : number {
 		throw new UnsupportedOperationException();
+	}
+
+
+	public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {
+        const v : V | null = this.get(key);
+		if (v != null)
+			return v;
+		const newValue : V = mappingFunction.apply(key);
+		if (newValue == null)
+			return null;
+		this.put(key, newValue);
+		return newValue;
 	}
 
 
