@@ -134,10 +134,10 @@ class TestArrayMap {
 				}
 				case 7 -> { // keySet
 					for (final TestEnum key2 : map2.keySet()) {
-						assertEquals(map1.containsKey(key2), true);
+						assertEquals(true, map1.containsKey(key2));
 					}
 					for (final TestEnum key1 : map1.keySet()) {
-						assertEquals(map2.containsKey(key1), true);
+						assertEquals(true, map2.containsKey(key1));
 					}
 				}
 				case 8 -> { // put
@@ -176,10 +176,10 @@ class TestArrayMap {
 				}
 				case 13 -> { // values
 					for (final Integer value1 : map1.values()) {
-						assertEquals(map2.containsValue(value1), true);
+						assertEquals(true, map2.containsValue(value1));
 					}
 					for (final Integer value2 : map2.values()) {
-						assertEquals(map1.containsValue(value2), true);
+						assertEquals(true, map1.containsValue(value2));
 					}
 				}
 			}
