@@ -48,7 +48,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <T> der Inhaltstyp des Minimum-Heaps
  */
-public final class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
+public final class MinHeap<@NotNull T> implements Queue<@NotNull T> {
 
 	/** Die Anzahl der Elemente in diesem Heap. */
 	private int _size = 0;
@@ -303,11 +303,6 @@ public final class MinHeap<@NotNull T> implements Queue<@NotNull T>, Cloneable {
 	@Override
 	public @NotNull Iterator<@NotNull T> iterator() {
 		return new MinHeapIterator<>(_nodes, this);
-	}
-
-	@Override
-	public @NotNull Object clone() throws CloneNotSupportedException {
-		return new MinHeap<>(this);
 	}
 
 	/**

@@ -6,14 +6,13 @@ import { Comparator } from '../../../java/util/Comparator';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
-import { Cloneable } from '../../../java/lang/Cloneable';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { LinkedCollectionDescendingIterator } from '../../../core/adt/collection/LinkedCollectionDescendingIterator';
 import { LinkedCollectionIterator } from '../../../core/adt/collection/LinkedCollectionIterator';
 import { Arrays } from '../../../java/util/Arrays';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
-export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneable {
+export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 
 	/**
 	 * Das erste Element der Collection.
@@ -296,10 +295,6 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 				return false;
 		}
 		return true;
-	}
-
-	public clone() : unknown {
-		return new LinkedCollection(this);
 	}
 
 	public toString() : string {
@@ -627,7 +622,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E>, Cloneab
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Cloneable', 'java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable'].includes(name);
+		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<E> {

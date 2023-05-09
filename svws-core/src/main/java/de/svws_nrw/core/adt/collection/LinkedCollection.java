@@ -48,7 +48,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param <E>   der Inhaltstyp der LinkedCollection
  */
-public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cloneable {
+public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E> {
 
 	/** Das erste Element der Collection. */
 	LinkedCollectionElement<@NotNull E> _head;
@@ -315,11 +315,6 @@ public final class LinkedCollection<@NotNull E> implements Deque<@NotNull E>, Cl
 				return false;
 		}
 		return true;
-	}
-
-	@Override
-	public @NotNull Object clone() throws CloneNotSupportedException {
-		return new LinkedCollection<>(this);
 	}
 
 	@Override

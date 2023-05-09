@@ -29,7 +29,6 @@
 package de.svws_nrw.core.adt.collection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -37,12 +36,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -352,15 +351,6 @@ class TestLinkedCollection {
 		assertNotEquals(v4, coll);
 		assertTrue(coll2.equals(v2));
 		assertEquals(coll2, coll2);
-	}
-
-	/**
-	 * Test method for {@link LinkedCollection#clone()}.
-	 */
-	@SuppressWarnings("static-method")
-	@Test
-	final void testClone() {
-		assertDoesNotThrow(() -> { assertEquals(coll, coll.clone()); });
 	}
 
 	/**

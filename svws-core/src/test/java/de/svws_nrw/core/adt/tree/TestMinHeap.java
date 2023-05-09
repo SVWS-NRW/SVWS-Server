@@ -395,22 +395,6 @@ class TestMinHeap {
 	}
 
 	/**
-	 * Test method for {@link MinHeap#clone()}.
-	 */
-	@Test
-	void testClone() {
-		try {
-			@SuppressWarnings("unchecked")
-			final
-			MinHeap<Integer> h = (MinHeap<Integer>) heap.clone();
-			assertEquals(heap.size(), h.size());
-			assertEquals(heap, h);
-		} catch (@SuppressWarnings("unused") final CloneNotSupportedException e) {
-			// Clone is supported...
-		}
-	}
-
-	/**
 	 * Test method for {@link MinHeap#toSortedArray()}.
 	 */
 	@Test

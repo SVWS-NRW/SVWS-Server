@@ -7,14 +7,13 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { Collection } from '../../../java/util/Collection';
-import { Cloneable } from '../../../java/lang/Cloneable';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { Arrays } from '../../../java/util/Arrays';
 import { Queue } from '../../../java/util/Queue';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
-export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
+export class MinHeap<T> extends JavaObject implements Queue<T> {
 
 	/**
 	 * Die Anzahl der Elemente in diesem Heap.
@@ -287,10 +286,6 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 		return new MinHeapIterator(this._nodes, this);
 	}
 
-	public clone() : unknown {
-		return new MinHeap(this);
-	}
-
 	/**
 	 * Gibt den {@link Comparator} des Minimum Heaps zurück.
 	 *
@@ -536,7 +531,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T>, Cloneable {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.lang.Cloneable', 'de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
+		return ['de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
 	}
 
 	public [Symbol.iterator](): Iterator<T> {
