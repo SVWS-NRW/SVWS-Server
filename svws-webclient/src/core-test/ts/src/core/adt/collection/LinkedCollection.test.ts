@@ -237,15 +237,6 @@ describe.each([s, n, l])("LinkedCollection mit $name", ({ data, data2 }: {data: 
 		expect(coll.equals(coll2)).toBeFalsy();
 		expect(coll2.equals(v2)).toBeTruthy();
 	});
-	test("clone: returns a clone of Collection", () => {
-		const clone: unknown = coll.clone();
-		expect(clone).toBeInstanceOf(LinkedCollection);
-		const cloneColl: LinkedCollection<unknown> =
-            coll.clone() as LinkedCollection<unknown>;
-		expect(cloneColl.size()).toBe(cloneColl.size());
-		expect(cloneColl.containsAll(cloneColl)).toBeTruthy();
-		expect(cloneColl.equals(cloneColl)).toBeTruthy();
-	});
 	test("toString: returns a String wiht the Elements", () => {
 		expect(coll.toString()).toBeDefined();
 	});
