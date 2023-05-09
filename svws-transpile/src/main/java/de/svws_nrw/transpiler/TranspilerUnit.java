@@ -72,61 +72,61 @@ public final class TranspilerUnit {
 	private final TypeElement classElement;
 
 	/** a set with the full qualified names of all super types of the class of this transpiler unit */
-	public final HashSet<String> superTypes = new HashSet<>();
+	public final Set<String> superTypes = new HashSet<>();
 
 	/** a map with a mapping from the local variable name to a set of scopes where it is used */
-	public final HashMap<String, Set<Tree>> allLocalVariables = new HashMap<>();
+	public final Map<String, Set<Tree>> allLocalVariables = new HashMap<>();
 
 	/** a map with a mapping from a variable scope to a map with all defined variables by their names */
-	public final HashMap<Tree, Map<String, VariableTree>> allLocalVariablesByScope = new HashMap<>();
+	public final Map<Tree, Map<String, VariableTree>> allLocalVariablesByScope = new HashMap<>();
 
 	/** a map with a mapping from the local method name to a set of {@link ExecutableElement} objects */
-	public final HashMap<String, Set<ExecutableElement>> allLocalMethodElements  = new HashMap<>();
+	public final Map<String, Set<ExecutableElement>> allLocalMethodElements  = new HashMap<>();
 
 	/** a map with a mapping from the local method name to a set of scopes where it is used */
-	public final HashMap<String, Set<Tree>> allLocalMethods = new HashMap<>();
+	public final Map<String, Set<Tree>> allLocalMethods = new HashMap<>();
 
 	/** a map with a mapping from a method scope to a map with all defined methods by their names */
-	public final HashMap<Tree, Map<String, MethodTree>> allLocalMethodsByScope = new HashMap<>();
+	public final Map<Tree, Map<String, MethodTree>> allLocalMethodsByScope = new HashMap<>();
 
 	/** a map with a mapping from a member select tree to the invoked method */
-	public final HashMap<MemberSelectTree, ExecutableElement> allInvokedMethods = new HashMap<>();
+	public final Map<MemberSelectTree, ExecutableElement> allInvokedMethods = new HashMap<>();
 
 	/** a list with all identifiers with the tree path that are visited */
-	public final ArrayList<AbstractMap.SimpleEntry<IdentifierTree, TreePath>> allIdentifier = new ArrayList<>();
+	public final List<AbstractMap.SimpleEntry<IdentifierTree, TreePath>> allIdentifier = new ArrayList<>();
 
 	/** a map with all identifiers that are not defined locally and must be imported */
-	public final HashMap<IdentifierTree, String> allImports = new HashMap<>();
+	public final Map<IdentifierTree, String> allImports = new HashMap<>();
 
 	/** a map with all identifiers in annotations that are not defined locally and must be imported bit are not in the import list of allImports */
-	public final HashMap<IdentifierTree, String> allImportsForAnnotations = new HashMap<>();
+	public final Map<IdentifierTree, String> allImportsForAnnotations = new HashMap<>();
 
 	/** a map with all annotation identifiers that are not defined locally and must be imported */
-	public final HashMap<IdentifierTree, String> allAnnotations = new HashMap<>();
+	public final Map<IdentifierTree, String> allAnnotations = new HashMap<>();
 
 	/** a map that maps the name of an identifier to the name of its package, if the identifier was imported in a super class */
-	public final HashMap<String, String> importsSuper = new HashMap<>();
+	public final Map<String, String> importsSuper = new HashMap<>();
 
 	/** a map that maps a short class name in case of nested classes to its full class name with it enclosing classes */
-	public final HashMap<String, String> importsFullClassnames = new HashMap<>();
+	public final Map<String, String> importsFullClassnames = new HashMap<>();
 
 	/** a map that maps the name of an identifier to the name of its package */
-	public final HashMap<String, String> imports = new HashMap<>();
+	public final Map<String, String> imports = new HashMap<>();
 
 	/** a map that maps the name of an annotation identifier to the name of its package */
-	public final HashMap<String, String> annotations = new HashMap<>();
+	public final Map<String, String> annotations = new HashMap<>();
 
 	/** the list of type parameter of this class */
-	public final ArrayList<String> typeParameters = new ArrayList<>();
+	public final List<String> typeParameters = new ArrayList<>();
 
 	/** a map with all expressions of this transpiler units in the order of their occurrence. */
-	public final ArrayList<ExpressionTree> allExpressions = new ArrayList<>();
+	public final List<ExpressionTree> allExpressions = new ArrayList<>();
 
 	/** a map that maps all expressions of this transpiler unit to its type */
-	public final HashMap<ExpressionTree, ExpressionType> allExpressionTypes = new HashMap<>();
+	public final Map<ExpressionTree, ExpressionType> allExpressionTypes = new HashMap<>();
 
 	/** a map containing a mapping between a java compiler abstract syntax tree node ant the corresponding tree path object */
-	public final HashMap<Tree, TreePath> mapTreePath = new HashMap<>();
+	public final Map<Tree, TreePath> mapTreePath = new HashMap<>();
 
 
 
@@ -174,9 +174,7 @@ public final class TranspilerUnit {
 		if (localMethods != null)
 			return true;
 		// Check whether the identifier is part of an AnnotationTree but not the Type (the type is usually imported and not local)
-		if (transpiler.isAnnotationArgument(node))
-			return true;
-		return false;
+		return transpiler.isAnnotationArgument(node);
 	}
 
 
@@ -432,25 +430,23 @@ public final class TranspilerUnit {
 				} else {
 					methodElements.add(method);
 				}
-				if (!isUnitElement) {
-					if (childPath != null) {
-						// register method
-						final MethodTree methodTree = (MethodTree) childPath.getLeaf();
-						Set<Tree> scopes = this.allLocalMethods.get(methodName);
-						if (scopes == null) {
-							scopes = new HashSet<>();
-							scopes.add(this.classTree);
-							this.allLocalMethods.put(methodName, scopes);
-						} else {
-							scopes.add(this.classTree);
-						}
-						Map<String, MethodTree> methods = this.allLocalMethodsByScope.get(this.classTree);
-						if (methods == null) {
-							methods = new HashMap<>();
-							this.allLocalMethodsByScope.put(this.classTree, methods);
-						}
-						methods.put(methodName, methodTree);
+				if (!isUnitElement &&  (childPath != null)) {
+					// register method
+					final MethodTree methodTree = (MethodTree) childPath.getLeaf();
+					Set<Tree> scopes = this.allLocalMethods.get(methodName);
+					if (scopes == null) {
+						scopes = new HashSet<>();
+						scopes.add(this.classTree);
+						this.allLocalMethods.put(methodName, scopes);
+					} else {
+						scopes.add(this.classTree);
 					}
+					Map<String, MethodTree> methods = this.allLocalMethodsByScope.get(this.classTree);
+					if (methods == null) {
+						methods = new HashMap<>();
+						this.allLocalMethodsByScope.put(this.classTree, methods);
+					}
+					methods.put(methodName, methodTree);
 				}
 			}
 		}
@@ -499,12 +495,12 @@ public final class TranspilerUnit {
 	private TypeMirror getIterableTypeArgument(final TypeElement elem) {
 		if ("java.lang.Iterable".equals(elem.getQualifiedName().toString()))
 			return null;
-		final ArrayList<TypeMirror> superTypes = new ArrayList<>();
+		final List<TypeMirror> tmpSuperTypes = new ArrayList<>();
 		if ((elem.getSuperclass() != null) && (elem.getSuperclass().getKind() != TypeKind.NONE))
-			superTypes.add(elem.getSuperclass());
+			tmpSuperTypes.add(elem.getSuperclass());
 		if (elem.getInterfaces() != null)
-			superTypes.addAll(elem.getInterfaces());
-		for (final TypeMirror type : superTypes) {
+			tmpSuperTypes.addAll(elem.getInterfaces());
+		for (final TypeMirror type : tmpSuperTypes) {
 			final Element ifaceElem = transpiler.getTypeUtils().asElement(type);
 			if ((ifaceElem instanceof final TypeElement te) && (type instanceof final DeclaredType dt)) {
 				final List<? extends TypeParameterElement> typeParams = te.getTypeParameters();
@@ -541,8 +537,7 @@ public final class TranspilerUnit {
 	public TypeMirror getIterableTypeArgument() {
 		if (!superTypes.contains("java.lang.Iterable"))
 			return null;
-		final TypeMirror result = getIterableTypeArgument(this.classElement);
-		return result;
+		return getIterableTypeArgument(this.classElement);
 	}
 
 
@@ -659,13 +654,9 @@ public final class TranspilerUnit {
 
 		// check whether its a case tree in a switch expression
 		final TreePath parent = path.getParentPath();
-		if (parent.getLeaf() instanceof CaseTree) {
-			if (parent.getParentPath().getLeaf() instanceof final SwitchTree st) {
-				if (st.getExpression() instanceof final ParenthesizedTree pt) {
-					if (pt.getExpression() instanceof final IdentifierTree it)
-						return getIdentifierType(it);
-				}
-			}
+		if ((parent.getLeaf() instanceof CaseTree) && ((parent.getParentPath().getLeaf() instanceof final SwitchTree st)
+				&& ((st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it))))) {
+			return getIdentifierType(it);
 		}
 
 		// TODO check for annotation identifier types
@@ -689,7 +680,7 @@ public final class TranspilerUnit {
 		if (path == null)
 			throw new TranspilerException("Transpiler Error: Cannot retrieve tree path object for the specified identifier.");
 		final Tree parent = path.getParentPath().getLeaf();
-		final MethodInvocationTree miTree = (parent instanceof MethodInvocationTree) ? (MethodInvocationTree) parent : null;
+		final MethodInvocationTree miTree = (parent instanceof final MethodInvocationTree mit) ? mit : null;
 		if (miTree == null)
 			return null;
 		final String memberName = node.getIdentifier().toString();
@@ -864,7 +855,6 @@ public final class TranspilerUnit {
 			} else if (expr instanceof final LambdaExpressionTree lambdaExpression) {
 				allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
 			}
-
 			// TODO MemberReferenceTree
 		}
 	}
