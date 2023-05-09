@@ -1,37 +1,90 @@
-import type { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { InitProps } from "~/components/init/SInitProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { List, SchulenKatalogEintrag} from "@svws-nrw/svws-core";
+import type { Ref} from "vue";
+import { DatenbankVerbindungsdaten} from "@svws-nrw/svws-core";
+import { ArrayList, BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "./RouteManager";
-import { routeInitSchulkatalog } from "./init/RouteInitSchulkatalog";
-import { routeInitSchild2 } from "./init/RouteInitSchild2";
-import { routeInitBackup } from "./init/RouteInitBackup";
+import { RouteManager } from "~/router/RouteManager";
+import { ref} from "vue";
+import { api } from "./Api";
+import { routeApp } from "./RouteApp";
 
-const SInitWrapper = () => import("~/components/init/SInitWrapper.vue")
-
+const SInit = () => import("~/components/init/SInit.vue")
 export class RouteInit extends RouteNode<unknown, any> {
 
-	protected mapRoutes: Map<string, RouteNode<unknown, any>> = new Map();
+	protected listSchulkatalog: Ref<List<SchulenKatalogEintrag>> = ref(new ArrayList());
+	protected source: Ref<'schulkatalog'|'schild2'|'backup'|undefined> = ref(undefined);
+	protected db: Ref<'mysql'|'mariadb'|'mssql'|'mdb'|undefined> = ref(undefined);
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init", SInitWrapper);
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init/:source?/:db?", SInit);
 		super.propHandler = (route) => this.getProps();
 		super.text = "Initialisierung";
-		super.children = [
-			routeInitSchulkatalog,
-			routeInitSchild2,
-			routeInitBackup,
-		]
-		this.mapRoutes.set('schulkatalog', routeInitSchulkatalog);
-		this.mapRoutes.set('backup', routeInitBackup);
-		this.mapRoutes.set('schild2', routeInitSchild2);
 	}
 
-	goto = async (route: string) => {
-		const name = this.mapRoutes.get(route)?.name;
-		if (name)
-			await RouteManager.doRoute({name});
-	};
+	initSchule = async (schule: SchulenKatalogEintrag): Promise<boolean> => {
+		try {
+			await api.server.initSchule(api.schema, Number(schule.SchulNr));
+			await RouteManager.doRoute(routeApp.getRoute());
+			return true;
+		} catch(error) {
+			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`, error);
+			return false;
+		}
+	}
+
+	migrateDB = async (formData: FormData): Promise<boolean> => {
+		const db = this.db.value;
+		console.log(db, formData)
+		if (!db) return false;
+		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
+		const data = new DatenbankVerbindungsdaten();
+		data.location = formData.get('location')?.toString() || null;
+		data.schema = formData.get('schema')?.toString() || null;
+		data.username = formData.get('username')?.toString() || null;
+		data.password = formData.get('password')?.toString() || null;
+		try {
+			switch (db) {
+				case 'mariadb':
+					schulnummer
+						? await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer)
+						: await api.server.migrateMariaDB(data, api.schema)
+					break;
+				case 'mysql':
+					schulnummer
+						? await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer)
+						: await api.server.migrateMySql(data, api.schema)
+					break;
+				case 'mssql':
+					schulnummer
+						? await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer)
+						: await api.server.migrateMsSqlServer(data, api.schema)
+					break;
+				case 'mdb':
+					await api.server.migrateFromMDB(formData, api.schema)
+					break;
+			}
+			return true;
+		} catch(error) {
+			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
+			return false;
+		}
+	}
+
+	setSource = async (source: string) => await RouteManager.doRoute({name: this.name, params: { source } });
+	setDB = async (db: string) => await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
+
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
+	}
+
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		if (to_params.source instanceof Array || to_params.db instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		this.source.value = ['schulkatalog','schild2','backup',undefined].includes(to_params.source) ? to_params.source as 'schulkatalog'|'schild2'|'backup'|undefined : undefined;
+		this.db.value = ['mysql','mariadb','mssql','mdb',undefined].includes(to_params.db) ? to_params.db as 'mysql'|'mariadb'|'mssql'|'mdb'|undefined : undefined;
+	}
 
 	public getRoute(): RouteLocationRaw {
 		return { name: this.name };
@@ -39,7 +92,13 @@ export class RouteInit extends RouteNode<unknown, any> {
 
 	public getProps(): InitProps {
 		return {
-			goto: this.goto,
+			setSource: this.setSource,
+			setDB: this.setDB,
+			listSchulkatalog: this.listSchulkatalog.value,
+			initSchule: this.initSchule,
+			migrateDB: this.migrateDB,
+			source: this.source.value,
+			db: this.db.value,
 		}
 	}
 

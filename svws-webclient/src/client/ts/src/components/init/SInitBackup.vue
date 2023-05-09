@@ -1,38 +1,29 @@
 <template>
-	<div class="modal--content">
-		<div class="init-form-header mb-8 px-8 py-4 mt-6">
-			<h1 class="leading-none text-center w-full">
-				<span class="font-normal">Import Schild 2-Datenbank</span>
-			</h1>
+	<svws-ui-content-card title="SQLite-Datenbank auswählen">
+		<div class="content-wrapper">
+			<input type="file" @change="import_file" :disabled="loading">
+			<svws-ui-spinner :spinning="loading" />
+			{{
+				status === false
+					? "Fehler beim Upload"
+					: status === true
+						? "Upload erfolgreich"
+						: ""
+			}}
 		</div>
-		<svws-ui-content-card title="MDB-Datei auswählen">
-			<div class="content-wrapper">
-				<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" />
-				<input type="file" accept="" @change="import_file" :disabled="loading">
-				<svws-ui-spinner :spinning="loading" />
-				<br>{{
-					status === false
-						? "Fehler beim Upload"
-						: status === true
-							? "Upload erfolgreich"
-							: ""
-				}}
-			</div>
-		</svws-ui-content-card>
-	</div>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { InitBackupProps } from "./SInitBackupProps";
 	import {ref} from "vue";
 
-	const props = defineProps<InitBackupProps>();
+	const props = defineProps<{
+		migrateDB: (data: FormData) => Promise<boolean>;
+	}>();
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
-	const password = ref<string>("");
-	const salt = ref<string>("");
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -44,8 +35,7 @@
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);
-		formData.append("password", password.value)
-		status.value = await props.migrateBackup(formData);
+		status.value = await props.migrateDB(formData);
 		loading.value = false;
 	}
 </script>

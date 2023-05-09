@@ -1,51 +1,68 @@
 <template>
-	<div class="modal--content">
-		<div class="init-form-header mb-8 px-8 py-4 mt-6">
-			<h1 class="leading-none text-center w-full">
-				<span class="font-normal">Import Schild 2-Datenbank</span>
-			</h1>
-		</div>
-		<svws-ui-content-card title="MDB-Datei auswählen">
-			<div class="content-wrapper">
-				<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" />
-				<input type="file" accept=".mdb" @change="import_file" :disabled="loading">
-				<svws-ui-spinner :spinning="loading" />
-				<br>{{
-					status === false
-						? "Fehler beim Upload"
-						: status === true
-							? "Upload erfolgreich"
-							: ""
-				}}
+	<svws-ui-content-card title="Datenbank auswählen">
+		<div class="content-wrapper">
+			<div class="flex flex-col gap-3">
+				<svws-ui-select-input v-model="db" :options="[{index: 'mysql', label: 'MySQL'}, {index: 'mariadb', label: 'MariaDB'},{index: 'mssql', label: 'MSSQL'},{index: 'mdb', label: 'Access (MDB)'}]" @update:model-value="setDB" />
+				<div class="flex flex-col gap-3" v-if="db && db !== 'mdb'">
+					<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
+					<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
+					<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
+					<svws-ui-text-input v-model="schema" placeholder="Datenbank-Schema" />
+					<svws-ui-text-input v-model="user" placeholder="Datenbankbenutzer" />
+					<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
+					<svws-ui-button @click="migrate()">Migration starten</svws-ui-button>
+				</div>
+				<div class="flex flex-col gap-3" v-if="db === 'mdb'">
+					<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
+					SQLite-Datei auswählen:
+					<input type="file" @change="migrate" :disabled="loading">
+				</div>
 			</div>
-		</svws-ui-content-card>
-	</div>
+			<svws-ui-spinner :spinning="loading" />
+			<br>{{
+				status === false
+					? "Fehler beim Upload"
+					: status === true
+						? "Upload erfolgreich"
+						: ""
+			}}
+		</div>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { InitSchild2Props } from "./SInitSchild2Props";
 	import {ref} from "vue";
 
-	const props = defineProps<InitSchild2Props>();
+	const props = defineProps<{
+		migrateDB: (data: FormData) => Promise<boolean>;
+		setDB: (db: string) => Promise<void>;
+	}>();
 
+	const db = ref();
+	const schildzentral = ref(false);
+	const schulnummer = ref("");
+	const location = ref("");
+	const schema = ref("");
+	const user = ref("");
+	const password = ref("");
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
-	const password = ref<string>("");
-	const salt = ref<string>("");
 
-	async function import_file(event: Event) {
-		const target = event.target as HTMLInputElement;
-		if (!target.files?.length)
-			return;
-		const file = target.files.item(0);
-		if (!file)
-			return;
+	async function migrate(event?: Event) {
 		loading.value = true;
 		const formData = new FormData();
-		formData.append("data", file);
-		formData.append("password", password.value)
-		status.value = await props.migrateMDB(formData);
+		const target = event?.target as HTMLInputElement;
+		if (target?.files?.length) {
+			const file = target.files.item(0);
+			if (file)
+				formData.append("data", file);
+		}
+		formData.append('username', user.value);
+		formData.append('password', password.value);
+		formData.append('schema', schema.value);
+		formData.append('location', location.value);
+		status.value = await props.migrateDB(formData);
 		loading.value = false;
 	}
 </script>

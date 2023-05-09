@@ -100,6 +100,7 @@ export class RouteManager {
 			return false;
 		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init")) {
 			await to_node.enter(to_node, to.params);
+			await to_node.doUpdate(to_node, to.params);
 			return;
 		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht

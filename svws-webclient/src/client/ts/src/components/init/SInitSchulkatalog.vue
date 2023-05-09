@@ -1,32 +1,26 @@
 <template>
-	<div class="modal--content">
-		<div class="init-form-header mb-8 px-8 py-4 mt-6">
-			<h1 class="leading-none text-center w-full">
-				<span class="font-normal">Schulauswahl</span>
-			</h1>
+	<svws-ui-content-card title="MDB-Datei auswählen">
+		<div class="content-wrapper">
+			<svws-ui-multi-select @update:model-value="initSchule" title="Auswahl Schule" autocomplete
+				:items="listSchulkatalog" :item-text="(i: SchulenKatalogEintrag) => i.KurzBez || 'Schule ohne Name'"
+				:item-filter="filter" required />
 		</div>
-		<div class="w-full mt-1 flex flex-col gap-2 items-center px-8" />
-		<svws-ui-multi-select @update:model-value="initSchule" title="Auswahl Schule" autocomplete
-			:items="listSchulkatalog" :item-text="(i: SchulenKatalogEintrag) => i.KurzBez || 'Schule ohne Name'"
-			:item-filter="filter" required />
-	</div>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { InitSchulkatalogProps } from "./SInitSchulkatalogProps";
-	import type { SchulenKatalogEintrag } from "@svws-nrw/svws-core";
+	import type { List, SchulenKatalogEintrag } from "@svws-nrw/svws-core";
 
-	const props = defineProps<InitSchulkatalogProps>();
+	const props = defineProps<{
+		listSchulkatalog: List<SchulenKatalogEintrag>;
+		initSchule: (schule: SchulenKatalogEintrag) => Promise<boolean>;
+	}>();
 
-	/** Filter für Staatsangehörigkeiten */
-	const filter = (items: SchulenKatalogEintrag[], search: string) => {
-		return items.filter(i =>
+	const filter = (items: SchulenKatalogEintrag[], search: string) =>
+		items.filter(i =>
 			i.SchulNr.includes(search.toLocaleLowerCase()) ||
-			i.KurzBez?.toLocaleLowerCase()
-				.includes(search.toLocaleLowerCase())
-		);
-	};
+			i.KurzBez?.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
 </script>
 
 <style lang="postcss" scoped>
