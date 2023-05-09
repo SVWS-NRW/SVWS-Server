@@ -10,7 +10,7 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Sport extends GostBelegpruefung {
 
-	private sport : List<AbiturFachbelegung> = new ArrayList();
+	private _sport : List<AbiturFachbelegung> = new ArrayList();
 
 
 	/**
@@ -24,16 +24,16 @@ export class Sport extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.sport = this.manager.getFachbelegungen(GostFachbereich.SPORT);
+		this._sport = this.manager.getFachbelegungen(GostFachbereich.SPORT);
 	}
 
 	protected pruefeEF1() : void {
-		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiertEinzeln(this.sport, GostHalbjahr.EF1)))
+		if ((this._sport === null) || (!this.manager.pruefeBelegungExistiertEinzeln(this._sport, GostHalbjahr.EF1)))
 			this.addFehler(GostBelegungsfehler.SP_10);
 	}
 
 	protected pruefeGesamt() : void {
-		if ((this.sport === null) || (!this.manager.pruefeBelegungExistiert(this.sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
+		if ((this._sport === null) || (!this.manager.pruefeBelegungExistiert(this._sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
 			this.addFehler(GostBelegungsfehler.SP_10);
 	}
 

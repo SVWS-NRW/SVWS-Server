@@ -9,7 +9,7 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Mathematik extends GostBelegpruefung {
 
-	private mathematik : AbiturFachbelegung | null = null;
+	private _mathematik : AbiturFachbelegung | null = null;
 
 
 	/**
@@ -23,26 +23,26 @@ export class Mathematik extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.mathematik = this.manager.getFachbelegung(GostFachbereich.MATHEMATIK);
+		this._mathematik = this.manager.getFachbelegung(GostFachbereich.MATHEMATIK);
 	}
 
 	protected pruefeEF1() : void {
-		if ((this.mathematik === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this.mathematik, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
+		if ((this._mathematik === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
 			this.addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this.mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.M_11);
 	}
 
 	protected pruefeGesamt() : void {
-		if (this.mathematik === null) {
+		if (this._mathematik === null) {
 			this.addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegung(this.mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!this.manager.pruefeBelegung(this._mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			this.addFehler(GostBelegungsfehler.M_10);
-		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this.mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			this.addFehler(GostBelegungsfehler.M_11);
 	}
 

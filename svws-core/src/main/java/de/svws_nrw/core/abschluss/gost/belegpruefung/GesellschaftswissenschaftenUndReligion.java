@@ -112,13 +112,11 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			return;
 
 		// Falls nicht: Philosophie und eine weitere durchgängig belegbare Gesellschaftswissenschaft müssen belegt sein
-		if (!manager.pruefeBelegung(philosophie, GostHalbjahr.EF1)) {
-			// Philosophie wurde nicht belegt
-			addFehler(GostBelegungsfehler.RE_10);
-		} else if ((!manager.pruefeBelegungDurchgehendBelegbarExistiert(geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
+		if ((!manager.pruefeBelegung(philosophie, GostHalbjahr.EF1))
+			|| ((!manager.pruefeBelegungDurchgehendBelegbarExistiert(geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
 				&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
-				&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))) {
-			// Philosophie wurde belegt - aber keine weitere Gesellschaftswissenschaft, die durchgängig belegbar ist
+				&& (!manager.pruefeBelegungDurchgehendBelegbarExistiert(sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)))) {
+			// Philosophie wurde nicht belegt oder keine zusätzliche Gesellschaftswissenschaft, welche durchgängig belegbar ist
 			addFehler(GostBelegungsfehler.RE_10);
 		}
 	}

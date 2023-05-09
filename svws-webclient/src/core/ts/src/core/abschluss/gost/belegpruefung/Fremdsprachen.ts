@@ -17,19 +17,19 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Fremdsprachen extends GostBelegpruefung {
 
-	private fremdsprachen : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachen : List<AbiturFachbelegung> = new ArrayList();
 
-	private fremdsprachen_neu : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachenNeu : List<AbiturFachbelegung> = new ArrayList();
 
-	private fremdsprachen_fortgefuehrt : List<AbiturFachbelegung> = new ArrayList();
+	private _fremdsprachenFortgefuehrt : List<AbiturFachbelegung> = new ArrayList();
 
-	private biliSachfaecher : List<AbiturFachbelegung> = new ArrayList();
+	private _biliSachfaecher : List<AbiturFachbelegung> = new ArrayList();
 
 	/**
 	 * Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
 	 *  - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde)
 	 */
-	private anzahl_schriftlich_durchgehend : number = 0;
+	private _anzahlDurchgehendSchriftlich : number = 0;
 
 
 	/**
@@ -43,11 +43,11 @@ export class Fremdsprachen extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.fremdsprachen = this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
-		this.fremdsprachen_neu = this.manager.filterFremdspracheNeuEinsetzend(this.fremdsprachen);
-		this.fremdsprachen_fortgefuehrt = this.manager.filterFremdspracheFortgefuehrt(this.fremdsprachen);
-		this.biliSachfaecher = this.manager.getFachbelegungenBilingual();
-		this.anzahl_schriftlich_durchgehend = 0;
+		this._fremdsprachen = this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
+		this._fremdsprachenNeu = this.manager.filterFremdspracheNeuEinsetzend(this._fremdsprachen);
+		this._fremdsprachenFortgefuehrt = this.manager.filterFremdspracheFortgefuehrt(this._fremdsprachen);
+		this._biliSachfaecher = this.manager.getFachbelegungenBilingual();
+		this._anzahlDurchgehendSchriftlich = 0;
 	}
 
 	protected pruefeEF1() : void {
@@ -65,9 +65,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache fehlerhafterweise als neu einsetzende Fremdsprache belegt wurde.
 	 */
 	private pruefeEF1Sprachenfolge() : void {
-		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this.fremdsprachen_neu))
+		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this._fremdsprachenNeu))
 			this.addFehler(GostBelegungsfehler.FS_20);
-		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this.fremdsprachen_fortgefuehrt))
+		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this._fremdsprachenFortgefuehrt))
 			this.addFehler(GostBelegungsfehler.FS_21);
 		if (!SprachendatenUtils.hatSprachbelegung(this.manager.getSprachendaten(), "E"))
 			this.addFehler(GostBelegungsfehler.FS_22_INFO);
@@ -86,7 +86,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		let anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar : number = 0;
 		let anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich : number = 0;
 		const anzahlFortfuehrbareFremdsprachen : number = SprachendatenUtils.getFortfuehrbareSprachenInGOSt(this.manager.getSprachendaten()).size();
-		for (const abiFachbelegung of this.fremdsprachen_fortgefuehrt) {
+		for (const abiFachbelegung of this._fremdsprachenFortgefuehrt) {
 			if (!this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1)) {
 				continue;
 			}
@@ -122,7 +122,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			return;
 		let anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar : number = 0;
 		let anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich : number = 0;
-		for (const abiFachbelegung of this.fremdsprachen_neu) {
+		for (const abiFachbelegung of this._fremdsprachenNeu) {
 			if (!this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1))
 				continue;
 			gefundenFremdsprachenbelegung = true;
@@ -181,7 +181,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		if (SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 			return;
 		if (SprachendatenUtils.hatEineSpracheMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-			if (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+			if (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 				return;
 			if (SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
@@ -190,7 +190,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				return;
 			}
 		}
-		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
+		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 			this.addFehler(GostBelegungsfehler.FS_14);
 		}
 	}
@@ -199,9 +199,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Prüft, ob alle Fremdsprachen in der EF.1 schriftlich belegt wurden.
 	 */
 	private pruefeEF1Schriftlichkeit() : void {
-		if (this.fremdsprachen === null)
+		if (this._fremdsprachen === null)
 			return;
-		for (const fachbelegung of this.fremdsprachen)
+		for (const fachbelegung of this._fremdsprachen)
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1) && !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				this.addFehler(GostBelegungsfehler.FS_12);
 				break;
@@ -214,9 +214,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache, sofern dieses durchgehende und schriftlich belegt werden kann.
 	 */
 	private pruefeEF1AnzahlDurchgehenedeSprachen() : void {
-		const fremdsprachenDurchgehend : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this.fremdsprachen), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
-		this.anzahl_schriftlich_durchgehend = fremdsprachenDurchgehend.size();
-		if (this.anzahl_schriftlich_durchgehend !== 1)
+		const fremdsprachenDurchgehend : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._fremdsprachen), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
+		this._anzahlDurchgehendSchriftlich = fremdsprachenDurchgehend.size();
+		if (this._anzahlDurchgehendSchriftlich !== 1)
 			return;
 		const fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehend.get(0));
 		if (fsDurchgehend === null)
@@ -224,12 +224,12 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null)
 			return;
-		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this.biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
+		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
 		for (const biliSachfach of biliSachfaecherDurchgehendSchriftlich) {
 			const fach : GostFach | null = this.manager.getFach(biliSachfach);
 			if ((fach === null) || (JavaObject.equalsTranspiler(fremdspracheDurchgehend, (fach.biliSprache))))
 				continue;
-			this.anzahl_schriftlich_durchgehend++;
+			this._anzahlDurchgehendSchriftlich++;
 			return;
 		}
 	}
@@ -239,9 +239,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * in der EF.1 belegt wurde.
 	 */
 	private pruefeEF1BilingualeSachfaecher() : void {
-		if (this.biliSachfaecher === null)
+		if (this._biliSachfaecher === null)
 			return;
-		for (const biliSachfach of this.biliSachfaecher) {
+		for (const biliSachfach of this._biliSachfaecher) {
 			const fach : GostFach | null = this.manager.getFach(biliSachfach);
 			if (fach === null)
 				continue;
@@ -267,11 +267,11 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if (!this.manager.pruefeBelegungDurchgehendBelegbar(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.BIL_10);
-		if ((this.biliSachfaecher === null) || (this.biliSachfaecher.isEmpty())) {
+		if ((this._biliSachfaecher === null) || (this._biliSachfaecher.isEmpty())) {
 			this.addFehler(GostBelegungsfehler.BIL_15);
 			return;
 		}
-		if (this.biliSachfaecher.size() < 2)
+		if (this._biliSachfaecher.size() < 2)
 			this.addFehler(GostBelegungsfehler.BIL_11_INFO);
 	}
 
@@ -290,9 +290,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache fehlerhafterweise als neu einsetzende Fremdsprache belegt wurde.
 	 */
 	private pruefeGesamtSprachenfolge() : void {
-		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this.fremdsprachen_neu))
+		if (this.manager.hatFortgefuehrteFremdspracheInSprachendaten(this._fremdsprachenNeu))
 			this.addFehler(GostBelegungsfehler.FS_20);
-		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this.fremdsprachen_fortgefuehrt))
+		if (this.manager.hatNeuEinsetzendeFremdspracheInSprachendaten(this._fremdsprachenFortgefuehrt))
 			this.addFehler(GostBelegungsfehler.FS_21);
 		if (!SprachendatenUtils.hatSprachbelegung(this.manager.getSprachendaten(), "E"))
 			this.addFehler(GostBelegungsfehler.FS_22_INFO);
@@ -306,7 +306,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		let anzahlFortgefuehrteFremdsprachenDurchgehendBelegt : number = 0;
 		let anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF : number = 0;
 		const anzahlFortfuehrbareFremdsprachen : number = SprachendatenUtils.getFortfuehrbareSprachenInGOSt(this.manager.getSprachendaten()).size();
-		for (const abiFachbelegung of this.fremdsprachen_fortgefuehrt) {
+		for (const abiFachbelegung of this._fremdsprachenFortgefuehrt) {
 			if (!this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1)) {
 				continue;
 			}
@@ -332,7 +332,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			return;
 		let anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt : number = 0;
 		let anzahlNeueinsetzendeFremdsprachenBelegtFehlerMuendlichEF : number = 0;
-		for (const abiFachbelegung of this.fremdsprachen_neu) {
+		for (const abiFachbelegung of this._fremdsprachenNeu) {
 			if (!this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1))
 				continue;
 			const gostFach : GostFach | null = this.manager.getFach(abiFachbelegung);
@@ -383,7 +383,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		if (SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 			return;
 		if (SprachendatenUtils.hatEineSpracheMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-			if (this.manager.pruefeBelegungExistiert(this.fremdsprachen_neu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+			if (this.manager.pruefeBelegungExistiert(this._fremdsprachenNeu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 				return;
 			if (SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
@@ -392,7 +392,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				return;
 			}
 		}
-		if (!this.manager.pruefeBelegungExistiert(this.fremdsprachen_neu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
+		if (!this.manager.pruefeBelegungExistiert(this._fremdsprachenNeu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			this.addFehler(GostBelegungsfehler.FS_14);
 		}
 	}
@@ -401,23 +401,23 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Prüft, ob eine gültige Fremdsprachenbelegung in Bezug auf die Schriftlichkeit und LK-Wahl vorhanden ist.
 	 */
 	private pruefeGesamtSchriftlichkeit() : void {
-		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(this.fremdsprachen_neu, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(this._fremdsprachenNeu, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			this.addFehler(GostBelegungsfehler.FS_15);
-		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalKursart(this.fremdsprachen_neu, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (this.manager.pruefeBelegungExistiertHatMindestensEinmalKursart(this._fremdsprachenNeu, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			this.addFehler(GostBelegungsfehler.FS_17);
-		if (this.manager.pruefeBelegungExistiertErfuelltNichtFallsBelegt(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
+		if (this.manager.pruefeBelegungExistiertErfuelltNichtFallsBelegt(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
 			this.addFehler(GostBelegungsfehler.FS_12);
-		if (this.manager.pruefeBelegungDurchgehendBelegtExistiert(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (this.manager.pruefeBelegungDurchgehendBelegtExistiert(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			return;
-		if (!this.manager.pruefeBelegungDurchgehendBelegtExistiert(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
+		if (!this.manager.pruefeBelegungDurchgehendBelegtExistiert(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			this.addFehler(GostBelegungsfehler.FS_11);
 			return;
 		}
-		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
 			return;
-		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungDurchgehendBelegtExistiert(this.fremdsprachen_neu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(this.manager.getSprachendaten()) && this.manager.pruefeBelegungDurchgehendBelegtExistiert(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			return;
-		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this.fremdsprachen_fortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
+		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeit(this._fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
 			this.addFehler(GostBelegungsfehler.FS_16);
 	}
 
@@ -427,10 +427,10 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache, sofern dieses durchgehend und schriftlich belegt wurde.
 	 */
 	private pruefeGesamtAnzahlDurchgehenedeSprachen() : void {
-		const fremdsprachenDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this.fremdsprachen, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
+		const fremdsprachenDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this._fremdsprachen, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
 		const fremdsprachenDurchgehendSchriftlich : List<AbiturFachbelegung> = this.manager.filterBelegungenMitSchriftlichkeit(fremdsprachenDurchgehend, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
-		this.anzahl_schriftlich_durchgehend = fremdsprachenDurchgehendSchriftlich.size();
-		if (this.anzahl_schriftlich_durchgehend !== 1)
+		this._anzahlDurchgehendSchriftlich = fremdsprachenDurchgehendSchriftlich.size();
+		if (this._anzahlDurchgehendSchriftlich !== 1)
 			return;
 		const fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehendSchriftlich.get(0));
 		if (fsDurchgehend === null)
@@ -438,13 +438,13 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null)
 			return;
-		const biliSachfaecherDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this.biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
+		const biliSachfaecherDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
 		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung> = this.manager.filterBelegungenMitSchriftlichkeit(biliSachfaecherDurchgehend, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
 		for (const biliSachfach of biliSachfaecherDurchgehendSchriftlich) {
 			const fach : GostFach | null = this.manager.getFach(biliSachfach);
 			if ((fach === null) || (JavaObject.equalsTranspiler(fremdspracheDurchgehend, (fach.biliSprache))))
 				continue;
-			this.anzahl_schriftlich_durchgehend++;
+			this._anzahlDurchgehendSchriftlich++;
 			return;
 		}
 	}
@@ -454,9 +454,9 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * belegt wurde.
 	 */
 	private pruefeGesamtBilingualeSachfaecher() : void {
-		if (this.biliSachfaecher === null)
+		if (this._biliSachfaecher === null)
 			return;
-		for (const biliSachfach of this.biliSachfaecher) {
+		for (const biliSachfach of this._biliSachfaecher) {
 			const biliFach : GostFach | null = this.manager.getFach(biliSachfach);
 			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), biliFach.biliSprache, 2)))
 				this.addFehler(GostBelegungsfehler.BIL_14);
@@ -474,7 +474,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const biliSprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(biligualeSprache);
 		if ((!this.manager.pruefeBelegungMitSchriftlichkeit(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2) || (!this.manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))))
 			this.addFehler(GostBelegungsfehler.BIL_10);
-		const biliSachfaecherEF : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungen(this.biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
+		const biliSachfaecherEF : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
 		if (biliSachfaecherEF.isEmpty()) {
 			this.addFehler(GostBelegungsfehler.BIL_15);
 			return;
@@ -482,8 +482,8 @@ export class Fremdsprachen extends GostBelegpruefung {
 		if (biliSachfaecherEF.size() < 2)
 			this.addFehler(GostBelegungsfehler.BIL_11_INFO);
 		let hatBiliSachfaecherDurchgehendSchriftlich : boolean = false;
-		if (this.biliSachfaecher !== null) {
-			for (const fach of this.biliSachfaecher) {
+		if (this._biliSachfaecher !== null) {
+			for (const fach of this._biliSachfaecher) {
 				if (this.manager.pruefeDurchgaengigkeitSchriftlich(fach)) {
 					hatBiliSachfaecherDurchgehendSchriftlich = true;
 					break;
@@ -492,7 +492,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		}
 		if (!hatBiliSachfaecherDurchgehendSchriftlich)
 			this.addFehler(GostBelegungsfehler.BIL_12);
-		if (!this.manager.pruefeExistiertAbiFach(this.biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4))
+		if (!this.manager.pruefeExistiertAbiFach(this._biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4))
 			this.addFehler(GostBelegungsfehler.BIL_13);
 	}
 
@@ -505,7 +505,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * @return die Anzahl der durchgehend schriftlich belegten bzw. belegbaren Fremdsprachen zurück.
 	 */
 	public getAnzahlDurchgehendSchritflichBelegt() : number {
-		return this.anzahl_schriftlich_durchgehend;
+		return this._anzahlDurchgehendSchriftlich;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

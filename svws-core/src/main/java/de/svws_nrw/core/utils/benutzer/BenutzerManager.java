@@ -146,19 +146,6 @@ public class BenutzerManager {
        return false;
     }
 
-//    /**
-//     * Liefert true, wenn der Benutzer durch die übergebene Gruppe in einer adminstrativen Gruppe ist, sonst false.
-//     *
-//     *
-//     *
-//     * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
-//     */
-//    public @NotNull List<@NotNull BenutzergruppeDaten> getAdminGruppen() {
-//        ArrayList<@NotNull BenutzergruppeDaten> gruppen = new ArrayList<@NotNull BenutzergruppeDaten>();
-//        return null;
-//    }
-
-
     /**
      * Initialisiert die lokalen Datenstrukturen.
      */

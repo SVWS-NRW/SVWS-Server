@@ -79,12 +79,9 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	private pruefeReligionEF1() : void {
 		if (this.manager.pruefeBelegungExistiert(this.religion, GostHalbjahr.EF1))
 			return;
-		if (!this.manager.pruefeBelegung(this.philosophie, GostHalbjahr.EF1)) {
+		if ((!this.manager.pruefeBelegung(this.philosophie, GostHalbjahr.EF1)) || ((!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)))) {
 			this.addFehler(GostBelegungsfehler.RE_10);
-		} else
-			if ((!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.geschichte, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sozialwissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) && (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.sonstige_gesellschaftswissenschaften, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))) {
-				this.addFehler(GostBelegungsfehler.RE_10);
-			}
+		}
 	}
 
 	protected pruefeGesamt() : void {

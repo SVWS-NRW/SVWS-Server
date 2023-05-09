@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 public final class Sport extends GostBelegpruefung {
 
 	/// Die Belegungen für das Fach Sport
-	private @NotNull List<@NotNull AbiturFachbelegung> sport = new ArrayList<>();
+	private @NotNull List<@NotNull AbiturFachbelegung> _sport = new ArrayList<>();
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Sport.
@@ -36,14 +36,14 @@ public final class Sport extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		sport = manager.getFachbelegungen(GostFachbereich.SPORT);
+		_sport = manager.getFachbelegungen(GostFachbereich.SPORT);
 	}
 
 
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob Sport in EF.1 belegt wurde
-		if ((sport == null) || (!manager.pruefeBelegungExistiertEinzeln(sport, GostHalbjahr.EF1)))
+		if ((_sport == null) || (!manager.pruefeBelegungExistiertEinzeln(_sport, GostHalbjahr.EF1)))
 			addFehler(GostBelegungsfehler.SP_10);
 	}
 
@@ -52,7 +52,7 @@ public final class Sport extends GostBelegpruefung {
 	protected void pruefeGesamt() {
 		// Prüfe, ob Sport durchgängig von EF.1 bis Q2.2 belegt wurde. Ein Sportattest muss mit
 		// Note "AT" eingetragen werden und gilt damit zunächst als belegt.
-		if ((sport == null) || (!manager.pruefeBelegungExistiert(sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
+		if ((_sport == null) || (!manager.pruefeBelegungExistiert(_sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
 			addFehler(GostBelegungsfehler.SP_10);
 	}
 

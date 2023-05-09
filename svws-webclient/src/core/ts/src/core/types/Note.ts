@@ -499,21 +499,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public hatTendenz() : boolean {
-		if (this.notenpunkte === null)
-			return false;
-		switch (this.notenpunkte) {
-			case 0:
-			case 2:
-			case 5:
-			case 8:
-			case 11:
-			case 14: {
-				return false;
-			}
-			default: {
-				return true;
-			}
-		}
+		return (this.notenpunkte !== null) && (this.notenpunkte !== 0) && (this.notenpunkte! % 3 !== 2);
 	}
 
 	/**

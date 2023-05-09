@@ -10,13 +10,13 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Naturwissenschaften extends GostBelegpruefung {
 
-	private naturwissenschaften : List<AbiturFachbelegung> | null = null;
+	private _naturwissenschaften : List<AbiturFachbelegung> | null = null;
 
-	private naturwissenschaften_klassisch : List<AbiturFachbelegung> | null = null;
+	private _naturwissenschaftenKlassisch : List<AbiturFachbelegung> | null = null;
 
-	private anzahl_durchgehend : number = 0;
+	private _anzahlDurchgehend : number = 0;
 
-	private anzahl_schriftlich_durchgehend : number = 0;
+	private _anzahlDurchgehendSchriftlich : number = 0;
 
 
 	/**
@@ -30,31 +30,31 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.naturwissenschaften = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
-		this.naturwissenschaften_klassisch = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
-		this.anzahl_durchgehend = 0;
-		this.anzahl_schriftlich_durchgehend = 0;
+		this._naturwissenschaften = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
+		this._naturwissenschaftenKlassisch = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
+		this._anzahlDurchgehend = 0;
+		this._anzahlDurchgehendSchriftlich = 0;
 	}
 
 	protected pruefeEF1() : void {
-		if (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this.naturwissenschaften_klassisch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
+		if (!this.manager.pruefeBelegungDurchgehendBelegbarExistiert(this._naturwissenschaftenKlassisch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.NW_10);
-		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.NW_11);
-		let fachbelegungen : List<AbiturFachbelegung> | null = this.manager.filterDurchgehendBelegbar(this.naturwissenschaften);
+		let fachbelegungen : List<AbiturFachbelegung> | null = this.manager.filterDurchgehendBelegbar(this._naturwissenschaften);
 		fachbelegungen = this.manager.filterBelegungen(fachbelegungen, GostHalbjahr.EF1);
-		this.anzahl_durchgehend = fachbelegungen === null ? 0 : fachbelegungen.size();
+		this._anzahlDurchgehend = fachbelegungen === null ? 0 : fachbelegungen.size();
 		fachbelegungen = this.manager.filterBelegungenMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
-		this.anzahl_schriftlich_durchgehend = fachbelegungen === null ? 0 : fachbelegungen.size();
+		this._anzahlDurchgehendSchriftlich = fachbelegungen === null ? 0 : fachbelegungen.size();
 	}
 
 	protected pruefeGesamt() : void {
-		if (!this.manager.pruefeBelegungExistiert(this.naturwissenschaften_klassisch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!this.manager.pruefeBelegungExistiert(this._naturwissenschaftenKlassisch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			this.addFehler(GostBelegungsfehler.NW_10);
-		if ((!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) || (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this.naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2)))
+		if ((!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) || (!this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2)))
 			this.addFehler(GostBelegungsfehler.NW_11);
-		this.anzahl_durchgehend = this.manager.zaehleBelegungenDurchgaengig(this.naturwissenschaften);
-		this.anzahl_schriftlich_durchgehend = this.manager.zaehleBelegungenDurchgaengigSchriftlichInQPhase(this.naturwissenschaften);
+		this._anzahlDurchgehend = this.manager.zaehleBelegungenDurchgaengig(this._naturwissenschaften);
+		this._anzahlDurchgehendSchriftlich = this.manager.zaehleBelegungenDurchgaengigSchriftlichInQPhase(this._naturwissenschaften);
 	}
 
 	/**
@@ -63,7 +63,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	 * @return die Anzahl der durchgehend belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public getAnzahlDurchgehendBelegt() : number {
-		return this.anzahl_durchgehend;
+		return this._anzahlDurchgehend;
 	}
 
 	/**
@@ -73,7 +73,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	 * @return die Anzahl der durchgehend schriftlich belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public getAnzahlDurchgehendSchritflichBelegt() : number {
-		return this.anzahl_schriftlich_durchgehend;
+		return this._anzahlDurchgehendSchriftlich;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

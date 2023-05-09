@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 public final class Mathematik extends GostBelegpruefung {
 
 	/// Die Belegung für das Fach Mathematik
-	private AbiturFachbelegung mathematik;
+	private AbiturFachbelegung _mathematik;
 
 	/**
 	 * Erstellt eine neue Belegprüfung für das Fach Mathematik.
@@ -32,20 +32,20 @@ public final class Mathematik extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		mathematik = manager.getFachbelegung(GostFachbereich.MATHEMATIK);
+		_mathematik = manager.getFachbelegung(GostFachbereich.MATHEMATIK);
 	}
 
 
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob Mathematik überhaupt belegt wurde
-		if ((mathematik == null) || !manager.pruefeBelegungMitSchriftlichkeitEinzeln(mathematik, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
+		if ((_mathematik == null) || !manager.pruefeBelegungMitSchriftlichkeitEinzeln(_mathematik, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
 			addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
 
 		// EF1-Prüfung Punkt 12: Prüfe, ob Mathematik in der EF1 schriftlich belegt wurde
-		if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			addFehler(GostBelegungsfehler.M_11);
 	}
 
@@ -53,17 +53,17 @@ public final class Mathematik extends GostBelegpruefung {
 	@Override
 	protected void pruefeGesamt() {
 		// Prüfe, ob Mathematik überhaupt belegt wurde
-		if (mathematik == null) {
+		if (_mathematik == null) {
 			addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
 
 		// Gesamtprüfung Punkt 45: Prüfe, ob Mathematik von EF.1 bis Q2.2 belegt wurde
-		if (!manager.pruefeBelegung(mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!manager.pruefeBelegung(_mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			addFehler(GostBelegungsfehler.M_10);
 
 		// Gesamtprüfung Punkt 46: Prüfe, ob Mathematik von EF.1 bis Q2.1 schriftlich belegt wurde
-		if (!manager.pruefeBelegungMitSchriftlichkeit(mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (!manager.pruefeBelegungMitSchriftlichkeit(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			addFehler(GostBelegungsfehler.M_11);
 	}
 

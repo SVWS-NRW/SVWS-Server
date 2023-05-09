@@ -19,16 +19,16 @@ import jakarta.validation.constraints.NotNull;
 public final class Naturwissenschaften extends GostBelegpruefung {
 
 	/// Die Belegungen für alle Fächer der Naturwissenschaften
-	private List<@NotNull AbiturFachbelegung> naturwissenschaften;
+	private List<@NotNull AbiturFachbelegung> _naturwissenschaften;
 
 	/// Die Belegungen für alle Fächer der klassischen Naturwissenschaften
-	private List<@NotNull AbiturFachbelegung> naturwissenschaften_klassisch;
+	private List<@NotNull AbiturFachbelegung> _naturwissenschaftenKlassisch;
 
 	// Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung)
-	private int anzahl_durchgehend;
+	private int _anzahlDurchgehend;
 
 	// Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung)
-	private int anzahl_schriftlich_durchgehend;
+	private int _anzahlDurchgehendSchriftlich;
 
 
 	/**
@@ -44,49 +44,49 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 
 	@Override
 	protected void init() {
-		naturwissenschaften = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
-		naturwissenschaften_klassisch = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
-		anzahl_durchgehend = 0;
-		anzahl_schriftlich_durchgehend = 0;
+		_naturwissenschaften = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
+		_naturwissenschaftenKlassisch = manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH);
+		_anzahlDurchgehend = 0;
+		_anzahlDurchgehendSchriftlich = 0;
 	}
 
 
 	@Override
 	protected void pruefeEF1() {
 		// Wurde eine durchgehend belegbare klassische Naturwissenschaft in EF.1 belegt?
-		if (!manager.pruefeBelegungDurchgehendBelegbarExistiert(naturwissenschaften_klassisch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
+		if (!manager.pruefeBelegungDurchgehendBelegbarExistiert(_naturwissenschaftenKlassisch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1))
 			addFehler(GostBelegungsfehler.NW_10);
 		// Wurde eine klassische Naturwissenschaft in EF.1 schriftlich belegt?
-		if (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			addFehler(GostBelegungsfehler.NW_11);
 
 		// Zähle die durchgehend belegbaren Belegungen
-		List<@NotNull AbiturFachbelegung> fachbelegungen = manager.filterDurchgehendBelegbar(naturwissenschaften);
+		List<@NotNull AbiturFachbelegung> fachbelegungen = manager.filterDurchgehendBelegbar(_naturwissenschaften);
 		fachbelegungen = manager.filterBelegungen(fachbelegungen, GostHalbjahr.EF1);
-		anzahl_durchgehend = fachbelegungen == null ? 0 : fachbelegungen.size();
+		_anzahlDurchgehend = fachbelegungen == null ? 0 : fachbelegungen.size();
 
 		// und nun die schriftlich belegten durchgehend belegbaren Belegungen
 		fachbelegungen = manager.filterBelegungenMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
-		anzahl_schriftlich_durchgehend = fachbelegungen == null ? 0 : fachbelegungen.size();
+		_anzahlDurchgehendSchriftlich = fachbelegungen == null ? 0 : fachbelegungen.size();
 	}
 
 
 	@Override
 	protected void pruefeGesamt() {
 		// Wurde eine klassische Naturwissenschaft durchgehend belegt?
-		if (!manager.pruefeBelegungExistiert(naturwissenschaften_klassisch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!manager.pruefeBelegungExistiert(_naturwissenschaftenKlassisch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			addFehler(GostBelegungsfehler.NW_10);
 
 		// Prüfe, ob in beiden Halbjahren der EF mindestens eine klassische Naturwissenschaft schriftlich belegt wurde.
-		if ((!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
-				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(naturwissenschaften_klassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2)))
+		if ((!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+				|| (!manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_naturwissenschaftenKlassisch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF2)))
 			addFehler(GostBelegungsfehler.NW_11);
 
 		// Zähle die durchgehend belegten Fachbelegungen
-		anzahl_durchgehend = manager.zaehleBelegungenDurchgaengig(naturwissenschaften);
+		_anzahlDurchgehend = manager.zaehleBelegungenDurchgaengig(_naturwissenschaften);
 
 		// und nun die durchgehend schriftlich belegten Naturwissenschaften (also in Q1.1 bis Q2.1 schriftlich)
-		anzahl_schriftlich_durchgehend = manager.zaehleBelegungenDurchgaengigSchriftlichInQPhase(naturwissenschaften);
+		_anzahlDurchgehendSchriftlich = manager.zaehleBelegungenDurchgaengigSchriftlichInQPhase(_naturwissenschaften);
 	}
 
 
@@ -96,7 +96,7 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 	 * @return die Anzahl der durchgehend belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public int getAnzahlDurchgehendBelegt() {
-		return anzahl_durchgehend;
+		return _anzahlDurchgehend;
 	}
 
 
@@ -107,7 +107,7 @@ public final class Naturwissenschaften extends GostBelegpruefung {
 	 * @return die Anzahl der durchgehend schriftlich belegten bzw. belegbaren Naturwissenschaften zurück.
 	 */
 	public int getAnzahlDurchgehendSchritflichBelegt() {
-		return anzahl_schriftlich_durchgehend;
+		return _anzahlDurchgehendSchriftlich;
 	}
 
 }

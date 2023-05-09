@@ -294,14 +294,7 @@ public enum Note {
 	 * @return true, falls die Note eine Tendenz hat
 	 */
 	public boolean hatTendenz() {
-		if (notenpunkte == null)
-			return false;
-		switch (notenpunkte) {
-			case 0, 2, 5, 8, 11, 14:
-				return false;
-			default:
-				return true;
-		}
+		return (notenpunkte != null) && (notenpunkte != 0) && (notenpunkte % 3 != 2);
 	}
 
 

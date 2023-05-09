@@ -9,7 +9,7 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Deutsch extends GostBelegpruefung {
 
-	private deutsch : AbiturFachbelegung | null = null;
+	private _deutsch : AbiturFachbelegung | null = null;
 
 
 	/**
@@ -23,26 +23,26 @@ export class Deutsch extends GostBelegpruefung {
 	}
 
 	protected init() : void {
-		this.deutsch = this.manager.getFachbelegung(GostFachbereich.DEUTSCH);
+		this._deutsch = this.manager.getFachbelegung(GostFachbereich.DEUTSCH);
 	}
 
 	protected pruefeEF1() : void {
-		if ((this.deutsch === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this.deutsch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
+		if ((this._deutsch === null) || !this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._deutsch, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)) {
 			this.addFehler(GostBelegungsfehler.D_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this.deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 			this.addFehler(GostBelegungsfehler.D_11);
 	}
 
 	protected pruefeGesamt() : void {
-		if (this.deutsch === null) {
+		if (this._deutsch === null) {
 			this.addFehler(GostBelegungsfehler.D_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegung(this.deutsch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!this.manager.pruefeBelegung(this._deutsch, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			this.addFehler(GostBelegungsfehler.D_10);
-		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this.deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._deutsch, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 			this.addFehler(GostBelegungsfehler.D_11);
 	}
 
