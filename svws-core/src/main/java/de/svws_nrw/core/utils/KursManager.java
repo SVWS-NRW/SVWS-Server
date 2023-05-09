@@ -1,9 +1,9 @@
 package de.svws_nrw.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotNull;
 public class KursManager {
 
 	/** Die Kurse, die im Manager vorhanden sind */
-	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new Vector<>();
+	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<@NotNull Long, @NotNull KursListeEintrag> _map = new HashMap<>();
@@ -152,8 +152,8 @@ public class KursManager {
 	 *
 	 * @return ein Vector mit den Kursen
 	 */
-	public @NotNull Vector<@NotNull KursListeEintrag> toVector() {
-		final @NotNull Vector<@NotNull KursListeEintrag> result = new Vector<>();
+	public @NotNull List<@NotNull KursListeEintrag> toList() {
+		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
 		for (final @NotNull KursListeEintrag kurs : _kurse)
 			result.add(kurs);
 		return result;

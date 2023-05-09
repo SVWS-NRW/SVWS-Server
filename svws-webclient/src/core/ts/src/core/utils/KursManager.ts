@@ -1,17 +1,17 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { KursListeEintrag } from '../../core/data/kurse/KursListeEintrag';
 import { HashMap } from '../../java/util/HashMap';
+import { ArrayList } from '../../java/util/ArrayList';
 import { Collection } from '../../java/util/Collection';
 import { List, cast_java_util_List } from '../../java/util/List';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
-import { Vector } from '../../java/util/Vector';
 
 export class KursManager extends JavaObject {
 
 	/**
 	 * Die Kurse, die im Manager vorhanden sind
 	 */
-	private readonly _kurse : List<KursListeEintrag> = new Vector();
+	private readonly _kurse : List<KursListeEintrag> = new ArrayList();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
@@ -158,8 +158,8 @@ export class KursManager extends JavaObject {
 	 *
 	 * @return ein Vector mit den Kursen
 	 */
-	public toVector() : Vector<KursListeEintrag> {
-		const result : Vector<KursListeEintrag> = new Vector();
+	public toList() : List<KursListeEintrag> {
+		const result : List<KursListeEintrag> = new ArrayList();
 		for (const kurs of this._kurse)
 			result.add(kurs);
 		return result;
