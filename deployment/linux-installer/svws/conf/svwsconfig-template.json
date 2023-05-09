@@ -3,7 +3,7 @@
   "DisableDBRootAccess" : false,
   "DisableAutoUpdates" : false,
   "UseHTTPDefaultv11" : false,
-  "PortHTTPS" : 8443,
+  "PortHTTPS" : "${APP_PORT}",
   "UseCORSHeader" : false,
   "TempPath" : "tmp",
   "TLSKeyAlias" : "${SVWS_TLS_KEY_ALIAS}",

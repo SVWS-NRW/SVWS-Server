@@ -36,6 +36,8 @@ export MYSQL_PASSWORD=${password2}
 export APP_PATH=/opt/app/svws
 export CONF_PATH=/etc/app/svws/conf
 
+export APP_PORT=8443
+
 export SVWS_TLS_KEYSTORE_PATH=$CONF_PATH/keystore
 export SVWS_TLS_KEYSTORE_PASSWORD=test123
 export SVWS_TLS_KEY_ALIAS=
@@ -92,6 +94,12 @@ else
     	read -p "CONF_PATH (default: '/etc/app/svws/conf'): " CONF_PATH
     	export CONF_PATH=${CONF_PATH:-/etc/app/svws/conf}
 
+    	read -p "APP_PORT (default: 8443): " APP_PORT
+    	export APP_PORT=${APP_PORT:-8443}
+
+    	if [ $APP_PORT -lt 1024 ]; then
+            echo "Hinweis: Ports unter 1024 erfordern Root-Rechte und müssen entsprechend freigeschaltet/weitergeleitet werden."
+        fi
 
     	read -p "Möchten Sie einen Keystore erstellen? (j/N): " CREATE_KEYSTORE
     	if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
@@ -138,6 +146,7 @@ else
     	echo "Installationspfade:"
     	echo "  APP_PATH: $APP_PATH"
     	echo "  CONF_PATH: $CONF_PATH"
+    	echo "  APP_PORT: $APP_PORT"
 
     	echo ""
     	echo "Keystore für TLS:"
@@ -170,6 +179,7 @@ else
     echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
     echo "APP_PATH=$APP_PATH" >> .env
     echo "CONF_PATH=$CONF_PATH" >> .env
+    echo "APP_PORT=$APP_PORT" >> .env
     echo "SVWS_TLS_KEYSTORE_PATH=$SVWS_TLS_KEYSTORE_PATH" >> .env
     echo "SVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD" >> .env
     echo "SVWS_TLS_KEY_ALIAS=$SVWS_TLS_KEY_ALIAS" >> .env
