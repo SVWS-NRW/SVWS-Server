@@ -240,7 +240,7 @@ public enum Herkunft {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Herkunft, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftKatalogEintrag daten;

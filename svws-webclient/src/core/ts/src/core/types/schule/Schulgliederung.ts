@@ -99,7 +99,7 @@ export class Schulgliederung extends JavaObject implements JavaEnum<Schulglieder
 	 *    Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *    Typ 10 (Berufsabschluss/mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ))
 	 */
-	public static readonly A10 : Schulgliederung = new Schulgliederung("A10", 10, [new SchulgliederungKatalogEintrag(1010000, "A10", true, Arrays.asList(Schulform.BK, Schulform.SB), true, false, "Berufsabschluss/mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)", BerufskollegAnlage.A, "10", 56, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.MSA), null, null)]);
+	public static readonly A10 : Schulgliederung = new Schulgliederung("A10", 10, [new SchulgliederungKatalogEintrag(1010000, "A10", true, Arrays.asList(Schulform.BK, Schulform.SB), true, false, "Berufsabschluss/Mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)", BerufskollegAnlage.A, "10", 56, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.MSA), null, null)]);
 
 	/**
 	 *  Schulgliederung A11 (auslaufend):
@@ -127,14 +127,14 @@ export class Schulgliederung extends JavaObject implements JavaEnum<Schulglieder
 	 *    Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *    Typ 14 (Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss (BAB/FOR; VZ))
 	 */
-	public static readonly A14 : Schulgliederung = new Schulgliederung("A14", 14, [new SchulgliederungKatalogEintrag(1014000, "A14", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss (BAB/FOR; VZ)", BerufskollegAnlage.A, "14", 59, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
+	public static readonly A14 : Schulgliederung = new Schulgliederung("A14", 14, [new SchulgliederungKatalogEintrag(1014000, "A14", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss (BAB/FOR; VZ)", BerufskollegAnlage.A, "14", 59, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
 
 	/**
 	 *  Schulgliederung A15:
 	 *    Anlage A (Fachklassen duales System und Ausbildungsvorbereitung),
 	 *    Typ 15 (Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife BAB/FHR; VZ)
 	 */
-	public static readonly A15 : Schulgliederung = new Schulgliederung("A15", 15, [new SchulgliederungKatalogEintrag(1015000, "A15", true, Arrays.asList(Schulform.BK), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife BAB/FHR; VZ", BerufskollegAnlage.A, "15", 59, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q, SchulabschlussAllgemeinbildend.FHR), null, null)]);
+	public static readonly A15 : Schulgliederung = new Schulgliederung("A15", 15, [new SchulgliederungKatalogEintrag(1015000, "A15", true, Arrays.asList(Schulform.BK), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife (BAB/FHR; VZ)", BerufskollegAnlage.A, "15", 59, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q, SchulabschlussAllgemeinbildend.FHR), null, null)]);
 
 	/**
 	 *  Schulgliederung A16:
@@ -189,35 +189,35 @@ export class Schulgliederung extends JavaObject implements JavaEnum<Schulglieder
 	 *    Anlage B (Berufsfachschule),
 	 *    Typ 06 (Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ))
 	 */
-	public static readonly B06 : Schulgliederung = new Schulgliederung("B06", 23, [new SchulgliederungKatalogEintrag(2006000, "B06", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ)", BerufskollegAnlage.B, "06", 91, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BK), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10), null, null)]);
+	public static readonly B06 : Schulgliederung = new Schulgliederung("B06", 23, [new SchulgliederungKatalogEintrag(2006000, "B06", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ)", BerufskollegAnlage.B, "06", 91, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BK), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10), null, 2021), new SchulgliederungKatalogEintrag(2006001, "B06", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (BK/EESA; 1j. VZ)", BerufskollegAnlage.B, "06", 91, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BK), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10), 2022, null)]);
 
 	/**
 	 *  Schulgliederung B07:
 	 *    Anlage B (Berufsfachschule),
 	 *    Typ 07 (Berufliche Kenntnisse/mittlerer Schulabschluss (BK/FOR; 1j. VZ))
 	 */
-	public static readonly B07 : Schulgliederung = new Schulgliederung("B07", 24, [new SchulgliederungKatalogEintrag(2007000, "B07", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufliche Kenntnisse/mittlerer Schulabschluss (BK/FOR; 1j. VZ)", BerufskollegAnlage.B, "07", 92, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BK), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
+	public static readonly B07 : Schulgliederung = new Schulgliederung("B07", 24, [new SchulgliederungKatalogEintrag(2007000, "B07", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufliche Kenntnisse/Mittlerer Schulabschluss (BK/FOR; 1j. VZ)", BerufskollegAnlage.B, "07", 92, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BK), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
 
 	/**
 	 *  Schulgliederung B08:
 	 *    Anlage B (Berufsfachschule),
 	 *    Typ 08 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ))
 	 */
-	public static readonly B08 : Schulgliederung = new Schulgliederung("B08", 25, [new SchulgliederungKatalogEintrag(2008000, "B08", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ)", BerufskollegAnlage.B, "08", 93, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
+	public static readonly B08 : Schulgliederung = new Schulgliederung("B08", 25, [new SchulgliederungKatalogEintrag(2008000, "B08", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ)", BerufskollegAnlage.B, "08", 93, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, 2021), new SchulgliederungKatalogEintrag(2008001, "B08", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 2j. VZ)", BerufskollegAnlage.B, "08", 93, true, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), 2022, null)]);
 
 	/**
 	 *  Schulgliederung B09:
 	 *    Anlage B (Berufsfachschule),
 	 *    Typ 09 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ))
 	 */
-	public static readonly B09 : Schulgliederung = new Schulgliederung("B09", 26, [new SchulgliederungKatalogEintrag(2009000, "B09", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)", BerufskollegAnlage.B, "09", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
+	public static readonly B09 : Schulgliederung = new Schulgliederung("B09", 26, [new SchulgliederungKatalogEintrag(2009000, "B09", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)", BerufskollegAnlage.B, "09", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, 2021), new SchulgliederungKatalogEintrag(2009001, "B09", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 3j. TZ)", BerufskollegAnlage.B, "09", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), 2022, null)]);
 
 	/**
 	 *  Schulgliederung B10:
 	 *    Anlage B (Berufsfachschule),
 	 *    Typ 10 (Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ))
 	 */
-	public static readonly B10 : Schulgliederung = new Schulgliederung("B10", 27, [new SchulgliederungKatalogEintrag(2010000, "B10", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ)", BerufskollegAnlage.B, "10", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
+	public static readonly B10 : Schulgliederung = new Schulgliederung("B10", 27, [new SchulgliederungKatalogEintrag(2010000, "B10", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ)", BerufskollegAnlage.B, "10", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null), new SchulgliederungKatalogEintrag(2010001, "B10", true, Arrays.asList(Schulform.BK, Schulform.SB), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 4j. TZ)", BerufskollegAnlage.B, "10", 93, false, Arrays.asList(SchulabschlussBerufsbildend.OA, SchulabschlussBerufsbildend.WECHSEL, SchulabschlussBerufsbildend.BAB), Arrays.asList(SchulabschlussAllgemeinbildend.OA, SchulabschlussAllgemeinbildend.HA10, SchulabschlussAllgemeinbildend.MSA, SchulabschlussAllgemeinbildend.MSA_Q), null, null)]);
 
 	/**
 	 *  Schulgliederung BT:
@@ -525,7 +525,7 @@ export class Schulgliederung extends JavaObject implements JavaEnum<Schulglieder
 	 *  Schulgliederung GY8:
 	 *    Bildungsgang G8-Gymnasium
 	 */
-	public static readonly GY8 : Schulgliederung = new Schulgliederung("GY8", 73, [new SchulgliederungKatalogEintrag(60002000, "GY8", false, Arrays.asList(Schulform.GE, Schulform.GY), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, null, null)]);
+	public static readonly GY8 : Schulgliederung = new Schulgliederung("GY8", 73, [new SchulgliederungKatalogEintrag(60002000, "GY8", false, Arrays.asList(Schulform.GE, Schulform.GY), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, null, 2022), new SchulgliederungKatalogEintrag(60002001, "GY8", false, Arrays.asList(Schulform.GY), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, 2023, null)]);
 
 	/**
 	 *  Schulgliederung GY9:
@@ -614,7 +614,7 @@ export class Schulgliederung extends JavaObject implements JavaEnum<Schulglieder
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION : number = 1;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten der Schulgliederung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

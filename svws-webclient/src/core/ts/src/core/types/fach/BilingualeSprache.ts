@@ -25,42 +25,42 @@ export class BilingualeSprache extends JavaObject implements JavaEnum<Bilinguale
 	/**
 	 * Bilinguale Sprache Englisch
 	 */
-	public static readonly ENGLISCH : BilingualeSprache = new BilingualeSprache("ENGLISCH", 0, [new BilingualeSpracheKatalogEintrag(1000, ZulaessigesFach.E, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly ENGLISCH : BilingualeSprache = new BilingualeSprache("ENGLISCH", 0, [new BilingualeSpracheKatalogEintrag(1000, ZulaessigesFach.E, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(1001, ZulaessigesFach.E, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Französisch
 	 */
-	public static readonly FRANZOESISCH : BilingualeSprache = new BilingualeSprache("FRANZOESISCH", 1, [new BilingualeSpracheKatalogEintrag(2000, ZulaessigesFach.F, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly FRANZOESISCH : BilingualeSprache = new BilingualeSprache("FRANZOESISCH", 1, [new BilingualeSpracheKatalogEintrag(2000, ZulaessigesFach.F, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(2001, ZulaessigesFach.F, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Italienisch
 	 */
-	public static readonly ITALIENISCH : BilingualeSprache = new BilingualeSprache("ITALIENISCH", 2, [new BilingualeSpracheKatalogEintrag(3000, ZulaessigesFach.I, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly ITALIENISCH : BilingualeSprache = new BilingualeSprache("ITALIENISCH", 2, [new BilingualeSpracheKatalogEintrag(3000, ZulaessigesFach.I, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(3001, ZulaessigesFach.I, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Niederländisch
 	 */
-	public static readonly NIEDERLAENDISCH : BilingualeSprache = new BilingualeSprache("NIEDERLAENDISCH", 3, [new BilingualeSpracheKatalogEintrag(4000, ZulaessigesFach.N, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly NIEDERLAENDISCH : BilingualeSprache = new BilingualeSprache("NIEDERLAENDISCH", 3, [new BilingualeSpracheKatalogEintrag(4000, ZulaessigesFach.N, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(4001, ZulaessigesFach.N, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Spanisch
 	 */
-	public static readonly SPANISCH : BilingualeSprache = new BilingualeSprache("SPANISCH", 4, [new BilingualeSpracheKatalogEintrag(5000, ZulaessigesFach.S, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly SPANISCH : BilingualeSprache = new BilingualeSprache("SPANISCH", 4, [new BilingualeSpracheKatalogEintrag(5000, ZulaessigesFach.S, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(5001, ZulaessigesFach.S, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Türkisch
 	 */
-	public static readonly TUERKISCH : BilingualeSprache = new BilingualeSprache("TUERKISCH", 5, [new BilingualeSpracheKatalogEintrag(6000, ZulaessigesFach.T, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly TUERKISCH : BilingualeSprache = new BilingualeSprache("TUERKISCH", 5, [new BilingualeSpracheKatalogEintrag(6000, ZulaessigesFach.T, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(6001, ZulaessigesFach.T, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Bilinguale Sprache Neugriechisch
 	 */
-	public static readonly NEUGRIECHIESCH : BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6, [new BilingualeSpracheKatalogEintrag(7000, ZulaessigesFach.Z, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, null)]);
+	public static readonly NEUGRIECHIESCH : BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6, [new BilingualeSpracheKatalogEintrag(7000, ZulaessigesFach.Z, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.GM, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), null, 2022), new BilingualeSpracheKatalogEintrag(7001, ZulaessigesFach.Z, Arrays.asList(Schulform.BK, Schulform.SB, Schulform.G, Schulform.GE, Schulform.GY, Schulform.R, Schulform.SG, Schulform.SK, Schulform.SR), 2023, null)]);
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION : number = 1;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten der bilingualen Sprache

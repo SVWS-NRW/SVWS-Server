@@ -27,57 +27,57 @@ export class HerkunftSchulform extends JavaObject implements JavaEnum<HerkunftSc
 	/**
 	 * Freie Waldorfschule
 	 */
-	public static readonly FW : HerkunftSchulform = new HerkunftSchulform("FW", 1, [new HerkunftSchulformKatalogEintrag(2000, "FW", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Freie Waldorfschule", null, null)]);
+	public static readonly FW : HerkunftSchulform = new HerkunftSchulform("FW", 1, [new HerkunftSchulformKatalogEintrag(2000, "FW", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Freie Waldorfschule", null, 2022), new HerkunftSchulformKatalogEintrag(2001, "FW", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Freie Waldorfschule", 2023, null)]);
 
 	/**
 	 * Grundschule (auch Primarstufe der Volksschule)
 	 */
-	public static readonly G : HerkunftSchulform = new HerkunftSchulform("G", 2, [new HerkunftSchulformKatalogEintrag(3000, "G", "G", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Grundschule (auch Primarstufe der Volksschule)", null, null)]);
+	public static readonly G : HerkunftSchulform = new HerkunftSchulform("G", 2, [new HerkunftSchulformKatalogEintrag(3000, "G", "G", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Grundschule (auch Primarstufe der Volksschule)", null, 2022), new HerkunftSchulformKatalogEintrag(3001, "G", "G", Arrays.asList(Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Grundschule (auch Primarstufe der Volksschule)", 2023, null)]);
 
 	/**
 	 * Gesamtschule
 	 */
-	public static readonly GE : HerkunftSchulform = new HerkunftSchulform("GE", 3, [new HerkunftSchulformKatalogEintrag(4000, "GE", "GE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gesamtschule", null, null)]);
+	public static readonly GE : HerkunftSchulform = new HerkunftSchulform("GE", 3, [new HerkunftSchulformKatalogEintrag(4000, "GE", "GE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gesamtschule", null, 2022), new HerkunftSchulformKatalogEintrag(4001, "GE", "GE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gesamtschule", 2023, null)]);
 
 	/**
 	 * Gemeinschaftsschule
 	 */
-	public static readonly GM : HerkunftSchulform = new HerkunftSchulform("GM", 4, [new HerkunftSchulformKatalogEintrag(5000, "GM", "GM", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gemeinschaftsschule", null, null)]);
+	public static readonly GM : HerkunftSchulform = new HerkunftSchulform("GM", 4, [new HerkunftSchulformKatalogEintrag(5000, "GM", "GM", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gemeinschaftsschule", null, 2022), new HerkunftSchulformKatalogEintrag(5001, "GM", "GM", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gemeinschaftsschule", 2023, null)]);
 
 	/**
 	 * Gymnasium (auch Aufbaugymnasium)
 	 */
-	public static readonly GY : HerkunftSchulform = new HerkunftSchulform("GY", 5, [new HerkunftSchulformKatalogEintrag(6000, "GY", "GY", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gymnasium (auch Aufbaugymnasium)", null, null)]);
+	public static readonly GY : HerkunftSchulform = new HerkunftSchulform("GY", 5, [new HerkunftSchulformKatalogEintrag(6000, "GY", "GY", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gymnasium (auch Aufbaugymnasium)", null, 2022), new HerkunftSchulformKatalogEintrag(6001, "GY", "GY", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Gymnasium (auch Aufbaugymnasium)", 2023, null)]);
 
 	/**
 	 * Hauptschule (auch Sekundarstufe I der Volksschule)
 	 */
-	public static readonly H : HerkunftSchulform = new HerkunftSchulform("H", 6, [new HerkunftSchulformKatalogEintrag(7000, "H", "H", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hauptschule (auch Sekundarstufe I der Volksschule)", null, null)]);
+	public static readonly H : HerkunftSchulform = new HerkunftSchulform("H", 6, [new HerkunftSchulformKatalogEintrag(7000, "H", "H", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hauptschule (auch Sekundarstufe I der Volksschule)", null, 2022), new HerkunftSchulformKatalogEintrag(7001, "H", "H", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hauptschule (auch Sekundarstufe I der Volksschule)", 2023, null)]);
 
 	/**
 	 * Hiberniaschule
 	 */
-	public static readonly HI : HerkunftSchulform = new HerkunftSchulform("HI", 7, [new HerkunftSchulformKatalogEintrag(8000, "HI", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hiberniaschule", null, null)]);
+	public static readonly HI : HerkunftSchulform = new HerkunftSchulform("HI", 7, [new HerkunftSchulformKatalogEintrag(8000, "HI", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hiberniaschule", null, 2022), new HerkunftSchulformKatalogEintrag(8001, "HI", "FW", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Hiberniaschule", 2023, null)]);
 
 	/**
 	 * Schulversuch PRIMUS
 	 */
-	public static readonly PS : HerkunftSchulform = new HerkunftSchulform("PS", 8, [new HerkunftSchulformKatalogEintrag(9000, "PS", "PS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Schulversuch PRIMUS", null, null)]);
+	public static readonly PS : HerkunftSchulform = new HerkunftSchulform("PS", 8, [new HerkunftSchulformKatalogEintrag(9000, "PS", "PS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Schulversuch PRIMUS", null, 2022), new HerkunftSchulformKatalogEintrag(9001, "PS", "PS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Schulversuch PRIMUS", 2023, null)]);
 
 	/**
 	 * Realschule (auch Aufbaurealschule)
 	 */
-	public static readonly R : HerkunftSchulform = new HerkunftSchulform("R", 9, [new HerkunftSchulformKatalogEintrag(10000, "R", "R", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Realschule (auch Aufbaurealschule)", null, null)]);
+	public static readonly R : HerkunftSchulform = new HerkunftSchulform("R", 9, [new HerkunftSchulformKatalogEintrag(10000, "R", "R", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Realschule (auch Aufbaurealschule)", null, 2022), new HerkunftSchulformKatalogEintrag(10001, "R", "R", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Realschule (auch Aufbaurealschule)", 2023, null)]);
 
 	/**
 	 * Förderschule oder Klinikschule
 	 */
-	public static readonly S : HerkunftSchulform = new HerkunftSchulform("S", 10, [new HerkunftSchulformKatalogEintrag(11000, "S", "S", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Förderschule oder Klinikschule", null, null)]);
+	public static readonly S : HerkunftSchulform = new HerkunftSchulform("S", 10, [new HerkunftSchulformKatalogEintrag(11000, "S", "S", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Förderschule oder Klinikschule", null, 2022), new HerkunftSchulformKatalogEintrag(11001, "S", "S", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Förderschule oder Klinikschule", 2023, null)]);
 
 	/**
 	 * Sekundarschule
 	 */
-	public static readonly SK : HerkunftSchulform = new HerkunftSchulform("SK", 11, [new HerkunftSchulformKatalogEintrag(15000, "SK", "SE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Sekundarschule", null, null)]);
+	public static readonly SK : HerkunftSchulform = new HerkunftSchulform("SK", 11, [new HerkunftSchulformKatalogEintrag(15000, "SK", "SE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Sekundarschule", null, 2022), new HerkunftSchulformKatalogEintrag(15001, "SK", "SE", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), "Sekundarschule", 2023, null)]);
 
 	/**
 	 * Weiterbildungskolleg
@@ -87,7 +87,7 @@ export class HerkunftSchulform extends JavaObject implements JavaEnum<HerkunftSc
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION : number = 1;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten der Herkunftsschulform, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

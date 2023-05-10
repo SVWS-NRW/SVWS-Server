@@ -17,33 +17,22 @@ public enum HerkunftSonstige {
 	/** Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind */
 	AS(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(
-			Schulform.BK, Schulform.SB,
-			Schulform.WB,
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.GE,
-			Schulform.GM,
-			Schulform.GY,
-			Schulform.H,
-			Schulform.PS,
-			Schulform.R,
-			Schulform.KS, Schulform.S,
-			Schulform.SG,
-			Schulform.SK,
-			Schulform.SR,
-			Schulform.V
-		), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, null)
+			Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+			Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+			Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+		), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022),
+        new HerkunftSonstigeKatalogEintrag(1001, "AS", Arrays.asList(
+            Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+            Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+            Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+        ), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)
 	}),
 
 
 	/** Keine Schule bzw. kein Förderschulkindergarten (Einschulung) */
 	ES(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(2000, "ES", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.PS,
-			Schulform.KS, Schulform.S,
-			Schulform.V
+			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
 		), "Keine Schule bzw. kein Förderschulkindergarten (Einschulung)", null, null)
 	}),
 
@@ -51,8 +40,7 @@ public enum HerkunftSonstige {
 	/** Hausfrüherziehung für Hör- bzw. Sehgeschädigte */
 	FE(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(3000, "FE", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.KS, Schulform.S
+			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.KS, Schulform.S
 		), "Hausfrüherziehung für Hör- bzw. Sehgeschädigte", null, null)
 	}),
 
@@ -68,11 +56,7 @@ public enum HerkunftSonstige {
 	/** Förderschulkindergarten (einschließlich frühkindliche Förderung) */
 	SK(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(5000, "SK", Arrays.asList(
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.PS,
-			Schulform.KS, Schulform.S,
-			Schulform.V
+			Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.KS, Schulform.S, Schulform.V
 		), "Förderschulkindergarten (einschließlich frühkindliche Förderung)", null, null)
 	}),
 
@@ -88,8 +72,7 @@ public enum HerkunftSonstige {
 	/** Wehr-, Zivil- oder Bundesfreiwilligendienst */
 	WZ(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(8000, "WZ", Arrays.asList(
-			Schulform.BK, Schulform.SB,
-			Schulform.WB
+			Schulform.BK, Schulform.SB, Schulform.WB
 		), "Wehr-, Zivil- oder Bundesfreiwilligendienst", null, null)
 	}),
 
@@ -97,8 +80,7 @@ public enum HerkunftSonstige {
 	/** Berufstätigkeit (z. B. vor Besuch einer Fachschule) */
 	XB(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(9000, "XB", Arrays.asList(
-			Schulform.BK, Schulform.SB,
-			Schulform.WB
+			Schulform.BK, Schulform.SB, Schulform.WB
 		), "Berufstätigkeit (z. B. vor Besuch einer Fachschule)", null, null)
 	}),
 
@@ -106,27 +88,20 @@ public enum HerkunftSonstige {
 	/** Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler */
 	XS(new HerkunftSonstigeKatalogEintrag[]{
 		new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(
-			Schulform.BK, Schulform.SB,
-			Schulform.WB,
-			Schulform.FW, Schulform.HI, Schulform.WF,
-			Schulform.G,
-			Schulform.GE,
-			Schulform.GM,
-			Schulform.GY,
-			Schulform.H,
-			Schulform.PS,
-			Schulform.R,
-			Schulform.KS, Schulform.S,
-			Schulform.SG,
-			Schulform.SK,
-			Schulform.SR,
-			Schulform.V
-		), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, null)
+			Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+			Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+			Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+		), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022),
+        new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(
+            Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
+            Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
+            Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
+        ), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", 2023, null)
 	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der sonstigen Herkunft, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftSonstigeKatalogEintrag daten;

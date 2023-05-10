@@ -61,7 +61,7 @@ public enum HerkunftBildungsgang {
 	}),
 
 
-	/** Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss */
+	/** Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss */
 	A14(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(9000, Schulgliederung.A14, null, null)
 	}),
@@ -103,31 +103,31 @@ public enum HerkunftBildungsgang {
 	}),
 
 
-	/** Berufsfachschule, Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (1-jährig, Vollzeit) */
+	/** Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit) */
 	B06(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(24000, Schulgliederung.B06, null, null)
 	}),
 
 
-	/** Berufsfachschule, Berufliche Kenntnisse/mittlerer Schulabschluss (1-jährig, Vollzeit) */
+	/** Berufsfachschule, Berufliche Kenntnisse/Mittlerer Schulabschluss (1-jährig, Vollzeit) */
 	B07(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(25000, Schulgliederung.B07, null, null)
 	}),
 
 
-	/** Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (2-jährig, Vollzeit) */
+	/** Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit) */
 	B08(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(26000, Schulgliederung.B08, null, null)
 	}),
 
 
-	/** Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (3-jährig, Teilzeit) */
+	/** Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit) */
 	B09(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(27000, Schulgliederung.B09, null, null)
 	}),
 
 
-	/** Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (4-jährig, Teilzeit) */
+	/** Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit) */
 	B10(new HerkunftBildungsgangKatalogEintrag[] {
 		new HerkunftBildungsgangKatalogEintrag(28000, Schulgliederung.B10, null, null)
 	}),

@@ -22,7 +22,7 @@ export class HerkunftSonstige extends JavaObject implements JavaEnum<HerkunftSon
 	/**
 	 * Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind
 	 */
-	public static readonly AS : HerkunftSonstige = new HerkunftSonstige("AS", 0, [new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, null)]);
+	public static readonly AS : HerkunftSonstige = new HerkunftSonstige("AS", 0, [new HerkunftSonstigeKatalogEintrag(1000, "AS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022), new HerkunftSonstigeKatalogEintrag(1001, "AS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)]);
 
 	/**
 	 * Keine Schule bzw. kein Förderschulkindergarten (Einschulung)
@@ -62,12 +62,12 @@ export class HerkunftSonstige extends JavaObject implements JavaEnum<HerkunftSon
 	/**
 	 * Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler
 	 */
-	public static readonly XS : HerkunftSonstige = new HerkunftSonstige("XS", 8, [new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, null)]);
+	public static readonly XS : HerkunftSonstige = new HerkunftSonstige("XS", 8, [new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022), new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", 2023, null)]);
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
 	 */
-	public static readonly VERSION : number = 1;
+	public static readonly VERSION : number = 2;
 
 	/**
 	 * Der aktuellen Daten der sonstigen Herkunft, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null

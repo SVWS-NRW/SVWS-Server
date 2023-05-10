@@ -59,7 +59,7 @@ export class HerkunftBildungsgang extends JavaObject implements JavaEnum<Herkunf
 	public static readonly A13 : HerkunftBildungsgang = new HerkunftBildungsgang("A13", 7, [new HerkunftBildungsgangKatalogEintrag(8000, Schulgliederung.A13, null, null)]);
 
 	/**
-	 * Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss
+	 * Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss
 	 */
 	public static readonly A14 : HerkunftBildungsgang = new HerkunftBildungsgang("A14", 8, [new HerkunftBildungsgangKatalogEintrag(9000, Schulgliederung.A14, null, null)]);
 
@@ -94,27 +94,27 @@ export class HerkunftBildungsgang extends JavaObject implements JavaEnum<Herkunf
 	public static readonly B05 : HerkunftBildungsgang = new HerkunftBildungsgang("B05", 14, [new HerkunftBildungsgangKatalogEintrag(23000, Schulgliederung.B05, null, null)]);
 
 	/**
-	 * Berufsfachschule, Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (1-jährig, Vollzeit)
+	 * Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)
 	 */
 	public static readonly B06 : HerkunftBildungsgang = new HerkunftBildungsgang("B06", 15, [new HerkunftBildungsgangKatalogEintrag(24000, Schulgliederung.B06, null, null)]);
 
 	/**
-	 * Berufsfachschule, Berufliche Kenntnisse/mittlerer Schulabschluss (1-jährig, Vollzeit)
+	 * Berufsfachschule, Berufliche Kenntnisse/Mittlerer Schulabschluss (1-jährig, Vollzeit)
 	 */
 	public static readonly B07 : HerkunftBildungsgang = new HerkunftBildungsgang("B07", 16, [new HerkunftBildungsgangKatalogEintrag(25000, Schulgliederung.B07, null, null)]);
 
 	/**
-	 * Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (2-jährig, Vollzeit)
+	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)
 	 */
 	public static readonly B08 : HerkunftBildungsgang = new HerkunftBildungsgang("B08", 17, [new HerkunftBildungsgangKatalogEintrag(26000, Schulgliederung.B08, null, null)]);
 
 	/**
-	 * Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (3-jährig, Teilzeit)
+	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)
 	 */
 	public static readonly B09 : HerkunftBildungsgang = new HerkunftBildungsgang("B09", 18, [new HerkunftBildungsgangKatalogEintrag(27000, Schulgliederung.B09, null, null)]);
 
 	/**
-	 * Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder mittlerer Schulabschluss (4-jährig, Teilzeit)
+	 * Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)
 	 */
 	public static readonly B10 : HerkunftBildungsgang = new HerkunftBildungsgang("B10", 19, [new HerkunftBildungsgangKatalogEintrag(28000, Schulgliederung.B10, null, null)]);
 
