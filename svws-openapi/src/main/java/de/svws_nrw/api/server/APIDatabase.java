@@ -120,7 +120,7 @@ public class APIDatabase {
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 				 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
-    public Response migrateFromMDB(@PathParam("schema") final String schemaname,
+    public Response migrateMDB(@PathParam("schema") final String schemaname,
     		@RequestBody(description = "Die MDB-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
     		@Context final HttpServletRequest request) {

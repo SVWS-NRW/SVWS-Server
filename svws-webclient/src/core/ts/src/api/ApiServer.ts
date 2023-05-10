@@ -5776,7 +5776,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode migrateFromMDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mdb
+	 * Implementierung der POST-Methode migrateMDB für den Zugriff auf die URL https://{hostname}/db/{schema}/migrate/mdb
 	 *
 	 * Migriert die übergebene Datenbank in dieses Schema. Das Schema wird dabei geleert und vorhanden Daten gehen dabei verloren.
 	 *
@@ -5794,7 +5794,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Log vom Migrieren der Access-MDB-Datenbank
 	 */
-	public async migrateFromMDB(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+	public async migrateMDB(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/migrate/mdb"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.postMultipart(path, data);

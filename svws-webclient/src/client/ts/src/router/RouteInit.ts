@@ -62,9 +62,10 @@ export class RouteInit extends RouteNode<unknown, any> {
 						: await api.server.migrateMsSqlServer(data, api.schema)
 					break;
 				case 'mdb':
-					await api.server.migrateFromMDB(formData, api.schema)
+					await api.server.migrateMDB(formData, api.schema)
 					break;
 			}
+			await RouteManager.doRoute(routeApp.getRoute());
 			return true;
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
