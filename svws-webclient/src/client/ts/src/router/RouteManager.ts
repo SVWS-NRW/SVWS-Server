@@ -55,7 +55,7 @@ export class RouteManager {
      */
 	public static create(router: Router): RouteManager {
 		if (RouteManager._instance !== undefined)
-			throw new Error("Es sind keine zwei Insanzen des Route-Managers erlaubt.");
+			throw new Error("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
 		RouteManager._instance = new RouteManager(router);
 		return RouteManager._instance;
 	}

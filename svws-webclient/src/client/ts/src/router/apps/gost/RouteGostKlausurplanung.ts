@@ -92,18 +92,18 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	private getChild(): GostKlausurplanungAuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
+		return this.data.view;
 	}
 
 	private getChildData(): GostKlausurplanungAuswahlChildData[] {
 		const result: GostKlausurplanungAuswahlChildData[] = [];
 		if (this.data.abiturjahr === -1) {
-			result.push({ name: routeGostKlausurplanungKlausurdaten.name, text: routeGostKlausurplanungKlausurdaten.text });
-			result.push({ name: routeGostKlausurplanungKalender.name, text: routeGostKlausurplanungKalender.text });
+			result.push(routeGostKlausurplanungKlausurdaten);
+			result.push(routeGostKlausurplanungKalender);
 			return result;
 		}
 		for (const c of this.children)
-			result.push({ name: c.name, text: c.text });
+			result.push(c);
 		return result;
 	}
 
