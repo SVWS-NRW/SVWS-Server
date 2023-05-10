@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Belegprüfungsergebnisse" class="sticky -top-8 pt-8">
+	<svws-ui-content-card title="Belegprüfungsergebnisse">
 		<template #actions>
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 		</template>
@@ -7,11 +7,6 @@
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
-			<div class="mt-16 flex flex-col gap-2">
-				<svws-ui-text-input v-model="inputBeratungsdatum" type="date" placeholder="Beratungsdatum" />
-				<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" />
-				<div>Letzte Beratung durchgeführt von <span class="font-bold">{{ beratungslehrer || '–' }}</span></div>
-			</div>
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
 		</div>
 	</svws-ui-content-card>
@@ -19,20 +14,17 @@
 
 <script setup lang="ts">
 
+	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
+		GostBelegpruefungsArt, Sprachendaten } from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
-		GostBelegpruefungsArt, Sprachendaten, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
-		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 		abiturdatenManager: AbiturdatenManager;
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: GostBelegpruefungsArt;
-		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
 	const emit = defineEmits<{
@@ -43,28 +35,6 @@
 		get: () => props.gostBelegpruefungsArt,
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
-
-	const inputBeratungsdatum: WritableComputedRef<string> = computed({
-		get: () => props.gostLaufbahnBeratungsdaten().beratungsdatum || "",
-		set: (value) => {
-			if (value === "")
-				void props.patchBeratungsdaten({ beratungsdatum: null });
-			else
-				void props.patchBeratungsdaten({ beratungsdatum: value });
-		}
-	});
-
-	const kommentar: WritableComputedRef<string> = computed({
-		get: () => props.gostLaufbahnBeratungsdaten().kommentar || "",
-		set: (value) => void props.patchBeratungsdaten({ kommentar: value })
-	});
-
-	const beratungslehrer: WritableComputedRef<string | undefined> = computed(()=>{
-		const id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
-		if (id === null)
-			return;
-		return props.mapLehrer.get(id)?.kuerzel;
-	})
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 

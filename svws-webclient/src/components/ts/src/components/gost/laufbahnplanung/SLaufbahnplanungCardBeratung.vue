@@ -1,0 +1,49 @@
+<template>
+	<svws-ui-content-card title="Beratungsdaten">
+		<div class="flex flex-col gap-2">
+			<svws-ui-text-input v-model="beratungsdatum" type="date" placeholder="Beratungsdatum" @update:model-value="dirty = true" />
+			<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" @update:model-value="dirty = true" />
+			<div>Letzte Beratung durchgeführt von</div>
+			<svws-ui-multi-select :items="mapLehrer.values()" v-model="beratungslehrer" :item-text="(i: LehrerListeEintrag)=>i.kuerzel" @update:model-value="dirty = true" :item-filter="filter" autocomplete />
+			<svws-ui-button :disabled="!dirty" @click="speichern()">Beratungsdaten speichern</svws-ui-button>
+		</div>
+	</svws-ui-content-card>
+</template>
+
+<script setup lang="ts">
+
+	import type { LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
+	import { computed, ref } from "vue";
+
+	const props = defineProps<{
+		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
+		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
+		mapLehrer: Map<number, LehrerListeEintrag>;
+	}>();
+
+	const beratungsdaten = ref(new GostLaufbahnplanungBeratungsdaten());
+	const beratungsdatum = computed({
+		get: () => props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14),
+		set: value => beratungsdaten.value.beratungsdatum = value
+	})
+	const kommentar = computed({
+		get: ()=>props.gostLaufbahnBeratungsdaten().kommentar || "",
+		set: value => beratungsdaten.value.kommentar = value
+	})
+	const beratungslehrer = computed({
+		get: ()=>props.mapLehrer.get(props.gostLaufbahnBeratungsdaten().beratungslehrerID || -1),
+		set: value => beratungsdaten.value.beratungslehrerID = value?.id || null
+	});
+	const dirty = ref(false);
+
+	async function speichern() {
+		await props.patchBeratungsdaten(beratungsdaten.value);
+		dirty.value = false;
+	}
+
+	const filter = (items: LehrerListeEintrag[], search: string) =>
+		items.filter(i =>
+			i.kuerzel.includes(search.toLocaleLowerCase()) ||
+			i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+</script>

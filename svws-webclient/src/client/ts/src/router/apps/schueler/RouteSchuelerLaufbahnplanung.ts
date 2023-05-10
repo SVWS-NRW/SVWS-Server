@@ -144,6 +144,8 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	patchBeratungsdaten = async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
 		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.auswahl.id);
+		const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
+		this.setPatchedState({gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data)});
 	}
 
 	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
@@ -166,8 +168,12 @@ export class RouteDataSchuelerLaufbahnplanung {
 				const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
 				for (const fk of listfachkombinationen)
 					mapFachkombinationen.set(fk.id, fk);
+				const listLehrer = await api.server.getLehrer(api.schema);
+				const mapLehrer = new Map<number, LehrerListeEintrag>();
+				for (const l of listLehrer)
+					mapLehrer.set(l.id, l);
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten,
-					listGostFaecher, faecherManager, mapFachkombinationen })
+					listGostFaecher, faecherManager, mapFachkombinationen, mapLehrer })
 				this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
