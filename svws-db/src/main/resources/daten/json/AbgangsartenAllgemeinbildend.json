@@ -49,6 +49,30 @@
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		},
+		{
+			"id": 2001,
+			"beschreibung": "Erster Schulabschluss",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["10","11","12","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","10","EF"] },
+				{ "schulform": "H", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["10"] },
+				{ "schulform": "KS", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["09","10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["09"] },
+				{ "schulform": "SK", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["09"] },
+				{ "schulform": "V", "jahrgaenge": ["09","10","1A","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -71,6 +95,26 @@
 				{ "schulform": "V", "jahrgaenge": ["09","10","1B"] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		},
+		{
+			"id": 3001,
+			"beschreibung": "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10, Typ B) (Nur G9, zehnjährige Vollzeitschulpflicht erfüllt)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["09","10"] },
+				{ "schulform": "GM", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","10"] },
+				{ "schulform": "H", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "KS", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["09","10"] },
+				{ "schulform": "R", "jahrgaenge": ["09","10"] },
+				{ "schulform": "S", "jahrgaenge": ["09","10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["09","10"] },
+				{ "schulform": "SK", "jahrgaenge": ["09","10","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["09","10"] },
+				{ "schulform": "V", "jahrgaenge": ["09","10","1B"] }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -97,6 +141,30 @@
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		},
+		{
+			"id": 4001,
+			"beschreibung": "Erweiterter Erster Schulabschluss",
+			"zulaessig": [
+				{ "schulform": "FW", "jahrgaenge": ["11","12","13","71"] },
+				{ "schulform": "GE", "jahrgaenge": ["10"] },
+				{ "schulform": "GM", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "GY", "jahrgaenge": ["10"] },
+				{ "schulform": "H", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "HI", "jahrgaenge": ["11","12"] },
+				{ "schulform": "KS", "jahrgaenge": ["10","71"] },
+				{ "schulform": "PS", "jahrgaenge": ["10"] },
+				{ "schulform": "R", "jahrgaenge": ["10","1A"] },
+				{ "schulform": "S", "jahrgaenge": ["10","71"] },
+				{ "schulform": "SG", "jahrgaenge": ["10"] },
+				{ "schulform": "SK", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "SR", "jahrgaenge": ["10"] },
+				{ "schulform": "V", "jahrgaenge": ["10","1A","1B"] },
+				{ "schulform": "WB", "jahrgaenge": ["null"] },
+				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -247,6 +315,18 @@
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		},
+		{
+			"id": 12001,
+			"beschreibung": "Erster Schulabschluss nach Klasse 9 (Nur G8, mit Berechtigung zum Besuch der gymnasialen Oberstufe, § 43 Abs. 3 i.V.m. § 40 Abs. 4 S. 2 APO-SI)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["09","EF"] },
+				{ "schulform": "GM", "jahrgaenge": ["EF"] },
+				{ "schulform": "GY", "jahrgaenge": ["09","EF"] },
+				{ "schulform": "SG", "jahrgaenge": ["EF"] }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -261,6 +341,18 @@
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		},
+		{
+			"id": 13001,
+			"beschreibung": "Erweiterter Erster Schulabschluss nach Klasse 10 (mit Berechtigung zum Besuch der gymnasialen Oberstufe, § 41 Abs. 2 APO-SI i.V.m. § 40 Abs. 2 APO-GOSt)",
+			"zulaessig": [
+				{ "schulform": "GE", "jahrgaenge": ["EF"] },
+				{ "schulform": "GM", "jahrgaenge": ["EF"] },
+				{ "schulform": "GY", "jahrgaenge": ["EF"] },
+				{ "schulform": "SG", "jahrgaenge": ["EF"] }
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
