@@ -1,13 +1,13 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
-			<template #cell(kuerzel)="{ rowData: row }">
+			<template #cell(kuerzel)="{ rowData: row }: {rowData: DataTableItem}">
 				<div class="flex justify-between w-full">
 					{{ row.kuerzel }}
-					<div v-if="allow_add_blockung(row)" class="inline-flex gap-1 -my-0.5">
-						<svws-ui-button type="secondary" @click.stop="blockung_hinzufuegen">Blockung <i-ri-add-circle-line class="-mr-0.5" /></svws-ui-button>
-						<s-gost-kursplanung-modal-blockung-recover v-slot="{ openModal }" :restore-blockung="restoreBlockung">
-							<svws-ui-button :disabled="jahrgangsdaten?.istBlockungFestgelegt[halbjahr.id] || false" type="secondary" @click="openModal()">Wiederherstellen</svws-ui-button>
+					<div v-if="row === halbjahr" class="inline-flex gap-1 -my-0.5">
+						<svws-ui-button v-if="allow_add_blockung(row)" type="secondary" @click.stop="blockung_hinzufuegen">Blockung <i-ri-add-circle-line class="-mr-0.5" /></svws-ui-button>
+						<s-gost-kursplanung-modal-blockung-recover v-if="allow_restore_blockung(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
+							<svws-ui-button type="secondary" @click="openModal()">Wiederherstellen</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
 					</div>
 				</div>
@@ -31,14 +31,18 @@
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
 	const allow_add_blockung = (row: DataTableItem): boolean => {
-		const curr_hj = row.id === props.halbjahr.id;
-		if (!curr_hj || props.jahrgangsdaten === undefined)
+		if (props.jahrgangsdaten === undefined)
 			return false;
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
+	const allow_restore_blockung = (row: DataTableItem): boolean =>
+		(props.jahrgangsdaten?.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ||
+		// TODO anpassen, damit nicht zukünftige Wiederhergestellt werden können
+		(!props.jahrgangsdaten?.istBlockungFestgelegt[row.id]) ? true : false;
+
 	async function select_hj(halbjahr: DataTableItem | null) {
-		if (halbjahr != null)
+		if (halbjahr !== null)
 			await props.setHalbjahr(halbjahr as unknown as GostHalbjahr);
 	}
 
