@@ -215,7 +215,7 @@ public enum Schulgliederung {
 	A10(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(1010000, "A10", true, Arrays.asList(
 				Schulform.BK, Schulform.SB
-			), true, false, "Berufsabschluss/mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)", BerufskollegAnlage.A, "10", 56, true, Arrays.asList(
+			), true, false, "Berufsabschluss/Mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)", BerufskollegAnlage.A, "10", 56, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.BAB
@@ -286,7 +286,7 @@ public enum Schulgliederung {
 	A14(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(1014000, "A14", true, Arrays.asList(
 				Schulform.BK, Schulform.SB
-			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/mittlerer Schulabschluss (BAB/FOR; VZ)", BerufskollegAnlage.A, "14", 59, true, Arrays.asList(
+			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss (BAB/FOR; VZ)", BerufskollegAnlage.A, "14", 59, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.BAB
@@ -306,7 +306,7 @@ public enum Schulgliederung {
 	A15(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(1015000, "A15", true, Arrays.asList(
 				Schulform.BK
-			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife BAB/FHR; VZ", BerufskollegAnlage.A, "15", 59, true, Arrays.asList(
+			), false, false, "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife (BAB/FHR; VZ)", BerufskollegAnlage.A, "15", 59, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.BAB
@@ -464,7 +464,17 @@ public enum Schulgliederung {
 			), Arrays.asList(
 				SchulabschlussAllgemeinbildend.OA,
 				SchulabschlussAllgemeinbildend.HA10
-			), null, null)
+			), null, 2021),
+        new SchulgliederungKatalogEintrag(2006001, "B06", true, Arrays.asList(
+                Schulform.BK, Schulform.SB
+            ), false, false, "Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (BK/EESA; 1j. VZ)", BerufskollegAnlage.B, "06", 91, true, Arrays.asList(
+                SchulabschlussBerufsbildend.OA,
+                SchulabschlussBerufsbildend.WECHSEL,
+                SchulabschlussBerufsbildend.BK
+            ), Arrays.asList(
+                SchulabschlussAllgemeinbildend.OA,
+                SchulabschlussAllgemeinbildend.HA10
+            ), 2022, null)
 	}),
 
 	/**
@@ -475,7 +485,7 @@ public enum Schulgliederung {
 	B07(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(2007000, "B07", true, Arrays.asList(
 				Schulform.BK, Schulform.SB
-			), false, false, "Berufliche Kenntnisse/mittlerer Schulabschluss (BK/FOR; 1j. VZ)", BerufskollegAnlage.B, "07", 92, true, Arrays.asList(
+			), false, false, "Berufliche Kenntnisse/Mittlerer Schulabschluss (BK/FOR; 1j. VZ)", BerufskollegAnlage.B, "07", 92, true, Arrays.asList(
 				SchulabschlussBerufsbildend.OA,
 				SchulabschlussBerufsbildend.WECHSEL,
 				SchulabschlussBerufsbildend.BK
@@ -503,7 +513,19 @@ public enum Schulgliederung {
 				SchulabschlussAllgemeinbildend.HA10,
 				SchulabschlussAllgemeinbildend.MSA,
 				SchulabschlussAllgemeinbildend.MSA_Q
-			), null, null)
+			), null, 2021),
+        new SchulgliederungKatalogEintrag(2008001, "B08", true, Arrays.asList(
+                Schulform.BK, Schulform.SB
+            ), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 2j. VZ)", BerufskollegAnlage.B, "08", 93, true, Arrays.asList(
+                SchulabschlussBerufsbildend.OA,
+                SchulabschlussBerufsbildend.WECHSEL,
+                SchulabschlussBerufsbildend.BAB
+            ), Arrays.asList(
+                SchulabschlussAllgemeinbildend.OA,
+                SchulabschlussAllgemeinbildend.HA10,
+                SchulabschlussAllgemeinbildend.MSA,
+                SchulabschlussAllgemeinbildend.MSA_Q
+            ), 2022, null)
 	}),
 
 	/**
@@ -523,7 +545,19 @@ public enum Schulgliederung {
 				SchulabschlussAllgemeinbildend.HA10,
 				SchulabschlussAllgemeinbildend.MSA,
 				SchulabschlussAllgemeinbildend.MSA_Q
-			), null, null)
+			), null, 2021),
+        new SchulgliederungKatalogEintrag(2009001, "B09", true, Arrays.asList(
+                Schulform.BK, Schulform.SB
+            ), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 3j. TZ)", BerufskollegAnlage.B, "09", 93, false, Arrays.asList(
+                SchulabschlussBerufsbildend.OA,
+                SchulabschlussBerufsbildend.WECHSEL,
+                SchulabschlussBerufsbildend.BAB
+            ), Arrays.asList(
+                SchulabschlussAllgemeinbildend.OA,
+                SchulabschlussAllgemeinbildend.HA10,
+                SchulabschlussAllgemeinbildend.MSA,
+                SchulabschlussAllgemeinbildend.MSA_Q
+            ), 2022, null)
 	}),
 
 	/**
@@ -543,7 +577,19 @@ public enum Schulgliederung {
 				SchulabschlussAllgemeinbildend.HA10,
 				SchulabschlussAllgemeinbildend.MSA,
 				SchulabschlussAllgemeinbildend.MSA_Q
-			), null, null)
+			), null, null),
+        new SchulgliederungKatalogEintrag(2010001, "B10", true, Arrays.asList(
+                Schulform.BK, Schulform.SB
+            ), false, false, "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 4j. TZ)", BerufskollegAnlage.B, "10", 93, false, Arrays.asList(
+                SchulabschlussBerufsbildend.OA,
+                SchulabschlussBerufsbildend.WECHSEL,
+                SchulabschlussBerufsbildend.BAB
+            ), Arrays.asList(
+                SchulabschlussAllgemeinbildend.OA,
+                SchulabschlussAllgemeinbildend.HA10,
+                SchulabschlussAllgemeinbildend.MSA,
+                SchulabschlussAllgemeinbildend.MSA_Q
+            ), null, null)
 	}),
 
 	/**
@@ -1292,9 +1338,11 @@ public enum Schulgliederung {
 	 */
 	GY8(new SchulgliederungKatalogEintrag[]{
 		new SchulgliederungKatalogEintrag(60002000, "GY8", false, Arrays.asList(
-				Schulform.GE,
-				Schulform.GY
-			), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, null, null)
+				Schulform.GE, Schulform.GY
+			), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, null, 2022),
+        new SchulgliederungKatalogEintrag(60002001, "GY8", false, Arrays.asList(
+                Schulform.GY
+            ), false, false, "Bildungsgang G8-Gymnasium", null, null, null, false, null, null, 2023, null)
 	}),
 
 	/**
@@ -1449,7 +1497,7 @@ public enum Schulgliederung {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Schulgliederung, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulgliederungKatalogEintrag daten;

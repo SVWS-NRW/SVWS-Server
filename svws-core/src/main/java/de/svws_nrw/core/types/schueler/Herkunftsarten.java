@@ -40,7 +40,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(1L, "00", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Nichtversetzung", "Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)")
+            ), 2023, null)
 	}),
 
 
@@ -65,7 +82,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(3001L, "03", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Freiwillige Wiederholung", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen freiwilliger Wiederholung")
+            ), 2023, null)
 	}),
 
 
@@ -90,7 +124,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(3101L, "03", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Rücktritt", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Rücktritt")
+            ), 2023, null)
 	}),
 
 
@@ -115,7 +166,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(3201L, "03", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Verbleib in der Schulstufe", "Gleiche Jahrgangsstufe gegenüber dem Vorjahr wegen Verbleib in der Schulstufe (Förderschwerpunkt geistige Entwicklung)")
+            ), 2023, null)
 	}),
 
 
@@ -157,7 +225,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(11001L, "11", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Versetzung", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Versetzung")
+            ), 2023, null)
 	}),
 
 
@@ -182,7 +267,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(11101L, "11", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Übergang (analog zu Versetzung)", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen versetzungsanalogem Übergang innerhalb der Schulform")
+            ), 2023, null)
 	}),
 
 
@@ -207,7 +309,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(11201L, "11", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Schulformaufstieg in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Schulformaufstieg")
+            ), 2023, null)
 	}),
 
 
@@ -248,7 +367,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(12001L, "12", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Vorversetzung in höheren Jahrgang", "Höhere Jahrgangsstufe gegenüber dem Vorjahr wegen Vorversetzung")
+            ), 2023, null)
 	}),
 
 
@@ -288,7 +424,24 @@ public enum Herkunftsarten {
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
 			new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind")
-		), null, null)
+		), null, 2022),
+        new HerkunftsartKatalogEintrag(99001L, "99", Arrays.asList(
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind"),
+                new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Zuzug aus dem Ausland", "Schüler, die aus dem Ausland zugezogen sind")
+            ), 2023, null)
 	}),
 
 
@@ -573,7 +726,7 @@ public enum Herkunftsarten {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Herkunftsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsartKatalogEintrag daten;
