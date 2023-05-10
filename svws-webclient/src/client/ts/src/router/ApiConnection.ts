@@ -297,7 +297,7 @@ export class ApiConnection {
 	}
 
 	/**
-	 * Initialialisiert die Daten, die beim Login geladen )erden sollen
+	 * Initialialisiert die Daten, die beim Login geladen werden sollen
 	 *
 	 * @returns {Promise<boolean>} true beim erfolgreichen Laden der Daten und ansonsten false
 	 */

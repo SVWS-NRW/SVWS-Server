@@ -1,9 +1,13 @@
-import type { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { DBSchemaListeEintrag} from "@svws-nrw/svws-core";
+import type { Ref} from "vue";
+import type { LoginProps } from "~/components/SLoginProps";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "./Api";
 import { RouteManager } from "./RouteManager";
 import { routeInit } from "./RouteInit";
+import { ref } from "vue";
 import SLogin from "~/components/SLogin.vue";
 
 export class RouteLogin extends RouteNode<unknown, any> {
@@ -12,6 +16,8 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
+	public redirect = '';
+	protected schema: Ref<string | undefined> = ref(undefined);
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schemaname?", SLogin);
@@ -21,6 +27,12 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	public getRoute(): RouteLocationRaw {
 		return { name: this.name };
+	}
+
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+		if (to_params.schemaname instanceof Array || to_params.redirect instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		this.schema.value = to_params.schemaname;
 	}
 
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
@@ -37,13 +49,19 @@ export class RouteLogin extends RouteNode<unknown, any> {
 		await api.logout();
 	}
 
-	public getProps() {
+	public setSchema = async (schema: DBSchemaListeEintrag) => {
+		//await RouteManager.doRoute({ name: this.name, params: { schemaname: schema.name} });
+	}
+
+	public getProps(): LoginProps {
 		return {
 			setHostname: api.setHostname,
+			setSchema: this.setSchema,
 			login: this.login,
 			connectTo: api.connectTo,
 			authenticated: api.authenticated,
-			hostname: api.hostname
+			hostname: api.hostname,
+			schema: this.schema.value,
 		}
 	}
 

@@ -22,7 +22,7 @@
 								</div>
 								<Transition>
 									<div v-if="inputDBSchemata.size() > 0 && !connecting" class="flex flex-col gap-2 items-center mt-8 px-8">
-										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" />
+										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="login" />
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="login" />
 										<svws-ui-button @click="login" type="primary" :disabled="authenticating">
@@ -79,9 +79,10 @@
 
 <script setup lang="ts">
 
+	import type { LoginProps } from "./SLoginProps";
 	import type { Ref, WritableComputedRef} from "vue";
-	import {computed, onErrorCaptured, ref} from "vue";
 	import type { DBSchemaListeEintrag, List} from "@svws-nrw/svws-core";
+	import {computed, onErrorCaptured, ref} from "vue";
 	import { ArrayList } from "@svws-nrw/svws-core";
 	import { version } from '../../version';
 
@@ -89,16 +90,10 @@
 
 	onErrorCaptured((e) => { errors.value.push(e); });
 
-	const props = defineProps<{
-		authenticated: boolean;
-		hostname: string;
-		setHostname: (hostname: string) => void;
-		login: (schema: string, username: string, password: string) => Promise<void>;
-		connectTo: (url: string) => Promise<List<DBSchemaListeEintrag>>;
-	}>();
+	const props = defineProps<LoginProps>();
 
 	const firstauth: Ref<boolean> = ref(true);
-	const schema: Ref<DBSchemaListeEintrag | undefined> = ref(undefined);
+	const schema: Ref<DBSchemaListeEintrag | undefined> = ref();
 	const username = ref("Admin");
 	const password = ref("");
 
@@ -137,6 +132,10 @@
 		let hasDefault = false;
 		for (const s of inputDBSchemata.value) {
 			if (s.isDefault) {
+				schema.value = s;
+				hasDefault = true;
+			}
+			if (s.name === props.schema) {
 				schema.value = s;
 				hasDefault = true;
 				break;

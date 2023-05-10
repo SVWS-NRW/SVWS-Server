@@ -26,26 +26,27 @@ export class RouteInit extends RouteNode<unknown, any> {
 	initSchule = async (schule: SchulenKatalogEintrag): Promise<boolean> => {
 		try {
 			await api.server.initSchule(api.schema, Number(schule.SchulNr));
-			await RouteManager.doRoute(routeApp.getRoute());
-			return true;
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schulnummer ${schule.SchulNr} ist fehlgeschlagen.`, error);
 			return false;
 		}
+		return this.gotoApp();
+	}
+
+	importSQLite = async (formData: FormData): Promise<boolean> => {
+		try {
+			await api.server.importSQLite(formData, api.schema);
+		} catch (error) {
+			console.warn(`Das Initialiseren des Schemas mit einnem SQLite-Backup ist fehlgeschlagen.`);
+			return false;
+		}
+		return this.gotoApp();
 	}
 
 	migrateDB = async (formData: FormData): Promise<boolean> => {
-		if (this.source.value === 'backup') {
-			try {
-				await api.server.importSQLite(formData, api.schema);
-				return true;
-			} catch (error) {
-				console.warn(`Das Initialiseren des Schemas mit einnem SQLite-Backup ist fehlgeschlagen.`);
-				return false;
-			}
-		}
+		if (this.source.value === 'backup')
+			return this.importSQLite(formData);
 		const db = this.db.value;
-		console.log(db, formData)
 		if (!db) return false;
 		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
 		const data = new DatenbankVerbindungsdaten();
@@ -74,12 +75,17 @@ export class RouteInit extends RouteNode<unknown, any> {
 					await api.server.migrateMDB(formData, api.schema)
 					break;
 			}
-			await RouteManager.doRoute(routeApp.getRoute());
-			return true;
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 			return false;
 		}
+		return this.gotoApp();
+	}
+
+	gotoApp = async (): Promise<true> => {
+		await api.init();
+		await RouteManager.doRoute(routeApp.getRoute());
+		return true;
 	}
 
 	setSource = async (source: string) => await RouteManager.doRoute({name: this.name, params: { source } });

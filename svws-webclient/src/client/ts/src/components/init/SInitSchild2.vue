@@ -39,7 +39,7 @@
 		setDB: (db: string) => Promise<void>;
 	}>();
 
-	const db = ref('mdb');
+	const db = ref('');
 	const schildzentral = ref(false);
 	const schulnummer = ref("");
 	const location = ref("");
