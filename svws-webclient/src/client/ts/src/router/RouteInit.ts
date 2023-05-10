@@ -35,6 +35,15 @@ export class RouteInit extends RouteNode<unknown, any> {
 	}
 
 	migrateDB = async (formData: FormData): Promise<boolean> => {
+		if (this.source.value === 'backup') {
+			try {
+				await api.server.importSQLite(formData, api.schema);
+				return true;
+			} catch (error) {
+				console.warn(`Das Initialiseren des Schemas mit einnem SQLite-Backup ist fehlgeschlagen.`);
+				return false;
+			}
+		}
 		const db = this.db.value;
 		console.log(db, formData)
 		if (!db) return false;

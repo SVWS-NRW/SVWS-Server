@@ -14,7 +14,7 @@
 				</div>
 				<div class="flex flex-col gap-3" v-if="db === 'mdb'">
 					<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
-					SQLite-Datei auswählen:
+					Access-Datei auswählen (Endung .mdb):
 					<input type="file" @change="migrate" :disabled="loading">
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 		setDB: (db: string) => Promise<void>;
 	}>();
 
-	const db = ref();
+	const db = ref('mdb');
 	const schildzentral = ref(false);
 	const schulnummer = ref("");
 	const location = ref("");
@@ -56,10 +56,11 @@
 		if (target?.files?.length) {
 			const file = target.files.item(0);
 			if (file)
-				formData.append("data", file);
+				formData.append("database", file);
 		}
 		formData.append('username', user.value);
 		formData.append('password', password.value);
+		formData.append('databasePassword', password.value);
 		formData.append('schema', schema.value);
 		formData.append('location', location.value);
 		status.value = await props.migrateDB(formData);

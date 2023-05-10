@@ -34,7 +34,7 @@
 			return;
 		loading.value = true;
 		const formData = new FormData();
-		formData.append("data", file);
+		formData.append("database", file);
 		status.value = await props.migrateDB(formData);
 		loading.value = false;
 	}
