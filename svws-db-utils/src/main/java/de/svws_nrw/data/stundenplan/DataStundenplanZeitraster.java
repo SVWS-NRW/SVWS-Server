@@ -1,19 +1,19 @@
 package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
+import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -36,9 +36,9 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOEigeneSchule} in einen Core-DTO {@link SchuleStammdaten}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanZeitraster} in einen Core-DTO {@link StundenplanZeitraster}.
 	 */
-	private final Function<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (final DTOStundenplanZeitraster z) -> {
+	private static final Function<DTOStundenplanZeitraster, StundenplanZeitraster> dtoMapper = (final DTOStundenplanZeitraster z) -> {
 		final StundenplanZeitraster daten = new StundenplanZeitraster();
 		daten.id = z.ID;
 		daten.wochentag = z.Tag;
@@ -57,10 +57,13 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	/**
 	 * Gibt das Zeitraster des Stundenplans zurück.
 	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 *
 	 * @return das Zeitraster
 	 */
-	public List<StundenplanZeitraster> getZeitraster() {
-		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", this.stundenplanID, DTOStundenplanZeitraster.class);
+	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn, final long idStundenplan) {
+		final List<DTOStundenplanZeitraster> zeitraster = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
 		for (final DTOStundenplanZeitraster z : zeitraster)
 			daten.add(dtoMapper.apply(z));
@@ -69,12 +72,19 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getZeitraster()).build();
+		final List<StundenplanZeitraster> daten = getZeitraster(conn, this.stundenplanID);
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Zeitrastereintrag eines Stundenplans mit der ID null ist unzulässig.");
+		final DTOStundenplanZeitraster eintrag = conn.queryByKey(DTOStundenplanZeitraster.class, id);
+		if (eintrag == null)
+			return OperationError.NOT_FOUND.getResponse("Es wurde kein Zeitrastereintrag eines Stundenplans mit der ID %d gefunden.".formatted(id));
+		final StundenplanZeitraster daten = dtoMapper.apply(eintrag);
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

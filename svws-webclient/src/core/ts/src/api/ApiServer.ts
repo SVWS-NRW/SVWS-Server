@@ -137,7 +137,11 @@ import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKata
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
+import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
+import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
+import { StundenplanPausenzeit } from '../core/data/stundenplan/StundenplanPausenzeit';
+import { StundenplanRaum } from '../core/data/stundenplan/StundenplanRaum';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
@@ -7861,6 +7865,61 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
+	 *
+	 * Gibt die grundlegenden Daten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Stundenplans
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Stundenplan>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
+	 *   Code 404: Keine Stundenplandaten gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten des Stundenplans
+	 */
+	public async getStundenplan(schema : string, id : number) : Promise<List<Stundenplan>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Stundenplan>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Stundenplan.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
+	 *
+	 * Passt die Stundenplandaten des Stundenplans mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Stundenplan>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplan(data : Partial<Stundenplan>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = Stundenplan.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/schueler/{schueler_id : \d+}
 	 *
 	 * Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -7919,6 +7978,59 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/kalenderwochen/{id : \d+}
+	 *
+	 * Gibt die Kalenderwochen-Zuordnung eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Kalenderwochen-Zuordnung
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanKalenderwochenzuordnung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keine Kalenderwochen-Zuordnung eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Kalenderwochen-Zuordnung
+	 */
+	public async getStundenplanKalenderwochenzuordnung(schema : string, id : number) : Promise<StundenplanKalenderwochenzuordnung> {
+		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanKalenderwochenzuordnung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/kalenderwochen/{id : \d+}
+	 *
+	 * Passt die Kalenderwochen-Zuordnung mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanKalenderwochenzuordnung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanKalenderwochenzuordnung(data : Partial<StundenplanKalenderwochenzuordnung>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/kalenderwochen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanliste für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/liste
 	 *
 	 * Erstellt eine Liste der Stundenpläne. Die Stundenpläne sind anhand des Schuljahresabschnitt und der Gültigkeit sortiert.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplanlisten besitzt.
@@ -7973,6 +8085,165 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<StundenplanListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenzeiten/{id : \d+}
+	 *
+	 * Gibt die Pausenzeit eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenzeit
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keine Pausenzeit eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeit
+	 */
+	public async getStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanPausenzeit.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenzeiten/{id : \d+}
+	 *
+	 * Passt die Pausenzeit mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanPausenzeit>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/pausenzeiten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/raeume/{id : \d+}
+	 *
+	 * Gibt den Raum eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanRaum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Kein Raum eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum
+	 */
+	public async getStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
+		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanRaum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/raeume/{id : \d+}
+	 *
+	 * Passt den Raum mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanRaum>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/zeitraster/{id : \d+}
+	 *
+	 * Gibt den Zeitraster-Eintrag eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Zeitraster-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Kein Zeitraster-Eintrag eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Zeitraster-Eintrag
+	 */
+	public async getStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/zeitraster/{id : \d+}
+	 *
+	 * Passt den Zeitrastereintrag mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

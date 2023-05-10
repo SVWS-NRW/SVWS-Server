@@ -1,9 +1,9 @@
 package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
- * {@link StundenplanZeitraster}.
+ * {@link SchuelerStundenplan}.
  */
 public final class DataSchuelerStundenplan extends DataManager<Long> {
 
@@ -35,7 +35,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
-	 * {@link StundenplanZeitraster}.
+	 * {@link SchuelerStundenplan}.
 	 *
 	 * @param conn          die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idStundenplan die ID des Stundenplans, dessen Zeitraster abgefragt
@@ -70,7 +70,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 					.build();
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
-		final List<StundenplanZeitraster> zeitraster = (new DataStundenplanZeitraster(conn, idStundenplan)).getZeitraster();
+		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);
 
 		final ArrayList<SchuelerStundenplanUnterricht> spUnterricht = new ArrayList<>();
 

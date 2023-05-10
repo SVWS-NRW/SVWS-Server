@@ -300,7 +300,11 @@ export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatal
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
 export { SchuelerStundenplan } from './core/data/stundenplan/SchuelerStundenplan';
 export { SchuelerStundenplanUnterricht } from './core/data/stundenplan/SchuelerStundenplanUnterricht';
+export { Stundenplan } from './core/data/stundenplan/Stundenplan';
+export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
+export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
+export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
 export { StundenplanZeitraster } from './core/data/stundenplan/StundenplanZeitraster';
 export { StundenplanInputSimple } from './core/data/stundenplanblockung/StundenplanInputSimple';
 export { StundenplanInputSimpleFach } from './core/data/stundenplanblockung/StundenplanInputSimpleFach';
