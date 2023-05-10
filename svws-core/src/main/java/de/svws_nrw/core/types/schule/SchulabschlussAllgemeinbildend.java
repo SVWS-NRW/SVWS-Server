@@ -17,38 +17,38 @@ public enum SchulabschlussAllgemeinbildend {
 
 	/** Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B) */
 	HA9A(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(1000, "HA9A", "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(1001, "ESAA", "Erster Schulabschluss (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(1000, "HA9A", "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(1001, "ESAA", "Erster Schulabschluss (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", 2022, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B) */
 	HA9(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(2000, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(2001, "ESA", "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(2000, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(2001, "ESA", "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", 2022, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen) - siehe BK-Bildungsgang A12 */
 	HA9_FOE(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(3000, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(3001, "ESA_FOE", "Erster Schulabschluss (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(3000, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(3001, "ESA_FOE", "Erster Schulabschluss (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", 2022, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe */
 	HA9_Q(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(4000, "HA9_Q", "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(4001, "ESA_Q", "Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(4000, "HA9_Q", "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(4001, "ESA_Q", "Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", 2022, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 10 */
 	HA10(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(5000, "HA10", "Hauptschulabschluss nach Klasse 10", "D", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(5001, "EESA", "Erweiterer Erster Schulabschluss", "D", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(5000, "HA10", "Hauptschulabschluss nach Klasse 10", "D", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(5001, "EESA", "Erweiterer Erster Schulabschluss", "D", 2022, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 10 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe */
 	HA10_Q(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(6000, "HA10_Q", "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", null, 2022),
-        new SchulabschlussAllgemeinbildendKatalogEintrag(6001, "EESA_Q", "Erweiterter Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", 2023, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(6000, "HA10_Q", "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", null, 2021),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(6001, "EESA_Q", "Erweiterter Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", 2022, null)
 	}),
 
 	/** Der Mittlere Schulabschluss bzw. Fachoberschulreife */

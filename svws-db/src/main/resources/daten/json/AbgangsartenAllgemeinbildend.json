@@ -49,7 +49,7 @@
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 2001,
@@ -72,7 +72,7 @@
 				{ "schulform": "WB", "jahrgaenge": ["null"] },
 				{ "schulform": "WF", "jahrgaenge": ["10","11","12","71"] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -95,7 +95,7 @@
 				{ "schulform": "V", "jahrgaenge": ["09","10","1B"] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 3001,
@@ -114,7 +114,7 @@
 				{ "schulform": "SR", "jahrgaenge": ["09","10"] },
 				{ "schulform": "V", "jahrgaenge": ["09","10","1B"] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -141,7 +141,7 @@
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 4001,
@@ -164,7 +164,7 @@
 				{ "schulform": "WB", "jahrgaenge": ["null"] },
 				{ "schulform": "WF", "jahrgaenge": ["11","12","13","71"] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -315,7 +315,7 @@
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 12001,
@@ -326,7 +326,7 @@
 				{ "schulform": "GY", "jahrgaenge": ["09","EF"] },
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -341,7 +341,7 @@
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 13001,
@@ -352,7 +352,7 @@
 				{ "schulform": "GY", "jahrgaenge": ["EF"] },
 				{ "schulform": "SG", "jahrgaenge": ["EF"] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {

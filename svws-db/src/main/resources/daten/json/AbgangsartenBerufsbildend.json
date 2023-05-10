@@ -82,7 +82,7 @@
 				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		}, {
 			"id": 1001001,
 			"beschreibung": "Ohne Abschluss",
@@ -158,7 +158,7 @@
 				{ "schulform": "SB", "gliederung": "E07", "jahrgaenge": [ "01","02","03","04","05","06" ] },
 				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -187,7 +187,7 @@
 				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1008001,
@@ -198,7 +198,7 @@
 				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] },
 				{ "schulform": "SB", "gliederung": "A13", "jahrgaenge": [ "01" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -241,7 +241,7 @@
 				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		}, {
 			"id": 1002001,
 			"beschreibung": "Erweiterter Erster Schulabschluss",
@@ -275,7 +275,7 @@
 				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
 				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -302,7 +302,7 @@
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1003001,
@@ -321,7 +321,7 @@
 				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "03" ] },
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -354,7 +354,7 @@
 				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1004001,
@@ -381,7 +381,7 @@
 				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "01","02","03","04" ] },
 				{ "schulform": "SB", "gliederung": "D02", "jahrgaenge": [ "01","02","03" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -418,7 +418,7 @@
 				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1011001,
@@ -427,7 +427,7 @@
 				{ "schulform": "BK", "gliederung": "A12", "jahrgaenge": [ "01" ] },
 				{ "schulform": "SB", "gliederung": "A12", "jahrgaenge": [ "01" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -500,7 +500,7 @@
 				{ "schulform": "SB", "gliederung": "A04", "jahrgaenge": [ "01","02","03","04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1013001,
@@ -515,7 +515,7 @@
 				{ "schulform": "SB", "gliederung": "A03", "jahrgaenge": [ "01","02","03","04" ] },
 				{ "schulform": "SB", "gliederung": "A04", "jahrgaenge": [ "01","02","03","04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		 } ]
 	}, {
@@ -648,7 +648,7 @@
 				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "02" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1019001,
@@ -661,7 +661,7 @@
 				{ "schulform": "SB", "gliederung": "C03", "jahrgaenge": [ "01","02" ] },
 				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "02" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -786,7 +786,7 @@
 				{ "schulform": "SB", "gliederung": "C12", "jahrgaenge": [ "03","04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1025001,
@@ -816,7 +816,7 @@
 				{ "schulform": "SB", "gliederung": "C02", "jahrgaenge": [ "02" ] },
 				{ "schulform": "SB", "gliederung": "C12", "jahrgaenge": [ "03","04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -844,7 +844,7 @@
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1026001,
@@ -868,7 +868,7 @@
 				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "03" ] },
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -896,7 +896,7 @@
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1027001,
@@ -916,7 +916,7 @@
 				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "03" ] },
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -942,7 +942,7 @@
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1028001,
@@ -962,7 +962,7 @@
 				{ "schulform": "SB", "gliederung": "B09", "jahrgaenge": [ "03" ] },
 				{ "schulform": "SB", "gliederung": "B10", "jahrgaenge": [ "04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -988,7 +988,7 @@
 				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "04" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1029001,
@@ -1008,7 +1008,7 @@
 				{ "schulform": "SB", "gliederung": "C13", "jahrgaenge": [ "03" ] },
 				{ "schulform": "SB", "gliederung": "D01", "jahrgaenge": [ "04" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1089,7 +1089,7 @@
 				{ "schulform": "SB", "gliederung": "C11", "jahrgaenge": [ "03" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1034001,
@@ -1102,7 +1102,7 @@
 				{ "schulform": "SB", "gliederung": "C08", "jahrgaenge": [ "01" ] },
 				{ "schulform": "SB", "gliederung": "C11", "jahrgaenge": [ "03" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1203,7 +1203,7 @@
 				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2021
 		},
 		{
 			"id": 1039001,
@@ -1280,7 +1280,7 @@
 				{ "schulform": "SB", "gliederung": "E07", "jahrgaenge": [ "01","02","03","04","05","06" ] },
 				{ "schulform": "SB", "gliederung": "E13", "jahrgaenge": [ "01","02","03" ] }
 			],
-			"gueltigVon": 2023,
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	} ]
