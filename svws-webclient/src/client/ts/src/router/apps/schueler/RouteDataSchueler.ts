@@ -9,6 +9,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerIndividualdaten } from "./RouteSchuelerIndividualdaten";
 
+import { useDebounceFn } from '@vueuse/shared';
 interface RouteStateSchueler {
 	idSchuljahresabschnitt: number,
 	auswahl: SchuelerListeEintrag | undefined;
@@ -189,7 +190,10 @@ export class RouteDataSchueler {
 		return this._state.value.mapAbiturjahrgaenge;
 	}
 
-	patch = async (data : Partial<SchuelerStammdaten>) => {
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	patch = useDebounceFn((data: Partial<SchuelerStammdaten>)=> this.patchit(data).then(val => val), 100)
+
+	patchit = async (data : Partial<SchuelerStammdaten>) => {
 		if (this.auswahl === undefined)
 			return;
 		await api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id);
