@@ -17,72 +17,72 @@ public enum SchulabschlussBerufsbildend {
 
 	/** Abschluss der Ausbildungsvorbereitung */
 	VORB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(10, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(100000, "VORB", "Abschluss der Ausbildungsvorbereitung", "1", null, null)
 	}),
 
 	/** Versetzungszeugnis */
 	VERS(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(11, "VERS", "Versetzungszeugnis", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(110000, "VERS", "Versetzungszeugnis", "1", null, null)
 	}),
 
 	/** Abschlusszeugnis in Aufbaubildungsgängen */
 	AUFB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(12, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(120000, "AUFB", "Abschlusszeugnis in Aufbaubildungsgängen", "1", null, null)
 	}),
 
 	/** Abschluss der Berufschulvorbereitung */
 	BV(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(13, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(130000, "BV", "Abschluss der Berufschulvorbereitung", "1", null, null)
 	}),
 
 	/** Vorpraktikum */
 	VP(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(14, "VP", "Vorpraktikum", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(140000, "VP", "Vorpraktikum", "1", null, null)
 	}),
 
 	/** Vorpraktikum */
 	BP(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(15, "BP", "Berufspraktikum", "1", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(150000, "BP", "Berufspraktikum", "1", null, null)
 	}),
 
 	/** Abschluss der Berufschulgrundjahres */
 	BG(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(20, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(200000, "BG", "Abschluss der Berufschulgrundjahres", "2", null, null)
 	}),
 
 	/** Berufschulabschluss */
 	BS(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(30, "BS", "Berufschulabschluss", "3", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(300000, "BS", "Berufschulabschluss", "3", null, null)
 	}),
 
 	/** Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	BK(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(40, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(400000, "BK", "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "4", null, null)
 	}),
 
 	/** Berufsabschluss */
 	BAB(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(50, "BAB", "Berufsabschluss", "5", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(500000, "BAB", "Berufsabschluss", "5", null, null)
 	}),
 
 	/** Fachschulabschluss (berufliche Weiterbildung) */
 	BW(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(60, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(600000, "BW", "Fachschulabschluss (berufliche Weiterbildung)", "6", null, null)
 	}),
 
 	/** Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	VBK(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(80, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(800000, "VBK", "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten", "8", null, null)
 	}),
 
 	/** Pseudoabschluss: Schulwechsler, die im selben Bildungsgang verbleiben */
 	WECHSEL(new SchulabschlussBerufsbildendKatalogEintrag[] {
-		new SchulabschlussBerufsbildendKatalogEintrag(90, "WECHSEL", "Schulwechsler, die im selben Bildungsgang verbleiben", "9", null, null)
+		new SchulabschlussBerufsbildendKatalogEintrag(900000, "WECHSEL", "Schulwechsler, die im selben Bildungsgang verbleiben", "9", null, null)
 	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulabschlussBerufsbildendKatalogEintrag daten;

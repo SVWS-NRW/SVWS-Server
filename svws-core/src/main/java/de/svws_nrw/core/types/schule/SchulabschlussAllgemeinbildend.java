@@ -17,92 +17,98 @@ public enum SchulabschlussAllgemeinbildend {
 
 	/** Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B) */
 	HA9A(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(1, "HA9A", "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(1000, "HA9A", "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(1001, "ESAA", "Erster Schulabschluss (ohne Berechtigung zum Besuch der Klasse 10 Typ B)", "B", 2023, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B) */
 	HA9(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(2, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(2000, "HA9", "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(2001, "ESA", "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10 Typ B)", "C", 2023, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen) - siehe BK-Bildungsgang A12 */
 	HA9_FOE(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(3, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(3000, "HA9_FOE", "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(3001, "ESA_FOE", "Erster Schulabschluss (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)", "S", 2023, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 9 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe */
 	HA9_Q(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(4, "HA9_Q", "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(4000, "HA9_Q", "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(4001, "ESA_Q", "Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "O", 2023, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 10 */
 	HA10(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(5, "HA10", "Hauptschulabschluss nach Klasse 10", "D", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(5000, "HA10", "Hauptschulabschluss nach Klasse 10", "D", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(5001, "EESA", "Erweiterer Erster Schulabschluss", "D", 2023, null)
 	}),
 
 	/** Hauptschulabschluss nach Klasse 10 mit der Berechtigung zum Besuch der Gymnasialen Oberstufe */
 	HA10_Q(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(6, "HA10_Q", "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(6000, "HA10_Q", "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", null, 2022),
+        new SchulabschlussAllgemeinbildendKatalogEintrag(6001, "EESA_Q", "Erweiterter Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)", "U", 2023, null)
 	}),
 
 	/** Der Mittlere Schulabschluss bzw. Fachoberschulreife */
 	MSA(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(10, "MSA", "Mittlerer Schulabschluss", "F", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(10000, "MSA", "Mittlerer Schulabschluss", "F", null, null)
 	}),
 
 	/** Der Mittlere Schulabschluss mit der Berechtigung zum Besuch Gymnasialen Oberstufe */
 	MSA_Q(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(11, "MSA_Q", "Mittlerer Schulabschluss (mit der Berechtigung zum Besuch Gymnasialen Oberstufe)", "G", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(11000, "MSA_Q", "Mittlerer Schulabschluss (mit der Berechtigung zum Besuch Gymnasialen Oberstufe)", "G", null, null)
 	}),
 
 	/** Der Mittlere Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase der Gymnasialen Oberstufe */
 	MSA_Q1(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(12, "MSA_Q1", "Mittlerer Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase Gymnasialen Oberstufe", "I", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(12000, "MSA_Q1", "Mittlerer Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase Gymnasialen Oberstufe", "I", null, null)
 	}),
 
 	/** Versetzung in die Klasse 11 der Fachoberschule (BK) */
 	VS_11(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(13, "VS_11", "Versetzung in die Klasse 11 der Fachoberschule (BK)", "P", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(13000, "VS_11", "Versetzung in die Klasse 11 der Fachoberschule (BK)", "P", null, null)
 	}),
 
 	/** Fachhochschulreife (nur schulischer Teil) */
 	FHR_S(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(20, "FHR_S", "Fachhochschulreife (nur schulischer Teil)", "H", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(20000, "FHR_S", "Fachhochschulreife (nur schulischer Teil)", "H", null, null)
 	}),
 
 	/** Fachhochschulreife */
 	FHR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(21, "FHR", "Fachhochschulreife", "J", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(21000, "FHR", "Fachhochschulreife", "J", null, null)
 	}),
 
 	/** fachgebundene Hochschulreife (BK) */
 	FGHR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(22, "FGHR", "fachgebundene Hochschulreife (BK)", "Q", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(22000, "FGHR", "fachgebundene Hochschulreife (BK)", "Q", null, null)
 	}),
 
 	/** Abitur / Allgemeine Hochschulreife */
 	ABITUR(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(30, "ABITUR", "Abitur / Allgemeine Hochschulreife", "K", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(30000, "ABITUR", "Abitur / Allgemeine Hochschulreife", "K", null, null)
 	}),
 
 	/** Förderschule (Förderschwerpunkt geistige Entwicklung) */
 	FOEG(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(40, "FOEG", "Förderschule (Förderschwerpunkt geistige Entwicklung)", "M", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(40000, "FOEG", "Förderschule (Förderschwerpunkt geistige Entwicklung)", "M", null, null)
 	}),
 
 	/** Förderschule (Förderschwerpunkt Lernen) */
 	FOEL(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(41, "FOEL", "Förderschule (Förderschwerpunkt Lernen)", "V", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(41000, "FOEL", "Förderschule (Förderschwerpunkt Lernen)", "V", null, null)
 	}),
 
 	/** Waldorfschule */
 	WALD(new SchulabschlussAllgemeinbildendKatalogEintrag[] {
-		new SchulabschlussAllgemeinbildendKatalogEintrag(50, "WALD", "Zeugnis der Waldorfschule", "W", null, null)
+		new SchulabschlussAllgemeinbildendKatalogEintrag(50000, "WALD", "Zeugnis der Waldorfschule", "W", null, null)
 	});
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 1;
+	public static final long VERSION = 2;
 
 	/** Der aktuellen Daten der Abschlussart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull SchulabschlussAllgemeinbildendKatalogEintrag daten;
