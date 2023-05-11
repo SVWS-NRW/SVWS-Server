@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -90,15 +90,15 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 	}
 
 
-	private static final Map<String, BiConsumer<DTOStundenplanKalenderwochenZuordnung, Object>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value) -> {
+	private static final Map<String, DataBasicMapper<DTOStundenplanKalenderwochenZuordnung>> patchMappings = Map.ofEntries(
+		Map.entry("id", (dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("jahr", (dto, value) -> dto.Jahr = JSONMapper.convertToInteger(value, false)),
-		Map.entry("kw", (dto, value) -> dto.KW = JSONMapper.convertToInteger(value, false)),
-		Map.entry("wochentyp", (dto, value) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
+		Map.entry("jahr", (dto, value, map) -> dto.Jahr = JSONMapper.convertToInteger(value, false)),
+		Map.entry("kw", (dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
+		Map.entry("wochentyp", (dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
 	);
 
 

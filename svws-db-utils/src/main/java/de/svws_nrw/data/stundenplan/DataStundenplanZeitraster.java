@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -91,16 +91,16 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	}
 
 
-	private static final Map<String, BiConsumer<DTOStundenplanZeitraster, Object>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value) -> {
+	private static final Map<String, DataBasicMapper<DTOStundenplanZeitraster>> patchMappings = Map.ofEntries(
+		Map.entry("id", (dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("wochentag", (dto, value) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
-		Map.entry("unterrichtstunde", (dto, value) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
-		Map.entry("stundenbeginn", (dto, value) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("stundenende", (dto, value) -> dto.Ende = JSONMapper.convertToString(value, false, false, null))
+		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
+		Map.entry("unterrichtstunde", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
+		Map.entry("stundenbeginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("stundenende", (dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null))
 	);
 
 	@Override

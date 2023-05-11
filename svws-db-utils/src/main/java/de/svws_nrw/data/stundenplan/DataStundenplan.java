@@ -3,13 +3,13 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -71,17 +71,17 @@ public final class DataStundenplan extends DataManager<Long> {
 	}
 
 
-	private static final Map<String, BiConsumer<DTOStundenplan, Object>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value) -> {
+	private static final Map<String, DataBasicMapper<DTOStundenplan>> patchMappings = Map.ofEntries(
+		Map.entry("id", (dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("idSchuljahresabschnitt", (dto, value) -> { throw OperationError.BAD_REQUEST.exception(); }),
-		Map.entry("gueltigAb", (dto, value) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("gueltigBis", (dto, value) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("bezeichnungStundenplan", (dto, value) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-		Map.entry("wochenTypModell", (dto, value) -> dto.WochentypModell = JSONMapper.convertToInteger(value, false))
+		Map.entry("idSchuljahresabschnitt", (dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }),
+		Map.entry("gueltigAb", (dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("gueltigBis", (dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("bezeichnungStundenplan", (dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
+		Map.entry("wochenTypModell", (dto, value, map) -> dto.WochentypModell = JSONMapper.convertToInteger(value, false))
 	);
 
 	@Override

@@ -3,7 +3,6 @@ package de.svws_nrw.data;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.BiConsumer;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
@@ -111,7 +110,7 @@ public abstract class DataManager<ID> {
 	 *
 	 * @return die Response
 	 */
-	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, BiConsumer<DTO, Object>> attributeMapper) {
+	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Eine Patch mit der ID null ist nicht möglich.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
@@ -125,10 +124,10 @@ public abstract class DataManager<ID> {
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
-				final BiConsumer<DTO, Object> mapper = attributeMapper.get(key);
+				final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
 				if (mapper == null)
 					throw OperationError.BAD_REQUEST.exception();
-				mapper.accept(dto, value);
+				mapper.map(dto, value, map);
 			}
 			conn.transactionPersist(dto);
 			conn.transactionCommit();

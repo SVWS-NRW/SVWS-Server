@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -92,15 +92,15 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	}
 
 
-	private static final Map<String, BiConsumer<DTOStundenplanRaum, Object>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value) -> {
+	private static final Map<String, DataBasicMapper<DTOStundenplanRaum>> patchMappings = Map.ofEntries(
+		Map.entry("id", (dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("kuerzel", (dto, value) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("beschreibung", (dto, value) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
-		Map.entry("groesse", (dto, value) -> dto.Groesse = JSONMapper.convertToInteger(value, false))
+		Map.entry("kuerzel", (dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+		Map.entry("beschreibung", (dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
+		Map.entry("groesse", (dto, value, map) -> dto.Groesse = JSONMapper.convertToInteger(value, false))
 	);
 
 
