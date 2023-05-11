@@ -16,17 +16,17 @@
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
-			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung" :restore-blockung="restoreBlockung" />
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
+			:restore-blockung="restoreBlockung" />
 	</template>
 </template>
 
 <script setup lang="ts">
-
-	import { GostHalbjahr } from "@svws-nrw/svws-core";
 	import type { DataTableItem } from "@ui";
 	import type { ComputedRef } from 'vue';
-	import { computed } from 'vue';
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
+	import { computed } from 'vue';
+	import { GostHalbjahr } from "@svws-nrw/svws-core";
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
@@ -36,10 +36,16 @@
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	const allow_restore_blockung = (row: DataTableItem): boolean =>
-		(props.jahrgangsdaten?.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ||
-		// TODO anpassen, damit nicht zukünftige Wiederhergestellt werden können
-		(!props.jahrgangsdaten?.istBlockungFestgelegt[row.id]) ? true : false;
+	const allow_restore_blockung = (row: DataTableItem): boolean => {
+		const jahrgang = props.jahrgangsdaten?.jahrgang;
+		if (!jahrgang)
+			return false;
+		const aktAbschnitt = props.aktAbschnitt.abschnitt;
+		const kuerzel = `${jahrgang}${aktAbschnitt}`;
+		const aktHalbjahr = GostHalbjahr.fromKuerzel(kuerzel);
+		return	(props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ||
+			(!props.jahrgangsdaten.istBlockungFestgelegt[row.id] && aktHalbjahr === props.halbjahr) ? true : false;
+	}
 
 	async function select_hj(halbjahr: DataTableItem | null) {
 		if (halbjahr !== null)

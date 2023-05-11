@@ -1,15 +1,14 @@
-import { Abiturdaten, BenutzerDaten, BenutzerTyp, GostFach, GostJahrgangFachkombination,
-	GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
-import { AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
+import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteSchueler} from "~/router/apps/RouteSchueler";
+import type { SchuelerLaufbahnplanungProps } from "@comp";
+import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 	GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
-import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import type { SchuelerLaufbahnplanungProps } from "@comp";
 import { SSchuelerLaufbahnplanung } from "@comp";
 
 interface RouteStateSchuelerLaufbahnplanung {
