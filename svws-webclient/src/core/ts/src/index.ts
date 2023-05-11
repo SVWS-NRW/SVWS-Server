@@ -304,7 +304,7 @@ export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
 export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
-export { StundenplanPausenaufsichten } from './core/data/stundenplan/StundenplanPausenaufsichten';
+export { StundenplanPausenaufsicht } from './core/data/stundenplan/StundenplanPausenaufsicht';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
 export { StundenplanUnterricht } from './core/data/stundenplan/StundenplanUnterricht';

@@ -7,7 +7,7 @@ import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
-import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichten;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
@@ -466,7 +466,7 @@ public class APIStundenplan {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Pausenaufsichten des Stundenplans",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsichten.class))))
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsicht.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplanPausenaufsichten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
@@ -475,6 +475,64 @@ public class APIStundenplan {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage einer Pausenaufsicht eines Stundenplans.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID der Pausenaufsicht
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              die Pausenaufsicht
+     */
+    @GET
+    @Path("/pausenaufsichten/{id : \\d+}")
+    @Operation(summary = "Gibt eine Pausenaufsicht eines Stundeplans zurück.",
+               description = "Gibt eine Pausenaufsicht eines Stundeplans zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenaufsicht",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = StundenplanPausenaufsicht.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenaufsicht eines Stundenplans gefunden")
+    public Response getStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataStundenplanPausenaufsichten(conn, null)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen einer Pausenaufsicht eines Stundenplans.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Pausenaufsicht
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/pausenaufsichten/{id : \\d+}")
+    @Operation(summary = "Passt die Pausenaufsicht mit der angebenen ID an.",
+    description = "Passt die Pausenaufsicht mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Kalenderwochen-Zuordnung", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanPausenaufsichten(conn, null).patch(id, is));
+    	}
+    }
 
 }
 

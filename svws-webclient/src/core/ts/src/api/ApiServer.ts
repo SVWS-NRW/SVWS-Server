@@ -140,7 +140,7 @@ import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/Sprachrefe
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
-import { StundenplanPausenaufsichten } from '../core/data/stundenplan/StundenplanPausenaufsichten';
+import { StundenplanPausenaufsicht } from '../core/data/stundenplan/StundenplanPausenaufsicht';
 import { StundenplanPausenzeit } from '../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanRaum } from '../core/data/stundenplan/StundenplanRaum';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
@@ -7928,7 +7928,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Pausenaufsichten des Stundenplans
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<StundenplanPausenaufsichten>
+	 *     - Rückgabe-Typ: List<StundenplanPausenaufsicht>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
 	 *   Code 404: Keine Stundenplandaten gefunden
 	 *
@@ -7937,14 +7937,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenaufsichten des Stundenplans
 	 */
-	public async getStundenplanPausenaufsichten(schema : string, id : number) : Promise<List<StundenplanPausenaufsichten>> {
+	public async getStundenplanPausenaufsichten(schema : string, id : number) : Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichten"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<StundenplanPausenaufsichten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsichten.transpilerFromJSON(text)); });
+		const ret = new ArrayList<StundenplanPausenaufsicht>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -8115,6 +8115,59 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<StundenplanListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanPausenaufsicht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenaufsichten/{id : \d+}
+	 *
+	 * Gibt eine Pausenaufsicht eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenaufsicht
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenaufsicht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keine Pausenaufsicht eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenaufsicht
+	 */
+	public async getStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
+		const path = "/db/{schema}/stundenplan/pausenaufsichten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanPausenaufsicht.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanPausenaufsicht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenaufsichten/{id : \d+}
+	 *
+	 * Passt die Pausenaufsicht mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanPausenaufsicht>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/pausenaufsichten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

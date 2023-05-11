@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "der Unterricht im Stundenplan.")
 @TranspilerDTO
-public class StundenplanPausenaufsichten {
+public class StundenplanPausenaufsicht {
 
 	/** Die ID der Pausenaufsicht */
 	@Schema(description = "die ID der Pausenaufsicht", example = "42")

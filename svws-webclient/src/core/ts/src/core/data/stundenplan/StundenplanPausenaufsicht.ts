@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 
-export class StundenplanPausenaufsichten extends JavaObject {
+export class StundenplanPausenaufsicht extends JavaObject {
 
 	/**
 	 * Die ID der Pausenaufsicht
@@ -35,12 +35,12 @@ export class StundenplanPausenaufsichten extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsichten'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): StundenplanPausenaufsichten {
+	public static transpilerFromJSON(json : string): StundenplanPausenaufsicht {
 		const obj = JSON.parse(json);
-		const result = new StundenplanPausenaufsichten();
+		const result = new StundenplanPausenaufsicht();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -61,7 +61,7 @@ export class StundenplanPausenaufsichten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : StundenplanPausenaufsichten) : string {
+	public static transpilerToJSON(obj : StundenplanPausenaufsicht) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idPausenzeit" : ' + obj.idPausenzeit + ',';
@@ -84,7 +84,7 @@ export class StundenplanPausenaufsichten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsichten>) : string {
+	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsicht>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
@@ -119,6 +119,6 @@ export class StundenplanPausenaufsichten extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_stundenplan_StundenplanPausenaufsichten(obj : unknown) : StundenplanPausenaufsichten {
-	return obj as StundenplanPausenaufsichten;
+export function cast_de_svws_nrw_core_data_stundenplan_StundenplanPausenaufsicht(obj : unknown) : StundenplanPausenaufsicht {
+	return obj as StundenplanPausenaufsicht;
 }
