@@ -92,7 +92,7 @@ public enum HerkunftSonstige {
 			Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
 			Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
 		), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022),
-        new HerkunftSonstigeKatalogEintrag(10000, "XS", Arrays.asList(
+        new HerkunftSonstigeKatalogEintrag(10001, "XS", Arrays.asList(
             Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
             Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
             Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
