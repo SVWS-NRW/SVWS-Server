@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -35,33 +34,9 @@ public class StundenplanUnterricht {
 	@Schema(description = "die ID des Kurses", example = "89")
 	public long idKurs = -1;
 
-	/** Die allgemeine Kursart der Unterrichtseinheit (siehe auch {@link ZulaessigeKursart}). */
-	@Schema(description = "die allgemeine Kursart der Unterrichtseinheit", example = "GK")
-	public @NotNull String kursart = "";
-
-	/** Die Bezeichnung des Kurses. */
-	@Schema(description = "die Bezeichnung des Kurses", example = "M-GK1")
-	public @NotNull String kursBezeichnung = "";
-
-	/** Die IDs der Jahrgänge, denen der Kurs zugeordnet ist. */
-	@Schema(description = "die IDs der Jahrgänge, denen der Kurs zugeordnet ist")
-	public @NotNull List<@NotNull Long> kursJahrgangIDs = new ArrayList<>();
-
 	/** Die ID des Faches */
 	@Schema(description = "die ID des Faches", example = "89")
 	public long idFach = -1;
-
-	/** Das Kürzel des Unterrichtsfaches. */
-	@Schema(description = "das Kürzel des Unterrichtsfaches", example = "D")
-	public @NotNull String fachKuerzel = "";
-
-	/** Die Bezeichnung des Unterrichtsfaches. */
-	@Schema(description = "die Bezeichnung des Unterrichtsfaches", example = "Deutsch")
-	public @NotNull String fachBezeichnung = "";
-
-	/** Das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik. */
-	@Schema(description = "das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik", example = "D")
-	public @NotNull String fachKuerzelStatistik = "";
 
 	/** Die IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind."))

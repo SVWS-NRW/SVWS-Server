@@ -25,39 +25,9 @@ export class StundenplanUnterricht extends JavaObject {
 	public idKurs : number = -1;
 
 	/**
-	 * Die allgemeine Kursart der Unterrichtseinheit (siehe auch {@link ZulaessigeKursart}).
-	 */
-	public kursart : string = "";
-
-	/**
-	 * Die Bezeichnung des Kurses.
-	 */
-	public kursBezeichnung : string = "";
-
-	/**
-	 * Die IDs der Jahrgänge, denen der Kurs zugeordnet ist.
-	 */
-	public kursJahrgangIDs : List<number> = new ArrayList();
-
-	/**
 	 * Die ID des Faches
 	 */
 	public idFach : number = -1;
-
-	/**
-	 * Das Kürzel des Unterrichtsfaches.
-	 */
-	public fachKuerzel : string = "";
-
-	/**
-	 * Die Bezeichnung des Unterrichtsfaches.
-	 */
-	public fachBezeichnung : string = "";
-
-	/**
-	 * Das Kürzel des Unterrichtsfaches in Bezug auf die amtliche Schulstatistik.
-	 */
-	public fachKuerzelStatistik : string = "";
 
 	/**
 	 * Die IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind.
@@ -98,29 +68,9 @@ export class StundenplanUnterricht extends JavaObject {
 		if (typeof obj.idKurs === "undefined")
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
-		if (typeof obj.kursart === "undefined")
-			 throw new Error('invalid json format, missing attribute kursart');
-		result.kursart = obj.kursart;
-		if (typeof obj.kursBezeichnung === "undefined")
-			 throw new Error('invalid json format, missing attribute kursBezeichnung');
-		result.kursBezeichnung = obj.kursBezeichnung;
-		if ((obj.kursJahrgangIDs !== undefined) && (obj.kursJahrgangIDs !== null)) {
-			for (const elem of obj.kursJahrgangIDs) {
-				result.kursJahrgangIDs?.add(elem);
-			}
-		}
 		if (typeof obj.idFach === "undefined")
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if (typeof obj.fachKuerzel === "undefined")
-			 throw new Error('invalid json format, missing attribute fachKuerzel');
-		result.fachKuerzel = obj.fachKuerzel;
-		if (typeof obj.fachBezeichnung === "undefined")
-			 throw new Error('invalid json format, missing attribute fachBezeichnung');
-		result.fachBezeichnung = obj.fachBezeichnung;
-		if (typeof obj.fachKuerzelStatistik === "undefined")
-			 throw new Error('invalid json format, missing attribute fachKuerzelStatistik');
-		result.fachKuerzelStatistik = obj.fachKuerzelStatistik;
 		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
 			for (const elem of obj.lehrer) {
 				result.lehrer?.add(elem);
@@ -145,24 +95,7 @@ export class StundenplanUnterricht extends JavaObject {
 		result += '"idZeitraster" : ' + obj.idZeitraster + ',';
 		result += '"wochentyp" : ' + obj.wochentyp + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
-		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
-		result += '"kursBezeichnung" : ' + '"' + obj.kursBezeichnung! + '"' + ',';
-		if (!obj.kursJahrgangIDs) {
-			result += '"kursJahrgangIDs" : []';
-		} else {
-			result += '"kursJahrgangIDs" : [ ';
-			for (let i = 0; i < obj.kursJahrgangIDs.size(); i++) {
-				const elem = obj.kursJahrgangIDs.get(i);
-				result += elem;
-				if (i < obj.kursJahrgangIDs.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
 		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel! + '"' + ',';
-		result += '"fachBezeichnung" : ' + '"' + obj.fachBezeichnung! + '"' + ',';
-		result += '"fachKuerzelStatistik" : ' + '"' + obj.fachKuerzelStatistik! + '"' + ',';
 		if (!obj.lehrer) {
 			result += '"lehrer" : []';
 		} else {
@@ -218,37 +151,8 @@ export class StundenplanUnterricht extends JavaObject {
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';
 		}
-		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + '"' + obj.kursart + '"' + ',';
-		}
-		if (typeof obj.kursBezeichnung !== "undefined") {
-			result += '"kursBezeichnung" : ' + '"' + obj.kursBezeichnung + '"' + ',';
-		}
-		if (typeof obj.kursJahrgangIDs !== "undefined") {
-			if (!obj.kursJahrgangIDs) {
-				result += '"kursJahrgangIDs" : []';
-			} else {
-				result += '"kursJahrgangIDs" : [ ';
-				for (let i = 0; i < obj.kursJahrgangIDs.size(); i++) {
-					const elem = obj.kursJahrgangIDs.get(i);
-					result += elem;
-					if (i < obj.kursJahrgangIDs.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (typeof obj.idFach !== "undefined") {
 			result += '"idFach" : ' + obj.idFach + ',';
-		}
-		if (typeof obj.fachKuerzel !== "undefined") {
-			result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel + '"' + ',';
-		}
-		if (typeof obj.fachBezeichnung !== "undefined") {
-			result += '"fachBezeichnung" : ' + '"' + obj.fachBezeichnung + '"' + ',';
-		}
-		if (typeof obj.fachKuerzelStatistik !== "undefined") {
-			result += '"fachKuerzelStatistik" : ' + '"' + obj.fachKuerzelStatistik + '"' + ',';
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			if (!obj.lehrer) {
