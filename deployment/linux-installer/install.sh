@@ -156,9 +156,11 @@ else
     	echo "  SVWS_TLS_KEYSTORE_PASSWORD: $SVWS_TLS_KEYSTORE_PASSWORD"
     	echo "  SVWS_TLS_KEY_ALIAS: $SVWS_TLS_KEY_ALIAS"
 
-    	echo ""
-    	echo "Testdaten import:"
-    	echo "  MDBFILE: $MDBFILE"
+		if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
+			echo ""
+			echo "Testdaten import:"
+			echo "  MDBFILE: $MDBFILE"
+		fi
 
     	read -p "Sind alle Einstellungen korrekt? (j/N): " CONFIRM
 
