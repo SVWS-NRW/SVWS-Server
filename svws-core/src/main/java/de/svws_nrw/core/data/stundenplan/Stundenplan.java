@@ -53,6 +53,10 @@ public class Stundenplan {
 	@Schema(description = "die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen")
 	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeiten = new ArrayList<>();
 
+	/** Die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen. */
+	@Schema(description = "die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen")
+	public @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereiche = new ArrayList<>();
+
 	/** Die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden. */
 	@Schema(description = "die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden")
 	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenZuordnung = new ArrayList<>();

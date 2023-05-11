@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
@@ -54,6 +55,11 @@ export class Stundenplan extends JavaObject {
 	public pausenzeiten : List<StundenplanPausenzeit> = new ArrayList();
 
 	/**
+	 * Die Liste der Aufsichtsbereiche in Pausen, für welche Aufsichten eingeteilt werden müssen.
+	 */
+	public aufsichtsbereiche : List<StundenplanAufsichtsbereich> = new ArrayList();
+
+	/**
 	 * Die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden.
 	 */
 	public kalenderwochenZuordnung : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
@@ -101,6 +107,11 @@ export class Stundenplan extends JavaObject {
 		if ((obj.pausenzeiten !== undefined) && (obj.pausenzeiten !== null)) {
 			for (const elem of obj.pausenzeiten) {
 				result.pausenzeiten?.add(StundenplanPausenzeit.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.aufsichtsbereiche !== undefined) && (obj.aufsichtsbereiche !== null)) {
+			for (const elem of obj.aufsichtsbereiche) {
+				result.aufsichtsbereiche?.add(StundenplanAufsichtsbereich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if ((obj.kalenderwochenZuordnung !== undefined) && (obj.kalenderwochenZuordnung !== null)) {
@@ -151,6 +162,18 @@ export class Stundenplan extends JavaObject {
 				const elem = obj.pausenzeiten.get(i);
 				result += StundenplanPausenzeit.transpilerToJSON(elem);
 				if (i < obj.pausenzeiten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.aufsichtsbereiche) {
+			result += '"aufsichtsbereiche" : []';
+		} else {
+			result += '"aufsichtsbereiche" : [ ';
+			for (let i = 0; i < obj.aufsichtsbereiche.size(); i++) {
+				const elem = obj.aufsichtsbereiche.get(i);
+				result += StundenplanAufsichtsbereich.transpilerToJSON(elem);
+				if (i < obj.aufsichtsbereiche.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -229,6 +252,20 @@ export class Stundenplan extends JavaObject {
 					const elem = obj.pausenzeiten.get(i);
 					result += StundenplanPausenzeit.transpilerToJSON(elem);
 					if (i < obj.pausenzeiten.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.aufsichtsbereiche !== "undefined") {
+			if (!obj.aufsichtsbereiche) {
+				result += '"aufsichtsbereiche" : []';
+			} else {
+				result += '"aufsichtsbereiche" : [ ';
+				for (let i = 0; i < obj.aufsichtsbereiche.size(); i++) {
+					const elem = obj.aufsichtsbereiche.get(i);
+					result += StundenplanAufsichtsbereich.transpilerToJSON(elem);
+					if (i < obj.aufsichtsbereiche.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

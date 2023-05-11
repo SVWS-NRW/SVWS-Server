@@ -301,10 +301,13 @@ export { VerkehrsspracheKatalogEintrag } from './core/data/schule/Verkehrssprach
 export { SchuelerStundenplan } from './core/data/stundenplan/SchuelerStundenplan';
 export { SchuelerStundenplanUnterricht } from './core/data/stundenplan/SchuelerStundenplanUnterricht';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
+export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
 export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
+export { StundenplanPausenaufsichten } from './core/data/stundenplan/StundenplanPausenaufsichten';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
+export { StundenplanUnterricht } from './core/data/stundenplan/StundenplanUnterricht';
 export { StundenplanZeitraster } from './core/data/stundenplan/StundenplanZeitraster';
 export { StundenplanInputSimple } from './core/data/stundenplanblockung/StundenplanInputSimple';
 export { StundenplanInputSimpleFach } from './core/data/stundenplanblockung/StundenplanInputSimpleFach';

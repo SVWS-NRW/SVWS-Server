@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -54,6 +55,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
 		final List<StundenplanPausenzeit> pausenzeiten = DataStundenplanPausenzeiten.getPausenzeiten(conn, id);
+		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, id);
 		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, id);
 		// Erstelle das Core-DTO-Objekt für die Response
 		final Stundenplan daten = new Stundenplan();
@@ -66,6 +68,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		daten.zeitraster.addAll(zeitraster);
 		daten.raeume.addAll(raeume);
 		daten.pausenzeiten.addAll(pausenzeiten);
+		daten.aufsichtsbereiche.addAll(aufsichtsbereiche);
 		daten.kalenderwochenZuordnung.addAll(kalenderwochenzuordnung);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
