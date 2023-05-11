@@ -269,37 +269,6 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 							schueler.GeburtslandMutter = nat;
 						}
 
-						// Daten zur Sonderpädagogischen Förderung
-//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird
-//						case "foerderschwerpunktID" -> {
-//							Long fid = JSONMapper.convertToLong(value, true);
-//							if ((fid != null) && (fid < 0))
-//								OperationError.CONFLICT.throwException();
-//							if (fid == null) {
-//								schueler.Foerderschwerpunkt_ID = null;
-//							} else {
-//								DTOFoerderschwerpunkt f = conn.queryByKey(DTOFoerderschwerpunkt.class, fid);
-//								if (f == null)
-//									OperationError.NOT_FOUND.throwException();
-//								schueler.Foerderschwerpunkt_ID = fid;
-//							}
-//						}
-//						case "foerderschwerpunkt2ID" -> {
-//							Long fid = JSONMapper.convertToLong(value, true);
-//							if ((fid != null) && (fid < 0))
-//								OperationError.CONFLICT.throwException();
-//							if (fid == null) {
-//								schueler.Foerderschwerpunkt2_ID = null;
-//							} else {
-//								DTOFoerderschwerpunkt f = conn.queryByKey(DTOFoerderschwerpunkt.class, fid);
-//								if (f == null)
-//									OperationError.NOT_FOUND.throwException();
-//								schueler.Foerderschwerpunkt2_ID = fid;
-//							}
-//						}
-//						case "istAOSF" -> schueler.AOSF = JSONMapper.convertToBoolean(value, false);
-//						case "istLernenZieldifferent" -> schueler.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false);
-
 						// Statusdaten
 						case "status" -> {
 							final SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
