@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
@@ -14,7 +14,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,50 +91,21 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	}
 
 
-	private static void patchStundenplanZeitraster(final DTOStundenplanZeitraster dto, final Map<String, Object> map) throws WebApplicationException {
-		for (final Entry<String, Object> entry : map.entrySet()) {
-			final String key = entry.getKey();
-			final Object value = entry.getValue();
-			switch (key) {
-				// Basisdaten
-				case "id" -> {
-					final Long patch_id = JSONMapper.convertToLong(value, true);
-					if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}
-				case "wochentag" -> dto.Tag = JSONMapper.convertToInteger(value, false);
-				case "unterrichtstunde" -> dto.Tag = JSONMapper.convertToInteger(value, false);
-				case "stundenbeginn" -> dto.Beginn = JSONMapper.convertToString(value, false, false, null);
-				case "stundenende" -> dto.Ende = JSONMapper.convertToString(value, false, false, null);
-				default -> throw OperationError.BAD_REQUEST.exception();
-			}
-		}
-	}
-
+	private static final Map<String, BiConsumer<DTOStundenplanZeitraster, Object>> patchMappings = Map.ofEntries(
+		Map.entry("id", (dto, value) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				throw OperationError.BAD_REQUEST.exception();
+		}),
+		Map.entry("wochentag", (dto, value) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
+		Map.entry("unterrichtstunde", (dto, value) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
+		Map.entry("stundenbeginn", (dto, value) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("stundenende", (dto, value) -> dto.Ende = JSONMapper.convertToString(value, false, false, null))
+	);
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Patch eines Zeitraster-Eintrags mit der ID null ist nicht möglich.");
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
-		try {
-			conn.transactionBegin();
-			final DTOStundenplanZeitraster eintrag = conn.queryByKey(DTOStundenplanZeitraster.class, id);
-			if (eintrag == null)
-				throw OperationError.NOT_FOUND.exception();
-			patchStundenplanZeitraster(eintrag, map);
-			conn.transactionPersist(eintrag);
-			conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
-		return Response.status(Status.OK).build();
+		return super.patchBasic(id, is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
 
