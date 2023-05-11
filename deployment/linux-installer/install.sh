@@ -50,7 +50,9 @@ if [ -f .env ]; then
  export $(grep -v '^#' .env | xargs)
 else
 
-	DOWNLOAD_PFAD=BASE_DOWNLOAD_URL/LINUX_INSTALLER_FILE_NAME
+    if [ ! -f "LINUX_INSTALLER_FILE_NAME" ]; then
+        DOWNLOAD_PFAD=BASE_DOWNLOAD_URL/LINUX_INSTALLER_FILE_NAME
+    fi
 
     if [[ "$1" == "--default" ]]; then
     	echo "verwende defaults ..."
