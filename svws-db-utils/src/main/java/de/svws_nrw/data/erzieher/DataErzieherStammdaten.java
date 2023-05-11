@@ -107,13 +107,13 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 	 * @return eine Liste mit den {@link ErzieherStammdaten} für den Schüler mit der angegebenen ID
 	 */
 	public Response getListFromSchueler(final long schuelerID) {
-    	final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
-    	if (erzieher == null)
-    		return OperationError.NOT_FOUND.getResponse();
-			final List<ErzieherStammdaten> daten = new ArrayList<>();
-			daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList());
-			daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryNamed("DTOSchuelerErzieherAdresse.schueler_id", schuelerID, DTOSchuelerErzieherAdresse.class);
+		if (erzieher == null)
+			return OperationError.NOT_FOUND.getResponse();
+		final List<ErzieherStammdaten> daten = new ArrayList<>();
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !"".equals(e.Name1.trim()))).map(dtoMapperErzieher1).toList());
+		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !"".equals(e.Name2.trim()))).map(dtoMapperErzieher2).toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
