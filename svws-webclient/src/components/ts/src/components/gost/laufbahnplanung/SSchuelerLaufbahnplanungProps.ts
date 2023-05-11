@@ -16,4 +16,5 @@ export interface SchuelerLaufbahnplanungProps {
 	faechermanager: GostFaecherManager;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	id?: number;
 }

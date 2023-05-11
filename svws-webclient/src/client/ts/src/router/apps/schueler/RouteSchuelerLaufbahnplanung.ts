@@ -1,4 +1,4 @@
-import type { Abiturdaten, GostFach, GostJahrgangFachkombination,
+import { Abiturdaten, BenutzerDaten, BenutzerTyp, GostFach, GostJahrgangFachkombination,
 	GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
 import { AbiturdatenManager, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 	GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList
@@ -107,6 +107,11 @@ export class RouteDataSchuelerLaufbahnplanung {
 	}
 	set abiturdatenManager(abiturdatenManager: AbiturdatenManager | undefined) {
 		this.setPatchedState({ abiturdatenManager });
+	}
+
+	get id(): number | undefined {
+		const { typ, typID } = api.benutzerdaten;
+		return BenutzerTyp.getByID(typ) === BenutzerTyp.LEHRER ? typID : undefined;
 	}
 
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsArt) => {
@@ -234,6 +239,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			faechermanager: this.data.faechermanager,
 			mapFachkombinationen: this.data.mapFachkombinationen,
 			mapLehrer: this.data.mapLehrer,
+			id: this.data.id,
 		};
 	}
 

@@ -20,6 +20,7 @@
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
 		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		id?: number;
 	}>();
 
 	const beratungsdaten = ref(new GostLaufbahnplanungBeratungsdaten());
@@ -32,7 +33,7 @@
 		set: value => beratungsdaten.value.kommentar = value
 	})
 	const beratungslehrer = computed({
-		get: ()=>props.mapLehrer.get(props.gostLaufbahnBeratungsdaten().beratungslehrerID || -1),
+		get: ()=>props.mapLehrer.get(props.gostLaufbahnBeratungsdaten().beratungslehrerID || props.id || -1),
 		set: value => beratungsdaten.value.beratungslehrerID = value?.id || null
 	});
 	const dirty = ref(false);
