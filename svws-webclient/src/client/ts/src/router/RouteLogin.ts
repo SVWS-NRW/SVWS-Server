@@ -17,7 +17,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
 	public redirect = '';
-	protected schema: Ref<string | undefined> = ref(undefined);
+	protected schema: Ref<string | null> = ref(null);
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schemaname?", SLogin);
@@ -27,12 +27,6 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	public getRoute(): RouteLocationRaw {
 		return { name: this.name };
-	}
-
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
-		if (to_params.schemaname instanceof Array || to_params.redirect instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		this.schema.value = to_params.schemaname;
 	}
 
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
@@ -45,12 +39,13 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	public logout = async () => {
 		this.routepath = "/";
+		this.schema.value = api.schema;
 		await RouteManager.doRoute({ name: this.name });
 		await api.logout();
 	}
 
 	public setSchema = async (schema: DBSchemaListeEintrag) => {
-		//await RouteManager.doRoute({ name: this.name, params: { schemaname: schema.name} });
+		this.schema.value = schema.name;
 	}
 
 	public getProps(): LoginProps {
