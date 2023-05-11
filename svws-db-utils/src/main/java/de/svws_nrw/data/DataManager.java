@@ -1,9 +1,15 @@
 package de.svws_nrw.data;
 
 import java.io.InputStream;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese abstrakte Klasse ist die Grundlage für das einheitliche Aggregieren von
@@ -89,6 +95,51 @@ public abstract class DataManager<ID> {
 	 */
 	public Response patch(final InputStream is) {
 		return this.patch(null, is);
+	}
+
+
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID
+	 * mithilfe des JSON-Patches aus dem übergebenen {@link InputStream} an.
+	 * Dabei werden nur die übergebenen Mappings zugelassen.
+	 *
+	 * @param <DTO>   der Typ des DTOs
+	 * @param id   die ID des zu patchenden DTOs
+	 * @param is   der Input-Stream
+	 * @param dtoClass   die Klasse des DTOs
+	 * @param attributeMapper   die Mapper für deas Anpassen des DTOs
+	 *
+	 * @return die Response
+	 */
+	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, BiConsumer<DTO, Object>> attributeMapper) {
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Eine Patch mit der ID null ist nicht möglich.");
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+		try {
+			conn.transactionBegin();
+			final DTO dto = conn.queryByKey(dtoClass, id);
+			if (dto == null)
+				throw OperationError.NOT_FOUND.exception();
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				final BiConsumer<DTO, Object> mapper = attributeMapper.get(key);
+				if (mapper == null)
+					throw OperationError.BAD_REQUEST.exception();
+				mapper.accept(dto, value);
+			}
+			conn.transactionPersist(dto);
+			conn.transactionCommit();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
+		return Response.status(Status.OK).build();
 	}
 
 }
