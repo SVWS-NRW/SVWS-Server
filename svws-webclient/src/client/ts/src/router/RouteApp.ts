@@ -1,3 +1,8 @@
+import type { AppProps } from "~/components/SAppProps";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+import type { WritableComputedRef } from "vue";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { routeSchule } from "~/router/apps/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
@@ -16,16 +21,13 @@ import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { routeLogin } from "./RouteLogin";
 import { RouteNode } from "~/router/RouteNode";
 
-import SApp from "~/components/SApp.vue";
-import type { AppProps } from "~/components/SAppProps";
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import { type OrtKatalogEintrag, type OrtsteilKatalogEintrag, Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core";
-import type { WritableComputedRef } from "vue";
+import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core";
 import { computed, shallowRef } from "vue";
 import { api } from "./Api";
 import { ConfigElement } from "~/components/Config";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { RouteManager } from "./RouteManager";
+import { routeStundenplan } from "./apps/RouteStundenplan";
+import SApp from "~/components/SApp.vue";
 
 interface RouteStateApp {
 	idSchuljahresabschnitt: number,
@@ -144,7 +146,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKlassen,
 			routeKurse,
 			routeGost,
-			routeStatistik
+			routeStatistik,
+			routeStundenplan,
 		];
 		super.menu = [
 			routeSchule,
@@ -154,7 +157,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKlassen,
 			routeKurse,
 			routeGost,
-			routeStatistik
+			routeStatistik,
+			routeStundenplan,
 		];
 		super.defaultChild = routeSchueler;
 		api.config.addElements([

@@ -25,9 +25,6 @@
 	</div>
 </template>
 
-<script lang="ts" type="module">
-</script>
-
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
