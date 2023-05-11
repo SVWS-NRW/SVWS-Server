@@ -5,6 +5,11 @@ import { List } from '../../../java/util/List';
 export class StundenplanPausenaufsichten extends JavaObject {
 
 	/**
+	 * Die ID der Pausenaufsicht
+	 */
+	public id : number = -1;
+
+	/**
 	 * Die ID der Pausenzeit
 	 */
 	public idPausenzeit : number = -1;
@@ -36,6 +41,9 @@ export class StundenplanPausenaufsichten extends JavaObject {
 	public static transpilerFromJSON(json : string): StundenplanPausenaufsichten {
 		const obj = JSON.parse(json);
 		const result = new StundenplanPausenaufsichten();
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (typeof obj.idPausenzeit === "undefined")
 			 throw new Error('invalid json format, missing attribute idPausenzeit');
 		result.idPausenzeit = obj.idPausenzeit;
@@ -55,6 +63,7 @@ export class StundenplanPausenaufsichten extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanPausenaufsichten) : string {
 		let result = '{';
+		result += '"id" : ' + obj.id + ',';
 		result += '"idPausenzeit" : ' + obj.idPausenzeit + ',';
 		result += '"idLehrer" : ' + obj.idLehrer + ',';
 		result += '"wochentyp" : ' + obj.wochentyp + ',';
@@ -77,6 +86,9 @@ export class StundenplanPausenaufsichten extends JavaObject {
 
 	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsichten>) : string {
 		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + obj.id + ',';
+		}
 		if (typeof obj.idPausenzeit !== "undefined") {
 			result += '"idPausenzeit" : ' + obj.idPausenzeit + ',';
 		}

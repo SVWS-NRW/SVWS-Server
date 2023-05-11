@@ -140,6 +140,7 @@ import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/Sprachrefe
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
+import { StundenplanPausenaufsichten } from '../core/data/stundenplan/StundenplanPausenaufsichten';
 import { StundenplanPausenzeit } from '../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanRaum } from '../core/data/stundenplan/StundenplanRaum';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
@@ -7916,6 +7917,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = Stundenplan.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
+	 *
+	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenaufsichten des Stundenplans
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenaufsichten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
+	 *   Code 404: Keine Stundenplandaten gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenaufsichten des Stundenplans
+	 */
+	public async getStundenplanPausenaufsichten(schema : string, id : number) : Promise<List<StundenplanPausenaufsichten>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenaufsichten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenaufsichten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsichten.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

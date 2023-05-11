@@ -18,6 +18,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class StundenplanPausenaufsichten {
 
+	/** Die ID der Pausenaufsicht */
+	@Schema(description = "die ID der Pausenaufsicht", example = "42")
+	public long id = -1;
+
 	/** Die ID der Pausenzeit */
 	@Schema(description = "die ID der Pausenzeit", example = "815")
 	public long idPausenzeit = -1;
