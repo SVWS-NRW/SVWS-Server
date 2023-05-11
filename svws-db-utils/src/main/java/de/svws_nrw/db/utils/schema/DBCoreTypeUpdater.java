@@ -251,7 +251,7 @@ public class DBCoreTypeUpdater {
 				// Füge die aktuellen Daten des Core-Types ein
 				conn.transactionNativeUpdate(sqlInsert);
 				// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
-				DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
+				DTOCoreTypeVersion v = conn.queryByKey(DTOCoreTypeVersion.class, tabname);
 				if (v == null) {
 					v = new DTOCoreTypeVersion(tabname, typename, version);
 				} else {
