@@ -84,12 +84,6 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.verkehrspracheFamilie = schueler.VerkehrsspracheFamilie == null ? null : schueler.VerkehrsspracheFamilie.daten.kuerzel;
 		daten.geburtslandVater = schueler.GeburtslandVater == null ? null : schueler.GeburtslandVater.daten.iso3;
 		daten.geburtslandMutter = schueler.GeburtslandMutter == null ? null : schueler.GeburtslandMutter.daten.iso3;
-		// Daten zur Sonderpädagogischen Förderung
-//TODO Entscheidung abwarten, ob dies abschnittsweise gespeichern wird
-//		daten.foerderschwerpunktID = schueler.Foerderschwerpunkt_ID;
-//		daten.foerderschwerpunkt2ID = schueler.Foerderschwerpunkt2_ID;
-//		daten.istAOSF = schueler.AOSF; // „Ausbildungsordnung Sonderpädagogische Förderung" bzw. „Verordnung über die sonderpädagogische Förderung, den Hausunterricht und die Schule für Kranke“
-//		daten.istLernenZieldifferent = schueler.ZieldifferentesLernen;
 		// Statusdaten
 		daten.status = schueler.Status.id;
 		daten.istDuplikat = schueler.Duplikat;
