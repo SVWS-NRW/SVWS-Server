@@ -68,7 +68,7 @@ export { SatOutput } from './core/adt/sat/SatOutput';
 export { SatPreprocessor1 } from './core/adt/sat/SatPreprocessor1';
 export { SatPreprocessor2 } from './core/adt/sat/SatPreprocessor2';
 export { SatSolver } from './core/adt/sat/SatSolver';
-export { SatSolverSimple } from './core/adt/sat/SatSolverSimple';
+export { SatSolverSimple1 } from './core/adt/sat/SatSolverSimple1';
 export { AVLSet } from './core/adt/set/AVLSet';
 export { MinHeap } from './core/adt/tree/MinHeap';
 export { MinHeapIterator } from './core/adt/tree/MinHeapIterator';

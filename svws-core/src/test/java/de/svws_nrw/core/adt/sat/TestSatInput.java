@@ -28,21 +28,17 @@
  */
 package de.svws_nrw.core.adt.sat;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
 /**
  * Testet die folgenden Klassen: <br>
- * {@link SatInput} <br>
- * {@link SatOutput} <br>
- * {@link SatPreprocessor1} <br>
- * {@link SatSolverSimple1} <br>
+ * {@link SatInput}
  *
  * @author Benjamin A. Bartsch
  */
-class TestSatSolver {
+class TestSatInput {
 
 	/**
 	 * Erzeugt eine NxN Matrix bei der für jede Zeile und für jede Spalte
@@ -50,25 +46,13 @@ class TestSatSolver {
 	 */
 	@Test
 	void testCaseSAT() {
+		final SatInput in = new SatInput();
 
-		final SatSolver solver = new SatSolverSimple1();
-		solver.setMaxTimeMillis(20000);
+		final int x1 = in.create_var();
+		in.add_clause_1(x1);
 
-		for (int n = 1; n <= 4; n++) {
-			// create "in"
-			final SatInput in = new SatInput();
-			final int[][] matrix = in.create_vars2D(n, n + 1);
-			for (int i = 0; i < n + 1; i++)
-				in.add_clause_exactly_in_column(matrix, i, 1);
-			for (int i = 0; i < n; i++)
-				in.add_clause_exactly_in_row(matrix, i, 1);
-			// create "out"
-			final SatOutput out =  solver.apply(in);
-			assertFalse(out.isSatisfiable());
-			assertFalse(out.isUnknown());
-			assertTrue(out.isUnsatisfiable());
-		}
-
+		assertEquals(true, in.isValidSolution(new int[] {0, x1}));
+		assertEquals(false, in.isValidSolution(new int[] {0, -x1}));
 	}
 
 }

@@ -104,7 +104,12 @@ public final class SatInput {
         return _clauses;
     }
 
-    private @NotNull String getDimacsHeader() {
+    /**
+     * Liefert den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+     *
+     * @return den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+     */
+    public @NotNull String getDimacsHeader() {
         return "p cnf " + _nVars + " " + _clauses.size();
     }
 

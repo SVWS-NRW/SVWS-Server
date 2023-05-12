@@ -8,6 +8,15 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SatOutput {
 
+	/** Es existiert eine Lösung. */
+	public static final int TYPE_UNKNOWN = 0;
+
+	/** Es existiert (beweisbar) keine Lösung existiert. */
+	public static final int TYPE_SATISFIABLE = 1;
+
+	/** Unbekannt, ob eine Lösung existiert (z. B. bei einem TimeOut). */
+	public static final int TYPE_UNSATISFIABLE = 2;
+
 	/**
 	 * Eine Lösung einer Formel {@link SatInput}. Das Format muss wie folgt aussehen:
 	 * <br><br>
@@ -18,24 +27,13 @@ public final class SatOutput {
 	 * Beispiel solution = {0, -1, 2, -3, -4} bedeutet x1=FALSE, x2=TRUE, x3=FALSE, x4=FALSE
 	 *
 	 */
-	private @NotNull int[] solution;
+	private final @NotNull int[] solution;
 
-	/**
-	 * Konstruktor.
-	 */
-	public SatOutput() {
-		this.solution = new int[0];
-	}
+	private final int type;
 
-	/**
-	 * Konstruktor für den Fall, dass eine Lösung gefunden wurde.
-	 *
-	 *
-	 *
-	 * @param pSolution Die Lösung der Variablenbelegungen.
-	 */
-	public SatOutput(@NotNull final int[] pSolution) {
-		this.solution = pSolution;
+	private SatOutput(@NotNull final int[] pSolution, final int pType) {
+		solution = pSolution;
+		type = pType;
 	}
 
 	/**
@@ -48,11 +46,58 @@ public final class SatOutput {
 	}
 
 	/**
-	 * Setzt die Anzahl an Variablen.
-	 * @param pSize Die Anzahl an Variablen.
+	 * Liefert TRUE, falls eine Lösung existiert.
+	 *
+	 * @return TRUE, falls eine Lösung existiert.
 	 */
-	public void setSolutionSize(final int pSize) {
-		this.solution = new int[pSize + 1];
+	public boolean isSatisfiable() {
+		return type == TYPE_SATISFIABLE;
+	}
+
+	/**
+	 * Liefert TRUE, falls (beweisbar) keine Lösung existiert.
+	 *
+	 * @return TRUE, falls (beweisbar) keine Lösung existiert.
+	 */
+	public boolean isUnsatisfiable() {
+		return type == TYPE_UNSATISFIABLE;
+	}
+
+	/**
+	 * Liefert TRUE, falls unbekannt ist, ob eine Lösung existiert (z. B. bei einem TimeOut).
+	 *
+	 * @return TRUE, falls unbekannt ist, ob eine Lösung existiert (z. B. bei einem TimeOut).
+	 */
+	public boolean isUnknown() {
+		return type == TYPE_UNKNOWN;
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_UNKNOWN  (z. B. bei einem TimeOut).
+	 *
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_UNKNOWN  (z. B. bei einem TimeOut).
+	 */
+	public static @NotNull SatOutput createUNKNOWN() {
+		return new SatOutput(new int[0], TYPE_UNKNOWN);
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_UNSATISFIABLE.
+	 *
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_UNSATISFIABLE
+	 */
+	public static @NotNull SatOutput createUNSATISFIABLE() {
+		return new SatOutput(new int[0], TYPE_UNSATISFIABLE);
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_SATISFIABLE.
+	 *
+	 * @param pSolution Die Lösung der Variablenbelegungen.
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_SATISFIABLE.
+	 */
+	public static @NotNull SatOutput createSATISFIABLE(@NotNull final int[] pSolution) {
+		return new SatOutput(pSolution, TYPE_SATISFIABLE);
 	}
 
 }

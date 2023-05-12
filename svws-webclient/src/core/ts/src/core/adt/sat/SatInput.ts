@@ -100,7 +100,12 @@ export class SatInput extends JavaObject {
 		return this._clauses;
 	}
 
-	private getDimacsHeader() : string {
+	/**
+	 * Liefert den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+	 *
+	 * @return den Header des DIMACs Formats. Diese zeigt die Variablen- und Klauselanzahl.
+	 */
+	public getDimacsHeader() : string {
 		return "p cnf " + this._nVars + " " + this._clauses.size();
 	}
 

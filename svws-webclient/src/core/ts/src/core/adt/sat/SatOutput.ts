@@ -3,6 +3,21 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class SatOutput extends JavaObject {
 
 	/**
+	 * Es existiert eine Lösung.
+	 */
+	public static readonly TYPE_UNKNOWN : number = 0;
+
+	/**
+	 * Es existiert (beweisbar) keine Lösung existiert.
+	 */
+	public static readonly TYPE_SATISFIABLE : number = 1;
+
+	/**
+	 * Unbekannt, ob eine Lösung existiert (z. B. bei einem TimeOut).
+	 */
+	public static readonly TYPE_UNSATISFIABLE : number = 2;
+
+	/**
 	 *  Eine Lösung einer Formel {@link SatInput}. Das Format muss wie folgt aussehen:
 	 *  <br><br>
 	 *  Das Array muss um Eins größer sein, als die Anzahl der verwendeten Variablen.
@@ -11,34 +26,15 @@ export class SatOutput extends JavaObject {
 	 *  <br><br>
 	 *  Beispiel solution = {0, -1, 2, -3, -4} bedeutet x1=FALSE, x2=TRUE, x3=FALSE, x4=FALSE
 	 */
-	private solution : Array<number>;
+	private readonly solution : Array<number>;
+
+	private readonly type : number;
 
 
-	/**
-	 * Konstruktor.
-	 */
-	public constructor();
-
-	/**
-	 * Konstruktor für den Fall, dass eine Lösung gefunden wurde.
-	 *
-	 *
-	 *
-	 * @param pSolution Die Lösung der Variablenbelegungen.
-	 */
-	public constructor(pSolution : Array<number>);
-
-	/**
-	 * Implementation for method overloads of 'constructor'
-	 */
-	public constructor(__param0? : Array<number>) {
+	private constructor(pSolution : Array<number>, pType : number) {
 		super();
-		if ((typeof __param0 === "undefined")) {
-			this.solution = Array(0).fill(0);
-		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0))) {
-			const pSolution : Array<number> = __param0;
-			this.solution = pSolution;
-		} else throw new Error('invalid method overload');
+		this.solution = pSolution;
+		this.type = pType;
 	}
 
 	/**
@@ -51,11 +47,58 @@ export class SatOutput extends JavaObject {
 	}
 
 	/**
-	 * Setzt die Anzahl an Variablen.
-	 * @param pSize Die Anzahl an Variablen.
+	 * Liefert TRUE, falls eine Lösung existiert.
+	 *
+	 * @return TRUE, falls eine Lösung existiert.
 	 */
-	public setSolutionSize(pSize : number) : void {
-		this.solution = Array(pSize + 1).fill(0);
+	public isSatisfiable() : boolean {
+		return this.type === SatOutput.TYPE_SATISFIABLE;
+	}
+
+	/**
+	 * Liefert TRUE, falls (beweisbar) keine Lösung existiert.
+	 *
+	 * @return TRUE, falls (beweisbar) keine Lösung existiert.
+	 */
+	public isUnsatisfiable() : boolean {
+		return this.type === SatOutput.TYPE_UNSATISFIABLE;
+	}
+
+	/**
+	 * Liefert TRUE, falls unbekannt ist, ob eine Lösung existiert (z. B. bei einem TimeOut).
+	 *
+	 * @return TRUE, falls unbekannt ist, ob eine Lösung existiert (z. B. bei einem TimeOut).
+	 */
+	public isUnknown() : boolean {
+		return this.type === SatOutput.TYPE_UNKNOWN;
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_UNKNOWN  (z. B. bei einem TimeOut).
+	 *
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_UNKNOWN  (z. B. bei einem TimeOut).
+	 */
+	public static createUNKNOWN() : SatOutput {
+		return new SatOutput(Array(0).fill(0), SatOutput.TYPE_UNKNOWN);
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_UNSATISFIABLE.
+	 *
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_UNSATISFIABLE
+	 */
+	public static createUNSATISFIABLE() : SatOutput {
+		return new SatOutput(Array(0).fill(0), SatOutput.TYPE_UNSATISFIABLE);
+	}
+
+	/**
+	 * Liefert ein Objekt dieser Klasse mit dem Typ TYPE_SATISFIABLE.
+	 *
+	 * @param pSolution Die Lösung der Variablenbelegungen.
+	 * @return ein Objekt dieser Klasse mit dem Typ TYPE_SATISFIABLE.
+	 */
+	public static createSATISFIABLE(pSolution : Array<number>) : SatOutput {
+		return new SatOutput(pSolution, SatOutput.TYPE_SATISFIABLE);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
