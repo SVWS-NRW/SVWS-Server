@@ -30,7 +30,7 @@ export class SatSolverSimple1 extends SatSolver {
 	public apply(t : SatInput) : SatOutput {
 		const timeEnd : number = System.currentTimeMillis() + this.maxTimeMillis;
 		const nVars : number = t.getVarCount();
-		DeveloperNotificationException.ifSmaller("nVars < 1", nVars, 1);
+		DeveloperNotificationException.ifSmaller("nVars", nVars, 1);
 		this._clauses.clear();
 		this._clauses.addAll(t.getClauses());
 		this._solution = Array(nVars + 1).fill(0);

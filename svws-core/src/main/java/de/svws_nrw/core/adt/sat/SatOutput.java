@@ -31,6 +31,12 @@ public final class SatOutput {
 
 	private final int type;
 
+	/**
+	 * Erzeugt eine Lösung anhand der übergebenen Parameter.
+	 *
+	 * @param pSolution Das Array der Variablen.
+	 * @param pType     Einer der drei möglichen Typen.
+	 */
 	private SatOutput(@NotNull final int[] pSolution, final int pType) {
 		solution = pSolution;
 		type = pType;
@@ -98,6 +104,17 @@ public final class SatOutput {
 	 */
 	public static @NotNull SatOutput createSATISFIABLE(@NotNull final int[] pSolution) {
 		return new SatOutput(pSolution, TYPE_SATISFIABLE);
+	}
+
+	/**
+	 * Liefert eine Kopie, welche aber potentiell eine andere Lösung besitzt.
+	 *
+	 * @param pOutput   Das zu kopierende Objekt.
+	 * @param pSolution Die Lösung der Variablenbelegungen.
+	 * @return eine Kopie, welche aber potentiell eine andere Lösung besitzt.
+	 */
+	public static @NotNull SatOutput createCopy(@NotNull final SatOutput pOutput, @NotNull final int[] pSolution) {
+		return new SatOutput(pSolution, pOutput.type);
 	}
 
 }

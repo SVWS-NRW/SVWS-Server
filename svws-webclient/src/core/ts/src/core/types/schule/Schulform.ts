@@ -42,7 +42,7 @@ export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 	/**
 	 * Schulform Gemeinschaftsschule
 	 */
-	public static readonly GM : Schulform = new Schulform("GM", 4, [new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, null)]);
+	public static readonly GM : Schulform = new Schulform("GM", 4, [new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, 2022)]);
 
 	/**
 	 * Schulform Gymnasium

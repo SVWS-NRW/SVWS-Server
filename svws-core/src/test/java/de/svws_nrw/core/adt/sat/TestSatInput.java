@@ -41,18 +41,95 @@ import org.junit.jupiter.api.Test;
 class TestSatInput {
 
 	/**
-	 * Erzeugt eine NxN Matrix bei der für jede Zeile und für jede Spalte
-	 * die Bedingung 'exactly one' gilt. Diese Formel ist lösbar.
+	 * Test: {@link SatInput#add_clause_1(int)}
 	 */
 	@Test
-	void testCaseSAT() {
+	void testAddClause1() {
 		final SatInput in = new SatInput();
-
 		final int x1 = in.create_var();
 		in.add_clause_1(x1);
-
 		assertEquals(true, in.isValidSolution(new int[] {0, x1}));
 		assertEquals(false, in.isValidSolution(new int[] {0, -x1}));
+	}
+
+	/**
+	 * Test: {@link SatInput#add_clause_2(int, int)}
+	 */
+	@Test
+	void testAddClause2() {
+		final SatInput in = new SatInput();
+		final int x1 = in.create_var();
+		final int x2 = in.create_var();
+		in.add_clause_2(x1, x2);
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
+		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2}));
+	}
+
+	/**
+	 * Test: {@link SatInput#add_clause_3(int, int, int)}
+	 */
+	@Test
+	void testAddClause3() {
+		final SatInput in = new SatInput();
+		final int x1 = in.create_var();
+		final int x2 = in.create_var();
+		final int x3 = in.create_var();
+		in.add_clause_3(x1, x2, x3);
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2, x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2, -x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2, x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2, -x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2, x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2, -x3}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2, x3}));
+		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2, -x3}));
+	}
+
+	/**
+	 * Test: {@link SatInput#add_clause_not_both(int, int)}
+	 */
+	@Test
+	void testAddClauseNotBoth() {
+		final SatInput in = new SatInput();
+		final int x1 = in.create_var();
+		final int x2 = in.create_var();
+		in.add_clause_not_both(x1, x2);
+		assertEquals(false, in.isValidSolution(new int[] {0, x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2}));
+	}
+
+	/**
+	 * Test: {@link SatInput#add_clause_equal(int, int)}
+	 */
+	@Test
+	void testAddClauseEqual() {
+		final SatInput in = new SatInput();
+		final int x1 = in.create_var();
+		final int x2 = in.create_var();
+		in.add_clause_equal(x1, x2);
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, x2}));
+		assertEquals(false, in.isValidSolution(new int[] {0, -x1, x2}));
+		assertEquals(false, in.isValidSolution(new int[] {0, x1, -x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, -x2}));
+	}
+
+	/**
+	 * Test: {@link SatInput#add_clause_unequal(int, int)}
+	 */
+	@Test
+	void testAddClauseUnequal() {
+		final SatInput in = new SatInput();
+		final int x1 = in.create_var();
+		final int x2 = in.create_var();
+		in.add_clause_unequal(x1, x2);
+		assertEquals(false, in.isValidSolution(new int[] {0, x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, -x1, x2}));
+		assertEquals(true, in.isValidSolution(new int[] {0, x1, -x2}));
+		assertEquals(false, in.isValidSolution(new int[] {0, -x1, -x2}));
 	}
 
 }

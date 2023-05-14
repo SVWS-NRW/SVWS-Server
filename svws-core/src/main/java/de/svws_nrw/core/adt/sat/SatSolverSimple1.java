@@ -33,7 +33,7 @@ public final class SatSolverSimple1 extends SatSolver {
 		final long timeEnd = System.currentTimeMillis() + maxTimeMillis;
 
 		final int nVars = t.getVarCount();
-		DeveloperNotificationException.ifSmaller("nVars < 1", nVars, 1);
+		DeveloperNotificationException.ifSmaller("nVars", nVars, 1);
 
 		_clauses.clear();
 		_clauses.addAll(t.getClauses());

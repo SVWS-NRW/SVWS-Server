@@ -55,7 +55,7 @@ public final class SatInput {
         _varFALSE = 0; // 0 ist ein ungültiger Dummy-Wert, der nach dem ersten Aufruf definiert wird.
     }
 
-    @Override
+	@Override
     public @NotNull String toString() {
         return getDimacsHeader();
     }
@@ -243,6 +243,26 @@ public final class SatInput {
         _clauses.add(pVars);
     }
 
+
+	/**
+     * Fügt eine Klausel hinzu. Falls die Variablen noch nicht existieren, werden sie erzeugt.
+     *
+     * @param pVars Die Variablen (auch negiert) der Klausel.
+     *
+     * @throws DeveloperNotificationException falls die Klausel leer ist, oder eine Variable 0 ist.
+     */
+    public void add_clause_and_variables(final @NotNull Integer @NotNull[] pVars) throws DeveloperNotificationException {
+        DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length == 0);
+
+        for (final int literal : pVars) {
+            DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal == 0);
+            final int absL = Math.abs(literal);
+            _nVars = Math.max(_nVars, absL);
+        }
+
+        _clauses.add(pVars);
+	}
+
     /**
      * Fügt eine Klausel der Größe 1 hinzu. Forciert damit die übergebene Variable auf TRUE.
      *
@@ -305,31 +325,17 @@ public final class SatInput {
 	}
 
 	/**
-	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Zeile {@code pRow} den Wert TRUE haben.
+	 * Forciert, dass genau {@code pAmount} Variablen des Arrays den Wert TRUE haben.
 	 *
-	 * @param pData   Die Matrix.
-	 * @param pRow    Die Zeile der Matrix.
-	 * @param pAmount Die Anzahl an TRUEs.
+	 * @param pArray  Das Array der Variablen.
+	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
 	 */
-	public void add_clause_exactly_in_row(final @NotNull int @NotNull [] @NotNull [] pData, final int pRow, final int pAmount) {
-		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
-		for (int c = 0; c < pData[pRow].length; c++)
-			pList.add(pData[pRow][c]);
-		add_clause_exactly(pList, pAmount);
-	}
-
-	/**
-	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Spalte {@code pCol} den Wert TRUE haben.
-	 *
-	 * @param pData   Die Matrix.
-	 * @param pCol    Die Spalte der Matrix.
-	 * @param pAmount Die Anzahl an TRUEs.
-	 */
-	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
-		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
-		for (int r = 0; r < pData.length; r++)
-			pList.add(pData[r][pCol]);
-		add_clause_exactly(pList, pAmount);
+	public void add_clause_exactly(final @NotNull int[] pArray, final int pAmount) {
+		// Array --> Liste
+		final @NotNull LinkedCollection<@NotNull Integer> list = new LinkedCollection<>();
+		for (final int x : pArray)
+			list.addLast(x);
+		add_clause_exactly(list, pAmount);
 	}
 
 	/**
@@ -369,6 +375,34 @@ public final class SatInput {
 
 		// Andernfalls muss ein Sortiernetzwerk aufgebaut werden.
 		_bitonic_exactly(list, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Zeile {@code pRow} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pRow    Die Zeile der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public void add_clause_exactly_in_row(final @NotNull int @NotNull [] @NotNull [] pData, final int pRow, final int pAmount) {
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		for (int c = 0; c < pData[pRow].length; c++)
+			pList.add(pData[pRow][c]);
+		add_clause_exactly(pList, pAmount);
+	}
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Spalte {@code pCol} den Wert TRUE haben.
+	 *
+	 * @param pData   Die Matrix.
+	 * @param pCol    Die Spalte der Matrix.
+	 * @param pAmount Die Anzahl an TRUEs.
+	 */
+	public void add_clause_exactly_in_column(final @NotNull int @NotNull [] @NotNull [] pData, final int pCol, final int pAmount) {
+		final @NotNull LinkedCollection<@NotNull Integer> pList = new  LinkedCollection<>();
+		for (int r = 0; r < pData.length; r++)
+			pList.add(pData[r][pCol]);
+		add_clause_exactly(pList, pAmount);
 	}
 
 	/**
@@ -494,5 +528,6 @@ public final class SatInput {
 
 		return true;
 	}
+
 
 }

@@ -31,13 +31,17 @@ package de.svws_nrw.core.adt.sat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.function.Function;
+
 import org.junit.jupiter.api.Test;
+
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Testet die folgenden Klassen: <br>
  * {@link SatInput} <br>
  * {@link SatOutput} <br>
- * {@link SatPreprocessor1} <br>
+ * {@link SatWrapper1} <br>
  * {@link SatSolverSimple1} <br>
  *
  * @author Benjamin A. Bartsch
@@ -51,22 +55,26 @@ class TestSatSolver {
 	@Test
 	void testCaseSAT() {
 
-		final SatSolver solver = new SatSolverSimple1();
-		solver.setMaxTimeMillis(20000);
+		final SatSolver solver1 =  new SatSolverSimple1();
+		solver1.setMaxTimeMillis(20000);
 
-		for (int n = 1; n <= 4; n++) {
+		final Function<@NotNull SatInput, @NotNull SatOutput> solver = new SatWrapper1(solver1);
+
+		for (int n = 1; n <= 4; n++) { // Vorsicht: N <= 4, sonst timeout!
 			// create "in"
 			final SatInput in = new SatInput();
-			final int[][] matrix = in.create_vars2D(n, n + 1);
-			for (int i = 0; i < n + 1; i++)
+			final int[][] matrix = in.create_vars2D(n, n);
+			for (int i = 0; i < n; i++)
 				in.add_clause_exactly_in_column(matrix, i, 1);
 			for (int i = 0; i < n; i++)
 				in.add_clause_exactly_in_row(matrix, i, 1);
+
 			// create "out"
 			final SatOutput out =  solver.apply(in);
-			assertFalse(out.isSatisfiable());
+			assertTrue(out.isSatisfiable());
 			assertFalse(out.isUnknown());
-			assertTrue(out.isUnsatisfiable());
+			assertFalse(out.isUnsatisfiable());
+			assertTrue(in.isValidSolution(out.getSolution()));
 		}
 
 	}

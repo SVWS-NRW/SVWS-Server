@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
+import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaIterator } from '../../../java/util/JavaIterator';
 import { List } from '../../../java/util/List';
@@ -230,6 +230,23 @@ export class SatInput extends JavaObject {
 	}
 
 	/**
+	 * Fügt eine Klausel hinzu. Falls die Variablen noch nicht existieren, werden sie erzeugt.
+	 *
+	 * @param pVars Die Variablen (auch negiert) der Klausel.
+	 *
+	 * @throws DeveloperNotificationException falls die Klausel leer ist, oder eine Variable 0 ist.
+	 */
+	public add_clause_and_variables(pVars : Array<number>) : void {
+		DeveloperNotificationException.ifTrue("Die Klausel darf nicht leer sein!", pVars.length === 0);
+		for (const literal of pVars) {
+			DeveloperNotificationException.ifTrue("Variable 0 ist nicht erlaubt!", literal === 0);
+			const absL : number = Math.abs(literal);
+			this._nVars = Math.max(this._nVars, absL);
+		}
+		this._clauses.add(pVars);
+	}
+
+	/**
 	 * Fügt eine Klausel der Größe 1 hinzu. Forciert damit die übergebene Variable auf TRUE.
 	 *
 	 * @param x Die Variable wird auf TRUE gesetzt.
@@ -291,6 +308,57 @@ export class SatInput extends JavaObject {
 	}
 
 	/**
+	 * Forciert, dass genau {@code pAmount} Variablen des Arrays den Wert TRUE haben.
+	 *
+	 * @param pArray  Das Array der Variablen.
+	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
+	 */
+	public add_clause_exactly(pArray : Array<number>, pAmount : number) : void;
+
+	/**
+	 * Forciert, dass genau {@code pAmount} Variablen der Variablenliste den Wert TRUE haben.
+	 *
+	 * @param pList   Die Variablenliste.
+	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
+	 */
+	public add_clause_exactly(pList : LinkedCollection<number>, pAmount : number) : void;
+
+	/**
+	 * Implementation for method overloads of 'add_clause_exactly'
+	 */
+	public add_clause_exactly(__param0 : Array<number> | LinkedCollection<number>, __param1 : number) : void {
+		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			const pArray : Array<number> = __param0;
+			const pAmount : number = __param1 as number;
+			const list : LinkedCollection<number> = new LinkedCollection();
+			for (const x of pArray)
+				list.addLast(x);
+			this.add_clause_exactly(list, pAmount);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number")) {
+			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
+			const pAmount : number = __param1 as number;
+			const list : LinkedCollection<number> = new LinkedCollection(pList);
+			const size : number = list.size();
+			DeveloperNotificationException.ifTrue("add_clause_exactly: " + pAmount + " > " + size, pAmount > size);
+			if (pAmount === 0) {
+				for (const x of list)
+					this.add_clause_1(-x);
+				return;
+			}
+			if (pAmount === size) {
+				for (const x of list)
+					this.add_clause_1(+x);
+				return;
+			}
+			if (pAmount === 1) {
+				this.add_clause_exactly_one(list);
+				return;
+			}
+			this._bitonic_exactly(list, pAmount);
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
 	 * Forciert, dass genau {@code pAmount} Variablen der Matrix {@code pData} in Zeile {@code pRow} den Wert TRUE haben.
 	 *
 	 * @param pData   Die Matrix.
@@ -316,33 +384,6 @@ export class SatInput extends JavaObject {
 		for (let r : number = 0; r < pData.length; r++)
 			pList.add(pData[r][pCol]);
 		this.add_clause_exactly(pList, pAmount);
-	}
-
-	/**
-	 * Forciert, dass genau {@code pAmount} Variablen der Variablenliste den Wert TRUE haben.
-	 *
-	 * @param pList   Die Variablenliste.
-	 * @param pAmount Die Anzahl an TRUEs in der Variablenliste.
-	 */
-	public add_clause_exactly(pList : LinkedCollection<number>, pAmount : number) : void {
-		const list : LinkedCollection<number> = new LinkedCollection(pList);
-		const size : number = list.size();
-		DeveloperNotificationException.ifTrue("add_clause_exactly: " + pAmount + " > " + size, pAmount > size);
-		if (pAmount === 0) {
-			for (const x of list)
-				this.add_clause_1(-x);
-			return;
-		}
-		if (pAmount === size) {
-			for (const x of list)
-				this.add_clause_1(+x);
-			return;
-		}
-		if (pAmount === 1) {
-			this.add_clause_exactly_one(list);
-			return;
-		}
-		this._bitonic_exactly(list, pAmount);
 	}
 
 	/**

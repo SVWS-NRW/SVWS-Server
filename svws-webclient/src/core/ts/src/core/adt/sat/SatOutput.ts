@@ -31,6 +31,12 @@ export class SatOutput extends JavaObject {
 	private readonly type : number;
 
 
+	/**
+	 * Erzeugt eine Lösung anhand der übergebenen Parameter.
+	 *
+	 * @param pSolution Das Array der Variablen.
+	 * @param pType     Einer der drei möglichen Typen.
+	 */
 	private constructor(pSolution : Array<number>, pType : number) {
 		super();
 		this.solution = pSolution;
@@ -99,6 +105,17 @@ export class SatOutput extends JavaObject {
 	 */
 	public static createSATISFIABLE(pSolution : Array<number>) : SatOutput {
 		return new SatOutput(pSolution, SatOutput.TYPE_SATISFIABLE);
+	}
+
+	/**
+	 * Liefert eine Kopie, welche aber potentiell eine andere Lösung besitzt.
+	 *
+	 * @param pOutput   Das zu kopierende Objekt.
+	 * @param pSolution Die Lösung der Variablenbelegungen.
+	 * @return eine Kopie, welche aber potentiell eine andere Lösung besitzt.
+	 */
+	public static createCopy(pOutput : SatOutput, pSolution : Array<number>) : SatOutput {
+		return new SatOutput(pSolution, pOutput.type);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
