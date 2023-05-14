@@ -37,7 +37,7 @@ public enum Schulform {
 
 	/** Schulform Gemeinschaftsschule */
 	GM(new SchulformKatalogEintrag[]{
-		new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, null)
+		new SchulformKatalogEintrag(5000, "GM", "16", "Gemeinschaftsschule", false, null, 2022)
 	}),
 
 	/** Schulform Gymnasium */
