@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { List, GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
-	import { ArrayList, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
+	import type { GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
 	import type { Ref} from "vue";
 	import { computed, ref } from "vue";
 
@@ -38,35 +38,35 @@
 
 	const fehler = ref(new Set());
 
-	const fachkombi_erforderlich = computed((): List<GostJahrgangFachkombination> => {
-		const result = new ArrayList<GostJahrgangFachkombination>()
+	const fachkombi_erforderlich = computed((): Set<GostJahrgangFachkombination> => {
+		const result = new Set<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);
 					const fach2 = props.faechermanager.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2} als ${kombi.kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2?.kuerzel} als ${kombi.kursart2}`;
 				}
 				result.add(kombi);
 			}
 		return result;
 	})
 
-	const fachkombi_verboten = computed((): List<GostJahrgangFachkombination> => {
-		const result = new ArrayList<GostJahrgangFachkombination>()
+	const fachkombi_verboten = computed((): Set<GostJahrgangFachkombination> => {
+		const result = new Set<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);
 					const fach2 = props.faechermanager.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2} als ${kombi.kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2?.kuerzel} als ${kombi.kursart2}`;
 				}
 				result.add(kombi);
 			}
 		return result;
 	})
 
-	const show: Ref<boolean> = ref(fachkombi_erforderlich.value.size()+fachkombi_verboten.value.size() > 0);
+	const show: Ref<boolean> = ref(fachkombi_erforderlich.value.size+fachkombi_verboten.value.size > 0);
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
 		const fach1 = props.faechermanager.get(kombi.fachID1);
