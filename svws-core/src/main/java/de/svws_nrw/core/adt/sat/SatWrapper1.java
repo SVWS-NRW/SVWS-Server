@@ -64,7 +64,7 @@ public final class SatWrapper1 implements Function<@NotNull SatInput, @NotNull S
 		final @NotNull int[] solution1 = new int[solution2.length];
 		for (int lit1 = 1; lit1 < solution2.length; lit1++) {
 			final int lit2 = map1to2[lit1];
-			solution1[lit1] = solution2[lit2] >= 0 ? lit1 : - lit1;
+			solution1[lit1] = solution2[lit2] >= 0 ? lit1 : -lit1;
 		}
 
 		return SatOutput.createCopy(out2, solution1);
