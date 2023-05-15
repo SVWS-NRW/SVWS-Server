@@ -439,7 +439,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			return false;
 		}
 		// Prüfe den Bilingualen Bildungsgang
-		if (!daten.bilingualeSprache.equals(abidaten.bilingualeSprache)) {
+		if ((daten.bilingualeSprache == null && abidaten.bilingualeSprache != null) || (daten.bilingualeSprache != null && abidaten.bilingualeSprache == null) 
+				|| (daten.bilingualeSprache != null && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache))) {
 			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
 			return false;
 		}
@@ -532,7 +533,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 					break;
 				}
 			}
-			if (!identisch || !db.abiturFach.equals(datei.abiturFach))
+			if (!identisch || (db.abiturFach != null && !db.abiturFach.equals(datei.abiturFach)) || ((db.abiturFach == null) && (datei.abiturFach != null)))
 				tmp.add(idFach);
 		}
 		beide = tmp;
@@ -636,7 +637,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 
 
 	/**
-	 * Importiert die Daten des Schülers mit der angegebenen ID aus der übergebene
+	 * Importiert die Daten des Schülers mit der angegebenen ID aus der übergebenen
 	 * Laufbahnplanungsdatei.
 	 *
 	 * @param idSchueler   die ID des Schülers

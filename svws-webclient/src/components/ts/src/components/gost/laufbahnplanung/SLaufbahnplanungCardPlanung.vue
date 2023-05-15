@@ -6,6 +6,8 @@
 			<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
 				<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal">Importieren <i-ri-download-2-line /></svws-ui-button>
 			</s-laufbahnplanung-import-modal>
+			<svws-ui-button size="small" :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
+			<svws-ui-button size="small" type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 			<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
 				Manueller Modus
 				<template v-if="istManuellerModus">
@@ -251,10 +253,10 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef} from "vue";
+	import type { ComputedRef } from "vue";
 	import { computed, ref } from "vue";
 
-	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten } from "@svws-nrw/svws-core";
+	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@svws-nrw/svws-core";
 	import { GostHalbjahr } from "@svws-nrw/svws-core";
 	import type {DataTableColumn} from "@svws-nrw/svws-ui";
 
@@ -267,7 +269,10 @@
 		getPdfWahlbogen: () => Promise<Blob>;
 		exportLaufbahnplanung: () => Promise<Blob>;
 		importLaufbahnplanung: (data: FormData) => Promise<boolean>;
-		item?: SchuelerListeEintrag;
+		item: SchuelerListeEintrag;
+		zwischenspeicher?: GostLaufbahnplanungDaten;
+		saveLaufbahnplanung: () => Promise<void>;
+		restoreLaufbahnplanung: () => Promise<void>;
 	}>();
 
 	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
@@ -279,7 +284,7 @@
 			const fach = props.abiturdatenManager.getFach(fachbelegung);
 			if (fach) {
 				const fachwahl = props.abiturdatenManager.getSchuelerFachwahl(fach.id);
-				for (const hj  of GostHalbjahr.values()) {
+				for (const hj of GostHalbjahr.values()) {
 					if (!props.abiturdatenManager.istBewertet(hj))
 						fachwahl.halbjahre[hj.id] = null;
 				}
@@ -323,8 +328,6 @@
 	}
 
 	async function export_laufbahnplanung() {
-		if (props.item === undefined)
-			return;
 		const gzip = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(gzip);

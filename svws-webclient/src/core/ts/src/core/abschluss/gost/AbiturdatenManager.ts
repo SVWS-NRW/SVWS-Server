@@ -269,13 +269,13 @@ export class AbiturdatenManager extends JavaObject {
 	/**
 	 * Bestimmt die Schüler-Fachwahlen aller belegten Fächer.
 	 *
-	 * @return die Liste mit den Schüler-Fachwahlen
+	 * @return die Map mit den Schüler-Fachwahlen
 	 */
-	public getSchuelerFachwahlen() : List<GostSchuelerFachwahl> {
-		const fachwahlen : List<GostSchuelerFachwahl> = new ArrayList();
+	public getSchuelerFachwahlen() : JavaMap<number, GostSchuelerFachwahl> {
+		const fachwahlen : HashMap<number, GostSchuelerFachwahl> = new HashMap();
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen)
-			fachwahlen.add(this.getSchuelerFachwahl(fb.fachID));
+			fachwahlen.put(fb.fachID, this.getSchuelerFachwahl(fb.fachID));
 		return fachwahlen;
 	}
 

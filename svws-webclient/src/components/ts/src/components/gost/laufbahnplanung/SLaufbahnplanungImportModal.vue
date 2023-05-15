@@ -4,7 +4,7 @@
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalDescription>
 			Bitte eine Datei auswählen, die importiert werden soll.
-			<br><input type="file" accept=".gz, .gzip" @change="import_file" :disabled="loading">
+			<br><input type="file" accept=".lp" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			<br>{{
 				status === false

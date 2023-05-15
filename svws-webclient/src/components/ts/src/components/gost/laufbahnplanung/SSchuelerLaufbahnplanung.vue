@@ -2,7 +2,8 @@
 	<div class="flex gap-x-8 2xl:gap-x-16">
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :item="schueler" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" :export-laufbahnplanung="exportLaufbahnplanung" :import-laufbahnplanung="importLaufbahnplanung" />
+				:gost-jahrgangsdaten="gostJahrgangsdaten" :item="schueler" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" :export-laufbahnplanung="exportLaufbahnplanung"
+				:import-laufbahnplanung="importLaufbahnplanung" :zwischenspeicher="zwischenspeicher" :save-laufbahnplanung="saveLaufbahnplanung" :restore-laufbahnplanung="restoreLaufbahnplanung" />
 		</div>
 		<div class="w-1/3 4xl:w-2/5">
 			<div class="flex flex-col gap-3 sticky -top-8 pt-8">
@@ -31,6 +32,6 @@
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => props.schueler?.abiturjahrgang !== undefined);
+	const visible: ComputedRef<boolean> = computed(() => props.schueler.abiturjahrgang !== undefined);
 
 </script>

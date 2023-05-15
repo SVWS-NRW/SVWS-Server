@@ -275,13 +275,13 @@ public class AbiturdatenManager {
 	/**
 	 * Bestimmt die Schüler-Fachwahlen aller belegten Fächer.
 	 *
-	 * @return die Liste mit den Schüler-Fachwahlen
+	 * @return die Map mit den Schüler-Fachwahlen
 	 */
-	public @NotNull List<@NotNull GostSchuelerFachwahl> getSchuelerFachwahlen() {
-		final @NotNull List<@NotNull GostSchuelerFachwahl> fachwahlen = new ArrayList<>();
+	public @NotNull Map<@NotNull Long, @NotNull GostSchuelerFachwahl> getSchuelerFachwahlen() {
+		final @NotNull HashMap<@NotNull Long, @NotNull GostSchuelerFachwahl> fachwahlen = new HashMap<>();
 		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen)
-			fachwahlen.add(getSchuelerFachwahl(fb.fachID));
+			fachwahlen.put(fb.fachID, getSchuelerFachwahl(fb.fachID));
 		return fachwahlen;
 	}
 

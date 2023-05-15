@@ -1,4 +1,4 @@
-import type { GostSchuelerFachwahl, GostBelegpruefungsArt, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@svws-nrw/svws-core";
+import type { GostSchuelerFachwahl, GostBelegpruefungsArt, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten } from "@svws-nrw/svws-core";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
@@ -6,7 +6,7 @@ export interface SchuelerLaufbahnplanungProps {
 	getPdfWahlbogen: () => Promise<Blob>;
 	exportLaufbahnplanung: () => Promise<Blob>;
 	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
-	schueler: SchuelerListeEintrag | undefined,
+	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
 	patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
@@ -17,4 +17,7 @@ export interface SchuelerLaufbahnplanungProps {
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
+	zwischenspeicher?: GostLaufbahnplanungDaten;
+	saveLaufbahnplanung: () => Promise<void>;
+	restoreLaufbahnplanung: () => Promise<void>;
 }

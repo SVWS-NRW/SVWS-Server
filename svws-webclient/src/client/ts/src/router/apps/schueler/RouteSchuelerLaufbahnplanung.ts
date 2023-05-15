@@ -1,4 +1,4 @@
-import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
@@ -24,6 +24,7 @@ interface RouteStateSchuelerLaufbahnplanung {
 	listGostFaecher: List<GostFach>;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
 }
 export class RouteDataSchuelerLaufbahnplanung {
 
@@ -40,6 +41,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		listGostFaecher: new ArrayList(),
 		mapFachkombinationen: new Map(),
 		mapLehrer: new Map(),
+		zwischenspeicher: undefined,
 	}
 
 	private _state = shallowRef<RouteStateSchuelerLaufbahnplanung>(RouteDataSchuelerLaufbahnplanung._defaultState);
@@ -113,6 +115,10 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return BenutzerTyp.getByID(typ) === BenutzerTyp.LEHRER ? typID : undefined;
 	}
 
+	get zwischenspeicher(): GostLaufbahnplanungDaten | undefined {
+		return this._state.value.zwischenspeicher;
+	}
+
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsArt) => {
 		this.setPatchedState({ gostBelegpruefungsArt });
 		this.setGostBelegpruefungErgebnis();
@@ -143,6 +149,10 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	importLaufbahnplanung = async (data: FormData): Promise<boolean> => {
 		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
+		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
+		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.listGostFaecher, this._state.value.gostBelegpruefungsArt);
+		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+		this.setPatchedState({abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
 		return res.success;
 	}
 
@@ -150,6 +160,21 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await api.server.patchGostSchuelerLaufbahnplanungBeratungsdaten(data, api.schema, this.auswahl.id);
 		const gostLaufbahnBeratungsdaten = this.gostLaufbahnBeratungsdaten;
 		this.setPatchedState({gostLaufbahnBeratungsdaten: Object.assign(gostLaufbahnBeratungsdaten, data)});
+	}
+
+	saveLaufbahnplanung = async (): Promise<void> => {
+		const zwischenspeicher = await api.server.exportGostSchuelerLaufbahnplanungsdaten(api.schema, this.auswahl.id);
+		this.setPatchedState({zwischenspeicher});
+	}
+
+	restoreLaufbahnplanung = async (): Promise<void> => {
+		if (this._state.value.zwischenspeicher === undefined)
+			return;
+		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.auswahl.id);
+		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
+		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.listGostFaecher, this._state.value.gostBelegpruefungsArt);
+		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
+		this.setPatchedState({zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
 	}
 
 	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
@@ -239,6 +264,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			mapFachkombinationen: this.data.mapFachkombinationen,
 			mapLehrer: this.data.mapLehrer,
 			id: this.data.id,
+			zwischenspeicher: this.data.zwischenspeicher,
+			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
+			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 		};
 	}
 
