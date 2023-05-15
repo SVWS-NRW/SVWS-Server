@@ -380,6 +380,24 @@
 			sortable: true,
 		} as const,
 	]) as Ref<DataTableColumnSource[]>;
+	const varcol = ref(columns);
+	const columns_ohne_id = ref([
+		{
+			key: "name",
+			label: "Überschriebener Name",
+			sortable: true,
+			span: 2,
+		},
+		{
+			key: "email",
+			label: "Digitale Postadresse",
+		},
+		{
+			key: "age",
+			label: "Wie alt?",
+			sortable: true,
+		} as const,
+	]) as Ref<DataTableColumnSource[]>;
 	const columns2 = ref([
 		{
 			key: "name",
@@ -666,6 +684,13 @@
 		</Variant>
 		<Variant title="Simple">
 			<svws-ui-data-table :items="data" />
+		</Variant>
+		<Variant title="Simple mit zuschaltbaren Columns">
+			<div class="flex gap-3 mb-3">
+				<svws-ui-button @click="varcol=columns">Columns</svws-ui-button>
+				<svws-ui-button @click="varcol=columns_ohne_id">Columns ohne ID</svws-ui-button>
+			</div>
+			<svws-ui-data-table :items="data" :columns="varcol" />
 		</Variant>
 		<Variant title="Simple Iterable">
 			<svws-ui-data-table :items="set" />
