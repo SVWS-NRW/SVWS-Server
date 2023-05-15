@@ -271,6 +271,21 @@ public class AbiturdatenManager {
 		return wahl;
 	}
 
+
+	/**
+	 * Bestimmt die Schüler-Fachwahlen aller belegten Fächer.
+	 *
+	 * @return die Liste mit den Schüler-Fachwahlen
+	 */
+	public @NotNull List<@NotNull GostSchuelerFachwahl> getSchuelerFachwahlen() {
+		final @NotNull List<@NotNull GostSchuelerFachwahl> fachwahlen = new ArrayList<>();
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
+		for (final AbiturFachbelegung fb : fachbelegungen)
+			fachwahlen.add(getSchuelerFachwahl(fb.fachID));
+		return fachwahlen;
+	}
+
+
 	/**
 	 * Liefert das Fach der gymnasialen Oberstufe für die angegeben Abiturfachbelegung.
 	 *
