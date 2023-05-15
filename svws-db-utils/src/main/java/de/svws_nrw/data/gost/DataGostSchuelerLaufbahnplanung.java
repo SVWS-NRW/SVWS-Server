@@ -309,7 +309,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 */
 	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) {
 		// Lese die Daten aus der Datenbank
-			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
+		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abidaten.abiturjahr, DTOGostJahrgangFachkombinationen.class);
@@ -353,7 +353,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		schuelerDaten.geschlecht = dtoSchueler.Geschlecht.kuerzel;
 		schuelerDaten.bilingualeSprache = abidaten.bilingualeSprache;
 		for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++)
-			System.arraycopy(abidaten, 0, schuelerDaten, 0, GostHalbjahr.maxHalbjahre);
+			System.arraycopy(abidaten.bewertetesHalbjahr, 0, schuelerDaten.bewertetesHalbjahr, 0, GostHalbjahr.maxHalbjahre);
 		for (final AbiturFachbelegung fbel : abidaten.fachbelegungen) {
 			final GostLaufbahnplanungDatenFachbelegung fb = new GostLaufbahnplanungDatenFachbelegung();
 			fb.fachID = fbel.fachID;
