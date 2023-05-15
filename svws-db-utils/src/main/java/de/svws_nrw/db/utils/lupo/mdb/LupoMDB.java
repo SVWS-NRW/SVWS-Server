@@ -361,22 +361,17 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination in der DB nicht definiert!");
 					continue;
 				}
-				final String f1 = dtoFach1.Kuerzel + ((nmk.Kursart1 == null || "".equals(nmk.Kursart1)) ? "" : " als " + nmk.Kursart1);
-				final String f2 = dtoFach2.Kuerzel + ((nmk.Kursart2 == null || "".equals(nmk.Kursart2)) ? "" : " als " + nmk.Kursart2);
-				final String hinweistext = "+".equals(nmk.Typ)
-					? ("" + f1 + " erfordert " + f2)
-					: ("" + f1 + " erlaubt kein " + f2);
 				final GostLaufbahnplanungFachkombinationTyp typ = nmk.Typ == null ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN);
 				final DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
 						dtoFach1.ID, dtoFach2.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,
-						typ, hinweistext);
+						typ, "");
 				lupoNMK.Abi_Jahrgang = abiJahrgang;
 				lupoNMK.Kursart1 = nmk.Kursart1;
 				lupoNMK.Kursart2 = nmk.Kursart2;
 				conn.persist(lupoNMK);
 				final DTOGostJahrgangFachkombinationen lupoNMK2 = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
 						dtoFach2.ID, dtoFach1.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,
-						typ, hinweistext);
+						typ, "");
 				lupoNMK2.Abi_Jahrgang = abiJahrgang;
 				lupoNMK2.Kursart1 = nmk.Kursart2;
 				lupoNMK2.Kursart2 = nmk.Kursart1;

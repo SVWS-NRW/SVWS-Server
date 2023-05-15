@@ -45,12 +45,7 @@ public final class Revision4Updates extends SchemaRevisionUpdateSQL {
 			  1 AS Q21,
 			  1 AS Q22,
 			  CASE WHEN nmk.Typ = '+' THEN 1 ELSE 0 END AS Typ,
-			  CONCAT(f1.FachKrz,
-			    CASE WHEN nmk.Kursart1 IS NULL THEN '' ELSE CONCAT(' als ', nmk.Kursart1) END,
-			    CASE WHEN nmk.Typ = '+' THEN ' erfordert ' ELSE ' erlaubt kein ' END,
-			    f2.FachKrz,
-			    CASE WHEN nmk.Kursart2 IS NULL THEN '' ELSE CONCAT(' als ', nmk.Kursart2) END
-			  ) AS Hinweistext
+			  '' AS Hinweistext
 			FROM
 			  NichtMoeglAbiFachKombi nmk JOIN EigeneSchule_Faecher f1 ON nmk.Fach1_ID = f1.ID
 			                             JOIN EigeneSchule_Faecher f2 ON nmk.Fach2_ID = f2.ID;
@@ -75,12 +70,7 @@ public final class Revision4Updates extends SchemaRevisionUpdateSQL {
 				  1 AS Q21,
 				  1 AS Q22,
 				  CASE WHEN nmk.Typ = '+' THEN 1 ELSE 0 END AS Typ,
-				  CONCAT(f2.FachKrz,
-				    CASE WHEN nmk.Kursart2 IS NULL THEN '' ELSE CONCAT(' als ', nmk.Kursart2) END,
-				    CASE WHEN nmk.Typ = '+' THEN ' erfordert ' ELSE ' erlaubt kein ' END,
-				    f1.FachKrz,
-				    CASE WHEN nmk.Kursart1 IS NULL THEN '' ELSE CONCAT(' als ', nmk.Kursart1) END
-				  ) AS Hinweistext
+				  '' AS Hinweistext
 				FROM
 				  NichtMoeglAbiFachKombi nmk JOIN EigeneSchule_Faecher f1 ON nmk.Fach1_ID = f1.ID
 				                             JOIN EigeneSchule_Faecher f2 ON nmk.Fach2_ID = f2.ID;
