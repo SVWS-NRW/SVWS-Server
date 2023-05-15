@@ -27,7 +27,6 @@
 
 	import type { GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
 	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
-	import type { Ref} from "vue";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{
@@ -37,6 +36,7 @@
 	}>();
 
 	const fehler = ref(new Set());
+	const show = ref(false);
 
 	const fachkombi_erforderlich = computed((): Set<GostJahrgangFachkombination> => {
 		const result = new Set<GostJahrgangFachkombination>()
@@ -45,7 +45,9 @@
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);
 					const fach2 = props.faechermanager.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erlaubt kein ${fach2?.kuerzel} als ${kombi.kursart2}`;
+					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
+					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
+					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erlaubt kein ${fach2?.kuerzel} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
@@ -59,14 +61,14 @@
 				if (kombi.hinweistext === "") {
 					const fach1 = props.faechermanager.get(kombi.fachID1);
 					const fach2 = props.faechermanager.get(kombi.fachID2);
-					kombi.hinweistext = `${fach1?.kuerzel} als ${kombi.kursart1} erfordert ${fach2?.kuerzel} als ${kombi.kursart2}`;
+					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
+					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
+					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erfordert ${fach2?.kuerzel} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
 		return result;
 	})
-
-	const show: Ref<boolean> = ref(fachkombi_erforderlich.value.size+fachkombi_verboten.value.size > 0);
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
 		const fach1 = props.faechermanager.get(kombi.fachID1);
