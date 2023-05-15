@@ -439,7 +439,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			return false;
 		}
 		// Prüfe den Bilingualen Bildungsgang
-		if ((daten.bilingualeSprache == null && abidaten.bilingualeSprache != null) || (daten.bilingualeSprache != null && abidaten.bilingualeSprache == null) 
+		if ((daten.bilingualeSprache == null && abidaten.bilingualeSprache != null) || (daten.bilingualeSprache != null && abidaten.bilingualeSprache == null)
 				|| (daten.bilingualeSprache != null && !daten.bilingualeSprache.equals(abidaten.bilingualeSprache))) {
 			logger.logLn("Fehler: Die Angaben zum Bilingualen Bildungsgang stimmen nicht überein.");
 			return false;
