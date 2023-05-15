@@ -1,13 +1,20 @@
 <template>
 	<template v-if="mapFachkombinationen.size">
-		<h4 class="flex font-bold mt-5"> Informationen zu Fachkombinationsregeln </h4>
-		<ul class="mt-1 flex flex-col gap-1.5">
-			<li v-for="regel in fachkombi_erforderlich()" :key="regel.id" class="flex gap-1 leading-tight">
+		<h4 class="gap-1 flex items-center font-bold mt-5 cursor-pointer" @click="show=!show">
+			<i-ri-arrow-down-s-line v-if="show" />
+			<i-ri-arrow-right-s-line v-else />
+			<span>Informationen zu Fachkombinationsregeln</span>
+			<svws-ui-badge v-if="fehler.size" type="error">
+				{{ fehler.size }}
+			</svws-ui-badge>
+		</h4>
+		<ul class="mt-1 flex flex-col gap-1.5" v-show="show">
+			<li v-for="regel in fachkombi_erforderlich" :key="regel.id" class="flex gap-1 leading-tight">
 				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span :class="{'': regel_umgesetzt(regel)}">{{ regel.hinweistext }}</span>
 			</li>
-			<li v-for="regel in fachkombi_verboten()" :key="regel.id" class="flex gap-1 leading-tight">
+			<li v-for="regel in fachkombi_verboten" :key="regel.id" class="flex gap-1 leading-tight">
 				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span :class="{'': regel_umgesetzt(regel)}">{{ regel.hinweistext }}</span>
@@ -20,6 +27,8 @@
 
 	import type { List, GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
 	import { ArrayList, GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
+	import type { Ref} from "vue";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -27,7 +36,9 @@
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
 
-	const fachkombi_erforderlich = (): List<GostJahrgangFachkombination> => {
+	const fehler = ref(new Set());
+
+	const fachkombi_erforderlich = computed((): List<GostJahrgangFachkombination> => {
 		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
@@ -39,9 +50,9 @@
 				result.add(kombi);
 			}
 		return result;
-	}
+	})
 
-	const fachkombi_verboten = (): List<GostJahrgangFachkombination> => {
+	const fachkombi_verboten = computed((): List<GostJahrgangFachkombination> => {
 		const result = new ArrayList<GostJahrgangFachkombination>()
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
@@ -53,7 +64,9 @@
 				result.add(kombi);
 			}
 		return result;
-	}
+	})
+
+	const show: Ref<boolean> = ref(fachkombi_erforderlich.value.size()+fachkombi_verboten.value.size() > 0);
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
 		const fach1 = props.faechermanager.get(kombi.fachID1);
@@ -64,12 +77,17 @@
 			if (kombi.gueltigInHalbjahr[hj.id]) {
 				const belegung_1 = props.abiturdatenManager.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, hj)
 				const belegung_2 = props.abiturdatenManager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, hj);
-				if (belegung_1 && belegung_2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
+				if (belegung_1 && belegung_2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
+					fehler.value.add(f1?.fachID)
 					return false;
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && belegung_1 != belegung_2)
+				}
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && belegung_1 != belegung_2) {
+					fehler.value.add(f1?.fachID)
 					return false;
+				}
 			}
 		}
+		fehler.value.delete(f1?.fachID)
 		return true;
 	}
 
