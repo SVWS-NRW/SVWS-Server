@@ -107,7 +107,7 @@
 				</div>
 			</template>
 			<template #body>
-				<div role="row" class="data-table__tr" v-for="row in rows" :key="row.id">
+				<div role="row" class="data-table__tr" v-for="row in rows" :key="row.hashCode()">
 					<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 				</div>
 			</template>
