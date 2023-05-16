@@ -1,11 +1,11 @@
 import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang} from "@svws-nrw/svws-core";
-import { SchuelerStatus } from "@svws-nrw/svws-core";
 import type { ShallowReactive} from "vue";
-import { shallowReactive, shallowRef } from "vue";
 import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
+import type { RouteNode } from "~/router/RouteNode";
+import { SchuelerStatus } from "@svws-nrw/svws-core";
+import { shallowReactive, shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerIndividualdaten } from "./RouteSchuelerIndividualdaten";
 
@@ -121,20 +121,11 @@ export class RouteDataSchueler {
 	public async setSchueler(schueler: SchuelerListeEintrag | undefined) {
 		if (schueler?.id === this._state.value.auswahl?.id)
 			return;
-		if ((schueler === undefined) || (this.mapSchueler.size === 0)) {
-			this.setPatchedState({
-				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
-				filter: this._state.value.filter,
-				mapSchueler: this._state.value.mapSchueler,
-			});
+		if ((schueler === undefined) || (this.mapSchueler.size === 0))
 			return;
-		}
-		const neueAuswahl = (this.mapSchueler.get(schueler.id) === undefined) ? this.firstSchueler(this.mapSchueler) : schueler;
-		const stammdaten = await this.ladeStammdaten(neueAuswahl);
-		this.setPatchedState({
-			auswahl: neueAuswahl,
-			stammdaten: stammdaten,
-		});
+		const auswahl = (this.mapSchueler.get(schueler.id) === undefined) ? this.firstSchueler(this.mapSchueler) : schueler;
+		const stammdaten = await this.ladeStammdaten(auswahl);
+		this.setPatchedState({ auswahl, stammdaten });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
