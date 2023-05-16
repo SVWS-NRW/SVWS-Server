@@ -47,7 +47,7 @@
 					const fach2 = props.faechermanager.get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erlaubt kein ${fach2?.kuerzel} ${kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erfordert ${fach2?.kuerzel} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
@@ -63,7 +63,7 @@
 					const fach2 = props.faechermanager.get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erfordert ${fach2?.kuerzel} ${kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erlaubt kein ${fach2?.kuerzel} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
