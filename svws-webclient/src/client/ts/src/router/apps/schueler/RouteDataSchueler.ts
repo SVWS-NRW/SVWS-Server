@@ -98,8 +98,10 @@ export class RouteDataSchueler {
 		const mapKurse = await api.getKursListe(idSchuljahresabschnitt);
 		const mapJahrgaenge = await api.getJahrgangsListe();
 		const mapAbiturjahrgaenge = await this.ladeMapAbiturjahrgaenge();
-		const auswahl = this.firstSchueler(mapSchueler);
+		const schuelerVorher = this._state.value.auswahl === undefined ? undefined : mapSchueler.get(this._state.value.auswahl.id);
+		const auswahl = schuelerVorher === undefined ? this.firstSchueler(mapSchueler) : schuelerVorher;
 		const stammdaten = await this.ladeStammdaten(auswahl);
+		const view = schuelerVorher === undefined ? routeSchuelerIndividualdaten : this._state.value.view;
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt,
 			mapSchueler,
@@ -109,7 +111,7 @@ export class RouteDataSchueler {
 			mapAbiturjahrgaenge,
 			auswahl,
 			stammdaten,
-			view: this._state.value.view
+			view
 		});
 	}
 

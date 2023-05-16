@@ -117,20 +117,22 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {		const result: AuswahlChildData[] = [];
+	private getTabs(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
 		for (const c of this.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {		if (value.name === this.data.view.name)
-		return;
-	const node = RouteNode.getNodeByName(value.name);
-	if (node === undefined)
-		throw new Error("Unbekannte Route");
-	await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
-	await this.data.setView(node);
+	private setTab = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await this.data.setView(node);
 	}
 
 }
