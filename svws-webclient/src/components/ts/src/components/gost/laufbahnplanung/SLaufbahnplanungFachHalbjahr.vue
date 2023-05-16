@@ -1,5 +1,5 @@
 <template>
-	<div role="cell" class="data-table__td data-table__td__align-center" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
+	<div role="cell" class="data-table__td data-table__td__align-center select-none" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
 		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
@@ -16,7 +16,7 @@
 					Fachkombination ist nicht zulässig
 				</template>
 				<template #content v-else>
-					Zusatzkurs in diesem Halbjahr nicht zulässig
+					Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
 				</template>
 			</svws-ui-tooltip>
 			<div class="inline-flex items-center" v-else-if="!moeglich && wahl">
@@ -33,10 +33,10 @@
 
 <script setup lang="ts">
 
+	import type { ComputedRef } from "vue";
 	import type { AbiturdatenManager, GostFach, GostFaecherManager,
 		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@svws-nrw/svws-core";
 	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -177,6 +177,8 @@
 	}
 
 	function stepper_manuell() : void {
+		if (props.bewertet)
+			return;
 		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
 		if (props.halbjahr === undefined) {
 			if (!wahl.halbjahre[GostHalbjahr.Q22.id])
