@@ -24,17 +24,24 @@
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
-		gostBelegpruefungsArt: GostBelegpruefungsArt;
+		gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto';
 	}>();
 
 	const emit = defineEmits<{
-		(e: 'update:gost-belegpruefungs-art', value: GostBelegpruefungsArt): void,
+		(e: 'update:gost-belegpruefungs-art', value: 'ef1'|'gesamt'|'auto'): void,
 	}>();
 
-	const art: WritableComputedRef<GostBelegpruefungsArt> = computed({
+	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({
 		get: () => props.gostBelegpruefungsArt,
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
+
+	const autoGesamt = computed(()=>{
+		for (const fachwahl of props.abiturdatenManager.getSchuelerFachwahlen().values())
+			if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
+				return true;
+		return false;
+	})
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 
