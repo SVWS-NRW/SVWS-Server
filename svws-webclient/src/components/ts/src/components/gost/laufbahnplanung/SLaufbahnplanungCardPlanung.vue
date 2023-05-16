@@ -321,7 +321,8 @@
 		const pdf = await props.getPdfWahlbogen();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(pdf);
-		link.download = "Wahlbogen.pdf";
+		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
+			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".pdf";
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
@@ -332,7 +333,7 @@
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(gzip);
 		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
-			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".lp"
+			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".lp";
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
