@@ -4,13 +4,16 @@
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
-			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich || !zkMoeglich" position="bottom">
+			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich || istFachkombiVerboten || !zkMoeglich" position="bottom">
 				<div class="inline-flex items-center">
 					<span>{{ wahl }}&#8203;</span>
 					<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
 				</div>
 				<template #content v-if="istFachkombiErforderlich">
 					Fachkombination erforderlich
+				</template>
+				<template #content v-else-if="istFachkombiVerboten">
+					Fachkombination ist nicht zulässig
 				</template>
 				<template #content v-else>
 					Zusatzkurs in diesem Halbjahr nicht zulässig
@@ -31,7 +34,7 @@
 <script setup lang="ts">
 
 	import type { AbiturdatenManager, GostFach, GostFaecherManager,
-		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List} from "@svws-nrw/svws-core";
+		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@svws-nrw/svws-core";
 	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
@@ -69,7 +72,7 @@
 				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1?.kuerzel || null)
 				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
 				const belegung_1 = props.abiturdatenManager.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, props.halbjahr)
-				const belegung_2 = props.abiturdatenManager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart1)!, props.halbjahr);
+				const belegung_2 = props.abiturdatenManager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart2)!, props.halbjahr);
 				if (belegung_2)
 					return false;
 				return belegung_1 !== belegung_2;
@@ -83,10 +86,19 @@
 			return false;
 		for (const kombi of props.fachkombiVerboten) {
 			if (kombi.gueltigInHalbjahr[props.halbjahr.id]) {
-				const fach = props.faechermanager.get(kombi.fachID1)
-				if (!fach)
+				const fach1 = props.faechermanager.get(kombi.fachID1)
+				if (!fach1)
 					return false;
-				return props.wahl ? true : false;
+				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1.kuerzel)
+				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
+				const bel1 = f1?.belegungen[props.halbjahr.id];
+				const bel2 = f2?.belegungen[props.halbjahr.id];
+				if ((bel1 === null) || (bel2 === null))
+					return false;
+				if (((kombi.kursart1 === null) || (kombi.kursart1 === bel1?.kursartKuerzel))
+					&& ((kombi.kursart2 === null) || (kombi.kursart2 === bel2?.kursartKuerzel)))
+					return true;
+				return false;
 			}
 		}
 		return false;
