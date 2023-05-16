@@ -115,26 +115,24 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return this._state.value.zwischenspeicher;
 	}
 
-	createAbiturdatenmanager = (): AbiturdatenManager | undefined => {
+	createAbiturdatenmanager = async (): Promise<AbiturdatenManager | undefined> => {
 		if (this._state.value.abiturdaten === undefined)
 			return;
-		let abiturdatenManager;
-		const art = routeSchuelerLaufbahnplanung.gostBelegpruefungsArt.value;
+		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
-		else
-			abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
-		if (art === 'auto') {
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
+		if (art === 'gesamt')
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
+		if (art === 'auto')
 			for (const fachwahl of abiturdatenManager.getSchuelerFachwahlen().values())
 				if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
 					return abiturdatenManager;
-		}
-		else return abiturdatenManager;
 		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
 	}
 
-	setGostBelegpruefungErgebnis = () => {
-		const abiturdatenManager = this.createAbiturdatenmanager();
+	setGostBelegpruefungErgebnis = async () => {
+		const abiturdatenManager = await this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
@@ -145,7 +143,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await api.server.patchGostSchuelerFachwahl(wahl, api.schema, this.auswahl.id, fachID);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
-		this.setGostBelegpruefungErgebnis();
+		await this.setGostBelegpruefungErgebnis();
 	}
 
 	getPdfWahlbogen = async() => {
@@ -159,7 +157,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 	importLaufbahnplanung = async (data: FormData): Promise<boolean> => {
 		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = this.createAbiturdatenmanager();
+		const abiturdatenManager = await this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined)
 			return false;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
@@ -183,11 +181,20 @@ export class RouteDataSchuelerLaufbahnplanung {
 			return;
 		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = this.createAbiturdatenmanager();
+		const abiturdatenManager = await this.createAbiturdatenmanager();
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis});
+	}
+
+	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
+		return api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
+	}
+
+	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto') => {
+		await api.config.setValue("app.gost.belegpruefungsart", gostBelegpruefungsArt);
+		await this.setGostBelegpruefungErgebnis();
 	}
 
 	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
@@ -216,7 +223,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 					mapLehrer.set(l.id, l);
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten,
 					listGostFaecher, faecherManager, mapFachkombinationen, mapLehrer })
-				this.setGostBelegpruefungErgebnis();
+				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
 			}
@@ -237,24 +244,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
-	}
-
-	gostBelegpruefungsArt: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({
-		get: () => {
-			let belegpruefungsart = api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
-			if (belegpruefungsart === null) {
-				void api.config.setValue("app.gost.belegpruefungsart", 'gesamt');
-				belegpruefungsart = 'gesamt';
-			}
-			return belegpruefungsart;
-		},
-		set: (belegpruefungsart) =>
-			void api.config.setValue("app.gost.belegpruefungsart", belegpruefungsart)
-	})
-
-	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto') => {
-		this.gostBelegpruefungsArt.value = gostBelegpruefungsArt;
-		this.data.setGostBelegpruefungErgebnis();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
@@ -281,7 +270,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {
 		return {
 			setWahl: this.data.setWahl,
-			setGostBelegpruefungsArt: this.setGostBelegpruefungsArt,
+			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,
 			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
 			importLaufbahnplanung: this.data.importLaufbahnplanung,
@@ -289,7 +278,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			gostJahrgangsdaten: this.data.gostJahrgangsdaten,
 			gostLaufbahnBeratungsdaten: () => this.data.gostLaufbahnBeratungsdaten,
 			patchBeratungsdaten: this.data.patchBeratungsdaten,
-			gostBelegpruefungsArt: this.gostBelegpruefungsArt.value,
+			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: this.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: this.data.abiturdatenManager,
 			faechermanager: this.data.faechermanager,

@@ -23,7 +23,7 @@
 		faechermanager: GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
-		gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto';
+		gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	}>();
 
 	const emit = defineEmits<{
@@ -31,7 +31,7 @@
 	}>();
 
 	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({
-		get: () => props.gostBelegpruefungsArt,
+		get: () => props.gostBelegpruefungsArt(),
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
 
