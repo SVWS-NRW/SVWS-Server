@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-	import { GostBelegpruefungsArt } from '@svws-nrw/svws-core';
+	import type { ShallowRef } from 'vue';
 	import { shallowRef } from 'vue';
 
-	const art = shallowRef(GostBelegpruefungsArt.GESAMT)
+	const art: ShallowRef<'gesamt'> = shallowRef('gesamt');
 </script>

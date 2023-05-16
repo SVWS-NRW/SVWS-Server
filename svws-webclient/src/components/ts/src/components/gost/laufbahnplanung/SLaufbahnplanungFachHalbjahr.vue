@@ -110,26 +110,23 @@
 	});
 
 
-	function ist_VTF(): boolean {
-		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_VX;
-	}
+	const ist_VTF: ComputedRef<boolean> = computed(() =>
+		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_VX);
 
-	function ist_PJK(): boolean {
-		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
-	}
+	const ist_PJK: ComputedRef<boolean> = computed(()=>
+		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX);
 
-	function getAndereFachwahl(): GostSchuelerFachwahl | undefined {
+	const getAndereFachwahl: ComputedRef<GostSchuelerFachwahl | undefined> = computed(()=> {
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
 			return;
 		const fachbelegungen = props.abiturdatenManager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		if (fachbelegungen !== undefined) {
-			for (const fachbelegung of fachbelegungen) {
+		if (fachbelegungen !== undefined)
+			for (const fachbelegung of fachbelegungen)
 				if (fachbelegung.fachID !== props.fach.id)
 					return props.abiturdatenManager.getSchuelerFachwahl(fachbelegung.fachID)
-			}
-		}
-	}
+		return
+	})
 
 	function stepper() {
 		if (props.manuellerModus) {
@@ -226,7 +223,7 @@
 
 	function setEF1Wahl(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
-			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF() || ist_PJK() ? "M" : "S"; break;
+			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S"; break;
 			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
 			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
 		}
@@ -236,7 +233,7 @@
 	function setEF2Wahl(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null:
-				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF() || ist_PJK() ? "M" : "S";
+				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
@@ -257,7 +254,7 @@
 				wahl.halbjahre[GostHalbjahr.Q11.id] = (GostFachbereich.DEUTSCH.hat(props.fach) || GostFachbereich.MATHEMATIK.hat(props.fach)) ? "S" : "M";
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q11.id] = ist_VTF() || ist_PJK() ? null : "S";
+				wahl.halbjahre[GostHalbjahr.Q11.id] = ist_VTF.value || ist_PJK.value ? null : "S";
 				break;
 			case "S":
 				//S->S ist richtig, weil DE und MA muss belegt sein, entweder S oder LK, anders geht es nicht.
@@ -276,7 +273,7 @@
 		// Q11 wählt bis Q22
 		switch (wahl.halbjahre[GostHalbjahr.Q11.id]) {
 			case null:
-				if (!ist_VTF()) {
+				if (!ist_VTF.value) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
@@ -284,7 +281,7 @@
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q11) {
 							if (wahl.halbjahre[GostHalbjahr.EF2.id] === null && andereWahl?.halbjahre[GostHalbjahr.EF2.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
@@ -296,7 +293,7 @@
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q11) {
 							if (wahl.halbjahre[GostHalbjahr.EF2.id] === null && andereWahl?.halbjahre[GostHalbjahr.EF2.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
@@ -311,16 +308,16 @@
 				}
 				break;
 			case "M":
-				if (props.fach.istMoeglichQ12 && !ist_VTF())
+				if (props.fach.istMoeglichQ12 && !ist_VTF.value)
 					wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
-				if (!(ist_VTF() || ist_PJK()) && !GostFachbereich.KUNST_MUSIK.hat(props.fach) && !GostFachbereich.RELIGION.hat(props.fach)) {
+				if (!(ist_VTF.value || ist_PJK.value) && !GostFachbereich.KUNST_MUSIK.hat(props.fach) && !GostFachbereich.RELIGION.hat(props.fach)) {
 					if (props.fach.istMoeglichQ21) wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
 					if (props.fach.istMoeglichQ22) wahl.halbjahre[GostHalbjahr.Q22.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
 				}
 				break;
 			case "S":
 				if (props.fach.istMoeglichQ12) wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
-				if (!(ist_VTF() || ist_PJK())) {
+				if (!(ist_VTF.value || ist_PJK.value)) {
 					if (props.fach.istMoeglichQ21)
 						wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
 					// "S" kann nur für drittes Abifach gewählt werden, Vorauswahl daher "M"
@@ -359,14 +356,14 @@
 		switch (wahl.halbjahre[GostHalbjahr.Q12.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q12.id] = "M";
-				if (ist_PJK() && wahl.halbjahre[GostHalbjahr.Q11.id] === null && props.fach.istMoeglichQ21) {
+				if (ist_PJK.value && wahl.halbjahre[GostHalbjahr.Q11.id] === null && props.fach.istMoeglichQ21) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "M";
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q11) {
 							if (wahl.halbjahre[GostHalbjahr.EF2.id] === null && andereWahl?.halbjahre[GostHalbjahr.EF2.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
@@ -384,7 +381,7 @@
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q11) {
 							if (wahl.halbjahre[GostHalbjahr.EF2.id] === null && andereWahl?.halbjahre[GostHalbjahr.EF2.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q11.id] = 'ZK'
@@ -408,7 +405,7 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q12.id] = ist_VTF() || ist_PJK() ? null : "S";
+				wahl.halbjahre[GostHalbjahr.Q12.id] = ist_VTF.value || ist_PJK.value ? null : "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id] === "LK" ? "LK" : null;
@@ -435,7 +432,7 @@
 		else if (wahl.halbjahre[GostHalbjahr.Q12.id] === "AT" && GostFachbereich.SPORT.hat(props.fach))
 			wahl.halbjahre[GostHalbjahr.Q12.id] = null;
 		// Nachfolgende HJ ebenfalls setzen
-		if (wahl.halbjahre[GostHalbjahr.Q12.id] === null && !ist_VTF()) {
+		if (wahl.halbjahre[GostHalbjahr.Q12.id] === null && !ist_VTF.value) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 		}
@@ -448,13 +445,13 @@
 		switch (wahl.halbjahre[GostHalbjahr.Q21.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q21.id] = "M";
-				if (ist_PJK() && wahl.halbjahre[GostHalbjahr.Q12.id] === null && props.fach.istMoeglichQ22) {
+				if (ist_PJK.value && wahl.halbjahre[GostHalbjahr.Q12.id] === null && props.fach.istMoeglichQ22) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q12) {
 							if (wahl.halbjahre[GostHalbjahr.Q11.id] === null && andereWahl?.halbjahre[GostHalbjahr.Q11.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
@@ -472,7 +469,7 @@
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q12) {
 							if (wahl.halbjahre[GostHalbjahr.Q11.id] === null && andereWahl?.halbjahre[GostHalbjahr.Q11.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q12.id] = 'ZK'
@@ -489,7 +486,7 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q21.id] = ist_VTF() || ist_PJK() ? null : "S";
+				wahl.halbjahre[GostHalbjahr.Q21.id] = ist_VTF.value || ist_PJK.value ? null : "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q12.id] === "LK" ? "LK" : null;
@@ -516,7 +513,7 @@
 		else if (wahl.halbjahre[GostHalbjahr.Q21.id] === "AT" && GostFachbereich.SPORT.hat(props.fach))
 			wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 		// Nachfolgende HJ ebenfalls setzen
-		if (wahl.halbjahre[GostHalbjahr.Q21.id] === null && !ist_VTF())
+		if (wahl.halbjahre[GostHalbjahr.Q21.id] === null && !ist_VTF.value)
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 		if (wahl.halbjahre[GostHalbjahr.Q21.id] === null || wahl.halbjahre[GostHalbjahr.Q21.id] === "ZK")
 			wahl.abiturFach = null;
@@ -530,7 +527,7 @@
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q21) {
 							if (wahl.halbjahre[GostHalbjahr.Q12.id] === null && andereWahl?.halbjahre[GostHalbjahr.Q12.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
@@ -542,7 +539,7 @@
 				if (GostFachbereich.GESCHICHTE.hat(props.fach) && props.gostJahrgangsdaten.hatZusatzkursGE) {
 					const beginn : GostHalbjahr | null = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE);
 					if (beginn !== null) {
-						const andereWahl = getAndereFachwahl();
+						const andereWahl = getAndereFachwahl.value;
 						if (beginn === GostHalbjahr.Q21) {
 							if (wahl.halbjahre[GostHalbjahr.Q12.id] === null && andereWahl?.halbjahre[GostHalbjahr.Q12.id] == undefined) {
 								wahl.halbjahre[GostHalbjahr.Q21.id] = 'ZK'
@@ -553,7 +550,7 @@
 				}
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.Q22.id] = ist_VTF() || ist_PJK() ? null : "S";
+				wahl.halbjahre[GostHalbjahr.Q22.id] = ist_VTF.value || ist_PJK.value ? null : "S";
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q22.id] = wahl.halbjahre[GostHalbjahr.Q21.id] === "LK" ? "LK" : null;
@@ -587,27 +584,27 @@
 	}
 
 
-	function getAbiGKMoeglich(): boolean {
+	const getAbiGKMoeglich: ComputedRef<boolean> = computed(()=> {
 		const fachgruppe = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
 		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX)
 			return false;
 		return props.fach.istMoeglichAbiGK;
-	}
+	})
 
 
-	function getAbiLKMoeglich(): boolean {
+	const getAbiLKMoeglich: ComputedRef<boolean> = computed(() => {
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		const fachgruppe = fach.getFachgruppe();
 		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX
 			|| fach.getJahrgangAb() === Jahrgaenge.JG_EF || (props.fach.biliSprache === null && props.fach.biliSprache === "D"))
 			return false;
 		return props.fach.istMoeglichAbiLK;
-	}
+	})
 
 
 	function setAbiturWahl(wahl: GostSchuelerFachwahl): void {
 		if (wahl.halbjahre[GostHalbjahr.Q11.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q12.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q21.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") {
-			if (!getAbiLKMoeglich()) {
+			if (!getAbiLKMoeglich.value) {
 				wahl.abiturFach = null;
 			} else {
 				switch (wahl.abiturFach) {
@@ -625,7 +622,7 @@
 			}
 		} else if ((wahl.halbjahre[GostHalbjahr.Q11.id] === "S" || wahl.halbjahre[GostHalbjahr.Q11.id] === "LK") && (wahl.halbjahre[GostHalbjahr.Q12.id] === "S" || wahl.halbjahre[GostHalbjahr.Q12.id] === "LK")
 			&& (wahl.halbjahre[GostHalbjahr.Q21.id] === "S" || wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") && (wahl.halbjahre[GostHalbjahr.Q22.id] === "S" || wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" || wahl.halbjahre[GostHalbjahr.Q22.id] === "M")) {
-			if (!getAbiGKMoeglich()) {
+			if (!getAbiGKMoeglich.value) {
 				wahl.abiturFach = null;
 			} else {
 				switch (wahl.abiturFach) {

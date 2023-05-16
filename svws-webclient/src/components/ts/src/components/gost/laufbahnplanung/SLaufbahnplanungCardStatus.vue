@@ -14,8 +14,7 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager,
-		GostBelegpruefungsArt, Sprachendaten } from "@svws-nrw/svws-core";
+	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, Sprachendaten } from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
@@ -35,13 +34,6 @@
 		get: () => props.gostBelegpruefungsArt,
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
-
-	const autoGesamt = computed(()=>{
-		for (const fachwahl of props.abiturdatenManager.getSchuelerFachwahlen().values())
-			if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
-				return true;
-		return false;
-	})
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 
