@@ -4,13 +4,16 @@
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
-			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich" position="bottom">
+			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich || !zkMoeglich" position="bottom">
 				<div class="inline-flex items-center">
 					<span>{{ wahl }}&#8203;</span>
 					<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
 				</div>
-				<template #content>
+				<template #content v-if="istFachkombiErforderlich">
 					Fachkombination erforderlich
+				</template>
+				<template #content v-else>
+					Zusatzkurs in diesem Halbjahr nicht zulässig
 				</template>
 			</svws-ui-tooltip>
 			<div class="inline-flex items-center" v-else-if="!moeglich && wahl">
@@ -599,6 +602,24 @@
 			|| fach.getJahrgangAb() === Jahrgaenge.JG_EF || (props.fach.biliSprache === null && props.fach.biliSprache === "D"))
 			return false;
 		return props.fach.istMoeglichAbiLK;
+	})
+
+	//**Gibt ein false zurück, falls ein Fach mit GE/SW an diesem HJ gesetzt ist */
+	const zkMoeglich: ComputedRef<boolean> = computed(()=>{
+		if (props.wahl !== 'ZK')
+			return true;
+		const sw = GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach);
+		const ge = GostFachbereich.GESCHICHTE.hat(props.fach);
+		if (!sw && !ge)
+			return true;
+		let beginn;
+		if (sw)
+			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW || "");
+		if (ge)
+			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE || "");
+		if (!beginn || beginn === props.halbjahr || beginn.next() === props.halbjahr)
+			return true;
+		return false;
 	})
 
 
