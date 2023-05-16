@@ -331,7 +331,8 @@
 		const gzip = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(gzip);
-		link.download = "Laufbahnplanung_Schueler_" + props.item.id + "_" + props.item.nachname + "_" + props.item.vorname + ".lp";
+		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
+			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".lp"
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);

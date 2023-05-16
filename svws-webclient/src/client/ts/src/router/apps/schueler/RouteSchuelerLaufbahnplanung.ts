@@ -2,11 +2,10 @@ import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnpl
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
-import type { WritableComputedRef} from "vue";
 import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
 	GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList
 } from "@svws-nrw/svws-core";
-import { computed, shallowRef } from "vue";
+import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";

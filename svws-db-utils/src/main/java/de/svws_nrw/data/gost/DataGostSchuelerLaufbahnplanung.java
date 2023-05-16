@@ -383,7 +383,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw OperationError.NOT_FOUND.exception();
-		return JSONMapper.gzipFileResponseFromObject(getLaufbahnplanungsdaten(dtoSchueler), "Laufbahnplanung_Schueler_" + dtoSchueler.ID + "_" + dtoSchueler.Nachname + "_" + dtoSchueler.Vorname + ".lp");
+		final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+		final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.ID);
+		return JSONMapper.gzipFileResponseFromObject(daten, filename);
 	}
 
 	/**
