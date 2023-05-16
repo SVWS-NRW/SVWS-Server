@@ -69,13 +69,19 @@
 				const fach1 = props.faechermanager.get(kombi.fachID1);
 				if (!fach1)
 					return false;
-				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1?.kuerzel || null)
+				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1.kuerzel)
 				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
-				const belegung_1 = props.abiturdatenManager.pruefeBelegungMitKursart(f1, GostKursart.fromKuerzel(kombi.kursart1)!, props.halbjahr)
-				const belegung_2 = props.abiturdatenManager.pruefeBelegungMitKursart(f2, GostKursart.fromKuerzel(kombi.kursart2)!, props.halbjahr);
-				if (belegung_2)
+				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
+				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
+				const bel1 = kursart1
+					? props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
+					: props.abiturdatenManager.pruefeBelegung(f1, props.halbjahr);
+				const bel2 = kursart2
+					? props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
+					: props.abiturdatenManager.pruefeBelegung(f2, props.halbjahr);
+				if (bel2)
 					return false;
-				return belegung_1 !== belegung_2;
+				return bel1 !== bel2;
 			}
 		}
 		return false;

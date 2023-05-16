@@ -77,8 +77,8 @@
 		const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(fach2?.kuerzel || null)
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
-		if (f1 === null || f2 === null)
-			return false;
+		if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() && (f1 === null || f2 === null) || f1 === null)
+			return true;
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
 				const bel1 = kursart1
@@ -97,7 +97,7 @@
 				}
 			}
 		}
-		fehler.value.delete(f1?.fachID)
+		fehler.value.delete(f1.fachID)
 		return true;
 	}
 
