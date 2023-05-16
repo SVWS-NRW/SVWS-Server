@@ -127,6 +127,15 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						logger.modifyIndent(-2);
 						return false;
 					}
+					logger.logLn("- Korrigiere bei diesen Lernabschnitte auch die Klassenzuordnung in den neuen Lernabschnitt.");
+					sql = "UPDATE SchuelerLernabschnittsdaten sla JOIN Klassen k ON sla.Klassen_ID = k.ID AND sla.Schuljahresabschnitts_ID <> k.Schuljahresabschnitts_ID"
+							+ " JOIN Klassen k2 ON sla.Schuljahresabschnitts_ID = k2.Schuljahresabschnitts_ID AND k.Klasse = k2.Klasse"
+							+ " SET sla.Klassen_ID = k2.ID";
+					if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
+						logger.logLn("Fehler beim Korrigieren der zugehörigen Klasseneinträge bei den Lernabschnitten");
+						logger.modifyIndent(-2);
+						return false;
+					}
 				}
 			}
 			// Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)
