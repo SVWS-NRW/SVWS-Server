@@ -77,7 +77,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			final int aktHalbjahr = (aktQuartal % 2 == 1) ? aktQuartal / 2 + 1 : aktQuartal / 2;
 			final Long aktFolgeAbschnittID = (Long) aktAbschnitt[4];
 			// Passe das aktuelle Quartal an, falls es Quartal 1 oder 3 ist
-			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " ( Schuljahr " + aktSchuljahr + "/" + (aktSchuljahr + 1 - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
+			logger.logLn("* Sie befindet sich aktuell im Quartal " + aktQuartal + " (Schuljahr " + aktSchuljahr + "/" + (aktSchuljahr + 1 - 2000) + ", " + aktHalbjahr + ". Halbjahr)");
 			logger.modifyIndent(2);
 			if ((aktQuartal == 1) || (aktQuartal == 3)) {
 				logger.logLn("... also im ersten Quartal eines Halbjahres");
@@ -103,6 +103,27 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					logger.logLn("- Setze den Abschnitt in EigeneSchule auf den FolgeAbschnitt, die Anpassung der Schülerleistungsdaten erfolgt später automatisch...");
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule JOIN Schuljahresabschnitte ON EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID SET EigeneSchule.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
 						logger.logLn("Fehler beim Anpassen des aktuellen Schuljahresabschnitt in der Tabelle EigeneSchule");
+						logger.modifyIndent(-2);
+						return false;
+					}
+					logger.logLn("- Verschiebe bei allen Schülern den aktuellen Lernabschnitt in den Folgelernabschnitt, wo noch kein Folgelernabschnitt für diesen existiert.");
+					String sql = "UPDATE SchuelerLernabschnittsdaten sla1"
+							+ " JOIN SchuljahresAbschnitte sja ON sla1.Schuljahresabschnitts_ID = sja.ID AND sla1.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell
+							+ " LEFT JOIN SchuelerLernabschnittsdaten sla2 ON sla2.Schuljahresabschnitts_ID = sja.FolgeAbschnitt_ID AND sla1.Schueler_ID = sla2.Schueler_ID AND sla2.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID
+							+ " SET sla1.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID + " WHERE sla2.ID IS NULL";
+					if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
+						logger.logLn("Fehler beim Verschieben des aktuellen Lernabschnittes (1. Quartal des Halbjahres in das 2. Quartal)");
+						logger.modifyIndent(-2);
+						return false;
+					}
+					logger.logLn("- Verschiebe dann bei diesen Lernabschnitte die Noten-Einträge in das Feld für die Quartalsnoten des Halbjahres.");
+					sql = "UPDATE SchuelerLeistungsdaten SET NotenKrzQuartal = NotenKrz, NotenKrz = NULL WHERE Abschnitt_ID IN ("
+							+ "SELECT sla1.ID FROM SchuljahresAbschnitte sja"
+							+ " JOIN SchuelerLernabschnittsdaten sla1 ON sla1.Schuljahresabschnitts_ID = sja.ID AND sla1.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID
+					        + " LEFT JOIN SchuelerLernabschnittsdaten sla2 ON sla2.Schuljahresabschnitts_ID = sja.VorigerAbschnitt_ID AND sla1.Schueler_ID = sla2.Schueler_ID AND sla2.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell
+							+ " WHERE sla2.ID IS NULL)";
+					if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
+						logger.logLn("Fehler beim Verschieben des zugehörigen Noteneinträge in die Quartalsnote");
 						logger.modifyIndent(-2);
 						return false;
 					}
