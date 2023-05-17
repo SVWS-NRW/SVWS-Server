@@ -6,21 +6,25 @@ import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.stundenplan.DataSchuelerStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanKalenderwochenzuordnung;
+import de.svws_nrw.data.stundenplan.DataStundenplanLehrer;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
 import de.svws_nrw.data.stundenplan.DataStundenplanPausenzeiten;
 import de.svws_nrw.data.stundenplan.DataStundenplanRaeume;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.data.stundenplan.DataStundenplanZeitraster;
 import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
@@ -620,6 +624,62 @@ public class APIStundenplan {
     		return (new DataStundenplanUnterricht(conn, null).patch(id, is));
     	}
     }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage von Daten zu Unterrichtsverteilung zu einem Stundenplan.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Stundenplans
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              die Daten zur Unterrichtsverteilung für den angegebenen Stundenplan
+     */
+    @GET
+    @Path("/{id : \\d+}")
+    @Operation(summary = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück.",
+               description = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Daten zur Unterrichtsverteilung des Stundenplans",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanUnterrichtsverteilung.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
+    public Response getStundenplanUnterrichtsverteilung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataStundenplanUnterrichtsverteilung(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Lehrers eines Stundenplans.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Lehrers
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              der Lehrer
+     */
+    @GET
+    @Path("/lehrer/{id : \\d+}")
+    @Operation(summary = "Gibt den Lehrer eines Stundenplans zurück.",
+               description = "Gibt den Lehrer eines Stundenplans zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Lehrer",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = StundenplanLehrer.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Raum eines Stundenplans gefunden")
+    public Response getStundenplanLehrer(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataStundenplanLehrer(conn, null)).get(id);
+    	}
+    }
+
+
 
 }
 

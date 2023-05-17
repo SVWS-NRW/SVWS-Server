@@ -95,12 +95,12 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	@Override
 	public Response get(final Long id) {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Raum eines Stundenplans mit der ID null ist unzulässig.");
+			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Lehrer mit der ID null ist unzulässig.");
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		if ((lehrer == null) || ((lehrer.PersonTyp != PersonalTyp.LEHRKRAFT) && (lehrer.PersonTyp != PersonalTyp.EXTERN)))
+		if ((lehrer == null) || (lehrer.Sichtbar != null && !lehrer.Sichtbar) || ((lehrer.PersonTyp != PersonalTyp.LEHRKRAFT) && (lehrer.PersonTyp != PersonalTyp.EXTERN)))
 			return OperationError.NOT_FOUND.getResponse("Es wurde keine Lehrkraft mit der ID %d gefunden.".formatted(id));
-		// TODO Datum Abgang prüfen
 		final StundenplanLehrer daten = dtoMapper.apply(lehrer);
+		// TODO Fächer des Lehrers ergänzen - hier besteht die Problematik, dass bei den Fachrichtungen/Lehrbefähigungen in der DB die Statistik-Kürzel stehen und hier Fach-IDs benötigt werden...
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

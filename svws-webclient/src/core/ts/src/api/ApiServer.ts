@@ -139,11 +139,13 @@ import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/Sprachpru
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
+import { StundenplanLehrer } from '../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanPausenaufsicht } from '../core/data/stundenplan/StundenplanPausenaufsicht';
 import { StundenplanPausenzeit } from '../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanRaum } from '../core/data/stundenplan/StundenplanRaum';
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
+import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
@@ -7922,6 +7924,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getStundenplanUnterrichtsverteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
+	 *
+	 * Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten zur Unterrichtsverteilung des Stundenplans
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanUnterrichtsverteilung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
+	 *   Code 404: Keine Stundenplandaten gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten zur Unterrichtsverteilung des Stundenplans
+	 */
+	public async getStundenplanUnterrichtsverteilung(schema : string, id : number) : Promise<List<StundenplanUnterrichtsverteilung>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanUnterrichtsverteilung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterrichtsverteilung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
 	 *
 	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -8087,6 +8118,33 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/lehrer/{id : \d+}
+	 *
+	 * Gibt den Lehrer eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Lehrer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanLehrer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Kein Raum eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Lehrer
+	 */
+	public async getStundenplanLehrer(schema : string, id : number) : Promise<StundenplanLehrer> {
+		const path = "/db/{schema}/stundenplan/lehrer/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanLehrer.transpilerFromJSON(text);
 	}
 
 
