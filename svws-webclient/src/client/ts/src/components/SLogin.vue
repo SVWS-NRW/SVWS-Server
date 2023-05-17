@@ -60,19 +60,6 @@
 					</div>
 				</div>
 			</div>
-			<svws-ui-notifications v-if="errors.length">
-				<template v-for="error of errors.reverse()" :key="error.message">
-					<svws-ui-notification type="error" :icon="error.message.includes('Passwort') ? 'login' : undefined">
-						<template #header>
-							{{ error.message.includes('Passwort') ? 'Anmeldung fehlgeschlagen' : error.name }}
-						</template>
-						{{ error.message }}
-						<template #stack v-if="error.stack">
-							<pre v-html="error.stack" />
-						</template>
-					</svws-ui-notification>
-				</template>
-			</svws-ui-notifications>
 		</template>
 	</svws-ui-app-layout>
 </template>
@@ -80,20 +67,15 @@
 <script setup lang="ts">
 
 	import type { LoginProps } from "./SLoginProps";
-	import type { Ref, WritableComputedRef} from "vue";
 	import type { DBSchemaListeEintrag, List} from "@svws-nrw/svws-core";
-	import {computed, onErrorCaptured, ref} from "vue";
+	import {computed, ref} from "vue";
 	import { ArrayList } from "@svws-nrw/svws-core";
 	import { version } from '../../version';
 
-	const errors: Ref<Error[]> = ref([]);
-
-	onErrorCaptured((e) => { errors.value.push(e); });
-
 	const props = defineProps<LoginProps>();
 
-	const firstauth: Ref<boolean> = ref(true);
-	const schema: Ref<DBSchemaListeEintrag | undefined> = ref();
+	const firstauth = ref(true);
+	const schema = ref<DBSchemaListeEintrag | undefined>();
 	const username = ref("Admin");
 	const password = ref("");
 
@@ -101,11 +83,11 @@
 	const authenticating = ref(false);
 	const inputFocus = ref(false);
 
-	const connection_failed: Ref<boolean> = ref(false);
+	const connection_failed = ref(false);
 
-	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new ArrayList<DBSchemaListeEintrag>());
+	const inputDBSchemata = ref<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
 
-	const inputHostname: WritableComputedRef<string> = computed({
+	const inputHostname = computed<string>({
 		get: () => props.hostname,
 		set: (value) => props.setHostname(value)
 	});

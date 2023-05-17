@@ -42,25 +42,6 @@
 				<main class="relative h-full">
 					<router-view :key="app.name" />
 				</main>
-				<svws-ui-notifications v-if="errors.length">
-					<template v-for="error of errors.reverse()" :key="error.message">
-						<svws-ui-notification type="error">
-							<template #header>
-								{{ error.name }}
-								<template v-if="error.name === 'DeveloperNotificationException'">
-									<br>Programmierfehler: Bitte melden Sie diesen Fehler.
-								</template>
-								<template v-if="error.name === 'UserNotificationException'">
-									<br>Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.
-								</template>
-							</template>
-							{{ error.message }}
-							<template #stack v-if="error.stack">
-								<pre v-html="error.stack" />
-							</template>
-						</svws-ui-notification>
-					</template>
-				</svws-ui-notifications>
 			</div>
 		</template>
 	</svws-ui-app-layout>
@@ -68,19 +49,11 @@
 
 <script setup lang="ts">
 
-	import { version } from '../../version';
-	import type { ComputedRef, Ref} from "vue";
-	import { computed, onErrorCaptured, ref, watch } from "vue";
+	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
 	import type { AuswahlChildData } from './AuswahlChildData';
-	import { api } from '~/router/Api';
-
-	const errors: Ref<Error[]> = ref([]);
-
-	onErrorCaptured((e) => {
-		errors.value.push(e);
-		api.status.stop();
-	});
+	import { computed, ref, watch } from "vue";
+	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
 

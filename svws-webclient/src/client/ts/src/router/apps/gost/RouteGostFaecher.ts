@@ -1,10 +1,10 @@
 import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
-import { api } from "~/router/Api";
 import type { RouteGost} from "~/router/apps/RouteGost";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { shallowRef} from "vue";
+import { api } from "~/router/Api";
 import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 
