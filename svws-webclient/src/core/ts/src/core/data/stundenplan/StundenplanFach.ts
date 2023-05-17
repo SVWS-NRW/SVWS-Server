@@ -1,0 +1,85 @@
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { RGBFarbe } from '../../../core/data/RGBFarbe';
+
+export class StundenplanFach extends JavaObject {
+
+	/**
+	 * Die ID des Faches.
+	 */
+	public id : number = -1;
+
+	/**
+	 * Das Kürzel des Faches.
+	 */
+	public kuerzel : string = "";
+
+	/**
+	 * Die Bezeichnung des Faches.
+	 */
+	public vorname : string = "";
+
+	/**
+	 * Die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll.
+	 */
+	public farbe : RGBFarbe | null = null;
+
+
+	public constructor() {
+		super();
+	}
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return ['de.svws_nrw.core.data.stundenplan.StundenplanFach'].includes(name);
+	}
+
+	public static transpilerFromJSON(json : string): StundenplanFach {
+		const obj = JSON.parse(json);
+		const result = new StundenplanFach();
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (typeof obj.kuerzel === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
+		if (typeof obj.vorname === "undefined")
+			 throw new Error('invalid json format, missing attribute vorname');
+		result.vorname = obj.vorname;
+		result.farbe = ((typeof obj.farbe === "undefined") || (obj.farbe === null)) ? null : RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
+		return result;
+	}
+
+	public static transpilerToJSON(obj : StundenplanFach) : string {
+		let result = '{';
+		result += '"id" : ' + obj.id + ',';
+		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<StundenplanFach>) : string {
+		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.kuerzel !== "undefined") {
+			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+		}
+		if (typeof obj.vorname !== "undefined") {
+			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+		}
+		if (typeof obj.farbe !== "undefined") {
+			result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
+		}
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+}
+
+export function cast_de_svws_nrw_core_data_stundenplan_StundenplanFach(obj : unknown) : StundenplanFach {
+	return obj as StundenplanFach;
+}

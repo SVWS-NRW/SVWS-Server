@@ -301,11 +301,17 @@ export { SchuelerStundenplan } from './core/data/stundenplan/SchuelerStundenplan
 export { SchuelerStundenplanUnterricht } from './core/data/stundenplan/SchuelerStundenplanUnterricht';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
+export { StundenplanFach } from './core/data/stundenplan/StundenplanFach';
+export { StundenplanJahrgang } from './core/data/stundenplan/StundenplanJahrgang';
 export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/StundenplanKalenderwochenzuordnung';
+export { StundenplanKlasse } from './core/data/stundenplan/StundenplanKlasse';
+export { StundenplanKurs } from './core/data/stundenplan/StundenplanKurs';
+export { StundenplanLehrer } from './core/data/stundenplan/StundenplanLehrer';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
 export { StundenplanPausenaufsicht } from './core/data/stundenplan/StundenplanPausenaufsicht';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
+export { StundenplanSchueler } from './core/data/stundenplan/StundenplanSchueler';
 export { StundenplanUnterricht } from './core/data/stundenplan/StundenplanUnterricht';
 export { StundenplanZeitraster } from './core/data/stundenplan/StundenplanZeitraster';
 export { StundenplanInputSimple } from './core/data/stundenplanblockung/StundenplanInputSimple';
