@@ -20,9 +20,9 @@ export class StundenplanUnterricht extends JavaObject {
 	public wochentyp : number = -1;
 
 	/**
-	 * Die ID des Kurses
+	 * Die ID des Kurses, sofern es sich um Kursunterricht handelt
 	 */
-	public idKurs : number = -1;
+	public idKurs : number | null = null;
 
 	/**
 	 * Die ID des Faches
@@ -65,9 +65,7 @@ export class StundenplanUnterricht extends JavaObject {
 		if (typeof obj.wochentyp === "undefined")
 			 throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
-		if (typeof obj.idKurs === "undefined")
-			 throw new Error('invalid json format, missing attribute idKurs');
-		result.idKurs = obj.idKurs;
+		result.idKurs = typeof obj.idKurs === "undefined" ? null : obj.idKurs === null ? null : obj.idKurs;
 		if (typeof obj.idFach === "undefined")
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
@@ -94,7 +92,7 @@ export class StundenplanUnterricht extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idZeitraster" : ' + obj.idZeitraster + ',';
 		result += '"wochentyp" : ' + obj.wochentyp + ',';
-		result += '"idKurs" : ' + obj.idKurs + ',';
+		result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs) + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
 		if (!obj.lehrer) {
 			result += '"lehrer" : []';
@@ -149,7 +147,7 @@ export class StundenplanUnterricht extends JavaObject {
 			result += '"wochentyp" : ' + obj.wochentyp + ',';
 		}
 		if (typeof obj.idKurs !== "undefined") {
-			result += '"idKurs" : ' + obj.idKurs + ',';
+			result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs) + ',';
 		}
 		if (typeof obj.idFach !== "undefined") {
 			result += '"idFach" : ' + obj.idFach + ',';
