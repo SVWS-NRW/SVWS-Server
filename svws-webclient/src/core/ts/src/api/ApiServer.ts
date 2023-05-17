@@ -7924,35 +7924,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getStundenplanUnterrichtsverteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
-	 *
-	 * Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten zur Unterrichtsverteilung des Stundenplans
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<StundenplanUnterrichtsverteilung>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
-	 *   Code 404: Keine Stundenplandaten gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten zur Unterrichtsverteilung des Stundenplans
-	 */
-	public async getStundenplanUnterrichtsverteilung(schema : string, id : number) : Promise<List<StundenplanUnterrichtsverteilung>> {
-		const path = "/db/{schema}/stundenplan/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<StundenplanUnterrichtsverteilung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterrichtsverteilung.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
 	 *
 	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -8035,6 +8006,35 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterricht.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanUnterrichtsverteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/unterrichtsverteilung
+	 *
+	 * Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten zur Unterrichtsverteilung des Stundenplans
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanUnterrichtsverteilung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
+	 *   Code 404: Keine Stundenplandaten gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten zur Unterrichtsverteilung des Stundenplans
+	 */
+	public async getStundenplanUnterrichtsverteilung(schema : string, id : number) : Promise<List<StundenplanUnterrichtsverteilung>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/unterrichtsverteilung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanUnterrichtsverteilung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterrichtsverteilung.transpilerFromJSON(text)); });
 		return ret;
 	}
 

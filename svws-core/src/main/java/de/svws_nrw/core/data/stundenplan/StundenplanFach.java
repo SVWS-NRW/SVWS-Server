@@ -25,7 +25,7 @@ public class StundenplanFach {
 
 	/** Die Bezeichnung des Faches. */
 	@Schema(description = "Die Bezeichnung des Faches", example = "Deutsch")
-	public @NotNull String vorname = "";
+	public @NotNull String bezeichnung = "";
 
 	/** Die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll. */
 	@Schema(description = "die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll")

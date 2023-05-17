@@ -30,7 +30,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanRaum}.
 	 *
 	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param stundenplanID   die ID des Stundenplans, dessen Räume abgefragt werden
+	 * @param stundenplanID   die ID des Stundenplans, dessen Lehrer abgefragt werden
 	 */
 	public DataStundenplanLehrer(final DBEntityManager conn, final Long stundenplanID) {
 		super(conn);
@@ -69,15 +69,15 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOLehrer> pausenzeiten = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
+		final List<DTOLehrer> lehrerliste = conn.queryNamed("DTOLehrer.sichtbar", true, DTOLehrer.class);
 		final ArrayList<StundenplanLehrer> daten = new ArrayList<>();
-		for (final DTOLehrer p : pausenzeiten) {
-			if ((p.PersonTyp != PersonalTyp.LEHRKRAFT) && (p.PersonTyp != PersonalTyp.EXTERN))
+		for (final DTOLehrer l : lehrerliste) {
+			if ((l.PersonTyp != PersonalTyp.LEHRKRAFT) && (l.PersonTyp != PersonalTyp.EXTERN))
 				continue;
-			if ((p.DatumAbgang != null)) {
+			if ((l.DatumAbgang != null)) {
 				// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
 			}
-			final StundenplanLehrer lehrer = dtoMapper.apply(p);
+			final StundenplanLehrer lehrer = dtoMapper.apply(l);
 			// TODO Fächer des Lehrers ergänzen - hier besteht die Problematik, dass bei den Fachrichtungen/Lehrbefähigungen in der DB die Statistik-Kürzel stehen und hier Fach-IDs benötigt werden...
 			daten.add(lehrer);
 		}

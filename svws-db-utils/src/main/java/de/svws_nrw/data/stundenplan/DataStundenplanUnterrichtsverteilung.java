@@ -3,7 +3,11 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
@@ -46,10 +50,18 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		if (stundenplan == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
 		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, id);
+		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, id);
+		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, id);
+		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
+		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, id);
 		// Erstelle das Core-DTO-Objekt für die Response
 		final StundenplanUnterrichtsverteilung daten = new StundenplanUnterrichtsverteilung();
 		daten.id = stundenplan.ID;
 		daten.lehrer.addAll(lehrer);
+		daten.schueler.addAll(schueler);
+		daten.faecher.addAll(faecher);
+		daten.jahrgaenge.addAll(jahrgaenge);
+		daten.klassen.addAll(klassen);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

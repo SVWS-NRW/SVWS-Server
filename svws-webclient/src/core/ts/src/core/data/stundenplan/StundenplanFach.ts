@@ -16,7 +16,7 @@ export class StundenplanFach extends JavaObject {
 	/**
 	 * Die Bezeichnung des Faches.
 	 */
-	public vorname : string = "";
+	public bezeichnung : string = "";
 
 	/**
 	 * Die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll.
@@ -41,9 +41,9 @@ export class StundenplanFach extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if (typeof obj.vorname === "undefined")
-			 throw new Error('invalid json format, missing attribute vorname');
-		result.vorname = obj.vorname;
+		if (typeof obj.bezeichnung === "undefined")
+			 throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		result.farbe = ((typeof obj.farbe === "undefined") || (obj.farbe === null)) ? null : RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
 		return result;
 	}
@@ -52,7 +52,7 @@ export class StundenplanFach extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -67,8 +67,8 @@ export class StundenplanFach extends JavaObject {
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
 		}
-		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+		if (typeof obj.bezeichnung !== "undefined") {
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		if (typeof obj.farbe !== "undefined") {
 			result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';

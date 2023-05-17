@@ -637,7 +637,7 @@ public class APIStundenplan {
      * @return              die Daten zur Unterrichtsverteilung für den angegebenen Stundenplan
      */
     @GET
-    @Path("/{id : \\d+}")
+    @Path("/{id : \\d+}/unterrichtsverteilung")
     @Operation(summary = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück.",
                description = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
