@@ -44,6 +44,11 @@ export class StundenplanUnterricht extends JavaObject {
 	 */
 	public raeume : List<number> = new ArrayList();
 
+	/**
+	 * Die IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere).
+	 */
+	public schienen : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -82,6 +87,11 @@ export class StundenplanUnterricht extends JavaObject {
 		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
 			for (const elem of obj.raeume) {
 				result.raeume?.add(elem);
+			}
+		}
+		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+			for (const elem of obj.schienen) {
+				result.schienen?.add(elem);
 			}
 		}
 		return result;
@@ -126,6 +136,18 @@ export class StundenplanUnterricht extends JavaObject {
 				const elem = obj.raeume.get(i);
 				result += elem;
 				if (i < obj.raeume.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schienen) {
+			result += '"schienen" : []';
+		} else {
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem;
+				if (i < obj.schienen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -189,6 +211,20 @@ export class StundenplanUnterricht extends JavaObject {
 					const elem = obj.raeume.get(i);
 					result += elem;
 					if (i < obj.raeume.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schienen !== "undefined") {
+			if (!obj.schienen) {
+				result += '"schienen" : []';
+			} else {
+				result += '"schienen" : [ ';
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
+					result += elem;
+					if (i < obj.schienen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

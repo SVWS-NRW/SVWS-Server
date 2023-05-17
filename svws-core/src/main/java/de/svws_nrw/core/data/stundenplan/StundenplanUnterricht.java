@@ -50,4 +50,8 @@ public class StundenplanUnterricht {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Räume, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<@NotNull Long> raeume = new ArrayList<>();
 
+	/** Die IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere). */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Schienen, die dieser Unterrichtseinheit zugeordnet sind (im Normalfall eine, bei Kursen mit Schülern aus mehreren Jahrgangsstufen ggf. mehrere)."))
+	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
+
 }

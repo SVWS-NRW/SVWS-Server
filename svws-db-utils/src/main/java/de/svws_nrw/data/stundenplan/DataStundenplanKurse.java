@@ -13,6 +13,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -72,6 +73,9 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
+		// Map für Schienen-IDs bestimmen
+		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", idStundenplan, DTOStundenplanSchienen.class)
+				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Erstelle die Core-DTOs
 		final ArrayList<StundenplanKurs> daten = new ArrayList<>();
 		for (final DTOKurs k : kurse) {
@@ -81,8 +85,18 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			} else {
 				kurs.jahrgaenge.add(k.Jahrgang_ID);
 			}
-			if (k.Schienen != null)
-				kurs.schienen.addAll(strLongToList(k.Schienen));
+			if (k.Schienen != null) {
+				for (final Long schienenNummer : strLongToList(k.Schienen)) {
+					final Map<Long, Long> mapJahrgangID = mapNummerJahrgangID.get(schienenNummer.intValue());
+					if ((mapJahrgangID != null) && (!mapJahrgangID.isEmpty())) {
+						for (final Long jgID : kurs.jahrgaenge) {
+							final Long schienenID = mapJahrgangID.get(jgID);
+							if (schienenID != null)
+								kurs.schienen.add(schienenID);
+						}
+					}
+				}
+			}
 			final List<Long> schuelerIDs = mapKursSchuelerIDs.get(k.ID);
 			if (schuelerIDs != null)
 				kurs.schueler.addAll(schuelerIDs);
@@ -134,14 +148,27 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		} else {
 			jahrgangsIDs.add(kurs.Jahrgang_ID);
 		}
+		// Schienen-IDs bestimmen
+		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", stundenplan.ID, DTOStundenplanSchienen.class)
+				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Schüler bestimmen
 		final List<Long> schuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id", kurs.ID, DTOKursSchueler.class)
 				.stream().map(ks -> ks.Schueler_ID).toList();
 		// DTO erstellen
 		final StundenplanKurs daten = dtoMapper.apply(kurs);
 		daten.jahrgaenge.addAll(jahrgangsIDs);
-		if (kurs.Schienen != null)
-			daten.schienen.addAll(strLongToList(kurs.Schienen));
+		if (kurs.Schienen != null) {
+			for (final Long schienenNummer : strLongToList(kurs.Schienen)) {
+				final Map<Long, Long> mapJahrgangID = mapNummerJahrgangID.get(schienenNummer.intValue());
+				if ((mapJahrgangID != null) && (!mapJahrgangID.isEmpty())) {
+					for (final Long jgID : jahrgangsIDs) {
+						final Long schienenID = mapJahrgangID.get(jgID);
+						if (schienenID != null)
+							daten.schienen.add(schienenID);
+					}
+				}
+			}
+		}
 		daten.schueler.addAll(schuelerIDs);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

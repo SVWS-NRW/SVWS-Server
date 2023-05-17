@@ -16,6 +16,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
@@ -62,6 +63,9 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		// Bestimme die Zuordnung der Räume zu den Unterrichts-Einträgen
 		final Map<Long, List<DTOStundenplanUnterrichtRaum>> mapRaeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtRaum.class)
 				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
+		// Bestimme die Zuordnung der Schienen zu den Unterrichts-Einträgen
+		final Map<Long, List<DTOStundenplanUnterrichtSchiene>> mapSchienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtSchiene.class)
+				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
 		// Bestimme die Zuordnung der Klassen zu den Unterrichts-Einträgen
 		final Map<Long, List<DTOStundenplanUnterrichtKlasse>> mapKlassen = conn.queryNamed("DTOStundenplanUnterrichtKlasse.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtKlasse.class)
 				.stream().collect(Collectors.groupingBy(u -> u.Unterricht_ID));
@@ -81,6 +85,8 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 				unterricht.klassen.addAll(mapKlassen.get(unterricht.id).stream().map(b -> b.Klasse_ID).toList());
 			if (mapLehrer.containsKey(unterricht.id))
 				unterricht.lehrer.addAll(mapLehrer.get(unterricht.id).stream().map(b -> b.Lehrer_ID).toList());
+			if (mapSchienen.containsKey(unterricht.id))
+				unterricht.schienen.addAll(mapSchienen.get(unterricht.id).stream().map(b -> b.Schiene_ID).toList());
 			daten.add(unterricht);
 		}
 		return daten;
@@ -107,6 +113,8 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 		final List<Long> raeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtRaum.class)
 				.stream().map(b -> b.Raum_ID).toList();
+		final List<Long> schienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtSchiene.class)
+				.stream().map(b -> b.Schiene_ID).toList();
 		final List<Long> klassen = conn.queryNamed("DTOStundenplanUnterrichtKlasse.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtKlasse.class)
 				.stream().map(b -> b.Klasse_ID).toList();
 		final List<Long> lehrer = conn.queryNamed("DTOStundenplanUnterrichtLehrer.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtLehrer.class)
@@ -118,6 +126,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		daten.idKurs = dtoUnterricht.Kurs_ID;
 		daten.idFach = dtoUnterricht.Fach_ID;
 		daten.raeume.addAll(raeume);
+		daten.schienen.addAll(schienen);
 		daten.klassen.addAll(klassen);
 		daten.lehrer.addAll(lehrer);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

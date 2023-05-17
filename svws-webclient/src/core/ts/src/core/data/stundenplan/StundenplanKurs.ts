@@ -15,7 +15,7 @@ export class StundenplanKurs extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Liste der Schienen-Nummern, denen der Kurs zugeordnet ist.
+	 * Die Liste der IDs der Schienen, denen der Kurs zugeordnet ist.
 	 */
 	public schienen : List<number> = new ArrayList();
 
