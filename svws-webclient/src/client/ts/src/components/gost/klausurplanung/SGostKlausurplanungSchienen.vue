@@ -55,9 +55,9 @@
 				<div class="flex flex-wrap items-center gap-2 border border-solid rounded px-2">
 					<label class="font-bold" for="rgQuartalAuswahl">Quartal:</label>
 					<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide" value="0" @input="chooseQuartal(0)" model-value="0" />
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="1." value="1" @input="chooseQuartal(1)" />
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="2." value="2" @input="chooseQuartal(2)" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide" value="0" @input="chooseQuartal(0)" :model-value="quartal.toString()" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="1." value="1" @input="chooseQuartal(1)" :model-value="quartal.toString()" />
+						<svws-ui-radio-option name="rgQuartalAuswahl" label="2." value="2" @input="chooseQuartal(2)" :model-value="quartal.toString()" />
 					</svws-ui-radio-group>
 				</div>
 				<div class="flex flex-wrap items-center gap-2">
