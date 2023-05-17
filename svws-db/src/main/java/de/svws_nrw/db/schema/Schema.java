@@ -208,10 +208,12 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenaufsichten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_PausenaufsichtenBereich;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenzeit;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Raeume;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Schienen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Unterricht;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtKlasse;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtLehrer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtRaum;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_UnterrichtSchiene;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Zeitraster;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
@@ -808,6 +810,9 @@ public final class Schema {
 	/** Tabelle Stundenplan_Raeume */
 	public static final Tabelle_Stundenplan_Raeume tab_Stundenplan_Raeume = add(new Tabelle_Stundenplan_Raeume());
 
+	/** Tabelle Stundenplan_Schienen */
+	public static final Tabelle_Stundenplan_Schienen tab_Stundenplan_Schienen = add(new Tabelle_Stundenplan_Schienen());
+
 	/** Tabelle Stundenplan_Zeitraster */
 	public static final Tabelle_Stundenplan_Zeitraster tab_Stundenplan_Zeitraster = add(new Tabelle_Stundenplan_Zeitraster());
 
@@ -822,6 +827,9 @@ public final class Schema {
 
 	/** Tabelle Stundenplan_UnterrichtRaum */
 	public static final Tabelle_Stundenplan_UnterrichtRaum tab_Stundenplan_UnterrichtRaum = add(new Tabelle_Stundenplan_UnterrichtRaum());
+
+	/** Tabelle Stundenplan_UnterrichtSchiene */
+	public static final Tabelle_Stundenplan_UnterrichtSchiene tab_Stundenplan_UnterrichtSchiene = add(new Tabelle_Stundenplan_UnterrichtSchiene());
 
 	/** Tabelle_Stundenplan_Kalenderwochen_Zuordnung */
 	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung = add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());

@@ -42,7 +42,7 @@ public final class DTOStundenplanUnterrichtRaum {
 	@JsonProperty
 	public long Unterricht_ID;
 
-	/** Die ID des zugewiesenen Raumes. Sollten ggf. mehrere Räume zugwiesen werden, so müssen für eine Unterricht-ID mehrere Datensätze vorliegen */
+	/** Die ID des zugewiesenen Raumes. Sollten ggf. mehrere Räume zugewiesen werden, so müssen für eine Unterricht-ID mehrere Datensätze vorliegen */
 	@Column(name = "Raum_ID")
 	@JsonProperty
 	public long Raum_ID;

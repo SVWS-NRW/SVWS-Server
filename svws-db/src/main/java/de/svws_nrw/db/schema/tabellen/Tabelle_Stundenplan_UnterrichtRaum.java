@@ -28,7 +28,7 @@ public class Tabelle_Stundenplan_UnterrichtRaum extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Raum_ID */
 	public SchemaTabelleSpalte col_Raum_ID = add("Raum_ID", SchemaDatentypen.BIGINT, false)
 		.setNotNull()
-		.setJavaComment("Die ID des zugewiesenen Raumes. Sollten ggf. mehrere Räume zugwiesen werden, so müssen für eine Unterricht-ID mehrere Datensätze vorliegen");
+		.setJavaComment("Die ID des zugewiesenen Raumes. Sollten ggf. mehrere Räume zugewiesen werden, so müssen für eine Unterricht-ID mehrere Datensätze vorliegen");
 
 
 	/** Die Definition des Fremdschlüssels Stundenplan_UnterrichtRaum_Raeume_FK */

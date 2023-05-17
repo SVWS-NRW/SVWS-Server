@@ -371,10 +371,12 @@
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum</class>
+        <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum</class>
+        <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>
         <class>de.svws_nrw.db.dto.current.schueler.DTOSchuelerStatus</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOHerkunftKeys</class>
