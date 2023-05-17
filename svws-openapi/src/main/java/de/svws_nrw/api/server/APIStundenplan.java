@@ -656,14 +656,15 @@ public class APIStundenplan {
     /**
      * Die OpenAPI-Methode für die Abfrage eines Lehrers eines Stundenplans.
      *
-     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id            die ID des Lehrers
-     * @param request       die Informationen zur HTTP-Anfrage
+     * @param schema          das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param idStundenplan   die ID des Stundenplans
+     * @param id              die ID des Lehrers
+     * @param request         die Informationen zur HTTP-Anfrage
      *
      * @return              der Lehrer
      */
     @GET
-    @Path("/lehrer/{id : \\d+}")
+    @Path("{idStundenplan : \\d+}/lehrer/{id : \\d+}")
     @Operation(summary = "Gibt den Lehrer eines Stundenplans zurück.",
                description = "Gibt den Lehrer eines Stundenplans zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
@@ -673,9 +674,9 @@ public class APIStundenplan {
                  schema = @Schema(implementation = StundenplanLehrer.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Raum eines Stundenplans gefunden")
-    public Response getStundenplanLehrer(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    public Response getStundenplanLehrer(@PathParam("schema") final String schema, @PathParam("idStundenplan") final long idStundenplan, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
-    		return (new DataStundenplanLehrer(conn, null)).get(id);
+    		return (new DataStundenplanLehrer(conn, idStundenplan)).get(id);
     	}
     }
 

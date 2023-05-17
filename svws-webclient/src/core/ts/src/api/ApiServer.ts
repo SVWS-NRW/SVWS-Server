@@ -8069,6 +8069,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getStundenplanLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{idStundenplan : \d+}/lehrer/{id : \d+}
+	 *
+	 * Gibt den Lehrer eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Lehrer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanLehrer
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Kein Raum eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idStundenplan - der Pfad-Parameter idStundenplan
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Lehrer
+	 */
+	public async getStundenplanLehrer(schema : string, idStundenplan : number, id : number) : Promise<StundenplanLehrer> {
+		const path = "/db/{schema}/stundenplan/{idStundenplan : \\d+}/lehrer/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{idStundenplan\s*(:[^}]+)?}/g, idStundenplan.toString())
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanLehrer.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/kalenderwochen/{id : \d+}
 	 *
 	 * Gibt die Kalenderwochen-Zuordnung eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -8118,33 +8147,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanKalenderwochenzuordnung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getStundenplanLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/lehrer/{id : \d+}
-	 *
-	 * Gibt den Lehrer eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Lehrer
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: StundenplanLehrer
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
-	 *   Code 404: Kein Raum eines Stundenplans gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der Lehrer
-	 */
-	public async getStundenplanLehrer(schema : string, id : number) : Promise<StundenplanLehrer> {
-		const path = "/db/{schema}/stundenplan/lehrer/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return StundenplanLehrer.transpilerFromJSON(text);
 	}
 
 

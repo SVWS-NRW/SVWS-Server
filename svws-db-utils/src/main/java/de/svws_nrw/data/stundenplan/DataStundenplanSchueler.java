@@ -138,17 +138,17 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw OperationError.NOT_FOUND.exception();
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Schüler mit der ID null ist unzulässig.");
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Schüler mit der ID %d gefunden.".formatted(id));
-		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, id, schule.Schuljahresabschnitts_ID);
+		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
 		if (abschnitte.size() != 1)
-			return OperationError.NOT_FOUND.getResponse("Der Schüler mit der ID %d hat mehr als einen Lernabschnitt.".formatted(id));
+			return OperationError.NOT_FOUND.getResponse("Der Schüler mit der ID %d hat keinen oder mehr als einen Lernabschnitt.".formatted(id));
 		final DTOSchuelerLernabschnittsdaten abschnitt = abschnitte.get(0);
 		final StundenplanSchueler daten = dtoMapper.apply(schueler);
 		daten.idKlasse = abschnitt.Klassen_ID;

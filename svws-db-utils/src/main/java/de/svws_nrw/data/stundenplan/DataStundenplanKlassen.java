@@ -102,11 +102,16 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Klasse mit der ID null ist unzulässig.");
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
 		if (klasse == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde keine Klasse mit der ID %d gefunden.".formatted(id));
+		if (klasse.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
+			return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein.".formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		// Jahrgänge bestimmen
 		final List<Long> jahrgangsIDs = new ArrayList<>();
 		if (klasse.Jahrgang_ID == null) {

@@ -6,6 +6,7 @@ import java.util.List;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
+import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
@@ -54,6 +55,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, id);
 		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
 		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, id);
+		final List<StundenplanKurs> kurse = DataStundenplanKurse.getKurse(conn, id);
 		// Erstelle das Core-DTO-Objekt für die Response
 		final StundenplanUnterrichtsverteilung daten = new StundenplanUnterrichtsverteilung();
 		daten.id = stundenplan.ID;
@@ -62,6 +64,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		daten.faecher.addAll(faecher);
 		daten.jahrgaenge.addAll(jahrgaenge);
 		daten.klassen.addAll(klassen);
+		daten.kurse.addAll(kurse);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

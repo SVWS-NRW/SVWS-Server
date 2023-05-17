@@ -106,6 +106,9 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw OperationError.NOT_FOUND.exception();
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Fach mit der ID null ist unzulässig.");
 		final DTOFach fach = conn.queryByKey(DTOFach.class, id);
