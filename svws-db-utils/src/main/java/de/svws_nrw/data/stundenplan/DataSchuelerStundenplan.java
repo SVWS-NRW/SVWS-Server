@@ -2,6 +2,7 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,7 +20,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
-import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -81,8 +81,8 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 					.build();
 
 		final List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
-		final Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream()
-				.collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, DTOLehrer> mapLehrer = lehrer.isEmpty() ? new HashMap<>()
+				: conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 
 		final List<Long> faecher = leistungsdaten.stream().map(ld -> ld.Fach_ID).filter(f -> f != null).toList();
 		final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream()
@@ -112,8 +112,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		leistungsdaten.stream().forEach(ld -> {
 			final List<DTOStundenplanUnterricht> unterricht = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
 			if ((unterricht == null) || (leistungsdaten.isEmpty()))
-				// TODO Wirklich eine Exception?
-				throw OperationError.NOT_FOUND.exception();
+				return;
 			final DTOLehrer l = mapLehrer.get(ld.Fachlehrer_ID);
 			final DTOFach f = mapFaecher.get(ld.Fach_ID);
 			unterricht.stream().forEach(u -> {

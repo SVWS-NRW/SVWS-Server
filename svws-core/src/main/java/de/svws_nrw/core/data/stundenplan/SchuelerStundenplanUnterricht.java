@@ -52,8 +52,8 @@ public class SchuelerStundenplanUnterricht {
 	public @NotNull String fachKuerzelStatistik = "";
 
 	/** Die ID des Lehrers. */
-	@Schema(description = "die ID des Lehrers", example = "7")
-	public long idLehrer = -1;
+	@Schema(description = "die ID des Lehrers, sofern ein Lehrer zugeordnet ist", example = "7")
+	public Long idLehrer = null;
 
 	/** Der Nachname des Schülers. */
 	@Schema(description = "das Kürzel des Lehrers", example = "007")

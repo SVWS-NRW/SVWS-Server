@@ -50,7 +50,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 	/**
 	 * Die ID des Lehrers.
 	 */
-	public idLehrer : number = -1;
+	public idLehrer : number | null = null;
 
 	/**
 	 * Der Nachname des Schülers.
@@ -106,9 +106,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		if (typeof obj.fachKuerzelStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute fachKuerzelStatistik');
 		result.fachKuerzelStatistik = obj.fachKuerzelStatistik;
-		if (typeof obj.idLehrer === "undefined")
-			 throw new Error('invalid json format, missing attribute idLehrer');
-		result.idLehrer = obj.idLehrer;
+		result.idLehrer = typeof obj.idLehrer === "undefined" ? null : obj.idLehrer === null ? null : obj.idLehrer;
 		if (typeof obj.lehrerKuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute lehrerKuerzel');
 		result.lehrerKuerzel = obj.lehrerKuerzel;
@@ -132,7 +130,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 		result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel! + '"' + ',';
 		result += '"fachBezeichnung" : ' + '"' + obj.fachBezeichnung! + '"' + ',';
 		result += '"fachKuerzelStatistik" : ' + '"' + obj.fachKuerzelStatistik! + '"' + ',';
-		result += '"idLehrer" : ' + obj.idLehrer + ',';
+		result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer) + ',';
 		result += '"lehrerKuerzel" : ' + '"' + obj.lehrerKuerzel! + '"' + ',';
 		result += '"lehrerNachname" : ' + '"' + obj.lehrerNachname! + '"' + ',';
 		result += '"lehrerVorname" : ' + '"' + obj.lehrerVorname! + '"' + ',';
@@ -171,7 +169,7 @@ export class SchuelerStundenplanUnterricht extends JavaObject {
 			result += '"fachKuerzelStatistik" : ' + '"' + obj.fachKuerzelStatistik + '"' + ',';
 		}
 		if (typeof obj.idLehrer !== "undefined") {
-			result += '"idLehrer" : ' + obj.idLehrer + ',';
+			result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer) + ',';
 		}
 		if (typeof obj.lehrerKuerzel !== "undefined") {
 			result += '"lehrerKuerzel" : ' + '"' + obj.lehrerKuerzel + '"' + ',';
