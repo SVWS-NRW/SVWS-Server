@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card class="pt-8">
-		<div class="router-tab-bar--subnav">
+		<svws-ui-sub-nav>
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
 			<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung">Exportieren <i-ri-upload-2-line /></svws-ui-button>
 			<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
@@ -15,8 +15,8 @@
 				</template>
 			</svws-ui-button>
 			<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
-			<s-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </s-modal-hilfe>
-		</div>
+			<svws-ui-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
+		</svws-ui-sub-nav>
 		<svws-ui-data-table :items="faechermanager.toList()"
 			:columns="cols">
 			<template #header>
