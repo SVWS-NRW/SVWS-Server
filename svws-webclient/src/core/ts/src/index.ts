@@ -313,6 +313,7 @@ export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausen
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
 export { StundenplanSchueler } from './core/data/stundenplan/StundenplanSchueler';
 export { StundenplanUnterricht } from './core/data/stundenplan/StundenplanUnterricht';
+export { StundenplanUnterrichtsverteilung } from './core/data/stundenplan/StundenplanUnterrichtsverteilung';
 export { StundenplanZeitraster } from './core/data/stundenplan/StundenplanZeitraster';
 export { StundenplanInputSimple } from './core/data/stundenplanblockung/StundenplanInputSimple';
 export { StundenplanInputSimpleFach } from './core/data/stundenplanblockung/StundenplanInputSimpleFach';
