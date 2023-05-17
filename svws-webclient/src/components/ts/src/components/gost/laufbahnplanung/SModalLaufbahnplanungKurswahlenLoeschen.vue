@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">Zurücksetzen</svws-ui-button>
+		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">Zurücksetzen …</svws-ui-button>
 		<svws-ui-modal ref="modal" size="small" type="danger">
 			<template #modalTitle>Alle Kurswahlen löschen</template>
 			<template #modalDescription>

@@ -103,7 +103,7 @@
 
 	const connection_failed: Ref<boolean> = ref(false);
 
-	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new ArrayList());
+	const inputDBSchemata: Ref<List<DBSchemaListeEintrag>> = ref(new ArrayList<DBSchemaListeEintrag>());
 
 	const inputHostname: WritableComputedRef<string> = computed({
 		get: () => props.hostname,

@@ -1,5 +1,5 @@
 <template>
-	<div role="cell" class="data-table__td data-table__td__align-center select-none" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-sm text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
+	<div role="cell" class="data-table__td data-table__td__align-center select-none" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
 		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">

@@ -6,7 +6,7 @@
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-4">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-5">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fachkombination
@@ -51,6 +51,14 @@
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Kursart
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Hinweis
 							</div>
 						</div>
 					</div>
@@ -160,6 +168,7 @@
 		{ key: "Kursart", label: "Kursart", span: 1},
 		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 2.5 },
 		{ key: "Kursart", label: "Kursart", align: 'center', span: 1, minWidth: 2.5 },
+		{ key: "Hinweistext", label: "Hinweistext", align: 'center', span: 0.5, minWidth: 2 },
 		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.5, minWidth: 2.5 },

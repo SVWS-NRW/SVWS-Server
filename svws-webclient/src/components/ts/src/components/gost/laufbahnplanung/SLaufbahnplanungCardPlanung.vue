@@ -4,7 +4,7 @@
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
 			<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung">Exportieren <i-ri-upload-2-line /></svws-ui-button>
 			<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
-				<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal">Importieren <i-ri-download-2-line /></svws-ui-button>
+				<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal">Importieren …<i-ri-download-2-line /></svws-ui-button>
 			</s-laufbahnplanung-import-modal>
 			<svws-ui-button size="small" :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 			<svws-ui-button size="small" type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>

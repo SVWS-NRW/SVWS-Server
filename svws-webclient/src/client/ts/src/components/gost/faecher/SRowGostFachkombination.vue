@@ -11,6 +11,14 @@
 	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
 		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
+	<div role="cell" class="data-table__td  data-table__td__align-center data-table__td__separate">
+		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
+			<svws-ui-tooltip position="top">
+				<i-ri-message-2-line @click="openModal" />
+				<template #content> {{ kombination.hinweistext || hinweistext }} </template>
+			</svws-ui-tooltip>
+		</s-row-gost-fachkombination-modal>
+	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
 		<svws-ui-checkbox circle v-model="gueltigEF1" headless />
 	</div>
@@ -36,9 +44,10 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection} from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection } from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
 	import { GostKursart, GostHalbjahr } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
@@ -124,6 +133,12 @@
 			void props.patchFachkombination({ gueltigInHalbjahr: result }, props.kombination.id);
 		}
 	});
+
+	const hinweistext: ComputedRef<string> = computed(() => {
+		const typ = (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === props.kombination.typ)
+			? 'erfordert' : 'erlaubt kein'
+		return `${fach1.value?.kuerzel || ''} ${kursart1.value || ''} ${typ} ${fach2.value?.kuerzel || ''} ${kursart2.value || ''}`;
+	})
 
 	const del_fachkombi = () => {
 		void props.removeFachkombination(props.kombination.id);
