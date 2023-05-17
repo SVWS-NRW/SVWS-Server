@@ -54,7 +54,13 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" />
+						class="data-table__th data-table__thead__th data-table__th__align-center">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Abitur
+							</div>
+						</div>
+					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
 					<div role="columnheader"
@@ -149,7 +155,7 @@
 						class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
-								Abiturfach
+								Fach
 							</div>
 						</div>
 					</div>
