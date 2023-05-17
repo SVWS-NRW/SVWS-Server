@@ -311,6 +311,7 @@ export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanList
 export { StundenplanPausenaufsicht } from './core/data/stundenplan/StundenplanPausenaufsicht';
 export { StundenplanPausenzeit } from './core/data/stundenplan/StundenplanPausenzeit';
 export { StundenplanRaum } from './core/data/stundenplan/StundenplanRaum';
+export { StundenplanSchiene } from './core/data/stundenplan/StundenplanSchiene';
 export { StundenplanSchueler } from './core/data/stundenplan/StundenplanSchueler';
 export { StundenplanUnterricht } from './core/data/stundenplan/StundenplanUnterricht';
 export { StundenplanUnterrichtsverteilung } from './core/data/stundenplan/StundenplanUnterrichtsverteilung';

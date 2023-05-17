@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
+import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -48,6 +49,11 @@ export class Stundenplan extends JavaObject {
 	 * Die Liste der Räume, die für den Stundenplan zur Verfügung stehen.
 	 */
 	public raeume : List<StundenplanRaum> = new ArrayList();
+
+	/**
+	 * Die Liste der Schienen, die für den Stundenplan angelegt sind.
+	 */
+	public schienen : List<StundenplanSchiene> = new ArrayList();
 
 	/**
 	 * Die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen.
@@ -104,6 +110,11 @@ export class Stundenplan extends JavaObject {
 				result.raeume?.add(StundenplanRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+			for (const elem of obj.schienen) {
+				result.schienen?.add(StundenplanSchiene.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if ((obj.pausenzeiten !== undefined) && (obj.pausenzeiten !== null)) {
 			for (const elem of obj.pausenzeiten) {
 				result.pausenzeiten?.add(StundenplanPausenzeit.transpilerFromJSON(JSON.stringify(elem)));
@@ -150,6 +161,18 @@ export class Stundenplan extends JavaObject {
 				const elem = obj.raeume.get(i);
 				result += StundenplanRaum.transpilerToJSON(elem);
 				if (i < obj.raeume.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schienen) {
+			result += '"schienen" : []';
+		} else {
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += StundenplanSchiene.transpilerToJSON(elem);
+				if (i < obj.schienen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -238,6 +261,20 @@ export class Stundenplan extends JavaObject {
 					const elem = obj.raeume.get(i);
 					result += StundenplanRaum.transpilerToJSON(elem);
 					if (i < obj.raeume.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schienen !== "undefined") {
+			if (!obj.schienen) {
+				result += '"schienen" : []';
+			} else {
+				result += '"schienen" : [ ';
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
+					result += StundenplanSchiene.transpilerToJSON(elem);
+					if (i < obj.schienen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

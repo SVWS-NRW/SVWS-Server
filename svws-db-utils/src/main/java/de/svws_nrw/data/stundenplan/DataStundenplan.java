@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -54,6 +55,7 @@ public final class DataStundenplan extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
+		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, id);
 		final List<StundenplanPausenzeit> pausenzeiten = DataStundenplanPausenzeiten.getPausenzeiten(conn, id);
 		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, id);
 		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, id);
@@ -67,6 +69,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		daten.wochenTypModell = stundenplan.WochentypModell;
 		daten.zeitraster.addAll(zeitraster);
 		daten.raeume.addAll(raeume);
+		daten.schienen.addAll(schienen);
 		daten.pausenzeiten.addAll(pausenzeiten);
 		daten.aufsichtsbereiche.addAll(aufsichtsbereiche);
 		daten.kalenderwochenZuordnung.addAll(kalenderwochenzuordnung);

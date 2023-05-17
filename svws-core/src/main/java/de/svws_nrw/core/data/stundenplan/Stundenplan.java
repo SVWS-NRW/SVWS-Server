@@ -49,6 +49,10 @@ public class Stundenplan {
 	@Schema(description = "die Liste der Räume, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<@NotNull StundenplanRaum> raeume = new ArrayList<>();
 
+	/** Die Liste der Schienen, die für den Stundenplan angelegt sind. */
+	@Schema(description = "die Liste der Schienen, die für den Stundenplan angelegt sind")
+	public @NotNull List<@NotNull StundenplanSchiene> schienen = new ArrayList<>();
+
 	/** Die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen. */
 	@Schema(description = "die Liste der Pausenzeiten, bei welchen Aufsichten eingeteilt werden müssen")
 	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeiten = new ArrayList<>();
