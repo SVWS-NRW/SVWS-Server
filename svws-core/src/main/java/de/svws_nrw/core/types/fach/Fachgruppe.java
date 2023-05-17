@@ -214,7 +214,7 @@ public enum Fachgruppe {
 
 	/** Fachgruppe Sport */
 	FG_SP(new FachgruppenKatalogEintrag[] {
-			new FachgruppenKatalogEintrag(12L, 9, 600, "Sport", "SP", new RGBFarbe(255, 255, 255), Arrays.asList(
+			new FachgruppenKatalogEintrag(12L, 9, 600, "Sport", "SP", new RGBFarbe(224, 211, 229), Arrays.asList(
 					Schulform.BK, Schulform.SB,
 					Schulform.FW, Schulform.HI, Schulform.WF,
 					Schulform.G,

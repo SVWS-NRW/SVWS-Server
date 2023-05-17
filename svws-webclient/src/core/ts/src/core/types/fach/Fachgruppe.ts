@@ -80,7 +80,7 @@ export class Fachgruppe extends JavaObject implements JavaEnum<Fachgruppe> {
 	/**
 	 * Fachgruppe Sport
 	 */
-	public static readonly FG_SP : Fachgruppe = new Fachgruppe("FG_SP", 11, [new FachgruppenKatalogEintrag(12, 9, 600, "Sport", "SP", new RGBFarbe(255, 255, 255), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 14, true, null, null)]);
+	public static readonly FG_SP : Fachgruppe = new Fachgruppe("FG_SP", 11, [new FachgruppenKatalogEintrag(12, 9, 600, "Sport", "SP", new RGBFarbe(224, 211, 229), Arrays.asList(Schulform.BK, Schulform.SB, Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R, Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V, Schulform.WB), 14, true, null, null)]);
 
 	/**
 	 * Fachgruppe Vertiefungskurs

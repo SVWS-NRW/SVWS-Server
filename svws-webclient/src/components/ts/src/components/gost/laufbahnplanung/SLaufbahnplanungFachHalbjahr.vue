@@ -116,9 +116,11 @@
 			!props.moeglich || props.bewertet || istFachkombiVerboten.value
 	);
 
+	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
+
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgb(var(--color-gray))';
+			return bgColorDisabled.value;
 		return ((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
@@ -126,8 +128,9 @@
 
 	const bgColorTransparent: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
-			return 'rgb(var(--color-gray))';
-		return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.6)
+			return bgColorDisabled.value;
+		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`;
+		//return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.7)
 	});
 
 
