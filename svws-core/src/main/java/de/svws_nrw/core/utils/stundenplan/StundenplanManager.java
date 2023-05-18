@@ -58,7 +58,7 @@ public class StundenplanManager {
 			// Der Wochentyp einer KW-Zuordnung muss >= 1 sein.
 			DeveloperNotificationException.ifTrue("z.wochentyp <= 0", z.wochentyp <= 0);
 			// Liegt die Zuordnung in einer bestimmten Woche, muss es so viele Wochen auch global geben.
-			DeveloperNotificationException.ifTrue("z.wochentyp > wochentyp", z.wochentyp > wochentyp );
+			DeveloperNotificationException.ifTrue("z.wochentyp > wochentyp", z.wochentyp > wochentyp);
 		}
 
 		for (@NotNull final StundenplanUnterricht u : _datenU) {
