@@ -25,7 +25,7 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public wochentyp : number = -1;
 
 	/**
-	 * Die IDs der Aufsichtsbeiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird.
+	 * Die IDs der Aufsichtsbereiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird.
 	 */
 	public bereiche : List<number> = new ArrayList();
 

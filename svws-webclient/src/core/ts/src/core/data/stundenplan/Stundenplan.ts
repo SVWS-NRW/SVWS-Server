@@ -21,7 +21,7 @@ export class Stundenplan extends JavaObject {
 	public idSchuljahresabschnitt : number = -1;
 
 	/**
-	 * Das Datum, ab dem der Stundenpland gültig ist.
+	 * Das Datum, ab dem der Stundenplan gültig ist.
 	 */
 	public gueltigAb : string = "";
 

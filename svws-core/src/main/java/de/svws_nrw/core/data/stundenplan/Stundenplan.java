@@ -25,7 +25,7 @@ public class Stundenplan {
 	@Schema(description = "die ID des Schuljahresabschnitts des Stundenplans", example = "7")
 	public long idSchuljahresabschnitt = -1;
 
-	/** Das Datum, ab dem der Stundenpland gültig ist. */
+	/** Das Datum, ab dem der Stundenplan gültig ist. */
 	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example = "1.1.1899")
 	public @NotNull String gueltigAb = "";
 

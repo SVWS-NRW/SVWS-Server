@@ -494,6 +494,7 @@ export { BerufskollegFachklassenManager } from './core/utils/schule/Berufskolleg
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
 export { SchuelerStundenplanManager } from './core/utils/stundenplan/SchuelerStundenplanManager';
+export { StundenplanManager } from './core/utils/stundenplan/StundenplanManager';
 export { StundenplanblockungManager } from './core/utils/stundenplanblockung/StundenplanblockungManager';
 export { StundenplanblockungManagerFach } from './core/utils/stundenplanblockung/StundenplanblockungManagerFach';
 export { StundenplanblockungManagerFachMenge } from './core/utils/stundenplanblockung/StundenplanblockungManagerFachMenge';
