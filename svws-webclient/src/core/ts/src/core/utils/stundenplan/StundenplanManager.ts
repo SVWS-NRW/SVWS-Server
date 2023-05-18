@@ -112,37 +112,46 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * Liefert TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
 	 *
-	 * @param kursID        Die ID des Kurses.
-	 * @param jahr          Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche. Der Wert darf nicht 0 sein.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
 	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * @return TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
 	 */
-	public getUnterrichtDesKurses(kursID : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht>;
+	public getWochentypUsesMapping(jahr : number, kalenderwoche : number) : boolean {
+		DeveloperNotificationException.ifTrue("(jahr < 2000) || (jahr > 3000)", (jahr < 2000) || (jahr > 3000));
+		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
+		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_wochtentyp.getOrNull(jahr, kalenderwoche);
+		return (this._daten.wochenTypModell >= 2) && (z !== null);
+	}
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
 	 * @param kursID    Die ID des Kurses.
-	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn es global keine AB-Wochen gibt.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
 	public getUnterrichtDesKurses(kursID : number, wochentyp : number) : List<StundenplanUnterricht>;
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursID        Die ID des Kurses.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDesKurses(kursID : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht>;
+
+	/**
 	 * Implementation for method overloads of 'getUnterrichtDesKurses'
 	 */
 	public getUnterrichtDesKurses(__param0 : number, __param1 : number, __param2? : number) : List<StundenplanUnterricht> {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			const kursID : number = __param0 as number;
-			const jahr : number = __param1 as number;
-			const kalenderwoche : number = __param2 as number;
-			const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
-			return this.getUnterrichtDesKurses(kursID, wochentyp);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
+		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
 			const kursID : number = __param0 as number;
 			const wochentyp : number = __param1 as number;
 			DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > this._daten.wochenTypModell);
@@ -152,6 +161,53 @@ export class StundenplanManager extends JavaObject {
 				if ((u.wochentyp === 0) || (u.wochentyp === wochentyp))
 					result.add(u);
 			return result;
+		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
+			const kursID : number = __param0 as number;
+			const jahr : number = __param1 as number;
+			const kalenderwoche : number = __param2 as number;
+			const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
+			return this.getUnterrichtDesKurses(kursID, wochentyp);
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 *
+	 * @param kursIDs   Die IDs aller Kurse.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 */
+	public getUnterrichtDerKurse(kursIDs : Array<number> | null, wochentyp : number) : List<StundenplanUnterricht>;
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursIDs       Die IDs aller Kurse.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDerKurse(kursIDs : Array<number> | null, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht>;
+
+	/**
+	 * Implementation for method overloads of 'getUnterrichtDerKurse'
+	 */
+	public getUnterrichtDerKurse(__param0 : Array<number> | null, __param1 : number, __param2? : number) : List<StundenplanUnterricht> {
+		if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
+			const kursIDs : Array<number> | null = __param0;
+			const wochentyp : number = __param1 as number;
+			const result : ArrayList<StundenplanUnterricht> | null = new ArrayList();
+			for (const kursID of kursIDs)
+				result.addAll(this.getUnterrichtDesKurses(kursID, wochentyp));
+			return result;
+		} else if (((typeof __param0 !== "undefined") && Array.isArray(__param0)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
+			const kursIDs : Array<number> | null = __param0;
+			const jahr : number = __param1 as number;
+			const kalenderwoche : number = __param2 as number;
+			const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
+			return this.getUnterrichtDerKurse(kursIDs, wochentyp);
 		} else throw new Error('invalid method overload');
 	}
 

@@ -127,24 +127,25 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * Liefert TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
 	 *
-	 * @param kursID        Die ID des Kurses.
-	 * @param jahr          Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche. Der Wert darf nicht 0 sein.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
 	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * @return TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final int kursID, final int jahr, final int kalenderwoche) {
-		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
-		return getUnterrichtDesKurses(kursID, wochentyp);
+	public boolean getWochentypUsesMapping(final int jahr, final int kalenderwoche) {
+		DeveloperNotificationException.ifTrue("(jahr < 2000) || (jahr > 3000)", (jahr < 2000) || (jahr > 3000));
+		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
+		final StundenplanKalenderwochenzuordnung z = _map_jahr_kw_zu_wochtentyp.getOrNull(jahr, kalenderwoche);
+		return (_daten.wochenTypModell >= 2) && (z != null);
 	}
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
 	 * @param kursID    Die ID des Kurses.
-	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn es global keine AB-Wochen gibt.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
@@ -160,6 +161,50 @@ public class StundenplanManager {
 				result.add(u);
 
 		return result;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursID        Die ID des Kurses.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final long kursID, final int jahr, final int kalenderwoche) {
+		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
+		return getUnterrichtDesKurses(kursID, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 *
+	 * @param kursIDs   Die IDs aller Kurse.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurse(final long[] kursIDs, final int wochentyp) {
+		// Daten filtern.
+		final ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
+		for (final long kursID : kursIDs)
+			result.addAll(getUnterrichtDesKurses(kursID, wochentyp));
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursIDs       Die IDs aller Kurse.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurse(final long[] kursIDs, final int jahr, final int kalenderwoche) {
+		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
+		return getUnterrichtDerKurse(kursIDs, wochentyp);
 	}
 
 }
