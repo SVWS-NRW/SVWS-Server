@@ -26,8 +26,8 @@ public class StundenplanKalenderwochenzuordnung {
 	@Schema(description = "die Kalenderwoche in dem Jahr", example = "48")
 	public int kw = -1;
 
-	/** Der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2). */
-	@Schema(description = "der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2)", example = "2")
+	/** Der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2). Muss größer als 0 sein.*/
+	@Schema(description = "der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2). Muss größer als 0 sein.", example = "2")
 	public int wochentyp = 0;
 
 }

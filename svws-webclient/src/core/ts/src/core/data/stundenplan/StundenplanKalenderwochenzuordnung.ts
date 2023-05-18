@@ -18,7 +18,7 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	public kw : number = -1;
 
 	/**
-	 * Der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2).
+	 * Der Wochentyp, der der Kalenderwoche zugeordnet ist (z.B. eine A- bzw. B-Wochen, d.h. 1 bzw. 2). Muss größer als 0 sein.
 	 */
 	public wochentyp : number = 0;
 

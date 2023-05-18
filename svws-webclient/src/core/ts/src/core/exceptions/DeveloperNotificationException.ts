@@ -85,6 +85,20 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Überprüft, ob eine Variable einen Wert hat.
+	 *
+	 * @param pVariablenname Der Name der Variablen.
+	 * @param pVariable      Die Variable, die geprüft wird.
+	 * @param pWert          Der Wert der Variablen.
+	 *
+	 * @throws DeveloperNotificationException falls pVariable gleich pWert ist..
+	 */
+	public static ifEqual(pVariablenname : string, pVariable : number, pWert : number) : void {
+		if (pVariable === pWert)
+			throw new DeveloperNotificationException(pVariablenname! + "(" + pWert + ") darf nicht gleich " + pWert + " sein!")
+	}
+
+	/**
 	 * Überprüft, ob ein Schlüssel bereits in einer Map existiert.
 	 * @param <K> Der Schlüssel-Typ der Map.
 	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
