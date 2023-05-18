@@ -24,6 +24,8 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 
 /**
  * Diese Klasse enthält die Testroutinen für den Belegprüfungsalgorithmus
@@ -33,7 +35,13 @@ import de.svws_nrw.core.data.gost.GostFach;
 class TestGostBelegpruefung {
 
 	/** Eine Map mit den Jahrgängen der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
+	static HashMap<String, GostJahrgangsdaten> testGostJahrgaenge = new HashMap<>();
+
+	/** Eine Map mit den Fächern der Jahrgänge der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, List<GostFach>> testGostJahrgaengeFaecher = new HashMap<>();
+
+	/** Eine Map mit mit den nicht erlaubten und geforderten Fachkombinationen für die Jahrgänge der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
+	static HashMap<String, List<GostJahrgangFachkombination>> testGostJahrgaengeFachkombinationen = new HashMap<>();
 
 	/** Eine Map mit den Abiturdaten von Schülern der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, Abiturdaten>> testAbiturdaten = new HashMap<>();
@@ -54,10 +62,24 @@ class TestGostBelegpruefung {
 	@BeforeAll
 	static void setup() throws IOException {
 		System.out.println("- Lade die Gost-Jahrgänge aus den JSON-Resourcen...");
+		final Map<String, GostJahrgangsdaten> tempTestGostJahrgaenge = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangsdaten", GostJahrgangsdaten.class);
+		assert (tempTestGostJahrgaenge != null) && tempTestGostJahrgaenge.size() != 0 : "Fehler beim Laden der Gost-Testjahrgänge!";
+		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet())
+			testGostJahrgaenge.put(entry.getKey(), entry.getValue());
+		System.out.println("  FERTIG!");
+
+		System.out.println("- Lade die Fächer der Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostFach[]> tempTestGostJahrgaengeFaecher = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
 		assert (tempTestGostJahrgaengeFaecher != null) && tempTestGostJahrgaengeFaecher.size() != 0 : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
 		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet())
 			testGostJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		System.out.println("  FERTIG!");
+
+		System.out.println("- Lade die Informationen zu nicht erlaubten und geforderten Fachkombinationen zu den Gost-Jahrgängen aus den JSON-Resourcen...");
+		final Map<String, GostJahrgangFachkombination[]> tempTestGostJahrgaengeFachkombinationen = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangFachkombination", GostJahrgangFachkombination[].class);
+		assert (tempTestGostJahrgaengeFachkombinationen != null) : "Fehler beim Laden der Gost-Fachkombinationen der Testjahrgänge!";
+		for (final Map.Entry<String, GostJahrgangFachkombination[]> entry : tempTestGostJahrgaengeFachkombinationen.entrySet())
+			testGostJahrgaengeFachkombinationen.put(entry.getKey(), Arrays.asList(entry.getValue()));
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");

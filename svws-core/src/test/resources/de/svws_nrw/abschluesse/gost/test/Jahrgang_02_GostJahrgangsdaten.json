@@ -1,0 +1,22 @@
+{
+  "abiturjahr": 2020,
+  "jahrgang": "Q1",
+  "bezeichnung": "Abi 2020 (Q1)",
+  "istAbgeschlossen": false,
+  "textBeratungsbogen": null,
+  "textMailversand": null,
+  "hatZusatzkursGE": true,
+  "beginnZusatzkursGE": "Q2.1",
+  "hatZusatzkursSW": true,
+  "beginnZusatzkursSW": "Q2.1",
+  "istBlockungFestgelegt": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    false
+  ],
+  "beratungslehrer": [
+  ]
+}

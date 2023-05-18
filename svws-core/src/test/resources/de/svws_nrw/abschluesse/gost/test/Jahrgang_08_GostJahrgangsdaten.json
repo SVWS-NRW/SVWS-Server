@@ -1,0 +1,22 @@
+{
+  "abiturjahr": 2022,
+  "jahrgang": "EF",
+  "bezeichnung": "Gemischte Testdaten (4)",
+  "istAbgeschlossen": false,
+  "textBeratungsbogen": null,
+  "textMailversand": null,
+  "hatZusatzkursGE": true,
+  "beginnZusatzkursGE": "Q2.1",
+  "hatZusatzkursSW": true,
+  "beginnZusatzkursSW": "Q2.1",
+  "istBlockungFestgelegt": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "beratungslehrer": [
+  ]
+}

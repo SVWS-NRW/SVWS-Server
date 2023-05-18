@@ -1,0 +1,22 @@
+{
+  "abiturjahr": 2021,
+  "jahrgang": "EF",
+  "bezeichnung": "Abi 2021 (EF)",
+  "istAbgeschlossen": false,
+  "textBeratungsbogen": null,
+  "textMailversand": null,
+  "hatZusatzkursGE": true,
+  "beginnZusatzkursGE": "Q2.1",
+  "hatZusatzkursSW": true,
+  "beginnZusatzkursSW": "Q2.1",
+  "istBlockungFestgelegt": [
+    true,
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "beratungslehrer": [
+  ]
+}
