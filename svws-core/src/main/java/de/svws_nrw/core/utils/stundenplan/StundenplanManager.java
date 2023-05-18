@@ -92,6 +92,8 @@ public class StundenplanManager {
 			// Ignoriere, falls es kein Kurs-Unterricht ist.
 			if (u.idKurs == null)
 				continue;
+			// Wurde der Kurs in der Unterrichtsverteilung definiert?
+			DeveloperNotificationException.ifTrue("!_map_kursID_zu_kurs.containsKey(u.idKurs)", !_map_kursID_zu_kurs.containsKey(u.idKurs));
 			// Liste des Kurses holen.
 			List<@NotNull StundenplanUnterricht> listU = _map_kursID_zu_unterrichte.get(u.idKurs);
 			if (listU == null) {
@@ -107,8 +109,8 @@ public class StundenplanManager {
 	/**
 	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
 	 *
-	 * @param jahr          Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche. Der Wert darf nicht 0 sein.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
 	 *
 	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp.
 	 */
@@ -127,19 +129,6 @@ public class StundenplanManager {
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 *
-	 * @param kursID    Die ID des Kurses.
-	 * @param wochentyp Die gewünschten Kalenderwoche. Der Wert darf nicht 0 sein.
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
-	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final int kursID, final int wochentyp) {
-
-		return new ArrayList<>();
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
-	 *
 	 * @param kursID        Die ID des Kurses.
 	 * @param jahr          Das Jahr der Kalenderwoche.
 	 * @param kalenderwoche Die gewünschten Kalenderwoche. Der Wert darf nicht 0 sein.
@@ -149,6 +138,28 @@ public class StundenplanManager {
 	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final int kursID, final int jahr, final int kalenderwoche) {
 		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
 		return getUnterrichtDesKurses(kursID, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
+	 *
+	 * @param kursID    Die ID des Kurses.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn es global keine AB-Wochen gibt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final long kursID, final int wochentyp) {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > _daten.wochenTypModell);
+		@NotNull final List<@NotNull StundenplanUnterricht> list = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", _map_kursID_zu_unterrichte.get(kursID));
+
+		// Daten filtern.
+		final ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
+		for (final StundenplanUnterricht u : list)
+			if ((u.wochentyp == 0) || (u.wochentyp == wochentyp))
+				result.add(u);
+
+		return result;
 	}
 
 }
