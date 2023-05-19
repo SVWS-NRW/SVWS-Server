@@ -21,7 +21,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								im Abitur

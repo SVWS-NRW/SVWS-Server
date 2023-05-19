@@ -335,9 +335,8 @@
 .data-table {
 	@apply flex flex-col;
 	@apply w-full border border-black/25 bg-white border-b-0;
-	@apply overflow-auto;
 	@apply tabular-nums;
-	@apply max-h-full;
+	@apply max-h-full overflow-y-visible overflow-x-auto;
 
 	.app-layout--secondary-container & {
 		@apply border-x-0;
@@ -358,7 +357,24 @@
 		}
 
 		&__separate {
-			@apply border-r-2;
+			padding-right: 3px;
+			margin-right: 3px;
+			position: relative;
+
+			&:before {
+				content: "";
+				position: absolute;
+				top: -1px;
+				bottom: -1px;
+				right: -4px;
+				width: 3px;
+				background-color: #ffffff;
+			}
+
+			+ .data-table__td,
+			+ .data-table__th {
+				@apply border-l;
+			}
 		}
 
 		&:last-child {
@@ -446,7 +462,7 @@
 
 	&__cell-select {
 		@apply flex items-center justify-center p-0;
-		@apply sticky left-0 z-10 bg-white;
+		@apply sticky left-0 z-10;
 
 		.checkbox:before {
 			content: '';
@@ -489,7 +505,15 @@
 	&__thead {
 		@apply w-full bg-white;
 		@apply font-bold text-button;
-		@apply sticky top-0 z-20;
+		@apply border-b border-black/25;
+		padding-right: var(--scrollbar-width);
+
+		.data-table__tr:last-child {
+			.data-table__td,
+			.data-table__th {
+				@apply border-b-0;
+			}
+		}
 
 		&__th,
 		&__td {
@@ -523,7 +547,16 @@
 	}
 
 	&__tbody {
-		display: contents;
+		@apply h-full overflow-y-auto overflow-x-visible flex flex-col;
+		background:
+			linear-gradient(white 30%, rgba(255,255,255,0)),
+			linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+			linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0)),
+			linear-gradient(to top, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 1px, rgba(0,0,0,0)) 0 100%;
+		background-repeat: no-repeat;
+		background-color: #fff;
+		background-size: 100% 4em, 100% 4em, 100% 1em, 100% 1em;
+		background-attachment: local, local, scroll, scroll;
 
 		&__tr {
 			@apply min-h-[1.7rem];
@@ -593,6 +626,13 @@
 		&__tr {
 			@apply w-full flex items-center;
 			@apply h-[2.75rem];
+		}
+
+		.data-table__tr:last-child {
+			.data-table__td,
+			.data-table__th {
+				@apply border-b-0;
+			}
 		}
 
 		&__th,
@@ -670,7 +710,7 @@
 		@apply border-black/10 border-b;
 
 		.data-table__thead {
-			@apply text-black/25 pointer-events-none;
+			@apply text-black/25 pointer-events-none border-b-black/10;
 		}
 
 		.data-table__th,

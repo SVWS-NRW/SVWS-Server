@@ -11,14 +11,6 @@
 	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
 		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
-	<div role="cell" class="data-table__td  data-table__td__align-center data-table__td__separate">
-		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
-			<svws-ui-tooltip position="top">
-				<i-ri-message-2-line @click="openModal" />
-				<template #content> {{ kombination.hinweistext || hinweistext }} </template>
-			</svws-ui-tooltip>
-		</s-row-gost-fachkombination-modal>
-	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
 		<svws-ui-checkbox circle v-model="gueltigEF1" headless />
 	</div>
@@ -36,6 +28,14 @@
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 		<svws-ui-checkbox circle v-model="gueltigQ22" headless />
+	</div>
+	<div role="cell" class="data-table__td  data-table__td__align-center">
+		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
+			<svws-ui-tooltip position="top">
+				<i-ri-chat-quote-line @click="openModal" class="cursor-pointer" />
+				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><em class="opacity-50">Klicken, um den Text zu bearbeiten</em> </template>
+			</svws-ui-tooltip>
+		</s-row-gost-fachkombination-modal>
 	</div>
 	<div role="cell" class="data-table__td data-table__td__align-center">
 		<svws-ui-button type="trash" @click="del_fachkombi" />

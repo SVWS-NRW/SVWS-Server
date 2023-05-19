@@ -201,6 +201,10 @@
 
 <style lang="postcss" scoped>
 	.faecher-toggle--checkbox {
+		.checkbox {
+			@apply my-0.5;
+		}
+
 		svg {
 			@apply -my-0.5;
 			width: 1.4em;

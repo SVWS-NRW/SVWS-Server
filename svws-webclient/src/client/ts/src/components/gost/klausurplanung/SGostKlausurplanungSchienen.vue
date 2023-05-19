@@ -52,7 +52,7 @@
 		</svws-ui-modal>
 		<svws-ui-content-card class="pt-8">
 			<div class="flex flex-wrap justify-between items-start">
-				<div class="flex flex-wrap items-center gap-2 border border-solid rounded px-2">
+				<div class="flex flex-wrap items-center gap-2">
 					<label class="font-bold" for="rgQuartalAuswahl">Quartal:</label>
 					<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
 						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide" value="0" @input="chooseQuartal(0)" :model-value="quartal.toString()" />

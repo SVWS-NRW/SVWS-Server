@@ -1,13 +1,15 @@
 <script setup lang='ts'>
 	const props = withDefaults(defineProps<{
 		title?: string;
+		overflowScroll?: boolean;
 	}>(), {
 		title: '',
+		overflowScroll: false
 	});
 </script>
 
 <template>
-	<div class="content-card--wrapper">
+	<div class="content-card--wrapper" :class="{'h-full': overflowScroll}">
 		<div v-if="title || $slots.actions" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
@@ -19,7 +21,7 @@
 			</div>
 		</div>
 		<slot name="title" />
-		<div :class="{'mt-4': title || $slots.title}">
+		<div :class="{'mt-4': title || $slots.title, 'h-full flex flex-col': overflowScroll}">
 			<slot />
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex flex-col gap-x-8 gap-y-16 3xl:flex-row content-start">
+	<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex h-full gap-x-8 gap-y-16">
 		<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
@@ -18,8 +18,8 @@
 				</svws-ui-button>
 			</template>
 		</s-card-gost-kursansicht>
-		<section class="content-card--wrapper flex gap-8 min-w-[50%]">
-			<div class="min-w-[21rem] w-[21rem]">
+		<section class="content-card--wrapper flex gap-8 min-w-[50%] h-full">
+			<div class="min-w-[21rem] w-[21rem] h-full">
 				<router-view name="gost_kursplanung_schueler_auswahl" />
 			</div>
 			<div class="flex-grow">

@@ -36,7 +36,7 @@
 
 <style lang="postcss">
 .router--gost-kursplanung .router-tab-bar--panel {
-	@apply h-px;
+	@apply overflow-y-hidden;
 }
 
 </style>

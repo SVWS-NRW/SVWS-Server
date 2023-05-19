@@ -1,22 +1,29 @@
 <template>
 	<svws-ui-content-card :title="title">
 		<template #actions>
-			<svws-ui-button size="small" @click="add_kurskombi">Hinzufügen</svws-ui-button>
+			<svws-ui-button size="small" type="secondary" @click="add_kurskombi">Hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-5">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-4">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fachkombination
 							</div>
 						</div>
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-7">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-6">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Gültig in
+							</div>
+						</div>
+					</div>
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								<!--Hinweis-->
 							</div>
 						</div>
 					</div>
@@ -51,14 +58,6 @@
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Kursart
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Hinweis
 							</div>
 						</div>
 					</div>
@@ -107,6 +106,14 @@
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Q2.2
+							</div>
+						</div>
+					</div>
+					<div role="columnheader"
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
+						<div class="data-table__th-wrapper">
+							<div class="data-table__th-title">
+								Text
 							</div>
 						</div>
 					</div>
@@ -168,13 +175,13 @@
 		{ key: "Kursart", label: "Kursart", span: 1},
 		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 2.5 },
 		{ key: "Kursart", label: "Kursart", align: 'center', span: 1, minWidth: 2.5 },
-		{ key: "Hinweistext", label: "Hinweistext", align: 'center', span: 0.5, minWidth: 2 },
 		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.5, minWidth: 2.5 },
 		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.5, minWidth: 2.5 },
+		{ key: "Hinweistext", label: "Hinweistext", align: 'center', span: 0.5, minWidth: 2 },
 		{ key: "Trash", label: "Trash", align: 'center', span: 0.25, minWidth: 2 },
 	];
 

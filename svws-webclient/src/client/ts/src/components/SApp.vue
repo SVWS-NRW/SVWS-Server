@@ -54,6 +54,7 @@
 	import type { AuswahlChildData } from './AuswahlChildData';
 	import { computed, ref, watch } from "vue";
 	import { version } from '../../version';
+	import {router} from "~/router/RouteManager";
 
 	const props = defineProps<AppProps>();
 
@@ -83,5 +84,54 @@
 		document.title = "SVWS NRW";
 		await props.logout();
 	}
+
+	let scrollbarWidthMeasure = false;
+
+	function getScrollbarWidth() {
+		if (scrollbarWidthMeasure) return;
+
+		scrollbarWidthMeasure = true;
+
+		// Creating invisible container
+		const outer = document.createElement('div');
+		outer.style.visibility = 'hidden';
+		outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+		outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
+		document.body.appendChild(outer);
+
+		// Creating inner element and placing it in the container
+		const inner = document.createElement('div');
+		outer.appendChild(inner);
+
+		// Calculating difference between container's full width and the child width
+		const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+
+		// Removing temporary elements from the DOM
+		outer.parentNode?.removeChild(outer);
+
+		const dataTables = document.querySelectorAll('.data-table__tbody');
+
+		dataTables.forEach((dataTable) => {
+			if (dataTable.scrollHeight > dataTable.clientHeight) {
+				dataTable.parentElement?.style.setProperty('--scrollbar-width', scrollbarWidth + "px");
+			}
+		});
+
+		// Set scrollbarWidth as a CSS variable
+		//document.documentElement.style.setProperty('--scrollbar-width', scrollbarWidth + "px");
+
+		setTimeout(() => { scrollbarWidthMeasure = false; }, 4000);
+
+		return scrollbarWidth;
+	}
+
+	setTimeout(() => { getScrollbarWidth(); }, 1000);
+
+	window.addEventListener('resize', getScrollbarWidth);
+
+	router.afterEach(() => {
+		setTimeout(() => { getScrollbarWidth(); }, 1000);
+		setTimeout(() => { getScrollbarWidth(); }, 3000);
+	});
 
 </script>

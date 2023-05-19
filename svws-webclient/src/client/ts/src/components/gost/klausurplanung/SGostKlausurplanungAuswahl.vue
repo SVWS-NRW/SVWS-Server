@@ -4,6 +4,13 @@
 	<div class="">
 		<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable />
 	</div>
+	<!--<Teleport v-if="children" to=".router-tab-bar&#45;&#45;panel">
+		<svws-ui-sub-nav>
+			<svws-ui-button v-for="c in children" :key="c" @click="() => setChild(child)" type="transparent">
+				{{ c.text }}
+			</svws-ui-button>
+		</svws-ui-sub-nav>
+	</Teleport>-->
 </template>
 
 <script setup lang="ts">

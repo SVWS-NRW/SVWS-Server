@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card overflow-scroll>
 		<svws-ui-data-table :model-value="filtered" v-model:clicked="selected" clickable :items="undefined"
 			:filter="true" :filter-reverse="true"
 			:no-data="schuelerFilter.filtered.value.size <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
