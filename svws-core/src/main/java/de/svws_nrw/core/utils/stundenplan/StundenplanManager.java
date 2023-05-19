@@ -149,7 +149,7 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final long kursID, final int wochentyp) {
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKursesByWochentyp(final long kursID, final int wochentyp) {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > _daten.wochenTypModell);
 		@NotNull final List<@NotNull StundenplanUnterricht> list = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", _map_kursID_zu_unterrichte.get(kursID));
@@ -172,9 +172,9 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKurses(final long kursID, final int jahr, final int kalenderwoche) {
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKursesByKW(final long kursID, final int jahr, final int kalenderwoche) {
 		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
-		return getUnterrichtDesKurses(kursID, wochentyp);
+		return getUnterrichtDesKursesByWochentyp(kursID, wochentyp);
 	}
 
 	/**
@@ -185,11 +185,11 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurse(final long[] kursIDs, final int wochentyp) {
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurseByWochentyp(final @NotNull long[] kursIDs, final int wochentyp) {
 		// Daten filtern.
 		final ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		for (final long kursID : kursIDs)
-			result.addAll(getUnterrichtDesKurses(kursID, wochentyp));
+			result.addAll(getUnterrichtDesKursesByWochentyp(kursID, wochentyp));
 		return result;
 	}
 
@@ -202,9 +202,9 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
 	 */
-	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurse(final long[] kursIDs, final int jahr, final int kalenderwoche) {
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurseByKW(final @NotNull long[] kursIDs, final int jahr, final int kalenderwoche) {
 		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
-		return getUnterrichtDerKurse(kursIDs, wochentyp);
+		return getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
 	}
 
 }
