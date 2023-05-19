@@ -92,6 +92,63 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die ID des Stundenplans.
+	 *
+	 * @return die ID des Stundenplans.
+	 */
+	public getID() : number {
+		return this._daten.id;
+	}
+
+	/**
+	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
+	 *
+	 * @return die ID des Schuljahresabschnitts des Stundenplans.
+	 */
+	public getIDSchuljahresabschnitt() : number {
+		return this._daten.idSchuljahresabschnitt;
+	}
+
+	/**
+	 * Liefert das Datum, ab dem der Stundenplan gültig ist.
+	 *
+	 * @return das Datum, ab dem der Stundenplan gültig ist.
+	 */
+	public getGueltigAb() : string {
+		return this._daten.gueltigAb;
+	}
+
+	/**
+	 * Liefert das Datum, bis wann der Stundenplan gültig ist.
+	 *
+	 * @return das Datum, bis wann der Stundenplan gültig ist.
+	 */
+	public getGueltigBis() : string {
+		return this._daten.gueltigBis;
+	}
+
+	/**
+	 * Liefert die textuelle Beschreibung des Stundenplans.
+	 *
+	 * @return die textuelle Beschreibung des Stundenplans.
+	 */
+	public getBezeichnungStundenplan() : string {
+		return this._daten.bezeichnungStundenplan;
+	}
+
+	/**
+	 * Liefert das Modell für die Wochen des Stundenplans. <br>
+	 * 0: Stundenplan gilt jede Woche. <br>
+	 * 1: Kein gültiger Wert. <br>
+	 * N: Stundenplan wiederholt sich alle N Wochen. <br>
+	 *
+	 * @return das Modell für die Wochen des Stundenplans.
+	 */
+	public getWochenTypModell() : number {
+		return this._daten.wochenTypModell;
+	}
+
+	/**
 	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
 	 *
 	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
@@ -137,7 +194,7 @@ export class StundenplanManager extends JavaObject {
 	public getUnterrichtDesKursesByWochentyp(kursID : number, wochentyp : number) : List<StundenplanUnterricht> {
 		DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > this._daten.wochenTypModell);
 		const list : List<StundenplanUnterricht> = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", this._map_kursID_zu_unterrichte.get(kursID));
-		const result : ArrayList<StundenplanUnterricht> | null = new ArrayList();
+		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
 		for (const u of list)
 			if ((u.wochentyp === 0) || (u.wochentyp === wochentyp))
 				result.add(u);
@@ -167,7 +224,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 */
 	public getUnterrichtDerKurseByWochentyp(kursIDs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
-		const result : ArrayList<StundenplanUnterricht> | null = new ArrayList();
+		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
 		for (const kursID of kursIDs)
 			result.addAll(this.getUnterrichtDesKursesByWochentyp(kursID, wochentyp));
 		return result;

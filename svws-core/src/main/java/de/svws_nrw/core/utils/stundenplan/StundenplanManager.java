@@ -107,6 +107,63 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert die ID des Stundenplans.
+	 *
+	 * @return die ID des Stundenplans.
+	 */
+	public long getID() {
+		return _daten.id;
+	}
+
+	/**
+	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
+	 *
+	 * @return die ID des Schuljahresabschnitts des Stundenplans.
+	 */
+	public long getIDSchuljahresabschnitt() {
+		return _daten.idSchuljahresabschnitt;
+	}
+
+	/**
+	 * Liefert das Datum, ab dem der Stundenplan gültig ist.
+	 *
+	 * @return das Datum, ab dem der Stundenplan gültig ist.
+	 */
+	public @NotNull String getGueltigAb() {
+		return _daten.gueltigAb;
+	}
+
+	/**
+	 * Liefert das Datum, bis wann der Stundenplan gültig ist.
+	 *
+	 * @return das Datum, bis wann der Stundenplan gültig ist.
+	 */
+	public @NotNull String getGueltigBis() {
+		return _daten.gueltigBis;
+	}
+
+	/**
+	 * Liefert die textuelle Beschreibung des Stundenplans.
+	 *
+	 * @return die textuelle Beschreibung des Stundenplans.
+	 */
+	public @NotNull String getBezeichnungStundenplan() {
+		return _daten.bezeichnungStundenplan;
+	}
+
+	/**
+	 * Liefert das Modell für die Wochen des Stundenplans. <br>
+	 * 0: Stundenplan gilt jede Woche. <br>
+	 * 1: Kein gültiger Wert. <br>
+	 * N: Stundenplan wiederholt sich alle N Wochen. <br>
+	 *
+	 * @return das Modell für die Wochen des Stundenplans.
+	 */
+	public int getWochenTypModell() {
+		return _daten.wochenTypModell;
+	}
+
+	/**
 	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
 	 *
 	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
@@ -155,7 +212,7 @@ public class StundenplanManager {
 		@NotNull final List<@NotNull StundenplanUnterricht> list = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", _map_kursID_zu_unterrichte.get(kursID));
 
 		// Daten filtern.
-		final ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		for (final StundenplanUnterricht u : list)
 			if ((u.wochentyp == 0) || (u.wochentyp == wochentyp))
 				result.add(u);
@@ -187,7 +244,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurseByWochentyp(final @NotNull long[] kursIDs, final int wochentyp) {
 		// Daten filtern.
-		final ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
+		final @NotNull ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		for (final long kursID : kursIDs)
 			result.addAll(getUnterrichtDesKursesByWochentyp(kursID, wochentyp));
 		return result;
