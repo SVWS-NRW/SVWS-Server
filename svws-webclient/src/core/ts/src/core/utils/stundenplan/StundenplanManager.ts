@@ -6,7 +6,9 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
@@ -27,6 +29,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _map_raumID_zu_raum : HashMap<number, StundenplanRaum> = new HashMap();
 
 	private readonly _map_schieneID_zu_schiene : HashMap<number, StundenplanSchiene> = new HashMap();
+
+	private readonly _map_pausenzeitID_zu_pausenzeit : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
 	private readonly _map_kursID_zu_kurs : HashMap<number, StundenplanKurs> = new HashMap();
 
@@ -52,6 +56,7 @@ export class StundenplanManager extends JavaObject {
 		this.initMapZeitrasterIDZuZeitraster();
 		this.initMapRaumIDZuRaum();
 		this.initMapSchieneIDZuSchiene();
+		this.initMapPausenzeitIDZuPausenzeit();
 		this.initMapJahrUndKwZuWochentyp();
 		this.initMapKursIDZuKurs();
 		this.initMapKursZuUnterrichte();
@@ -74,9 +79,9 @@ export class StundenplanManager extends JavaObject {
 	private initMapZeitrasterIDZuZeitraster() : void {
 		this._map_zeitrasterID_zu_zeitraster.clear();
 		for (const zeit of this._daten.zeitraster) {
-			DeveloperNotificationException.ifTrue("zeit.id <= 0", zeit.id <= 0);
-			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.length() == 0", zeit.stundenbeginn.length === 0);
-			DeveloperNotificationException.ifTrue("zeit.stundenende.length() == 0", zeit.stundenende.length === 0);
+			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
+			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.isBlank()", JavaString.isBlank(zeit.stundenbeginn));
+			DeveloperNotificationException.ifTrue("zeit.stundenende.isBlank()", JavaString.isBlank(zeit.stundenende));
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
 			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
 			DeveloperNotificationException.ifTrue("_map_zeitrasterID_zu_zeitraster.containsKey(zeit.id)", this._map_zeitrasterID_zu_zeitraster.containsKey(zeit.id));
@@ -87,10 +92,10 @@ export class StundenplanManager extends JavaObject {
 	private initMapRaumIDZuRaum() : void {
 		this._map_raumID_zu_raum.clear();
 		for (const raum of this._daten.raeume) {
-			DeveloperNotificationException.ifTrue("raum.id <= 0", raum.id <= 0);
+			DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
 			DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
-			DeveloperNotificationException.ifTrue("raum.kuerzel.length() == 0", raum.kuerzel.length === 0);
-			DeveloperNotificationException.ifTrue("_map_raumID_zu_raum.containsKey(raum.id)", this._map_raumID_zu_raum.containsKey(raum.id));
+			DeveloperNotificationException.ifTrue("raum.kuerzel.isBlank()", JavaString.isBlank(raum.kuerzel));
+			DeveloperNotificationException.ifDuplicate("_map_raumID_zu_raum", this._map_raumID_zu_raum, raum.id);
 			this._map_raumID_zu_raum.put(raum.id, raum);
 		}
 	}
@@ -98,12 +103,20 @@ export class StundenplanManager extends JavaObject {
 	private initMapSchieneIDZuSchiene() : void {
 		this._map_schieneID_zu_schiene.clear();
 		for (const schiene of this._daten.schienen) {
-			DeveloperNotificationException.ifTrue("schiene.id <= 0", schiene.id <= 0);
-			DeveloperNotificationException.ifTrue("schiene.idJahrgang <= 0", schiene.idJahrgang <= 0);
+			DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
+			DeveloperNotificationException.ifInvalidID("schiene.idJahrgang", schiene.idJahrgang);
 			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
-			DeveloperNotificationException.ifTrue("schiene.bezeichnung.length() == 0", schiene.bezeichnung.length === 0);
-			DeveloperNotificationException.ifTrue("_map_schieneID_zu_schiene.containsKey(schiene.id)", this._map_schieneID_zu_schiene.containsKey(schiene.id));
+			DeveloperNotificationException.ifTrue("schiene.bezeichnung.isBlank()", JavaString.isBlank(schiene.bezeichnung));
+			DeveloperNotificationException.ifDuplicate("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, schiene.id);
 			this._map_schieneID_zu_schiene.put(schiene.id, schiene);
+		}
+	}
+
+	private initMapPausenzeitIDZuPausenzeit() : void {
+		this._map_pausenzeitID_zu_pausenzeit.clear();
+		for (const pause of this._daten.pausenzeiten) {
+			DeveloperNotificationException.ifTrue("pause.id <= 0", pause.id <= 0);
+			this._map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
 		}
 	}
 
@@ -118,7 +131,7 @@ export class StundenplanManager extends JavaObject {
 			return;
 		this._map_kursID_zu_kurs.clear();
 		for (const k of this._datenUV.kurse) {
-			DeveloperNotificationException.ifTrue("_map_kursID_zu_kurs.containsKey(k.id)", this._map_kursID_zu_kurs.containsKey(k.id));
+			DeveloperNotificationException.ifDuplicate("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, k.id);
 			this._map_kursID_zu_kurs.put(k.id, k);
 		}
 	}

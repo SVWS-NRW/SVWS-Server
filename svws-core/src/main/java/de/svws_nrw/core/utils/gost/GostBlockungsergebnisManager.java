@@ -1758,6 +1758,7 @@ public class GostBlockungsergebnisManager {
 		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
 		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++)
 			setKursSchienenNr(pKursID, nr);
+
 	}
 
 	/**
