@@ -8,6 +8,14 @@ export abstract class JavaString {
 		return str.includes(s);
 	}
 
+	public static isBlank(s: string) {
+		return s.trim().length === 0;
+	}
+
+	public static isEmpty(s: string) {
+		return s.length === 0;
+	}
+
 	public static indexOf(s : string, str : string | null, fromIndex? : number) : number {
 		if (str === null)
 			return -1;

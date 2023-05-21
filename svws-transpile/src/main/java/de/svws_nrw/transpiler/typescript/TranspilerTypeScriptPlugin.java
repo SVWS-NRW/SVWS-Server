@@ -1411,6 +1411,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					return "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 				if ("length".equals(ms.getIdentifier().toString()))
 					return expression + ".length"; // in typescript it is not a method...
+				if ("isBlank".equals(ms.getIdentifier().toString()))
+					return "JavaString.isBlank(" + expression + ")";
+				if ("isEmpty".equals(ms.getIdentifier().toString()))
+					return "JavaString.isEmpty(" + expression + ")";
 			}
 			// replace reflective Array commands
 			if ((type instanceof final ExpressionClassType classType) && ("java.lang.reflect.Array".equals(classType.getFullQualifiedName()))) {
