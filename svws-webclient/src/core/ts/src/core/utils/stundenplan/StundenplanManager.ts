@@ -6,6 +6,9 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
+import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import { List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -19,9 +22,15 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _datenUV : StundenplanUnterrichtsverteilung | null;
 
-	private readonly _map_kursID_zu_unterrichte : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+	private readonly _map_zeitrasterID_zu_zeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
+
+	private readonly _map_raumID_zu_raum : HashMap<number, StundenplanRaum> = new HashMap();
+
+	private readonly _map_schieneID_zu_schiene : HashMap<number, StundenplanSchiene> = new HashMap();
 
 	private readonly _map_kursID_zu_kurs : HashMap<number, StundenplanKurs> = new HashMap();
+
+	private readonly _map_kursID_zu_unterrichte : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
 	private readonly _map_jahr_kw_zu_wochtentyp : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
@@ -40,6 +49,9 @@ export class StundenplanManager extends JavaObject {
 		this._datenU = unterrichte;
 		this._datenUV = unterrichtsverteilung;
 		this.checkWochentypenKonsistenz();
+		this.initMapZeitrasterIDZuZeitraster();
+		this.initMapRaumIDZuRaum();
+		this.initMapSchieneIDZuSchiene();
 		this.initMapJahrUndKwZuWochentyp();
 		this.initMapKursIDZuKurs();
 		this.initMapKursZuUnterrichte();
@@ -59,10 +71,46 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
+	private initMapZeitrasterIDZuZeitraster() : void {
+		this._map_zeitrasterID_zu_zeitraster.clear();
+		for (const zeit of this._daten.zeitraster) {
+			DeveloperNotificationException.ifTrue("zeit.id <= 0", zeit.id <= 0);
+			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.length() == 0", zeit.stundenbeginn.length === 0);
+			DeveloperNotificationException.ifTrue("zeit.stundenende.length() == 0", zeit.stundenende.length === 0);
+			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
+			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
+			DeveloperNotificationException.ifTrue("_map_zeitrasterID_zu_zeitraster.containsKey(zeit.id)", this._map_zeitrasterID_zu_zeitraster.containsKey(zeit.id));
+			this._map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
+		}
+	}
+
+	private initMapRaumIDZuRaum() : void {
+		this._map_raumID_zu_raum.clear();
+		for (const raum of this._daten.raeume) {
+			DeveloperNotificationException.ifTrue("raum.id <= 0", raum.id <= 0);
+			DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+			DeveloperNotificationException.ifTrue("raum.kuerzel.length() == 0", raum.kuerzel.length === 0);
+			DeveloperNotificationException.ifTrue("_map_raumID_zu_raum.containsKey(raum.id)", this._map_raumID_zu_raum.containsKey(raum.id));
+			this._map_raumID_zu_raum.put(raum.id, raum);
+		}
+	}
+
+	private initMapSchieneIDZuSchiene() : void {
+		this._map_schieneID_zu_schiene.clear();
+		for (const schiene of this._daten.schienen) {
+			DeveloperNotificationException.ifTrue("schiene.id <= 0", schiene.id <= 0);
+			DeveloperNotificationException.ifTrue("schiene.idJahrgang <= 0", schiene.idJahrgang <= 0);
+			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
+			DeveloperNotificationException.ifTrue("schiene.bezeichnung.length() == 0", schiene.bezeichnung.length === 0);
+			DeveloperNotificationException.ifTrue("_map_schieneID_zu_schiene.containsKey(schiene.id)", this._map_schieneID_zu_schiene.containsKey(schiene.id));
+			this._map_schieneID_zu_schiene.put(schiene.id, schiene);
+		}
+	}
+
 	private initMapJahrUndKwZuWochentyp() : void {
 		this._map_jahr_kw_zu_wochtentyp.clear();
-		for (const z of this._daten.kalenderwochenZuordnung)
-			this._map_jahr_kw_zu_wochtentyp.put(z.jahr, z.kw, z);
+		for (const skwz of this._daten.kalenderwochenZuordnung)
+			this._map_jahr_kw_zu_wochtentyp.put(skwz.jahr, skwz.kw, skwz);
 	}
 
 	private initMapKursIDZuKurs() : void {

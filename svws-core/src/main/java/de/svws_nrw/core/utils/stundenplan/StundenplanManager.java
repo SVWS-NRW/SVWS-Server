@@ -9,12 +9,16 @@ import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
+import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
+import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Manager für die Daten eines Stundenplanes. Die Daten werden aus vier DTO-Objekten aggregiert.
  *
  * @author Benjamin A. Bartsch
  */
@@ -24,8 +28,14 @@ public class StundenplanManager {
 	private final @NotNull List<@NotNull StundenplanUnterricht> _datenU;
 	private final StundenplanUnterrichtsverteilung _datenUV;
 
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_kursID_zu_unterrichte = new HashMap<>();
+	// Simple Mappings von "Stundenplan"
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_raumID_zu_raum = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_schieneID_zu_schiene = new HashMap<>();
+
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_kursID_zu_kurs = new HashMap<>();
+
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_kursID_zu_unterrichte = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_wochtentyp = new HashMap2D<>();
 
 	/**
@@ -42,11 +52,14 @@ public class StundenplanManager {
 		_datenUV = unterrichtsverteilung;
 		checkWochentypenKonsistenz();
 
+		initMapZeitrasterIDZuZeitraster();
+		initMapRaumIDZuRaum();
+		initMapSchieneIDZuSchiene();
+
 		initMapJahrUndKwZuWochentyp();
 		initMapKursIDZuKurs();
 		initMapKursZuUnterrichte();
 	}
-
 
 	private void checkWochentypenKonsistenz() {
 		// Der globale Wochentyp darf nur 0 oder >= 2 sein.
@@ -69,10 +82,47 @@ public class StundenplanManager {
 		}
 	}
 
+	private void initMapZeitrasterIDZuZeitraster() {
+		_map_zeitrasterID_zu_zeitraster.clear();
+		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
+			DeveloperNotificationException.ifTrue("zeit.id <= 0", zeit.id <= 0);
+			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.length() == 0", zeit.stundenbeginn.length() == 0); // TODO Transpiler: Mit isBlank() ersetzen
+			DeveloperNotificationException.ifTrue("zeit.stundenende.length() == 0", zeit.stundenende.length() == 0); // TODO Transpiler: Mit isBlank() ersetzen
+			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
+			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
+			DeveloperNotificationException.ifTrue("_map_zeitrasterID_zu_zeitraster.containsKey(zeit.id)", _map_zeitrasterID_zu_zeitraster.containsKey(zeit.id));
+			_map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
+		}
+	}
+
+	private void initMapRaumIDZuRaum() {
+		_map_raumID_zu_raum.clear();
+		for (final @NotNull StundenplanRaum raum : _daten.raeume) {
+			DeveloperNotificationException.ifTrue("raum.id <= 0", raum.id <= 0);
+			DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+			DeveloperNotificationException.ifTrue("raum.kuerzel.length() == 0", raum.kuerzel.length() == 0); // TODO Transpiler: Mit isBlank() ersetzen
+			DeveloperNotificationException.ifTrue("_map_raumID_zu_raum.containsKey(raum.id)", _map_raumID_zu_raum.containsKey(raum.id));
+			_map_raumID_zu_raum.put(raum.id, raum);
+		}
+
+	}
+
+	private void initMapSchieneIDZuSchiene() {
+		_map_schieneID_zu_schiene.clear();
+		for (final @NotNull StundenplanSchiene schiene : _daten.schienen) {
+			DeveloperNotificationException.ifTrue("schiene.id <= 0", schiene.id <= 0);
+			DeveloperNotificationException.ifTrue("schiene.idJahrgang <= 0", schiene.idJahrgang <= 0);
+			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
+			DeveloperNotificationException.ifTrue("schiene.bezeichnung.length() == 0", schiene.bezeichnung.length() == 0); // TODO Transpiler: Mit isBlank() ersetzen
+			DeveloperNotificationException.ifTrue("_map_schieneID_zu_schiene.containsKey(schiene.id)", _map_schieneID_zu_schiene.containsKey(schiene.id));
+			_map_schieneID_zu_schiene.put(schiene.id, schiene);
+		}
+	}
+
 	private void initMapJahrUndKwZuWochentyp() {
 		_map_jahr_kw_zu_wochtentyp.clear();
-		for (final @NotNull StundenplanKalenderwochenzuordnung z : _daten.kalenderwochenZuordnung)
-			_map_jahr_kw_zu_wochtentyp.put(z.jahr, z.kw, z);
+		for (final @NotNull StundenplanKalenderwochenzuordnung skwz : _daten.kalenderwochenZuordnung)
+			_map_jahr_kw_zu_wochtentyp.put(skwz.jahr, skwz.kw, skwz);
 	}
 
 	private void initMapKursIDZuKurs() {
