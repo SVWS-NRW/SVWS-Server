@@ -487,7 +487,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
 		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ")", GostHalbjahr.fromID(pErgebnis.gostHalbjahr));
-		DeveloperNotificationException.ifDuplicate("_mapErgebnis", this._mapErgebnis, pErgebnis.id);
+		DeveloperNotificationException.ifMapContains("_mapErgebnis", this._mapErgebnis, pErgebnis.id);
 		this._daten.ergebnisse.add(pErgebnis);
 		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
 	}
@@ -578,7 +578,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private addKursOhneSortierung(pKurs : GostBlockungKurs) : void {
 		const nSchienen : number = this.getSchienenAnzahl();
 		DeveloperNotificationException.ifInvalidID("pKurs.id", pKurs.id);
-		DeveloperNotificationException.ifDuplicate("_mapKurse", this._mapKurse, pKurs.id);
+		DeveloperNotificationException.ifMapContains("_mapKurse", this._mapKurse, pKurs.id);
 		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", this._faecherManager.get(pKurs.fach_id));
 		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(pKurs.kursart));
 		DeveloperNotificationException.ifSmaller("pKurs.wochenstunden", pKurs.wochenstunden, 0);
@@ -859,7 +859,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (pSchiene.bezeichnung)));
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", pSchiene.nummer, 1);
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", pSchiene.wochenstunden, 1);
-		DeveloperNotificationException.ifDuplicate("mapSchienen", this._mapSchienen, pSchiene.id);
+		DeveloperNotificationException.ifMapContains("mapSchienen", this._mapSchienen, pSchiene.id);
 		this._mapSchienen.put(pSchiene.id, pSchiene);
 		this._daten.schienen.add(pSchiene);
 	}
@@ -997,7 +997,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
 		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
-		DeveloperNotificationException.ifDuplicate("_mapRegeln", this._mapRegeln, pRegel.id);
+		DeveloperNotificationException.ifMapContains("_mapRegeln", this._mapRegeln, pRegel.id);
 		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
 		this._daten.regeln.add(pRegel);
 		this._mapRegeln.put(pRegel.id, pRegel);
@@ -1114,7 +1114,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addSchueler(pSchueler : Schueler) : void {
 		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
-		DeveloperNotificationException.ifDuplicate("_map_id_schueler", this._map_id_schueler, pSchueler.id);
+		DeveloperNotificationException.ifMapContains("_map_id_schueler", this._map_id_schueler, pSchueler.id);
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
 		this._daten.schueler.add(pSchueler);
 		this._map_id_schueler.put(pSchueler.id, pSchueler);

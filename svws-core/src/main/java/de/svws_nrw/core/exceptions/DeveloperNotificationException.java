@@ -117,7 +117,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls der Schlüssel in der Map bereits existiert.
 	 */
-	public static <@NotNull K, @NotNull V> void ifDuplicate(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
+	public static <@NotNull K, @NotNull V> void ifMapContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
 			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY(" + pKey + ")");
 	}

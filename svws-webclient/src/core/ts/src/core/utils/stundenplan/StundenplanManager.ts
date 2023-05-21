@@ -9,6 +9,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
+import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
@@ -32,11 +33,15 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_pausenzeitID_zu_pausenzeit : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
+	private readonly _map_aufsichtID_zu_aufsicht : HashMap<number, StundenplanAufsichtsbereich> = new HashMap();
+
+	private readonly _map_kwzID_zu_kwz : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
+
+	private readonly _map_jahr_kw_zu_kwz : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
+
 	private readonly _map_kursID_zu_kurs : HashMap<number, StundenplanKurs> = new HashMap();
 
 	private readonly _map_kursID_zu_unterrichte : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
-
-	private readonly _map_jahr_kw_zu_wochtentyp : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
 
 	/**
@@ -53,11 +58,12 @@ export class StundenplanManager extends JavaObject {
 		this._datenU = unterrichte;
 		this._datenUV = unterrichtsverteilung;
 		this.checkWochentypenKonsistenz();
-		this.initMapZeitrasterIDZuZeitraster();
-		this.initMapRaumIDZuRaum();
-		this.initMapSchieneIDZuSchiene();
-		this.initMapPausenzeitIDZuPausenzeit();
-		this.initMapJahrUndKwZuWochentyp();
+		this.initMapZeitraster();
+		this.initMapRaum();
+		this.initMapSchiene();
+		this.initMapPausenzeit();
+		this.initMapAufsicht();
+		this.initMapKalenderWochenZuordnung();
 		this.initMapKursIDZuKurs();
 		this.initMapKursZuUnterrichte();
 	}
@@ -76,7 +82,7 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private initMapZeitrasterIDZuZeitraster() : void {
+	private initMapZeitraster() : void {
 		this._map_zeitrasterID_zu_zeitraster.clear();
 		for (const zeit of this._daten.zeitraster) {
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
@@ -89,41 +95,63 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private initMapRaumIDZuRaum() : void {
+	private initMapRaum() : void {
 		this._map_raumID_zu_raum.clear();
 		for (const raum of this._daten.raeume) {
 			DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
 			DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
 			DeveloperNotificationException.ifTrue("raum.kuerzel.isBlank()", JavaString.isBlank(raum.kuerzel));
-			DeveloperNotificationException.ifDuplicate("_map_raumID_zu_raum", this._map_raumID_zu_raum, raum.id);
+			DeveloperNotificationException.ifMapContains("_map_raumID_zu_raum", this._map_raumID_zu_raum, raum.id);
 			this._map_raumID_zu_raum.put(raum.id, raum);
 		}
 	}
 
-	private initMapSchieneIDZuSchiene() : void {
+	private initMapSchiene() : void {
 		this._map_schieneID_zu_schiene.clear();
 		for (const schiene of this._daten.schienen) {
 			DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
 			DeveloperNotificationException.ifInvalidID("schiene.idJahrgang", schiene.idJahrgang);
 			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
 			DeveloperNotificationException.ifTrue("schiene.bezeichnung.isBlank()", JavaString.isBlank(schiene.bezeichnung));
-			DeveloperNotificationException.ifDuplicate("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, schiene.id);
+			DeveloperNotificationException.ifMapContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, schiene.id);
 			this._map_schieneID_zu_schiene.put(schiene.id, schiene);
 		}
 	}
 
-	private initMapPausenzeitIDZuPausenzeit() : void {
+	private initMapPausenzeit() : void {
 		this._map_pausenzeitID_zu_pausenzeit.clear();
 		for (const pause of this._daten.pausenzeiten) {
-			DeveloperNotificationException.ifTrue("pause.id <= 0", pause.id <= 0);
+			DeveloperNotificationException.ifInvalidID("pause.id", pause.id);
+			DeveloperNotificationException.ifTrue("pause.beginn.isBlank()", JavaString.isBlank(pause.beginn));
+			DeveloperNotificationException.ifTrue("pause.ende.isBlank()", JavaString.isBlank(pause.ende));
+			DeveloperNotificationException.ifTrue("(pause.wochentag < 1) || (pause.wochentag > 7)", (pause.wochentag < 1) || (pause.wochentag > 7));
+			DeveloperNotificationException.ifMapContains("_map_pausenzeitID_zu_pausenzeit", this._map_pausenzeitID_zu_pausenzeit, pause.id);
 			this._map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
 		}
 	}
 
-	private initMapJahrUndKwZuWochentyp() : void {
-		this._map_jahr_kw_zu_wochtentyp.clear();
-		for (const skwz of this._daten.kalenderwochenZuordnung)
-			this._map_jahr_kw_zu_wochtentyp.put(skwz.jahr, skwz.kw, skwz);
+	private initMapAufsicht() : void {
+		this._map_aufsichtID_zu_aufsicht.clear();
+		for (const aufsicht of this._daten.aufsichtsbereiche) {
+			DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsicht.id);
+			DeveloperNotificationException.ifTrue("aufsicht.kuerzel.isBlank()", JavaString.isBlank(aufsicht.kuerzel));
+			DeveloperNotificationException.ifMapContains("_map_aufsichtID_zu_aufsicht", this._map_aufsichtID_zu_aufsicht, aufsicht.id);
+			this._map_aufsichtID_zu_aufsicht.put(aufsicht.id, aufsicht);
+		}
+	}
+
+	private initMapKalenderWochenZuordnung() : void {
+		this._map_kwzID_zu_kwz.clear();
+		this._map_jahr_kw_zu_kwz.clear();
+		for (const kwz of this._daten.kalenderwochenZuordnung) {
+			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
+			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
+			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
+			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > this._daten.wochenTypModell);
+			DeveloperNotificationException.ifTrue("kwz.wochentyp == 0", kwz.wochentyp === 0);
+			this._map_jahr_kw_zu_kwz.put(kwz.jahr, kwz.kw, kwz);
+			this._map_kwzID_zu_kwz.put(kwz.id, kwz);
+		}
 	}
 
 	private initMapKursIDZuKurs() : void {
@@ -131,7 +159,7 @@ export class StundenplanManager extends JavaObject {
 			return;
 		this._map_kursID_zu_kurs.clear();
 		for (const k of this._datenUV.kurse) {
-			DeveloperNotificationException.ifDuplicate("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, k.id);
+			DeveloperNotificationException.ifMapContains("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, k.id);
 			this._map_kursID_zu_kurs.put(k.id, k);
 		}
 	}
@@ -222,7 +250,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
 		if (this._daten.wochenTypModell === 0)
 			return 0;
-		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_wochtentyp.getOrNull(jahr, kalenderwoche);
+		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
 		if (z !== null)
 			return z.wochentyp;
 		const wochentyp : number = kalenderwoche % this._daten.wochenTypModell;
@@ -240,7 +268,7 @@ export class StundenplanManager extends JavaObject {
 	public getWochentypUsesMapping(jahr : number, kalenderwoche : number) : boolean {
 		DeveloperNotificationException.ifTrue("(jahr < 2000) || (jahr > 3000)", (jahr < 2000) || (jahr > 3000));
 		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
-		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_wochtentyp.getOrNull(jahr, kalenderwoche);
+		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
 		return (this._daten.wochenTypModell >= 2) && (z !== null);
 	}
 

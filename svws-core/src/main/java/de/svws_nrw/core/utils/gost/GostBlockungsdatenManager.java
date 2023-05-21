@@ -449,7 +449,7 @@ public class GostBlockungsdatenManager {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
 		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ")", GostHalbjahr.fromID(pErgebnis.gostHalbjahr));
-		DeveloperNotificationException.ifDuplicate("_mapErgebnis", _mapErgebnis, pErgebnis.id);
+		DeveloperNotificationException.ifMapContains("_mapErgebnis", _mapErgebnis, pErgebnis.id);
 
 		// Hinzufügen des Kurses.
 		_daten.ergebnisse.add(pErgebnis);
@@ -558,7 +558,7 @@ public class GostBlockungsdatenManager {
 
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("pKurs.id", pKurs.id);
-		DeveloperNotificationException.ifDuplicate("_mapKurse", _mapKurse, pKurs.id);
+		DeveloperNotificationException.ifMapContains("_mapKurse", _mapKurse, pKurs.id);
 		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", _faecherManager.get(pKurs.fach_id));
 		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(pKurs.kursart));
 		DeveloperNotificationException.ifSmaller("pKurs.wochenstunden", pKurs.wochenstunden, 0);
@@ -853,7 +853,7 @@ public class GostBlockungsdatenManager {
 		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", "".equals(pSchiene.bezeichnung));
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", pSchiene.nummer, 1);
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", pSchiene.wochenstunden, 1);
-		DeveloperNotificationException.ifDuplicate("mapSchienen", _mapSchienen, pSchiene.id);
+		DeveloperNotificationException.ifMapContains("mapSchienen", _mapSchienen, pSchiene.id);
 
 		// Hinzufügen der Schiene.
 		_mapSchienen.put(pSchiene.id, pSchiene);
@@ -1008,7 +1008,7 @@ public class GostBlockungsdatenManager {
 	private void addRegelOhneSortierung(final @NotNull GostBlockungRegel pRegel) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
-		DeveloperNotificationException.ifDuplicate("_mapRegeln", _mapRegeln, pRegel.id);
+		DeveloperNotificationException.ifMapContains("_mapRegeln", _mapRegeln, pRegel.id);
 		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) == GostKursblockungRegelTyp.UNDEFINIERT);
 
 		// Hinzufügen der Regel.
@@ -1137,7 +1137,7 @@ public class GostBlockungsdatenManager {
 	public void addSchueler(final @NotNull Schueler pSchueler) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
-		DeveloperNotificationException.ifDuplicate("_map_id_schueler", _map_id_schueler, pSchueler.id);
+		DeveloperNotificationException.ifMapContains("_map_id_schueler", _map_id_schueler, pSchueler.id);
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
 
 		// Schüler hinzufügen
