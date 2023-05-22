@@ -40,9 +40,6 @@
 		const jahrgang = props.jahrgangsdaten?.jahrgang;
 		if (!jahrgang)
 			return false;
-		const aktAbschnitt = props.aktAbschnitt.abschnitt;
-		const kuerzel = `${jahrgang}${aktAbschnitt}`;
-		const aktHalbjahr = GostHalbjahr.fromKuerzel(kuerzel);
 		return (props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ? true : false;
 	}
 
@@ -57,9 +54,8 @@
 		await props.addBlockung();
 	}
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return (props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0);
-	});
+	const visible: ComputedRef<boolean> = computed(() =>
+		(props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0));
 
 </script>
 

@@ -77,7 +77,7 @@
 				</span>
 				<div v-if="(row.id === auswahlErgebnis?.id && !blockung_aktiv)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen."> Ableiten </svws-ui-button>
-					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending" title="Ergebnis löschen" />
+					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending || selected_ergebnisse.length > 0" title="Ergebnis löschen" />
 				</div>
 			</template>
 			<template #footerActions>
@@ -99,8 +99,8 @@
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
 	import type { DataTableItem } from "@ui";
 	import type { ComputedRef, Ref } from 'vue';
-	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -115,9 +115,11 @@
 
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
 
-	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung());
+	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> = computed(() =>
+		props.getDatenmanager().getErgebnisseSortiertNachBewertung());
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
+	const blockung_aktiv: ComputedRef<boolean> = computed(() =>
+		props.getDatenmanager().daten().istAktiv);
 
 	async function remove_ergebnisse() {
 		if (props.halbjahr === undefined)
@@ -158,9 +160,8 @@
 		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
 	}
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() > 0;
-	});
+	const visible: ComputedRef<boolean> = computed(() =>
+		props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() > 0);
 
 </script>
 

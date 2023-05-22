@@ -44,8 +44,8 @@
 	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
 	import type { DataTableItem } from "@ui";
 	import type { ComputedRef, Ref } from 'vue';
-	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
@@ -104,9 +104,9 @@
 			props.auswahlBlockung.name = value.toString();
 	}
 
-	const visible: ComputedRef<boolean> = computed(() => {
-		return props.mapBlockungen().size > 0;
-	});
+	const visible: ComputedRef<boolean> = computed(() =>
+		props.mapBlockungen().size > 0);
+
 </script>
 
 <style lang="postcss" scoped>

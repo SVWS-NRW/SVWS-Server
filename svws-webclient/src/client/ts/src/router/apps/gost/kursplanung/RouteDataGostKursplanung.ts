@@ -1,7 +1,7 @@
 import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
+import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
-import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -619,19 +619,19 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		const reselect = ergebnisse.find(e => e.id === ergebnisid);
+		const reselect = ergebnisse.some(e => e.id === ergebnisid);
+		for (const ergebnis of ergebnisse) {
+			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
+			this.datenmanager.removeErgebnis(ergebnis);
+		}
 		if (reselect) {
-			for await (const e of this.ergebnisse)
+			for (const e of this.ergebnisse)
 				if (!ergebnisse.includes(e)) {
 					await this.gotoErgebnis(e);
 					break;
 				}
-		}
-		for await (const ergebnis of ergebnisse) {
-			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
-			this.datenmanager.removeErgebnis(ergebnis);
-		}
-		this.commit();
+		} else
+			this.commit();
 		api.status.stop();
 	}
 
