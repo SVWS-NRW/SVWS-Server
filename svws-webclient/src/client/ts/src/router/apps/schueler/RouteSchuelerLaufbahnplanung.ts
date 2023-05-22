@@ -121,15 +121,15 @@ export class RouteDataSchuelerLaufbahnplanung {
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
 		if (art === 'auto')
 			for (const fachwahl of abiturdatenManager.getSchuelerFachwahlen().values())
 				if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
 					return abiturdatenManager;
-		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
