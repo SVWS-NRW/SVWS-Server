@@ -19,6 +19,8 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
@@ -723,8 +725,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Erstelle das DTO für die Eregbnisrückmeldung
 			final List<GostBelegpruefungsErgebnisse> daten = new ArrayList<>();
 
+			// Bestimme die Jahrgangsdaten des Abiturjahrgangs
+	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
+
 			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
 			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).toList();
+
+			// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
+	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr);
 
 			// Führe für alle Schüler nacheinander die Belegprüfung durch
 			for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
@@ -735,7 +743,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
 				// Führe die Belegprüfung für den Schüler durch
-				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher, pruefungsArt);
+				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher, faecherkombinationen, pruefungsArt);
 				ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 
 				// F+lle das zugehörige Schüler-DTO

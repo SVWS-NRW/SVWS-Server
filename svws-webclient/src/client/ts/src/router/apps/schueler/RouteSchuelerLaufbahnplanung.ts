@@ -22,6 +22,7 @@ interface RouteStateSchuelerLaufbahnplanung {
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
 	listGostFaecher: List<GostFach>;
+	listFachkombinationen: List<GostJahrgangFachkombination>;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
@@ -38,6 +39,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
 		listGostFaecher: new ArrayList(),
+		listFachkombinationen: new ArrayList(),
 		mapFachkombinationen: new Map(),
 		mapLehrer: new Map(),
 		zwischenspeicher: undefined,
@@ -119,15 +121,15 @@ export class RouteDataSchuelerLaufbahnplanung {
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
 		if (art === 'auto')
 			for (const fachwahl of abiturdatenManager.getSchuelerFachwahlen().values())
 				if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
 					return abiturdatenManager;
-		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.listGostFaecher, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
@@ -212,16 +214,16 @@ export class RouteDataSchuelerLaufbahnplanung {
 				const gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, auswahl.id);
 				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
 				const faecherManager = new GostFaecherManager(listGostFaecher);
-				const listfachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
+				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
-				for (const fk of listfachkombinationen)
+				for (const fk of listFachkombinationen)
 					mapFachkombinationen.set(fk.id, fk);
 				const listLehrer = await api.server.getLehrer(api.schema);
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten,
-					listGostFaecher, faecherManager, mapFachkombinationen, mapLehrer })
+					listGostFaecher, faecherManager, listFachkombinationen, mapFachkombinationen, mapLehrer })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")

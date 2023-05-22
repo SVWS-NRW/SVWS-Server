@@ -21,6 +21,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -75,17 +76,29 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response getList() {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		// Lese die Fächerkombinationen für den Abiturjahrgang ein
+	/**
+	 * Gibt die nicht erlaubten und die geforderten Fächerkombinationen für den entsprechenden Abiturjahrgang zurück.
+	 *
+	 * @param conn          die Datenbankverbindung für die Abfrage
+	 * @param abijahrgang   der Abiturjahrgang
+	 *
+	 * @return eine Liste mit den Fächerkombinationen
+	 */
+	public static @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationen(final DBEntityManager conn, final int abijahrgang) {
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", abijahrgang, DTOGostJahrgangFachkombinationen.class);
 		if (kombis == null)
-			return OperationError.NOT_FOUND.getResponse();
-		final ArrayList<GostJahrgangFachkombination> daten = new ArrayList<>();
+			return new ArrayList<>();
+		final List<GostJahrgangFachkombination> daten = new ArrayList<>();
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.add(dtoMapper.apply(kombi));
+        return daten;
+	}
+
+	@Override
+	public Response getList() {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final @NotNull List<@NotNull GostJahrgangFachkombination> daten = getFachkombinationen(conn, abijahrgang);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

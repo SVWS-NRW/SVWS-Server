@@ -1,11 +1,11 @@
 import { readFileSync, readdirSync } from "fs";
 import { resolve, basename } from "path";
 import { describe, test, expect } from "vitest";
-import type {
-	GostBelegpruefungErgebnisFehler} from "~/index";
+import { GostBelegpruefungErgebnisFehler, GostJahrgangsdaten} from "~/index";
 import {
 	Abiturdaten,
 	AbiturdatenManager,
+	GostJahrgangFachkombination,
 	GostBelegpruefungErgebnis,
 	GostBelegpruefungsArt,
 	GostFach,
@@ -19,11 +19,25 @@ const test_dir = resolve(
 );
 const files = readdirSync(test_dir);
 
+const jahrgaenge: { [jahrgang: string]: GostJahrgangsdaten | null } = {};
 const jahrgaenge_faecher: { [jahrgang: string]: GostFach[] } = {};
+const jahrgaenge_fachkombis: { [jahrgang: string]: GostJahrgangFachkombination[] } = {};
 const abiturdaten: { [jahrgang: string]: { [id: string]: Abiturdaten } } = {};
 const belegpruefungsergebnisse_gesamt: { [jahrgang: string]: any } = {};
 const belegpruefungsergebnisse_ef1: { [jahrgang: string]: any } = {};
 
+files
+	.filter((file) => file.includes("_GostJahrgangsdaten"))
+	.forEach((file) => {
+		const split = basename(file, ".json").split("_");
+		if (!jahrgaenge[split[1]]) {
+			jahrgaenge[split[1]] = null;
+			return;
+		}
+		jahrgaenge[split[1]] = GostJahrgangsdaten.transpilerFromJSON(
+			readFileSync(resolve(test_dir, file), "utf8")
+		);
+	});
 files
 	.filter((file) => file.includes("_GostFaecher"))
 	.forEach((file) => {
@@ -33,6 +47,18 @@ files
 		json.forEach((fach: { [string: string]: any }) => {
 			jahrgaenge_faecher[split[1]].push(
 				GostFach.transpilerFromJSON(JSON.stringify(fach))
+			);
+		});
+	});
+files
+	.filter((file) => file.includes("_GostJahrgangFachkombination"))
+	.forEach((file) => {
+		const json = JSON.parse(readFileSync(resolve(test_dir, file), "utf8"));
+		const split = basename(file, ".json").split("_");
+		if (!jahrgaenge_fachkombis[split[1]]) jahrgaenge_fachkombis[split[1]] = [];
+		json.forEach((fachkombi: { [string: string]: any }) => {
+			jahrgaenge_fachkombis[split[1]].push(
+				GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(fachkombi))
 			);
 		});
 	});
@@ -75,18 +101,20 @@ files
 describe.each(Object.entries(abiturdaten))(
 	"Testfälle Jahrgang %s",
 	(jahrgang, schueler) => {
+		const jahrgangsdaten = jahrgaenge[jahrgang];
 		const gost_faecher = jahrgaenge_faecher[jahrgang];
 		const list = new ArrayList<GostFach>();
 		for (let index = 0; index < gost_faecher.length; index++) {
 			list.add(gost_faecher[index]);
 		}
+		const gost_fachkombis = jahrgaenge_fachkombis[jahrgang];
+		const listKombis = new ArrayList<GostJahrgangFachkombination>();
+		for (let index = 0; index < gost_fachkombis.length; index++) {
+			listKombis.add(gost_fachkombis[index]);
+		}
 		describe.each(Object.entries(schueler))("Testfall %s", (id, abitur) => {
 			test("EF1", () => {
-				const manager = new AbiturdatenManager(
-					abitur,
-					list,
-					GostBelegpruefungsArt.EF1
-				);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, list, listKombis, GostBelegpruefungsArt.EF1);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =
                     belegpruefungsergebnisse_ef1[jahrgang][id];
@@ -106,11 +134,7 @@ describe.each(Object.entries(abiturdaten))(
 				expect(fehlercodes_expected).toEqual(fehlercodes_ergebnis);
 			});
 			test("Gesamt", () => {
-				const manager = new AbiturdatenManager(
-					abitur,
-					list,
-					GostBelegpruefungsArt.GESAMT
-				);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, list, listKombis, GostBelegpruefungsArt.GESAMT);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =
                     belegpruefungsergebnisse_gesamt[jahrgang][id];

@@ -28,6 +28,8 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -74,10 +76,14 @@ public class AbiturdatenManager {
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
 	 *
 	 * @param abidaten       die Abiturdaten
+	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
 	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen.
+	 * @param gostFaecherKombinationen   die nicht zulässigen und geforderten Fächerkombinationen
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public AbiturdatenManager(final @NotNull Abiturdaten abidaten, final @NotNull List<@NotNull GostFach> gostFaecher, final @NotNull GostBelegpruefungsArt pruefungsArt) {
+	public AbiturdatenManager(final @NotNull Abiturdaten abidaten, final GostJahrgangsdaten gostJahrgang,
+			final @NotNull List<@NotNull GostFach> gostFaecher, final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherKombinationen,
+			final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		this.abidaten = abidaten;
 		this.gostFaecher = new HashMap<>();
 		for (int i = 0; i < gostFaecher.size(); i++) {

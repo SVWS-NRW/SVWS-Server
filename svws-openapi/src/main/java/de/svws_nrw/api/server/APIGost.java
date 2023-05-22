@@ -774,11 +774,13 @@ public class APIGost {
     		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 	    	GostFaecherManager gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toList(), GostBelegpruefungsArt.GESAMT);
+	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.toList(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
@@ -813,11 +815,13 @@ public class APIGost {
     		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 	    	if (!schule.Schulform.daten.hatGymOb)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 	    	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 	    	GostFaecherManager gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecherManager.toList(), GostBelegpruefungsArt.EF1);
+	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.toList(), faecherkombinationen, GostBelegpruefungsArt.EF1);
 			return manager.getBelegpruefungErgebnis();
     	}
     }

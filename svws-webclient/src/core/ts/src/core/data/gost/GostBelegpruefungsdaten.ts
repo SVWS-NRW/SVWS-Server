@@ -1,5 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach } from '../../../core/data/gost/GostFach';
+import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
+import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { List } from '../../../java/util/List';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
@@ -9,12 +11,22 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	/**
 	 * Das Jahr, in welchem der Jahrgang Abitur machen wird.
 	 */
-	public abiturdaten : Abiturdaten | null = null;
+	public abiturdaten : Abiturdaten = new Abiturdaten();
+
+	/**
+	 * Informationen zu dem Abiturjahrgang.
+	 */
+	public gostJahrgang : GostJahrgangsdaten = new GostJahrgangsdaten();
 
 	/**
 	 * Die Liste der Fächer der gymnasialen Oberstufe, die für die Belegprüfung genutzt werden sollen
 	 */
 	public gostFaecher : List<GostFach> = new ArrayList();
+
+	/**
+	 * Die Informationen zu den nicht zulässigen und geforderten Fächerkombinationen.
+	 */
+	public gostFaecherKombinationen : List<GostJahrgangFachkombination> = new ArrayList();
 
 
 	public constructor() {
@@ -28,10 +40,20 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	public static transpilerFromJSON(json : string): GostBelegpruefungsdaten {
 		const obj = JSON.parse(json);
 		const result = new GostBelegpruefungsdaten();
-		result.abiturdaten = ((typeof obj.abiturdaten === "undefined") || (obj.abiturdaten === null)) ? null : Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
+		if (typeof obj.abiturdaten === "undefined")
+			 throw new Error('invalid json format, missing attribute abiturdaten');
+		result.abiturdaten = Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
+		if (typeof obj.gostJahrgang === "undefined")
+			 throw new Error('invalid json format, missing attribute gostJahrgang');
+		result.gostJahrgang = GostJahrgangsdaten.transpilerFromJSON(JSON.stringify(obj.gostJahrgang));
 		if ((obj.gostFaecher !== undefined) && (obj.gostFaecher !== null)) {
 			for (const elem of obj.gostFaecher) {
 				result.gostFaecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.gostFaecherKombinationen !== undefined) && (obj.gostFaecherKombinationen !== null)) {
+			for (const elem of obj.gostFaecherKombinationen) {
+				result.gostFaecherKombinationen?.add(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -39,7 +61,8 @@ export class GostBelegpruefungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBelegpruefungsdaten) : string {
 		let result = '{';
-		result += '"abiturdaten" : ' + ((!obj.abiturdaten) ? 'null' : Abiturdaten.transpilerToJSON(obj.abiturdaten)) + ',';
+		result += '"abiturdaten" : ' + Abiturdaten.transpilerToJSON(obj.abiturdaten) + ',';
+		result += '"gostJahrgang" : ' + GostJahrgangsdaten.transpilerToJSON(obj.gostJahrgang) + ',';
 		if (!obj.gostFaecher) {
 			result += '"gostFaecher" : []';
 		} else {
@@ -52,6 +75,18 @@ export class GostBelegpruefungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		if (!obj.gostFaecherKombinationen) {
+			result += '"gostFaecherKombinationen" : []';
+		} else {
+			result += '"gostFaecherKombinationen" : [ ';
+			for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
+				const elem = obj.gostFaecherKombinationen.get(i);
+				result += GostJahrgangFachkombination.transpilerToJSON(elem);
+				if (i < obj.gostFaecherKombinationen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -60,7 +95,10 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungsdaten>) : string {
 		let result = '{';
 		if (typeof obj.abiturdaten !== "undefined") {
-			result += '"abiturdaten" : ' + ((!obj.abiturdaten) ? 'null' : Abiturdaten.transpilerToJSON(obj.abiturdaten)) + ',';
+			result += '"abiturdaten" : ' + Abiturdaten.transpilerToJSON(obj.abiturdaten) + ',';
+		}
+		if (typeof obj.gostJahrgang !== "undefined") {
+			result += '"gostJahrgang" : ' + GostJahrgangsdaten.transpilerToJSON(obj.gostJahrgang) + ',';
 		}
 		if (typeof obj.gostFaecher !== "undefined") {
 			if (!obj.gostFaecher) {
@@ -71,6 +109,20 @@ export class GostBelegpruefungsdaten extends JavaObject {
 					const elem = obj.gostFaecher.get(i);
 					result += GostFach.transpilerToJSON(elem);
 					if (i < obj.gostFaecher.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.gostFaecherKombinationen !== "undefined") {
+			if (!obj.gostFaecherKombinationen) {
+				result += '"gostFaecherKombinationen" : []';
+			} else {
+				result += '"gostFaecherKombinationen" : [ ';
+				for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
+					const elem = obj.gostFaecherKombinationen.get(i);
+					result += GostJahrgangFachkombination.transpilerToJSON(elem);
+					if (i < obj.gostFaecherKombinationen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

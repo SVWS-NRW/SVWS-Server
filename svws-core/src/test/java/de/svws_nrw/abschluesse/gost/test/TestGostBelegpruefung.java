@@ -144,9 +144,14 @@ class TestGostBelegpruefung {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+				// Lese GostJahrgangsdaten
+				final GostJahrgangsdaten gostJahrgangsdaten = testGostJahrgaenge.get(jahrgang);
+				assert gostJahrgangsdaten != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id + "' wurden keine Jahrgangsdaten der gymnasialen Oberstufe gefunden.";
 				// Lese GostFaecher
 				final List<GostFach> gostFaecher = testGostJahrgaengeFaecher.get(jahrgang);
 				assert gostFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id + "' wurden keine Test-Fächerdaten der gymnasialen Oberstufe gefunden.";
+				final List<GostJahrgangFachkombination> gostFachkombinationen = testGostJahrgaengeFachkombinationen.get(jahrgang);
+				assert gostFachkombinationen != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
 				// Lese EF1-Belegprüefungsergebnis
 				final var testJahrgangBelegpruefungsergebnisseEF1 = testBelegpruefungsergebnisseEF1.get(jahrgang);
 				assert testJahrgangBelegpruefungsergebnisseEF1 != null : "Es konnte kein Jahrgang " + jahrgang + " mit EF1-Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
@@ -163,7 +168,7 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: EF1-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecher, GostBelegpruefungsArt.EF1);
+							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, gostFaecher, gostFachkombinationen, GostBelegpruefungsArt.EF1);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 							final List<String> log = ergebnis.log;
 							if (log != null) {
@@ -204,7 +209,7 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: Gesamt-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
+							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, gostFaecher, gostFachkombinationen, GostBelegpruefungsArt.GESAMT);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 							final List<String> log = ergebnis.log;
 							if (log != null) {

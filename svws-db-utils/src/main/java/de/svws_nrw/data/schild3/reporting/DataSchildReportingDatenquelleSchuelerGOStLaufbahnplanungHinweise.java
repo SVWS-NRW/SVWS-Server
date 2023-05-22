@@ -6,15 +6,20 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungHinweise;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
+import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
+import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +67,10 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinw
 				// Da unter Umständen durch Migration und Importe alter Daten aus Schild und LuPO die GOSt-Fächer nicht mit den Fachwahlen übereinstimmen könnten,
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
+			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
-					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
+			    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher.toList(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
 
 					final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
 					if (!ergebnis.fehlercodes.isEmpty()) {

@@ -2,8 +2,9 @@ package de.svws_nrw.module.pdf.gost;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
@@ -15,6 +16,8 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.Geschlecht;
@@ -25,8 +28,9 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
+import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
+import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -36,6 +40,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
 import jakarta.persistence.TypedQuery;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -174,8 +179,14 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	/** Die Laufbahndaten des Schülers */
 	private final Abiturdaten abidaten;
 
+	/** Die Jahrgangsdaten des Abiturjahrgangs */
+	private final GostJahrgangsdaten gostJahrgangsdaten;
+
 	/** Die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers */
 	private final GostFaecherManager gostFaecher;
+
+	/** Die Liste der nicht erlaubten und geforderten Fachkombinationen */
+	private final List<GostJahrgangFachkombination> gostFaecherkombinationen;
 
 	/** Der Abiturdaten-Manager */
 	private final AbiturdatenManager manager;
@@ -189,19 +200,24 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	 * @param klasse              die Klasse des Schülers
 	 * @param schulbezeichnung    die Bezeichnung der Schule bestehend aus drei Teilen
 	 * @param abidaten            die Laufbahndaten des Schülers
+	 * @param gostJahrgangsdaten  die Jahrgangsdaten des Abiturjahrganges
 	 * @param gostFaecher         die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers
+	 * @param gostFaecherkombinationen   die Informationen zu den nicht erlaubten und den geforderten Fachkombinationen
 	 * @param planungsHalbjahr    das Halbjahr der gymnasialen Oberstufe, auf welches sich die Planung bezieht
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
 	private PDFGostWahlbogen(final String schuelerName, final Geschlecht geschlecht, final String klasse, final String[] schulbezeichnung, final Abiturdaten abidaten,
-			                 final GostFaecherManager gostFaecher, final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang,
+                             final GostJahrgangsdaten gostJahrgangsdaten, final GostFaecherManager gostFaecher, final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen,
+                             final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang,
 			                 final String datumBeratung) {
 		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
 		this.abidaten = abidaten;
+		this.gostJahrgangsdaten = gostJahrgangsdaten;
 		this.gostFaecher = gostFaecher;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
+		this.gostFaecherkombinationen = gostFaecherkombinationen;
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.gostFaecher.toList(), this.gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
@@ -425,9 +441,14 @@ public final class PDFGostWahlbogen extends PDFCreator {
     	final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
 		if (daten == null)
     		return OperationError.NOT_FOUND.getResponse();
-    	final DTOGostJahrgangsdaten jahrgangsDaten = conn.queryByKey(DTOGostJahrgangsdaten.class, daten.abiturjahr);
-		if (jahrgangsDaten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+		final @NotNull GostJahrgangsdaten gostJahrgangsdaten;
+		try {
+			gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, daten.abiturjahr);
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException wae)
+				return wae.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
+		}
     	// TODO Bei Schulen mit Quartalen fehlt die Bestimmung des Halbjahres anstatt abschnitt.Abschnitt...
     	final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
@@ -436,15 +457,18 @@ public final class PDFGostWahlbogen extends PDFCreator {
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
     	if (gostFaecher.isEmpty())
     		return OperationError.NOT_FOUND.getResponse();
+    	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, daten.abiturjahr);
     	final PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(
     		schueler.Vorname + " " + schueler.Nachname,
     		schueler.Geschlecht,
     		klasse.Klasse,
     		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 },
     		daten,
+    		gostJahrgangsdaten,
     		gostFaecher,
+    		gostFaecherkombinationen,
     		planungsHalbjahr,
-    		jahrgangsDaten.TextBeratungsbogen,
+    		gostJahrgangsdaten.textBeratungsbogen,
     		gostSchueler.DatumBeratung
     	);
 		final byte[] data = wahlbogen.toByteArray();

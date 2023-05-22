@@ -16,6 +16,7 @@ import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
 import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
+import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
@@ -36,6 +37,7 @@ import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
 import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
+import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
@@ -83,10 +85,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * Erstellt ein neues Manager-Objekt, welches mit den übergebenen Abiturdaten verknüpft wird.
 	 *
 	 * @param abidaten       die Abiturdaten
+	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
 	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen.
+	 * @param gostFaecherKombinationen   die nicht zulässigen und geforderten Fächerkombinationen
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public constructor(abidaten : Abiturdaten, gostFaecher : List<GostFach>, pruefungsArt : GostBelegpruefungsArt) {
+	public constructor(abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, gostFaecher : List<GostFach>, gostFaecherKombinationen : List<GostJahrgangFachkombination>, pruefungsArt : GostBelegpruefungsArt) {
 		super();
 		this.abidaten = abidaten;
 		this.gostFaecher = new HashMap();

@@ -51,7 +51,7 @@ public class APIAlgoGostAbschluss {
     					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
     		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.GESAMT);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, daten.gostFaecher, daten.gostFaecherKombinationen, GostBelegpruefungsArt.GESAMT);
 		return manager.getBelegpruefungErgebnis();
     }
 
@@ -78,7 +78,7 @@ public class APIAlgoGostAbschluss {
     					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
     		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostFaecher, GostBelegpruefungsArt.EF1);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, daten.gostFaecher, daten.gostFaecherKombinationen, GostBelegpruefungsArt.EF1);
 		return manager.getBelegpruefungErgebnis();
     }
 

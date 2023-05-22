@@ -20,6 +20,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -73,26 +74,33 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		return jahrgangsdaten;
 	}
 
-	@Override
-	public Response get(final Integer abi_jahrgang) {
+	/**
+	 * Bestimmt die Jahrgangsdaten für den angebebenen Abiturjahrgang
+	 *
+	 * @param conn          die zu nutzende Datenbankverbindung
+	 * @param abijahrgang   der Abiturjahrgang
+	 *
+	 * @return die Jahrgangsdaten
+	 */
+	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
     	// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
 
     	// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
-		final DTOGostJahrgangsdaten jahrgangsdaten = (abi_jahrgang == -1)
+		final DTOGostJahrgangsdaten jahrgangsdaten = (abijahrgang == -1)
 				? getVorlage(conn)
-				: conn.queryByKey(DTOGostJahrgangsdaten.class, abi_jahrgang);
+				: conn.queryByKey(DTOGostJahrgangsdaten.class, abijahrgang);
 		if (jahrgangsdaten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
 
 		final GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
@@ -119,12 +127,12 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     	daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
     	daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
     	// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
-    	if (abi_jahrgang >= 0) {
+    	if (abijahrgang >= 0) {
     		final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
-	    	final List<Integer> jahre = Arrays.asList(abi_jahrgang - 1, abi_jahrgang - 2, abi_jahrgang - 3);
+	    	final List<Integer> jahre = Arrays.asList(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
 	    	final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryNamed("DTOSchuljahresabschnitte.jahr.multiple", jahre, DTOSchuljahresabschnitte.class);
 	    	for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
-	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abi_jahrgang, abschnitt.Jahr,
+	    		final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
 	    				(anzahlAbschnitte == 4) ? (abschnitt.Abschnitt + 1) / 2 : abschnitt.Abschnitt);
 	    		daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 	    	}
@@ -132,7 +140,19 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
     	// Ergänze die Beratungslehrer
     	final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer = conn.queryNamed("DTOGostJahrgangBeratungslehrer.abi_jahrgang", daten.abiturjahr, DTOGostJahrgangBeratungslehrer.class);
     	daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+    	return daten;
+	}
+
+	@Override
+	public Response get(final Integer abi_jahrgang) {
+		try {
+			final GostJahrgangsdaten daten = getJahrgangsdaten(conn, abi_jahrgang);
+	        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException wae)
+				return wae.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse(e);
+		}
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -22,11 +23,14 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt eine Kommandozeilen-Anwendung zur Verfügung, die dem
@@ -98,9 +102,11 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 					.enable(SerializationFeature.INDENT_OUTPUT);
 
 			// Lese die Fächerdaten aus der Lupo-Datei und generiere die Testdateien - Fasse dabei alle Daten der Datei zu einem Jahrgang zusammen
+			final @NotNull GostJahrgangsdaten gostJahrgangsdaten = new GostJahrgangsdaten();
 			final List<GostFach> gostFaecher = lupoMDB.retrieveGostFaecher();
 			if ((gostFaecher == null) || (gostFaecher.isEmpty()))
 				throw new DeveloperNotificationException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
+			final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = new ArrayList<>();
 			final String strJahrgangID = String.format("%02d", jahrgangID);
 
 			writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", mapper.writeValueAsString(gostFaecher));
@@ -111,9 +117,9 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 				final String strSchuelerID = String.format("%04d", abiturdaten.schuelerID);
 				logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher, GostBelegpruefungsArt.EF1);
+				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher, gostFaecherkombinationen, GostBelegpruefungsArt.EF1);
 				final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-				manager = new AbiturdatenManager(abiturdaten, gostFaecher, GostBelegpruefungsArt.GESAMT);
+				manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher, gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
 				final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 				writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));

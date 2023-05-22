@@ -23,12 +23,16 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
+import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
+import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -48,7 +52,11 @@ public class GenerateTestdatenLaufbahn {
 
 	private static HashMap<Integer, String> mapAbiJahrgangToJahrgangID = new HashMap<>();
 
+	private static HashMap<String, @NotNull GostJahrgangsdaten> mapJahrgangIDToGostJahrgangsdaten = new HashMap<>();
+
 	private static HashMap<String, GostFaecherManager> mapJahrgangIDToGostFaecher = new HashMap<>();
+
+	private static HashMap<String, @NotNull List<@NotNull GostJahrgangFachkombination>> mapJahrgangIDToGostFaecherkombinationen = new HashMap<>();
 
 	private static HashMap<String, String> mapJahrgangIDToJsonGostFaecher = new HashMap<>();
 
@@ -124,16 +132,24 @@ public class GenerateTestdatenLaufbahn {
 				// Lese die Fächerdaten aus der Datenbank und generiere die Testdateien
 				final List<DTOGostJahrgangsdaten> jahrgaenge = conn.queryAll(DTOGostJahrgangsdaten.class);
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
-					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
-					if (gostFaecher.isEmpty())
-						continue; // Lasse Jahrgänge ohne Fächerdaten aus
-					final String strJahrgangID = String.format("%02d", jahrgangID++);
-					mapAbiJahrgangToJahrgangID.put(jahrgang.Abi_Jahrgang, strJahrgangID);
-					mapJahrgangIDToGostFaecher.put(strJahrgangID, gostFaecher);
+					try {
+				    	final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
+						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, jahrgang.Abi_Jahrgang);
+						if (gostFaecher.isEmpty())
+							continue; // Lasse Jahrgänge ohne Fächerdaten aus
+				    	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, jahrgang.Abi_Jahrgang);
+						final String strJahrgangID = String.format("%02d", jahrgangID++);
+						mapAbiJahrgangToJahrgangID.put(jahrgang.Abi_Jahrgang, strJahrgangID);
+						mapJahrgangIDToGostJahrgangsdaten.put(strJahrgangID, gostJahrgangsdaten);
+						mapJahrgangIDToGostFaecher.put(strJahrgangID, gostFaecher);
+						mapJahrgangIDToGostFaecherkombinationen.put(strJahrgangID, gostFaecherkombinationen);
 
-					final String jsonGostFaecher = mapper.writeValueAsString(gostFaecher);
-					mapJahrgangIDToJsonGostFaecher.put(strJahrgangID, jsonGostFaecher);
-					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", jsonGostFaecher);
+						final String jsonGostFaecher = mapper.writeValueAsString(gostFaecher);
+						mapJahrgangIDToJsonGostFaecher.put(strJahrgangID, jsonGostFaecher);
+						writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_GostFaecher.json", jsonGostFaecher);
+					} catch (@SuppressWarnings("unused") final Exception e) {
+						// ignoriere fehlerhafte Jahrgänge
+					}
 				}
 
 				// Lese die Laufbahndaten aus der Datenbank und generiere die Testdateien für die Belegpruefung
@@ -149,12 +165,14 @@ public class GenerateTestdatenLaufbahn {
 					if (abiturdaten == null)
 						continue;
 					final String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
+					final GostJahrgangsdaten gostJahrgangsdaten = mapJahrgangIDToGostJahrgangsdaten.get(strJahrgangID);
 					final GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
+					final List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = mapJahrgangIDToGostFaecherkombinationen.get(strJahrgangID);
 					logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostFaecher.toList(), GostBelegpruefungsArt.EF1);
+					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher.toList(), gostFaecherkombinationen, GostBelegpruefungsArt.EF1);
 					final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-					manager = new AbiturdatenManager(abiturdaten, gostFaecher.toList(), GostBelegpruefungsArt.GESAMT);
+					manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher.toList(), gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
 					final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));
