@@ -108,7 +108,7 @@ export class RouteManager {
 			return false;
 		// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 		if (to_node.hidden(to.params))
-			return false;
+			return to_node.parent.getRoute();
 		console.log("Routing:");
 		console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
 		console.log("  to: " + to_node.name + " params=" + JSON.stringify(to.params));

@@ -1,7 +1,8 @@
-import type { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
-import type { ComputedRef, Ref } from "vue";
-import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw} from "vue-router";
+import type { Schulform } from "@svws-nrw/svws-core";
+import type { ComputedRef, Ref } from "vue";
+import { BenutzerKompetenz } from "@svws-nrw/svws-core";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "./Api";
 
@@ -286,7 +287,13 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 * @returns true, falls der Benutzer eine benötigte Kompetenz hat und ansonsten false
 	 */
 	public hatEineKompetenz(): boolean {
-		return api.authenticated && api.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
+		if (!api.authenticated)
+			return false;
+		if (this._kompetenzenBenoetigt.has(BenutzerKompetenz.KEINE))
+			return true;
+		if (api.benutzerIstAdmin)
+			return true;
+		return api.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
 	}
 
 	/**

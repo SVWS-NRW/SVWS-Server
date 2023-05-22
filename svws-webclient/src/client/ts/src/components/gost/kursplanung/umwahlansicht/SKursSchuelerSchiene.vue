@@ -32,7 +32,6 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";
-	import {get} from "@vueuse/core";
 
 	type DndData = { id: number, fachID: number, kursart: number };
 

@@ -58,9 +58,11 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			return this.getRoute();
 		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
 		await this.data.setAbiturjahrgang(eintrag);
+		if (this.name !== to.name)
+			return;
 		const redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
-			return { name: this.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
+			return { name: this.defaultChild!.name, params: { abiturjahr: String(abiturjahr) }};
 	}
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
@@ -69,7 +71,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: "" + abiturjahr }))
+		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
 			redirect = this.defaultChild!;
 		return { name: redirect.name, params: this.data.params};
 	}
