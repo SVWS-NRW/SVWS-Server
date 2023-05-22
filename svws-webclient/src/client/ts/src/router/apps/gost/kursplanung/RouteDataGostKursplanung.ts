@@ -315,7 +315,7 @@ export class RouteDataGostKursplanung {
 
 	restoreBlockung = async () => {
 		api.status.start();
-		const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.halbjahr)
+		const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id)
 		this.mapBlockungen.set(result.id, result);
 		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		await this.gotoBlockung(result);
