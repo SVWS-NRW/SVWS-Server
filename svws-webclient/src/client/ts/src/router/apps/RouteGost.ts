@@ -54,7 +54,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		if (cur !== this.data.view)
 			await this.data.setView(cur);
 		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr == undefined)
+		if (abiturjahr === undefined)
 			return this.getRoute();
 		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
 		await this.data.setAbiturjahrgang(eintrag);

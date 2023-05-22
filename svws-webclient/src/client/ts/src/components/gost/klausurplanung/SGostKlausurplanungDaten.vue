@@ -13,7 +13,7 @@
 					<template #cell(features)="value">
 						<div class="cursor-pointer flex items-center gap-1">
 							<svws-ui-tooltip
-								v-if="value.rowData.bemerkungVorgabe != null && value.rowData.bemerkungVorgabe.trim().length > 0">
+								v-if="value.rowData.bemerkungVorgabe !== null && value.rowData.bemerkungVorgabe.trim().length > 0">
 								<i-ri-information-line />
 								<template #content>
 									Bemerkung: {{ value.rowData.bemerkungVorgabe }}
@@ -171,7 +171,7 @@
 	};
 
 	const startEdit = () => {
-		if (selectedVorgabeRow.value != null) {
+		if (selectedVorgabeRow.value !== null && selectedVorgabeRow.value !== undefined) {
 			const v = props.klausurvorgabenmanager().gibGostKlausurvorgabe(selectedVorgabeRow.value.idVorgabe);
 			activeVorgabe.value = v !== null ? v : new GostKlausurvorgabe();
 		}

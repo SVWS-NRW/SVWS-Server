@@ -2,8 +2,8 @@ import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, 
 
 /** Die Sortierfunktion für den Ortskatalog */
 export const orte_sort = (a: OrtKatalogEintrag, b: OrtKatalogEintrag): number => {
-	if (a.ortsname == null) return -1;
-	if (b.ortsname == null) return 1;
+	if (a.ortsname === null) return -1;
+	if (b.ortsname === null) return 1;
 	return a.ortsname.localeCompare(b.ortsname, "de-DE");
 };
 

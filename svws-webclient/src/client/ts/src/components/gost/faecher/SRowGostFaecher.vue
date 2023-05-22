@@ -197,7 +197,7 @@
 	async function set_pjk_stunden() {
 		if (!istPJK(fach.value))
 			return;
-		await doPatch({ wochenstundenQualifikationsphase: fach.value.wochenstundenQualifikationsphase == 2 ? 3 : 2 });
+		await doPatch({ wochenstundenQualifikationsphase: fach.value.wochenstundenQualifikationsphase === 2 ? 3 : 2 });
 	}
 
 </script>

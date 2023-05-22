@@ -82,7 +82,7 @@
 	const setKlausurToTermin = async (pKlausur: GostKursklausur) => {
 		const klausur = props.kursklausurmanager().gibKursklausur(pKlausur.id)!;
 		const terminNeu = props.termin !== null ? props.termin.id : null;
-		if (props.termin !== null && props.termin.quartal != klausur.quartal)
+		if (props.termin !== null && props.termin.quartal !== klausur.quartal)
 			return;
 		const result = await props.setTerminToKursklausur(terminNeu, klausur);
 	}
@@ -96,7 +96,7 @@
 	);
 
 	const loescheTermin = async() => {
-		if (props.loescheKlausurtermin != undefined && props.termin != null)
+		if (props.loescheKlausurtermin !== undefined && props.termin !== null)
 			await props.loescheKlausurtermin(props.termin);
 	};
 
