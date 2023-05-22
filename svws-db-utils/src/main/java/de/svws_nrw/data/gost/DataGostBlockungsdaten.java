@@ -231,7 +231,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webAppException)
 				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
 		} finally {
 			// Perform a rollback if necessary
 			conn.transactionRollback();
@@ -963,6 +963,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final GostKursart kursart = GostKursart.fromKuerzel(ld.KursartAllg);
 				if (managerFachwahlen.hatFachwahl(idSchueler, ld.Fach_ID, kursart)) {
 					final long kursID = mapKursIDs.get(ld.Kurs_ID);
+					final DTOGostBlockungKurs kursErstellt = mapKurseErstellt.get(kursID);
+					if ((kursErstellt == null) || (kursErstellt.Fach_ID != ld.Fach_ID))
+						continue;
 					final DTOGostBlockungZwischenergebnisKursSchueler zuordnungKursSchueler = new DTOGostBlockungZwischenergebnisKursSchueler(
 						idErgebnis, kursID, idSchueler);
 					conn.transactionPersist(zuordnungKursSchueler);
