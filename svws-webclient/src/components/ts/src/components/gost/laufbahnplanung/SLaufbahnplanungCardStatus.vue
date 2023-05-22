@@ -4,7 +4,7 @@
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 		</template>
 		<div class="print:hidden -mt-4">
-			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" />
+			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="pruefungsart" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
@@ -34,6 +34,10 @@
 		get: () => props.gostBelegpruefungsArt(),
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
+
+	const pruefungsart = computed(() => {
+		return props.abiturdatenManager.getPruefungsArt().kuerzel as 'gesamt'|'ef1';
+	})
 
 	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
 

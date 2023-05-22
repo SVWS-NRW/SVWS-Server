@@ -2,7 +2,7 @@
 	<svws-ui-radio-group class="radio--row">
 		<svws-ui-radio-option v-model="art" value="ef1" name="ef1" label="EF.1" />
 		<svws-ui-radio-option v-model="art" value="gesamt" name="gesamt" label="Gesamt" />
-		<svws-ui-radio-option v-model="art" value="auto" name="gesamt" label="Automatisch" />
+		<svws-ui-radio-option v-model="art" value="auto" name="gesamt" label="Automatisch" v-if="noAuto !== true" />
 	</svws-ui-radio-group>
 </template>
 
@@ -13,6 +13,7 @@
 
 	const props = withDefaults(defineProps<{
 		modelValue?: 'ef1'|'gesamt'|'auto';
+		noAuto?: boolean
 	}>(), {
 		modelValue: () => 'gesamt'
 	});

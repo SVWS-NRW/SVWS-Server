@@ -1,11 +1,11 @@
 import type { GostBelegpruefungsErgebnisse, List } from "@svws-nrw/svws-core";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, GostBelegpruefungsArt, Schulform } from "@svws-nrw/svws-core";
-import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { ConfigElement } from "~/components/Config";
 import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
-import { api } from "~/router/Api";
 import type { RouteGost } from "~/router/apps/RouteGost";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform } from "@svws-nrw/svws-core";
+import { shallowRef } from "vue";
+import { ConfigElement } from "~/components/Config";
+import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLaufbahnplanung } from "../schueler/RouteSchuelerLaufbahnplanung";
@@ -14,14 +14,14 @@ import { routeSchuelerLaufbahnplanung } from "../schueler/RouteSchuelerLaufbahnp
 interface RouteStateDataGostLaufbahnplanung {
 	abiturjahr: number;
 	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
-	belegpruefungsart: GostBelegpruefungsArt;
+	gostBelegpruefungsArt: 'ef1'|'gesamt';
 }
 export class RouteDataGostLaufbahnplanung  {
 
 	private static _defaultState: RouteStateDataGostLaufbahnplanung = {
 		abiturjahr: -1,
 		listBelegpruefungsErgebnisse: new ArrayList(),
-		belegpruefungsart: GostBelegpruefungsArt.GESAMT,
+		gostBelegpruefungsArt: 'gesamt',
 	}
 
 	private _state = shallowRef(RouteDataGostLaufbahnplanung._defaultState);
@@ -38,8 +38,8 @@ export class RouteDataGostLaufbahnplanung  {
 		this._state.value = { ... this._state.value };
 	}
 
-	get belegpruefungsart(): GostBelegpruefungsArt {
-		return this._state.value.belegpruefungsart;
+	get gostBelegpruefungsArt(): 'ef1'|'gesamt' {
+		return this._state.value.gostBelegpruefungsArt;
 	}
 
 	get abiturjahr(): number {
@@ -50,24 +50,24 @@ export class RouteDataGostLaufbahnplanung  {
 		return this._state.value.listBelegpruefungsErgebnisse;
 	}
 
-	private async updateList(abiturjahr : number, belegpruefungsart : GostBelegpruefungsArt) {
+	private async updateList(abiturjahr : number, gostBelegpruefungsArt : 'ef1'|'gesamt') {
 		if (abiturjahr < 1)
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`)
-		const listBelegpruefungsErgebnisse = (belegpruefungsart === GostBelegpruefungsArt.GESAMT)
+		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === 'gesamt')
 			? await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(api.schema, abiturjahr)
 			: await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseEF1(api.schema, abiturjahr);
-		this.setPatchedState({ listBelegpruefungsErgebnisse, belegpruefungsart, abiturjahr });
+		this.setPatchedState({ listBelegpruefungsErgebnisse, gostBelegpruefungsArt, abiturjahr });
 	}
 
 	public async setAbiturjahr(abiturjahr: number) {
-		await this.updateList(abiturjahr, this._state.value.belegpruefungsart);
+		await this.updateList(abiturjahr, this._state.value.gostBelegpruefungsArt);
 	}
 
-	setBelegpruefungsart = async (belegpruefungsart: GostBelegpruefungsArt) => {
-		if (belegpruefungsart === this.belegpruefungsart)
+	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt') => {
+		if (gostBelegpruefungsArt === this.gostBelegpruefungsArt)
 			return;
-		await this.updateList(this.abiturjahr, belegpruefungsart)
-		this.setPatchedState({ belegpruefungsart });
+		await this.updateList(this.abiturjahr, gostBelegpruefungsArt)
+		this.setPatchedState({ gostBelegpruefungsArt });
 	}
 
 	gotoLaufbahnplanung = async (idSchueler: number) => {
@@ -131,8 +131,8 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 		return {
 			config: api.config,
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
-			belegpruefungsart: () => this.data.belegpruefungsart,
-			setBelegpruefungsart: this.data.setBelegpruefungsart,
+			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
+			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
 		};
 	}

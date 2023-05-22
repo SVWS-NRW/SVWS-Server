@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card>
 		<svws-ui-toggle v-model="filterFehler" /> Nur Ergebnisse mit Fehlern anzeigen
-		<s-laufbahnplanung-belegpruefungsart :model-value="belegpruefungsart()" @update:model-value="setBelegpruefungsart($event)" />
+		<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
 				<svws-ui-icon @click.stop="gotoLaufbahnplanung(s.id)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon>{{ s.nachname }}, {{ s.vorname }}
@@ -15,12 +15,12 @@
 		</svws-ui-data-table>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
-		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" />
+		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt()" />
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
-	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungsArt, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
+	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
 	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import { toRaw} from 'vue';
@@ -30,8 +30,8 @@
 	const props = defineProps<{
 		config: Config;
 		listBelegpruefungsErgebnisse: () =>List<GostBelegpruefungsErgebnisse>;
-		belegpruefungsart: () => GostBelegpruefungsArt;
-		setBelegpruefungsart: (belegpruefungsart: GostBelegpruefungsArt) => Promise<void>;
+		gostBelegpruefungsArt: () => 'ef1'|'gesamt';
+		setGostBelegpruefungsArt: (value: 'ef1'|'gesamt') => Promise<void>;
 		gotoLaufbahnplanung: (id: number) => Promise<void>;
 	}>();
 
@@ -59,6 +59,12 @@
 		get: () => props.config.getValue('gost.laufbahnplanung.filterFehler') === 'true',
 		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterFehler', value === true ? 'true':'false')
 	});
+
+	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({
+		get: () => props.gostBelegpruefungsArt(),
+		set: (value) => void props.setGostBelegpruefungsArt(value)
+	});
+
 
 	function counter(fehlercodes: List<GostBelegpruefungErgebnisFehler>): number {
 		let res = 0;

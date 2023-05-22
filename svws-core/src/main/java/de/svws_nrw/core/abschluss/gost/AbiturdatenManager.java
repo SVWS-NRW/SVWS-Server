@@ -168,6 +168,14 @@ public class AbiturdatenManager {
 		}
 	}
 
+	/**
+	 * gibt die gewählte Prüfungsart zurück
+	 *
+	 * @return entweder Gesamtprüfung oder EF1-Prüfung
+	 */
+	public @NotNull GostBelegpruefungsArt getPruefungsArt() {
+		return this.pruefungsArt;
+	}
 
 	/**
 	 * Gibt zurück, ob das angegebene Halbjahr bereits bewertet ist oder nicht.

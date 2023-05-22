@@ -4,6 +4,7 @@
 			<i-ri-checkbox-circle-line v-if="!belegungsfehler.size()" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
 			<span v-if="!belegungsfehler.size()">Keine</span>
 			<span>Laufbahnfehler</span>
+			<span v-if="belegungsfehler.size()">{{ belegpruefungsArt === 'ef1' ? 'EF1' : 'Gesamt' }}</span>
 			<svws-ui-badge v-if="belegungsfehler.size()" type="error">
 				{{ belegungsfehler.size() }}
 			</svws-ui-badge>
@@ -26,6 +27,7 @@
 
 	const props = defineProps<{
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
+		belegpruefungsArt: 'gesamt' | 'ef1'
 	}>();
 
 	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {

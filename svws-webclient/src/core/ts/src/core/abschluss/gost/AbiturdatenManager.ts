@@ -169,6 +169,15 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * gibt die gewählte Prüfungsart zurück
+	 *
+	 * @return entweder Gesamtprüfung oder EF1-Prüfung
+	 */
+	public getPruefungsArt() : GostBelegpruefungsArt {
+		return this.pruefungsArt;
+	}
+
+	/**
 	 * Gibt zurück, ob das angegebene Halbjahr bereits bewertet ist oder nicht.
 	 *
 	 * @param halbjahr   das Halbjahr
