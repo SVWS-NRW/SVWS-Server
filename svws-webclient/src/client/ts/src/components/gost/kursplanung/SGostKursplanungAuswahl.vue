@@ -43,8 +43,7 @@
 		const aktAbschnitt = props.aktAbschnitt.abschnitt;
 		const kuerzel = `${jahrgang}${aktAbschnitt}`;
 		const aktHalbjahr = GostHalbjahr.fromKuerzel(kuerzel);
-		return	(props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ||
-			(!props.jahrgangsdaten.istBlockungFestgelegt[row.id] && aktHalbjahr === props.halbjahr) ? true : false;
+		return (props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ? true : false;
 	}
 
 	async function select_hj(halbjahr: DataTableItem | null) {
