@@ -123,7 +123,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn).get(id));
         }
     }
@@ -226,7 +226,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anzeigename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setAnzeigename(id, JSONMapper.toString(is));
         }
     }
@@ -255,7 +255,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setAnmeldename(id, JSONMapper.toString(is));
         }
     }
@@ -283,7 +283,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
@@ -366,7 +366,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).addKompetenzen(id, kids);
         }
     }
@@ -396,7 +396,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).removeKompetenzen(id, kids);
         }
     }
@@ -425,7 +425,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, BenutzerKompetenz.ADMIN, id)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }

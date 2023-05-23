@@ -1,7 +1,10 @@
 package de.svws_nrw.db;
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
@@ -15,22 +18,22 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 public final class Benutzer {
 
 	/** Der Benutzername des angemeldeten Benutzers. */
-    private String username;
+    private String _username;
 
     /** Das Kennwort des angemeldeten Benutzers */
-    private String password;
+    private String _password;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen SVWS-Benutzers. */
-    private Long id = null;
+    private Long _id = null;
 
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
-	private final DBConfig config;
+	private final DBConfig _config;
 
 	/** Der Managaer für dei Datenbank-Verbindungen */
 	public final ConnectionManager connectionManager;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
-	private Long idLehrer = null;
+	private Long _idLehrer = null;
 
 
     /**
@@ -39,7 +42,7 @@ public final class Benutzer {
      * dann einem Datenbankbenutzer administrativ zugewiesen werden. Diese Zuordnung ist in der SVWS-Datenbank
      * gespeichert.
      */
-    private List<BenutzerKompetenz> kompetenzen = new ArrayList<>();
+    private List<BenutzerKompetenz> _kompetenzen = new ArrayList<>();
 
 
 
@@ -50,9 +53,9 @@ public final class Benutzer {
 	 * @param config   die Datenbank-Konfiguration
      */
     private Benutzer(final DBConfig config) {
-    	this.username = "niemand";
-    	this.password = "keines";
-    	this.config = config;
+    	this._username = "niemand";
+    	this._password = "keines";
+    	this._config = config;
     	this.connectionManager = ConnectionManager.get(config);
     }
 
@@ -80,7 +83,7 @@ public final class Benutzer {
 	 * @return der Benutzer für den Datenbankzugriff, oder null im Fehlerfall
 	 */
 	public Benutzer connectTo(final String schema) {
-		return create(config.switchSchema(schema));
+		return create(_config.switchSchema(schema));
 	}
 
 
@@ -100,19 +103,24 @@ public final class Benutzer {
 
 
 	/**
-	 * Prüft, ob der Benutzer die übergeben Kompetenz eingeräumt wurde oder nicht.
+	 * Prüft, ob dem Benutzer eine der übergeben Kompetenzen eingeräumt wurde oder nicht.
 	 * Hierbei findet keine Prüfung auf einen Admin-Benutzer mit vollen Rechten statt.
 	 *
-	 * @param kompetenz   die zu prüfende Kompetenz oder BenutzerKompetenz.KEINE
+	 * @param kompetenzen   die zu prüfenden Kompetenzen oder BenutzerKompetenz.KEINE
 	 *
 	 * @return true, im Falle von BenutzerKompetenz.KEINE als zu prüfende Kompetenz
-	 *         oder wenn der Benutzer die übergebene Kompetenz besitzt. Anonsten
+	 *         oder wenn der Benutzer einer der übergebenen Kompetenzen besitzt. Anonsten
 	 *         wird false zurückgegeben.
 	 */
-    private boolean hatKompetenz(final BenutzerKompetenz kompetenz) {
-    	if (kompetenz == BenutzerKompetenz.KEINE)
+    private boolean hatKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
+    	if (kompetenzen == null)
+    		return false;
+    	if (kompetenzen.contains(BenutzerKompetenz.KEINE))
     		return true;
-        return (kompetenzen != null) && kompetenzen.contains(kompetenz);
+    	for (final BenutzerKompetenz kompetenz : kompetenzen)
+    		if (this._kompetenzen.contains(kompetenz))
+    			return true;
+        return false;
     }
 
 
@@ -124,24 +132,42 @@ public final class Benutzer {
      *         handelt und ansonsten false
      */
     public boolean istAdmin() {
-        return (kompetenzen != null) && kompetenzen.contains(BenutzerKompetenz.ADMIN);
+        return (_kompetenzen != null) && _kompetenzen.contains(BenutzerKompetenz.ADMIN);
     }
 
 
     /**
-	 * Prüft, ob der Benutzer die übergeben Kompetenz eingeräumt wurde oder nicht.
+	 * Prüft, ob der Benutzer eine der übergeben Kompetenz eingeräumt wurde oder nicht.
 	 * Hierbei findet zunächst eine Prüfung auf einen Admin-Benutzer mit vollen Rechten
 	 * statt. Ist dies ein Admin-Benutzer, so hat er die Kompetenz ohne dass weiter
 	 * geprüft werden muss.
 	 *
-	 * @param kompetenz   die zu prüfende Kompetenz oder BenutzerKompetenz.KEINE
+	 * @param kompetenzen   die zu prüfenden Kompetenzen oder BenutzerKompetenz.KEINE
 	 *
 	 * @return true, im Falle von BenutzerKompetenz.KEINE als zu prüfende Kompetenz
 	 *         oder wenn der Benutzer die übergebene Kompetenz besitzt. Anonsten
 	 *         wird false zurückgegeben.
      */
-    public boolean pruefeKompetenz(final BenutzerKompetenz kompetenz) {
-    	return istAdmin() || hatKompetenz(kompetenz);
+    public boolean pruefeKompetenz(final BenutzerKompetenz... kompetenzen) {
+    	final Set<BenutzerKompetenz> tmp = new HashSet<>(Arrays.asList(kompetenzen));
+    	return istAdmin() || hatKompetenz(tmp);
+    }
+
+
+    /**
+	 * Prüft, ob der Benutzer eine der übergeben Kompetenz eingeräumt wurde oder nicht.
+	 * Hierbei findet zunächst eine Prüfung auf einen Admin-Benutzer mit vollen Rechten
+	 * statt. Ist dies ein Admin-Benutzer, so hat er die Kompetenz ohne dass weiter
+	 * geprüft werden muss.
+	 *
+	 * @param kompetenzen   die zu prüfenden Kompetenzen oder BenutzerKompetenz.KEINE
+	 *
+	 * @return true, im Falle von BenutzerKompetenz.KEINE als zu prüfende Kompetenz
+	 *         oder wenn der Benutzer die übergebene Kompetenz besitzt. Anonsten
+	 *         wird false zurückgegeben.
+     */
+    public boolean pruefeKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
+    	return istAdmin() || hatKompetenz(kompetenzen);
     }
 
 
@@ -152,7 +178,7 @@ public final class Benutzer {
 	 * @return die Datenbank-ID des Benutzer oder null
 	 */
 	public Long getId() {
-		return id;
+		return _id;
 	}
 
 
@@ -162,7 +188,7 @@ public final class Benutzer {
 	 * @param id   die ID des SVWS-Benutzers
 	 */
 	public void setId(final Long id) {
-		this.id = id;
+		this._id = id;
 	}
 
 
@@ -172,7 +198,7 @@ public final class Benutzer {
 	 * @return der Benutzername
 	 */
 	public String getUsername() {
-		return username;
+		return _username;
 	}
 
 
@@ -182,7 +208,7 @@ public final class Benutzer {
 	 * @param username   der zu setzende Benutzername
 	 */
 	public void setUsername(final String username) {
-		this.username = username;
+		this._username = username;
 	}
 
 
@@ -192,7 +218,7 @@ public final class Benutzer {
 	 * @return das Kennwort
 	 */
 	public String getPassword() {
-		return password;
+		return _password;
 	}
 
 
@@ -202,7 +228,7 @@ public final class Benutzer {
 	 * @param password   das zu setzende Kennwort
 	 */
 	public void setPassword(final String password) {
-		this.password = password;
+		this._password = password;
 	}
 
 
@@ -212,7 +238,7 @@ public final class Benutzer {
 	 * @return die Liste der Benutzer-Kompetenzen
 	 */
 	public List<BenutzerKompetenz> getKompetenzen() {
-		return kompetenzen;
+		return _kompetenzen;
 	}
 
 
@@ -222,7 +248,7 @@ public final class Benutzer {
 	 * @param kompetenzen   die Kompetenzen, die diesem Benutzer zugeordnet werden.
 	 */
 	public void setKompetenzen(final List<BenutzerKompetenz> kompetenzen) {
-		this.kompetenzen = kompetenzen;
+		this._kompetenzen = kompetenzen;
 	}
 
 
@@ -235,7 +261,7 @@ public final class Benutzer {
 	 */
 	public DBEntityManager getEntityManager() {
 		try {
-			return new DBEntityManager(this, config);
+			return new DBEntityManager(this, _config);
 		} catch (@SuppressWarnings("unused") final IllegalStateException e) {
 			// TODO error handling
 			return null;
@@ -250,7 +276,7 @@ public final class Benutzer {
 	 * @return die Lehrer-ID oder null, falls der angemeldete Benutzer kein Lehrer ist
 	 */
 	public Long getIdLehrer() {
-		return idLehrer;
+		return _idLehrer;
 	}
 
 
@@ -260,7 +286,7 @@ public final class Benutzer {
 	 * @param idLehrer   die Lehrer-ID oder null, falls der angemeldete Benutzer kein Lehrer ist
 	 */
 	public void setIdLehrer(final Long idLehrer) {
-		this.idLehrer = idLehrer;
+		this._idLehrer = idLehrer;
 	}
 
 }
