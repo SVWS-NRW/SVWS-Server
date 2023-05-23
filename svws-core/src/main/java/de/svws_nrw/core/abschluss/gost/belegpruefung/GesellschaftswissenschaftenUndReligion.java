@@ -224,8 +224,8 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			final boolean belegungQ21 = manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22);
 			if ((zusatzkursFachbelegungen != null) && (belegungQ11 || belegungQ12 || belegungQ21))
 				zusatzkursFachbelegungen.add(fachbelegung);
-			if ((belegungQ11 && manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22))
-					|| (belegungQ12 && manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q22)))
+			if ((belegungQ11 && manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22) > 0)
+					|| (belegungQ12 && manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q22) > 0))
 				addFehler(GostBelegungsfehler.ZK_18);
 			// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
 		} else if (halbjahre.size() > 1) {

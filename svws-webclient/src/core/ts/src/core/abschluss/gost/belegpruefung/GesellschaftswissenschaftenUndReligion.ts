@@ -165,7 +165,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			const belegungQ21 : boolean = this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22);
 			if ((this.zusatzkursFachbelegungen !== null) && (belegungQ11 || belegungQ12 || belegungQ21))
 				this.zusatzkursFachbelegungen.add(fachbelegung);
-			if ((belegungQ11 && this.manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22)) || (belegungQ12 && this.manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q22)))
+			if ((belegungQ11 && this.manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22) > 0) || (belegungQ12 && this.manager.zaehleBelegungInHalbjahren(fachbelegungenZK, GostHalbjahr.Q22) > 0))
 				this.addFehler(GostBelegungsfehler.ZK_18);
 		} else
 			if (halbjahre.size() > 1) {
