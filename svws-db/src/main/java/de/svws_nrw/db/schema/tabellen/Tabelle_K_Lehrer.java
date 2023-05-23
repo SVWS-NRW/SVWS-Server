@@ -228,9 +228,9 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Beschaeftigungsart = add("Beschaeftigungsart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 		.setJavaComment("Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.)");
 
-	/** Die Definition der Tabellenspalte Einsatzstatus */
+	/** [ASD] Die Definition der Tabellenspalte Einsatzstatus */
 	public SchemaTabelleSpalte col_Einsatzstatus = add("Einsatzstatus", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setJavaComment("Der Einsatzstatus (z.B. Stammschule, nur hier tätig)");
+		.setJavaComment("[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig)");
 
 	/** Die Definition der Tabellenspalte StammschulNr */
 	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)

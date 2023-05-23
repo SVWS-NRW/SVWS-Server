@@ -2,6 +2,7 @@ package de.svws_nrw.core.data.lehrer;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.core.types.lehrer.LehrerEinsatzstatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -65,8 +66,8 @@ public class LehrerPersonaldaten {
 	@Schema(description = "Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.", example = "T")
 	public String beschaeftigungsart;
 
-	/** Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. */
-	@Schema(description = "Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.", example = "*")
+	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Core-Type {@link LehrerEinsatzstatus} */
+	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.", example = "*")
 	public String einsatzstatus;
 
 	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
