@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Die Klasse ist ein Core-DTO für die Farbdefintion nach dem RGB-Schema.
+ * Die Klasse ist ein Core-DTO für die Farbdefinition nach dem RGB-Schema.
  */
 @XmlRootElement
 @Schema(description = "Eine RGB-Farbdefinition.")

@@ -29,11 +29,11 @@ public class StundenplanKlasse {
 	@Schema(description = "Die Bezeichnung der Klasse", example = "Eichhörnchen")
 	public @NotNull String bezeichnung = "";
 
-	/** Die Liste der IDs der Jahrgänge, denen die Klasse zugeordnet ist. */
+	/** Die Liste der {@link StundenplanJahrgang}-IDs denen die Klasse zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Jahrgänge, denen die Klasse zugeordnet ist")
 	public @NotNull List<@NotNull Long> jahrgaenge = new ArrayList<>();
 
-	/** Die Liste der IDs der Schüler, die der Klasse zugeordnet sind. */
+	/** Die Liste der {@link StundenplanSchueler}-IDs, die der Klasse zugeordnet sind. */
 	@Schema(description = "die Liste der IDs der Schüler, die der Klasse zugeordnet sind")
 	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
 

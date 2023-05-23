@@ -7,12 +7,17 @@ import java.util.List;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
+import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
+import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
@@ -28,9 +33,19 @@ public class StundenplanManager {
 
 	private final @NotNull Stundenplan _daten;
 	private final @NotNull List<@NotNull StundenplanUnterricht> _datenU;
-	private final StundenplanUnterrichtsverteilung _datenUV;
+	private final @NotNull StundenplanUnterrichtsverteilung _datenUV;
 
-	// Mappings vom DTO-Stundenplan
+	// Mappings von DTO-StundenplanUnterrichtsverteilung.
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_fachID_zu_fach = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_klasseID_zu_klasse = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_klasseID_zu_jahrgangIDs = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_jahrgangID_zu_jahrgang = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _map_lehrerID_zu_lehrer = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_lehrerID_zu_faecherIDs = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_kursID_zu_kurs = new HashMap<>();
+
+	// Mappings von DTO-Stundenplan
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_raumID_zu_raum = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_schieneID_zu_schiene = new HashMap<>();
@@ -38,9 +53,6 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_aufsichtID_zu_aufsicht = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_kwzID_zu_kwz = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_kwz = new HashMap2D<>();
-
-
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_kursID_zu_kurs = new HashMap<>();
 
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_kursID_zu_unterrichte = new HashMap<>();
 
@@ -55,19 +67,35 @@ public class StundenplanManager {
 	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		_daten = daten;
 		_datenU = unterrichte;
-		_datenUV = unterrichtsverteilung;
+		if (unterrichtsverteilung == null) {
+			_datenUV = new StundenplanUnterrichtsverteilung();
+			_datenUV.id = daten.id;
+		} else {
+			_datenUV = unterrichtsverteilung;
+		}
+
 		checkWochentypenKonsistenz();
 
-		// Initialisiere Maps vom DTO-Stundenplan.
+		// Maps: DTO-StundenplanUnterrichtsverteilung.
+		initMapFach();
+		initMapJahrgang();
+		initMapSchueler(); // hat "Klasse"
+		initMapKlasse();   // hat "Jahrgang", "{Schüler}"
+		initMapLehrer();   // hat "{Fach}"
+		initMapKurs();     // hat "{Schienen}", "{Jahrgang}", "{Schüler}"
+
+		// Maps: DTO-Stundenplan.
 		initMapZeitraster();
 		initMapRaum();
-		initMapSchiene();
+		initMapSchiene();  // hat "Jahrgang"
 		initMapPausenzeit();
 		initMapAufsicht();
 		initMapKalenderWochenZuordnung();
 
-		initMapKursIDZuKurs();
+
+		// Maps: DTO-StundenplanUnterricht (DTO-StundenplanUnterrichtsverteilung muss vorher geladen werden)
 		initMapKursZuUnterrichte();
+
 	}
 
 	private void checkWochentypenKonsistenz() {
@@ -88,6 +116,97 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
 			// Liegt der Unterricht in einer bestimmten Woche, muss es so viele Wochen auch global geben.
 			DeveloperNotificationException.ifTrue("u.wochentyp > wochentyp", u.wochentyp > wochentyp);
+		}
+	}
+
+	private void initMapFach() {
+		_map_fachID_zu_fach.clear();
+		for (final @NotNull StundenplanFach fach: _datenUV.faecher) {
+			DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
+			DeveloperNotificationException.ifTrue("fach.bezeichnung.isBlank()", fach.bezeichnung.isBlank());
+			DeveloperNotificationException.ifTrue("fach.kuerzel.isBlank()", fach.kuerzel.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_fachID_zu_fach", _map_fachID_zu_fach, fach.id);
+			_map_fachID_zu_fach.put(fach.id, fach);
+		}
+	}
+
+	private void initMapKlasse() {
+		_map_klasseID_zu_klasse.clear();
+		_map_klasseID_zu_jahrgangIDs.clear();
+		for (final @NotNull StundenplanKlasse klasse: _datenUV.klassen) {
+			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+			DeveloperNotificationException.ifTrue("klasse.bezeichnung.isBlank()", klasse.bezeichnung.isBlank());
+			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", klasse.kuerzel.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", _map_klasseID_zu_klasse, klasse.id);
+			_map_klasseID_zu_klasse.put(klasse.id, klasse);
+
+			// Jahrgänge der Klasse hinzufügen.
+			@NotNull final ArrayList<@NotNull Long> jahrgaenge = new ArrayList<>();
+			for (final @NotNull Long jahrgangID : klasse.jahrgaenge) {
+				DeveloperNotificationException.ifTrue("!_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID)", !_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID));
+				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", jahrgaenge.contains(jahrgangID));
+				jahrgaenge.add(jahrgangID);
+			}
+			_map_klasseID_zu_jahrgangIDs.put(klasse.id, jahrgaenge);
+
+			// TODO klasse schueler
+		}
+	}
+
+	private void initMapJahrgang() {
+		_map_jahrgangID_zu_jahrgang.clear();
+		for (final @NotNull StundenplanJahrgang jahrgang: _datenUV.jahrgaenge) {
+			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
+			DeveloperNotificationException.ifTrue("jahrgang.bezeichnung.isBlank()", jahrgang.bezeichnung.isBlank());
+			DeveloperNotificationException.ifTrue("jahrgang.kuerzel.isBlank()", jahrgang.kuerzel.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_jahrgangID_zu_jahrgang", _map_jahrgangID_zu_jahrgang, jahrgang.id);
+			_map_jahrgangID_zu_jahrgang.put(jahrgang.id, jahrgang);
+		}
+	}
+
+	private void initMapLehrer() {
+		_map_lehrerID_zu_lehrer.clear();
+		_map_lehrerID_zu_faecherIDs.clear();
+		for (final @NotNull StundenplanLehrer lehrer : _datenUV.lehrer) {
+			DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
+			DeveloperNotificationException.ifTrue("zeit.kuerzel.isBlank()", lehrer.kuerzel.isBlank());
+			DeveloperNotificationException.ifTrue("zeit.nachname.isBlank()", lehrer.nachname.isBlank());
+			DeveloperNotificationException.ifTrue("zeit.vorname.isBlank()", lehrer.vorname.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_lehrerID_zu_lehrer", _map_lehrerID_zu_lehrer, lehrer.id);
+			_map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
+
+			// Fächer der Lehrkraft hinzufügen.
+			@NotNull final ArrayList<@NotNull Long> faecher = new ArrayList<>();
+			for (final @NotNull Long fachID : lehrer.faecher) {
+				DeveloperNotificationException.ifTrue("!_map_fachID_zu_fach.containsKey(fachID)", !_map_fachID_zu_fach.containsKey(fachID));
+				DeveloperNotificationException.ifTrue("faecher.contains(fachID)", faecher.contains(fachID));
+				faecher.add(fachID);
+			}
+			_map_lehrerID_zu_faecherIDs.put(lehrer.id, faecher);
+		}
+	}
+
+	private void initMapSchueler() {
+		_map_schuelerID_zu_schueler.clear();
+		for (final @NotNull StundenplanSchueler schueler : _datenUV.schueler) {
+			DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
+			DeveloperNotificationException.ifInvalidID("schueler.idKlasse", schueler.idKlasse);
+			DeveloperNotificationException.ifTrue("schueler.nachname.isBlank()", schueler.nachname.isBlank());
+			DeveloperNotificationException.ifTrue("schueler.vorname.isBlank()", schueler.vorname.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, schueler.id);
+			_map_schuelerID_zu_schueler.put(schueler.id, schueler);
+		}
+	}
+
+	private void initMapKurs() {
+		DeveloperNotificationException.ifTrue("_daten.id != _datenUV.id", _daten.id != _datenUV.id);
+
+		_map_kursID_zu_kurs.clear();
+		for (final @NotNull StundenplanKurs kurs : _datenUV.kurse) {
+			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
+			DeveloperNotificationException.ifTrue("kurs.bezeichnung.isBlank()", kurs.bezeichnung.isBlank());
+			DeveloperNotificationException.ifMapContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, kurs.id);
+			_map_kursID_zu_kurs.put(kurs.id, kurs);
 		}
 	}
 
@@ -164,17 +283,6 @@ public class StundenplanManager {
 		}
 	}
 
-	private void initMapKursIDZuKurs() {
-		if (_datenUV == null)
-			return;
-
-		_map_kursID_zu_kurs.clear();
-		for (final @NotNull StundenplanKurs k : _datenUV.kurse) {
-			DeveloperNotificationException.ifMapContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, k.id);
-			_map_kursID_zu_kurs.put(k.id, k);
-		}
-	}
-
 	private void initMapKursZuUnterrichte() {
 		_map_kursID_zu_unterrichte.clear();
 		for (final @NotNull StundenplanUnterricht u : _datenU) {
@@ -184,7 +292,7 @@ public class StundenplanManager {
 			// Wurde der Kurs in der Unterrichtsverteilung definiert?
 			DeveloperNotificationException.ifTrue("!_map_kursID_zu_kurs.containsKey(u.idKurs)", !_map_kursID_zu_kurs.containsKey(u.idKurs));
 			// Liste des Kurses holen.
-			List<@NotNull StundenplanUnterricht> listU = _map_kursID_zu_unterrichte.get(u.idKurs);
+			List<@NotNull StundenplanUnterricht> listU = _map_kursID_zu_unterrichte.get(u.idKurs); // Kann NULL sein!
 			if (listU == null) {
 				listU = new ArrayList<>();
 				_map_kursID_zu_unterrichte.put(u.idKurs, listU);

@@ -33,7 +33,7 @@ public class StundenplanLehrer {
 	@Schema(description = "Der Vorname des Lehrers", example = "Max")
 	public @NotNull String vorname = "";
 
-	/** Die Liste der IDs der Unterrichsfächer, die der Lehrer unterrichten kann. */
+	/** Die Liste der IDs der Unterrichtsfächer, die der Lehrer unterrichten kann. */
 	@Schema(description = "die Liste der IDs der Unterrichsfächer, die der Lehrer unterrichten kann")
 	public @NotNull List<@NotNull Long> faecher = new ArrayList<>();
 
