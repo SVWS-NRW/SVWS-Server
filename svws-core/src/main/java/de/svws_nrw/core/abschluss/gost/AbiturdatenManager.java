@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden;
@@ -132,6 +133,8 @@ public class AbiturdatenManager {
 		// Die Prüfung der Kurszahlen und Wochenstunden ist abhängig von den Projektkursergebnissen - sie muss nach den Projektkursergebnissen durchgeführt werden!!!
 		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse));
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
+		// Die Prüfung von schulspezifischen Fachkombinationen
+		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
 		return pruefungen;
 	}
 
@@ -1729,6 +1732,29 @@ public class AbiturdatenManager {
 		return hj;
 	}
 
+
+	/**
+	 * Gibt alle Fachkombination zurück, welche in der EF.1 gültig sind.
+	 *
+	 * @return die Liste mit den Fachkombinationen
+	 */
+	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenEF1() {
+		final @NotNull List<@NotNull GostJahrgangFachkombination> kombis = new ArrayList<>();
+		for (final @NotNull GostJahrgangFachkombination kombi : gostFaecherKombinationen)
+			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
+				kombis.add(kombi);
+		return kombis;
+	}
+
+
+	/**
+	 * Gibt alle Fachkombination zurück.
+	 *
+	 * @return die Liste mit den Fachkombinationen
+	 */
+	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenGesamt() {
+		return gostFaecherKombinationen;
+	}
 
 
 	/**

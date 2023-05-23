@@ -37,6 +37,7 @@ import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
 import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
+import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
@@ -141,6 +142,7 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(new AbiFaecher(this, pruefungsArt));
 		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse));
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
+		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
 		return pruefungen;
 	}
 
@@ -1639,6 +1641,28 @@ export class AbiturdatenManager extends JavaObject {
 		if (hj === null)
 			return GostHalbjahr.Q21;
 		return hj;
+	}
+
+	/**
+	 * Gibt alle Fachkombination zurück, welche in der EF.1 gültig sind.
+	 *
+	 * @return die Liste mit den Fachkombinationen
+	 */
+	public getFachkombinationenEF1() : List<GostJahrgangFachkombination> {
+		const kombis : List<GostJahrgangFachkombination> = new ArrayList();
+		for (const kombi of this.gostFaecherKombinationen)
+			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
+				kombis.add(kombi);
+		return kombis;
+	}
+
+	/**
+	 * Gibt alle Fachkombination zurück.
+	 *
+	 * @return die Liste mit den Fachkombinationen
+	 */
+	public getFachkombinationenGesamt() : List<GostJahrgangFachkombination> {
+		return this.gostFaecherKombinationen;
 	}
 
 	/**

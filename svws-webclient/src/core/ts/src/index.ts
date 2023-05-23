@@ -29,6 +29,7 @@ export { AbiturBlockIMarkierPruefung } from './core/abschluss/gost/abitur/servic
 export { AbiFaecher } from './core/abschluss/gost/belegpruefung/AbiFaecher';
 export { Allgemeines } from './core/abschluss/gost/belegpruefung/Allgemeines';
 export { Deutsch } from './core/abschluss/gost/belegpruefung/Deutsch';
+export { Fachkombinationen } from './core/abschluss/gost/belegpruefung/Fachkombinationen';
 export { Fremdsprachen } from './core/abschluss/gost/belegpruefung/Fremdsprachen';
 export { GesellschaftswissenschaftenUndReligion } from './core/abschluss/gost/belegpruefung/GesellschaftswissenschaftenUndReligion';
 export { KurszahlenUndWochenstunden } from './core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';

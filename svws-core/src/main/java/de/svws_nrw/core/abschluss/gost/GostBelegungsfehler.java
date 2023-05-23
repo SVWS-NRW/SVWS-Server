@@ -518,12 +518,12 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt KOMBI_1 */
 	KOMBI_1("KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
 			"Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.",
-			null),
+			"Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt."),
 
 	/** BelegungsfehlerArt KOMBI_2 */
 	KOMBI_2("KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
 			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.",
-			null);
+			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
 
 
 	/** Der eindeutige Code des Belegungsfehlers */

@@ -526,12 +526,12 @@ export class GostBelegungsfehler extends JavaObject implements JavaEnum<GostBele
 	/**
 	 * BelegungsfehlerArt KOMBI_1
 	 */
-	public static readonly KOMBI_1 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_1", 101, "KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.", null);
+	public static readonly KOMBI_1 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_1", 101, "KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.", "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.");
 
 	/**
 	 * BelegungsfehlerArt KOMBI_2
 	 */
-	public static readonly KOMBI_2 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 102, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", null);
+	public static readonly KOMBI_2 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 102, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
 
 	/**
 	 * Der eindeutige Code des Belegungsfehlers
