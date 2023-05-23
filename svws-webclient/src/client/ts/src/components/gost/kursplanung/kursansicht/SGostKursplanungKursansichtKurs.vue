@@ -46,9 +46,11 @@
 				<span class="opacity-25">–</span>
 			</div>
 		</template>
-		<s-gost-kursplanung-kursansicht-kurs-schienen :blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color="bgColor"
+		<s-gost-kursplanung-kursansicht-kurs-schienen v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" :schiene="schiene"
+			:blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color="bgColor"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter"
-			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung" />
+			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+			v-model="drag_data" />
 		<template v-if="allowRegeln">
 			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black" :class="{'text-black' : kursdetail_anzeige, 'text-black/25' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
 				<div class="inline-block">
@@ -67,13 +69,12 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import { GostBlockungRegel,
-		GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from "vue";
+	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from "~/helfer";
-	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -101,6 +102,8 @@
 	const edit_name: Ref<number | undefined> = ref(undefined);
 	const tmp_name = ref(props.kurs.suffix);
 	const kursdetail_anzeige: Ref<boolean> = ref(false)
+
+	const drag_data: Ref<{kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}> = ref({schiene: undefined, kurs: undefined})
 
 	async function setKoop(value: boolean) {
 		await props.patchKurs({ istKoopKurs: value }, props.kurs.id);

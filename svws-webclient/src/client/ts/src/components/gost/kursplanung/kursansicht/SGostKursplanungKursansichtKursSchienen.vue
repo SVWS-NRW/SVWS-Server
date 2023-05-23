@@ -1,61 +1,53 @@
 <template>
-	<template v-if="!blockungAktiv">
-		<svws-ui-drop-data v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id"
-			v-slot="{ active }"
-			class="data-table__td data-table__td__no-padding data-table__td__align-center"
-			:class="{'bg-white/50': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-white text-black/25': drag_data.kurs?.id === kurs.id && drag_data.schiene?.id === schiene.id}"
+	<svws-ui-drop-data v-slot="{ active }" v-if="!blockungAktiv"
+		class="data-table__td data-table__td__no-padding data-table__td__align-center"
+		:class="{'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt, 'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id}"
+		tag="div"
+		role="cell"
+		:drop-allowed="is_drop_zone"
+		@drop="drop_aendere_kursschiene($event, schiene)">
+		<svws-ui-drag-data v-if="kurs_schiene_zugeordnet"
+			:key="kurs.id"
 			tag="div"
-			role="cell"
-			:drop-allowed="is_drop_zone(schiene)"
-			@drop="drop_aendere_kursschiene($event, schiene)">
-			<svws-ui-drag-data v-if="kurs_schiene_zugeordnet(schiene)"
-				:key="kurs.id"
-				tag="div"
-				:data="{kurs, schiene}"
-				class="select-none w-full h-full rounded flex items-center justify-center relative group"
-				:draggable="true"
-				:class="{'schiene-gesperrt': schiene_gesperrt(schiene), 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone(schiene), 'p-0': active || is_drop_zone(schiene)}"
-				@drag-start="drag_started"
-				@drag-end="drag_ended"
-				@click="toggle_active_kurs">
-				{{ kurs_blockungsergebnis?.schueler.size() }}
-				<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5">
-					<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-50 group-hover:text-black" />
-				</span>
-				<svws-ui-icon class="cursor-pointer group absolute right-1" @click.stop="fixieren_regel_toggle(schiene)">
-					<i-ri-pushpin-fill v-if="istFixiert(schiene)" class="inline-block group-hover:opacity-75" />
-					<i-ri-pushpin-line v-if="!istFixiert(schiene) && allowRegeln" class="inline-block opacity-25 group-hover:opacity-100" />
-				</svws-ui-icon>
-			</svws-ui-drag-data>
-			<template v-else>
-				<div class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle(schiene)"
-					:class="{'bg-white': active && is_drop_zone(schiene),
-						'schiene-gesperrt': schiene_gesperrt(schiene)}">
-					<div v-if="active && is_drop_zone(schiene)" class="absolute inset-1 border-2 border-dashed border-black/25" />
-					<svws-ui-icon>
-						<i-ri-prohibited-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block" />
-						<i-ri-prohibited-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
-					</svws-ui-icon>
-				</div>
-			</template>
-		</svws-ui-drop-data>
-	</template>
-	<template v-else>
-		<div role="cell" v-for="schiene in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
-			<div v-if="kurs_schiene_zugeordnet(schiene)"
-				class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
-				:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
-				@click="toggle_active_kurs">
-				{{ kurs_blockungsergebnis?.schueler.size() }}
-				<svws-ui-icon class="absolute right-1" v-if="istFixiert(schiene)">
-					<i-ri-pushpin-fill class="inline-block" />
-				</svws-ui-icon>
-				<svws-ui-icon v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene(schiene).nummer)">
-					<i-ri-prohibited-line class="inline-block" />
-				</svws-ui-icon>
-			</div>
+			:data="{kurs, schiene}"
+			class="select-none w-full h-full rounded flex items-center justify-center relative group"
+			:draggable="true"
+			:class="{'schiene-gesperrt': schiene_gesperrt, 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
+			@drag-start="drag_started"
+			@drag-end="drag_ended"
+			@click="toggle_active_kurs">
+			{{ kurs_blockungsergebnis?.schueler.size() }}
+			<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5">
+				<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-50 group-hover:text-black" />
+			</span>
+			<svws-ui-icon class="cursor-pointer group absolute right-1" @click.stop="fixieren_regel_toggle">
+				<i-ri-pushpin-fill v-if="istFixiert" class="inline-block group-hover:opacity-75" />
+				<i-ri-pushpin-line v-if="!istFixiert && allowRegeln" class="inline-block opacity-25 group-hover:opacity-100" />
+			</svws-ui-icon>
+		</svws-ui-drag-data>
+		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
+			:class="{'bg-white': active && is_drop_zone, 'schiene-gesperrt': schiene_gesperrt}">{{ is_drop_zone }}
+			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
+			<svws-ui-icon>
+				<i-ri-prohibited-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block" />
+				<i-ri-prohibited-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
+			</svws-ui-icon>
 		</div>
-	</template>
+	</svws-ui-drop-data>
+	<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
+		<div v-if="kurs_schiene_zugeordnet"
+			class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
+			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
+			@click="toggle_active_kurs">
+			{{ kurs_blockungsergebnis?.schueler.size() }}
+			<svws-ui-icon class="absolute right-1" v-if="istFixiert">
+				<i-ri-pushpin-fill class="inline-block" />
+			</svws-ui-icon>
+			<svws-ui-icon v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)">
+				<i-ri-prohibited-line class="inline-block" />
+			</svws-ui-icon>
+		</div>
+	</div>
 	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
 		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" :add-regel="addRegel" />
 </template>
@@ -63,10 +55,10 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, List } from "@svws-nrw/svws-core";
-	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref } from "vue";
-	import { computed, ref } from "vue";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -79,6 +71,12 @@
 		kurs: GostBlockungKurs;
 		bgColor: string;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
+		schiene: GostBlockungsergebnisSchiene;
+		modelValue: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined};
+	}>();
+
+	const emit = defineEmits<{
+		(e: "update:modelValue", drag_data: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}): void;
 	}>();
 
 	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.getErgebnismanager().getKursE(props.kurs.id));
@@ -99,25 +97,20 @@
 
 	// Drag & Drop
 
-	const drag_data: Ref<{kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}> = ref({schiene: undefined, kurs: undefined})
-
 	function drag_started(e: DragEvent) {
 		const transfer = e.dataTransfer;
 		const data = JSON.parse(transfer?.getData('text/plain') || "") as { kurs: GostBlockungKurs; schiene: GostBlockungSchiene } | undefined;
 		if (!data)
 			return;
-		drag_data.value.kurs = data.kurs;
-		drag_data.value.schiene = data.schiene;
+		emit("update:modelValue", data);
 	}
 
 	function drag_ended() {
-		drag_data.value.kurs = undefined;
-		drag_data.value.schiene = undefined;
+		emit("update:modelValue", {kurs: undefined, schiene: undefined});
 	}
 
-	function is_drop_zone(schiene: GostBlockungsergebnisSchiene): boolean{
-		return drag_data.value?.schiene?.id !== schiene.id && drag_data.value.kurs?.id === props.kurs.id && drag_data.value.schiene?.id !== schiene.id
-	}
+	const is_drop_zone = computed(()=>
+		props.modelValue?.schiene?.id !== props.schiene.id && props.modelValue.kurs?.id === props.kurs.id && props.modelValue.schiene?.id !== props.schiene.id);
 
 	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
 
@@ -126,7 +119,7 @@
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
 		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
 			return
-		if ((drag_data.kurs.id !== kurs_blockungsergebnis.value.id) && kurs_schiene_zugeordnet(schiene)) {
+		if ((drag_data.kurs.id !== kurs_blockungsergebnis.value.id) && kurs_schiene_zugeordnet) {
 			kurs1 = drag_data.kurs;
 			isModalOpen_KurseZusammen.value = true;
 			return;
@@ -140,15 +133,13 @@
 		}
 	}
 
-	function kurs_schiene_zugeordnet(schiene: GostBlockungsergebnisSchiene): boolean {
-		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(props.kurs.id, schiene.id);
-	}
+	const kurs_schiene_zugeordnet = computed(() =>
+		props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(props.kurs.id, props.schiene.id));
 
 
 	// Regeln
 
 	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.getDatenmanager().getMengeOfRegeln());
-
 
 	// Regeln zum Sperren
 
@@ -160,16 +151,16 @@
 		return arr;
 	})
 
-	const ermittel_parent_schiene = (ergebnis_schiene: GostBlockungsergebnisSchiene): GostBlockungSchiene => {
-		const schiene =	props.getErgebnismanager().getSchieneG(ergebnis_schiene.id)
+	const ermittel_parent_schiene = computed(() => {
+		const schiene =	props.getErgebnismanager().getSchieneG(props.schiene.id)
 		if (!schiene)
-			throw new Error(`Schiene mit der ID: ${ergebnis_schiene.id} fehlt in der Definition`);
+			throw new Error(`Schiene mit der ID: ${props.schiene.id} fehlt in der Definition`);
 		return schiene;
-	}
+	})
 
-	const schiene_gesperrt = (schiene: GostBlockungsergebnisSchiene): boolean => {
+	const schiene_gesperrt = computed(()=>{
 		for (const regel of regeln.value) {
-			const { nummer } = ermittel_parent_schiene(schiene)
+			const { nummer } = ermittel_parent_schiene.value;
 			if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
 				&& ((regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
 					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2)))))
@@ -180,13 +171,13 @@
 				return true;
 		}
 		return false;
-	}
+	})
 
 
-	async function sperren_regel_toggle(schiene: GostBlockungsergebnisSchiene) {
+	async function sperren_regel_toggle() {
 		if (!props.allowRegeln)
 			return;
-		const { nummer } = ermittel_parent_schiene(schiene);
+		const { nummer } = ermittel_parent_schiene.value;
 		if (sperr_regeln.value.find(r => r.parameter.get(1) === nummer))
 			await sperren_regel_entfernen(nummer);
 		else
@@ -213,10 +204,10 @@
 
 	// Regeln zum Fixieren
 
-	function istFixiert(schiene: GostBlockungsergebnisSchiene) {
-		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+	const istFixiert = computed(() => {
+		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
 		return fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer);
-	}
+	})
 
 	const fixier_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
 		const arr = []
@@ -226,10 +217,10 @@
 		return arr;
 	});
 
-	async function fixieren_regel_toggle(schiene: GostBlockungsergebnisSchiene) {
+	async function fixieren_regel_toggle() {
 		if (!props.allowRegeln)
 			return;
-		const s = props.getErgebnismanager().getSchieneG(schiene.id);
+		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
 		if (fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer))
 			await fixieren_regel_entfernen(s);
 		else
@@ -250,7 +241,6 @@
 			if (regel.parameter.get(1) === schiene.nummer)
 				await props.removeRegel(regel.id);
 	}
-
 
 </script>
 
