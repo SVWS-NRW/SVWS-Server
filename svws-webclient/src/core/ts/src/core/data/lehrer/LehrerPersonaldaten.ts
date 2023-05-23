@@ -68,7 +68,7 @@ export class LehrerPersonaldaten extends JavaObject {
 	public beschaeftigungsart : string | null = null;
 
 	/**
-	 * Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.
+	 * [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Core-Type {@link LehrerEinsatzstatus}
 	 */
 	public einsatzstatus : string | null = null;
 

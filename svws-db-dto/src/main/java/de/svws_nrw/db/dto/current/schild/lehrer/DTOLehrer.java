@@ -398,7 +398,7 @@ public final class DTOLehrer {
 	@JsonProperty
 	public String Beschaeftigungsart;
 
-	/** Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
+	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
 	@Column(name = "Einsatzstatus")
 	@JsonProperty
 	public String Einsatzstatus;
