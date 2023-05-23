@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,7 @@ public class SQLGenerator {
 	 * @return das SQL-Drop-Skript
 	 */
 	public static String getDropSchemaSkript(final DBDriver dbms, final long rev) {
-		final var tmp = Schema.getTabellen(rev);
+		final var tmp = new ArrayList<>(Schema.getTabellen(rev));
 		Collections.reverse(tmp);
 		return tmp.stream().map(t -> t.getSQLDrop(dbms)).collect(Collectors.joining(System.lineSeparator())) + System.lineSeparator();
 	}
