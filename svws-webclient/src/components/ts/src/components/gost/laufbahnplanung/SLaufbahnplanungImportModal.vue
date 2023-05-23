@@ -43,6 +43,8 @@
 		formData.append("data", file);
 		status.value = await props.importLaufbahnplanung(formData);
 		loading.value = false;
+		if (status.value === true)
+			modal.value.closeModal();
 	}
 
 	const openModal = () => {
