@@ -34,13 +34,13 @@
 			<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
+			:style="{ 'background-color': ef_moeglich ? bgColor : bgColorNichtMoeglich }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
 				<svws-ui-checkbox v-model="ef1" circle bw />
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate"
-			:style="{ 'background-color': ef_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
+			:style="{ 'background-color': ef_moeglich ? bgColor : bgColorNichtMoeglich }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
 				<svws-ui-checkbox v-model="ef2" circle bw />
 			</span>
@@ -66,13 +66,13 @@
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': abi_gk_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
+			:style="{ 'background-color': abi_gk_moeglich ? bgColor : bgColorNichtMoeglich }">
 			<span class="faecher-toggle--checkbox" v-if="abi_gk_moeglich">
 				<svws-ui-checkbox v-model="abiGK" circle bw />
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': abi_lk_moeglich ? bgColor : 'rgb(var(--color-gray))' }">
+			:style="{ 'background-color': abi_lk_moeglich ? bgColor : bgColorNichtMoeglich }">
 			<span class="faecher-toggle--checkbox" v-if="abi_lk_moeglich">
 				<svws-ui-checkbox v-model="abiLK" circle bw />
 			</span>
@@ -130,6 +130,8 @@
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB());
+
+	const bgColorNichtMoeglich: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
