@@ -26,7 +26,8 @@
 			</svws-ui-icon>
 		</svws-ui-drag-data>
 		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
-			:class="{'bg-white': active && is_drop_zone, 'schiene-gesperrt': schiene_gesperrt}">{{ is_drop_zone }}
+			:class="{'bg-white': active && is_drop_zone, 'schiene-gesperrt': schiene_gesperrt}">
+			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
 			<svws-ui-icon>
 				<i-ri-prohibited-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block" />
