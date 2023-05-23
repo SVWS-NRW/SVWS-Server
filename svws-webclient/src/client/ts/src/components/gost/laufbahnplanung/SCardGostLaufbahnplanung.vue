@@ -1,13 +1,20 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-toggle v-model="filterFehler" /> Nur Ergebnisse mit Fehlern anzeigen
-		<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
+		<div class="flex justify-between mb-2">
+			<svws-ui-toggle v-model="filterFehler"> Nur Ergebnisse mit Fehlern anzeigen</svws-ui-toggle>
+			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
+		</div>
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
-				<svws-ui-icon @click.stop="gotoLaufbahnplanung(s.id)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon>{{ s.nachname }}, {{ s.vorname }}
-				<svws-ui-badge v-if="s.status !== 2" type="light" size="big" :short="true">
-					{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
-				</svws-ui-badge>
+				<svws-ui-icon @click.stop="gotoLaufbahnplanung(s.id)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon>
+				<div class="flex justify-between w-full">
+					<div>{{ s.nachname }}, {{ s.vorname }}</div>
+					<div class="mr-5">
+						<svws-ui-badge v-if="s.status !== 2" type="light" size="big" :short="true">
+							{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
+						</svws-ui-badge>
+					</div>
+				</div>
 			</template>
 			<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 				{{ counter(f.fehlercodes) }}
@@ -35,7 +42,7 @@
 		gotoLaufbahnplanung: (id: number) => Promise<void>;
 	}>();
 
-	const cols = [{key: 'schueler', label: 'Name, Vorname'}, {key: 'ergebnis', label: 'Anzahl Fehler'}]
+	const cols = [{key: 'schueler', label: 'Name, Vorname', span: 3}, {key: 'ergebnis', label: 'Anzahl Fehler', span: 1}]
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if (!filterFehler.value)
