@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Schule auswählen">
 		<div class="content-wrapper">
-			<svws-ui-multi-select @update:model-value="runInitSchule" title="Auswahl Schule" autocomplete
-				:items="listSchulkatalog" :item-text="(i: SchulenKatalogEintrag) => i.KurzBez || 'Schule ohne Name'"
+			<svws-ui-multi-select :model-value="model" @update:model-value="runInitSchule" title="Auswahl Schule" autocomplete
+				:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
 				:item-filter="filter" required :disabled="loading" />
 			<svws-ui-spinner :spinning="loading" />
 		</div>
@@ -21,11 +21,16 @@
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
+	const model = ref<SchulenKatalogEintrag>();
 
-	const filter = (items: SchulenKatalogEintrag[], search: string) =>
-		items.filter(i =>
-			i.SchulNr.includes(search.toLocaleLowerCase()) ||
-			i.KurzBez?.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+	const filter = (items: Iterable<SchulenKatalogEintrag>, search: string) => {
+		const list = [];
+		for (const i of items)
+			if (i.SchulNr.includes(search.toLocaleLowerCase())
+				|| i.KurzBez?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				list.push(i);
+		return list;
+	}
 
 	async function runInitSchule(schule: SchulenKatalogEintrag) {
 		loading.value = true;
@@ -34,9 +39,3 @@
 	}
 </script>
 
-<style lang="postcss" scoped>
-.init-form-header {
-	@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-	font-size: 2.618rem;
-}
-</style>

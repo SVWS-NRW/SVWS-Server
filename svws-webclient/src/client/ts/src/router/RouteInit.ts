@@ -13,7 +13,7 @@ import { routeApp } from "./RouteApp";
 const SInit = () => import("~/components/init/SInit.vue")
 export class RouteInit extends RouteNode<unknown, any> {
 
-	protected listSchulkatalog: Ref<List<SchulenKatalogEintrag>> = ref(new ArrayList());
+	protected listSchulkatalog: Ref<List<SchulenKatalogEintrag>> = ref(new ArrayList<SchulenKatalogEintrag>());
 	protected source: Ref<'schulkatalog'|'schild2'|'backup'|undefined> = ref(undefined);
 	protected db: Ref<'mysql'|'mariadb'|'mssql'|'mdb'|undefined> = ref(undefined);
 

@@ -183,15 +183,15 @@ export class RouteDataSchueler {
 		return this._state.value.mapAbiturjahrgaenge;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	patch = useDebounceFn((data: Partial<SchuelerStammdaten>)=> this.patchit(data).then(val => val), 100)
+	patch = useDebounceFn((data: Partial<SchuelerStammdaten>)=> this.patchit(data), 100)
 
-	patchit = async (data : Partial<SchuelerStammdaten>) => {
+	patchit = (data : Partial<SchuelerStammdaten>) => {
 		if (this.auswahl === undefined)
 			return;
-		await api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id);
-		const stammdaten = this.stammdaten;
-		this.setPatchedState({stammdaten: Object.assign(stammdaten, data)});
+		api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id).then(()=>{
+			const stammdaten = this.stammdaten;
+			this.setPatchedState({stammdaten: Object.assign(stammdaten, data)});
+		}).catch((e) => console.log(e))
 		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
