@@ -77,20 +77,20 @@ public class StundenplanManager {
 		checkWochentypenKonsistenz();
 
 		// Maps: DTO-StundenplanUnterrichtsverteilung.
-		initMapFach();
-		initMapJahrgang();
-		initMapSchueler(); // hat "Klasse"
-		initMapKlasse();   // hat "Jahrgang", "{Schüler}"
-		initMapLehrer();   // hat "{Fach}"
-		initMapKurs();     // hat "{Schienen}", "{Jahrgang}", "{Schüler}"
+		initMapFach();         // hat ---
+		initMapJahrgang();     // hat ---
+		initMapLehrer();       // hat "{Fach}"
+		initMapKlasse();       // hat "{Jahrgang}", es gibt auch jahrgangsübergreifende Klassen!
+		initMapSchueler();     // hat "Klasse"
+		initMapKurs();         // hat "{Schienen}", "{Jahrgang}", "{Schüler}"
 
 		// Maps: DTO-Stundenplan.
 		initMapZeitraster();
 		initMapRaum();
-		initMapSchiene();  // hat "Jahrgang"
-		initMapPausenzeit();
+		initMapSchiene();      // hat "Jahrgang"
+		initMapPausenzeit();   // hat ---
 		initMapAufsicht();
-		initMapKalenderWochenZuordnung();
+		initMapKWZuordnung();
 
 
 		// Maps: DTO-StundenplanUnterricht (DTO-StundenplanUnterrichtsverteilung muss vorher geladen werden)
@@ -141,15 +141,13 @@ public class StundenplanManager {
 			_map_klasseID_zu_klasse.put(klasse.id, klasse);
 
 			// Jahrgänge der Klasse hinzufügen.
-			@NotNull final ArrayList<@NotNull Long> jahrgaenge = new ArrayList<>();
+			@NotNull final ArrayList<@NotNull Long> listJ = new ArrayList<>();
 			for (final @NotNull Long jahrgangID : klasse.jahrgaenge) {
 				DeveloperNotificationException.ifTrue("!_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID)", !_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID));
-				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", jahrgaenge.contains(jahrgangID));
-				jahrgaenge.add(jahrgangID);
+				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", listJ.contains(jahrgangID));
+				listJ.add(jahrgangID);
 			}
-			_map_klasseID_zu_jahrgangIDs.put(klasse.id, jahrgaenge);
-
-			// TODO klasse schueler
+			_map_klasseID_zu_jahrgangIDs.put(klasse.id, listJ);
 		}
 	}
 
@@ -176,13 +174,13 @@ public class StundenplanManager {
 			_map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
 
 			// Fächer der Lehrkraft hinzufügen.
-			@NotNull final ArrayList<@NotNull Long> faecher = new ArrayList<>();
+			@NotNull final ArrayList<@NotNull Long> listF = new ArrayList<>();
 			for (final @NotNull Long fachID : lehrer.faecher) {
 				DeveloperNotificationException.ifTrue("!_map_fachID_zu_fach.containsKey(fachID)", !_map_fachID_zu_fach.containsKey(fachID));
-				DeveloperNotificationException.ifTrue("faecher.contains(fachID)", faecher.contains(fachID));
-				faecher.add(fachID);
+				DeveloperNotificationException.ifTrue("faecher.contains(fachID)", listF.contains(fachID));
+				listF.add(fachID);
 			}
-			_map_lehrerID_zu_faecherIDs.put(lehrer.id, faecher);
+			_map_lehrerID_zu_faecherIDs.put(lehrer.id, listF);
 		}
 	}
 
@@ -191,6 +189,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanSchueler schueler : _datenUV.schueler) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 			DeveloperNotificationException.ifInvalidID("schueler.idKlasse", schueler.idKlasse);
+			DeveloperNotificationException.ifTrue("!_map_klasseID_zu_klasse.containsKey(schueler.idKlasse)", !_map_klasseID_zu_klasse.containsKey(schueler.idKlasse));
 			DeveloperNotificationException.ifTrue("schueler.nachname.isBlank()", schueler.nachname.isBlank());
 			DeveloperNotificationException.ifTrue("schueler.vorname.isBlank()", schueler.vorname.isBlank());
 			DeveloperNotificationException.ifMapContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, schueler.id);
@@ -269,7 +268,7 @@ public class StundenplanManager {
 		}
 	}
 
-	private void initMapKalenderWochenZuordnung() {
+	private void initMapKWZuordnung() {
 		_map_kwzID_zu_kwz.clear();
 		_map_jahr_kw_zu_kwz.clear();
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _daten.kalenderwochenZuordnung) {

@@ -84,16 +84,16 @@ export class StundenplanManager extends JavaObject {
 		this.checkWochentypenKonsistenz();
 		this.initMapFach();
 		this.initMapJahrgang();
-		this.initMapSchueler();
-		this.initMapKlasse();
 		this.initMapLehrer();
+		this.initMapKlasse();
+		this.initMapSchueler();
 		this.initMapKurs();
 		this.initMapZeitraster();
 		this.initMapRaum();
 		this.initMapSchiene();
 		this.initMapPausenzeit();
 		this.initMapAufsicht();
-		this.initMapKalenderWochenZuordnung();
+		this.initMapKWZuordnung();
 		this.initMapKursZuUnterrichte();
 	}
 
@@ -131,13 +131,13 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", JavaString.isBlank(klasse.kuerzel));
 			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, klasse.id);
 			this._map_klasseID_zu_klasse.put(klasse.id, klasse);
-			const jahrgaenge : ArrayList<number> = new ArrayList();
+			const listJ : ArrayList<number> = new ArrayList();
 			for (const jahrgangID of klasse.jahrgaenge) {
 				DeveloperNotificationException.ifTrue("!_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID)", !this._map_jahrgangID_zu_jahrgang.containsKey(jahrgangID));
-				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", jahrgaenge.contains(jahrgangID));
-				jahrgaenge.add(jahrgangID);
+				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", listJ.contains(jahrgangID));
+				listJ.add(jahrgangID);
 			}
-			this._map_klasseID_zu_jahrgangIDs.put(klasse.id, jahrgaenge);
+			this._map_klasseID_zu_jahrgangIDs.put(klasse.id, listJ);
 		}
 	}
 
@@ -162,13 +162,13 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("zeit.vorname.isBlank()", JavaString.isBlank(lehrer.vorname));
 			DeveloperNotificationException.ifMapContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, lehrer.id);
 			this._map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
-			const faecher : ArrayList<number> = new ArrayList();
+			const listF : ArrayList<number> = new ArrayList();
 			for (const fachID of lehrer.faecher) {
 				DeveloperNotificationException.ifTrue("!_map_fachID_zu_fach.containsKey(fachID)", !this._map_fachID_zu_fach.containsKey(fachID));
-				DeveloperNotificationException.ifTrue("faecher.contains(fachID)", faecher.contains(fachID));
-				faecher.add(fachID);
+				DeveloperNotificationException.ifTrue("faecher.contains(fachID)", listF.contains(fachID));
+				listF.add(fachID);
 			}
-			this._map_lehrerID_zu_faecherIDs.put(lehrer.id, faecher);
+			this._map_lehrerID_zu_faecherIDs.put(lehrer.id, listF);
 		}
 	}
 
@@ -177,6 +177,7 @@ export class StundenplanManager extends JavaObject {
 		for (const schueler of this._datenUV.schueler) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 			DeveloperNotificationException.ifInvalidID("schueler.idKlasse", schueler.idKlasse);
+			DeveloperNotificationException.ifTrue("!_map_klasseID_zu_klasse.containsKey(schueler.idKlasse)", !this._map_klasseID_zu_klasse.containsKey(schueler.idKlasse));
 			DeveloperNotificationException.ifTrue("schueler.nachname.isBlank()", JavaString.isBlank(schueler.nachname));
 			DeveloperNotificationException.ifTrue("schueler.vorname.isBlank()", JavaString.isBlank(schueler.vorname));
 			DeveloperNotificationException.ifMapContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, schueler.id);
@@ -253,7 +254,7 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private initMapKalenderWochenZuordnung() : void {
+	private initMapKWZuordnung() : void {
 		this._map_kwzID_zu_kwz.clear();
 		this._map_jahr_kw_zu_kwz.clear();
 		for (const kwz of this._daten.kalenderwochenZuordnung) {
