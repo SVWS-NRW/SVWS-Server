@@ -24,11 +24,6 @@ export class StundenplanKlasse extends JavaObject {
 	 */
 	public jahrgaenge : List<number> = new ArrayList();
 
-	/**
-	 * Die Liste der {@link StundenplanSchueler}-IDs, die der Klasse zugeordnet sind.
-	 */
-	public schueler : List<number> = new ArrayList();
-
 
 	public constructor() {
 		super();
@@ -55,11 +50,6 @@ export class StundenplanKlasse extends JavaObject {
 				result.jahrgaenge?.add(elem);
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
-			for (const elem of obj.schueler) {
-				result.schueler?.add(elem);
-			}
-		}
 		return result;
 	}
 
@@ -76,18 +66,6 @@ export class StundenplanKlasse extends JavaObject {
 				const elem = obj.jahrgaenge.get(i);
 				result += elem;
 				if (i < obj.jahrgaenge.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
-			result += '"schueler" : [ ';
-			for (let i = 0; i < obj.schueler.size(); i++) {
-				const elem = obj.schueler.get(i);
-				result += elem;
-				if (i < obj.schueler.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -117,20 +95,6 @@ export class StundenplanKlasse extends JavaObject {
 					const elem = obj.jahrgaenge.get(i);
 					result += elem;
 					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (typeof obj.schueler !== "undefined") {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += elem;
-					if (i < obj.schueler.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

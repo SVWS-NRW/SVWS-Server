@@ -3,15 +3,12 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.OperationError;
@@ -71,10 +68,6 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class);
 		final List<Long> jahrgaengsIDs = DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan).stream().map(j -> j.id).toList();
-		// Schüler bestimmen
-		final List<Long> klassenIDs = klassen.stream().map(k -> k.ID).toList();
-		final Map<Long, List<Long>> mapKlasseSchuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id.multiple", klassenIDs, DTOSchuelerLernabschnittsdaten.class)
-				.stream().collect(Collectors.groupingBy(sla -> sla.Klassen_ID, Collectors.mapping(sla -> sla.Schueler_ID, Collectors.toList())));
 		// Erstelle die Core-DTOs
 		final ArrayList<StundenplanKlasse> daten = new ArrayList<>();
 		for (final DTOKlassen k : klassen) {
@@ -84,9 +77,6 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 			} else {
 				klasse.jahrgaenge.add(k.Jahrgang_ID);
 			}
-			final List<Long> schuelerIDs = mapKlasseSchuelerIDs.get(k.ID);
-			if (schuelerIDs != null)
-				klasse.schueler.addAll(schuelerIDs);
 			daten.add(klasse);
 		}
 		return daten;
@@ -119,13 +109,9 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		} else {
 			jahrgangsIDs.add(klasse.Jahrgang_ID);
 		}
-		// Schüler bestimmen
-		final List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", klasse.ID, DTOSchuelerLernabschnittsdaten.class)
-				.stream().map(sla -> sla.Schueler_ID).toList();
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);
 		daten.jahrgaenge.addAll(jahrgangsIDs);
-		daten.schueler.addAll(schuelerIDs);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
