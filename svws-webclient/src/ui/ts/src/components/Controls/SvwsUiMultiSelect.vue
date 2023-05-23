@@ -531,7 +531,7 @@
 
 				&:after {
 					@apply opacity-75 font-normal;
-					content: ' entfernen';
+					content: '\0000a0entfernen';
 				}
 			}
 		}

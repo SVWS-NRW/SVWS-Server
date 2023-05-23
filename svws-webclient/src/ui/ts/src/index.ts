@@ -39,7 +39,8 @@ export {
 	SvwsUiDragData,
 	SvwsUiDropData,
 	SvwsUiDataTable,
-	SvwsUiSpinner
+	SvwsUiSpinner,
+	SvwsUiSubNav,
 } from './components'
 
 export type { DataTableColumn, DataTableItem } from './components/Layout/DataTable/types'

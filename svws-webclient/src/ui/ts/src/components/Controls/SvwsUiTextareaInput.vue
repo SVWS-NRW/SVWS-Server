@@ -255,7 +255,7 @@
 		&:not(.textarea-input-filled):not(.textarea-input-focus) {
 			.textarea-input--placeholder {
 				&:after {
-					content: ' hinzufügen…';
+					content: '\0000a0hinzufügen…';
 				}
 			}
 		}
