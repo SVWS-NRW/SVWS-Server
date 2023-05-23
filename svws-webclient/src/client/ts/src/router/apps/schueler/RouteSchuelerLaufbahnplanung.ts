@@ -2,9 +2,7 @@ import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnpl
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
-import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt,
-	GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList
-} from "@svws-nrw/svws-core";
+import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -116,20 +114,21 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return this._state.value.zwischenspeicher;
 	}
 
-	createAbiturdatenmanager = async (): Promise<AbiturdatenManager | undefined> => {
-		if (this._state.value.abiturdaten === undefined)
+	createAbiturdatenmanager = async (daten?: Abiturdaten): Promise<AbiturdatenManager | undefined> => {
+		const abiturdaten = daten || this._state.value.abiturdaten;
+		if (abiturdaten === undefined)
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
 		if (art === 'auto')
 			for (const fachwahl of abiturdatenManager.getSchuelerFachwahlen().values())
 				if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
 					return abiturdatenManager;
-		return new AbiturdatenManager(this._state.value.abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
@@ -158,7 +157,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 	importLaufbahnplanung = async (data: FormData): Promise<boolean> => {
 		const res = await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = await this.createAbiturdatenmanager();
+		const abiturdatenManager = await this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
 			return false;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
@@ -182,7 +181,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 			return;
 		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
-		const abiturdatenManager = await this.createAbiturdatenmanager();
+		const abiturdatenManager = await this.createAbiturdatenmanager(abiturdaten);
 		if (abiturdatenManager === undefined)
 			return;
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
