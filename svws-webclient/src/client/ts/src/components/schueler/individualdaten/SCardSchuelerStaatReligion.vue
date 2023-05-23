@@ -12,7 +12,7 @@
 				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<div class="col-span-2">
-				<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen" required />
+				<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required />
 			</div>
 			<svws-ui-text-input v-model="religionAbmeldung" type="date"
 				placeholder="Abmeldung vom Religionsunterricht" />
