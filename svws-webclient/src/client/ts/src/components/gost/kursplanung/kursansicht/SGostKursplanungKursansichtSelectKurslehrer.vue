@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col gap-2 text-left">
 		<div class="flex w-full items-center" v-for="lehrer, i of kurslehrer" :key="lehrer.id">
-			<svws-ui-multi-select :model-value="lehrer" @update:model-value="(val) => update_kurslehrer(val, lehrer)" class="flex-1"
+			<svws-ui-multi-select :model-value="lehrer" @update:model-value="(val: LehrerListeEintrag) => update_kurslehrer(val, lehrer)" class="flex-1"
 				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
 				:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 			<svws-ui-icon v-if="!new_kurs_lehrer && i === kurslehrer.length-1" class="ml-3 cursor-pointer text-black hover:text-primary" @click="new_kurs_lehrer=true">
@@ -18,8 +18,8 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager} from "@svws-nrw/svws-core";
-	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref} from 'vue';
+	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@svws-nrw/svws-core";
 	import { computed, ref } from 'vue';
 	import { lehrer_filter } from '~/helfer';
 

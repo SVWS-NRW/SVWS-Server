@@ -7,8 +7,8 @@
 			<div class="col-span-2">
 				<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" />
 			</div>
-			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" />
-			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" />
+			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i=>i.text ?? ''" />
+			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i=>i.text ?? ''" />
 			<svws-ui-text-input placeholder="Anmeldedatum" v-model="inputAnmeldedatum" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" />
 			<div class="col-span-full input-wrapper input-wrapper--checkboxes">
@@ -25,9 +25,9 @@
 
 <script setup lang="ts">
 
+	import type { KatalogEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { KatalogEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
 	import { SchuelerStatus } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{

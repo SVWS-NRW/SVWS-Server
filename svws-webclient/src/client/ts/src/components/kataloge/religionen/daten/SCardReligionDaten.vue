@@ -27,8 +27,8 @@
 <script setup lang="ts">
 
 	import type { ReligionEintrag } from "@svws-nrw/svws-core";
-	import { Religion } from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { Religion } from "@svws-nrw/svws-core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -43,7 +43,7 @@
 		emit('patch', data);
 	}
 
-	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
+	const inputKatalogReligionenStatistik: ComputedRef<Religion[]> = computed(() => Religion.values());
 
 	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
 		get: () => props.auswahl.kuerzel ?? undefined,

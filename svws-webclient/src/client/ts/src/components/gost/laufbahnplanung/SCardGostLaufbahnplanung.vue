@@ -28,11 +28,11 @@
 
 <script setup lang="ts">
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
-	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
+	import type { Config } from '~/components/Config';
+	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
 	import { toRaw} from 'vue';
 	import { computed, ref } from 'vue';
-	import type { Config } from '~/components/Config';
 
 	const props = defineProps<{
 		config: Config;

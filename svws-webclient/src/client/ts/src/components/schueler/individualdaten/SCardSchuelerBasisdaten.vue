@@ -9,7 +9,7 @@
 					@update:model-value="doPatch({ vorname: String($event) })" type="text" />
 				<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data().alleVornamen"
 					@update:model-value="doPatch({ alleVornamen: String($event) })" type="text" />
-				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics />
+				<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="i=>i.text" />
 				<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data().geburtsdatum"
 					@update:model-value="doPatch({ geburtsdatum: String($event) })" type="date" required statistics />
 				<svws-ui-text-input placeholder="Geburtsort" :model-value="data().geburtsort"
@@ -23,9 +23,9 @@
 
 <script setup lang="ts">
 
+	import type { SchuelerStammdaten } from "@svws-nrw/svws-core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { SchuelerStammdaten } from "@svws-nrw/svws-core";
 	import { Geschlecht } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{

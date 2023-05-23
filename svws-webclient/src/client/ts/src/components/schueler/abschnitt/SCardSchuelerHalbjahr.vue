@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Allgemeine Angaben">
 		<div class="input-wrapper">
-			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="props.mapKlassen.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
-			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="props.mapJahrgaenge.values()" :item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined"
 				@update:model-value="doPatch({ datumAnfang: String($event) })" type="date" />
 			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined"
@@ -13,8 +13,8 @@
 				<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
 				<div v-else v-for="kl in klassenlehrer" :key="kl.id"> {{ getLehrerText(kl) }}  </div>
 			</div>
-			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="props.mapLehrer.values()" :item-text="getLehrerText" autocomplete />
-			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="props.mapLehrer.values()"
+			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
+			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer"
 				:item-text="getLehrerText" autocomplete />
 			<div class="mt-4 input-wrapper-3-cols col-span-2">
 				<span class="font-bold col-span-full">Fehlstunden</span>
@@ -32,9 +32,9 @@
 				<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
 			</div>
 			<div class="mt-4 col-span-full input-wrapper">
-				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="props.mapFoerderschwerpunkte.values()"
+				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte"
 					:item-text="i => `${i.text}`" autocomplete />
-				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="props.mapFoerderschwerpunkte.values()"
+				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte"
 					:item-text="i => `${i.text}`" autocomplete />
 				<div class="col-span-2">
 					<svws-ui-checkbox v-model="schwerbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
@@ -68,9 +68,9 @@
 
 	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag,
 		SchuelerLernabschnittsdaten, SchuleStammdaten} from "@svws-nrw/svws-core";
+	import type { ComputedRef, WritableComputedRef } from 'vue';
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
 		Klassenart, Note, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@svws-nrw/svws-core";
-	import type { ComputedRef, WritableComputedRef } from 'vue';
 	import { computed } from 'vue';
 
 	const props = defineProps<{

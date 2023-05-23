@@ -1,54 +1,44 @@
-<script setup lang="ts">
-	import {
-		type PropType,
-		type ComputedRef,
-		computed,
-		nextTick,
-		ref,
-		shallowReactive,
-		shallowRef,
-		watch,
-		Teleport, readonly
-	} from "vue";
-	import {genId} from "../../utils";
+<script setup lang="ts" generic="Item">
+	import type { ComputedRef, ShallowRef } from "vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
-	import {useFloating, autoUpdate, flip, offset, shift, size} from "@floating-ui/vue";
+	import { computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
+	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
+	import { genId } from "../../utils";
 
-	type Item = Record<string, any>;
-
-	const props = defineProps({
-		placeholder: {type: String, default: ""},
-		title: {type: String, default: ""},
-		tags: {type: Boolean, default: false},
-		autocomplete: {type: Boolean, default: false},
-		disabled: {type: Boolean, default: false},
-		statistics: {type: Boolean, default: false},
-		danger: {type: Boolean, default: false},
-		items: {
-			type: [Array, Object],
-			default() {
-				return [];
-			}
-		},
-		itemText: {
-			type: Function as PropType<(item: any) => string>,
-			default(item: Item) {
-				return item.text ?? "";
-			}
-		},
-		itemSort: {type: Function as PropType<(a: any, b: any) => number>, default: null},
-		itemFilter: {type: Function as PropType<(items: any[], searchText: string) => any[]>, default: null},
-		// eslint-disable-next-line vue/require-default-prop
-		modelValue: {
-			type: [Object, Array] as PropType<Item | Item[]>
-		},
-		headless: {type: Boolean, default: false},
-		removable: {type: Boolean, default: false},
-		rounded: {type: Boolean, default: false}
-	});
+	const props = withDefaults(defineProps<{
+		placeholder?: string;
+		title?: string;
+		tags?: boolean;
+		autocomplete?: boolean;
+		disabled?: boolean;
+		statistics?: boolean;
+		danger?: boolean;
+		items: Iterable<Item> | Map<number, Item>;
+		itemText: (item: Item) => string;
+		itemSort?: (a: Item, b: Item) => number;
+		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
+		modelValue: Item[] | Item | undefined;
+		headless?: boolean;
+		removable?: boolean;
+		rounded?: boolean;
+		required?: boolean;
+	}>(), {
+		placeholder: '',
+		title: '',
+		tags: false,
+		autocomplete: false,
+		disabled: false,
+		statistics: false,
+		danger: false,
+		itemSort: (a: Item, b: Item) => 0,
+		itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
+		headless: false,
+		removable: false,
+		rounded: false,
+	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: Array<Item | null> | Item | null | undefined): void;
+		(e: "update:modelValue", items: Item[] | Item | null | undefined): void;
 		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 	}>();
@@ -105,7 +95,7 @@
 		searchText.value = "" + value;
 	}
 
-	const selectedItem = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
+	const selectedItem: ShallowRef<Item|undefined> = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
 	const selectedItemList = shallowReactive(
 		new Set<Item>(Array.isArray(props.modelValue) ? props.modelValue : props.modelValue ? [props.modelValue] : [])
 	);
@@ -122,12 +112,7 @@
 		}
 	);
 
-	function isIterable(o: Item[] | object): o is Iterable<Item> {
-		return Symbol.iterator in o;
-	}
-
 	const sortedList: ComputedRef<Item[]> = computed(() => {
-		if (!isIterable(props.items)) return [];
 		let arr
 		if (Array.isArray(props.items))
 			arr = props.items;
@@ -139,7 +124,7 @@
 		return arr;
 	});
 
-	const filteredList: ComputedRef<Array<Item>> = computed(() => {
+	const filteredList: ComputedRef<Item[]> = computed(() => {
 		if (props.autocomplete) {
 			if (props.itemFilter) return props.itemFilter(sortedList.value, searchText.value);
 			else

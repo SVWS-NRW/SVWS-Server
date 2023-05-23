@@ -6,7 +6,7 @@
 		<div class="input-wrapper">
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
-			<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="mapJahrgaenge.values()"
+			<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="mapJahrgaenge"
 				:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel ?? ''" />
 			<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
 			<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 
+	import type { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag} from "@svws-nrw/svws-core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag} from "@svws-nrw/svws-core";
 	import { ArrayList } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{

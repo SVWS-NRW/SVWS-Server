@@ -49,20 +49,18 @@ export const orte_filter = (items: OrtKatalogEintrag[], search: string): OrtKata
 };
 
 /** Filter für Staatsangehörigkeiten */
-export const staatsangehoerigkeitKatalogEintragFilter = (items: Nationalitaeten[], search: string) => {
-	return items.filter((i: Nationalitaeten) => {
-		if (i.daten.staatsangehoerigkeit) {
-			return (
-				i.daten.staatsangehoerigkeit
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase()) ||
-				i.daten.iso3
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase())
-			);
-		}
-		return [];
-	});
+export const staatsangehoerigkeitKatalogEintragFilter = (items: Iterable<Nationalitaeten>, search: string) => {
+	const list = [];
+	for (const i of items)
+		if (
+			i.daten.staatsangehoerigkeit
+				.toLocaleLowerCase()
+				.includes(search.toLocaleLowerCase()) ||
+			i.daten.iso3
+				.toLocaleLowerCase()
+				.includes(search.toLocaleLowerCase()))
+			list.push(i);
+	return list;
 };
 
 /** Sortierfunktion für Staatsangehörigkeiten */
@@ -78,12 +76,13 @@ export const staatsangehoerigkeitKatalogEintragSort = (a: Nationalitaeten, b: Na
 };
 
 /** Filter für Sprachen */
-export const verkehrsspracheKatalogEintragFilter = (items: Verkehrssprache[], search: string) => {
-	if (!items.length)
-		return [];
-	return items.filter((i : Verkehrssprache) => i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-	)
+export const verkehrsspracheKatalogEintragFilter = (items: Iterable<Verkehrssprache>, search: string) => {
+	const list = [];
+	for (const i of items)
+		if (i.daten.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+		|| i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			list.push(i);
+	return list;
 };
 
 /** Sortierfunktion für Sprachen */
@@ -91,15 +90,13 @@ export const verkehrsspracheKatalogEintragSort = (a: Verkehrssprache, b: Verkehr
 	a.daten.bezeichnung.localeCompare(b.daten.bezeichnung)
 
 /** Filter für Länder */
-export const nationalitaetenKatalogEintragFilter = (items: Nationalitaeten[], search: string) => {
-	if (!items.length)
-		return [];
-	return items.filter((i: Nationalitaeten) => {
-		return (
-			i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-			i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-		);
-	});
+export const nationalitaetenKatalogEintragFilter = (items: Iterable<Nationalitaeten>, search: string) => {
+	const list = [];
+	for (const i of items)
+		if ( i.daten.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+			|| i.daten.iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			list.push(i);
+	return list;
 };
 
 /** Sortierfunktion für Länder */
@@ -118,16 +115,18 @@ export const katalogEintragSort = (a: KatalogEintrag | null, b: KatalogEintrag |
 	return 0;
 };
 
-export const katalogEintragFilter = (items: KatalogEintrag[] | undefined, search: string) => {
-	return items?.filter((i: KatalogEintrag) => {
-		if (i.text && i.kuerzel) {
-			i.text.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-				i.kuerzel
+export const katalogEintragFilter = (items: Iterable<KatalogEintrag> | undefined, search: string) => {
+	const list: KatalogEintrag[] = [];
+	if (items === undefined)
+		return list;
+	for (const i of items)
+		if (i.text && i.kuerzel
+			&& (i.text.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+				||i.kuerzel
 					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase());
-		}
-		return false;
-	});
+					.includes(search.toLocaleLowerCase())))
+			list.push(i)
+	return list;
 };
 
 export const ortsteilSort = (a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag) => {
@@ -141,7 +140,7 @@ export const ortsteilSort = (a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintra
 	return 0;
 };
 
-export const ortsteilFilter = (items: OrtsteilKatalogEintrag[], search: string) => {
+export const ortsteilFilter = (items: Iterable<OrtsteilKatalogEintrag>, search: string) => {
 	const o = [];
 	for (const i of items) {
 		if (i.ortsteil?.includes(search)) {
@@ -162,18 +161,21 @@ export const erzieherArtSort = (a: Erzieherart, b: Erzieherart) => {
 };
 
 /** Der Filter für Lehrer mit Kürzelsuche */
-export const lehrer_filter = (items: LehrerListeEintrag[], search: string): LehrerListeEintrag[] => {
+export const lehrer_filter = (items: Iterable<LehrerListeEintrag>, search: string): LehrerListeEintrag[] => {
 	const name = search.replace(/\d+\s*/, "").trim();
 	if (!name)
-		return items;
-	return items.filter((item: LehrerListeEintrag) =>
-		item.kuerzel
+		return Array.isArray(items) ? items : [...items];
+	const list = [];
+	for (const i of items)
+		if (i.kuerzel
 			.toLocaleLowerCase("de-DE")
 			.startsWith(name.toLocaleLowerCase("de-DE"))
-		|| item.nachname
+		|| i.nachname
 			.toLocaleLowerCase("de-DE")
 			.startsWith(name.toLocaleLowerCase("de-DE"))
-		|| item.vorname
+		|| i.vorname
 			.toLocaleLowerCase("de-DE")
 			.startsWith(name.toLocaleLowerCase("de-DE")))
+			list.push(i);
+	return list;
 };

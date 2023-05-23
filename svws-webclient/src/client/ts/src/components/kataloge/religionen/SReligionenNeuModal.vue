@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-	import { Religion, ReligionEintrag } from '@svws-nrw/svws-core';
 	import type { ComputedRef} from 'vue';
+	import { Religion, ReligionEintrag } from '@svws-nrw/svws-core';
 	import { computed, reactive, ref } from 'vue';
 
 	const props = defineProps<{
@@ -32,7 +32,7 @@
 	const modal = ref();
 	const reli_neu: ReligionEintrag = reactive(new ReligionEintrag());
 
-	const inputKatalogReligionenStatistik: ComputedRef<Religion[] | undefined> = computed(() => Religion.values());
+	const inputKatalogReligionenStatistik: ComputedRef<Religion[]> = computed(() => Religion.values());
 
 	async function saveEntries() {
 		if (reli_neu.kuerzel) {

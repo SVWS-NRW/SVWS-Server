@@ -57,7 +57,7 @@
 		kombination: GostJahrgangFachkombination;
 	}>();
 
-	const faecher: ComputedRef<LinkedCollection<GostFach> | undefined> = computed(() => props.faecherManager().faecher());
+	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => props.faecherManager().faecher());
 	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
 
 	const fach1: WritableComputedRef<GostFach | undefined> = computed({
