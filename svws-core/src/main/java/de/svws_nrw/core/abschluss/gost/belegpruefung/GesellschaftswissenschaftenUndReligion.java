@@ -11,6 +11,7 @@ import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -198,31 +199,50 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			addFehler(GostBelegungsfehler.ZK_13);
 
 		// Prüfe die gefilterten Belegungen
-		for (final AbiturFachbelegung fachbelegung : fachbelegungenZK) {
-			// Prüfe, ob die Belegung für den Zusatzkurs bilingual ist
-			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach == null) || (GostFachManager.istBilingual(fach)))
-				addFehler(GostBelegungsfehler.ZK_13);
+		final AbiturFachbelegung fachbelegung = fachbelegungenZK.get(0);
 
-			// Bestimme die Halbjahre des Zusatzkurses
-			final @NotNull List<@NotNull GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
-			// Prüfe, ob zwei Zusatzkurse in aufeinanderfolgenden Halbjahren belegt wurden
-			if (halbjahre.size() == 2) {
-				if ((zusatzkursFachbelegungen != null)
-						&& (manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12)
-						|| manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21)
-						|| manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22)))
-					zusatzkursFachbelegungen.add(fachbelegung);
-				// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
-			} else if (halbjahre.size() > 1) {
-				addFehler(GostBelegungsfehler.ZK_12);
-			}
-			// Prüfe, ob bei den Halbjahren des Zusatzkurses im Halbjahr davor eine Belegung vorliegt - beim ersten Halbjahr darf dies nicht der Fall sein!
-			if (!halbjahre.isEmpty()) {
-				final GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
-				if ((prevHalbjahr != null) && (manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
-					addFehler(GostBelegungsfehler.ZK_10);
-			}
+		// Prüfe, ob die Belegung für den Zusatzkurs bilingual ist
+		final GostFach fach = manager.getFach(fachbelegung);
+		if (fach == null)
+			throw new NullPointerException();
+		if (GostFachManager.istBilingual(fach))
+			addFehler(GostBelegungsfehler.ZK_13);
+
+		// Prüfe, ob der Zusatzkurs in dem Fach angeboten wird.
+		final @NotNull ZulaessigesFach zFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		if ((zFach == ZulaessigesFach.GE) && (!manager.istErlaubtZusatzkursGE()))
+			addFehler(GostBelegungsfehler.ZK_14);
+		if ((zFach == ZulaessigesFach.SW) && (!manager.istErlaubtZusatzkursSW()))
+			addFehler(GostBelegungsfehler.ZK_15);
+
+		// Bestimme die Halbjahre des Zusatzkurses
+		final @NotNull List<@NotNull GostHalbjahr> halbjahre = manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
+		// Prüfe, ob zwei Zusatzkurse in aufeinanderfolgenden Halbjahren belegt wurden
+		if (halbjahre.size() == 2) {
+			final boolean belegungQ11 = manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			final boolean belegungQ12 = manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21);
+			final boolean belegungQ21 = manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22);
+			if ((zusatzkursFachbelegungen != null) && (belegungQ11 || belegungQ12 || belegungQ21))
+				zusatzkursFachbelegungen.add(fachbelegung);
+			if ((belegungQ11 && manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22))
+					|| (belegungQ12 && manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q22)))
+				addFehler(GostBelegungsfehler.ZK_18);
+			// Prüfe, ob mehr als zwei Zusatzkurse belegt wurden oder die Belegung in nicht aufeinander folgenden Halbjahren ist
+		} else if (halbjahre.size() > 1) {
+			addFehler(GostBelegungsfehler.ZK_12);
+		}
+		// Prüfe, ob bei den Halbjahren des Zusatzkurses im Halbjahr davor eine Belegung vorliegt - beim ersten Halbjahr darf dies nicht der Fall sein!
+		if (!halbjahre.isEmpty()) {
+			final GostHalbjahr prevHalbjahr = halbjahre.get(0).previous();
+			if ((prevHalbjahr != null) && (manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
+				addFehler(GostBelegungsfehler.ZK_10);
+		}
+		// Prüfe, ob der Beginn des Zusatzkurse der Einstellung bei dem Jahrgang entspricht
+		if (!halbjahre.isEmpty()) {
+			if ((zFach == ZulaessigesFach.GE) && (manager.getBeginnZusatzkursGE() != halbjahre.get(0)))
+				addFehler(GostBelegungsfehler.ZK_16);
+			if ((zFach == ZulaessigesFach.SW) && (manager.getBeginnZusatzkursSW() != halbjahre.get(0)))
+				addFehler(GostBelegungsfehler.ZK_17);
 		}
 	}
 

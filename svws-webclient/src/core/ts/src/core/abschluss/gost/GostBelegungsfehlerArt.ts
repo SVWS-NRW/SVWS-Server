@@ -26,9 +26,14 @@ export class GostBelegungsfehlerArt extends JavaObject implements JavaEnum<GostB
 	public static readonly SCHRIFTLICHKEIT : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("SCHRIFTLICHKEIT", 1, "SCHRIFTLICHKEIT");
 
 	/**
+	 * Fehler in Bezug auf schulische Rahmenbedingungen - Zusatzkursbeginn oder nicht erlaubte oder geforderte Fachkombinationen
+	 */
+	public static readonly SCHULSPEZIFISCH : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("SCHULSPEZIFISCH", 2, "SCHULSPEZIFISCH");
+
+	/**
 	 * Information, aber kein Fehler
 	 */
-	public static readonly HINWEIS : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("HINWEIS", 2, "HINWEIS");
+	public static readonly HINWEIS : GostBelegungsfehlerArt = new GostBelegungsfehlerArt("HINWEIS", 3, "HINWEIS");
 
 	/**
 	 * Das Kürzel für die Belegungsfehlerart
@@ -65,6 +70,9 @@ export class GostBelegungsfehlerArt extends JavaObject implements JavaEnum<GostB
 			}
 			case "SCHRIFTLICHKEIT": {
 				return GostBelegungsfehlerArt.SCHRIFTLICHKEIT;
+			}
+			case "SCHULSPEZIFISCH": {
+				return GostBelegungsfehlerArt.SCHULSPEZIFISCH;
 			}
 			case "HINWEIS": {
 				return GostBelegungsfehlerArt.HINWEIS;

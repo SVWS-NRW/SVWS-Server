@@ -80,6 +80,8 @@
 				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
 					GostBelegungsfehlerArt.BELEGUNG ||
 					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
+					GostBelegungsfehlerArt.SCHULSPEZIFISCH ||
+					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
 					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
 				res++;
 		return res;

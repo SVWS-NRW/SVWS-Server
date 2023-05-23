@@ -499,6 +499,41 @@ export class GostBelegungsfehler extends JavaObject implements JavaEnum<GostBele
 	public static readonly ZK_13 : GostBelegungsfehler = new GostBelegungsfehler("ZK_13", 95, "ZK_13", GostBelegungsfehlerArt.BELEGUNG, "Zusatzkurse dürfen nur einmal pro Fach belegt werden und können nicht in einem bilingualen Fach gewählt werden.", null);
 
 	/**
+	 * BelegungsfehlerArt ZK_14
+	 */
+	public static readonly ZK_14 : GostBelegungsfehler = new GostBelegungsfehler("ZK_14", 96, "ZK_14", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Geschichte werden in diesem Jahrgang nicht angeboten.", null);
+
+	/**
+	 * BelegungsfehlerArt ZK_15
+	 */
+	public static readonly ZK_15 : GostBelegungsfehler = new GostBelegungsfehler("ZK_15", 97, "ZK_15", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Zusatzkurse in Sozialwissenschaften werden in diesem Jahrgang nicht angeboten.", null);
+
+	/**
+	 * BelegungsfehlerArt ZK_16
+	 */
+	public static readonly ZK_16 : GostBelegungsfehler = new GostBelegungsfehler("ZK_16", 98, "ZK_16", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Geschichte entspricht nicht der Einstellung in diesem Jahrgang.", null);
+
+	/**
+	 * BelegungsfehlerArt ZK_17
+	 */
+	public static readonly ZK_17 : GostBelegungsfehler = new GostBelegungsfehler("ZK_17", 99, "ZK_17", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Der Beginn des Zusatzkurses in Sozialwissenschaften entspricht nicht der Einstellung in diesem Jahrgang.", null);
+
+	/**
+	 * BelegungsfehlerArt ZK_18
+	 */
+	public static readonly ZK_18 : GostBelegungsfehler = new GostBelegungsfehler("ZK_18", 100, "ZK_18", GostBelegungsfehlerArt.BELEGUNG, "Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden.", null);
+
+	/**
+	 * BelegungsfehlerArt KOMBI_1
+	 */
+	public static readonly KOMBI_1 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_1", 101, "KOMBI_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang nicht erlaubte Fächerkombination gewählt.", null);
+
+	/**
+	 * BelegungsfehlerArt KOMBI_2
+	 */
+	public static readonly KOMBI_2 : GostBelegungsfehler = new GostBelegungsfehler("KOMBI_2", 102, "KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH, "Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.", null);
+
+	/**
 	 * Der eindeutige Code des Belegungsfehlers
 	 */
 	public readonly code : string;

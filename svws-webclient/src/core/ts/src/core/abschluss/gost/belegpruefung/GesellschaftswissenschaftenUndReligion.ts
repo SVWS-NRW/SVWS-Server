@@ -7,8 +7,10 @@ import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenM
 import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
+import { NullPointerException } from '../../../../java/lang/NullPointerException';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
@@ -145,23 +147,40 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			return;
 		if (fachbelegungenZK.size() > 1)
 			this.addFehler(GostBelegungsfehler.ZK_13);
-		for (const fachbelegung of fachbelegungenZK) {
-			const fach : GostFach | null = this.manager.getFach(fachbelegung);
-			if ((fach === null) || (GostFachManager.istBilingual(fach)))
-				this.addFehler(GostBelegungsfehler.ZK_13);
-			const halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
-			if (halbjahre.size() === 2) {
-				if ((this.zusatzkursFachbelegungen !== null) && (this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12) || this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21) || this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22)))
-					this.zusatzkursFachbelegungen.add(fachbelegung);
-			} else
-				if (halbjahre.size() > 1) {
-					this.addFehler(GostBelegungsfehler.ZK_12);
-				}
-			if (!halbjahre.isEmpty()) {
-				const prevHalbjahr : GostHalbjahr | null = halbjahre.get(0).previous();
-				if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
-					this.addFehler(GostBelegungsfehler.ZK_10);
+		const fachbelegung : AbiturFachbelegung | null = fachbelegungenZK.get(0);
+		const fach : GostFach | null = this.manager.getFach(fachbelegung);
+		if (fach === null)
+			throw new NullPointerException()
+		if (GostFachManager.istBilingual(fach))
+			this.addFehler(GostBelegungsfehler.ZK_13);
+		const zFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		if ((zFach as unknown === ZulaessigesFach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE()))
+			this.addFehler(GostBelegungsfehler.ZK_14);
+		if ((zFach as unknown === ZulaessigesFach.SW as unknown) && (!this.manager.istErlaubtZusatzkursSW()))
+			this.addFehler(GostBelegungsfehler.ZK_15);
+		const halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
+		if (halbjahre.size() === 2) {
+			const belegungQ11 : boolean = this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			const belegungQ12 : boolean = this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q12, GostHalbjahr.Q21);
+			const belegungQ21 : boolean = this.manager.pruefeBelegungMitKursart(fachbelegung, GostKursart.ZK, GostHalbjahr.Q21, GostHalbjahr.Q22);
+			if ((this.zusatzkursFachbelegungen !== null) && (belegungQ11 || belegungQ12 || belegungQ21))
+				this.zusatzkursFachbelegungen.add(fachbelegung);
+			if ((belegungQ11 && this.manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q21, GostHalbjahr.Q22)) || (belegungQ12 && this.manager.pruefeBelegungExistiert(fachbelegungenZK, GostHalbjahr.Q22)))
+				this.addFehler(GostBelegungsfehler.ZK_18);
+		} else
+			if (halbjahre.size() > 1) {
+				this.addFehler(GostBelegungsfehler.ZK_12);
 			}
+		if (!halbjahre.isEmpty()) {
+			const prevHalbjahr : GostHalbjahr | null = halbjahre.get(0).previous();
+			if ((prevHalbjahr !== null) && (this.manager.pruefeBelegung(fachbelegung, prevHalbjahr)))
+				this.addFehler(GostBelegungsfehler.ZK_10);
+		}
+		if (!halbjahre.isEmpty()) {
+			if ((zFach as unknown === ZulaessigesFach.GE as unknown) && (this.manager.getBeginnZusatzkursGE() as unknown !== halbjahre.get(0) as unknown))
+				this.addFehler(GostBelegungsfehler.ZK_16);
+			if ((zFach as unknown === ZulaessigesFach.SW as unknown) && (this.manager.getBeginnZusatzkursSW() as unknown !== halbjahre.get(0) as unknown))
+				this.addFehler(GostBelegungsfehler.ZK_17);
 		}
 	}
 

@@ -13,6 +13,9 @@ public enum GostBelegungsfehlerArt {
 	/** Fehler bei der Schriftlichkeit */
 	SCHRIFTLICHKEIT("SCHRIFTLICHKEIT"),
 
+	/** Fehler in Bezug auf schulische Rahmenbedingungen - Zusatzkursbeginn oder nicht erlaubte oder geforderte Fachkombinationen */
+	SCHULSPEZIFISCH("SCHULSPEZIFISCH"),
+
 	/** Information, aber kein Fehler */
 	HINWEIS("HINWEIS");
 
@@ -44,6 +47,7 @@ public enum GostBelegungsfehlerArt {
 		switch (kuerzel) {
 			case "BELEGUNG": return BELEGUNG;
 			case "SCHRIFTLICHKEIT": return SCHRIFTLICHKEIT;
+			case "SCHULSPEZIFISCH": return SCHULSPEZIFISCH;
 			case "HINWEIS": return HINWEIS;
 			default: return null;
 		}

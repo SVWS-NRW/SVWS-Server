@@ -51,9 +51,19 @@ export class AbiturdatenManager extends JavaObject {
 	private readonly abidaten : Abiturdaten;
 
 	/**
+	 * Die Informationen zu den Jahrgangsdaten, sofern welche vorhanden sind - ansonsten null
+	 */
+	private readonly _jahrgangsdaten : GostJahrgangsdaten | null;
+
+	/**
 	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang
 	 */
 	private readonly gostFaecher : JavaMap<number, GostFach>;
+
+	/**
+	 * Die Informationen zu nicht zulässigen und erforderten Fächerkombinationen
+	 */
+	private readonly gostFaecherKombinationen : List<GostJahrgangFachkombination>;
 
 	/**
 	 * Die Art der durchzuführenden Belegprüfung
@@ -93,12 +103,14 @@ export class AbiturdatenManager extends JavaObject {
 	public constructor(abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, gostFaecher : List<GostFach>, gostFaecherKombinationen : List<GostJahrgangFachkombination>, pruefungsArt : GostBelegpruefungsArt) {
 		super();
 		this.abidaten = abidaten;
+		this._jahrgangsdaten = gostJahrgang;
 		this.gostFaecher = new HashMap();
 		for (let i : number = 0; i < gostFaecher.size(); i++) {
 			const fach : GostFach | null = gostFaecher.get(i);
 			if (fach !== null)
 				this.gostFaecher.put(fach.id, fach);
 		}
+		this.gostFaecherKombinationen = gostFaecherKombinationen;
 		this.pruefungsArt = pruefungsArt;
 		this.init();
 	}
@@ -1573,6 +1585,60 @@ export class AbiturdatenManager extends JavaObject {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * Gibt zurück, ob ein Zusatzkurs in Geschichte in diesem Jahrgang angeboten
+	 * wird oder nicht.
+	 *
+	 * @return true, wenn einer angeboten wird und ansonsten false
+	 */
+	public istErlaubtZusatzkursGE() : boolean {
+		if (this._jahrgangsdaten === null)
+			return true;
+		return this._jahrgangsdaten.hatZusatzkursGE;
+	}
+
+	/**
+	 * Gibt das erste Halbjahr für Zusatzkurse in Geschichte
+	 * in diesem Jahrgang zurück.
+	 *
+	 * @return das erste Halbjahr für Zusatzkurse in Geschichte
+	 */
+	public getBeginnZusatzkursGE() : GostHalbjahr {
+		if (this._jahrgangsdaten === null)
+			return GostHalbjahr.Q21;
+		const hj : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this._jahrgangsdaten.beginnZusatzkursGE);
+		if (hj === null)
+			return GostHalbjahr.Q21;
+		return hj;
+	}
+
+	/**
+	 * Gibt zurück, ob ein Zusatzkurs in Sozialwissenschaften in diesem Jahrgang
+	 * angeboten wird oder nicht.
+	 *
+	 * @return true, wenn einer angeboten wird und ansonsten false
+	 */
+	public istErlaubtZusatzkursSW() : boolean {
+		if (this._jahrgangsdaten === null)
+			return true;
+		return this._jahrgangsdaten.hatZusatzkursSW;
+	}
+
+	/**
+	 * Gibt das erste Halbjahr für Zusatzkurse in Sozialwissenschaften
+	 * in diesem Jahrgang zurück.
+	 *
+	 * @return das erste Halbjahr für Zusatzkurse in Sozialwissenschaften
+	 */
+	public getBeginnZusatzkursSW() : GostHalbjahr {
+		if (this._jahrgangsdaten === null)
+			return GostHalbjahr.Q21;
+		const hj : GostHalbjahr | null = GostHalbjahr.fromKuerzel(this._jahrgangsdaten.beginnZusatzkursSW);
+		if (hj === null)
+			return GostHalbjahr.Q21;
+		return hj;
 	}
 
 	/**

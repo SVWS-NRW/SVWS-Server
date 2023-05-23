@@ -1,6 +1,10 @@
 {
-  "erfolgreich" : true,
+  "erfolgreich" : false,
   "fehlercodes" : [ {
+    "code" : "ZK_16",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Der Beginn des Zusatzkurses in Geschichte entspricht nicht der Einstellung in diesem Jahrgang."
+  }, {
     "code" : "ANZ_11_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."

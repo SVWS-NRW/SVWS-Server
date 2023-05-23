@@ -37,7 +37,9 @@
 				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
 					GostBelegungsfehlerArt.BELEGUNG ||
 					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
+					GostBelegungsfehlerArt.SCHRIFTLICHKEIT ||
+					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
+					GostBelegungsfehlerArt.SCHULSPEZIFISCH))
 				res.add(fehler);
 		return res;
 	});
