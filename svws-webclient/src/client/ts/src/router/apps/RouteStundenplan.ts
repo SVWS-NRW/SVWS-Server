@@ -13,6 +13,7 @@ import { RouteNode } from "../RouteNode";
 import { routeStundenplanDaten } from "./stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "./stundenplan/RouteStundenplanUnterricht";
 import { routeStundenplanPausenaufsicht } from "./stundenplan/RouteStundenplanPausenaufsicht";
+import { useDebounceFn } from "@vueuse/core";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
@@ -65,6 +66,18 @@ export class RouteDataStundenplan {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.daten;
+	}
+
+	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
+
+	patchit = (data : Partial<Stundenplan>) => {
+		if (this.auswahl === undefined)
+			return;
+		api.server.patchStundenplan(data, api.schema, this.auswahl.id).then(()=>{
+			const daten = this.daten;
+			this.setPatchedState({daten: Object.assign(daten, data)});
+		}).catch((e) => console.log(e))
+		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
 	public async ladeListe() {
@@ -154,7 +167,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public getProps(to: RouteLocationNormalized): StundenplanAppProps {
 		return {
-			daten: this.data.daten,
+			data: () => this.data.daten,
 			setTab: this.setTab,
 			tab: this.getTab(),
 			tabs: this.getTabs(),

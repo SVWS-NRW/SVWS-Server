@@ -1,5 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteStundenplan} from "../RouteStundenplan";
+import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
+import { routeStundenplan} from "../RouteStundenplan";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -20,8 +22,10 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 		return { name: this.name, params: { id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {
 		return {
+			data: () => routeStundenplan.data.daten,
+			patch: routeStundenplan.data.patch,
 		};
 	}
 

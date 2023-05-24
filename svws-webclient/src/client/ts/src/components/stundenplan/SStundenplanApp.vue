@@ -3,13 +3,11 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div>
-					<span class="inline-block mr-3"> {{ daten.bezeichnungStundenplan }} </span>
+					<span class="inline-block mr-3"> {{ data().bezeichnungStundenplan }} </span>
 					<svws-ui-badge type="light" title="ID" class="font-mono">
 						<i-ri-fingerprint-line />
-						{{ daten.id }}
+						{{ data().id }}
 					</svws-ui-badge>
-					<br>
-					<span class="opacity-50"> </span>
 				</div>
 			</div>
 		</svws-ui-header>
@@ -24,10 +22,7 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
-
-	import { StundenplanAppProps } from "./SStundenplanAppProps";
+	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 
 	const props = defineProps<StundenplanAppProps>();
 
