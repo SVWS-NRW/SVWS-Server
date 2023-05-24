@@ -126,7 +126,7 @@ public class APIStundenplan {
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Daten des Stundenplans",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Stundenplan.class))))
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Stundenplan.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {

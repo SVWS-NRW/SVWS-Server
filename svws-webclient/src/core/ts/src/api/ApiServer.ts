@@ -7877,7 +7877,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten des Stundenplans
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<Stundenplan>
+	 *     - Rückgabe-Typ: Stundenplan
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.
 	 *   Code 404: Keine Stundenplandaten gefunden
 	 *
@@ -7886,15 +7886,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten des Stundenplans
 	 */
-	public async getStundenplan(schema : string, id : number) : Promise<List<Stundenplan>> {
+	public async getStundenplan(schema : string, id : number) : Promise<Stundenplan> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<Stundenplan>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Stundenplan.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return Stundenplan.transpilerFromJSON(text);
 	}
 
 

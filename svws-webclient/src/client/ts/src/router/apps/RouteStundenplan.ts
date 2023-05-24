@@ -1,7 +1,9 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
+import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
+import type { Stundenplan, StundenplanListeEintrag } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { routeApp } from "~/router/RouteApp";
@@ -11,14 +13,19 @@ import { RouteNode } from "../RouteNode";
 import { routeStundenplanDaten } from "./stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "./stundenplan/RouteStundenplanUnterricht";
 import { routeStundenplanPausenaufsicht } from "./stundenplan/RouteStundenplanPausenaufsicht";
-import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
 interface RouteStateStundenplan {
+	auswahl: StundenplanListeEintrag | undefined;
+	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
+	daten: Stundenplan | undefined;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
 
 	private static _defaultState: RouteStateStundenplan = {
+		auswahl: undefined,
+		mapKatalogeintraege: new Map(),
+		daten: undefined,
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -45,6 +52,43 @@ export class RouteDataStundenplan {
 	public get view(): RouteNode<any,any> {
 		return this._state.value.view;
 	}
+
+	get auswahl(): StundenplanListeEintrag | undefined {
+		return this._state.value.auswahl;
+	}
+
+	get mapKatalogeintraege(): Map<number, StundenplanListeEintrag> {
+		return this._state.value.mapKatalogeintraege;
+	}
+
+	get daten(): Stundenplan {
+		if (this._state.value.daten === undefined)
+			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		return this._state.value.daten;
+	}
+
+	public async ladeListe() {
+		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
+		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
+		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
+		for (const l of listKatalogeintraege)
+			mapKatalogeintraege.set(l.id, l);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+	}
+
+	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
+		if (auswahl === undefined && this.mapKatalogeintraege.size > 0) {
+			auswahl = this.mapKatalogeintraege.values().next().value;
+		}
+		const daten = auswahl ? await api.server.getStundenplan(api.schema, auswahl.id) : undefined;
+		console.log(daten)
+		this.setPatchedState({ auswahl, daten })
+	}
+
+	gotoEintrag = async (eintrag: StundenplanListeEintrag) => {
+		await RouteManager.doRoute(routeStundenplan.getRoute(eintrag.id));
+	}
+
 }
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -52,7 +96,7 @@ const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.v
 export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "/stundenplan", SStundenplanApp, new RouteDataStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "/stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));
@@ -64,12 +108,43 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		super.defaultChild = routeStundenplanDaten;
 	}
 
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		await this.data.ladeListe();
+	}
+
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+		if (to_params.id instanceof Array)
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (to_params.id === undefined) {
+			await this.data.ladeListe();
+		} else {
+			const id = parseInt(to_params.id);
+			const eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined && this.data.auswahl !== undefined) {
+				await this.data.ladeListe();
+				return this.getRoute(this.data.auswahl.id);
+			}
+			else if (eintrag)
+				await this.data.setEintrag(eintrag);
+		}
+		if (to.name === this.name && this.data.auswahl !== undefined)
+			return this.getRoute(this.data.auswahl.id);
+	}
+
 	public getRoute(id?: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
+	public getChildRoute(id: number | undefined) : RouteLocationRaw {
+		const redirect_name = (routeStundenplan.selectedChild === undefined) ? routeStundenplanDaten.name : routeStundenplan.selectedChild.name;
+		return { name: redirect_name, params: { id }};
+	}
+
 	public getAuswahlProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
 		return {
+			auswahl: this.data.auswahl,
+			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			gotoEintrag: this.data.gotoEintrag,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -79,6 +154,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public getProps(to: RouteLocationNormalized): StundenplanAppProps {
 		return {
+			daten: this.data.daten,
 			setTab: this.setTab,
 			tab: this.getTab(),
 			tabs: this.getTabs(),
