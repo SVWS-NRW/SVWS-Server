@@ -136,8 +136,29 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static <@NotNull K, @NotNull V>  void ifMapPutOverwrites(@NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey, final @NotNull V pValue) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
-			throw new DeveloperNotificationException("Hinzufügen von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " existiert!");
+			throw new DeveloperNotificationException("PUT von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " existiert!");
 		pMap.put(pKey, pValue);
+	}
+
+	/**
+	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K nichts oder NULL zugeordnet ist.
+	 *
+	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
+	 * @param map Die Map.
+	 * @param key Der Schlüssel des Mappings K --> V.
+	 *
+	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * @throws DeveloperNotificationException falls dem Schlüssel K nichts oder NULL zugeordnet ist.
+	 */
+	public static <@NotNull K, @NotNull V>  @NotNull V ifMapGetIsNull(@NotNull final Map<@NotNull K, @NotNull V> map, final @NotNull K key) throws DeveloperNotificationException {
+		if (!map.containsKey(key))
+			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da kein Mapping existiert!");
+		final V value = map.get(key);
+		if (value == null)
+			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL zuordnet!");
+		return value;
 	}
 
 }

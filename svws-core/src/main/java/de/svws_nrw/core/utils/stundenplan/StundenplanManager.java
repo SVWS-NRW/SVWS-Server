@@ -22,7 +22,6 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
-import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -87,11 +86,11 @@ public class StundenplanManager {
 		initMapKurs();         // hat "{Schienen}", "{Jahrgang}", "{Schüler}"
 
 		// Maps: DTO-Stundenplan.
-		initMapZeitraster();
-		initMapRaum();
+		initMapZeitraster();   // hat ---
+		initMapRaum();         // hat ---
 		initMapSchiene();      // hat "Jahrgang"
 		initMapPausenzeit();   // hat ---
-		initMapAufsicht();
+		initMapAufsicht();     // hat ---
 		initMapKWZuordnung();
 
 
@@ -468,7 +467,7 @@ public class StundenplanManager {
 	 * @return ein Map der Räume {@link StundenplanRaum}
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull StundenplanRaum> getMapRaeume() {
-		return this._map_raumID_zu_raum;
+		return _map_raumID_zu_raum;
 	}
 
 	/**
@@ -477,7 +476,7 @@ public class StundenplanManager {
 	 * @return ein Map der Pausenzeiten {@link StundenplanPausenzeit}
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull StundenplanPausenzeit> getMapPausenzeiten() {
-		return this._map_pausenzeitID_zu_pausenzeit;
+		return _map_pausenzeitID_zu_pausenzeit;
 	}
 
 	/**
@@ -486,6 +485,130 @@ public class StundenplanManager {
 	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull StundenplanAufsichtsbereich> getMapAufsichtsbereich() {
-		return this._map_aufsichtID_zu_aufsicht;
+		return _map_aufsichtID_zu_aufsicht;
 	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanRaum> getListRaum() {
+		return _daten.raeume;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenzeit> getListPausenzeit() {
+		return _daten.pausenzeiten;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanAufsichtsbereich> getListAufsichtbereich() {
+		return _daten.aufsichtsbereiche;
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
+	 *
+	 * @param raumID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur raumID zugehörige {@link StundenplanRaum}-Objekt.
+	 */
+	public @NotNull StundenplanRaum getRaum(final long raumID) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_raumID_zu_raum, raumID);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
+	 *
+	 * @param pausenzeitID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
+	 */
+	public @NotNull StundenplanPausenzeit getPausenzeit(final long pausenzeitID) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_pausenzeitID_zu_pausenzeit, pausenzeitID);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 *
+	 * @param aufsichtsbereichID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 */
+	public @NotNull StundenplanAufsichtsbereich getAufsichtsbereich(final long aufsichtsbereichID) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_aufsichtID_zu_aufsicht, aufsichtsbereichID);
+	}
+
+	/**
+	 * Fügt dem Stundenplan einen neuen Raum hinzu.
+	 *
+	 * @param raum Der Raum, der hinzugefügt werden soll.
+	 */
+	public void addRaum(final @NotNull StundenplanRaum raum) {
+		DeveloperNotificationException.ifMapPutOverwrites(_map_raumID_zu_raum, raum.id, raum);
+		_daten.raeume.add(raum); // TODO BAR Sortiere die Liste
+	}
+
+	/**
+	 * Fügt dem Stundenplan eine neue Pausenzeit hinzu.
+	 *
+	 * @param pausenzeit Die Pausenzeit, die hinzugefügt werden soll.
+	 */
+	public void addPausenzeit(final @NotNull StundenplanPausenzeit pausenzeit) {
+		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
+		_daten.pausenzeiten.add(pausenzeit); // TODO BAR Sortiere die Liste
+	}
+
+	/**
+	 * Fügt dem Stundenplan einen neuen Aufsichtsbereich hinzu.
+	 *
+	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
+	 */
+	public void addAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtID_zu_aufsicht, aufsichtsbereich.id, aufsichtsbereich);
+		_daten.aufsichtsbereiche.add(aufsichtsbereich); // TODO BAR Sortiere die Liste
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}.
+	 *
+	 * @param raumID Die ID des Raumes, der entfernt werden soll.
+	 */
+	public void removeRaum(final long raumID) {
+		final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + raumID + ")", _map_raumID_zu_raum.get(raumID));
+		_map_raumID_zu_raum.remove(raumID);
+		_daten.raeume.remove(raum);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanPausenzeit}.
+	 *
+	 * @param pausenzeitID Die ID der Pausenzeit, die entfernt werden soll.
+	 */
+	public void removePausenzeit(final long pausenzeitID) {
+		final @NotNull StundenplanPausenzeit pausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + pausenzeitID + ")", _map_pausenzeitID_zu_pausenzeit.get(pausenzeitID));
+		_map_pausenzeitID_zu_pausenzeit.remove(pausenzeitID);
+		_daten.pausenzeiten.remove(pausenzeit);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanAufsichtsbereich}.
+	 *
+	 * @param aufsichtsbereichID Die ID des Aufsichtsbereich, der entfernt werden soll.
+	 */
+	public void removeAufsichtsbereich(final long aufsichtsbereichID) {
+		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + aufsichtsbereichID + ")", _map_aufsichtID_zu_aufsicht.get(aufsichtsbereichID));
+		_map_aufsichtID_zu_aufsicht.remove(aufsichtsbereichID);
+		_daten.aufsichtsbereiche.remove(aufsichtsbereich);
+	}
+
 }
