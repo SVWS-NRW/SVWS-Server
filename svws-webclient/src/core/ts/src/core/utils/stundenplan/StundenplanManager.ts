@@ -588,6 +588,36 @@ export class StundenplanManager extends JavaObject {
 		this._daten.aufsichtsbereiche.remove(aufsichtsbereich);
 	}
 
+	/**
+	 * Entfernt anhand der ID den alten {@link StundenplanRaum} und fügt dann den neuen hinzu.
+	 *
+	 * @param raum Der neue Raum, welcher den alten ersetzt.
+	 */
+	public modifyRaum(raum : StundenplanRaum) : void {
+		this.removeRaum(raum.id);
+		this.addRaum(raum);
+	}
+
+	/**
+	 * Entfernt anhand der ID die alte {@link StundenplanPausenzeit} und fügt dann die neue hinzu.
+	 *
+	 * @param pausenzeit Die neue Pausenzeit, welche den alte ersetzt.
+	 */
+	public modifyPausenzeit(pausenzeit : StundenplanPausenzeit) : void {
+		this.removePausenzeit(pausenzeit.id);
+		this.addPausenzeit(pausenzeit);
+	}
+
+	/**
+	 * Entfernt anhand der ID den alten {@link StundenplanAufsichtsbereich} und fügt dann den neuen hinzu.
+	 *
+	 * @param aufsichtsbereich Der neue Aufsichtsbereich, welcher den alten ersetzt.
+	 */
+	public modifyAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
+		this.removeAufsichtsbereich(aufsichtsbereich.id);
+		this.addAufsichtsbereich(aufsichtsbereich);
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}

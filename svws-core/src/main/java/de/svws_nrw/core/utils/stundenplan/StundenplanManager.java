@@ -91,7 +91,7 @@ public class StundenplanManager {
 		initMapSchiene();      // hat "Jahrgang"
 		initMapPausenzeit();   // hat ---
 		initMapAufsicht();     // hat ---
-		initMapKWZuordnung();
+		initMapKWZuordnung();  // hat ---
 
 
 		// Maps: DTO-StundenplanUnterricht (DTO-StundenplanUnterrichtsverteilung muss vorher geladen werden)
@@ -609,6 +609,36 @@ public class StundenplanManager {
 		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + aufsichtsbereichID + ")", _map_aufsichtID_zu_aufsicht.get(aufsichtsbereichID));
 		_map_aufsichtID_zu_aufsicht.remove(aufsichtsbereichID);
 		_daten.aufsichtsbereiche.remove(aufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt anhand der ID den alten {@link StundenplanRaum} und fügt dann den neuen hinzu.
+	 *
+	 * @param raum Der neue Raum, welcher den alten ersetzt.
+	 */
+	public void modifyRaum(final @NotNull StundenplanRaum raum) {
+		removeRaum(raum.id);
+		addRaum(raum);
+	}
+
+	/**
+	 * Entfernt anhand der ID die alte {@link StundenplanPausenzeit} und fügt dann die neue hinzu.
+	 *
+	 * @param pausenzeit Die neue Pausenzeit, welche den alte ersetzt.
+	 */
+	public void modifyPausenzeit(final @NotNull StundenplanPausenzeit pausenzeit) {
+		removePausenzeit(pausenzeit.id);
+		addPausenzeit(pausenzeit);
+	}
+
+	/**
+	 * Entfernt anhand der ID den alten {@link StundenplanAufsichtsbereich} und fügt dann den neuen hinzu.
+	 *
+	 * @param aufsichtsbereich Der neue Aufsichtsbereich, welcher den alten ersetzt.
+	 */
+	public void modifyAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		removeAufsichtsbereich(aufsichtsbereich.id);
+		addAufsichtsbereich(aufsichtsbereich);
 	}
 
 }
