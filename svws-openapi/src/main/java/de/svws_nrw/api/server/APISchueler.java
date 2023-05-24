@@ -306,7 +306,7 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("abschnitt") final long abschnitt,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataSchuelerLernabschnittsdaten(conn).get(id, abschnitt));
     	}

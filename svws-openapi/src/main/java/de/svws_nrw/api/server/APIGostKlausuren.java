@@ -100,7 +100,7 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
 			return (new DataGostKlausurenVorgabe(conn, abiturjahr)).get(halbjahr);
@@ -125,7 +125,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createGostKlausurenVorgabe(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurvorgabe.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
 			return (new DataGostKlausurenVorgabe(conn, -1)).create(is);
 		}
@@ -260,7 +260,7 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
 			return (new DataGostKlausurenKursklausur(conn, abiturjahr)).get(halbjahr);
@@ -290,7 +290,7 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
 			return (new DataGostKlausurenTermin(conn, abiturjahr)).get(halbjahr);
@@ -422,7 +422,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
 	public Response getGostKlausurenKalenderinformationen(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
 			return (new DataGostKlausurenKalenderinformation(conn)).getList();

@@ -144,7 +144,7 @@ public class APIGost {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("jahrgangid") final long jahrgangID, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
     		return (new DataGostJahrgangsliste(conn)).create(jahrgangID);
@@ -211,12 +211,12 @@ public class APIGost {
     		@RequestBody(description = "Der Patch für die Abiturjahrgangsdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostJahrgangsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN, 
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.ABITUR_AENDERN_ALLGEMEIN,
     			BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN)) {
     		return (new DataGostJahrgangsdaten(conn)).patch(abiturjahr, is);
     	}
@@ -244,12 +244,12 @@ public class APIGost {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangSchueler(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
@@ -375,12 +375,12 @@ public class APIGost {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
@@ -414,12 +414,12 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
             @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-        		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, 
-        		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+        		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+        		BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
         		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
@@ -451,10 +451,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
         		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
@@ -486,10 +486,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine und unvollständige Daten für die Belegprüfung gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangBelegpruefungsergebnisseEF1(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+        		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
         		BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		if (abiturjahr < 0)
     			return OperationError.NOT_FOUND.getResponse("Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
@@ -521,10 +521,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
     public Response getGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).get(id);
     	}
@@ -554,10 +554,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Beratungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
     public Response getGostSchuelerLaufbahnplanungBeratungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).get(id);
     	}
@@ -591,10 +591,10 @@ public class APIGost {
     		@RequestBody(description = "Der Patch für die Beratungsdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostLaufbahnplanungBeratungsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn)).patch(schueler_id, is);
     	}
@@ -623,10 +623,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
     public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return PDFGostWahlbogen.query(conn, id);
     	}
@@ -656,10 +656,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
     public Response getGostSchuelerFachwahl(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schueler_id, @PathParam("fachid") final long fach_id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).getFachwahl(schueler_id, fach_id);
     	}
@@ -695,10 +695,10 @@ public class APIGost {
     		@RequestBody(description = "Der Patch für die Fachdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostSchuelerFachwahl.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostSchuelerLaufbahnplanung(conn)).patchFachwahl(schueler_id, fach_id, is);
     	}
@@ -732,10 +732,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public GostLeistungen getGostSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                            @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
 	    	return DBUtilsGost.getLeistungsdaten(conn, id);
     	}
@@ -769,12 +769,12 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Abiturdaten getGostSchuelerAbiturdatenAusLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                                       @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
     			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)) {
     		return DBUtilsGostAbitur.getAbiturdatenAusLeistungsdaten(conn, id);
     	}
@@ -806,12 +806,12 @@ public class APIGost {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Leistungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Abiturdaten getGostSchuelerAbiturdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, 
-    			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+    			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
     			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN)) {
 	    	return DBUtilsGostAbitur.getAbiturdaten(conn, id);
     	}
@@ -923,8 +923,8 @@ public class APIGost {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockungs-Einträge gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
     public Response getGostAbiturjahrgangBlockungsliste(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsliste(conn, abiturjahr)).get(halbjahr);
     	}
@@ -958,8 +958,8 @@ public class APIGost {
     		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@PathParam("halbjahr") final int halbjahr,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).create(abiturjahr, halbjahr);
     	}
@@ -987,8 +987,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response deleteGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).delete(id);
     	}
@@ -1017,10 +1017,10 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, 
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).get(id);
     	}
@@ -1051,8 +1051,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response rechneGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @PathParam("zeit") final long zeit, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).berechne(id, zeit);
     	}
@@ -1087,8 +1087,8 @@ public class APIGost {
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).patch(id, is);
     	}
@@ -1123,8 +1123,8 @@ public class APIGost {
             @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).addKurs(idBlockung, idFach, idKursart);
     	}
@@ -1159,8 +1159,8 @@ public class APIGost {
             @PathParam("fachid") final long idFach, @PathParam("kursartid") final int idKursart,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).deleteKurs(idBlockung, idFach, idKursart);
     	}
@@ -1189,8 +1189,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Kurs einer Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungKurs(@PathParam("schema") final String schema, @PathParam("kursid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).get(id);
     	}
@@ -1225,8 +1225,8 @@ public class APIGost {
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKurs.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).patch(id, is);
     	}
@@ -1258,8 +1258,8 @@ public class APIGost {
     		@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).splitKurs(idKurs);
     	}
@@ -1293,8 +1293,8 @@ public class APIGost {
     		@PathParam("schema") final String schema, @PathParam("kursid1") final long idKurs1,
     		@PathParam("kursid2") final long idKurs2, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).combineKurs(idKurs1, idKurs2);
     	}
@@ -1323,8 +1323,8 @@ public class APIGost {
     public Response deleteGostBlockungKursByID(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKurs(conn)).delete(idKurs);
     	}
@@ -1354,8 +1354,8 @@ public class APIGost {
     public Response getGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).get(idLehrer);
     	}
@@ -1388,8 +1388,8 @@ public class APIGost {
 				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungKursLehrer.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).patch(idLehrer, is);
     	}
@@ -1419,8 +1419,8 @@ public class APIGost {
     public Response addGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).addKurslehrer(idLehrer);
     	}
@@ -1449,8 +1449,8 @@ public class APIGost {
     public Response deleteGostBlockungKurslehrer(@PathParam("schema") final String schema, @PathParam("kursid") final long idKurs,
     		@PathParam("lehrerid") final long idLehrer, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungKursLehrer(conn, idKurs)).deleteKurslehrer(idLehrer);
     	}
@@ -1482,8 +1482,8 @@ public class APIGost {
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungSchiene(conn)).addSchiene(idBlockung);
     	}
@@ -1515,8 +1515,8 @@ public class APIGost {
     		@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungSchiene(conn)).deleteSchiene(idBlockung);
     	}
@@ -1545,8 +1545,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Schiene einer Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungSchiene(@PathParam("schema") final String schema, @PathParam("schienenid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungSchiene(conn)).get(id);
     	}
@@ -1581,8 +1581,8 @@ public class APIGost {
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungSchiene.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungSchiene(conn)).patch(id, is);
     	}
@@ -1611,8 +1611,8 @@ public class APIGost {
     public Response deleteGostBlockungSchieneByID(@PathParam("schema") final String schema, @PathParam("schienenid") final long idSchiene,
     		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungSchiene(conn)).delete(idSchiene);
     	}
@@ -1649,8 +1649,8 @@ public class APIGost {
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> regelParameter,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungRegel(conn)).addRegel(idBlockung, typRegel, regelParameter);
     	}
@@ -1679,8 +1679,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Regel einer Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungRegel(@PathParam("schema") final String schema, @PathParam("regelid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungRegel(conn)).get(id);
     	}
@@ -1715,8 +1715,8 @@ public class APIGost {
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostBlockungRegel.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungRegel(conn)).patch(id, is);
     	}
@@ -1745,8 +1745,8 @@ public class APIGost {
     public Response deleteGostBlockungRegelByID(@PathParam("schema") final String schema, @PathParam("regelid") final long idRegel,
     		                                   @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungRegel(conn)).delete(idRegel);
     	}
@@ -1775,8 +1775,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response getGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).get(id);
     	}
@@ -1808,8 +1808,8 @@ public class APIGost {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response activateGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerrechte
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).aktiviere(id);
     	}
@@ -1837,8 +1837,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
     public Response deleteGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).delete(id);
     	}
@@ -1871,8 +1871,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
     public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).dupliziere(id);
     	}
@@ -1907,8 +1907,8 @@ public class APIGost {
     @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
     public Response schreibeGostBlockungsErgebnisHoch(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).hochschreiben(id);
     	}
@@ -1940,8 +1940,8 @@ public class APIGost {
     public Response restauriereGostBlockung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
     		@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeinformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsdaten(conn)).restore(abiturjahr, halbjahr);
     	}
@@ -1976,8 +1976,8 @@ public class APIGost {
             @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		@Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).createKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
     	}
@@ -2012,8 +2012,8 @@ public class APIGost {
             @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKursAlt, @PathParam("kursidneu") final long idKursNeu,
             @Context final HttpServletRequest request) {
         // TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+        		BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
             return (new DataGostBlockungsergebnisse(conn)).updateKursSchuelerZuordnung(idErgebnis, idSchueler, idKursAlt, idKursNeu);
         }
@@ -2044,8 +2044,8 @@ public class APIGost {
     		                                    @PathParam("schuelerid") final long idSchueler, @PathParam("kursid") final long idKurs,
     		                                    @Context final HttpServletRequest request) {
     	// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, 
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, 
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostBlockungsergebnisse(conn)).deleteKursSchuelerZuordnung(idErgebnis, idSchueler, idKurs);
     	}
