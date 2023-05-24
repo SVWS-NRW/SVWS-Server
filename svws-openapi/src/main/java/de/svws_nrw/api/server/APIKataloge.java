@@ -60,7 +60,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Straßen-Katalog-Einträge gefunden")
     public Response getKatalogStrassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    	OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
     	return (new DataStrassen()).getAll();
     }
 
@@ -83,7 +83,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Orts-Katalog-Einträge gefunden")
     public Response getKatalogOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
         return (new DataKatalogOrte()).getAll();
     }
 
@@ -109,7 +109,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ort-Katalog-Einträge gefunden")
     public Response getOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
         	return (new DataOrte(conn)).getAll();
     	}
     }
@@ -133,7 +133,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getKatalogOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
         return (new DataKatalogOrtsteile()).getAll();
     }
 
@@ -159,7 +159,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
         	return (new DataOrtsteile(conn)).getAll();
     	}
     }
@@ -186,7 +186,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataHaltestellen(conn)).getList();
     	}
     }
