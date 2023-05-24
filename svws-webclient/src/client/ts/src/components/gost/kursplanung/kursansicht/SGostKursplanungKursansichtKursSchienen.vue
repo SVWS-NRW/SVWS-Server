@@ -1,7 +1,8 @@
 <template>
 	<svws-ui-drop-data v-slot="{ active }" v-if="!blockungAktiv"
 		class="data-table__td data-table__td__no-padding data-table__td__align-center"
-		:class="{'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id, 'schiene-gesperrt': schiene_gesperrt, 'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id}"
+		:class="{'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id, 'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id}"
+		:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
 		tag="div"
 		role="cell"
 		:drop-allowed="is_drop_zone"
@@ -12,7 +13,8 @@
 			:data="{kurs, schiene}"
 			class="select-none w-full h-full rounded flex items-center justify-center relative group"
 			:draggable="true"
-			:class="{'schiene-gesperrt': schiene_gesperrt, 'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
+			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
+			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
 			@drag-start="drag_started"
 			@drag-end="drag_ended"
 			@click="toggle_active_kurs">
@@ -26,7 +28,8 @@
 			</svws-ui-icon>
 		</svws-ui-drag-data>
 		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
-			:class="{'bg-white': active && is_drop_zone, 'schiene-gesperrt': schiene_gesperrt}">
+			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
+			:class="{'bg-white': active && is_drop_zone}">
 			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
 			<svws-ui-icon>
@@ -55,7 +58,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, List} from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref } from "vue";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
@@ -70,14 +73,14 @@
 		blockungAktiv: boolean;
 		allowRegeln: boolean;
 		kurs: GostBlockungKurs;
-		bgColor: string;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 		schiene: GostBlockungsergebnisSchiene;
 		modelValue: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined};
+		bgColorNichtMoeglich: string;
 	}>();
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", drag_data: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}): void;
+		"update:modelValue": [drag_data: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}];
 	}>();
 
 	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.getErgebnismanager().getKursE(props.kurs.id));
@@ -111,14 +114,14 @@
 	}
 
 	const is_drop_zone = computed(()=>
-		props.modelValue?.schiene?.id !== props.schiene.id && props.modelValue.kurs?.id === props.kurs.id && props.modelValue.schiene?.id !== props.schiene.id);
+		props.modelValue?.schiene?.id !== props.schiene.id && props.modelValue.kurs?.id === props.kurs.id && props.modelValue.schiene?.id !== props.schiene.id && schiene_gesperrt.value !== true);
 
 	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
 
 	let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
 
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
-		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
+		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined || schiene_gesperrt.value === true)
 			return
 		if ((drag_data.kurs.id !== kurs_blockungsergebnis.value.id) && kurs_schiene_zugeordnet) {
 			kurs1 = drag_data.kurs;
@@ -244,10 +247,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-	.schiene-gesperrt {
-		background-image: url("/images/table-cell--stripes.svg");
-		background-size: auto 100%;
-	}
-</style>

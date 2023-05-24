@@ -1,6 +1,5 @@
 <template>
-	<div role="row"
-		class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColor }">
+	<div role="row" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColor }">
 		<div role="cell" class="data-table__td">
 			<div class="flex gap-1">
 				<template v-if="kurs.id === edit_name">
@@ -47,7 +46,7 @@
 			</div>
 		</template>
 		<s-gost-kursplanung-kursansicht-kurs-schienen v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" :schiene="schiene"
-			:blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color="bgColor"
+			:blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color-nicht-moeglich="bgColorNichtMoeglich"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			v-model="drag_data" />
@@ -61,7 +60,7 @@
 		</template>
 	</div>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
-	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
+	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColorNichtMoeglich" :anzahl-spalten="6 + anzahlSchienen"
 		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
 		:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 		:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
@@ -69,10 +68,10 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
-	import type { ComputedRef, Ref} from "vue";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List} from "@svws-nrw/svws-core";
+	import type { ComputedRef, Ref } from "vue";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, ZulaessigesFach } from "@svws-nrw/svws-core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from "~/helfer";
 
@@ -115,7 +114,12 @@
 		edit_name.value = undefined;
 	}
 
-	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id))
+	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
+
+	const kuerzel = computed(()=> props.getErgebnismanager().getFach(props.kurs.fach_id).kuerzel);
+
+	const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
+		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(kuerzel.value).getHMTLFarbeRGB()}, rgb(170,170,170)`);
 
 	function toggle_active_fachwahl() {
 		if (props.schuelerFilter === undefined)

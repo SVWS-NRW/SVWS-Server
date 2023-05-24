@@ -1,7 +1,6 @@
 <template>
 	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
-		<div role="row"
-			class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColor }" :key="kursart.id">
+		<div role="row" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColorNichtMoeglich }" :key="kursart.id">
 			<div role="cell" class="data-table__td">
 				<span title="Fach">{{ fach.kuerzel }}</span><span class="opacity-50">–</span><span title="Kursart">{{ kursart.kuerzel }}</span>
 			</div>
@@ -41,12 +40,11 @@
 
 	import type { List, GostBlockungKurs, GostBlockungSchiene, GostStatistikFachwahl, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
 		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs } from "@svws-nrw/svws-core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr,
-		ZulaessigesFach } from "@svws-nrw/svws-core";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
-	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
+	import type { ComputedRef } from "vue";
+	import type { Config } from "~/components/Config";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -73,6 +71,11 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		allowRegeln: boolean;
 	}>();
+
+	const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
+		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);
+
+	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
 	// const selected_fachwahl: ComputedRef<boolean> = computed(() => {
 	// 	const filter_fach_id = props.schuelerFilter?.fach?.value;
@@ -137,8 +140,6 @@
 		wahlen.set(GostKursart.VTF.id, zulFach === ZulaessigesFach.VX ? fach_halbjahr.value.wahlenGK : 0);
 		return wahlen;
 	});
-
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
 	async function add_kurs(art: GostKursart) {
 		await props.addKurs(props.fach.id, art.id);

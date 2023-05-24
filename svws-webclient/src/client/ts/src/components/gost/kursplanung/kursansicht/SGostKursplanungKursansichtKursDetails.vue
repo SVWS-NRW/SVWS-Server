@@ -63,11 +63,11 @@
 		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
-		bgColor: string;
 		anzahlSpalten: number;
 		kurs: GostBlockungKurs;
 		kurseMitKursart: List<GostBlockungsergebnisKurs>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
+		bgColor: string;
 	}>();
 
 	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {

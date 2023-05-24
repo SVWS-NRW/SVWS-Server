@@ -81,10 +81,9 @@
 </template>
 
 <script setup lang="ts">
+	import type { GostFach, GostFaecherManager} from "@svws-nrw/svws-core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-
-	import type { GostFach, GostFaecherManager} from "@svws-nrw/svws-core";
 	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
@@ -151,10 +150,6 @@
 		const fg = f.getFachgruppe();
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
-
-	function toggle(bool: boolean): string {
-		return bool ? "\u2705" : "\u274C";
-	}
 
 	const ef1 = computed({
 		get: () => fach.value.istMoeglichEF1,
