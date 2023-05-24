@@ -65,7 +65,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fächerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fächer-Einträge gefunden")
     public Response getFaecher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataFaecherliste(conn)).getAll();
     	}
     }
@@ -95,7 +95,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "404", description = "Kein Fach-Eintrag mit der angegebenen ID gefunden")
     public Response getFach(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataFachdaten(conn)).get(id);
     	}
     }
@@ -119,7 +119,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fach-Katalog-Einträge gefunden")
     public Response getKatalogFaecher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
         return (new DataKatalogZulaessigeFaecher()).getAll();
     }
 
@@ -142,7 +142,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
     public Response getKatalogFachgruppen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataKatalogFachgruppen(conn)).getAll();
     	}
     }
@@ -165,7 +165,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen für die Schulform dieser Schule gefunden.")
     public Response getFachgruppen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogFachgruppen(conn)).getList();
         }
     }
@@ -189,7 +189,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.")
     public Response getKatalogFachgruppenEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogFachgruppen(conn)).get(id);
         }
     }
@@ -212,7 +212,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
     public Response getKatalogBilingualeSprachenAlle(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogBilingualeSprachen(conn)).getAll();
         }
     }
@@ -235,7 +235,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine bilingualen Sprachen für die Schulform dieser Schule gefunden.")
     public Response getKatalogBilingualeSprachen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogBilingualeSprachen(conn)).getList();
         }
     }
@@ -259,7 +259,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Kein Katalog-Eintrag einer bilingualen Sprache für die angegebene ID gefunden.")
     public Response getKatalogBilingualeSprachenEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogBilingualeSprachen(conn)).get(id);
         }
     }
@@ -282,7 +282,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
     public Response getKatalogSprachpruefungsniveaus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogSprachpruefungsniveaus()).getAll();
         }
     }
@@ -305,7 +305,7 @@ public class APIFaecher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
     public Response getKatalogSprachreferenzniveaus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
             return (new DataKatalogSprachreferenzniveaus()).getAll();
         }
     }

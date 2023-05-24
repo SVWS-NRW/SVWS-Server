@@ -85,7 +85,7 @@ public class APIErzieher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
     public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataErzieherarten(conn)).getList();
     	}
     }
