@@ -516,6 +516,15 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> getListKalenderwochenzuordnung() {
+		return _daten.kalenderwochenZuordnung;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param raumID Die ID des angefragten-Objektes.
@@ -549,33 +558,54 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen Raum hinzu.
+	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @param kwzID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 */
+	public @NotNull StundenplanKalenderwochenzuordnung getKalenderwochenzuordnung(final long kwzID) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kwzID_zu_kwz, kwzID);
+	}
+
+	/**
+	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
 	 *
 	 * @param raum Der Raum, der hinzugefügt werden soll.
 	 */
 	public void addRaum(final @NotNull StundenplanRaum raum) {
 		DeveloperNotificationException.ifMapPutOverwrites(_map_raumID_zu_raum, raum.id, raum);
-		_daten.raeume.add(raum); // TODO BAR Sortiere die Liste
+		_daten.raeume.add(raum); // TODO BAR Sortiere _daten.raeume
 	}
 
 	/**
-	 * Fügt dem Stundenplan eine neue Pausenzeit hinzu.
+	 * Fügt dem Stundenplan eine neue {@link StundenplanPausenzeit} hinzu.
 	 *
 	 * @param pausenzeit Die Pausenzeit, die hinzugefügt werden soll.
 	 */
 	public void addPausenzeit(final @NotNull StundenplanPausenzeit pausenzeit) {
 		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
-		_daten.pausenzeiten.add(pausenzeit); // TODO BAR Sortiere die Liste
+		_daten.pausenzeiten.add(pausenzeit); // TODO BAR Sortiere _daten.pausenzeiten
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen Aufsichtsbereich hinzu.
+	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
 	 *
 	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
 	 */
 	public void addAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
 		DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtID_zu_aufsicht, aufsichtsbereich.id, aufsichtsbereich);
-		_daten.aufsichtsbereiche.add(aufsichtsbereich); // TODO BAR Sortiere die Liste
+		_daten.aufsichtsbereiche.add(aufsichtsbereich); // TODO BAR Sortiere _daten.aufsichtsbereiche
+	}
+
+	/**
+	 * Fügt dem Stundenplan eine neue {@link StundenplanKalenderwochenzuordnung} hinzu.
+	 *
+	 * @param kwz Die Kalenderwochenzuordnung, die hinzugefügt werden soll.
+	 */
+	public void addKalenderwochenzuordnung(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		DeveloperNotificationException.ifMapPutOverwrites(_map_kwzID_zu_kwz, kwz.id, kwz);
+		_daten.kalenderwochenZuordnung.add(kwz); // TODO BAR Sortiere _daten.kalenderwochenZuordnung
 	}
 
 	/**
@@ -612,6 +642,17 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanKalenderwochenzuordnung}.
+	 *
+	 * @param kwzID Die ID der Kalenderwochenzuordnung, die entfernt werden soll.
+	 */
+	public void removeKalenderwochenzuordnung(final long kwzID) {
+		final @NotNull StundenplanKalenderwochenzuordnung kwz = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + kwzID + ")", _map_kwzID_zu_kwz.get(kwzID));
+		_map_kwzID_zu_kwz.remove(kwzID);
+		_daten.kalenderwochenZuordnung.remove(kwz);
+	}
+
+	/**
 	 * Entfernt anhand der ID den alten {@link StundenplanRaum} und fügt dann den neuen hinzu.
 	 *
 	 * @param raum Der neue Raum, welcher den alten ersetzt.
@@ -639,6 +680,16 @@ public class StundenplanManager {
 	public void modifyAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
 		removeAufsichtsbereich(aufsichtsbereich.id);
 		addAufsichtsbereich(aufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt anhand der ID die alte {@link StundenplanKalenderwochenzuordnung} und fügt dann die neue hinzu.
+	 *
+	 * @param kwz Die neue Kalenderwochenzuordnung, welche die alte ersetzt.
+	 */
+	public void modifyKalenderwochenzuordnung(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		removeKalenderwochenzuordnung(kwz.id);
+		addKalenderwochenzuordnung(kwz);
 	}
 
 }

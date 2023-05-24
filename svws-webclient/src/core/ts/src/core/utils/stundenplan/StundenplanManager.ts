@@ -493,6 +493,15 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public getListKalenderwochenzuordnung() : List<StundenplanKalenderwochenzuordnung> {
+		return this._daten.kalenderwochenZuordnung;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param raumID Die ID des angefragten-Objektes.
@@ -526,7 +535,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen Raum hinzu.
+	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @param kwzID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 */
+	public getKalenderwochenzuordnung(kwzID : number) : StundenplanKalenderwochenzuordnung {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kwzID_zu_kwz, kwzID);
+	}
+
+	/**
+	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
 	 *
 	 * @param raum Der Raum, der hinzugefügt werden soll.
 	 */
@@ -536,7 +556,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan eine neue Pausenzeit hinzu.
+	 * Fügt dem Stundenplan eine neue {@link StundenplanPausenzeit} hinzu.
 	 *
 	 * @param pausenzeit Die Pausenzeit, die hinzugefügt werden soll.
 	 */
@@ -546,13 +566,23 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen Aufsichtsbereich hinzu.
+	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
 	 *
 	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
 	 */
 	public addAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_aufsichtID_zu_aufsicht, aufsichtsbereich.id, aufsichtsbereich);
 		this._daten.aufsichtsbereiche.add(aufsichtsbereich);
+	}
+
+	/**
+	 * Fügt dem Stundenplan eine neue {@link StundenplanKalenderwochenzuordnung} hinzu.
+	 *
+	 * @param kwz Die Kalenderwochenzuordnung, die hinzugefügt werden soll.
+	 */
+	public addKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
+		this._daten.kalenderwochenZuordnung.add(kwz);
 	}
 
 	/**
@@ -589,6 +619,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanKalenderwochenzuordnung}.
+	 *
+	 * @param kwzID Die ID der Kalenderwochenzuordnung, die entfernt werden soll.
+	 */
+	public removeKalenderwochenzuordnung(kwzID : number) : void {
+		const kwz : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + kwzID + ")", this._map_kwzID_zu_kwz.get(kwzID));
+		this._map_kwzID_zu_kwz.remove(kwzID);
+		this._daten.kalenderwochenZuordnung.remove(kwz);
+	}
+
+	/**
 	 * Entfernt anhand der ID den alten {@link StundenplanRaum} und fügt dann den neuen hinzu.
 	 *
 	 * @param raum Der neue Raum, welcher den alten ersetzt.
@@ -616,6 +657,16 @@ export class StundenplanManager extends JavaObject {
 	public modifyAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
 		this.removeAufsichtsbereich(aufsichtsbereich.id);
 		this.addAufsichtsbereich(aufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt anhand der ID die alte {@link StundenplanKalenderwochenzuordnung} und fügt dann die neue hinzu.
+	 *
+	 * @param kwz Die neue Kalenderwochenzuordnung, welche die alte ersetzt.
+	 */
+	public modifyKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
+		this.removeKalenderwochenzuordnung(kwz.id);
+		this.addKalenderwochenzuordnung(kwz);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
