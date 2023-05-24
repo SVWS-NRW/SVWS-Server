@@ -53,7 +53,7 @@ public class APIENM {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
     public Response getENMDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN)) {
 	    	return (new DataENMDaten(conn)).getAll();
     	}
     }
@@ -81,7 +81,7 @@ public class APIENM {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
     @ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
     public Response getENMDatenGZip(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN)) {
 	    	return (new DataENMDaten(conn)).getAllGZip();
     	}
     }
@@ -110,7 +110,7 @@ public class APIENM {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     public Response getLehrerENMDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN)) {
 	    	return (new DataENMDaten(conn)).get(id);
     	}
     }
