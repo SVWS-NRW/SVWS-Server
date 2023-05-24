@@ -37,7 +37,7 @@ allprojects {
 
 	svwsmavenrepo {
 		//nexusMavenCentralProxyRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/maven-central'
-		githubMavenPackagesUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+		githubMavenPackagesUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
 	}
 
 	java {
@@ -117,7 +117,7 @@ subprojects {
 		svwsmavenpublish {
 			nexusSnapshotRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-snapshots'
 			nexusReleasesRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-releases'
-			githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages'
+			githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
 		}
 	}
 }
