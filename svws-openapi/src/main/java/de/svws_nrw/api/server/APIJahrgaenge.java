@@ -57,7 +57,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
     public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataJahrgangsliste(conn)).getList();
     	}
     }
@@ -86,7 +86,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "404", description = "Kein Jahrgangs-Eintrag mit der angegebenen ID gefunden")
     public Response getJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
     		return (new DataJahrgangsdaten(conn)).get(id);
     	}
     }
@@ -110,7 +110,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
     public Response getKatalogJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+        OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.KEINE);
         return (new DataKatalogJahrgaenge()).getAll();
     }
 

@@ -62,7 +62,7 @@ public class APIGostDatenaustausch {
     		@RequestBody(description = "Die LuPO-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
+    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
     	return DataLupo.importMDB(user, multipart);
     }
 
@@ -90,7 +90,7 @@ public class APIGostDatenaustausch {
     public Response getGostLupoExportMDBFuerJahrgang(@PathParam("schema") final String schemaname,
     		@PathParam("jahrgang") final String jahrgang,
     		@Context final HttpServletRequest request) {
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.IMPORT_EXPORT_SCHUELERDATEN_EXPORTIEREN);
+    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
 		return DataLupo.exportMDB(user, jahrgang);
     }
 
