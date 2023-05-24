@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
-import type { Stundenplan, StundenplanListeEintrag } from "@svws-nrw/svws-core";
+import { ArrayList, DeveloperNotificationException, List, Stundenplan, StundenplanListeEintrag, StundenplanManager, StundenplanRaum } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { routeApp } from "~/router/RouteApp";
@@ -14,11 +14,13 @@ import { routeStundenplanDaten } from "./stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "./stundenplan/RouteStundenplanUnterricht";
 import { routeStundenplanPausenaufsicht } from "./stundenplan/RouteStundenplanPausenaufsicht";
 import { useDebounceFn } from "@vueuse/core";
+import { Listbox } from "@headlessui/vue";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 	daten: Stundenplan | undefined;
+	stundenplanManager: StundenplanManager | undefined;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
@@ -27,6 +29,7 @@ export class RouteDataStundenplan {
 		auswahl: undefined,
 		mapKatalogeintraege: new Map(),
 		daten: undefined,
+		stundenplanManager: undefined,
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -68,6 +71,13 @@ export class RouteDataStundenplan {
 		return this._state.value.daten;
 	}
 
+	get stundenplanManager(): StundenplanManager {
+		if (this._state.value.stundenplanManager === undefined)
+			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		return this._state.value.stundenplanManager;
+	}
+
+
 	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
 
 	patchit = (data : Partial<Stundenplan>) => {
@@ -80,6 +90,18 @@ export class RouteDataStundenplan {
 		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
+	patchRaum = async (data : Partial<StundenplanRaum>, id: number) => {
+		if (this.auswahl === undefined)
+			return;
+		await api.server.patchStundenplanRaum(data, api.schema, id);
+		const mapRaeume = this.stundenplanManager.getMapRaeume();
+		const raum = mapRaeume.get(id);
+		if (raum === null)
+			throw new DeveloperNotificationException("Raum fehlt, Programmierfehler");
+		Object.assign(raum, data);
+		this.commit();
+	}
+
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
 		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
@@ -90,19 +112,21 @@ export class RouteDataStundenplan {
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
-		if (auswahl === undefined && this.mapKatalogeintraege.size > 0) {
+		if (auswahl === undefined && this.mapKatalogeintraege.size > 0)
 			auswahl = this.mapKatalogeintraege.values().next().value;
+		if (auswahl === undefined)
+			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
+		else {
+			const daten = await api.server.getStundenplan(api.schema, auswahl.id);
+			const stundenplanManager = new StundenplanManager(daten, new ArrayList(), new ArrayList(), null);
+			this.setPatchedState({ auswahl, daten, stundenplanManager });
 		}
-		const daten = auswahl ? await api.server.getStundenplan(api.schema, auswahl.id) : undefined;
-		console.log(daten)
-		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeStundenplan.getRoute(eintrag.id));
-	}
+	gotoEintrag = async (eintrag: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag.id));
 
 }
+
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
 

@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.stundenplan;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
@@ -21,6 +22,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -460,4 +462,30 @@ public class StundenplanManager {
 		return getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
 	}
 
+	/**
+	 * Liefert ein Map der Räume {@link StundenplanRaum} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Räume {@link StundenplanRaum}
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull StundenplanRaum> getMapRaeume() {
+		return this._map_raumID_zu_raum;
+	}
+
+	/**
+	 * Liefert ein Map der Pausenzeiten {@link StundenplanPausenzeit} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Pausenzeiten {@link StundenplanPausenzeit}
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull StundenplanPausenzeit> getMapPausenzeiten() {
+		return this._map_pausenzeitID_zu_pausenzeit;
+	}
+
+	/**
+	 * Liefert ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull StundenplanAufsichtsbereich> getMapAufsichtsbereich() {
+		return this._map_aufsichtID_zu_aufsicht;
+	}
 }

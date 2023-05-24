@@ -24,8 +24,9 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {
 		return {
-			data: () => routeStundenplan.data.daten,
+			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patch: routeStundenplan.data.patch,
+			patchRaum: routeStundenplan.data.patchRaum,
 		};
 	}
 

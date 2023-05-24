@@ -1,6 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
@@ -9,18 +8,20 @@ import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs'
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
-import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
-import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
-import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
-import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
-import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
-import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import { List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
+import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
+import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
+import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
+import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
+import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
+import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanManager extends JavaObject {
 
@@ -435,6 +436,33 @@ export class StundenplanManager extends JavaObject {
 	public getUnterrichtDerKurseByKW(kursIDs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
 		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
 		return this.getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
+	}
+
+	/**
+	 * Liefert ein Map der Räume {@link StundenplanRaum} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Räume {@link StundenplanRaum}
+	 */
+	public getMapRaeume() : JavaMap<number, StundenplanRaum> {
+		return this._map_raumID_zu_raum;
+	}
+
+	/**
+	 * Liefert ein Map der Pausenzeiten {@link StundenplanPausenzeit} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Pausenzeiten {@link StundenplanPausenzeit}
+	 */
+	public getMapPausenzeiten() : JavaMap<number, StundenplanPausenzeit> {
+		return this._map_pausenzeitID_zu_pausenzeit;
+	}
+
+	/**
+	 * Liefert ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
+	 *
+	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
+	 */
+	public getMapAufsichtsbereich() : JavaMap<number, StundenplanAufsichtsbereich> {
+		return this._map_aufsichtID_zu_aufsicht;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
