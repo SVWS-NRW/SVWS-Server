@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@svws-nrw/svws-core";
+	import type { StundenplanManager, StundenplanPausenzeit } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

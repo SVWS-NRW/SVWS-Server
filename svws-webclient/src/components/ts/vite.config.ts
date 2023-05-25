@@ -1,5 +1,4 @@
 import { defineConfig } from "vite";
-import BetterDefine from '@vue-macros/better-define'
 import { resolve } from "path";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
@@ -17,7 +16,6 @@ export default defineConfig({
 		],
 	},
 	plugins: [
-		BetterDefine.vite(),
 		Vue({
 			include: [/\.vue$/, /\.md$/]
 		}),
