@@ -13,6 +13,9 @@
 						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
+						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume">
+							<svws-ui-button @click="openModal()" type="secondary" title="Räume importieren">Aus Katalog importieren</svws-ui-button>
+						</s-card-stundenplan-import-raeume-modal>
 						<svws-ui-button @click="addRaum()" type="icon" title="Raum hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
 							<svws-ui-button @click="removeRaeume(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
@@ -34,6 +37,7 @@
 		patchRaum: (daten: Partial<StundenplanRaum>, id: number) => Promise<void>;
 		addRaum: () => Promise<void>;
 		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
+		importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 	}>();
 
 	const raum = ref<StundenplanRaum | undefined>();

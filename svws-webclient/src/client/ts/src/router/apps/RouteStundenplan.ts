@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
-import type { Stundenplan, StundenplanAufsichtsbereich, StundenplanListeEintrag, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanRaum } from "@svws-nrw/svws-core";
+import { DeveloperNotificationException, Stundenplan, StundenplanAufsichtsbereich, StundenplanListeEintrag, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanRaum } from "@svws-nrw/svws-core";
 import { ArrayList, StundenplanManager } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
@@ -82,7 +82,7 @@ export class RouteDataStundenplan {
 
 	patchit = (data : Partial<Stundenplan>) => {
 		if (this.auswahl === undefined)
-			return;
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.server.patchStundenplan(data, api.schema, this.auswahl.id).then(()=>{
 			const daten = this.daten;
 			this.setPatchedState({daten: Object.assign(daten, data)});
@@ -92,7 +92,7 @@ export class RouteDataStundenplan {
 
 	patchRaum = async (data : Partial<StundenplanRaum>, id: number) => {
 		if (this.auswahl === undefined)
-			return;
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		await api.server.patchStundenplanRaum(data, api.schema, id);
 		const raum = this.stundenplanManager.getRaum(id);
 		this.stundenplanManager.patchRaum(Object.assign(raum, data));
@@ -101,7 +101,7 @@ export class RouteDataStundenplan {
 
 	patchPausenzeit = async (data : Partial<StundenplanPausenaufsicht>, id: number) => {
 		if (this.auswahl === undefined)
-			return;
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		await api.server.patchStundenplanPausenzeit(data, api.schema, id);
 		const pausenzeit = this.stundenplanManager.getPausenzeit(id);
 		this.stundenplanManager.patchPausenzeit(Object.assign(pausenzeit, data));
@@ -110,7 +110,7 @@ export class RouteDataStundenplan {
 
 	patchAufsichtsbereich = async (data : Partial<StundenplanAufsichtsbereich>, id: number) => {
 		if (this.auswahl === undefined)
-			return;
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		//await api.server.patchStundenplanAufsichtsbereich(data, api.schema, id);
 		const aufsichtsbereich = this.stundenplanManager.getAufsichtsbereich(id);
 		this.stundenplanManager.patchAufsichtsbereich(Object.assign(aufsichtsbereich, data));
@@ -118,8 +118,11 @@ export class RouteDataStundenplan {
 	}
 
 	addRaum = async () => {
-		//const raum = await api.server.
-		// this.stundenplanManager.addRaum(raum);
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		const raum = await api.server.addStundenplanRaum(new StundenplanRaum(), api.schema, id)
+		this.stundenplanManager.addRaum(raum);
 		this.commit();
 	}
 
@@ -157,6 +160,10 @@ export class RouteDataStundenplan {
 		}
 		this.commit();
 	}
+
+	importRaeume = async (raeume: StundenplanRaum[]) => {}
+	importPausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {}
+	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
