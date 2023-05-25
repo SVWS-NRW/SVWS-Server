@@ -112,14 +112,14 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("_daten.wochenTypModell < 0", wochentyp < 0);
 		DeveloperNotificationException.ifTrue("_daten.wochenTypModell == 1", wochentyp == 1);
 
-		for (@NotNull final StundenplanKalenderwochenzuordnung z : _daten.kalenderwochenZuordnung) {
+		for (final @NotNull StundenplanKalenderwochenzuordnung z : _daten.kalenderwochenZuordnung) {
 			// Der Wochentyp einer KW-Zuordnung muss >= 1 sein.
 			DeveloperNotificationException.ifTrue("z.wochentyp <= 0", z.wochentyp <= 0);
 			// Liegt die Zuordnung in einer bestimmten Woche, muss es so viele Wochen auch global geben.
 			DeveloperNotificationException.ifTrue("z.wochentyp > wochentyp", z.wochentyp > wochentyp);
 		}
 
-		for (@NotNull final StundenplanUnterricht u : _datenU) {
+		for (final @NotNull StundenplanUnterricht u : _datenU) {
 			// Der Wochentyp eines Unterrichts muss >= 0 sein.
 			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
 			// Liegt der Unterricht in einer bestimmten Woche, muss es so viele Wochen auch global geben.
@@ -149,7 +149,7 @@ public class StundenplanManager {
 			_map_klasseID_zu_klasse.put(klasse.id, klasse);
 
 			// Jahrgänge der Klasse hinzufügen.
-			@NotNull final ArrayList<@NotNull Long> listJ = new ArrayList<>();
+			final @NotNull ArrayList<@NotNull Long> listJ = new ArrayList<>();
 			for (final @NotNull Long jahrgangID : klasse.jahrgaenge) {
 				DeveloperNotificationException.ifTrue("!_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID)", !_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID));
 				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", listJ.contains(jahrgangID));
@@ -181,7 +181,7 @@ public class StundenplanManager {
 			_map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
 
 			// Konsistenz der Fächer der Lehrkraft überprüfen.
-			@NotNull final ArrayList<@NotNull Long> listF = new ArrayList<>();
+			final @NotNull ArrayList<@NotNull Long> listF = new ArrayList<>();
 			for (final @NotNull Long fachID : lehrer.faecher) {
 				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_fachID_zu_fach, fachID);
 				DeveloperNotificationException.ifTrue("listF.contains(" + fachID + ")", listF.contains(fachID));
@@ -302,7 +302,7 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapContains("_map_pausenaufsichtID_zu_pausenaufsicht", _map_pausenaufsichtID_zu_pausenaufsicht, pa.id);
 
 			// Konsistenz der Aufsichtsbereiche überprüfen.
-			@NotNull final ArrayList<@NotNull Long> listAB = new ArrayList<>();
+			final @NotNull ArrayList<@NotNull Long> listAB = new ArrayList<>();
 			for (final @NotNull Long aufsichtsbereichID : pa.bereiche) {
 				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", _map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereichID);
 				DeveloperNotificationException.ifTrue("listAB.contains(" + aufsichtsbereichID + ")", listAB.contains(aufsichtsbereichID));
@@ -445,7 +445,7 @@ public class StundenplanManager {
 	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDesKursesByWochentyp(final long kursID, final int wochentyp) {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > _daten.wochenTypModell);
-		@NotNull final List<@NotNull StundenplanUnterricht> list = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", _map_kursID_zu_unterrichte.get(kursID));
+		final @NotNull List<@NotNull StundenplanUnterricht> list = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", _map_kursID_zu_unterrichte.get(kursID));
 
 		// Daten filtern.
 		final @NotNull ArrayList<@NotNull StundenplanUnterricht> result = new ArrayList<>();
@@ -484,6 +484,20 @@ public class StundenplanManager {
 		for (final long kursID : kursIDs)
 			result.addAll(getUnterrichtDesKursesByWochentyp(kursID, wochentyp));
 		return result;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursIDs       Die IDs aller Kurse.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurseByKW(final @NotNull long[] kursIDs, final int jahr, final int kalenderwoche) {
+		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
+		return getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
 	}
 
 	/**

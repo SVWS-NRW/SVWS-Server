@@ -449,6 +449,20 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 *
+	 * @param kursIDs       Die IDs aller Kurse.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDerKurseByKW(kursIDs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
+		return this.getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
+	}
+
+	/**
 	 * Liefert ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
 	 *
 	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
