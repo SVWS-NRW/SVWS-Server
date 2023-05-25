@@ -358,10 +358,10 @@ public class APIStundenplan {
     @POST
     @Path("/{id : \\d+}/raeume/create")
     @Operation(summary = "Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
-    description = "Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    description = "Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Raum wurde erfolgreich hinzugefügt.",
+    @ApiResponse(responseCode = "201", description = "Der Raum wurde erfolgreich hinzugefügt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = StundenplanRaum.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.")
@@ -479,10 +479,10 @@ public class APIStundenplan {
     @POST
     @Path("/{id : \\d+}/aufsichtsbereiche/create")
     @Operation(summary = "Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
-    description = "Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    description = "Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Aufsichtsbereich wurde erfolgreich hinzugefügt.",
+    @ApiResponse(responseCode = "201", description = "Der Aufsichtsbereich wurde erfolgreich hinzugefügt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = StundenplanAufsichtsbereich.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.")
@@ -657,10 +657,10 @@ public class APIStundenplan {
     @POST
     @Path("/{id : \\d+}/pausenzeiten/create")
     @Operation(summary = "Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
-    description = "Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    description = "Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Pausenzeit wurde erfolgreich hinzugefügt.",
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeit wurde erfolgreich hinzugefügt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = StundenplanPausenzeit.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für einen Stundenplan anzulegen.")

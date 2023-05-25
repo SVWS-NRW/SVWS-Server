@@ -198,7 +198,7 @@ public abstract class DataManager<ID> {
 			conn.transactionPersist(dto);
 			conn.transactionCommit();
 			final CoreData daten = dtoMapper.apply(dto);
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webAppException)
 				return webAppException.getResponse();

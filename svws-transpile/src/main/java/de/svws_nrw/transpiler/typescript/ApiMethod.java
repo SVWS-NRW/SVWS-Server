@@ -303,7 +303,7 @@ public final class ApiMethod {
 		if ((!requestBody.exists) || (requestBody.content == null))
 			return null;
 		String tstype = getTSType(requestBody.content);
-		if (httpMethod == ApiHttpMethod.PATCH)
+		if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201)))
 			tstype = "Partial<" + tstype + ">";
 		return tstype;
 	}
@@ -406,7 +406,7 @@ public final class ApiMethod {
 					if (isTSPrimitive(getTSType(requestBody.content))) {
 						sb.append("\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator());
 					} else {
-						if (httpMethod == ApiHttpMethod.PATCH) {
+						if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {
 							sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSONPatch(data);" + System.lineSeparator());
 						} else {
 							sb.append("\t\tconst body : string = " + requestBody.content.datatype + ".transpilerToJSON(data);" + System.lineSeparator());

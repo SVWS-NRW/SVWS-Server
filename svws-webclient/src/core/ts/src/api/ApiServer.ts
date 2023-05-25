@@ -7926,27 +7926,27 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/aufsichtsbereiche/create
 	 *
-	 * Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 * Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
+	 *   Code 201: Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: StundenplanAufsichtsbereich
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.
 	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {StundenplanAufsichtsbereich} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<StundenplanAufsichtsbereich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanAufsichtsbereich(data : StundenplanAufsichtsbereich, schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+	public async addStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = StundenplanAufsichtsbereich.transpilerToJSON(data);
+		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
@@ -7985,27 +7985,27 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenzeiten/create
 	 *
-	 * Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 * Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Pausenzeit wurde erfolgreich hinzugefügt.
+	 *   Code 201: Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: StundenplanPausenzeit
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für einen Stundenplan anzulegen.
 	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {StundenplanPausenzeit} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<StundenplanPausenzeit>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanPausenzeit(data : StundenplanPausenzeit, schema : string, id : number) : Promise<StundenplanPausenzeit> {
+	public async addStundenplanPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = StundenplanPausenzeit.transpilerToJSON(data);
+		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
@@ -8015,27 +8015,27 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode addStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/raeume/create
 	 *
-	 * Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 * Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Raum wurde erfolgreich hinzugefügt.
+	 *   Code 201: Der Raum wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: StundenplanRaum
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.
 	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {StundenplanRaum} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<StundenplanRaum>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Der Raum wurde erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanRaum(data : StundenplanRaum, schema : string, id : number) : Promise<StundenplanRaum> {
+	public async addStundenplanRaum(data : Partial<StundenplanRaum>, schema : string, id : number) : Promise<StundenplanRaum> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = StundenplanRaum.transpilerToJSON(data);
+		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
