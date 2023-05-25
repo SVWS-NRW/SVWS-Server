@@ -207,7 +207,7 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("zeit.stundenende.isBlank()", JavaString.isBlank(zeit.stundenende));
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
 			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
-			DeveloperNotificationException.ifTrue("_map_zeitrasterID_zu_zeitraster.containsKey(zeit.id)", this._map_zeitrasterID_zu_zeitraster.containsKey(zeit.id));
+			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, zeit.id);
 			this._map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
 		}
 	}
@@ -503,6 +503,15 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanZeitraster}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte.
+	 */
+	public getListZeitraster() : List<StundenplanZeitraster> {
+		return this._daten.zeitraster;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param raumID Die ID des angefragten-Objektes.
@@ -558,6 +567,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param zeitrasterID Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public getZeitraster(zeitrasterID : number) : StundenplanZeitraster {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, zeitrasterID);
+	}
+
+	/**
 	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
 	 *
 	 * @param raum Der Raum, der hinzugefügt werden soll.
@@ -608,9 +628,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}.
+	 * Fügt dem Stundenplan eine neues {@link StundenplanZeitraster} hinzu.
 	 *
-	 * @param raumID Die ID des Raumes, der entfernt werden soll.
+	 * @param zeitraster Das StundenplanZeitraster, das hinzugefügt werden soll.
+	 */
+	public addZeitraster(zeitraster : StundenplanZeitraster) : void {
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
+		this._daten.zeitraster.add(zeitraster);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
+	 *
+	 * @param raumID Die ID des {@link StundenplanRaum}-Objekts.
 	 */
 	public removeRaum(raumID : number) : void {
 		const raum : StundenplanRaum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + raumID + ")", this._map_raumID_zu_raum.get(raumID));
@@ -619,9 +649,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanPausenzeit}.
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenzeit}-Objekt.
 	 *
-	 * @param pausenzeitID Die ID der Pausenzeit, die entfernt werden soll.
+	 * @param pausenzeitID Die ID des {@link StundenplanPausenzeit}-Objekts.
 	 */
 	public removePausenzeit(pausenzeitID : number) : void {
 		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + pausenzeitID + ")", this._map_pausenzeitID_zu_pausenzeit.get(pausenzeitID));
@@ -630,9 +660,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanAufsichtsbereich}.
+	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
 	 *
-	 * @param aufsichtsbereichID Die ID des Aufsichtsbereich, der entfernt werden soll.
+	 * @param aufsichtsbereichID Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
 	 */
 	public removeAufsichtsbereich(aufsichtsbereichID : number) : void {
 		const aufsichtsbereich : StundenplanAufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + aufsichtsbereichID + ")", this._map_aufsichtsbereichID_zu_aufsichtsbereich.get(aufsichtsbereichID));
@@ -641,9 +671,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanKalenderwochenzuordnung}.
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 *
-	 * @param kwzID Die ID der Kalenderwochenzuordnung, die entfernt werden soll.
+	 * @param kwzID Die ID des {@link StundenplanKalenderwochenzuordnung}-Objekts.
 	 */
 	public removeKalenderwochenzuordnung(kwzID : number) : void {
 		const kwz : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + kwzID + ")", this._map_kwzID_zu_kwz.get(kwzID));
@@ -652,9 +682,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan eine existierende {@link StundenplanPausenaufsicht}.
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsicht}-Objekt.
 	 *
-	 * @param pausenaufsichtID Die ID der StundenplanPausenaufsicht, die entfernt werden soll.
+	 * @param pausenaufsichtID Die ID des {@link StundenplanPausenaufsicht}-Objekts.
 	 */
 	public removePausenaufsicht(pausenaufsichtID : number) : void {
 		const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifNull("_map_pausenaufsichtID_zu_pausenaufsicht.get(" + pausenaufsichtID + ")", this._map_pausenaufsichtID_zu_pausenaufsicht.get(pausenaufsichtID));
@@ -663,9 +693,20 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID den alten {@link StundenplanRaum} und fügt dann den neuen hinzu.
+	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanZeitraster}-Objekt.
 	 *
-	 * @param raum Der neue Raum, welcher den alten ersetzt.
+	 * @param zeitrasterID Die ID des {@link StundenplanZeitraster}-Objekts.
+	 */
+	public removeZeitraster(zeitrasterID : number) : void {
+		const zr : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + zeitrasterID + ")", this._map_zeitrasterID_zu_zeitraster.get(zeitrasterID));
+		this._map_zeitrasterID_zu_zeitraster.remove(zeitrasterID);
+		this._daten.zeitraster.remove(zr);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public patchRaum(raum : StundenplanRaum) : void {
 		this.removeRaum(raum.id);
@@ -673,9 +714,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID die alte {@link StundenplanPausenzeit} und fügt dann die neue hinzu.
+	 * Entfernt anhand der ID das alte {@link StundenplanPausenzeit}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
-	 * @param pausenzeit Die neue Pausenzeit, welche den alte ersetzt.
+	 * @param pausenzeit Das neue {@link StundenplanPausenzeit}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public patchPausenzeit(pausenzeit : StundenplanPausenzeit) : void {
 		this.removePausenzeit(pausenzeit.id);
@@ -683,9 +724,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID den alten {@link StundenplanAufsichtsbereich} und fügt dann den neuen hinzu.
+	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
-	 * @param aufsichtsbereich Der neue Aufsichtsbereich, welcher den alten ersetzt.
+	 * @param aufsichtsbereich Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public patchAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
 		this.removeAufsichtsbereich(aufsichtsbereich.id);
@@ -693,9 +734,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID die alte {@link StundenplanKalenderwochenzuordnung} und fügt dann die neue hinzu.
+	 * Entfernt anhand der ID das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
-	 * @param kwz Die neue Kalenderwochenzuordnung, welche die alte ersetzt.
+	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public patchKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
 		this.removeKalenderwochenzuordnung(kwz.id);
@@ -703,13 +744,23 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID die alte {@link StundenplanPausenaufsicht} und fügt dann die neue hinzu.
+	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
-	 * @param pausenaufsicht Die neue StundenplanPausenaufsicht, welche die alte ersetzt.
+	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public patchPausenaufsicht(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		this.removePausenaufsicht(pausenaufsicht.id);
 		this.addPausenaufsicht(pausenaufsicht);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param zeitraster Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public patchZeitraster(zeitraster : StundenplanZeitraster) : void {
+		this.removeZeitraster(zeitraster.id);
+		this.addZeitraster(zeitraster);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
