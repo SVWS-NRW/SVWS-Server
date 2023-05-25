@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Hilfreiche statische Methoden für Listen.
+ * Diese Klasse bietet hilfreiche statische Methoden für Listen.
  *
  * @author Benjamin A. Bartsch
  */
