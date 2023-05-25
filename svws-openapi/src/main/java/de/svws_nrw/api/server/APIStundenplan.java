@@ -5,6 +5,7 @@ import java.io.InputStream;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
@@ -18,6 +19,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.stundenplan.DataSchuelerStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
+import de.svws_nrw.data.stundenplan.DataStundenplanAufsichtsbereiche;
 import de.svws_nrw.data.stundenplan.DataStundenplanKalenderwochenzuordnung;
 import de.svws_nrw.data.stundenplan.DataStundenplanLehrer;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
@@ -347,7 +349,7 @@ public class APIStundenplan {
      *
      * @param schema       das Datenbankschema
      * @param id           die ID des Stundenplans
-     * @param is           der Input-Stream mit den Datendes Raums
+     * @param is           der Input-Stream mit den Daten des Raums
      * @param request      die Informationen zur HTTP-Anfrage
      *
      * @return die HTTP-Antwort mit dem neuen Raum
@@ -362,7 +364,7 @@ public class APIStundenplan {
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = StundenplanRaum.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.")
-    @ApiResponse(responseCode = "404", description = "Die Stundneplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
@@ -371,6 +373,99 @@ public class APIStundenplan {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
     		return (new DataStundenplanRaeume(conn, id)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Aufsichtsbereichs eines Stundenplans.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Aufsichtsbereichs
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              der Aufsichtsbereich eines Stundenplans
+     */
+    @GET
+    @Path("/aufsichtsbereich/{id : \\d+}")
+    @Operation(summary = "Gibt den Aufsichtsbereich eines Stundenplans zurück.",
+               description = "Gibt den Aufsichtsbereich eines Stundenplans zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Raum",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = StundenplanAufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich eines Stundenplans gefunden")
+    public Response getStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataStundenplanAufsichtsbereiche(conn, null)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen eines Aufsichtsbereichs eines Stundenplans.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation des Aufsichtsbereichs
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/aufsichtsbereich/{id : \\d+}")
+    @Operation(summary = "Passt den Aufsichtsbereich mit der angebenen ID an.",
+    description = "Passt den Aufsichtsbereich mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für den Aufsichtsbereich", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanAufsichtsbereich.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanAufsichtsbereiche(conn, null).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Aufsichtsbereichs zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten des Aufsichtsbereichs
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Aufsichtsbereich
+     */
+    @POST
+    @Path("/{id : \\d+}/aufsichtsbereiche/create")
+    @Operation(summary = "Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Aufsichtsbereich wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanAufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten des zu erstellenden Aufsichtsbereichs ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanAufsichtsbereich.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanAufsichtsbereiche(conn, id)).add(is);
     	}
     }
 
@@ -488,6 +583,39 @@ public class APIStundenplan {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
     		return (new DataStundenplanPausenzeiten(conn, null).patch(id, is));
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen einer neuen Pausenzeit zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Pausenzeit
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Pausenzeit
+     */
+    @POST
+    @Path("/{id : \\d+}/pausenzeiten/create")
+    @Operation(summary = "Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenzeit wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanPausenzeit.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeit ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanPausenzeiten(conn, id)).add(is);
     	}
     }
 

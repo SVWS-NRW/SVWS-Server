@@ -117,7 +117,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 
 	/**
 	 * Fügt einen Raum mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
-	 * zurück. Falls ein Fehler auftritt wird ein entsprechender ResponseCode zurückgegeben.
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
 	 *
 	 * @param is   der InputStream mit den JSON-Daten
 	 *

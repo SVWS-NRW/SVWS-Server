@@ -138,6 +138,7 @@ import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
+import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { StundenplanLehrer } from '../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
@@ -7923,6 +7924,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/aufsichtsbereiche/create
+	 *
+	 * Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanAufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {StundenplanAufsichtsbereich} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanAufsichtsbereich(data : StundenplanAufsichtsbereich, schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanAufsichtsbereich.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
 	 *
 	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -7952,6 +7983,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenzeiten/create
+	 *
+	 * Erstellt eine neue Pausenzeit für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenzeit wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {StundenplanPausenzeit} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanPausenzeit(data : StundenplanPausenzeit, schema : string, id : number) : Promise<StundenplanPausenzeit> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanPausenzeit.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanPausenzeit.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/raeume/create
 	 *
 	 * Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
@@ -7961,7 +8022,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: StundenplanRaum
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.
-	 *   Code 404: Die Stundneplandaten wurden nicht gefunden
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {StundenplanRaum} data - der Request-Body für die HTTP-Methode
@@ -8123,6 +8184,59 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return StundenplanLehrer.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/aufsichtsbereich/{id : \d+}
+	 *
+	 * Gibt den Aufsichtsbereich eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanAufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Kein Aufsichtsbereich eines Stundenplans gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum
+	 */
+	public async getStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/aufsichtsbereich/{id : \d+}
+	 *
+	 * Passt den Aufsichtsbereich mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanAufsichtsbereich>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchStundenplanAufsichtsbereich(data : Partial<StundenplanAufsichtsbereich>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/aufsichtsbereich/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanAufsichtsbereich.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
