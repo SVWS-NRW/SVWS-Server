@@ -833,8 +833,31 @@ public final class DBEntityManager implements AutoCloseable {
 		return entries.get(0);
 	}
 
+
 	/**
-	 * Generische Methode zum speichern von Daten
+	 * Bestimmt für die übergebene DTOKlasse die nächste verfügbare Datenbank-ID
+	 *
+	 * @param <T>   der Typ der DtoKlasse
+	 * @param t     die DtoKlasse
+	 *
+	 * @return die nächste verfügbare ID
+	 */
+	public <T> long transactionGetNextID(final Class<T> t) {
+		final String tableName = t.getAnnotation(Table.class).name();
+		if (tableName == null)
+			throw new NullPointerException("Die angegebene Klasse hat keine Tabellen-Annotation");
+		final Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
+		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
+		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
+		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");
+		q.setParameter("tableName", tableName);
+		final Long currentID = (Long) q.getSingleResult();
+		return currentID == null ? 1 : currentID + 1;
+	}
+
+
+	/**
+	 * Generische Methode zum Speichern von Daten
 	 *
 	 * @param t       Typ der zu speichernden Daten
 	 * @param idApplicator methode die die ID im Objekt übernimmt
@@ -842,26 +865,15 @@ public final class DBEntityManager implements AutoCloseable {
 	 *
 	 * @return Rückgabetyp
 	 */
-
 	public  <T> boolean persistNewWithAutoInkrement(final Class<T> t, final LongFunction<T> idApplicator) {
-		final String tableName = t.getAnnotation(Table.class).name();
 		this.transactionBegin();
-
-		final Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
-		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
-		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
-		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");
-		q.setParameter("tableName", tableName);
-		final Long currentID = (Long) q.getSingleResult();
-		final long nextID = currentID == null ? 1 : currentID + 1;
+		final long nextID = transactionGetNextID(t);
 		final T daten = idApplicator.apply(nextID);
 		this.transactionPersist(daten);
-
 		if (!this.transactionCommit()) {
 			this.transactionRollback();
 			return false;
 		}
-
 		return true;
 	}
 

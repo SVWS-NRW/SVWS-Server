@@ -2689,7 +2689,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createGostAbiturjahrgangBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/{halbjahr : \d+}/blockungen/new
 	 *
-	 * Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Fachwahlen besitzt.
+	 * Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Blockungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Blockung wurde erfolgreich angelegt.
@@ -2697,7 +2697,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: GostBlockungsdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Blockung anzulegen.
 	 *   Code 404: Keine Fachwahlinformationen zum Anlegen einer Blockung gefunden
-	 *   Code 409: Das Abitujahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 409: Das Abiturjahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -7952,6 +7952,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/raeume/create
+	 *
+	 * Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurückDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanRaum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundneplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {StundenplanRaum} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanRaum(data : StundenplanRaum, schema : string, id : number) : Promise<StundenplanRaum> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanRaum.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanRaum.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/schueler/{schueler_id : \d+}
 	 *
 	 * Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -8316,7 +8346,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/raeume/{id : \d+}
 	 *
-	 * Gibt den Raum eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 * Gibt den Raum eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Raum

@@ -945,14 +945,14 @@ public class APIGost {
     @Path("/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen/new")
     @Operation(summary = "Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück.",
     description = "Erstellt eine neue Blockung und gibt die ID dieser Blockung zurück."
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Fachwahlen "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Blockungen "
     		    + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Blockung wurde erfolgreich angelegt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Blockung anzulegen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachwahlinformationen zum Anlegen einer Blockung gefunden")
-    @ApiResponse(responseCode = "409", description = "Das Abitujahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+    @ApiResponse(responseCode = "409", description = "Das Abiturjahr oder das Halbjahr ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response createGostAbiturjahrgangBlockung(
     		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,

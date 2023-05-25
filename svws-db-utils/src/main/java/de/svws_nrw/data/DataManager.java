@@ -1,12 +1,17 @@
 package de.svws_nrw.data;
 
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
+import java.util.Set;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -98,6 +103,27 @@ public abstract class DataManager<ID> {
 
 
 	/**
+	 * Wendet die angegebenen Mappings für die Attribute des Core-DTOs (übergebene Map) auf das übergebene DatenbankDTO an.
+	 *
+	 * @param <DTO>   Der Typ des Datenbank-DTOs
+	 *
+	 * @param dto               das Datenbank-DTO
+	 * @param map               eine Map mit den Attributen und den Attributwerten des Core-DTOs
+	 * @param attributeMapper   eine Map mit den Mappingfunktionen zum mappen von Core-DTO-Attributen auf Datenbank-DTO-Attributen
+	 */
+	private static <DTO> void applyPatchMappings(final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
+			if (mapper == null)
+				throw OperationError.BAD_REQUEST.exception();
+			mapper.map(dto, value, map);
+		}
+	}
+
+
+	/**
 	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID
 	 * mithilfe des JSON-Patches aus dem übergebenen {@link InputStream} an.
 	 * Dabei werden nur die übergebenen Mappings zugelassen.
@@ -106,7 +132,7 @@ public abstract class DataManager<ID> {
 	 * @param id   die ID des zu patchenden DTOs
 	 * @param is   der Input-Stream
 	 * @param dtoClass   die Klasse des DTOs
-	 * @param attributeMapper   die Mapper für deas Anpassen des DTOs
+	 * @param attributeMapper   die Mapper für das Anpassen des DTOs
 	 *
 	 * @return die Response
 	 */
@@ -121,14 +147,7 @@ public abstract class DataManager<ID> {
 			final DTO dto = conn.queryByKey(dtoClass, id);
 			if (dto == null)
 				throw OperationError.NOT_FOUND.exception();
-			for (final Entry<String, Object> entry : map.entrySet()) {
-				final String key = entry.getKey();
-				final Object value = entry.getValue();
-				final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
-				if (mapper == null)
-					throw OperationError.BAD_REQUEST.exception();
-				mapper.map(dto, value, map);
-			}
+			applyPatchMappings(dto, map, attributeMapper);
 			conn.transactionPersist(dto);
 			conn.transactionCommit();
 		} catch (final Exception e) {
@@ -139,6 +158,54 @@ public abstract class DataManager<ID> {
 			conn.transactionRollback();
 		}
 		return Response.status(Status.OK).build();
+	}
+
+
+	/**
+	 * Erstellt ein neues DTO des übergebenen Typ, indem in der Datenbank eine neue ID abgefragt wird
+	 * und die Attribute des JSON-Objektes gemäß dem Attribut-Mapper integriert werden
+	 *
+	 * @param <DTO>                der Typ des Datenbank-DTOs
+	 * @param <CoreData>           der Typ des Core-DTOs
+	 * @param is                   der Input-Stream
+	 * @param dtoClass             die Klasse des DTOs
+	 * @param initDTO              ein BiConsumer zum Initialisieren des Datenbank-DTOs
+	 * @param dtoMapper            die Funktion zum Erstellen
+	 * @param attributesRequired   eine Menge der benötigten Attribute im JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributeMapper      die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response mit dem Core-DTO
+	 */
+	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass,
+			final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		for (final String attr : attributesRequired)
+			if (!map.containsKey(attr))
+				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+		try {
+			conn.transactionBegin();
+			// Bestimme die nächste verfügbare ID für ein DTOStundenplanRaum
+			final long newID = conn.transactionGetNextID(dtoClass);
+			// Erstelle einen neuen DTOStundenplanRaum für die DB und wende die Initialisierung und das Mapping der Attribute an
+			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			final DTO dto = constructor.newInstance();
+			initDTO.accept(dto, newID);
+			applyPatchMappings(dto, map, attributeMapper);
+			// Persistiere das DTO in der Datenbank
+			conn.transactionPersist(dto);
+			conn.transactionCommit();
+			final CoreData daten = dtoMapper.apply(dto);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
 	}
 
 }

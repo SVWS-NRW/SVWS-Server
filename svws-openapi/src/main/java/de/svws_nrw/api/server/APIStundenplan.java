@@ -40,6 +40,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -292,8 +293,8 @@ public class APIStundenplan {
      */
     @GET
     @Path("/raeume/{id : \\d+}")
-    @Operation(summary = "Gibt den Raum eines Stundeplans zurück.",
-               description = "Gibt den Raum eines Stundeplans zurück. "
+    @Operation(summary = "Gibt den Raum eines Stundenplans zurück.",
+               description = "Gibt den Raum eines Stundenplans zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Raum",
@@ -336,6 +337,40 @@ public class APIStundenplan {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
     		return (new DataStundenplanRaeume(conn, null).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Raumes zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Datendes Raums
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Raum
+     */
+    @POST
+    @Path("/{id : \\d+}/raeume/create")
+    @Operation(summary = "Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Raum für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück"
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Raum wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanRaum.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundneplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanRaum.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanRaeume(conn, id)).add(is);
     	}
     }
 

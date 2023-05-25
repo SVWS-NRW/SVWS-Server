@@ -4,13 +4,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -107,6 +110,32 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		return super.patchBasic(id, is, DTOStundenplanRaum.class, patchMappings);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "groesse");
+
+	/**
+	 * Fügt einen Raum mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender ResponseCode zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
+		if (this.stundenplanID == null)
+			return OperationError.NOT_FOUND.getResponse("Die StundenplanID darf nicht null sein.");
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			return OperationError.NOT_FOUND.getResponse("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(stundenplanID));
+		// füge den Raum in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
+		final ObjLongConsumer<DTOStundenplanRaum> initDTO = (dto, id) -> {
+			dto.ID = id;
+			dto.Stundenplan_ID = this.stundenplanID;
+		};
+		return super.addBasic(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 }
