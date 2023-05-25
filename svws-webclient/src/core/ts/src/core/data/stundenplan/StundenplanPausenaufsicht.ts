@@ -10,12 +10,12 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public id : number = -1;
 
 	/**
-	 * Die ID der Pausenzeit
+	 * Die ID der {@link StundenplanPausenzeit}.
 	 */
 	public idPausenzeit : number = -1;
 
 	/**
-	 * Die ID des Lehrers, der Aufsicht führt
+	 * Die ID des {@link StundenplanLehrer} der Aufsicht führt.
 	 */
 	public idLehrer : number = -1;
 
@@ -25,7 +25,7 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	public wochentyp : number = -1;
 
 	/**
-	 * Die IDs der Aufsichtsbereiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird.
+	 * Die IDs der {@link StundenplanAufsichtsbereich}, in denen in dieser Pausenzeit von dem {@link StundenplanLehrer} Aufsicht geführt wird.
 	 */
 	public bereiche : List<number> = new ArrayList();
 

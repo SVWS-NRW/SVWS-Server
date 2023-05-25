@@ -109,6 +109,7 @@ public class DeveloperNotificationException extends RuntimeException {
 
 	/**
 	 * Überprüft, ob ein Schlüssel bereits in einer Map existiert.
+	 *
 	 * @param <K> Der Schlüssel-Typ der Map.
 	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
 	 * @param pMapName Der Name der Map.
@@ -120,6 +121,22 @@ public class DeveloperNotificationException extends RuntimeException {
 	public static <@NotNull K, @NotNull V> void ifMapContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
 			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY(" + pKey + ")");
+	}
+
+	/**
+	 * Überprüft, ob ein Schlüssel nicht in einer Map existiert.
+	 *
+	 * @param <K> Der Schlüssel-Typ der Map.
+	 * @param <V> Der zum Schlüssel zugeordnete Typ der Map.
+	 * @param pMapName Der Name der Map.
+	 * @param pMap     Die Map.
+	 * @param pKey     Der Schlüssel der überprüft wird.
+	 *
+	 * @throws DeveloperNotificationException falls der Schlüssel nicht in der Map bereits existiert.
+	 */
+	public static <@NotNull K, @NotNull V> void ifMapNotContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
+		if (!pMap.containsKey(pKey))
+			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY(" + pKey + ")");
 	}
 
 	/**

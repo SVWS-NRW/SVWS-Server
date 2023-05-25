@@ -22,11 +22,11 @@ public class StundenplanPausenaufsicht {
 	@Schema(description = "die ID der Pausenaufsicht", example = "42")
 	public long id = -1;
 
-	/** Die ID der Pausenzeit */
+	/** Die ID der {@link StundenplanPausenzeit}. */
 	@Schema(description = "die ID der Pausenzeit", example = "815")
 	public long idPausenzeit = -1;
 
-	/** Die ID des Lehrers, der Aufsicht führt */
+	/** Die ID des {@link StundenplanLehrer} der Aufsicht führt. */
 	@Schema(description = "die ID des Lehrers, der Aufsicht führt", example = "89")
 	public long idLehrer = -1;
 
@@ -34,7 +34,7 @@ public class StundenplanPausenaufsicht {
 	@Schema(description = "der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
 	public int wochentyp = -1;
 
-	/** Die IDs der Aufsichtsbereiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird. */
+	/** Die IDs der {@link StundenplanAufsichtsbereich}, in denen in dieser Pausenzeit von dem {@link StundenplanLehrer} Aufsicht geführt wird. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Aufsichtsbeiche, in denen in dieser Pausenzeit von dem Lehrer Aufsicht geführt wird."))
 	public @NotNull List<@NotNull Long> bereiche = new ArrayList<>();
 
