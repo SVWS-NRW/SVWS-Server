@@ -8,8 +8,8 @@
 			<div class="flex flex-col gap-12">
 				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
 					<template #cell(abiturjahr)="{ value }">
-						{{ value.abiturjahr === -1 ? '' : value.abiturjahr }}
-						<svws-ui-spinner :spinning="(pending && value.abiturjahr === auswahl?.abiturjahr)" />
+						{{ value === -1 ? '' : value }}
+						<svws-ui-spinner :spinning="(pending && value === auswahl?.abiturjahr)" />
 					</template>
 					<template #footerActions>
 						<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang" :add-abiturjahrgang="addAbiturjahrgang">
