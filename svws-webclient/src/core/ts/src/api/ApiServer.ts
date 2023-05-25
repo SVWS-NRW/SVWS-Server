@@ -8241,6 +8241,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/aufsichtsbereiche/{id : \d+}
+	 *
+	 * Entfernt einen Aufsichtsbereich eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Aufsichtsbereich wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanAufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Kein Aufsichtsbereich vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Aufsichtsbereich wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanAufsichtsbereich(schema : string, id : number) : Promise<StundenplanAufsichtsbereich> {
+		const path = "/db/{schema}/stundenplan/aufsichtsbereiche/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanKalenderwochenzuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/kalenderwochen/{id : \d+}
 	 *
 	 * Gibt die Kalenderwochen-Zuordnung eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -8507,6 +8536,64 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanRaum.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/raeume/{id : \d+}
+	 *
+	 * Entfernt einen Raum eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanRaum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Kein Raum vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanRaum(schema : string, id : number) : Promise<StundenplanRaum> {
+		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanRaum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/raeume/{id : \d+}
+	 *
+	 * Entfernt eine Pausenzeit eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenzeit wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Keine Pausenzeit vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeit wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+		const path = "/db/{schema}/stundenplan/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
 
 

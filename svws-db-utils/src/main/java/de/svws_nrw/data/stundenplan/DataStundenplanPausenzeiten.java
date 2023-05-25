@@ -135,4 +135,16 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		return super.addBasic(is, DTOStundenplanPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
+
+	/**
+	 * Löscht eine Pausenzeit
+	 *
+	 * @param id   die ID der Pausenzeit
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOStundenplanPausenzeit.class, dtoMapper);
+	}
+
 }

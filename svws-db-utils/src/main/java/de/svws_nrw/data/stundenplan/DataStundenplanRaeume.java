@@ -138,4 +138,16 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		return super.addBasic(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
+
+	/**
+	 * Löscht einen Raum
+	 *
+	 * @param id   die ID des Raums
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOStundenplanRaum.class, dtoMapper);
+	}
+
 }

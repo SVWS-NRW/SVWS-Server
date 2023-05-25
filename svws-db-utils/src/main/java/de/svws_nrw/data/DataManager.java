@@ -208,4 +208,39 @@ public abstract class DataManager<ID> {
 		}
 	}
 
+
+	/**
+	 * Entfernt das Datenbank-DTO mit der angegebenen ID und gibt das zugehörige Core-DTO in der
+	 * Response zurück.
+	 *
+	 * @param <DTO>       der Typ des Datenbank-DTOs
+	 * @param <CoreData>  der Typ des Core-DTOs
+	 * @param id          die ID
+	 * @param dtoClass    die Klasses des Datenbank-DTOs
+	 * @param dtoMapper   der Mapper für das Mapping eines Datenbank-DTOs auf ein Core-DTO
+	 *
+	 * @return die Response - im Erfolgsfall mit dem gelöschen Core-DTO
+	 */
+	public <DTO, CoreData> Response deleteBasic(final Long id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+		try {
+			conn.transactionBegin();
+			// Bestimme dem Raum
+			if (id == null)
+	    		throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+			final DTO raum = conn.queryByKey(dtoClass, id);
+			if (raum == null)
+	    		throw OperationError.NOT_FOUND.exception("Es wurde kein Raum mit der ID %d gefunden.".formatted(id));
+			final CoreData daten = dtoMapper.apply(raum);
+			// Entferne den Raum
+			conn.transactionRemove(raum);
+			conn.transactionCommit();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception exception) {
+			conn.transactionRollback();
+			if (exception instanceof final WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
 }

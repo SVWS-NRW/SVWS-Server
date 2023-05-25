@@ -133,4 +133,16 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 		return super.addBasic(is, DTOStundenplanAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
+
+	/**
+	 * Löscht einen Aufsichtsbereich
+	 *
+	 * @param id   die ID des Aufsichtsbereichs
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOStundenplanAufsichtsbereich.class, dtoMapper);
+	}
+
 }

@@ -40,6 +40,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -378,6 +379,34 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Entfernen des Raums eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Raums
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Raum
+     */
+    @DELETE
+    @Path("/raeume/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Raum eines Stundenplans.",
+    description = "Entfernt einen Raum eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Der Raum wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanRaum.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Raum vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanRaeume(conn, null)).delete(id);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage eines Aufsichtsbereichs eines Stundenplans.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -466,6 +495,34 @@ public class APIStundenplan {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
     		return (new DataStundenplanAufsichtsbereiche(conn, id)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen des Aufsichtsbereichs eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Aufsichtsbereichs
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Aufsichtsbereich
+     */
+    @DELETE
+    @Path("/aufsichtsbereiche/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Aufsichtsbereich eines Stundenplans.",
+    description = "Entfernt einen Aufsichtsbereich eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Der Aufsichtsbereich wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanAufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanAufsichtsbereiche(conn, null)).delete(id);
     	}
     }
 
@@ -616,6 +673,34 @@ public class APIStundenplan {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
     			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
     		return (new DataStundenplanPausenzeiten(conn, id)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen der Pausenzeit eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID der Pausenzeit
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Pausenzeit
+     */
+    @DELETE
+    @Path("/raeume/{id : \\d+}")
+    @Operation(summary = "Entfernt eine Pausenzeit eines Stundenplans.",
+    description = "Entfernt eine Pausenzeit eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenzeit wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanPausenzeit.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanPausenzeiten(conn, null)).delete(id);
     	}
     }
 
