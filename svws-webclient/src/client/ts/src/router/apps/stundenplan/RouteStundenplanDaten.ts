@@ -27,6 +27,14 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patch: routeStundenplan.data.patch,
 			patchRaum: routeStundenplan.data.patchRaum,
+			addRaum: routeStundenplan.data.addRaum,
+			removeRaeume: routeStundenplan.data.removeRaeume,
+			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
+			addPausenzeit: routeStundenplan.data.addPausenzeit,
+			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
+			patchAufsichtsbereich: routeStundenplan.data.patchAufsichtsbereich,
+			addAufsichtsbereich: routeStundenplan.data.addAufsichtsbereich,
+			removeAufsichtsbereiche: routeStundenplan.data.removeAufsichtsbereiche,
 		};
 	}
 

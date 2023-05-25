@@ -2,12 +2,18 @@
 	<svws-ui-content-card title="Aufsichtsbereiche">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-data-table :columns="cols" :items="stundenplanManager().getMapAufsichtsbereich().values()" clickable v-model:clicked="bereich">
+				<svws-ui-data-table :columns="cols" :items="stundenplanManager().getListAufsichtbereich()" clickable v-model:clicked="bereich" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.kuerzel" @update:model-value="doPatch({kuerzel: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput :model-value="rowData.kuerzel" @update:model-value="patchAufsichtsbereich({kuerzel: String($event)}, rowData.id)" headless />
 					</template>
 					<template #cell(beschreibung)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="doPatch({beschreibung: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchAufsichtsbereich({beschreibung: String($event)}, rowData.id)" headless />
+					</template>
+					<template #footerActions>
+						<svws-ui-button @click="addAufsichtsbereich()" type="icon" title="Aufsichtsbereich hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
+							<svws-ui-button @click="removeAufsichtsbereiche(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
+						</div>
 					</template>
 				</svws-ui-data-table>
 			</div>
@@ -22,17 +28,13 @@
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
+		patchAufsichtsbereich: (daten: Partial<StundenplanAufsichtsbereich>, id: number) => Promise<void>;
+		addAufsichtsbereich: () => Promise<void>;
+		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 	}>();
 
-	const emit = defineEmits<{
-		patchAufsichtsbereich: [data: Partial<StundenplanAufsichtsbereich>, id: number];
-	}>()
-
-	async function doPatch(data: Partial<StundenplanAufsichtsbereich>, id: number) {
-		emit('patchAufsichtsbereich', data, id);
-	}
-
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();
+	const selected = ref<StundenplanAufsichtsbereich[]>([]);
 
 	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}

@@ -2,15 +2,21 @@
 	<svws-ui-content-card title="Räume">
 		<div class="content-wrapper">
 			<div class="input-wrapper">
-				<svws-ui-data-table :columns="cols" :items="stundenplanManager().getMapRaeume().values()" clickable v-model:clicked="raum">
+				<svws-ui-data-table :columns="cols" :items="stundenplanManager().getListRaum()" clickable v-model:clicked="raum" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 					<template #cell(kuerzel)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.kuerzel" @update:model-value="doPatch({kuerzel: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput :model-value="rowData.kuerzel" @update:model-value="patchRaum({kuerzel: String($event)}, rowData.id)" headless />
 					</template>
 					<template #cell(groesse)="{ rowData }">
-						<SvwsUiTextInput type="number" :model-value="rowData.groesse" @update:model-value="doPatch({groesse: Number($event)}, rowData.id)" headless />
+						<SvwsUiTextInput type="number" :model-value="rowData.groesse" @update:model-value="patchRaum({groesse: Number($event)}, rowData.id)" headless />
 					</template>
 					<template #cell(beschreibung)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="doPatch({beschreibung: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
+					</template>
+					<template #footerActions>
+						<svws-ui-button @click="addRaum()" type="icon" title="Raum hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
+							<svws-ui-button @click="removeRaeume(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
+						</div>
 					</template>
 				</svws-ui-data-table>
 			</div>
@@ -25,20 +31,16 @@
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
+		patchRaum: (daten: Partial<StundenplanRaum>, id: number) => Promise<void>;
+		addRaum: () => Promise<void>;
+		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 	}>();
 
-	const emit = defineEmits<{
-		// (e: 'patch', data: Partial<Stundenplan>): void;
-		patchRaum: [data: Partial<StundenplanRaum>, id: number];
-	}>()
-
-	async function doPatch(data: Partial<StundenplanRaum>, id: number) {
-		emit('patchRaum', data, id);
-	}
-
 	const raum = ref<StundenplanRaum | undefined>();
+	const selected = ref<StundenplanRaum[]>([]);
 
 	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'groesse', label: 'Größe', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}
 	]
+
 </script>

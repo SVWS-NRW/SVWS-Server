@@ -3,7 +3,8 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
-import { ArrayList, DeveloperNotificationException, List, Stundenplan, StundenplanListeEintrag, StundenplanManager, StundenplanRaum } from "@svws-nrw/svws-core";
+import type { Stundenplan, StundenplanAufsichtsbereich, StundenplanListeEintrag, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanRaum } from "@svws-nrw/svws-core";
+import { ArrayList, StundenplanManager } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { routeApp } from "~/router/RouteApp";
@@ -14,7 +15,6 @@ import { routeStundenplanDaten } from "./stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "./stundenplan/RouteStundenplanUnterricht";
 import { routeStundenplanPausenaufsicht } from "./stundenplan/RouteStundenplanPausenaufsicht";
 import { useDebounceFn } from "@vueuse/core";
-import { Listbox } from "@headlessui/vue";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
@@ -94,11 +94,67 @@ export class RouteDataStundenplan {
 		if (this.auswahl === undefined)
 			return;
 		await api.server.patchStundenplanRaum(data, api.schema, id);
-		const mapRaeume = this.stundenplanManager.getMapRaeume();
-		const raum = mapRaeume.get(id);
-		if (raum === null)
-			throw new DeveloperNotificationException("Raum fehlt, Programmierfehler");
-		Object.assign(raum, data);
+		const raum = this.stundenplanManager.getRaum(id);
+		this.stundenplanManager.patchRaum(Object.assign(raum, data));
+		this.commit();
+	}
+
+	patchPausenzeit = async (data : Partial<StundenplanPausenaufsicht>, id: number) => {
+		if (this.auswahl === undefined)
+			return;
+		await api.server.patchStundenplanPausenzeit(data, api.schema, id);
+		const pausenzeit = this.stundenplanManager.getPausenzeit(id);
+		this.stundenplanManager.patchPausenzeit(Object.assign(pausenzeit, data));
+		this.commit();
+	}
+
+	patchAufsichtsbereich = async (data : Partial<StundenplanAufsichtsbereich>, id: number) => {
+		if (this.auswahl === undefined)
+			return;
+		//await api.server.patchStundenplanAufsichtsbereich(data, api.schema, id);
+		const aufsichtsbereich = this.stundenplanManager.getAufsichtsbereich(id);
+		this.stundenplanManager.patchAufsichtsbereich(Object.assign(aufsichtsbereich, data));
+		this.commit();
+	}
+
+	addRaum = async () => {
+		//const raum = await api.server.
+		// this.stundenplanManager.addRaum(raum);
+		this.commit();
+	}
+
+	addPausenzeit = async () => {
+		//const pausenzeit = await api.server.
+		// this.stundenplanManager.addPausenzeit(pausenzeit);
+		this.commit();
+	}
+
+	addAufsichtsbereich = async () => {
+		//const aufsichtsbereich = await api.server.
+		// this.stundenplanManager.addAufsichtsbereich(aufsichtsbereich);
+		this.commit();
+	}
+
+	removeRaeume = async (raeume: StundenplanRaum[]) => {
+		for (const raum of raeume) {
+			this.stundenplanManager.removeRaum(raum.id);
+		}
+		this.commit();
+	}
+
+	removePausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {
+		for (const pausenzeit of pausenzeiten) {
+
+			this.stundenplanManager.removePausenzeit(pausenzeit.id);
+		}
+		this.commit();
+	}
+
+	removeAufsichtsbereiche = async (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => {
+		for (const aufsichtsbereich of aufsichtsbereiche) {
+
+			this.stundenplanManager.removeAufsichtsbereich(aufsichtsbereich.id);
+		}
 		this.commit();
 	}
 

@@ -1,9 +1,9 @@
 <template>
 	<div class="app-container">
-		<s-card-stundenplan-daten :stundenplan-manager="stundenplanManager" @patch="patch" />
-		<s-card-stundenplan-raeume :stundenplan-manager="stundenplanManager" @patch-raum="patchRaum" />
-		<s-card-stundenplan-pausenzeiten :stundenplan-manager="stundenplanManager" @patch-pausenzeit="patchPausenzeit" />
-		<s-card-stundenplan-aufsichtsbereiche :stundenplan-manager="stundenplanManager" @patch-aufsichtsbereich="patchAufsichtsbereich" />
+		<s-card-stundenplan-daten :stundenplan-manager="stundenplanManager" :patch="patch" />
+		<s-card-stundenplan-raeume :stundenplan-manager="stundenplanManager" :patch-raum="patchRaum" :add-raum="addRaum" :remove-raeume="removeRaeume" />
+		<s-card-stundenplan-pausenzeiten :stundenplan-manager="stundenplanManager" :patch-pausenzeit="patchPausenzeit" :add-pausenzeit="addPausenzeit" :remove-pausenzeiten="removePausenzeiten" />
+		<s-card-stundenplan-aufsichtsbereiche :stundenplan-manager="stundenplanManager" :patch-aufsichtsbereich="patchAufsichtsbereich" :add-aufsichtsbereich="addAufsichtsbereich" :remove-aufsichtsbereiche="removeAufsichtsbereiche" />
 	</div>
 </template>
 
