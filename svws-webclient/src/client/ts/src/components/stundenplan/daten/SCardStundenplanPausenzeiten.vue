@@ -13,7 +13,9 @@
 						<SvwsUiTextInput :model-value="rowData.ende" @update:model-value="patchPausenzeit({ende: String($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
-						<svws-ui-button @click="addPausenzeit()" type="icon" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
+							<svws-ui-button @click="openModal()" type="secondary" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						</s-card-stundenplan-add-pausenzeit-modal>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
 							<svws-ui-button @click="removePausenzeiten(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
 						</div>
@@ -32,7 +34,7 @@
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
 		patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
-		addPausenzeit: () => Promise<void>;
+		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (raeume: StundenplanPausenzeit[]) => Promise<void>;
 	}>();
 

@@ -10,7 +10,9 @@
 						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchAufsichtsbereich({beschreibung: String($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
-						<svws-ui-button @click="addAufsichtsbereich()" type="icon" title="Aufsichtsbereich hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						<s-card-stundenplan-add-aufsichtsbereich-modal v-slot="{ openModal }" :add-aufsichtsbereich="addAufsichtsbereich">
+							<svws-ui-button @click="openModal()" type="secondary" title="Aufsichtsbereich hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						</s-card-stundenplan-add-aufsichtsbereich-modal>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
 							<svws-ui-button @click="removeAufsichtsbereiche(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
 						</div>
@@ -29,7 +31,7 @@
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
 		patchAufsichtsbereich: (daten: Partial<StundenplanAufsichtsbereich>, id: number) => Promise<void>;
-		addAufsichtsbereich: () => Promise<void>;
+		addAufsichtsbereich: (aufsichtsbereich: StundenplanAufsichtsbereich) => Promise<void>;
 		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 	}>();
 
