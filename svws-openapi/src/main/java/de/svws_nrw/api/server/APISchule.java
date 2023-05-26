@@ -5,6 +5,7 @@ import java.io.InputStream;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
+import de.svws_nrw.core.data.schule.Aufsichtsbereich;
 import de.svws_nrw.core.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
@@ -33,6 +34,7 @@ import de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
 import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
@@ -1103,7 +1105,7 @@ public class APISchule {
     @ApiResponse(responseCode = "200", description = "Der Katalog der Räume der Schule.",
                  content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Raum.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-    @ApiResponse(responseCode = "404", description = "Keine Noten-Einträge gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Raum-Einträge gefunden.")
     public Response getRaeume(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogRaeume(conn)).getList();
@@ -1191,7 +1193,7 @@ public class APISchule {
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
             schema = @Schema(implementation = Raum.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für die Schule anzulegen.")
-    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addRaum(@PathParam("schema") final String schema,
     		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
@@ -1227,6 +1229,151 @@ public class APISchule {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataKatalogRaeume(conn)).delete(id);
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Kataloges der Aufsichtsbereiche der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste mit den Einträgen des Aufsichtsbereichs-Kataloges
+     */
+    @GET
+    @Path("/aufsichtsbereiche")
+    @Operation(summary = "Gibt den Katalog der Aufsichtsbereiche der Schule zurück.",
+               description = "Gibt den Katalog der Aufsichtsbereiche der Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Aufsichtsbereiche der Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Aufsichtsbereich.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Aufsichtsbereichs-Einträge gefunden.")
+    public Response getAufsichtsbereiche(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogAufsichtsbereiche(conn)).getList();
+        }
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Aufsichtsbereichs der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Aufsichtsbereichs
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              der Aufsichtsbereich der Schule
+     */
+    @GET
+    @Path("/aufsichtsbereiche/{id : \\d+}")
+    @Operation(summary = "Gibt den Aufsichtsbereich der Schule zurück.",
+               description = "Gibt den Aufsichtsbereich der Schule zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Aufsichtsbereich der Schule",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = Aufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich bei der Schule gefunden")
+    public Response getAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		return (new DataKatalogAufsichtsbereiche(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen eines Aufsichtsbereichs der Schule.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation des Aufsichtsbereichs
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/aufsichtsbereiche/{id : \\d+}")
+    @Operation(summary = "Passt den Aufsichtsbereich der Schule mit der angebenen ID an.",
+    description = "Passt den Aufsichtsbereich der Schule mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für den Aufsichtsbereich der Schule", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Aufsichtsbereich.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogAufsichtsbereiche(conn).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Aufsichtsbereichs zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten des Aufsichtsbereichs
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Aufsichtsbereich
+     */
+    @POST
+    @Path("/aufsichtsbereiche/create")
+    @Operation(summary = "Erstellt einen neuen Aufsichtsbereich für die Schule und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Aufsichtsbereich für die Schule und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Aufsichtsbereich wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Aufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Aufsichtsbereich für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addAufsichtsbereich(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten des zu erstellenden Aufsichtsbereichs ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Aufsichtsbereich.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogAufsichtsbereiche(conn)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Aufsichtsbereichs der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Aufsichtsbereichs
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Aufsichtsbereich
+     */
+    @DELETE
+    @Path("/aufsichtsbereiche/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Aufsichtsbereich der Schule.",
+    description = "Entfernt einen Aufsichtsbereich der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Der Aufsichtsbereich wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Aufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogAufsichtsbereiche(conn)).delete(id);
     	}
     }
 

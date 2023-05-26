@@ -3,6 +3,7 @@ import { AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 import { ArrayList } from '../java/util/ArrayList';
+import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
 import { BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
 import { BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
 import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
@@ -7533,6 +7534,143 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getAufsichtsbereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche
+	 *
+	 * Gibt den Katalog der Aufsichtsbereiche der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Katalog der Aufsichtsbereiche der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Aufsichtsbereich>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Aufsichtsbereichs-Einträge gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Katalog der Aufsichtsbereiche der Schule.
+	 */
+	public async getAufsichtsbereiche(schema : string) : Promise<List<Aufsichtsbereich>> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Aufsichtsbereich>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/{id : \d+}
+	 *
+	 * Gibt den Aufsichtsbereich der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Aufsichtsbereich der Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Aufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Kein Aufsichtsbereich bei der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Aufsichtsbereich der Schule
+	 */
+	public async getAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Aufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/{id : \d+}
+	 *
+	 * Passt den Aufsichtsbereich der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Aufsichtsbereich>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/{id : \d+}
+	 *
+	 * Entfernt einen Aufsichtsbereich der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Aufsichtsbereich wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Aufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Kein Aufsichtsbereich vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Aufsichtsbereich wurde erfolgreich entfernt.
+	 */
+	public async deleteAufsichtsbereich(schema : string, id : number) : Promise<Aufsichtsbereich> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Aufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/create
+	 *
+	 * Erstellt einen neuen Aufsichtsbereich für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Aufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Aufsichtsbereich für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Aufsichtsbereich>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Aufsichtsbereich wurde erfolgreich hinzugefügt.
+	 */
+	public async addAufsichtsbereich(data : Partial<Aufsichtsbereich>, schema : string) : Promise<Aufsichtsbereich> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = Aufsichtsbereich.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Aufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerFoerderschwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/foerderschwerpunkt/{id : \d+}
 	 *
 	 * Liest die Daten des Förderschwerpunktes zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
@@ -7696,7 +7834,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<Raum>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
-	 *   Code 404: Keine Noten-Einträge gefunden.
+	 *   Code 404: Keine Raum-Einträge gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
@@ -7805,7 +7943,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Raum
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für die Schule anzulegen.
-	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<Raum>} data - der Request-Body für die HTTP-Methode

@@ -258,6 +258,7 @@ export { AbgangsartKatalog } from './core/data/schule/AbgangsartKatalog';
 export { AbgangsartKatalogDaten } from './core/data/schule/AbgangsartKatalogDaten';
 export { AbgangsartKatalogEintrag } from './core/data/schule/AbgangsartKatalogEintrag';
 export { AllgemeineMerkmaleKatalogEintrag } from './core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+export { Aufsichtsbereich } from './core/data/schule/Aufsichtsbereich';
 export { BerufskollegAnlageKatalogEintrag } from './core/data/schule/BerufskollegAnlageKatalogEintrag';
 export { BerufskollegBerufsebeneKatalogEintrag } from './core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegFachklassenKatalog';
