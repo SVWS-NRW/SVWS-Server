@@ -104,6 +104,7 @@ import { OrganisationsformKatalogEintrag } from '../core/data/schule/Organisatio
 import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
 import { PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
+import { Raum } from '../core/data/schule/Raum';
 import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
 import { ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
@@ -7682,6 +7683,143 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return parseInt(JSON.parse(text));
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume
+	 *
+	 * Gibt den Katalog der Räume der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Katalog der Räume der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Raum>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Noten-Einträge gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Katalog der Räume der Schule.
+	 */
+	public async getRaeume(schema : string) : Promise<List<Raum>> {
+		const path = "/db/{schema}/schule/raeume"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Raum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/{id : \d+}
+	 *
+	 * Gibt den Raum der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum der Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Raum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Kein Raum bei der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum der Schule
+	 */
+	public async getRaum(schema : string, id : number) : Promise<Raum> {
+		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Raum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/{id : \d+}
+	 *
+	 * Passt den Raum der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Raum>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchRaum(data : Partial<Raum>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = Raum.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/{id : \d+}
+	 *
+	 * Entfernt einen Raum der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Raum wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Raum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Kein Raum vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Raum wurde erfolgreich entfernt.
+	 */
+	public async deleteRaum(schema : string, id : number) : Promise<Raum> {
+		const path = "/db/{schema}/schule/raeume/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Raum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/create
+	 *
+	 * Erstellt einen neuen Raum für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Raum wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Raum
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Raum für die Schule anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Raum>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Raum wurde erfolgreich hinzugefügt.
+	 */
+	public async addRaum(data : Partial<Raum>, schema : string) : Promise<Raum> {
+		const path = "/db/{schema}/schule/raeume/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = Raum.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Raum.transpilerFromJSON(text);
 	}
 
 

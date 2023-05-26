@@ -281,6 +281,7 @@ export { NationalitaetenKatalogEintrag } from './core/data/schule/Nationalitaete
 export { NotenKatalogEintrag } from './core/data/schule/NotenKatalogEintrag';
 export { OrganisationsformKatalogEintrag } from './core/data/schule/OrganisationsformKatalogEintrag';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
+export { Raum } from './core/data/schule/Raum';
 export { ReformpaedagogikKatalogEintrag } from './core/data/schule/ReformpaedagogikKatalogEintrag';
 export { ReligionEintrag } from './core/data/schule/ReligionEintrag';
 export { ReligionKatalogEintrag } from './core/data/schule/ReligionKatalogEintrag';

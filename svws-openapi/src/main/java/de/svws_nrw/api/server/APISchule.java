@@ -17,6 +17,7 @@ import de.svws_nrw.core.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.core.data.schule.NotenKatalogEintrag;
 import de.svws_nrw.core.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
+import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
@@ -32,6 +33,7 @@ import de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
 import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
@@ -73,6 +75,7 @@ import jakarta.persistence.FieldResult;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -1080,6 +1083,151 @@ public class APISchule {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
             return (new DataKatalogNoten()).getList();
         }
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Kataloges der Räume der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste mit den Einträgen des Raum-Kataloges
+     */
+    @GET
+    @Path("/raeume")
+    @Operation(summary = "Gibt den Katalog der Räume der Schule zurück.",
+               description = "Gibt den Katalog der Räume der Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Räume der Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Raum.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Noten-Einträge gefunden.")
+    public Response getRaeume(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogRaeume(conn)).getList();
+        }
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Raumes der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Raumes
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              der Raum der Schule
+     */
+    @GET
+    @Path("/raeume/{id : \\d+}")
+    @Operation(summary = "Gibt den Raum der Schule zurück.",
+               description = "Gibt den Raum der Schule zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Raum der Schule",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = Raum.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Raum bei der Schule gefunden")
+    public Response getRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		return (new DataKatalogRaeume(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen eines Raumes der Schule.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation des Raumes
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/raeume/{id : \\d+}")
+    @Operation(summary = "Passt den Raum der Schule mit der angebenen ID an.",
+    description = "Passt den Raum der Schule mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für den Raum der Schule", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Raum.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogRaeume(conn).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Raumes zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten des Raums
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Raum
+     */
+    @POST
+    @Path("/raeume/create")
+    @Operation(summary = "Erstellt einen neuen Raum für die Schule und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Raum für die Schule und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Raum wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Raum.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Raum für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addRaum(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Raum.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogRaeume(conn)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Raums der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Raums
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Raum
+     */
+    @DELETE
+    @Path("/raeume/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Raum der Schule.",
+    description = "Entfernt einen Raum der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Der Raum wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Raum.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Raum vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogRaeume(conn)).delete(id);
+    	}
     }
 
 }
