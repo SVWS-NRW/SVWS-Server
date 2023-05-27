@@ -7825,6 +7825,143 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getPausenzeiten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten
+	 *
+	 * Gibt den Katalog der Pausenzeiten der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Katalog der Pausenzeiten der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenzeit>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Pausenzeit-Einträge gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Katalog der Pausenzeiten der Schule.
+	 */
+	public async getPausenzeiten(schema : string) : Promise<List<StundenplanPausenzeit>> {
+		const path = "/db/{schema}/schule/pausenzeiten"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenzeit>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten/{id : \d+}
+	 *
+	 * Gibt die Pausenzeit der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenzeit der Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Keine Pausenzeit bei der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeit der Schule
+	 */
+	public async getPausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanPausenzeit.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten/{id : \d+}
+	 *
+	 * Passt die Pausenzeit der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanPausenzeit>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deletePausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten/{id : \d+}
+	 *
+	 * Entfernt eine Pausenzeit der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenzeit wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Keine Pausenzeit vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeit wurde erfolgreich entfernt.
+	 */
+	public async deletePausenzeit(schema : string, id : number) : Promise<StundenplanPausenzeit> {
+		const path = "/db/{schema}/schule/pausenzeiten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanPausenzeit.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten/create
+	 *
+	 * Erstellt eine neue Pausenzeit für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenzeit wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Aufsichtsbereich
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanPausenzeit>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
+	 */
+	public async addPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string) : Promise<Aufsichtsbereich> {
+		const path = "/db/{schema}/schule/pausenzeiten/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Aufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume
 	 *
 	 * Gibt den Katalog der Räume der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -8143,6 +8280,143 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getZeitraster für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster
+	 *
+	 * Gibt den Zeitraster-Katalog der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Zeitraster-Katalog der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanZeitraster>
+	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
+	 *   Code 404: Keine Zeitraster-Einträge gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Zeitraster-Katalog der Schule.
+	 */
+	public async getZeitraster(schema : string) : Promise<List<StundenplanZeitraster>> {
+		const path = "/db/{schema}/schule/zeitraster"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanZeitraster>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 *
+	 * Gibt den Zeitraster-Eintrag der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Zeitraster-Eintrag der Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Kein Zeitraster-Eintrag bei der Schule gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Zeitraster-Eintrag der Schule
+	 */
+	public async getZeitrastereintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 *
+	 * Passt den Zeitraster-Eintrag der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchZeitrastereintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 *
+	 * Entfernt einen Zeitraster-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Zeitraster-Eintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Kein Zeitraster-Eintrag vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Zeitraster-Eintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteZeitrastereintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/create
+	 *
+	 * Erstellt einen neue Zeitraster-Eintrag für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Zeitraster-Eintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Zeitraster-Eintrag für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Zeitraster-Eintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addZeitrastereintrag(data : Partial<StundenplanZeitraster>, schema : string) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/schule/zeitraster/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
 
 

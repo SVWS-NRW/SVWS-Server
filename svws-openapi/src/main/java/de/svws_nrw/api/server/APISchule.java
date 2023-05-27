@@ -33,9 +33,13 @@ import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
 import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
+import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
+import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
+import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
+import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
@@ -1374,6 +1378,293 @@ public class APISchule {
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataKatalogAufsichtsbereiche(conn)).delete(id);
+    	}
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Kataloges der Pausenzeiten der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste mit den Einträgen des Pausenzeiten-Kataloges
+     */
+    @GET
+    @Path("/pausenzeiten")
+    @Operation(summary = "Gibt den Katalog der Pausenzeiten der Schule zurück.",
+               description = "Gibt den Katalog der Pausenzeiten der Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Katalog der Pausenzeiten der Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit-Einträge gefunden.")
+    public Response getPausenzeiten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogPausenzeiten(conn)).getList();
+        }
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage einer Pausenzeit der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID der Pausenzeit
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Pausenzeit der Schule
+     */
+    @GET
+    @Path("/pausenzeiten/{id : \\d+}")
+    @Operation(summary = "Gibt die Pausenzeit der Schule zurück.",
+               description = "Gibt die Pausenzeit der Schule zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenzeit der Schule",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = StundenplanPausenzeit.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit bei der Schule gefunden")
+    public Response getPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		return (new DataKatalogPausenzeiten(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen einer Pausenzeit der Schule.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Pausenzeit
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/pausenzeiten/{id : \\d+}")
+    @Operation(summary = "Passt die Pausenzeit der Schule mit der angebenen ID an.",
+    description = "Passt die Pausenzeit der Schule mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Pausenzeit der Schule", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogPausenzeiten(conn).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen einer neuen Pausenzeit zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Pausenzeit
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Pausenzeit
+     */
+    @POST
+    @Path("/pausenzeiten/create")
+    @Operation(summary = "Erstellt eine neue Pausenzeit für die Schule und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt eine neue Pausenzeit für die Schule und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeit wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Aufsichtsbereich.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addPausenzeit(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeit ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogPausenzeiten(conn)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen einer Pausenzeit der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID der Pausenzeit
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Pausenzeit
+     */
+    @DELETE
+    @Path("/pausenzeiten/{id : \\d+}")
+    @Operation(summary = "Entfernt eine Pausenzeit der Schule.",
+    description = "Entfernt eine Pausenzeit der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenzeit wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanPausenzeit.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deletePausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogPausenzeiten(conn)).delete(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Zeitraster-Kataloges der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste mit den Einträgen des Zeitraster-Kataloges
+     */
+    @GET
+    @Path("/zeitraster")
+    @Operation(summary = "Gibt den Zeitraster-Katalog der Schule zurück.",
+               description = "Gibt den Zeitraster-Katalog der Schule zurück. "
+                       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Zeitraster-Katalog der Schule.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
+    @ApiResponse(responseCode = "404", description = "Keine Zeitraster-Einträge gefunden.")
+    public Response getZeitraster(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+            return (new DataKatalogZeitraster(conn)).getList();
+        }
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Zeitraster-Eintrags der Schule.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Zeitraster-Eintrags
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return der Zeitraster-Eintrags der Schule
+     */
+    @GET
+    @Path("/zeitraster/{id : \\d+}")
+    @Operation(summary = "Gibt den Zeitraster-Eintrags der Schule zurück.",
+               description = "Gibt den Zeitraster-Eintrag der Schule zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Zeitraster-Eintrag der Schule",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = StundenplanZeitraster.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag bei der Schule gefunden")
+    public Response getZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
+    		return (new DataKatalogZeitraster(conn)).get(id);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen eines Zeitraster-Eintrags der Schule.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation des Zeitraster-Eintrags
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/zeitraster/{id : \\d+}")
+    @Operation(summary = "Passt den Zeitraster-Eintrag der Schule mit der angebenen ID an.",
+    description = "Passt den Zeitraster-Eintrag der Schule mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für den Zeitraster-Eintrag der Schule", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogZeitraster(conn).patch(id, is));
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Zeitraster-Eintrags zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten des Zeitraster-Eintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Zeitraster-Eintrag
+     */
+    @POST
+    @Path("/zeitraster/create")
+    @Operation(summary = "Erstellt einen neue Zeitraster-Eintrag für die Schule und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neue Zeitraster-Eintrag für die Schule und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Zeitraster-Eintrag wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanZeitraster.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Zeitraster-Eintrag für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addZeitrastereintrag(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten des zu erstellenden Zeitraster-Eintrags ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogZeitraster(conn)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Zeitraster-Eintrags der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Zeitraster-Eintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. des gelöschten Zeitraster-Eintrags
+     */
+    @DELETE
+    @Path("/zeitraster/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Zeitraster-Eintrag der Schule.",
+    description = "Entfernt einen Zeitraster-Eintrag der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Der Zeitraster-Eintrag wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanZeitraster.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+    		return (new DataKatalogZeitraster(conn)).delete(id);
     	}
     }
 
