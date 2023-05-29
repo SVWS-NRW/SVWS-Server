@@ -71,9 +71,9 @@ public enum Geschlecht {
 
 	/**
 	 * Bestimmt das Geschlecht anhand des übergebenen Strings.
-	 * Enthält der übegebene String einen ungültigen Wert,
+	 * Enthält der übergebene String einen ungültigen Wert,
 	 * so wird als Geschlecht "x", d.h. ohne Angabe im Geburtenregister
-	 * zurückgegebeben.
+	 * zurückgegeben.
 	 *
 	 * @param text         die textuelle Beschreibung des Geschlechts
 	 *
