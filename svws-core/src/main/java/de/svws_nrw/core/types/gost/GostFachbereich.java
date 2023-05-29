@@ -14,13 +14,13 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse definiert die Fachbereich für die Laufbahnprüfung in der
- * gymnasialen Oberatufe.
+ * gymnasialen Oberstufe.
  */
 public enum GostFachbereich {
 	/** Fachbereich deutsch */
 	DEUTSCH(null, ZulaessigesFach.D),
 
-	/** Fachbereich fremdsprachllich */
+	/** Fachbereich fremdsprachlich */
 	FREMDSPRACHE(null,
 			ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9,
 			ZulaessigesFach.E,

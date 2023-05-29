@@ -88,7 +88,7 @@ public enum BenutzerKompetenzGruppe {
 	public final @NotNull BenutzerKompetenzGruppenKatalogEintrag daten;
 
 
-	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz-Gruppe */
+	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz-Gruppe */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenzGruppe> _mapID = new HashMap<>();
 
 
@@ -104,7 +104,7 @@ public enum BenutzerKompetenzGruppe {
 
 	/**
 	 * Gibt eine Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */

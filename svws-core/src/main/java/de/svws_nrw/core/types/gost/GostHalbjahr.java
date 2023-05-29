@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt die Core-Types als Ennummeration für
+ * Diese Klasse stellt die Core-Types als Enumeration für
  * die Halbjahre der gymnasialen Oberstufe zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
@@ -316,7 +316,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
 	/**
-	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
+	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr
 	 *
 	 * @param abiturjahr   das Abiturjahr
@@ -333,7 +333,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
 	/**
-	 * Bestimmt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
+	 * Bestimmt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr und gibt anhand dessen das Halbjahr der gymnasialen
 	 * Oberstufe zurück, welches als nächstes geplant wird.
 	 *
@@ -354,7 +354,7 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 
 
 	/**
-	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
+	 * Bestimmt das Abiturjahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
 	 * übergebenen Schuljahres.
 	 *
 	 * @param schuljahr   das Schuljahr

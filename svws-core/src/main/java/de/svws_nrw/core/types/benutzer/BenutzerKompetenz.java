@@ -446,7 +446,7 @@ public enum BenutzerKompetenz {
 	public final @NotNull BenutzerKompetenzKatalogEintrag daten;
 
 
-	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz */
+	/** Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz */
 	private static final @NotNull HashMap<@NotNull Long, @NotNull BenutzerKompetenz> _mapID = new HashMap<>();
 
 	/** Eine ArrayMap zum schnellen Zugriff auf die Benutzer-Kompetenzen anhand der Benutzer-Kompetenz-Gruppe*/
@@ -465,7 +465,7 @@ public enum BenutzerKompetenz {
 
 	/**
 	 * Gibt eine Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
 	 */
@@ -512,7 +512,7 @@ public enum BenutzerKompetenz {
 
     /**
      *  Überprüft, ob die Kompetenz mit k_id für die Schulform mit s_id zulässig ist.
-     * @param schulform  Die Schulfrom
+     * @param schulform  Die Schulform
      * @return true, wenn die Kompetenz für die Schulform zulässig ist.
      */
     public  boolean hatSchulform(final Schulform schulform) {

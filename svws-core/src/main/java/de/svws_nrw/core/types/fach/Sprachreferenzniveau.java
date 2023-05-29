@@ -6,7 +6,7 @@ import de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Der Core-Type für die Sprachreferenznniveaus.
+ * Der Core-Type für die Sprachreferenzniveaus.
  */
 public enum Sprachreferenzniveau  {
 

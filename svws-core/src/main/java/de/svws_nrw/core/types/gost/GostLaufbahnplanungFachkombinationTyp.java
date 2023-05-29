@@ -17,6 +17,7 @@ public enum GostLaufbahnplanungFachkombinationTyp {
 
 	/** Der Typ als Integer-Wert */
 	private final int value;
+
 	/**
 	 * Erstellt einen neuen Fachkombinations-Typ
 	 *

@@ -550,11 +550,11 @@ public enum Jahrgaenge {
 
 
 	/**
-	 * Liefert die Bezeichnung des Jahrgangs für die angebenene Schulform.
+	 * Liefert die Bezeichnung des Jahrgangs für die angegebene Schulform.
 	 *
 	 * @param schulform   die Schulform
 	 *
-	 * @return die Bezeichung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
+	 * @return die Bezeichnung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
 	 */
 	public String getBezeichnung(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))
@@ -661,7 +661,7 @@ public enum Jahrgaenge {
 
 
 	/**
-	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
+	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
 	 * @param jgVorher     der zu prüfende Jahrgang
@@ -736,7 +736,7 @@ public enum Jahrgaenge {
 
 
 	/**
-	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
+	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
 	 * @param jgNachher    der zu prüfende Jahrgang

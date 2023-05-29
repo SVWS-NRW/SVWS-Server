@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Aufzählung beinhaltet die für die Sekundarstufe II relevanten Belegungsmöglichkeiten
- * für Sprachen in der Sekundastufe I.
+ * für Sprachen in der Sekundarstufe I.
  */
 public enum SprachBelegungSekI {
 
@@ -37,7 +37,7 @@ public enum SprachBelegungSekI {
 
 
 	/**
-	 * Ermittelt die Spachbelegung in der Sek I anhand des übergebenen Jahrgangs.
+	 * Ermittelt die Sprachbelegung in der Sek I anhand des übergebenen Jahrgangs.
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *
@@ -64,7 +64,7 @@ public enum SprachBelegungSekI {
 
 
 	/**
-	 * Ermittelt die Spachbelegung in der Sek I anhand der übergebenen Dauer der Belegung in der Sek I.
+	 * Ermittelt die Sprachbelegung in der Sek I anhand der übergebenen Dauer der Belegung in der Sek I.
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *

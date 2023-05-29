@@ -453,7 +453,7 @@ public enum Fachgruppe {
 	Fachgruppe(final @NotNull FachgruppenKatalogEintrag @NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
-		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
+		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
 		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();

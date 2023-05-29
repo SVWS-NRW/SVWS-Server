@@ -120,7 +120,7 @@ public enum KAOAEbene4 {
 			new KAOAEbene4Eintrag(22, "SBO 9.2.1.6", "Workshops für Schülerinnen und Schüler in der Zentralen Studienberatung", KAOAZusatzmerkmal.SBO_9_2_1,  null, null)
 	}),
 
-	/** KAoA-Eintrag der SBO Ebene 4: Besondere Formate für Schlerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote) */
+	/** KAoA-Eintrag der SBO Ebene 4: Besondere Formate für Schülerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote) */
 	SBO_9_2_1_7(new KAOAEbene4Eintrag[]{
 			new KAOAEbene4Eintrag(23, "SBO 9.2.1.7", "Besondere Formate für Schlerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)", KAOAZusatzmerkmal.SBO_9_2_1,  null, null)
 	}),
