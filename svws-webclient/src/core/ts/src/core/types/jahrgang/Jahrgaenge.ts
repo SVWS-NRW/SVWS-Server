@@ -266,11 +266,11 @@ export class Jahrgaenge extends JavaObject implements JavaEnum<Jahrgaenge> {
 	}
 
 	/**
-	 * Liefert die Bezeichnung des Jahrgangs für die angebenene Schulform.
+	 * Liefert die Bezeichnung des Jahrgangs für die angegebene Schulform.
 	 *
 	 * @param schulform   die Schulform
 	 *
-	 * @return die Bezeichung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
+	 * @return die Bezeichnung des Jahrgangs oder null, falls die Schulform nicht zulässig ist
 	 */
 	public getBezeichnung(schulform : Schulform | null) : string | null {
 		if ((schulform === null) || (schulform.daten === null))
@@ -370,7 +370,7 @@ export class Jahrgaenge extends JavaObject implements JavaEnum<Jahrgaenge> {
 	}
 
 	/**
-	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
+	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
 	 * @param jgVorher     der zu prüfende Jahrgang
@@ -471,7 +471,7 @@ export class Jahrgaenge extends JavaObject implements JavaEnum<Jahrgaenge> {
 	}
 
 	/**
-	 * Prüft, ob der angebene Jahrgang bei der angebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
+	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
 	 * @param jgNachher    der zu prüfende Jahrgang

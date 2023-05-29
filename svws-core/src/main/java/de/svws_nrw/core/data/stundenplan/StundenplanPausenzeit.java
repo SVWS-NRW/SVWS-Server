@@ -1,6 +1,7 @@
 package de.svws_nrw.core.data.stundenplan;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.core.types.Wochentag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -18,7 +19,7 @@ public class StundenplanPausenzeit {
 	@Schema(description = "die ID der Pausenzeit", example = "4711")
 	public long id = -1;
 
-	/** Der Wochentag für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
+	/** Der {@link Wochentag} für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
 	@Schema(description = "der Wochentag für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
 	public int wochentag = -1;
 

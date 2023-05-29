@@ -358,7 +358,7 @@ export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 	}
 
 	/**
-	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
+	 * Ermittelt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr
 	 *
 	 * @param abiturjahr   das Abiturjahr
@@ -373,7 +373,7 @@ export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 	}
 
 	/**
-	 * Bestimmt das Halbjahr der gymnasialen Oberstufe anhand des angegegebenen Abiturjahres und
+	 * Bestimmt das Halbjahr der gymnasialen Oberstufe anhand des angegebenen Abiturjahres und
 	 * dem aktuellen Schuljahr und Halbjahr und gibt anhand dessen das Halbjahr der gymnasialen
 	 * Oberstufe zurück, welches als nächstes geplant wird.
 	 *
@@ -392,7 +392,7 @@ export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 	}
 
 	/**
-	 * Bestimmt das Abitujahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
+	 * Bestimmt das Abiturjahr für dieses Halbjahr der Gymnasialen Oberstufe anhand des
 	 * übergebenen Schuljahres.
 	 *
 	 * @param schuljahr   das Schuljahr

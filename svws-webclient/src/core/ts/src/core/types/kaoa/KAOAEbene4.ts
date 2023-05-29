@@ -129,7 +129,7 @@ export class KAOAEbene4 extends JavaObject implements JavaEnum<KAOAEbene4> {
 	public static readonly SBO_9_2_1_6 : KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_6", 21, [new KAOAEbene4Eintrag(22, "SBO 9.2.1.6", "Workshops für Schülerinnen und Schüler in der Zentralen Studienberatung", KAOAZusatzmerkmal.SBO_9_2_1, null, null)]);
 
 	/**
-	 * KAoA-Eintrag der SBO Ebene 4: Besondere Formate für Schlerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)
+	 * KAoA-Eintrag der SBO Ebene 4: Besondere Formate für Schülerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)
 	 */
 	public static readonly SBO_9_2_1_7 : KAOAEbene4 = new KAOAEbene4("SBO_9_2_1_7", 22, [new KAOAEbene4Eintrag(23, "SBO 9.2.1.7", "Besondere Formate für Schlerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)", KAOAZusatzmerkmal.SBO_9_2_1, null, null)]);
 

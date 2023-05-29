@@ -21,6 +21,7 @@ import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/Stun
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
+import { Wochentag } from '../../../core/types/Wochentag';
 import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanManager extends JavaObject {
@@ -49,11 +50,11 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_zeitrasterID_zu_zeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
 
+	private readonly _map_pausenzeitID_zu_pausenzeit : HashMap<number, StundenplanPausenzeit> = new HashMap();
+
 	private readonly _map_raumID_zu_raum : HashMap<number, StundenplanRaum> = new HashMap();
 
 	private readonly _map_schieneID_zu_schiene : HashMap<number, StundenplanSchiene> = new HashMap();
-
-	private readonly _map_pausenzeitID_zu_pausenzeit : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
 	private readonly _map_aufsichtsbereichID_zu_aufsichtsbereich : HashMap<number, StundenplanAufsichtsbereich> = new HashMap();
 
@@ -202,11 +203,11 @@ export class StundenplanManager extends JavaObject {
 	private initMapZeitraster() : void {
 		this._map_zeitrasterID_zu_zeitraster.clear();
 		for (const zeit of this._daten.zeitraster) {
+			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.isBlank()", JavaString.isBlank(zeit.stundenbeginn));
 			DeveloperNotificationException.ifTrue("zeit.stundenende.isBlank()", JavaString.isBlank(zeit.stundenende));
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
-			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
 			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, zeit.id);
 			this._map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
 		}
@@ -238,10 +239,10 @@ export class StundenplanManager extends JavaObject {
 	private initMapPausenzeit() : void {
 		this._map_pausenzeitID_zu_pausenzeit.clear();
 		for (const pause of this._daten.pausenzeiten) {
+			Wochentag.fromIDorException(pause.wochentag);
 			DeveloperNotificationException.ifInvalidID("pause.id", pause.id);
 			DeveloperNotificationException.ifTrue("pause.beginn.isBlank()", JavaString.isBlank(pause.beginn));
 			DeveloperNotificationException.ifTrue("pause.ende.isBlank()", JavaString.isBlank(pause.ende));
-			DeveloperNotificationException.ifTrue("(pause.wochentag < 1) || (pause.wochentag > 7)", (pause.wochentag < 1) || (pause.wochentag > 7));
 			DeveloperNotificationException.ifMapContains("_map_pausenzeitID_zu_pausenzeit", this._map_pausenzeitID_zu_pausenzeit, pause.id);
 			this._map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
 		}

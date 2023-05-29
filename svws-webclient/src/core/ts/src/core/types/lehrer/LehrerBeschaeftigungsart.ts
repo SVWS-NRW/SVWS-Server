@@ -48,14 +48,14 @@ export class LehrerBeschaeftigungsart extends JavaObject implements JavaEnum<Leh
 	public static readonly TS : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TS", 5, [new LehrerKatalogBeschaeftigungsartEintrag(6, "TS", "Sabbatjahr", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Nebenberufliche Beschäftigtigung' eines Lehrers
+	 * Beschaeftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers
 	 */
-	public static readonly SB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6, [new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigtigung", null, null)]);
+	public static readonly SB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6, [new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigung", null, null)]);
 
 	/**
-	 * Beschaeftigungsart 'Geringfügige Beschäftigtigung' eines Lehrers
+	 * Beschaeftigungsart 'Geringfügige Beschäftigung' eines Lehrers
 	 */
-	public static readonly GB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7, [new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigtigung", null, null)]);
+	public static readonly GB : LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7, [new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigung", null, null)]);
 
 	/**
 	 * Beschaeftigungsart 'Studierende' eines Lehrers
@@ -129,7 +129,7 @@ export class LehrerBeschaeftigungsart extends JavaObject implements JavaEnum<Leh
 
 	/**
 	 * Gibt eine Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
@@ -142,7 +142,7 @@ export class LehrerBeschaeftigungsart extends JavaObject implements JavaEnum<Leh
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */

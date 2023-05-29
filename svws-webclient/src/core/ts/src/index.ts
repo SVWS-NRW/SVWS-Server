@@ -376,6 +376,7 @@ export { KursFortschreibungsart } from './core/types/KursFortschreibungsart';
 export { Note } from './core/types/Note';
 export { PersonalTyp } from './core/types/PersonalTyp';
 export { SchuelerStatus } from './core/types/SchuelerStatus';
+export { Wochentag } from './core/types/Wochentag';
 export { BenutzerKompetenz } from './core/types/benutzer/BenutzerKompetenz';
 export { BenutzerKompetenzGruppe } from './core/types/benutzer/BenutzerKompetenzGruppe';
 export { BenutzerTyp } from './core/types/benutzer/BenutzerTyp';

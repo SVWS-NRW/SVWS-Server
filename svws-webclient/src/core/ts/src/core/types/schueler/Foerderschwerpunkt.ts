@@ -277,7 +277,7 @@ export class Foerderschwerpunkt extends JavaObject implements JavaEnum<Foerdersc
 	}
 
 	/**
-	 * Gibt die Förderschwerpunkte der angegebenen Schulform mit dem übergegebenen Kürzel zurück.
+	 * Gibt die Förderschwerpunkte der angegebenen Schulform mit dem übergebenen Kürzel zurück.
 	 *
 	 * @param sf        die Schulform
 	 * @param kuerzel   das Kürzel des Förderschwerpunktes

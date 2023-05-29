@@ -109,7 +109,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject implements JavaEnum<Lehr
 
 	/**
 	 * Gibt eine Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */
@@ -122,7 +122,7 @@ export class LehrerRechtsverhaeltnis extends JavaObject implements JavaEnum<Lehr
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Rechtsverhältnisse auf die zugehörigen Rechtsverhältnisse
 	 */

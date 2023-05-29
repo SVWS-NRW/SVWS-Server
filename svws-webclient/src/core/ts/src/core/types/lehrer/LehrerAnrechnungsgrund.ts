@@ -468,7 +468,7 @@ export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<Lehre
 
 	/**
 	 * Gibt eine Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
@@ -481,7 +481,7 @@ export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<Lehre
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */

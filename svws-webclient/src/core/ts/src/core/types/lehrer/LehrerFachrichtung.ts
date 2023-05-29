@@ -614,7 +614,7 @@ export class LehrerFachrichtung extends JavaObject implements JavaEnum<LehrerFac
 
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
@@ -627,7 +627,7 @@ export class LehrerFachrichtung extends JavaObject implements JavaEnum<LehrerFac
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */

@@ -23,6 +23,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.Wochentag;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -49,9 +50,9 @@ public class StundenplanManager {
 
 	// Mappings von DTO-Stundenplan
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_pausenzeitID_zu_pausenzeit = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_raumID_zu_raum = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_schieneID_zu_schiene = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_pausenzeitID_zu_pausenzeit = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_aufsichtsbereichID_zu_aufsichtsbereich = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_kwzID_zu_kwz = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_kwz = new HashMap2D<>();
@@ -218,11 +219,11 @@ public class StundenplanManager {
 	private void initMapZeitraster() {
 		_map_zeitrasterID_zu_zeitraster.clear();
 		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
+			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.isBlank()", zeit.stundenbeginn.isBlank());
 			DeveloperNotificationException.ifTrue("zeit.stundenende.isBlank()", zeit.stundenende.isBlank());
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
-			DeveloperNotificationException.ifTrue("(zeit.wochentag < 1) || (zeit.wochentag > 7)", (zeit.wochentag < 1) || (zeit.wochentag > 7));
 			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, zeit.id);
 			_map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
 		}
@@ -255,10 +256,10 @@ public class StundenplanManager {
 	private void initMapPausenzeit() {
 		_map_pausenzeitID_zu_pausenzeit.clear();
 		for (final @NotNull StundenplanPausenzeit pause : _daten.pausenzeiten) {
+			Wochentag.fromIDorException(pause.wochentag);
 			DeveloperNotificationException.ifInvalidID("pause.id", pause.id);
 			DeveloperNotificationException.ifTrue("pause.beginn.isBlank()", pause.beginn.isBlank());
 			DeveloperNotificationException.ifTrue("pause.ende.isBlank()", pause.ende.isBlank());
-			DeveloperNotificationException.ifTrue("(pause.wochentag < 1) || (pause.wochentag > 7)", (pause.wochentag < 1) || (pause.wochentag > 7));
 			DeveloperNotificationException.ifMapContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pause.id);
 			_map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
 		}

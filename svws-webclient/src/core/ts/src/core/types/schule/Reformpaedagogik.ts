@@ -107,7 +107,7 @@ export class Reformpaedagogik extends JavaObject implements JavaEnum<Reformpaeda
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
@@ -120,7 +120,7 @@ export class Reformpaedagogik extends JavaObject implements JavaEnum<Reformpaeda
 
 	/**
 	 * Gibt eine Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */

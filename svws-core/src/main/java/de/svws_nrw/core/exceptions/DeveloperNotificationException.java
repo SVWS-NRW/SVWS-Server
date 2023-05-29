@@ -120,7 +120,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static <@NotNull K, @NotNull V> void ifMapContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
-			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY(" + pKey + ")");
+			throw new DeveloperNotificationException(pMapName + " hat bereits den KEY " + pKey + "");
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static <@NotNull K, @NotNull V> void ifMapNotContains(final @NotNull String pMapName, @NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey) throws DeveloperNotificationException {
 		if (!pMap.containsKey(pKey))
-			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY(" + pKey + ")");
+			throw new DeveloperNotificationException(pMapName + " hat nicht den KEY " + pKey + "");
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static <@NotNull K, @NotNull V>  void ifMapPutOverwrites(@NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey, final @NotNull V pValue) throws DeveloperNotificationException {
 		if (pMap.containsKey(pKey))
-			throw new DeveloperNotificationException("PUT von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " existiert!");
+			throw new DeveloperNotificationException("PUT von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " bereits existiert!");
 		pMap.put(pKey, pValue);
 	}
 
@@ -174,7 +174,7 @@ public class DeveloperNotificationException extends RuntimeException {
 			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da kein Mapping existiert!");
 		final V value = map.get(key);
 		if (value == null)
-			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL zuordnet!");
+			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL mapped!");
 		return value;
 	}
 

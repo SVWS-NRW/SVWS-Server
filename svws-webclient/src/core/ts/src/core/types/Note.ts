@@ -102,7 +102,7 @@ export class Note extends JavaObject implements JavaEnum<Note> {
 	public static readonly SEHR_GUT_PLUS : Note = new Note("SEHR_GUT_PLUS", 16, 15, 99, 15, "1+", "sehr gut (plus)", "sehr gut", null, null);
 
 	/**
-	 * Der Noteneintrag "ärtzliches Attest" mit dem Wert AT.
+	 * Der Noteneintrag "ärztliches Attest" mit dem Wert AT.
 	 */
 	public static readonly ATTEST : Note = new Note("ATTEST", 17, 16, 2500, null, "AT", "(ärtzliches Attest)", "--------------------", null, null);
 

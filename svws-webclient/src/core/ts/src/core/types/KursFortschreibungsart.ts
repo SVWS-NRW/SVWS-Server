@@ -16,7 +16,7 @@ export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursF
 	private static readonly all_values_by_name : Map<string, KursFortschreibungsart> = new Map<string, KursFortschreibungsart>();
 
 	/**
-	 * Keine Fortschreibung Kurs wird bei der Verstzung gelöscht.
+	 * Keine Fortschreibung Kurs wird bei der Versetzung gelöscht.
 	 */
 	public static readonly KEINE : KursFortschreibungsart = new KursFortschreibungsart("KEINE", 0, 0, "N", "Keine", null, null);
 
@@ -46,7 +46,7 @@ export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursF
 	public readonly id : number;
 
 	/**
-	 * Das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart.
+	 * Das eindeutige einstellige Kürzel der Kurs-Fortschreibungsart.
 	 */
 	public readonly kuerzel : string;
 
@@ -56,7 +56,7 @@ export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursF
 	public readonly beschreibung : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * Gibt an, in welchem Schuljahr die Fortschreibungsart eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
@@ -68,10 +68,10 @@ export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursF
 	/**
 	 * Erstellt eine neue Kurs-Fortschreibungsart in der Aufzählung.
 	 *
-	 * @param id             die ID der Fortchreibungsart
-	 * @param kuerzel        das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart
+	 * @param id             die ID der Fortschreibungsart
+	 * @param kuerzel        das eindeutige einstellige Kürzel der Kurs-Fortschreibungsart
 	 * @param beschreibung   die Beschreibung der Kurs-Fortschreibungsart
-	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis     gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string, gueltigVon : number | null, gueltigBis : number | null) {
@@ -119,7 +119,7 @@ export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursF
 
 	/**
 	 * Gibt die Kurs-Fortschreibungsart anhand des Kürzels zurück.
-	 * Eine ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert.
+	 * Ein ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert.
 	 *
 	 * @param kuerzel    das Kürzel
 	 *

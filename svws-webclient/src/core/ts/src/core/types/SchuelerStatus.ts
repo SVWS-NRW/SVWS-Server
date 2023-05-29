@@ -27,7 +27,7 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 	public static readonly WARTELISTE : SchuelerStatus = new SchuelerStatus("WARTELISTE", 1, 1, "Warteliste", null, null);
 
 	/**
-	 * Status Aktic mit dem Wert 2
+	 * Status Aktiv mit dem Wert 2
 	 */
 	public static readonly AKTIV : SchuelerStatus = new SchuelerStatus("AKTIV", 2, 2, "Aktiv", null, null);
 
@@ -82,7 +82,7 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 	public readonly bezeichnung : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * Gibt an, in welchem Schuljahr der Schülerstatus eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
@@ -96,7 +96,7 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 	 *
 	 * @param id            die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird
 	 * @param bezeichnung   die textuelle Bezeichnung des Schülerstatus
-	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis    gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	private constructor(name : string, ordinal : number, id : number, bezeichnung : string, gueltigVon : number | null, gueltigBis : number | null) {
@@ -113,7 +113,7 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 
 	/**
 	 * Gibt eine Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
@@ -126,7 +126,7 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */

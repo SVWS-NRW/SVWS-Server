@@ -17,7 +17,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	private static readonly all_values_by_name : Map<string, PersonalTyp> = new Map<string, PersonalTyp>();
 
 	/**
-	 * Lehrkraft fest der Schule zugeodnet hat eine Identnummer
+	 * Lehrkraft fest der Schule zugeordnet hat eine Identnummer
 	 */
 	public static readonly LEHRKRAFT : PersonalTyp = new PersonalTyp("LEHRKRAFT", 0, 1, "LEHRKRAFT", "Lehrkraft", null, null);
 
@@ -72,7 +72,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	public readonly bezeichnung : string;
 
 	/**
-	 * Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * Gibt an, in welchem Schuljahr der Personaltyp eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	public readonly gueltigVon : number | null;
 
@@ -87,7 +87,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param id           die ID des Personal-Typs
 	 * @param kuerzel      das Kürzel des Personal-Typs
 	 * @param bezeichnung  die Bezeichnung des Personal-Typs
-	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis   gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	private constructor(name : string, ordinal : number, id : number, kuerzel : string, bezeichnung : string, gueltigVon : number | null, gueltigBis : number | null) {
@@ -105,7 +105,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 
 	/**
 	 * Gibt eine Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
@@ -118,7 +118,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
 	 */

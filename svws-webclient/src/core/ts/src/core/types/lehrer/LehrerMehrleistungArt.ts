@@ -43,7 +43,7 @@ export class LehrerMehrleistungArt extends JavaObject implements JavaEnum<Lehrer
 	public static readonly ID_165 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_165", 4, [new LehrerKatalogMehrleistungsartEintrag(6, "165", "Überschreitung der Pflichtstundenzahl wegen COVID-19", null, null)]);
 
 	/**
-	 * Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite'
+	 * Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichtstunden-Bandbreite'
 	 */
 	public static readonly ID_170 : LehrerMehrleistungArt = new LehrerMehrleistungArt("ID_170", 5, [new LehrerKatalogMehrleistungsartEintrag(5, "170", "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)]);
 
@@ -89,7 +89,7 @@ export class LehrerMehrleistungArt extends JavaObject implements JavaEnum<Lehrer
 
 	/**
 	 * Gibt eine Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
@@ -102,7 +102,7 @@ export class LehrerMehrleistungArt extends JavaObject implements JavaEnum<Lehrer
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */

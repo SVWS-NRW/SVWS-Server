@@ -149,7 +149,7 @@ export class LehrerMinderleistungArt extends JavaObject implements JavaEnum<Lehr
 
 	/**
 	 * Gibt eine Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */
@@ -162,7 +162,7 @@ export class LehrerMinderleistungArt extends JavaObject implements JavaEnum<Lehr
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Minderleistungsarten auf die zugehörigen Minderleistungsarten
 	 */

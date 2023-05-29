@@ -83,10 +83,10 @@ export class LehrerLehramtAnerkennung extends JavaObject implements JavaEnum<Leh
 	}
 
 	/**
-	 * Gibt eine Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * Gibt eine Map von den IDs der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
+	 * @return die Map von den IDs der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
 	private static getMapAnerkennungenByID() : HashMap<number, LehrerLehramtAnerkennung | null> {
 		if (LehrerLehramtAnerkennung._anerkennungenByID.size() === 0)
@@ -96,10 +96,10 @@ export class LehrerLehramtAnerkennung extends JavaObject implements JavaEnum<Leh
 	}
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * Gibt eine Map von den Kürzeln der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
+	 * @return die Map von den Kürzeln der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
 	private static getMapAnerkennungenByKuerzel() : HashMap<string, LehrerLehramtAnerkennung | null> {
 		if (LehrerLehramtAnerkennung._anerkennungenByKuerzel.size() === 0)

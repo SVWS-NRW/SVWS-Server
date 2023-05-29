@@ -8,7 +8,7 @@ export class StundenplanZeitraster extends JavaObject {
 	public id : number = -1;
 
 	/**
-	 * Der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
+	 * Der {@link Wochentag} an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 */
 	public wochentag : number = -1;
 

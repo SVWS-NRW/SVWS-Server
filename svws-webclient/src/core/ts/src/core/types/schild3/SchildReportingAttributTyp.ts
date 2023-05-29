@@ -51,7 +51,7 @@ export class SchildReportingAttributTyp extends JavaObject implements JavaEnum<S
 	private readonly type : string;
 
 	/**
-	 * Initialisiert den Datentype für die Aufzählung
+	 * Initialisiert den Datentyp für die Aufzählung
 	 *
 	 * @param type   der JSON-Datentyp
 	 */

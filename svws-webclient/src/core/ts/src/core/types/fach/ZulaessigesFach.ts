@@ -1504,7 +1504,7 @@ export class ZulaessigesFach extends JavaObject implements JavaEnum<ZulaessigesF
 
 	/**
 	 * Gibt eine Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
@@ -1574,7 +1574,7 @@ export class ZulaessigesFach extends JavaObject implements JavaEnum<ZulaessigesF
 	}
 
 	/**
-	 * Gibt das Fach zurück, welches dem übergebenen Kürzel zuzuordnet ist.
+	 * Gibt das Fach zurück, welches dem übergebenen Kürzel zugeordnet ist.
 	 * Ist der übergebene Wert ungültig, so wird {@link ZulaessigesFach#DEFAULT}
 	 * zurückgeben.
 	 *

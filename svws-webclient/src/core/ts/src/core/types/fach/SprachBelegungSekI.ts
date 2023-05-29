@@ -56,7 +56,7 @@ export class SprachBelegungSekI extends JavaObject implements JavaEnum<SprachBel
 	}
 
 	/**
-	 * Ermittelt die Spachbelegung in der Sek I anhand des übergebenen Jahrgangs.
+	 * Ermittelt die Sprachbelegung in der Sek I anhand des übergebenen Jahrgangs.
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *
@@ -77,7 +77,7 @@ export class SprachBelegungSekI extends JavaObject implements JavaEnum<SprachBel
 	}
 
 	/**
-	 * Ermittelt die Spachbelegung in der Sek I anhand der übergebenen Dauer der Belegung in der Sek I.
+	 * Ermittelt die Sprachbelegung in der Sek I anhand der übergebenen Dauer der Belegung in der Sek I.
 	 * WICHTIG: Sollte ein Schüler sich im G8-Bildungsgang bewegen, so wird die Dauer
 	 * mit 6 Jahren hier nicht korrekt zugeordnet.
 	 *

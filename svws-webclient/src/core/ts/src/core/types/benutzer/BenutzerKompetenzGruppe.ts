@@ -143,7 +143,7 @@ export class BenutzerKompetenzGruppe extends JavaObject implements JavaEnum<Benu
 	public readonly daten : BenutzerKompetenzGruppenKatalogEintrag;
 
 	/**
-	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungobjekt anhand der ID der Benutzerkompetenz-Gruppe
+	 * Eine HashMap zum schnellen Zugriff auf ein Aufzählungsobjekt anhand der ID der Benutzerkompetenz-Gruppe
 	 */
 	private static readonly _mapID : HashMap<number, BenutzerKompetenzGruppe> = new HashMap();
 
@@ -163,7 +163,7 @@ export class BenutzerKompetenzGruppe extends JavaObject implements JavaEnum<Benu
 
 	/**
 	 * Gibt eine Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Benutzerkompetenz-Gruppen auf die zugehörigen Benutzerkompetenz-Gruppen
 	 */

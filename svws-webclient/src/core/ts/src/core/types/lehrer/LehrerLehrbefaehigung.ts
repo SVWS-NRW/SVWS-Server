@@ -609,7 +609,7 @@ export class LehrerLehrbefaehigung extends JavaObject implements JavaEnum<Lehrer
 
 	/**
 	 * Gibt eine Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */
@@ -622,7 +622,7 @@ export class LehrerLehrbefaehigung extends JavaObject implements JavaEnum<Lehrer
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Lehrbefähigungen auf die zugehörigen Lehrbefähigungen
 	 */

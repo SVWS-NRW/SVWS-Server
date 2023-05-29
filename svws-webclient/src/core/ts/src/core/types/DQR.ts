@@ -66,7 +66,7 @@ export class DQR extends JavaObject implements JavaEnum<DQR> {
 	public readonly beschreibung : string | null;
 
 	/**
-	 * Erstell ein neues DQR-Niveau.
+	 * Erstellt ein neues DQR-Niveau.
 	 *
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus
