@@ -286,6 +286,66 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Zeitrastereintrags zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten des Zeitrastereintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Zeitrastereintrag
+     */
+    @POST
+    @Path("/{id : \\d+}/zeitraster/create")
+    @Operation(summary = "Erstellt einen neuen Zeitrastereintrag für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Zeitrastereintrag für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Zeitrastereintrag wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanZeitraster.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Zeitrastereintrag für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten des zu erstellenden Zeitrastereintrags ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanZeitraster(conn, id)).add(is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen des Zeitrastereintrags eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Zeitrastereintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Zeitrastereintrag
+     */
+    @DELETE
+    @Path("/zeitraster/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Zeitrastereintrag eines Stundenplans.",
+    description = "Entfernt einen Zeitrastereintrag eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Der Zeitrastereintrag wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanZeitraster.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Zeitrastereintrag vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanZeitraster(conn, null)).delete(id);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage eines Raumes eines Stundenplans.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

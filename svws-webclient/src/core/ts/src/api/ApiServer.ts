@@ -8709,6 +8709,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/zeitraster/create
+	 *
+	 * Erstellt einen neuen Zeitrastereintrag für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Zeitrastereintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Zeitrastereintrag für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanZeitraster>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Zeitrastereintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanLehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{idStundenplan : \d+}/lehrer/{id : \d+}
 	 *
 	 * Gibt den Lehrer eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -9303,6 +9333,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/zeitraster/{id : \d+}
+	 *
+	 * Entfernt einen Zeitrastereintrag eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Zeitrastereintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanZeitraster
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Kein Zeitrastereintrag vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Zeitrastereintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+		const path = "/db/{schema}/stundenplan/zeitraster/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanZeitraster.transpilerFromJSON(text);
 	}
 
 

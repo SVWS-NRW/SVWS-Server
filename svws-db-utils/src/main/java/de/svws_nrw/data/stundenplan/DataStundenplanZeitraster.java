@@ -4,13 +4,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -108,5 +111,42 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
+
+	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "unterrichtstunde", "stundenbeginn", "stundenende");
+
+	/**
+	 * Fügt einen Zeitrastereintrag mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
+		if (this.stundenplanID == null)
+			return OperationError.NOT_FOUND.getResponse("Die StundenplanID darf nicht null sein.");
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			return OperationError.NOT_FOUND.getResponse("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(stundenplanID));
+		// füge den Zeitrastereintrag in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
+		final ObjLongConsumer<DTOStundenplanZeitraster> initDTO = (dto, id) -> {
+			dto.ID = id;
+			dto.Stundenplan_ID = this.stundenplanID;
+		};
+		return super.addBasic(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Löscht einen Zeitrastereintrag
+	 *
+	 * @param id   die ID des Zeitrastereintrags
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOStundenplanZeitraster.class, dtoMapper);
+	}
 
 }
