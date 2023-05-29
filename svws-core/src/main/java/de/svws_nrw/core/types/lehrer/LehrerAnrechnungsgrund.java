@@ -458,7 +458,7 @@ public enum LehrerAnrechnungsgrund {
 
 	/**
 	 * Gibt eine Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */
@@ -472,7 +472,7 @@ public enum LehrerAnrechnungsgrund {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Anrechnungsgründe auf die zugehörigen Anrechnungsgründe
 	 */

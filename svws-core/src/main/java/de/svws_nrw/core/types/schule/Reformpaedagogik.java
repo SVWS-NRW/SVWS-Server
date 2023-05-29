@@ -134,7 +134,7 @@ public enum Reformpaedagogik {
 	Reformpaedagogik(final @NotNull ReformpaedagogikKatalogEintrag@NotNull[] historie) {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
-		// Erzeuge ein zweites Array mit der Schulformzuordnung für dei Historie
+		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
 		this.schulformen = (@NotNull ArrayList<@NotNull Schulform> @NotNull[]) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
@@ -149,7 +149,7 @@ public enum Reformpaedagogik {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */
@@ -163,7 +163,7 @@ public enum Reformpaedagogik {
 
 	/**
 	 * Gibt eine Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Reformpädagogik auf die zugehörige Reformpädagogik
 	 */

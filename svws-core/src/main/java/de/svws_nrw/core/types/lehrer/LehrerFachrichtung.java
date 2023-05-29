@@ -600,7 +600,7 @@ public enum LehrerFachrichtung {
 
 	/**
 	 * Gibt eine Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */
@@ -614,7 +614,7 @@ public enum LehrerFachrichtung {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Fachrichtungen auf die zugehörigen Fachrichtungen
 	 */

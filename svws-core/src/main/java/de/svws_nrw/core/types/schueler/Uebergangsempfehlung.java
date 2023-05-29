@@ -92,7 +92,7 @@ public enum Uebergangsempfehlung {
 
 
 	/**
-	 * Gibt den Core-Type-Wert für das angegebe Kürzel der Übergangsempfehlung zurück.
+	 * Gibt den Core-Type-Wert für das angegebene Kürzel der Übergangsempfehlung zurück.
 	 *
 	 * @param kuerzel   das Kürzel
 	 *

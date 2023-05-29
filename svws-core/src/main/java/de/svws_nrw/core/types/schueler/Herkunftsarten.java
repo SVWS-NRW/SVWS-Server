@@ -829,11 +829,11 @@ public enum Herkunftsarten {
 
 
 	/**
-	 * Liefert die Bezeichnung der Herkunftsart für die angebenene Schulform.
+	 * Liefert die Bezeichnung der Herkunftsart für die angegebene Schulform.
 	 *
 	 * @param schulform   die Schulform
 	 *
-	 * @return die Bezeichung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
+	 * @return die Bezeichnung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
 	public String getBezeichnung(final Schulform schulform) {
 		if ((schulform == null) || (schulform.daten == null))

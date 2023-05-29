@@ -32,7 +32,7 @@ public enum SchildReportingAttributTyp {
 
 
     /**
-     * Initialisiert den Datentype für die Aufzählung
+     * Initialisiert den Datentyp für die Aufzählung
      *
      * @param type   der JSON-Datentyp
      */

@@ -45,14 +45,14 @@ public enum LehrerBeschaeftigungsart {
 		new LehrerKatalogBeschaeftigungsartEintrag(6, "TS", "Sabbatjahr", null, null)
 	}),
 
-	/** Beschaeftigungsart 'Nebenberufliche Beschäftigtigung' eines Lehrers */
+	/** Beschaeftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers */
 	SB(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigtigung", null, null)
+		new LehrerKatalogBeschaeftigungsartEintrag(8, "SB", "Nebenberufliche Beschäftigung", null, null)
 	}),
 
-	/** Beschaeftigungsart 'Geringfügige Beschäftigtigung' eines Lehrers */
+	/** Beschaeftigungsart 'Geringfügige Beschäftigung' eines Lehrers */
 	GB(new LehrerKatalogBeschaeftigungsartEintrag[]{
-		new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigtigung", null, null)
+		new LehrerKatalogBeschaeftigungsartEintrag(9, "GB", "Geringfügige Beschäftigung", null, null)
 	}),
 
 	/** Beschaeftigungsart 'Studierende' eines Lehrers */
@@ -116,7 +116,7 @@ public enum LehrerBeschaeftigungsart {
 
 	/**
 	 * Gibt eine Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */
@@ -130,7 +130,7 @@ public enum LehrerBeschaeftigungsart {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Beschäftigungsarten auf die zugehörigen Beschäftigungsarten
 	 */

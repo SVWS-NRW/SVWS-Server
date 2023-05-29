@@ -62,7 +62,7 @@ public enum Note {
 	/** Die Note "sehr gut plus" mit 15 Punkten.*/
 	SEHR_GUT_PLUS(15, 99, 15, "1+", "sehr gut (plus)", "sehr gut", null, null),
 
-	/** Der Noteneintrag "ärtzliches Attest" mit dem Wert AT.*/
+	/** Der Noteneintrag "ärztliches Attest" mit dem Wert AT.*/
 	ATTEST(16, 2500, null, "AT", "(ärtzliches Attest)", "--------------------", null, null),
 
 	/** Der Noteneintrag "mit besonderem Erfolg teilgenommen" mit dem Wert E1.*/

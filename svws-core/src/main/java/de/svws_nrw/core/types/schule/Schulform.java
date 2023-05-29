@@ -141,7 +141,7 @@ public enum Schulform {
 
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */
@@ -158,7 +158,7 @@ public enum Schulform {
 
 	/**
 	 * Gibt eine Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzels der Schulformen auf die zugehörigen Schulformen
 	 */

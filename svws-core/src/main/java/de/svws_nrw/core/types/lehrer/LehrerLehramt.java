@@ -276,7 +276,7 @@ public enum LehrerLehramt {
 
 	/**
 	 * Gibt eine Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Lehrämter auf die zugehörigen Lehrämter
 	 */
@@ -290,7 +290,7 @@ public enum LehrerLehramt {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Lehrämter auf die zugehörigen Lehrämter
 	 */

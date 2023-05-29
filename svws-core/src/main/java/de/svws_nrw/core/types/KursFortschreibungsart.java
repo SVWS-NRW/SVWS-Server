@@ -3,14 +3,14 @@ package de.svws_nrw.core.types;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse stellt die Core-Types als Aufzählung für die Fortschreibungarten
+ * Diese Klasse stellt die Core-Types als Aufzählung für die Fortschreibungsarten
  * von Kursen bei der Versetzung der Schule in einen neuen Abschnitt zur Verfügung.
  * Core-Types dienen als grundlegende abstrakte Datentypen sowohl für die Core-Algorithmen
  * als auch für die OpenAPI-Schnittstelle.
  */
 public enum KursFortschreibungsart {
 
-	/** Keine Fortschreibung Kurs wird bei der Verstzung gelöscht. */
+	/** Keine Fortschreibung Kurs wird bei der Versetzung gelöscht. */
 	KEINE(0, "N", "Keine", null, null),
 
 	/** Nur Definition, alle Schüler werden aus dem Kurs gelöscht, der Jahrgang wird aber erhöht. */
@@ -30,13 +30,13 @@ public enum KursFortschreibungsart {
 	/** Die ID der Kurs-Fortschreibungsart als Integer */
 	public final int id;
 
-	/** Das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart. */
+	/** Das eindeutige einstellige Kürzel der Kurs-Fortschreibungsart. */
 	public final @NotNull String kuerzel;
 
 	/** Die Beschreibung der Kurs-Fortschreibungsart */
 	public final @NotNull String beschreibung;
 
-	/** Gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	/** Gibt an, in welchem Schuljahr die Fortschreibungsart eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	public final Integer gueltigVon;
 
 	/** Gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
@@ -46,10 +46,10 @@ public enum KursFortschreibungsart {
 	/**
 	 * Erstellt eine neue Kurs-Fortschreibungsart in der Aufzählung.
 	 *
-	 * @param id             die ID der Fortchreibungsart
-	 * @param kuerzel        das eindeutige einstelleige Kürzel der Kurs-Fortschreibungsart
+	 * @param id             die ID der Fortschreibungsart
+	 * @param kuerzel        das eindeutige einstellige Kürzel der Kurs-Fortschreibungsart
 	 * @param beschreibung   die Beschreibung der Kurs-Fortschreibungsart
-	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon     gibt an, in welchem Schuljahr die Fortschreibungsart eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis     gibt an, bis zu welchem Schuljahr die Fortschreibungsart gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	KursFortschreibungsart(final int id, final @NotNull String kuerzel, final @NotNull String beschreibung, final Integer gueltigVon, final Integer gueltigBis) {
@@ -84,7 +84,7 @@ public enum KursFortschreibungsart {
 
 	/**
 	 * Gibt die Kurs-Fortschreibungsart anhand des Kürzels zurück.
-	 * Eine ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert.
+	 * Ein ungültiges Kürzel wird als Fortschreibungsart KEINE interpretiert.
 	 *
 	 * @param kuerzel    das Kürzel
 	 *

@@ -61,7 +61,7 @@ public enum LehrerEinsatzstatus {
 
 	/**
 	 * Gibt eine Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von der ID des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */
@@ -75,7 +75,7 @@ public enum LehrerEinsatzstatus {
 
 	/**
 	 * Gibt eine Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von de Kürzel des Einsatzstatus auf den zugehörigen Einsatzstatus
 	 */

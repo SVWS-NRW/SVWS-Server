@@ -42,7 +42,7 @@ public enum DQR {
 
 
 	/**
-	 * Erstell ein neues DQR-Niveau.
+	 * Erstellt ein neues DQR-Niveau.
 	 *
 	 * @param bezeichnung    die Bezeichnung des Niveaus
 	 * @param beschreibung   eine kurze Beschreibung des Niveaus

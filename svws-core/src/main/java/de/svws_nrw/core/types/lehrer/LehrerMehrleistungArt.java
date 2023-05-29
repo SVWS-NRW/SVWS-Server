@@ -39,7 +39,7 @@ public enum LehrerMehrleistungArt {
 		new LehrerKatalogMehrleistungsartEintrag(6, "165", "Überschreitung der Pflichtstundenzahl wegen COVID-19", null, null)
 	}),
 
-	/** Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite' */
+	/** Mehrleistungsart 'Überschreitung der Pflichtstundenzahl wegen Pflichtstunden-Bandbreite' */
 	ID_170(new LehrerKatalogMehrleistungsartEintrag[]{
 		new LehrerKatalogMehrleistungsartEintrag(5, "170", "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite", null, null)
 	});
@@ -76,7 +76,7 @@ public enum LehrerMehrleistungArt {
 
 	/**
 	 * Gibt eine Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */
@@ -90,7 +90,7 @@ public enum LehrerMehrleistungArt {
 
 	/**
 	 * Gibt eine Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Kürzeln der Mehrleistungsarten auf die zugehörigen Mehrleistungsarten
 	 */

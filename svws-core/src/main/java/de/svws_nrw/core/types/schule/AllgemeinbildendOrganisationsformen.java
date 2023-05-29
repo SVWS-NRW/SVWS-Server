@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum AllgemeinbildendOrganisationsformen {
 
-	/** Organisationsform: Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen) */
+	/** Organisationsform: Nicht zuordenbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen) */
 	NICHT_ZUGEORDNET(new OrganisationsformKatalogEintrag[] {
 		new OrganisationsformKatalogEintrag(3000000, "*", "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)", Arrays.asList(
 			Schulform.S, Schulform.KS

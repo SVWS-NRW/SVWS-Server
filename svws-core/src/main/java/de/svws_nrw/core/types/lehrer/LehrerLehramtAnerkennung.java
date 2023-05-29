@@ -70,10 +70,10 @@ public enum LehrerLehramtAnerkennung {
 
 
 	/**
-	 * Gibt eine Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * Gibt eine Map von den IDs der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den IDs der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
+	 * @return die Map von den IDs der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
 	private static @NotNull HashMap<@NotNull Long, LehrerLehramtAnerkennung> getMapAnerkennungenByID() {
 		if (_anerkennungenByID.size() == 0)
@@ -84,10 +84,10 @@ public enum LehrerLehramtAnerkennung {
 
 
 	/**
-	 * Gibt eine Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * Gibt eine Map von den Kürzeln der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
-	 * @return die Map von den Kürzeln der Lehramtssanerkennungen auf die zugehörigen Lehramtssanerkennungen
+	 * @return die Map von den Kürzeln der Lehramtsanerkennungen auf die zugehörigen Lehramtsanerkennungen
 	 */
 	private static @NotNull HashMap<@NotNull String, LehrerLehramtAnerkennung> getMapAnerkennungenByKuerzel() {
 		if (_anerkennungenByKuerzel.size() == 0)
