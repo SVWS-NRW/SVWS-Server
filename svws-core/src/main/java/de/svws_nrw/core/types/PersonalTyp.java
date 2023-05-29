@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum PersonalTyp {
 
-	/** Lehrkraft fest der Schule zugeodnet hat eine Identnummer */
+	/** Lehrkraft fest der Schule zugeordnet hat eine Identnummer */
 	LEHRKRAFT(1, "LEHRKRAFT", "Lehrkraft", null, null),
 
 	/** Verwaltungskraft ohne Identnummer */
@@ -50,7 +50,7 @@ public enum PersonalTyp {
 	/** Die Bezeichnung des Personal-Typs als String */
 	public final @NotNull String bezeichnung;
 
-	/** Gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	/** Gibt an, in welchem Schuljahr der Personaltyp eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	public final Integer gueltigVon;
 
 	/** Gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
@@ -63,7 +63,7 @@ public enum PersonalTyp {
 	 * @param id           die ID des Personal-Typs
 	 * @param kuerzel      das Kürzel des Personal-Typs
 	 * @param bezeichnung  die Bezeichnung des Personal-Typs
-	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon   gibt an, in welchem Schuljahr der Personaltyp eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis   gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	PersonalTyp(final int id, final @NotNull String kuerzel, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
@@ -78,7 +78,7 @@ public enum PersonalTyp {
 
 	/**
 	 * Gibt eine Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
@@ -92,7 +92,7 @@ public enum PersonalTyp {
 
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Bezeichnungen der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
