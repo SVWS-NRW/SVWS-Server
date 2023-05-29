@@ -17,7 +17,7 @@ public enum SchuelerStatus {
 	/** Status Warteliste mit dem Wert 1 */
 	WARTELISTE(1, "Warteliste", null, null),
 
-	/** Status Aktic mit dem Wert 2 */
+	/** Status Aktiv mit dem Wert 2 */
 	AKTIV(2, "Aktiv", null, null),
 
 	/** Status Beurlaubt mit dem Wert 3 */
@@ -53,7 +53,7 @@ public enum SchuelerStatus {
 	/** Die textuelle Bezeichnung des Schülerstatus. */
 	public final @NotNull String bezeichnung;
 
-	/** Gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
+	/** Gibt an, in welchem Schuljahr der Schülerstatus eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	public final Integer gueltigVon;
 
 	/** Gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
@@ -65,7 +65,7 @@ public enum SchuelerStatus {
 	 *
 	 * @param id            die ID des Schüler Status, welche auch in der SVWS-Datenbank genutzt wird
 	 * @param bezeichnung   die textuelle Bezeichnung des Schülerstatus
-	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
+	 * @param gueltigVon    gibt an, in welchem Schuljahr der Schülerstatus eingeführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigBis    gibt an, bis zu welchem Schuljahr der Schülerstatus gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	SchuelerStatus(final int id, final @NotNull String bezeichnung, final Integer gueltigVon, final Integer gueltigBis) {
@@ -79,7 +79,7 @@ public enum SchuelerStatus {
 
 	/**
 	 * Gibt eine Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den IDs der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
@@ -93,7 +93,7 @@ public enum SchuelerStatus {
 
 	/**
 	 * Gibt eine Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
-	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initielisiert.
+	 * zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
 	 * @return die Map von den Bezeichnungen der Schüler-Status auf die zugehörigen Schüler-Status
 	 */
