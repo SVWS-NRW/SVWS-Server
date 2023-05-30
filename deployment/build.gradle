@@ -14,7 +14,7 @@ subprojects {
 	repositories {
 		maven {
 			name = "GitHubPackagesServer"
-			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
 			credentials {
 				username = getGithubActor()
 				password = getGithubToken()
