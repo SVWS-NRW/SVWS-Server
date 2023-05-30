@@ -658,30 +658,42 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
 	 *
-	 * @param zeitraster DUMMY
-	 * @param zeitverstrichen DUMMY
+	 * @param zeitraster Das aktuelle {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 */
+	public @NotNull StundenplanZeitraster getZeitrasterNext(final @NotNull StundenplanZeitraster zeitraster) {
+		return _map_wochentag_stunde_zu_zeitraster.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 *
+	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
+	 * @param minutenVerstrichen Die verstrichene Zeit seit dem Start des Zeitrasters.
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
-	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitraster, final int zeitverstrichen) {
-		@NotNull final List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitrasterStart, final int minutenVerstrichen) {
+		final @NotNull List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+		// TODO BAR programmieren nachdem BACHRAN "Uhrzeit" definiert hat.
 		return result;
 	}
 
-
 	/**
-	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 *
 	 * @param wochentag DUMMY
-	 * @param startzeit DUMMY
-	 * @param zeitverstrichen DUMMY
+	 * @param stundenbeginn DUMMY
+	 * @param minutenVerstrichen DUMMY
 	 *
-	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final @NotNull String startzeit, final int zeitverstrichen) {
-		@NotNull final List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final @NotNull String stundenbeginn, final int minutenVerstrichen) {
+		final @NotNull List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+		// TODO BAR programmieren nachdem BACHRAN "Uhrzeit" definiert hat.
 		return result;
 	}
 

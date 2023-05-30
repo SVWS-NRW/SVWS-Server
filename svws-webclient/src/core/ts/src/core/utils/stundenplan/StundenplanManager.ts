@@ -621,28 +621,39 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
 	 *
-	 * @param zeitraster DUMMY
-	 * @param zeitverstrichen DUMMY
+	 * @param zeitraster Das aktuelle {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 */
+	public getZeitrasterNext(zeitraster : StundenplanZeitraster) : StundenplanZeitraster {
+		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 *
+	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
+	 * @param minutenVerstrichen Die verstrichene Zeit seit dem Start des Zeitrasters.
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
-	public getZeitrasterByStartVerstrichen(zeitraster : StundenplanZeitraster, zeitverstrichen : number) : List<StundenplanZeitraster> {
+	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
 		const result : List<StundenplanZeitraster> = new ArrayList();
 		return result;
 	}
 
 	/**
-	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 *
 	 * @param wochentag DUMMY
-	 * @param startzeit DUMMY
-	 * @param zeitverstrichen DUMMY
+	 * @param stundenbeginn DUMMY
+	 * @param minutenVerstrichen DUMMY
 	 *
-	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, startzeit : string, zeitverstrichen : number) : List<StundenplanZeitraster> {
+	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, stundenbeginn : string, minutenVerstrichen : number) : List<StundenplanZeitraster> {
 		const result : List<StundenplanZeitraster> = new ArrayList();
 		return result;
 	}
