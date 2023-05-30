@@ -22,11 +22,11 @@ public class StundenplanPausenzeit {
 	@Schema(description = "der Wochentag für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
 	public int wochentag = -1;
 
-	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt. */
+	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt. NULL bedeutet "noch nicht definiert". */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt", example = "610")
 	public Integer beginn = null;
 
-	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause endet. */
+	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause endet. NULL bedeutet "noch nicht definiert".  */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Pause endet", example = "630")
 	public Integer ende = null;
 

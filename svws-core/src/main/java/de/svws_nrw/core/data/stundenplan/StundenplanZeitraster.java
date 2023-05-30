@@ -26,11 +26,11 @@ public class StundenplanZeitraster {
 	@Schema(description = "die Nummer der Unterrichtsstunde an dem Wochentag", example = "1")
 	public int unterrichtstunde = -1;
 
-	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. */
+	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert". */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt", example = "430")
 	public Integer stundenbeginn = null;
 
-	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet. */
+	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet. NULL bedeutet "noch nicht definiert". */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet", example = "475")
 	public Integer stundenende = null;
 
