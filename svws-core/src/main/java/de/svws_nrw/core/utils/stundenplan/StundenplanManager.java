@@ -50,6 +50,7 @@ public class StundenplanManager {
 
 	// Mappings von DTO-Stundenplan
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_pausenzeitID_zu_pausenzeit = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_raumID_zu_raum = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_schieneID_zu_schiene = new HashMap<>();
@@ -218,6 +219,7 @@ public class StundenplanManager {
 
 	private void initMapZeitraster() {
 		_map_zeitrasterID_zu_zeitraster.clear();
+		_map_wochentag_stunde_zu_zeitraster.clear();
 		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
 			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
@@ -226,6 +228,7 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
 			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, zeit.id);
 			_map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
+			_map_wochentag_stunde_zu_zeitraster.put(zeit.wochentag, zeit.unterrichtstunde, zeit);
 		}
 	}
 
@@ -628,6 +631,30 @@ public class StundenplanManager {
 	 */
 	public @NotNull StundenplanZeitraster getZeitraster(final long zeitrasterID) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_zeitrasterID_zu_zeitraster, zeitrasterID);
+	}
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public @NotNull StundenplanZeitraster getZeitrasterByWochentagStunde(final @NotNull Wochentag wochentag, final int stunde) {
+		return _map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
+	}
+
+	/**
+	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 */
+	public boolean testZeitrasterByWochentagStunde(final @NotNull Wochentag wochentag, final int stunde) {
+		return _map_wochentag_stunde_zu_zeitraster.contains(wochentag.id, stunde);
 	}
 
 	/**

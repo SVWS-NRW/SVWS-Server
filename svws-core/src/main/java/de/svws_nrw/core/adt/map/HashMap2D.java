@@ -108,6 +108,21 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Liefert TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
+	 */
+	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<@NotNull K2, V> map2 = _map.get(key1);
+		if (map2 == null)
+			return false;
+		return map2.containsKey(key2);
+	}
+
+	/**
 	 * Löscht alle Zuordnungen der Map.
 	 */
 	public void clear() {

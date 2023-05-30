@@ -98,6 +98,21 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
+	 */
+	public contains(key1 : K1, key2 : K2) : boolean {
+		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+		if (map2 === null)
+			return false;
+		return map2.containsKey(key2);
+	}
+
+	/**
 	 * Löscht alle Zuordnungen der Map.
 	 */
 	public clear() : void {
