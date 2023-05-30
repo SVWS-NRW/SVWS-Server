@@ -1,6 +1,5 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
-import { HashMap } from '../../java/util/HashMap';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class Wochentag extends JavaObject implements JavaEnum<Wochentag> {
@@ -53,11 +52,6 @@ export class Wochentag extends JavaObject implements JavaEnum<Wochentag> {
 	public static readonly SONNTAG : Wochentag = new Wochentag("SONNTAG", 6, 7, "Sonntag", "So");
 
 	/**
-	 * Mapping von der ID zum Objekt Wochentag.
-	 */
-	private static readonly _map_id_zu_wochentag : HashMap<number, Wochentag> = new HashMap();
-
-	/**
 	 * Die eindeutige ID der Kursart der Gymnasialen Oberstufe
 	 */
 	public readonly id : number;
@@ -103,20 +97,9 @@ export class Wochentag extends JavaObject implements JavaEnum<Wochentag> {
 	 * @throws DeveloperNotificationException falls die ID ungültig ist
 	 */
 	public static fromIDorException(id : number) : Wochentag {
-		return DeveloperNotificationException.ifMapGetIsNull(Wochentag.getMapIDZuWochentag(), id);
-	}
-
-	/**
-	 * Liefert eine Map, welche die ID dem {@link Wochentag}-Objekt zuordnet.
-	 * Eine leere Map wird dabei zuvor initialisiert.
-	 *
-	 * @return eine Map, welche die ID dem {@link Wochentag}-Objekt zuordnet.
-	 */
-	private static getMapIDZuWochentag() : HashMap<number, Wochentag> {
-		if (Wochentag._map_id_zu_wochentag.isEmpty())
-			for (const wt of Wochentag.values())
-				Wochentag._map_id_zu_wochentag.put(wt.id, wt);
-		return Wochentag._map_id_zu_wochentag;
+		DeveloperNotificationException.ifTrue("Der Wochentag(" + id + ") muss zwischen 1 (Montag) und 7 (Sonntag) liegen!", id < 1 || id > 7);
+		const wochentage : Array<Wochentag> = this.values();
+		return wochentage[id - 1];
 	}
 
 	/**

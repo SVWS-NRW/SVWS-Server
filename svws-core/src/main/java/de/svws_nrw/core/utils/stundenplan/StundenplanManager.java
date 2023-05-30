@@ -658,6 +658,34 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 *
+	 * @param zeitraster DUMMY
+	 * @param zeitverstrichen DUMMY
+	 *
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 */
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitraster, final int zeitverstrichen) {
+		@NotNull final List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+		return result;
+	}
+
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag DUMMY
+	 * @param startzeit DUMMY
+	 * @param zeitverstrichen DUMMY
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final @NotNull String startzeit, final int zeitverstrichen) {
+		@NotNull final List<@NotNull StundenplanZeitraster> result = new ArrayList<>();
+		return result;
+	}
+
+	/**
 	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
 	 *
 	 * @param raum Der Raum, der hinzugefügt werden soll.
