@@ -67,7 +67,7 @@ public final class DTOGostKlausurenRaeumeStundenAufsichten {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Startzeit;
+	public Integer Startzeit;
 
 	/** Die Endzeit der Aufsicht */
 	@Column(name = "Endzeit")
@@ -75,7 +75,7 @@ public final class DTOGostKlausurenRaeumeStundenAufsichten {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Endzeit;
+	public Integer Endzeit;
 
 	/** Text für Bemerkungen zur Aufsicht */
 	@Column(name = "Bemerkungen")

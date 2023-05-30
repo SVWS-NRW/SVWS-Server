@@ -70,7 +70,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Startzeit;
+	public Integer Startzeit;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausuren ohne eine Initialisierung der Attribute.

@@ -95,7 +95,7 @@ public final class DTOGostKlausurenTermine {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Startzeit;
+	public Integer Startzeit;
 
 	/** Text für Bezeichnung des Klausurtermins */
 	@Column(name = "Bezeichnung")

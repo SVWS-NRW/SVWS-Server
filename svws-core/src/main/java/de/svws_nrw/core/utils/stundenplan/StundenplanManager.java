@@ -223,8 +223,8 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
 			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
-			DeveloperNotificationException.ifTrue("zeit.stundenbeginn.isBlank()", zeit.stundenbeginn.isBlank());
-			DeveloperNotificationException.ifTrue("zeit.stundenende.isBlank()", zeit.stundenende.isBlank());
+			DeveloperNotificationException.ifNull("zeit.stundenbeginn == null", zeit.stundenbeginn);
+			DeveloperNotificationException.ifNull("zeit.stundenende == null", zeit.stundenende);
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
 			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, zeit.id);
 			_map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
@@ -261,8 +261,8 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanPausenzeit pause : _daten.pausenzeiten) {
 			Wochentag.fromIDorException(pause.wochentag);
 			DeveloperNotificationException.ifInvalidID("pause.id", pause.id);
-			DeveloperNotificationException.ifTrue("pause.beginn.isBlank()", pause.beginn.isBlank());
-			DeveloperNotificationException.ifTrue("pause.ende.isBlank()", pause.ende.isBlank());
+			DeveloperNotificationException.ifNull("pause.beginn == null", pause.beginn);
+			DeveloperNotificationException.ifNull("pause.ende == null", pause.ende);
 			DeveloperNotificationException.ifMapContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pause.id);
 			_map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
 		}

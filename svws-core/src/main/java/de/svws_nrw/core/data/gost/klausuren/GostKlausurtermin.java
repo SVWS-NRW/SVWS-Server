@@ -33,9 +33,9 @@ public class GostKlausurtermin {
 	@Schema(description = "das Datum des Klausurtermins, falls schon gesetzt", example = "29.02.2025")
 	public String datum = null;
 
-	/** Die Startzeit des Klausurtermins, falls schon gesetzt. */
-	@Schema(description = "die ID der Unterrichtseinheit, falls schon gesetzt", example = "09:00:00")
-	public String startzeit = null;
+	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
+	@Schema(description = "die ID der Unterrichtseinheit in Minuten seit 0 Uhr, falls schon gesetzt", example = "540")
+	public Integer startzeit = null;
 
 	/** Die Bezeichnung des Klausurtermins, falls schon gesetzt. */
 	@Schema(description = "die Bezeichnung des Klausurtermins", example = "Zentrale Vergleichsarbeit")

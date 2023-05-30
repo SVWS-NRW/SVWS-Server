@@ -95,9 +95,9 @@ export class GostKursklausur extends JavaObject {
 	public idTermin : number | null = null;
 
 	/**
-	 * Die Startzeit der Klausur, sofern abweichend von Startzeit des gesamten Termins.
+	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins.
 	 */
-	public startzeit : string | null = null;
+	public startzeit : number | null = null;
 
 	/**
 	 * Die Liste der IDs der zugehörigen Schüler.
@@ -204,7 +204,7 @@ export class GostKursklausur extends JavaObject {
 		}
 		result += '"idLehrer" : ' + obj.idLehrer + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		if (!obj.schuelerIds) {
 			result += '"schuelerIds" : []';
 		} else {
@@ -291,7 +291,7 @@ export class GostKursklausur extends JavaObject {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
 		}
 		if (typeof obj.startzeit !== "undefined") {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
 		if (typeof obj.schuelerIds !== "undefined") {
 			if (!obj.schuelerIds) {

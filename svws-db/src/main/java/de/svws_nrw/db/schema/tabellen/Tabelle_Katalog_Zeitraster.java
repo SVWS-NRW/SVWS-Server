@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.db.converter.current.DatumConverter;
+import de.svws_nrw.db.converter.current.UhrzeitConverter;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -30,13 +30,13 @@ public class Tabelle_Katalog_Zeitraster extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Beginn */
 	public SchemaTabelleSpalte col_Beginn = add("Beginn", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter(DatumConverter.class)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Stunde beginnt");
 
 	/** Die Definition der Tabellenspalte Ende */
 	public SchemaTabelleSpalte col_Ende = add("Ende", SchemaDatentypen.TIME, false)
 		.setNotNull()
-		.setConverter(DatumConverter.class)
+		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Stunde endet");
 
 

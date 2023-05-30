@@ -235,6 +235,36 @@ public final class JSONMapper {
 
 
 	/**
+	 * Konvertiert das übergeben Objekt in einen Integer-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 * Dabei wird geprüft, ob der wert innerhalb des übergebenen Intervalls [lower, upper[ liegt
+	 *
+	 * @param obj        das zu konvertierende Objekt
+	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param lower      die untere Intervallgrenze (einschließlich)
+	 * @param upper      die obere Intervallgrenze (außschließlich)
+	 *
+	 * @return das konvertierte Integer-Objekt
+	 */
+	public static Integer convertToIntegerInRange(final Object obj, final boolean nullable, final int lower, final int upper) {
+		if (obj == null) {
+			if (nullable)
+				return null;
+			throw new WebApplicationException("Der Wert null ist nicht erlaubt.", Response.Status.BAD_REQUEST);
+		}
+		if (obj instanceof final Number n) {
+			if ((obj instanceof Float) || (obj instanceof Double))
+				throw new WebApplicationException("Fehler beim Konvertieren zu Integer: Es handelt sich um einen Fließkommawert, obwohl eine Ganzzahl erwartet wird.", Response.Status.BAD_REQUEST);
+			final int value = n.intValue();
+			if ((value >= lower) && (value < upper))
+				return value;
+			throw new WebApplicationException("Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.", Response.Status.BAD_REQUEST);
+		}
+		throw new WebApplicationException("Fehler beim Konvertieren zu Integer: Das Objekt ist keine Zahl.", Response.Status.BAD_REQUEST);
+	}
+
+
+	/**
 	 * Konvertiert das übergeben Objekt in einen Boolean-Wert.
 	 *
 	 * @param obj        das zu konvertierende Objekt

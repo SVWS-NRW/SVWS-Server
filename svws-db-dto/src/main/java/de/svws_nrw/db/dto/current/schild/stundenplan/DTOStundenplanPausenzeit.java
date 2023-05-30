@@ -65,7 +65,7 @@ public final class DTOStundenplanPausenzeit {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Beginn;
+	public Integer Beginn;
 
 	/** Die Uhrzeit, wann die Pausenzeit endet */
 	@Column(name = "Ende")
@@ -73,7 +73,7 @@ public final class DTOStundenplanPausenzeit {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Ende;
+	public Integer Ende;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOStundenplanPausenzeit ohne eine Initialisierung der Attribute.
@@ -90,7 +90,7 @@ public final class DTOStundenplanPausenzeit {
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
-	public DTOStundenplanPausenzeit(final long ID, final long Stundenplan_ID, final int Tag, final String Beginn, final String Ende) {
+	public DTOStundenplanPausenzeit(final long ID, final long Stundenplan_ID, final int Tag, final Integer Beginn, final Integer Ende) {
 		this.ID = ID;
 		this.Stundenplan_ID = Stundenplan_ID;
 		this.Tag = Tag;

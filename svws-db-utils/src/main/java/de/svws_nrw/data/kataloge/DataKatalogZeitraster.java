@@ -96,8 +96,8 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 		}),
 		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
 		Map.entry("unterrichtstunde", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
-		Map.entry("stundenbeginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("stundenende", (dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null))
+		Map.entry("stundenbeginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+		Map.entry("stundenende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 	);
 
 	@Override

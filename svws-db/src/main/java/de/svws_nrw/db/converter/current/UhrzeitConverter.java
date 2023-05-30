@@ -8,7 +8,7 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
 /**
- * Diese Klasse dient dem Konvertieren von Datumswerten in Java (ISO-8601-String)
+ * Diese Klasse dient dem Konvertieren von Datumswerten in Java (Integer-Wert in Minuten)
  * zu einer Uhrzeitdarstellung (siehe {@link Timestamp}) in der Datenbank.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
@@ -16,28 +16,30 @@ import jakarta.persistence.Converter;
  * registriert werden.
  */
 @Converter
-public final class UhrzeitConverter extends DBAttributeConverter<String, Timestamp> {
+public final class UhrzeitConverter extends DBAttributeConverter<Integer, Timestamp> {
 
 	/** Die Instanz des Konverters */
 	public static final UhrzeitConverter instance = new UhrzeitConverter();
 
 	@Override
-	public Timestamp convertToDatabaseColumn(final String attribute) {
-		return ((attribute == null) || ("".equals(attribute)))
-				? null
-			    : Timestamp.valueOf(LocalTime.parse(attribute).atDate(LocalDate.of(1970, 1, 1)));
+	public Timestamp convertToDatabaseColumn(final Integer attribute) {
+		if ((attribute == null) || (attribute < 0) || (attribute >= 1440)) // 24*60 = 1440
+			return null;
+		final String timeStr = "%d:%d".formatted(attribute / 60, attribute % 60);
+		return Timestamp.valueOf(LocalTime.parse(timeStr).atDate(LocalDate.of(1970, 1, 1)));
 	}
 
 	@Override
-	public String convertToEntityAttribute(final Timestamp dbData) {
+	public Integer convertToEntityAttribute(final Timestamp dbData) {
 		if (dbData == null)
 			return null;
-		return dbData.toLocalDateTime().toLocalTime().toString();
+		final LocalTime time = dbData.toLocalDateTime().toLocalTime();
+		return time.getHour() * 60 + time.getMinute();
 	}
 
 	@Override
-	public Class<String> getResultType() {
-		return String.class;
+	public Class<Integer> getResultType() {
+		return Integer.class;
 	}
 
 	@Override

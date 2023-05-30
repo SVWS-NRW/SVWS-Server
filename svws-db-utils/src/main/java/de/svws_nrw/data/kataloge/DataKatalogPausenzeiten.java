@@ -94,8 +94,8 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 				throw OperationError.BAD_REQUEST.exception();
 		}),
 		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
-		Map.entry("beginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("end", (dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null))
+		Map.entry("beginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+		Map.entry("end", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 	);
 
 	@Override

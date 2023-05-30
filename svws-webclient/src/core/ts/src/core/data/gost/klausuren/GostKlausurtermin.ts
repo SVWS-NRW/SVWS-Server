@@ -28,9 +28,9 @@ export class GostKlausurtermin extends JavaObject {
 	public datum : string | null = null;
 
 	/**
-	 * Die Startzeit des Klausurtermins, falls schon gesetzt.
+	 * Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
-	public startzeit : string | null = null;
+	public startzeit : number | null = null;
 
 	/**
 	 * Die Bezeichnung des Klausurtermins, falls schon gesetzt.
@@ -80,7 +80,7 @@ export class GostKlausurtermin extends JavaObject {
 		result += '"halbjahr" : ' + obj.halbjahr + ',';
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
 		result = result.slice(0, -1);
@@ -106,7 +106,7 @@ export class GostKlausurtermin extends JavaObject {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
 		}
 		if (typeof obj.startzeit !== "undefined") {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';

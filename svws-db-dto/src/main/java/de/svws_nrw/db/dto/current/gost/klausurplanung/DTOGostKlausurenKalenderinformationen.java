@@ -80,7 +80,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Startzeit;
+	public Integer Startzeit;
 
 	/** Enddatum für den Kalendereintrag */
 	@Column(name = "Enddatum")
@@ -96,7 +96,7 @@ public final class DTOGostKlausurenKalenderinformationen {
 	@Convert(converter = UhrzeitConverter.class)
 	@JsonSerialize(using = UhrzeitConverterSerializer.class)
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
-	public String Endzeit;
+	public Integer Endzeit;
 
 	/** Gibt an, ob es sich um einen Sperrtermin handelt oder nicht: 1 - true, 0 - false. */
 	@Column(name = "IstSperrtermin")

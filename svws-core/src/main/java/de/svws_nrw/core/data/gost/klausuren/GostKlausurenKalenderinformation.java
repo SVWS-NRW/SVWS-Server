@@ -2,6 +2,7 @@ package de.svws_nrw.core.data.gost.klausuren;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -19,23 +20,23 @@ public class GostKlausurenKalenderinformation {
 
 	/** Die Bezeichnung der Kalenderinformation. */
 	@Schema(description = "die Bezeichnung der Kalenderinformation", example = "Elternsprechtag")
-	public String bezeichnung = "";
+	public @NotNull String bezeichnung = "";
 
 	/** Das Startdatum der Kalenderinformation. */
 	@Schema(description = "das Startdatum der Kalenderinformation", example = "29.02.2025")
 	public String startdatum = null;
 
-	/** Die Startzeit der Kalenderinformation. */
-	@Schema(description = "die Startzeit der Kalenderinformation", example = "09:00:00")
-	public String startzeit = null;
+	/** Die Startzeit der Kalenderinformation in Minuten seit 0 Uhr. */
+	@Schema(description = "die Startzeit der Kalenderinformation in Minuten seit 0 Uhr", example = "540")
+	public Integer startzeit = null;
 
 	/** Das Enddatum der Kalenderinformation. */
 	@Schema(description = "das Enddatum der Kalenderinformation", example = "01.03.2025")
 	public String enddatum = null;
 
-	/** Die Endzeit der Kalenderinformation. */
-	@Schema(description = "die Endzeit der Kalenderinformation", example = "11:00:00")
-	public String endzeit = null;
+	/** Die Endzeit der Kalenderinformation in Minuten seit 0 Uhr. */
+	@Schema(description = "die Endzeit der Kalenderinformation in Minuten seit 0 Uhr", example = "660")
+	public Integer endzeit = null;
 
 	/** Die textuelle Bemerkung zur Kalenderinformation, sofern vorhanden. */
 	@Schema(description = "die textuelle Bemerkung zur Kalenderinformation, sofern vorhanden", example = "Im Anschluss kein regulärer Unterricht.")

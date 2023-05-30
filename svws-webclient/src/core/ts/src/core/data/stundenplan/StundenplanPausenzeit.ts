@@ -13,14 +13,14 @@ export class StundenplanPausenzeit extends JavaObject {
 	public wochentag : number = -1;
 
 	/**
-	 * Die Uhrzeit, wann die Pause beginnt.
+	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt.
 	 */
-	public beginn : string = "";
+	public beginn : number | null = null;
 
 	/**
-	 * Die Uhrzeit, wann die Pause endet.
+	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause endet.
 	 */
-	public ende : string = "";
+	public ende : number | null = null;
 
 
 	public constructor() {
@@ -40,12 +40,8 @@ export class StundenplanPausenzeit extends JavaObject {
 		if (typeof obj.wochentag === "undefined")
 			 throw new Error('invalid json format, missing attribute wochentag');
 		result.wochentag = obj.wochentag;
-		if (typeof obj.beginn === "undefined")
-			 throw new Error('invalid json format, missing attribute beginn');
-		result.beginn = obj.beginn;
-		if (typeof obj.ende === "undefined")
-			 throw new Error('invalid json format, missing attribute ende');
-		result.ende = obj.ende;
+		result.beginn = typeof obj.beginn === "undefined" ? null : obj.beginn === null ? null : obj.beginn;
+		result.ende = typeof obj.ende === "undefined" ? null : obj.ende === null ? null : obj.ende;
 		return result;
 	}
 
@@ -53,8 +49,8 @@ export class StundenplanPausenzeit extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"wochentag" : ' + obj.wochentag + ',';
-		result += '"beginn" : ' + '"' + obj.beginn! + '"' + ',';
-		result += '"ende" : ' + '"' + obj.ende! + '"' + ',';
+		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
+		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,10 +65,10 @@ export class StundenplanPausenzeit extends JavaObject {
 			result += '"wochentag" : ' + obj.wochentag + ',';
 		}
 		if (typeof obj.beginn !== "undefined") {
-			result += '"beginn" : ' + '"' + obj.beginn + '"' + ',';
+			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
 		}
 		if (typeof obj.ende !== "undefined") {
-			result += '"ende" : ' + '"' + obj.ende + '"' + ',';
+			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

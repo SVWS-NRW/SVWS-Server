@@ -1,7 +1,7 @@
 package de.svws_nrw.db.dto.current.schild.stundenplan;
 
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.converter.current.DatumConverter;
+import de.svws_nrw.db.converter.current.UhrzeitConverter;
 
 
 import jakarta.persistence.Cacheable;
@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.svws_nrw.csv.converter.current.DatumConverterSerializer;
-import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
+import de.svws_nrw.csv.converter.current.UhrzeitConverterSerializer;
+import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Katalog_Zeitraster.
@@ -62,18 +62,18 @@ public final class DTOKatalogZeitraster {
 	/** Die Uhrzeit, wann die Stunde beginnt */
 	@Column(name = "Beginn")
 	@JsonProperty
-	@Convert(converter = DatumConverter.class)
-	@JsonSerialize(using = DatumConverterSerializer.class)
-	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String Beginn;
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
+	public Integer Beginn;
 
 	/** Die Uhrzeit, wann die Stunde endet */
 	@Column(name = "Ende")
 	@JsonProperty
-	@Convert(converter = DatumConverter.class)
-	@JsonSerialize(using = DatumConverterSerializer.class)
-	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String Ende;
+	@Convert(converter = UhrzeitConverter.class)
+	@JsonSerialize(using = UhrzeitConverterSerializer.class)
+	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
+	public Integer Ende;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKatalogZeitraster ohne eine Initialisierung der Attribute.
@@ -90,7 +90,7 @@ public final class DTOKatalogZeitraster {
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
 	 */
-	public DTOKatalogZeitraster(final long ID, final int Tag, final int Stunde, final String Beginn, final String Ende) {
+	public DTOKatalogZeitraster(final long ID, final int Tag, final int Stunde, final Integer Beginn, final Integer Ende) {
 		this.ID = ID;
 		this.Tag = Tag;
 		this.Stunde = Stunde;

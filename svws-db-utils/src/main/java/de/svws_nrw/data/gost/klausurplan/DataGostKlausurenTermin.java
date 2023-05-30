@@ -1,10 +1,10 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
@@ -122,7 +122,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge());
 					case "bezeichnung" -> termin.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge());
 					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false, null);
-					case "startzeit" -> termin.Startzeit = JSONMapper.convertToString(value, true, false, null);
+					case "startzeit" -> termin.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}

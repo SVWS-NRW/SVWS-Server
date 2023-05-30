@@ -11,9 +11,9 @@ import de.svws_nrw.db.converter.current.UhrzeitConverter;
 
 /**
  * Diese Klasse ist ein Serialisierer für Uhrzeiten. Sie serialisiert
- * eine Uhrzeit als ISO-8601-Zeichenkette in die Datenbankdarstellung als {@link Timestamp}.
+ * eine Uhrzeit in Minuten als Integer in die Datenbankdarstellung als {@link Timestamp}.
  */
-public final class UhrzeitConverterSerializer extends StdSerializer<String> {
+public final class UhrzeitConverterSerializer extends StdSerializer<Integer> {
 
 	private static final long serialVersionUID = 1997212110466236373L;
 
@@ -21,7 +21,7 @@ public final class UhrzeitConverterSerializer extends StdSerializer<String> {
 	 * Erzeugt ein neues Objekt zur Serialisierung
 	 */
 	public UhrzeitConverterSerializer() {
-		super(String.class);
+		super(Integer.class);
 	}
 
 	/**
@@ -29,12 +29,12 @@ public final class UhrzeitConverterSerializer extends StdSerializer<String> {
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	public UhrzeitConverterSerializer(final Class<String> t) {
+	public UhrzeitConverterSerializer(final Class<Integer> t) {
 		super(t);
 	}
 
 	@Override
-	public void serialize(final String value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
+	public void serialize(final Integer value, final JsonGenerator gen, final SerializerProvider provider) throws IOException {
 		gen.writeString(UhrzeitConverter.instance.convertToDatabaseColumn(value).toString());
 	}
 

@@ -102,9 +102,9 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge());
 					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge());
 					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false, null);
-					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false, null);
+					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false, null);
-					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false, null);
+					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 					case "istSperrtermin" -> kalInfo.IstSperrtermin = JSONMapper.convertToBoolean(value, false);
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
@@ -158,9 +158,9 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 					case "bemerkung" -> kalInfo.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge());
 					case "bezeichnung" -> kalInfo.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge());
 					case "startdatum" -> kalInfo.Startdatum = JSONMapper.convertToString(value, false, false, null);
-					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToString(value, true, false, null);
+					case "startzeit" -> kalInfo.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 					case "enddatum" -> kalInfo.Enddatum = JSONMapper.convertToString(value, true, false, null);
-					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToString(value, true, false, null);
+					case "endzeit" -> kalInfo.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
 					case "istSperrtermin" -> kalInfo.IstSperrtermin = JSONMapper.convertToBoolean(value, false);
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}

@@ -7,21 +7,21 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import de.svws_nrw.db.converter.current.UhrzeitConverter;
+import de.svws_nrw.db.converter.current.UhrzeitConverterString;
 
 /**
  * Diese Klasse ist ein Deserialisierer für Uhrzeitwerte. Sie deserialisiert die
- * Datenbankdarstellung als Timestamp in eine Uhrzeit als Integer-Wert in Minuten.
+ * Datenbankdarstellung als Timestamp in eine Uhrzeit als Zeichenkette nach ISO-8601.
  */
-public final class UhrzeitConverterDeserializer extends StdDeserializer<Integer> {
+public final class UhrzeitConverterStringDeserializer extends StdDeserializer<String> {
 
-	private static final long serialVersionUID = 1997235870466231273L;
+	private static final long serialVersionUID = 1371785011991978261L;
 
 	/**
 	 * Erzeugt einen neuen Deserialisierer
 	 */
-	public UhrzeitConverterDeserializer() {
-		super(Integer.class);
+	public UhrzeitConverterStringDeserializer() {
+		super(String.class);
 	}
 
 	/**
@@ -29,14 +29,14 @@ public final class UhrzeitConverterDeserializer extends StdDeserializer<Integer>
 	 *
 	 * @param t   das Klassen-Objekt
 	 */
-	protected UhrzeitConverterDeserializer(final Class<Integer> t) {
+	protected UhrzeitConverterStringDeserializer(final Class<String> t) {
 		super(t);
 	}
 
 	@Override
-	public Integer deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
+	public String deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
 		try {
-			return UhrzeitConverter.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
+			return UhrzeitConverterString.instance.convertToEntityAttribute(Timestamp.valueOf(p.getText()));
 		} catch (@SuppressWarnings("unused") final IllegalArgumentException e) {
 			return null;
 		}
