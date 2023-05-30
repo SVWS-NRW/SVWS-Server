@@ -21,11 +21,11 @@ public class StundenplanKlasse {
 	@Schema(description = "die ID der Klasse", example = "4711")
 	public long id = -1;
 
-	/** Das Kürzel der Klasse. */
+	/** Das Kürzel der Klasse. Darf nicht "blank" sein.*/
 	@Schema(description = "das Kürzel der Klasse", example = "01b")
 	public @NotNull String kuerzel = "";
 
-	/** Die Bezeichnung der Klasse. */
+	/** Die Bezeichnung der Klasse. Darf "blank" sein. */
 	@Schema(description = "Die Bezeichnung der Klasse", example = "Eichhörnchen")
 	public @NotNull String bezeichnung = "";
 

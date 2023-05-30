@@ -10,12 +10,12 @@ export class StundenplanKlasse extends JavaObject {
 	public id : number = -1;
 
 	/**
-	 * Das Kürzel der Klasse.
+	 * Das Kürzel der Klasse. Darf nicht "blank" sein.
 	 */
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Klasse.
+	 * Die Bezeichnung der Klasse. Darf "blank" sein.
 	 */
 	public bezeichnung : string = "";
 

@@ -145,7 +145,7 @@ public class StundenplanManager {
 		_map_klasseID_zu_jahrgangIDs.clear();
 		for (final @NotNull StundenplanKlasse klasse: _datenUV.klassen) {
 			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-			DeveloperNotificationException.ifTrue("klasse.bezeichnung.isBlank()", klasse.bezeichnung.isBlank());
+			// klasse.bezeichnung darf "blank" sein
 			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", klasse.kuerzel.isBlank());
 			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", _map_klasseID_zu_klasse, klasse.id);
 			_map_klasseID_zu_klasse.put(klasse.id, klasse);

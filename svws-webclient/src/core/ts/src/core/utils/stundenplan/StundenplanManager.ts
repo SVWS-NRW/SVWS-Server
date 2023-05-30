@@ -135,7 +135,6 @@ export class StundenplanManager extends JavaObject {
 		this._map_klasseID_zu_jahrgangIDs.clear();
 		for (const klasse of this._datenUV.klassen) {
 			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-			DeveloperNotificationException.ifTrue("klasse.bezeichnung.isBlank()", JavaString.isBlank(klasse.bezeichnung));
 			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", JavaString.isBlank(klasse.kuerzel));
 			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, klasse.id);
 			this._map_klasseID_zu_klasse.put(klasse.id, klasse);
