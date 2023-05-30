@@ -5,8 +5,8 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<SvwsUiTextInput type="number" v-model="item.wochentag" required placeholder="Wochentag" />
-				<SvwsUiTextInput v-model="item.beginn" required placeholder="Beginn" />
-				<SvwsUiTextInput v-model="item.ende" placeholder="Ende" />
+				<SvwsUiTextInput type="number" v-model="item.beginn" required placeholder="Beginn" />
+				<SvwsUiTextInput type="number" v-model="item.ende" placeholder="Ende" />
 			</div>
 		</template>
 		<template #modalActions>

@@ -7,10 +7,10 @@
 						<SvwsUiTextInput type="number" :model-value="rowData.wochentag" @update:model-value="patchPausenzeit({wochentag: Number($event)}, rowData.id)" headless />
 					</template>
 					<template #cell(beginn)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.beginn" @update:model-value="patchPausenzeit({beginn: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput type="number" :model-value="rowData.beginn" @update:model-value="patchPausenzeit({beginn: Number($event)}, rowData.id)" headless />
 					</template>
 					<template #cell(ende)="{ rowData }">
-						<SvwsUiTextInput :model-value="rowData.ende" @update:model-value="patchPausenzeit({ende: String($event)}, rowData.id)" headless />
+						<SvwsUiTextInput type="number" :model-value="rowData.ende" @update:model-value="patchPausenzeit({ende: Number($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
 						<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
