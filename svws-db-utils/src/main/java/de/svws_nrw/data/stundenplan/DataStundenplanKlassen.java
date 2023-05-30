@@ -44,7 +44,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		final StundenplanKlasse daten = new StundenplanKlasse();
 		daten.id = k.ID;
 		daten.kuerzel = k.Klasse;
-		daten.bezeichnung = k.Bezeichnung;
+		daten.bezeichnung = k.Bezeichnung == null ? "" : k.Bezeichnung;
 		return daten;
 	};
 
