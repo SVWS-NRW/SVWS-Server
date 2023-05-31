@@ -27,6 +27,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
+			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 		}
 	}
 

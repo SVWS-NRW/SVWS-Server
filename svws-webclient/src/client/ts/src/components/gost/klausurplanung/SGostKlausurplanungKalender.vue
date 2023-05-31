@@ -5,23 +5,36 @@
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
 		</svws-ui-radio-group>
 		<div class="flex h-full gap-4 mt-4">
-			<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1" tag="div" :class="dropOverCssClasses()" class="w-1/4" @drop="onDrop($event, null)">
+			<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1" tag="div" :class="dropOverCssClasses()" class="w-1/4" @drop="onDrop($event, null, -1)">
 				<ul class="flex flex-col gap-y-1">
-					<svws-ui-drag-data tag="li" v-for="termin in termineOhne" :key="termin.id" :data="{termin}" @drag-start="dragStatus(termin)" @drag-end="dragStatus(null)">
+					<svws-ui-drag-data tag="li" v-for="termin in termineOhne" :key="termin.id" :data="termin" @drag-start="dragStatus(termin)" @drag-end="dragStatus(null)">
 						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :termin="termin" :kursmanager="kursmanager" />
 					</svws-ui-drag-data>
 				</ul>
 			</svws-ui-drop-data>
 			<div class="flex flex-row flex-wrap gap-4 w-full h-full">
-				<calendar-view :display-period-uom="displayPeriodUom" :starting-day-of-week="1" :enable-drag-drop="true" :items="termineMit"
-					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell">
+				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 3" :starting-day-of-week="1" :enable-drag-drop="false" :items="termineMit"
+					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell" :display-week-numbers="true">
 					<template #header="{ headerProps }">
 						<calendar-view-header :header-props="headerProps" @input="setShowDate" />
 					</template>
-					<template #item="{value, top}">
+					<template #item="{value, top, itemTop}">
 						<svws-ui-drag-data :class="dropOverCssClasses()" tag="div" :data="value" @drag-start="dragStatus(value.originalItem)" @drag-end="dragStatus(null)">
-							<s-gost-klausurplanung-kalender-termin :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
+							<s-gost-klausurplanung-kalender-termin-short :item-top="itemTop" :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
 						</svws-ui-drag-data>
+					</template>
+					<template #dayContent="{day}">
+						<table class="w-full">
+							<tr class="border-b last:border-0" v-for="stunde in 6" :key="stunde">
+								<td class="border-r">{{ stunde }}</td>
+								<svws-ui-drop-data @drop="onDrop($event, day, stunde)" class="w-full" tag="td">
+									&nbsp;&nbsp;
+								</svws-ui-drop-data>
+							</tr>
+						</table>
+					</template>
+					<template #weekNumber="{numberInYear}">
+						{{ currentWeekNumber = numberInYear }}
 					</template>
 				</calendar-view>
 			</div>
@@ -30,12 +43,11 @@
 </template>
 
 <script setup lang="ts">
-	import { CalendarView, CalendarViewHeader, CalendarMath } from "vue-simple-calendar"
+	import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@svws-nrw/svws-core";
-	import { GostKursklausur, List } from "@svws-nrw/svws-core";
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
@@ -44,9 +56,12 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
 		patchKlausurtermin: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
+		stundenplanmanager: StundenplanManager;
 	}>();
 
 	const displayPeriodUom = ref("month");
+
+	const currentWeekNumber = 0;
 
 	const showDate = ref(new Date());
 
@@ -71,18 +86,33 @@
 		}));
 	});
 
-	const onDrop = async (item: GostKlausurtermin, date: Date | null) => {
+	const onDrop = async (item: GostKlausurtermin, date: Date | null, stunde: number) => {
+		console.log(date);
 		const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
 		if (termin !== null) {
 			if (date !== null) {
 				date.setDate(date.getDate() + 1);
 				termin.datum = date.toISOString().split('T')[0];
+				termin.startzeit = stunde + "";
 			} else {
 				termin.datum = null;
 			}
 			await props.patchKlausurtermin({datum: termin.datum}, termin.id);
 		}
 	};
+
+	//const onDrop = async (item: GostKlausurtermin, date: Date | null) => {
+	// 	const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
+	// 	if (termin !== null) {
+	// 		if (date !== null) {
+	// 			date.setDate(date.getDate() + 1);
+	// 			termin.datum = date.toISOString().split('T')[0];
+	// 		} else {
+	// 			termin.datum = null;
+	// 		}
+	// 		await props.patchKlausurtermin({datum: termin.datum}, termin.id);
+	// 	}
+	// };
 
 
 </script>

@@ -1,4 +1,4 @@
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe} from "@svws-nrw/svws-core";
+import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, StundenplanManager} from "@svws-nrw/svws-core";
 import { KursManager } from "@svws-nrw/svws-core";
 import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
@@ -23,6 +23,7 @@ interface RouteStateGostKlausurplanung {
 	halbjahr: GostHalbjahr;
 	kursklausurmanager: GostKursklausurManager | undefined;
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
+	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
 	view: RouteNode<any, any>;
 }
@@ -38,6 +39,7 @@ export class RouteDataGostKlausurplanung {
 		halbjahr: GostHalbjahr.EF1,
 		kursklausurmanager: undefined,
 		klausurvorgabenmanager: undefined,
+		stundenplanmanager: undefined,
 		kursmanager: new KursManager(),
 		view: routeGostKlausurplanungKlausurdaten,
 	}
@@ -115,6 +117,7 @@ export class RouteDataGostKlausurplanung {
 			halbjahr: this._state.value.halbjahr,
 			kursklausurmanager: undefined,
 			klausurvorgabenmanager: undefined,
+			stundenplanmanager: undefined,
 			kursmanager: kursManager,
 			view: view,
 		};
@@ -155,8 +158,17 @@ export class RouteDataGostKlausurplanung {
 
 		api.status.start();
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+		const stundenplandaten = await api.server.getStundenplan(api.schema, 1);
+		console.log("stundenplandaten", stundenplandaten);
+		const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, 1);
+		console.log("unterrichte", unterrichte);
+		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, 1);
+		console.log("pausenaufsichten", pausenaufsichten);
+		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, 1);
+		console.log("unterrichtsverteilung", unterrichtsverteilung);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
+		const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
 		api.status.stop();
@@ -168,11 +180,22 @@ export class RouteDataGostKlausurplanung {
 			mapLehrer: this._state.value.mapLehrer,
 			halbjahr: halbjahr,
 			kursklausurmanager,
+			stundenplanmanager,
 			klausurvorgabenmanager,
 			kursmanager: this._state.value.kursmanager,
 			view: this._state.value.view,
 		};
 		return true;
+	}
+
+	public get hatStundenplanManager(): boolean {
+		return this._state.value.stundenplanmanager !== undefined;
+	}
+
+	public get stundenplanmanager(): StundenplanManager {
+		if (this._state.value.stundenplanmanager === undefined)
+			throw new Error("Es wurde noch keine Daten geladen, so dass kein Stundenplan-Manager zur Verfügung steht.");
+		return this._state.value.stundenplanmanager;
 	}
 
 
