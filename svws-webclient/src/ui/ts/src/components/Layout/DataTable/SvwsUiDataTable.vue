@@ -1,6 +1,6 @@
 <template>
 	<div v-if="$slots.search || $slots.filter">
-		<div class="data-table__filter" :class="{'data-table__filter-open': $slots.filter && filterOpen}">
+		<div class="data-table__filter" :class="{'data-table__filter-open': $slots.filter && filterOpenRef}">
 			<div class="flex w-full gap-2">
 				<div class="flex-grow" v-if="$slots.search">
 					<slot name="search" />
@@ -9,16 +9,16 @@
 					<slot name="filterSimple" />
 				</div>
 				<div v-if="$slots.filter && filterHide" class="ml-auto flex flex-shrink-0">
-					<div :class="{'opacity-40 hover:opacity-100': filterOpen}" class="toggle--filter" v-if="filterHide">
+					<div :class="{'opacity-40 hover:opacity-100': filterOpenRef}" class="toggle--filter" v-if="filterHide">
 						<svws-ui-button type="transparent" @click="toggleFilterOpen" class="h-full">
-							<i-ri-filter-line v-if="!filterOpen" />
+							<i-ri-filter-line v-if="!filterOpenRef" />
 							<i-ri-eye-off-line v-else />
 							<span class="max-sm:hidden">Filter</span>
 						</svws-ui-button>
 					</div>
 				</div>
 			</div>
-			<div v-if="$slots.filter && filterOpen" class="data-table__filter__fields" :class="{'-order-1': filterReverse}">
+			<div v-if="$slots.filter && filterOpenRef" class="data-table__filter__fields" :class="{'-order-1': filterReverse}">
 				<slot name="filter" />
 				<template v-if="filtered && filterReset">
 					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen"
@@ -210,7 +210,7 @@
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
-			items?: Iterable<DataTableItem>;
+			items?: Iterable<DataTableItem> | DataTableItem[];
 			modelValue?: DataTableItem[];
 			sortingOrder?: DataTableSortingOrder | undefined;
 			sortBy?: string | undefined;
@@ -280,16 +280,18 @@
 
 	const {rowsComputed} = useRows(columnsComputed, props);
 
-	const {sortBy, sortingOrder, toggleSorting, sortedRows} = useSortable(
+	const {
+		// sortBy, sortingOrder,
+		toggleSorting, sortedRows} = useSortable(
 		columnsComputed,
 		rowsComputed,
 		props
 	);
 
-	const filterOpen = ref(props.filterOpen);
+	const filterOpenRef = ref(props.filterOpen);
 
 	const toggleFilterOpen = () => {
-		filterOpen.value = !filterOpen.value;
+		filterOpenRef.value = !filterOpenRef.value;
 	}
 
 	const {
