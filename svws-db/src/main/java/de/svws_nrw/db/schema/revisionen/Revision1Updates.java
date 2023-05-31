@@ -25,6 +25,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 	 */
 	public Revision1Updates() {
 		super(SchemaRevisionen.REV_1);
+		erzeugeFehlendeSchuljahreabschnitte();
 		pruefeKatalogReligion();
 		pruefeKatalogErzieherArt();
 		pruefeKatalogOrtsteile();
@@ -41,6 +42,24 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		passeLehrerTabelleAn();
 		pruefeWeitereDaten2();
 		passeBenutzerTabellenAn();
+	}
+
+
+	private void erzeugeFehlendeSchuljahreabschnitte() {
+		add("Erzeuge fehlende Schuljahresabschnitte, sofern sie zwischen dem ersten und letzten existierenden Abschnitt liegen",
+			"""
+			INSERT INTO Schuljahresabschnitte(Jahr, Abschnitt)
+			SELECT Jahr, Abschnitt FROM
+			(SELECT DISTINCT Jahr FROM Schuljahresabschnitte ORDER BY Jahr) a,
+			(SELECT seq AS Abschnitt FROM seq_1_to_4 WHERE seq <= (SELECT AnzahlAbschnitte FROM EigeneSchule)) b
+			WHERE ((Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte) AND Abschnitt < (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte)))
+			    OR ((Jahr < (SELECT max(Jahr) FROM Schuljahresabschnitte)) AND (Jahr > (SELECT min(Jahr) FROM Schuljahresabschnitte)))
+			    OR (Jahr = (SELECT min(Jahr) FROM Schuljahresabschnitte) AND Abschnitt > (SELECT min(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT min(Jahr) FROM Schuljahresabschnitte)))
+			) AND (Jahr, Abschnitt) NOT IN (SELECT Jahr, Abschnitt FROM Schuljahresabschnitte)
+			ORDER BY Jahr DESC, Abschnitt DESC
+			""",
+			Schema.tab_Schuljahresabschnitte, Schema.tab_EigeneSchule
+		);
 	}
 
 
