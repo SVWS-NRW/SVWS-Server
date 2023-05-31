@@ -48,6 +48,7 @@
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
 	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@svws-nrw/svws-core";
+	import { Wochentag } from "@svws-nrw/svws-core/dist/core/types/Wochentag";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten | undefined;
@@ -93,11 +94,14 @@
 			if (date !== null) {
 				date.setDate(date.getDate() + 1);
 				termin.datum = date.toISOString().split('T')[0];
-				termin.startzeit = stunde + "";
+				props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde);
+				console.log(props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde));
+				termin.startzeit = props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde).stundenbeginn;
+				console.log(termin);
 			} else {
 				termin.datum = null;
 			}
-			await props.patchKlausurtermin({datum: termin.datum}, termin.id);
+			await props.patchKlausurtermin({datum: termin.datum, startzeit: termin.startzeit}, termin.id);
 		}
 	};
 
