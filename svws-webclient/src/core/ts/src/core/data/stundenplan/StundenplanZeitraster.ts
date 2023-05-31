@@ -18,12 +18,12 @@ export class StundenplanZeitraster extends JavaObject {
 	public unterrichtstunde : number = -1;
 
 	/**
-	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt.
+	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert".
 	 */
 	public stundenbeginn : number | null = null;
 
 	/**
-	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet.
+	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet. NULL bedeutet "noch nicht definiert".
 	 */
 	public stundenende : number | null = null;
 
