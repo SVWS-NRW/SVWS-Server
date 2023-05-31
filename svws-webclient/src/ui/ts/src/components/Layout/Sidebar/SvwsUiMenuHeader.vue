@@ -2,9 +2,11 @@
 	const props = withDefaults(defineProps<{
 		collapsed?: boolean;
 		user?: string;
+		schule?: string;
 	}>(), {
 		collapsed: false,
 		user: undefined,
+		schule: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -17,15 +19,19 @@
 </script>
 
 <template>
-	<a class="sidebar--menu--initials"
+	<a class="app--menu--initials"
 		href="#" @click.prevent="onClick">
 		<svws-ui-tooltip position="right" v-if="user">
-			<div class="sidebar--menu-header--icon">
+			<div class="app--menu--initials--icon">
 				{{ user.charAt(0).toUpperCase() }}
 			</div>
 			<template #content>
-				<div class="sidebar--menu-header--label">
+				<div class="app--menu--initials--label">
 					Angemeldet als {{ user }}
+					<template v-if="schule">
+						<br>
+						<span class="opacity-50">{{ schule }}</span>
+					</template>
 				</div>
 			</template>
 		</svws-ui-tooltip>
@@ -33,17 +39,17 @@
 </template>
 
 <style>
-.sidebar--menu--initials {
+.app--menu--initials {
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
 }
 
-.sidebar--menu--initials .sidebar--menu-header--icon {
+.app--menu--initials .app--menu--initials--icon {
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
 	@apply rounded-full overflow-hidden bg-dark-80 text-white;
 	@apply w-10 xl:w-12 h-10 xl:h-12;
 }
 
-.sidebar--menu--initials svg {
+.app--menu--initials svg {
 	@apply w-3/4 mx-auto hidden;
 }
 </style>

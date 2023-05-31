@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible}"
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
 			<slot name="header"
@@ -173,7 +173,7 @@
 							class="font-bold opacity-50">{{ modelValue.length }}/{{
 								sortedRows.length
 							}} ausgewählt</span>
-						<span v-else class="opacity-50">{{ sortedRows.length === 1 ? 'Blockungsvorlage': `${sortedRows.length} Ergebnisse` }}</span>
+						<span v-else class="opacity-50">{{ sortedRows.length === 1 ? '1 Ergebnis': `${sortedRows.length} Ergebnisse` }}</span>
 					</div>
 					<div role="cell" class="data-table__th data-table__tfoot__th data-table__tfoot-actions"
 						v-if="$slots.footerActions">
@@ -236,6 +236,7 @@
 			collapsible?: boolean;
 			noData?: boolean;
 			scrollIntoView?: boolean;
+			tabBarDesign?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -262,6 +263,7 @@
 			collapsible: false,
 			noData: undefined,
 			scrollIntoView: undefined,
+			tabBarDesign: undefined,
 		}
 	);
 
@@ -827,6 +829,28 @@
 	.complex-filters &__filter {
 		&__fields {
 			@apply md:grid-cols-4;
+		}
+	}
+
+	&--tab-bar {
+		@apply border-0 bg-light rounded-lg p-1;
+
+		.data-table__tbody {
+			@apply bg-none bg-transparent overflow-visible space-y-1;
+		}
+
+		.data-table__tr {
+			@apply rounded-md inline-flex px-1 py-1.5;
+		}
+
+		.data-table__tr--clicked {
+			@apply bg-white text-primary;
+		}
+
+		.data-table__td,
+		.data-table__th,
+		.data-table__thead {
+			@apply bg-transparent border-0 font-bold;
 		}
 	}
 }

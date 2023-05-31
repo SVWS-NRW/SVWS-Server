@@ -5,8 +5,10 @@
 				@update:model-value="doPatch({ aufnehmdendSchulnummer: String($event) })" type="text" span="full" />
 			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum"
 				@update:model-value="doPatch({ aufnehmdendWechseldatum: String($event) })" type="date" />
-			<svws-ui-checkbox text="Aufnahme bestätigt" :model-value="data.aufnehmdendBestaetigt || undefined"
-				@update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })" />
+			<svws-ui-checkbox :model-value="data.aufnehmdendBestaetigt || undefined"
+				@update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })">
+				Aufnahme bestätigt
+			</svws-ui-checkbox>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

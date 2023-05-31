@@ -11,14 +11,23 @@
 			<div class="col-span-full flex flex-wrap gap-3" :class="{'opacity-50': !klassenlehrer.length}">
 				<span class="font-bold">Klassenlehrer:</span>
 				<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
-				<div v-else v-for="kl in klassenlehrer" :key="kl.id"> {{ getLehrerText(kl) }}  </div>
+				<div v-else class="separate-items--custom">
+					<span v-for="kl in klassenlehrer" :key="kl.id">
+						<svws-ui-tooltip>
+							{{ getLehrerKuerzel(kl) }}
+							<template #content>
+								{{ getLehrerText(kl) }}
+							</template>
+						</svws-ui-tooltip>
+					</span>
+				</div>
 			</div>
 			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
 			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer"
 				:item-text="getLehrerText" autocomplete />
-			<svws-ui-spacing />
-			<svws-ui-input-wrapper class="col-span-full" :grid="4">
-				<span class="font-bold">Fehlstunden</span>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
+				<span class="font-bold col-span-full">Fehlstunden</span>
 				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined"
 					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined"
@@ -26,7 +35,7 @@
 				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined"
 					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
+			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
 				<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="data.pruefungsOrdnung || undefined" />
@@ -41,7 +50,7 @@
 					:item-text="i => `${i.text}`" autocomplete />
 				<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
+			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
 				<svws-ui-multi-select title="Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
@@ -49,7 +58,7 @@
 				<svws-ui-multi-select title="Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
 					:item-text="i => `${i.kuerzel}`" autocomplete />
 			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
+			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper>
 				<div class="font-bold opacity-50"> TODO: Nachprüfungen </div>
 				<div v-if="data.nachpruefungen !== null">
@@ -95,6 +104,10 @@
 
 	function getLehrerText(lehrer: LehrerListeEintrag) : string {
 		return lehrer.nachname + ", " + lehrer.vorname + " (" + lehrer.kuerzel + ")";
+	}
+
+	function getLehrerKuerzel(lehrer: LehrerListeEintrag) : string {
+		return lehrer.kuerzel;
 	}
 
 	const sonderpaedagoge: WritableComputedRef<LehrerListeEintrag | undefined> = computed({

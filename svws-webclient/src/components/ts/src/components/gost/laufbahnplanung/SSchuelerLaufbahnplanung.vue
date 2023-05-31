@@ -1,5 +1,5 @@
 <template>
-	<div class="flex gap-x-8 2xl:gap-x-16">
+	<div class="page--content page--content--full gap-x-8 2xl:gap-x-16">
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
 				:gost-jahrgangsdaten="gostJahrgangsdaten" :item="schueler" :set-wahl="setWahl" :get-pdf-wahlbogen="getPdfWahlbogen" :export-laufbahnplanung="exportLaufbahnplanung"

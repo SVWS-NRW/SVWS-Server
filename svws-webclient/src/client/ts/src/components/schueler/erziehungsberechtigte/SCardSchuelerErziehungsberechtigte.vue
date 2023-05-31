@@ -1,59 +1,43 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.zusatzNachname ? erzieher.zusatzNachname + ' ' : ''}${erzieher.nachname}` : '(Ohne Namen)'">
 		<template #actions>
-			<svws-ui-button type="error">
-				<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
-				<span class="ml-2"> Löschen </span>
+			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
+				@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
+				Erhält Anschreiben
+			</svws-ui-checkbox>
+			<svws-ui-button type="danger">
+				<i-ri-delete-bin-line />
+				Person löschen
 			</svws-ui-button>
-			<svws-ui-button type="secondary"> Schüleradresse übernehmen </svws-ui-button>
 		</template>
-		<div class="input-wrapper">
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
-				<div class="entry-content">
-					<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten"
-						:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
-					<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
-						@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)">
-						erhält Anschreiben
-					</svws-ui-checkbox>
-					<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname || undefined"
-						@update:model-value="doPatch({ nachname: String($event) }, erzieher.id)" type="text" />
-					<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname || undefined"
-						@update:model-value="doPatch({ zusatzNachname: String($event) }, erzieher.id)" type="text" />
-					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname || undefined"
-						@update:model-value="doPatch({ vorname: String($event) }, erzieher.id)" type="text" />
-					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail || undefined"
-						@update:model-value="doPatch({ eMail: String($event) }, erzieher.id)" type="email" verify-email />
-					<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
-						:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
-						:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
-				</div>
-			</div>
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2">Adresse</h2>
-				<div class="entry-content">
-					<div class="col-span-2">
-						<svws-ui-text-input placeholder="Straße / Hausnummer" v-model="strassenname" type="text" />
-					</div>
-					<div class="col-span-2">
-						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerZusatz" type="text" />
-					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter"
-						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile"
-						:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
-				</div>
-			</div>
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2">Bemerkungen</h2>
-				<div class="entry-content">
-					<div class="col-span-2">
-						<svws-ui-textarea-input placeholder="Bemerkungen" v-model:value="bemerkungen" />
-					</div>
-				</div>
-			</div>
-		</div>
+		<svws-ui-input-wrapper :grid="2" class="input-wrapper--erziehungsberechtigte">
+			<svws-ui-input-wrapper :grid="2" class="col-span-1">
+				<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten"
+					:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
+				<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname || undefined"
+					@update:model-value="doPatch({ nachname: String($event) }, erzieher.id)" type="text" />
+				<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname || undefined"
+					@update:model-value="doPatch({ zusatzNachname: String($event) }, erzieher.id)" type="text" />
+				<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname || undefined"
+					@update:model-value="doPatch({ vorname: String($event) }, erzieher.id)" type="text" />
+				<svws-ui-spacing />
+				<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail || undefined"
+					@update:model-value="doPatch({ eMail: String($event) }, erzieher.id)" type="email" verify-email />
+				<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
+					:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
+					:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
+			</svws-ui-input-wrapper>
+			<svws-ui-input-wrapper :grid="2" class="col-span-1">
+				<svws-ui-text-input placeholder="Straße und Hausnummer" v-model="strassenname" type="text" />
+				<svws-ui-text-input placeholder="Adresszusatz" v-model="hausnummerZusatz" type="text" />
+				<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter"
+					:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+				<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile"
+					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
+				<svws-ui-spacing />
+				<svws-ui-textarea-input placeholder="Bemerkungen" v-model:value="bemerkungen" span="full" autoresize />
+			</svws-ui-input-wrapper>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
@@ -118,18 +102,12 @@
 
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
+.input-wrapper--erziehungsberechtigte {
+	@apply lg:gap-x-9 3xl:gap-x-12 4xl:gap-x-16 items-start;
 
-	.input-wrapper {
-		@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
+	.col-span-1 {
+		@apply max-lg:col-span-full;
 	}
-
-	.entry-content {
-		@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
-	}
-
-	h2 {
-		@apply mb-2 text-sm font-bold;
-	}
-
+}
 </style>

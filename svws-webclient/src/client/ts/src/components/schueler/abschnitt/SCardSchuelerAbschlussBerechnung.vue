@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Abschluss Berechnung">
 		<svws-ui-input-wrapper>
-			<svws-ui-textarea-input placeholder="" v-model="abschlussBerechnung" resizeable="vertical" :autoresize="true" />
+			<svws-ui-textarea-input placeholder="Text" v-model="abschlussBerechnung" resizeable="vertical" :autoresize="true" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

@@ -26,7 +26,7 @@
 		@apply grid-cols-2 md:grid-cols-4;
 	}
 
-	.input-wrapper {
+	.input-wrapper:not(.col-span-1) {
 		@apply col-span-full;
 	}
 

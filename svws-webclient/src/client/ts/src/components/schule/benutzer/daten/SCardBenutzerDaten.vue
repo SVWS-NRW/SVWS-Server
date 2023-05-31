@@ -2,15 +2,14 @@
 	<svws-ui-content-card title="Benutzer">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
-			<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Login-Name" />
-			<svws-ui-spacing />
+			<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
 			<!-- <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager.istInAdminGruppe()"> Admin ? </svws-ui-checkbox> -->
 			<svws-ui-text-input v-model="kennwort1" type="password" placeholder="Neues Passwort" />
 			<svws-ui-text-input v-model="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />
 			<div>
 				<svws-ui-button :disabled="!kennwort1 || !kennwort2" @click="setPassword()"> Passwort speichern </svws-ui-button>
 			</div>
-		</svws-ui-input-wrapper>>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

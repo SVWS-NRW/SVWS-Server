@@ -7,7 +7,7 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
-				<svws-ui-text-input v-model="name" type="text" placeholder="Login-Name" />
+				<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
 				<svws-ui-spacing />
 				<svws-ui-text-input v-model="passwort1" type="password" placeholder="Passwort" />
 				<svws-ui-text-input v-model="passwort2" type="password" placeholder="Passwort wiederholen" />

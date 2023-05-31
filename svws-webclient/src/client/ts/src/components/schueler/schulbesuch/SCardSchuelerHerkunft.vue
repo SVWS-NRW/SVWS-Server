@@ -11,6 +11,7 @@
 				@update:model-value="doPatch({ vorigeEntlassjahrgang: String($event) })" type="number" />
 			<svws-ui-text-input placeholder="Bemerkung" :model-value="data.vorigeBemerkung"
 				@update:model-value="doPatch({ vorigeBemerkung: String($event) })" type="text" span="full" />
+			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Entlassgrund" :model-value="data.vorigeEntlassgrundID"
 				@update:model-value="doPatch({ vorigeEntlassgrundID: Number($event) })" type="text" />
 			<svws-ui-text-input placeholder="höchster allg.-bild. Abschluss" :model-value="data.vorigeAbschlussartID"

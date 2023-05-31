@@ -192,7 +192,7 @@
 }
 
 .modal--overlay {
-	@apply bg-light/75;
+	@apply bg-light/75 backdrop-filter backdrop-grayscale;
 	@apply absolute top-0 left-0;
 	@apply h-full w-full;
 	@apply z-50;

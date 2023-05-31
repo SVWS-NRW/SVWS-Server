@@ -11,10 +11,25 @@
 }
 
 .page--content {
-	@apply grid grid-cols-1 lg:grid-cols-2 4xl:grid-cols-3;
-	@apply gap-12 lg:gap-16;
-	@apply min-h-full;
-	grid-template-rows: min-content;
+	@apply grid grid-cols-1 lg:grid-cols-2;
+	@apply gap-x-6 gap-y-16 lg:gap-y-20 lg:gap-x-16;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-16 py-8;
+	grid-auto-rows: min-content;
+	max-width: 123rem;
+	@apply mx-auto;
+}
+
+.page--content .page--content {
+	@apply p-0 !important;
+}
+
+.page--content--single {
+	@apply lg:grid-cols-1;
+}
+
+.page--content--full {
+	@apply flex;
+	max-width: unset;
 }
 
 .separate-items--custom > *:not(:last-child):after {

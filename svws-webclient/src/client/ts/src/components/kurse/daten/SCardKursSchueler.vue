@@ -5,7 +5,7 @@
 				<svws-ui-icon @click.stop="gotoSchueler(rowData as Schueler)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon> {{ rowData.nachname }}
 			</template>
 			<template #cell(status)="{ value }">
-				<svws-ui-badge type="light" size="big"> {{ SchuelerStatus.fromID(value) }} </svws-ui-badge>
+				<span>{{ SchuelerStatus.fromID(value).bezeichnung }}</span>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
@@ -25,7 +25,7 @@
 	const cols: DataTableColumn[] = [
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "vorname", label: "Vorname", sortable: true },
-		{ key: "status", label: "Status", sortable: true }
+		{ key: "status", label: "Status", sortable: true, span: 0.5 }
 	];
 
 </script>

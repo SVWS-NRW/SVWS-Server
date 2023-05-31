@@ -1,5 +1,5 @@
 <template>
-	<div class="router-tab-bar--area">
+	<div class="router-tab-bar--area" :class="{'router-tab-bar--area--single-route': props.routes.length === 1}">
 		<div class="router-tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
 				<button class="router-tab-bar--scroll-button" @click="scroll('left')">
@@ -113,15 +113,13 @@
 		@apply pt-1.5;
 
 		&--single-route {
-			@apply pt-0.5;
+			@apply bg-transparent;
 		}
     }
 
     .router-tab-bar--panel {
         @apply h-full;
-        @apply flex-grow overflow-auto flex-auto w-full;
-		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
-		@apply py-8;
+        @apply overflow-hidden w-full;
 		@apply relative;
 
 		&.pt-0 {

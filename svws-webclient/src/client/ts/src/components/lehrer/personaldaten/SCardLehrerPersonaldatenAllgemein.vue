@@ -6,6 +6,7 @@
 			<svws-ui-text-input placeholder="Vergütungsschlüssel" v-model="inputLbvVerguetungsschluessel" type="text" />
 			<svws-ui-text-input placeholder="PA-Nummer" v-model="inputPersonalaktennummer" type="text" />
 			<svws-ui-text-input placeholder="LBV-Pers.Nummer" v-model="inputLbvPersonalnummer" type="text" />
+			<svws-ui-spacing />
 			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
 				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required span="full" />
 			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"

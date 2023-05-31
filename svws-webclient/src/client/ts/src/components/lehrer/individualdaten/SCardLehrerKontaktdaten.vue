@@ -6,6 +6,7 @@
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort"
 				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
+			<svws-ui-spacing />
 			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
 			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="Private E-Mail-Adresse" verify-email />

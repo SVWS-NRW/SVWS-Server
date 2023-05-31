@@ -1,5 +1,5 @@
 <template>
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 min-h-full">
+	<div class="page--content">
 		<div class="flex flex-col gap-12 lg:gap-16">
 			<s-card-benutzer-daten :get-benutzer-manager="getBenutzerManager"
 				:set-anzeigename="setAnzeigename" :set-anmeldename="setAnmeldename"

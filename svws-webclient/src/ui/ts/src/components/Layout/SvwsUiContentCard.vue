@@ -31,10 +31,6 @@
 	.content-card {
 		@apply h-fit;
 
-		&:not(:last-child) {
-			@apply max-lg:pb-12;
-		}
-
 		&--content {
 			&--with-title {
 				@apply mt-4;

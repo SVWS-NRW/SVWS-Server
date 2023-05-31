@@ -6,7 +6,7 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
-			<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="mapJahrgaenge"
+			<svws-ui-multi-select title="Jahrgänge" v-model="jahrgaenge" tags :items="mapJahrgaenge"
 				:item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel ?? ''" />
 			<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
 			<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />

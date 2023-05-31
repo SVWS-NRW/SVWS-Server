@@ -3,7 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
-					<svws-ui-menu-header :user="username" />
+					<svws-ui-menu-header :user="username" :schule="schulname" />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
@@ -60,7 +60,7 @@
 
 	const schulname: ComputedRef<string> = computed(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
-		return name ? name : "fehlende Bezeichnung";
+		return name ? name : "Fehlende Bezeichnung für die Schule";
 	});
 
 	const minDelayReached = ref(false);

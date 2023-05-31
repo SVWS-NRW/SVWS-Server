@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 min-h-full">
+	<div v-if="visible" class="page--content">
 		<div class="flex flex-col gap-12 lg:gap-16">
 			<s-card-benutzergruppe-daten :set-bezeichnung="setBezeichnung" :set-ist-admin="setIstAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" />
 			<s-benutzergruppe-add-benutzer :list-benutzer-alle="listBenutzerAlle"
