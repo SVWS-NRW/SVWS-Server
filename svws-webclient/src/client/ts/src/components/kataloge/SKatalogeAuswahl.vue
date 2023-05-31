@@ -29,7 +29,8 @@
 		{ title: "Religionen", value: "religionen" },
 		{ title: "Förderschwerpunkte", value: "foerderschwerpunkte" },
 		{ title: "Haltestellen", value: "haltestellen" },
-		{ title: "Betriebe", value: "betriebe" }
+		{ title: "Betriebe", value: "betriebe" },
+		{ title: "Räume", value: "raeume" },
 	];
 
 </script>

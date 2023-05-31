@@ -28,6 +28,7 @@ import { ConfigElement } from "~/components/Config";
 import { RouteManager } from "./RouteManager";
 import { routeStundenplan } from "./apps/RouteStundenplan";
 import SApp from "~/components/SApp.vue";
+import { routeKatalogRaeume } from "./apps/RouteKatalogRaeume";
 
 interface RouteStateApp {
 	idSchuljahresabschnitt: number,
@@ -141,6 +142,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogReligion,
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
+			routeKatalogRaeume,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,
