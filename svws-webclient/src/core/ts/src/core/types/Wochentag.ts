@@ -52,26 +52,26 @@ export class Wochentag extends JavaObject implements JavaEnum<Wochentag> {
 	public static readonly SONNTAG : Wochentag = new Wochentag("SONNTAG", 6, 7, "Sonntag", "So");
 
 	/**
-	 * Die eindeutige ID der Kursart der Gymnasialen Oberstufe
+	 * Die eindeutige ID des Wochentags
 	 */
 	public readonly id : number;
 
 	/**
-	 * Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
+	 * Der voll ausgeschriebene Wochentag, z.B. Montag
 	 */
 	public readonly beschreibung : string;
 
 	/**
-	 * Das Kürzel der Kursart der Gymnasialen Oberstufe
+	 * Das Kürzel des Wochentags, z.B. Mo
 	 */
 	public readonly kuerzel : string;
 
 	/**
 	 * Erzeugt einen neuen Wochentag für die Aufzählung.
 	 *
-	 * @param id             die eindeutige ID der Kursart der Gymnasialen Oberstufe
-	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
-	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
+	 * @param id             die eindeutige ID des Wochentags
+	 * @param kuerzel        das Kürzel des Wochentags
+	 * @param beschreibung   der ausgeschriebene Wochentag
 	 */
 	private constructor(name : string, ordinal : number, id : number, beschreibung : string, kuerzel : string) {
 		super();
