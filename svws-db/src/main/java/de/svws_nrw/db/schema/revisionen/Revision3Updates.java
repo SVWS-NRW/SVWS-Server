@@ -69,7 +69,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			logger.logLn("Im Anschluss - Die Schule wurde in Schild 2 im \"Quartalsmodus\" betrieben und wird im folgenden auf den Betrieb mit Halbjahren umgestellt:");
 			// Bestimme den aktuellen Abschnitt, in dem sich die Schule befindet
 			final List<Long> tmpSchuljahresabschnittAktuell = conn.queryNative("SELECT Schuljahresabschnitts_ID FROM EigeneSchule");
+			final List<Long> tmpSchuljahresabschnittMax = conn.queryNative("SELECT ID FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte) AND Abschnitt = (SELECT max(Abschnitt) FROM Schuljahresabschnitte WHERE Jahr = (SELECT max(Jahr) FROM Schuljahresabschnitte))");
 			final long schuljahresabschnittAktuell = tmpSchuljahresabschnittAktuell.get(0);
+			final long schuljahresabschnittMax = tmpSchuljahresabschnittMax.get(0);
 			final List<Object[]> tmpAktAbschnitt = conn.queryNative("SELECT ID, Jahr, Abschnitt, VorigerAbschnitt_ID, FolgeAbschnitt_ID FROM Schuljahresabschnitte WHERE ID = " + schuljahresabschnittAktuell);
 			final Object[] aktAbschnitt = tmpAktAbschnitt.get(0);
 			final int aktSchuljahr = (Integer) aktAbschnitt[1];
@@ -138,6 +140,30 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 				}
 			}
+			// Ggf. Verschieben des letzten Schuljahresabschnitts, sofern es nicht der aktuelle oder dessen Folgeabschnitt ist
+			if ((schuljahresabschnittMax != schuljahresabschnittAktuell) && ((aktFolgeAbschnittID != null) && (schuljahresabschnittMax != aktFolgeAbschnittID))) {
+				// Lade die Daten des letzten Schuljahresabschnitts
+				final List<Integer> tmpMaxQuartal = conn.queryNative("SELECT Abschnitt FROM Schuljahresabschnitte WHERE ID = " + schuljahresabschnittMax);
+				final int maxQuartal = tmpMaxQuartal.get(0);
+				if ((maxQuartal == 1) || (maxQuartal == 3)) {
+					logger.logLn("- Der letzte Schuljahresabschnitt ist ein erstes oder drittes Quartal, so dass dieses verschoben werden muss, da noch kein Folgeabschnitt existiert");
+					// Erhöhe das Quartal in dem letzten Schuljahresabschnitt, so dass dies das zweite Quartal im Halbjahr wird
+					logger.logLn("- Erhöhe das Quartal in dem letzten Schuljahresabschnitt, so dass dies das zweite Quartal im Halbjahr wird...");
+					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE Schuljahresabschnitte SET Schuljahresabschnitte.Abschnitt = Schuljahresabschnitte.Abschnitt + 1 WHERE ID = " + schuljahresabschnittMax)) {
+						logger.logLn("Fehler beim Erhöhen des Quartals beim letzten Schuljahresabschnitt");
+						logger.modifyIndent(-2);
+						return false;
+					}
+					// Verschiebe die Noten-Einträge bei den Schülerleistungsdaten in das Feld für die Quartalsnoten des Halbjahres
+					logger.logLn("- Verschiebe die Noten-Einträge bei den Schülerleistungsdaten in das Feld für die Quartalsnoten des Halbjahres...");
+					if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerLeistungsdaten JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID AND SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID = " + schuljahresabschnittMax + " SET SchuelerLeistungsdaten.NotenKrzQuartal = SchuelerLeistungsdaten.NotenKrz, SchuelerLeistungsdaten.NotenKrz = NULL")) {
+						logger.logLn("Fehler beim Anpassen der Schüler-Leistungsdaten des letzten Schuljahresabschnittes (Noten -> Quartalsnoten)");
+						logger.modifyIndent(-2);
+						return false;
+					}
+				}
+			}
+
 			// Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)
 			logger.logLn("- Anpassen des Schuljahresabschnittes bei allen Einträgen der Schüler-Tabelle (z.B. bei Abgängern)...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE Schueler JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schuljahresabschnitte.Abschnitt IN (1,3) SET Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.FolgeAbschnitt_ID")) {
