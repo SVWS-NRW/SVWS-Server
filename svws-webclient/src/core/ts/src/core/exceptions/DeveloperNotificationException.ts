@@ -1,5 +1,6 @@
 import { RuntimeException } from '../../java/lang/RuntimeException';
 import { List } from '../../java/util/List';
+import { JavaString } from '../../java/lang/JavaString';
 import { JavaMap } from '../../java/util/JavaMap';
 
 export class DeveloperNotificationException extends RuntimeException {
@@ -37,7 +38,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifInvalidID(pVariablenname : string, pID : number) : void {
 		if (pID < 0)
-			throw new DeveloperNotificationException("Ungültige ID für " + pVariablenname! + "(" + pID + ")")
+			throw new DeveloperNotificationException(pVariablenname! + " hat eine ungültige ID=" + pID + "!")
 	}
 
 	/**
@@ -184,6 +185,19 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (list.contains(value))
 			throw new DeveloperNotificationException(listName! + " hat bereits das Element " + value + "!")
 		list.add(value);
+	}
+
+	/**
+	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param nameDerVariablen Der Name der Variablen.
+	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 *
+	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 */
+	public static ifStringIsBlank(nameDerVariablen : string, zeichenkette : string) : void {
+		if (JavaString.isBlank(zeichenkette))
+			throw new DeveloperNotificationException(nameDerVariablen! + " darf nicht 'blank' sein!")
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

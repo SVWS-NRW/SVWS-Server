@@ -86,16 +86,17 @@ export class StundenplanManager extends JavaObject {
 		} else {
 			this._datenUV = unterrichtsverteilung;
 		}
+		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", this._daten.id !== this._datenUV.id);
 		this.checkWochentypenKonsistenz();
 		this.initMapFach();
 		this.initMapJahrgang();
 		this.initMapLehrer();
 		this.initMapKlasse();
 		this.initMapSchueler();
+		this.initMapSchiene();
 		this.initMapKurs();
 		this.initMapZeitraster();
 		this.initMapRaum();
-		this.initMapSchiene();
 		this.initMapPausenzeit();
 		this.initMapAufsicht();
 		this.initMapKWZuordnung();
@@ -121,10 +122,9 @@ export class StundenplanManager extends JavaObject {
 		this._map_fachID_zu_fach.clear();
 		for (const fach of this._datenUV.faecher) {
 			DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-			DeveloperNotificationException.ifTrue("fach.bezeichnung.isBlank()", JavaString.isBlank(fach.bezeichnung));
-			DeveloperNotificationException.ifTrue("fach.kuerzel.isBlank()", JavaString.isBlank(fach.kuerzel));
-			DeveloperNotificationException.ifMapContains("_map_fachID_zu_fach", this._map_fachID_zu_fach, fach.id);
-			this._map_fachID_zu_fach.put(fach.id, fach);
+			DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
+			DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_fachID_zu_fach, fach.id, fach);
 		}
 	}
 
@@ -132,10 +132,9 @@ export class StundenplanManager extends JavaObject {
 		this._map_jahrgangID_zu_jahrgang.clear();
 		for (const jahrgang of this._datenUV.jahrgaenge) {
 			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-			DeveloperNotificationException.ifTrue("jahrgang.bezeichnung.isBlank()", JavaString.isBlank(jahrgang.bezeichnung));
-			DeveloperNotificationException.ifTrue("jahrgang.kuerzel.isBlank()", JavaString.isBlank(jahrgang.kuerzel));
-			DeveloperNotificationException.ifMapContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, jahrgang.id);
-			this._map_jahrgangID_zu_jahrgang.put(jahrgang.id, jahrgang);
+			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
+			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
 		}
 	}
 
@@ -143,15 +142,14 @@ export class StundenplanManager extends JavaObject {
 		this._map_lehrerID_zu_lehrer.clear();
 		for (const lehrer of this._datenUV.lehrer) {
 			DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
-			DeveloperNotificationException.ifTrue("zeit.kuerzel.isBlank()", JavaString.isBlank(lehrer.kuerzel));
-			DeveloperNotificationException.ifTrue("zeit.nachname.isBlank()", JavaString.isBlank(lehrer.nachname));
-			DeveloperNotificationException.ifTrue("zeit.vorname.isBlank()", JavaString.isBlank(lehrer.vorname));
-			DeveloperNotificationException.ifMapContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, lehrer.id);
-			this._map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
+			DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
+			DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
+			DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_lehrerID_zu_lehrer, lehrer.id, lehrer);
 			const listFaecherDerLehrkraft : ArrayList<number> = new ArrayList();
-			for (const fachID of lehrer.faecher) {
-				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", this._map_fachID_zu_fach, fachID);
-				DeveloperNotificationException.ifListAddsDuplicate("listFaecherDerLehrkraft", listFaecherDerLehrkraft, fachID);
+			for (const idFachDerLehrkraft of lehrer.faecher) {
+				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", this._map_fachID_zu_fach, idFachDerLehrkraft);
+				DeveloperNotificationException.ifListAddsDuplicate("listFaecherDerLehrkraft", listFaecherDerLehrkraft, idFachDerLehrkraft);
 			}
 		}
 	}
@@ -160,13 +158,12 @@ export class StundenplanManager extends JavaObject {
 		this._map_klasseID_zu_klasse.clear();
 		for (const klasse of this._datenUV.klassen) {
 			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", JavaString.isBlank(klasse.kuerzel));
-			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, klasse.id);
-			this._map_klasseID_zu_klasse.put(klasse.id, klasse);
+			DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_klasseID_zu_klasse, klasse.id, klasse);
 			const listJahrgaengeDerKlasse : ArrayList<number> = new ArrayList();
-			for (const jahrgangID of klasse.jahrgaenge) {
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, jahrgangID);
-				DeveloperNotificationException.ifListAddsDuplicate("listJahrgaengeDerKlasse", listJahrgaengeDerKlasse, jahrgangID);
+			for (const idJahrgangDerKlasse of klasse.jahrgaenge) {
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, idJahrgangDerKlasse);
+				DeveloperNotificationException.ifListAddsDuplicate("listJahrgaengeDerKlasse", listJahrgaengeDerKlasse, idJahrgangDerKlasse);
 			}
 		}
 	}
@@ -175,23 +172,36 @@ export class StundenplanManager extends JavaObject {
 		this._map_schuelerID_zu_schueler.clear();
 		for (const schueler of this._datenUV.schueler) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
-			DeveloperNotificationException.ifInvalidID("schueler.idKlasse", schueler.idKlasse);
-			DeveloperNotificationException.ifTrue("!_map_klasseID_zu_klasse.containsKey(schueler.idKlasse)", !this._map_klasseID_zu_klasse.containsKey(schueler.idKlasse));
-			DeveloperNotificationException.ifTrue("schueler.nachname.isBlank()", JavaString.isBlank(schueler.nachname));
-			DeveloperNotificationException.ifTrue("schueler.vorname.isBlank()", JavaString.isBlank(schueler.vorname));
-			DeveloperNotificationException.ifMapContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, schueler.id);
-			this._map_schuelerID_zu_schueler.put(schueler.id, schueler);
+			DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
+			DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
+			DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, schueler.idKlasse);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_zu_schueler, schueler.id, schueler);
+		}
+	}
+
+	private initMapSchiene() : void {
+		this._map_schieneID_zu_schiene.clear();
+		for (const schiene of this._daten.schienen) {
+			DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
+			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
+			DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
+			DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, schiene.idJahrgang);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schieneID_zu_schiene, schiene.id, schiene);
 		}
 	}
 
 	private initMapKurs() : void {
-		DeveloperNotificationException.ifTrue("_daten.id != _datenUV.id", this._daten.id !== this._datenUV.id);
 		this._map_kursID_zu_kurs.clear();
 		for (const kurs of this._datenUV.kurse) {
 			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
-			DeveloperNotificationException.ifTrue("kurs.bezeichnung.isBlank()", JavaString.isBlank(kurs.bezeichnung));
-			DeveloperNotificationException.ifMapContains("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, kurs.id);
-			this._map_kursID_zu_kurs.put(kurs.id, kurs);
+			DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_zu_kurs, kurs.id, kurs);
+			for (const idSchuelerDesKurses of kurs.schueler)
+				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, idSchuelerDesKurses);
+			for (const idJahrgangDesKurses of kurs.jahrgaenge)
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, idJahrgangDesKurses);
+			for (const idSchieneDesKurses of kurs.schienen)
+				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, idSchieneDesKurses);
 		}
 	}
 
@@ -218,18 +228,6 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("raum.kuerzel.isBlank()", JavaString.isBlank(raum.kuerzel));
 			DeveloperNotificationException.ifMapContains("_map_raumID_zu_raum", this._map_raumID_zu_raum, raum.id);
 			this._map_raumID_zu_raum.put(raum.id, raum);
-		}
-	}
-
-	private initMapSchiene() : void {
-		this._map_schieneID_zu_schiene.clear();
-		for (const schiene of this._daten.schienen) {
-			DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
-			DeveloperNotificationException.ifInvalidID("schiene.idJahrgang", schiene.idJahrgang);
-			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
-			DeveloperNotificationException.ifTrue("schiene.bezeichnung.isBlank()", JavaString.isBlank(schiene.bezeichnung));
-			DeveloperNotificationException.ifMapContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, schiene.id);
-			this._map_schieneID_zu_schiene.put(schiene.id, schiene);
 		}
 	}
 

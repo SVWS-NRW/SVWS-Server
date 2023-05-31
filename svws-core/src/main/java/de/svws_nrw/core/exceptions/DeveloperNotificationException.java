@@ -46,7 +46,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static void ifInvalidID(final @NotNull String pVariablenname, final long pID) throws DeveloperNotificationException {
 		if (pID < 0)
-			throw new DeveloperNotificationException("Ungültige ID für " + pVariablenname + "(" + pID + ")");
+			throw new DeveloperNotificationException(pVariablenname + " hat eine ungültige ID=" + pID + "!");
 	}
 
   	/**
@@ -193,6 +193,19 @@ public class DeveloperNotificationException extends RuntimeException {
 		if (list.contains(value))
 			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!");
 		list.add(value);
+	}
+
+	/**
+	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param nameDerVariablen Der Name der Variablen.
+	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 *
+	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 */
+	public static void ifStringIsBlank(final @NotNull String nameDerVariablen, final @NotNull String zeichenkette) {
+		if (zeichenkette.isBlank())
+			throw new DeveloperNotificationException(nameDerVariablen + " darf nicht 'blank' sein!");
 	}
 
 }
