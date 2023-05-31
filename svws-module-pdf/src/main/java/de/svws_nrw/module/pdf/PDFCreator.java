@@ -175,7 +175,7 @@ public class PDFCreator {
 	 * @param list   die Liste
 	 */
 	public static void ul(final StringBuilder sb, final List<String> list) {
-		if ((list == null) || (list.size() <= 0))
+		if ((list == null) || (list.isEmpty()))
 			return;
 		sb.append("<ul>");
 		for (final String s : list) {
@@ -198,7 +198,7 @@ public class PDFCreator {
 			runBuilder(baos);
 			return baos.toByteArray();
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			return null;
+			return new byte[0];
 		}
 	}
 

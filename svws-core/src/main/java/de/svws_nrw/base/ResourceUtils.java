@@ -130,6 +130,25 @@ public final class ResourceUtils {
 
 
 	/**
+	 * Liest den UTF8-kodierten Text aus der angebenen Datei ein und gibt
+	 * diesen als String zurück.
+	 *
+	 * @param filename   der Dateiname
+	 *
+	 * @return der Text der Datei als String oder null im Fehlerfall
+	 */
+	public static String text(final String filename) {
+		try {
+			final Path path = getFile(filename);
+			return Files.readString(path, StandardCharsets.UTF_8);
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	/**
 	 * Hilfsmethode für {@link ResourceUtils#getFilesInPackage(String, String)}. Bestimmt
 	 * für die übergebene URL die entsprechenden Dateien und schreibt {@link Path}-Objekt
 	 * für diese in die Liste.

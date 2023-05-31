@@ -1,0 +1,26 @@
+table.faecher thead {
+	background-color: #E0E0E0;
+	text-align: center;
+}
+
+table.faecher tbody {
+	text-align: left;
+}
+
+table.faecher tfoot {
+	background-color: #E0E0E0;
+	text-align: center;
+}
+
+table.faecher th {
+	border: 0.5px solid gray;
+}
+
+table.faecher td {
+	text-align: center;
+	border: 0.5px solid gray;
+}
+
+table.faecher tfoot td {
+	border: 0px solid gray;
+}

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
@@ -51,130 +52,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class PDFGostWahlbogen extends PDFCreator {
 
-	private static final String html =
-		"""
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tr>
-				<td style="width: 15%; text-align: left; vertical-align: top;">
-					<p>@@PRUEFUNGSORDNUNG@@</p>
-				</td>
-				<td style="width: 70%; text-align: center;">
-					<h2>@@SCHULBEZEICHNUNG_1@@<br/>@@SCHULBEZEICHNUNG_2@@<br/>@@SCHULBEZEICHNUNG_3@@</h2>
-				</td>
-				<td style="width: 15%; text-align: right; vertical-align: top;">
-					<p>@@KLASSE@@<br/> Abitur @@ABITURJAHR@@</p>
-				</td>
-			</tr>
-		</table>
-		<p><b>Wahlbogen für das Halbjahr @@PLANUNGSHALBJAHR@@ von @@SCHUELER_NAME@@</b></p>
-		<p>@@BEMERKUNGEN@@</p>
-		<p>Hiermit wähle ich verbindlich für das Halbjahr @@PLANUNGSHALBJAHR@@ die folgenden Fächer:</p>
-		<table class="faecher" style="border-collapse:collapse; border:0.5px solid gray;" width="100%" cellspacing="0" cellpadding="0">
-			<thead>
-				<tr>
-					<th style="width: 45%;">Fach</th>
-					<th style="width: 13%;">Sprachenfolge</th>
-					<th style="width: 6%;">EF.1</th>
-					<th style="width: 6%;">EF.2</th>
-					<th style="width: 6%;">Q1.1</th>
-					<th style="width: 6%;">Q1.2</th>
-					<th style="width: 6%;">Q2.1</th>
-					<th style="width: 6%;">Q2.2</th>
-					<th style="width: 6%;">Abitur</th>
-				</tr>
-			</thead>
-			<tbody>
-				@@ROWS@@
-			</tbody>
-			<tfoot>
-				<tr>
-					<td></td>
-					<td style="text-align: right;">Anzahl Kurse: </td>
-					<td>@@KURSE_EF1@@</td>
-					<td>@@KURSE_EF2@@</td>
-					<td>@@KURSE_Q11@@</td>
-					<td>@@KURSE_Q12@@</td>
-					<td>@@KURSE_Q21@@</td>
-					<td>@@KURSE_Q22@@</td>
-					<td>@@KURSE_Q@@ <sup>1)</sup></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td style="text-align: right;">Wochenstunden: </td>
-					<td>@@WSTD_EF1@@</td>
-					<td>@@WSTD_EF2@@</td>
-					<td>@@WSTD_Q11@@</td>
-					<td>@@WSTD_Q12@@</td>
-					<td>@@WSTD_Q21@@</td>
-					<td>@@WSTD_Q22@@</td>
-					<td>@@JSTD@@ <sup>2)</sup></td>
-				</tr>
-			</tfoot>
-		</table>
-		<p>Schulorganisatorische Gründe können zu einer Änderung der Fachwahl und der Laufbahn führen. Korrekturwünsche können
-		vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrern durchgeführt werden.</p>
-		@@BELEGUNGSFEHLER@@
-		@@BELEGUNGSHINWEISE@@
-		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;">
-			<tr style="height: 3em;">
-				<td style="width: 45%;"> </td>
-				<td style="width: 10%;"> </td>
-				<td style="width: 45%;"> </td>
-			</tr>
-			<tr style="height: 1em;">
-				<td style="text-align: center; border: 0.5px solid black; border-style: solid none none none;">
-					Unterschrift Beratungslehrer/in
-				</td>
-				<td> </td>
-				<td style="text-align: left;"> Beraten am: @@BERATUNGSDATUM@@ </td>
-			</tr>
-			<tr style="height: 3em;">
-				<td> </td>
-				<td> </td>
-				<td> </td>
-			</tr>
-			<tr style="height: 1em;">
-				<td style="text-align: center; border: 0.5px solid black; border-style: solid none none none;">
-				  	@@UNTERSCHRIFT_SCHUELER@@
-				</td>
-				<td> </td>
-				<td style="text-align: center; border: 0.5px solid black; border-style: solid none none none;">
-					Unterschrift eines Erziehungsberechtigten
-				</td>
-			</tr>
-		</table>
-		<div class="footer">
-		<p class="tinyfont" style="margin: 0px; width: 100%; border: 0.5px solid black; border-style: none none solid none;">@@ZEIT@@</p>
-		<p style="margin: 0px"><span class="tinyfont" style="margin-right: 2em">1) Anzahl der anrechenbaren Kurse aus der Qualifikationsphase</span>
-		<span class="tinyfont" style="margin-right: 2em">2) Summe der durchschnittlichen Jahresstunden</span></p>
-		</div>
-		""";
-
-	private static final String css =
-		"""
-		table.faecher thead {
-			background-color: #E0E0E0;
-			text-align: center;
-		}
-		table.faecher tbody {
-			text-align: left;
-		}
-		table.faecher tfoot {
-			background-color: #E0E0E0;
-			text-align: center;
-		}
-		table.faecher th {
-			border: 0.5px solid gray;
-		}
-		table.faecher td {
-			text-align: center;
-			border: 0.5px solid gray;
-		}
-		table.faecher tfoot td {
-			border: 0px solid gray;
-		}
-		""";
-
+	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostWahlbogen.html.txt");
+	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostWahlbogen.css.txt");
 
 	/** Die Laufbahndaten des Schülers */
 	private final Abiturdaten abidaten;
@@ -273,7 +152,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	private void getErgebnisse() {
 		// Berechne das Ergebnis des Belegprüfung für die Abiturdaten
 		final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
-		if (ergebnis.fehlercodes.size() <= 0) {
+		if (ergebnis.fehlercodes.isEmpty()) {
 			bodyData.put("BELEGUNGSFEHLER", "");
 			bodyData.put("BELEGUNGSHINWEISE", "");
 			return;
