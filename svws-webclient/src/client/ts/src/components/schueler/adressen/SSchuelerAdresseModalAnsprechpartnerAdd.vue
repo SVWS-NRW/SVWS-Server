@@ -2,15 +2,16 @@
 	<svws-ui-modal ref="modal" size="medium">
 		<template #modalTitle>Ansprechpartner Hinzufügen</template>
 		<template #modalContent>
-			<div class="input-wrapper">
+			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Name" v-model="ansprechpartner.name" type="text" />
 				<svws-ui-text-input placeholder="Vorname" v-model="ansprechpartner.vorname" type="text" />
 				<svws-ui-text-input placeholder="Anrede" v-model="ansprechpartner.anrede" type="text" />
 				<svws-ui-text-input placeholder="Titel" v-model="ansprechpartner.titel" type="text" />
+				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Abteilung" v-model="ansprechpartner.abteilung" type="text" />
 				<svws-ui-text-input placeholder="Telefon-Nr." v-model="ansprechpartner.telefon" type="tel" />
-				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ansprechpartner.email" type="email" verify-email />
-			</div>
+				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ansprechpartner.email" type="email" verify-email span="full" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>

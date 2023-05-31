@@ -251,6 +251,7 @@
 }
 
 .button--small,
+.content-card--header .button,
 .data-table__tbody .button,
 .router-tab-bar--subnav .button,
 .router-tab-bar--subnav .radio--label,
@@ -260,6 +261,7 @@
 
 .button--small,
 .data-table__tbody .button,
+.content-card--header .button,
 .router-tab-bar--subnav .button,
 .cv-wrapper .cv-header button {
 	padding: 0.3em 0.75em;

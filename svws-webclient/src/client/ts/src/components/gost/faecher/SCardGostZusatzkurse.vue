@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Angebot von Zusatzkursen">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<div class="flex flex-col gap-3">
 				<svws-ui-checkbox v-model="inputHatZusatzkursGE">Zusatzkurs in GE wird angeboten</svws-ui-checkbox>
 				<svws-ui-multi-select title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE"
@@ -11,7 +11,7 @@
 				<svws-ui-multi-select title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW"
 					:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursSW" />
 			</div>
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

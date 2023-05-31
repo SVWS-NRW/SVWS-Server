@@ -3,17 +3,17 @@
 	<svws-ui-modal ref="modal" size="medium">
 		<template #modalTitle>Religion Hinzufügen</template>
 		<template #modalContent>
-			<div class="input-wrapper">
+			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-multi-select v-model="religion" title="Statistikkürzel" :items="list"
 					:item-text="i => i.kuerzel || 'ohne Kürzel'" required />
 				<svws-ui-text-input v-model="religion.kuerzel" type="text" placeholder="Kürzel" />
 				<svws-ui-text-input v-model="religion.text" type="text" placeholder="Bezeichnung" />
 				<svws-ui-text-input v-model="religion.textZeugnis" type="text" placeholder="Zeugnisbezeichnung" />
-			</div>
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="saveEntries()" :disabled="!religion.kuerzel"> Speichern </svws-ui-button>
+			<svws-ui-button type="primary" @click="saveEntries()" :disabled="!religion.kuerzel"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="ENM-Datei">
-		<div class="content-wrapper">
+		<div class="flex items-start gap-3">
 			<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" />
 			<svws-ui-text-input v-model="salt" type="password" placeholder="Salt" />
 			<input type="file" accept=".base64" @change="import_file" :disabled="loading">

@@ -3,7 +3,7 @@
 		<template #actions>
 			<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 		</template>
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt" v-model="schuljahresabschnitt" type="text" />
 			<svws-ui-multi-select title="Jahrgaenge" v-model="jahrgaenge" tags :items="mapJahrgaenge"
@@ -11,7 +11,7 @@
 			<svws-ui-text-input placeholder="Fach-ID" v-model="fach" type="number" />
 			<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
 			<svws-ui-text-input placeholder="Sortierung" v-model="sortierung" type="number" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

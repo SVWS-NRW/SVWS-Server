@@ -14,6 +14,7 @@
 		autoresize?: boolean;
 		cols?: number;
 		rows?: number;
+		span?: 'full';
 	}>(), {
 		modelValue: "",
 		placeholder: "",
@@ -24,7 +25,8 @@
 		resizeable: "both",
 		autoresize: false,
 		cols: 80,
-		rows: 3
+		rows: 3,
+		span: undefined,
 	})
 
 	const emit = defineEmits<{
@@ -106,7 +108,8 @@
 			'textarea-input--resize-none': resizeable === 'none',
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
-			'textarea-input--resize-both': resizeable === 'both'
+			'textarea-input--resize-both': resizeable === 'both',
+			'col-span-full': span === 'full'
 		}">
 		<component :is="tag" v-bind="bindings" class="textarea-input--control" ref="element" />
 		<span v-if="placeholder"

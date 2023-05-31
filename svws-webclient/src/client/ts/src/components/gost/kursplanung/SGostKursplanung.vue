@@ -18,7 +18,7 @@
 				</svws-ui-button>
 			</template>
 		</s-card-gost-kursansicht>
-		<section class="content-card--wrapper flex gap-8 min-w-[50%] h-full">
+		<section class="content-card flex gap-8 min-w-[50%] h-full">
 			<div class="min-w-[21rem] w-[21rem] h-full">
 				<router-view name="gost_kursplanung_schueler_auswahl" />
 			</div>

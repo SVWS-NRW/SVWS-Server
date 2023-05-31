@@ -17,15 +17,16 @@
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
 				</svws-ui-radio-group>
-				<div class="input-wrapper-1-col col-span-full" v-if="kurs_filter_toggle">
+				<svws-ui-input-wrapper class="col-span-full" v-if="kurs_filter_toggle">
 					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
-				</div>
-				<div class="input-wrapper col-span-full" v-if="fach_filter_toggle">
+				</svws-ui-input-wrapper>
+				<svws-ui-input-wrapper class="col-span-full" v-if="fach_filter_toggle">
 					<svws-ui-multi-select v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
 					<svws-ui-multi-select v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
-				</div>
-				<svws-ui-radio-group class="radio--row mt-4 col-span-full">
+				</svws-ui-input-wrapper>
+				<svws-ui-spacing />
+				<svws-ui-radio-group class="radio--row col-span-full">
 					<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
 						<i-ri-alert-line />

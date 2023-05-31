@@ -1,12 +1,10 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper>
 			<svws-ui-text-input placeholder="ID" v-model="id" type="text" />
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" />
-			</div>
-		</div>
+			<svws-ui-text-input placeholder="Bezeichnung" v-model="bezeichnung" type="text" span="full" />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
 		<template #title>
@@ -15,12 +13,10 @@
 				<span>Statistik</span>
 			</div>
 		</template>
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-multi-select title="Statistik-Eintrag" v-model="statistikEintrag" :items="statistikKatalog"
-					:item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel + ' (' + i.daten.beschreibung + ')'" required statistics />
-			</div>
-		</div>
+		<svws-ui-input-wrapper>
+			<svws-ui-multi-select title="Statistik-Eintrag" v-model="statistikEintrag" :items="statistikKatalog"
+				:item-text="(i: Foerderschwerpunkt) => i.daten.kuerzel + ' (' + i.daten.beschreibung + ')'" required statistics />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

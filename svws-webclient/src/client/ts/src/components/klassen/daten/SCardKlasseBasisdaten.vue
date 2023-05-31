@@ -3,13 +3,13 @@
 		<template #actions>
 			<svws-ui-checkbox v-model="inputIstSichtbar"> Ist sichtbar </svws-ui-checkbox>
 		</template>
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 			<svws-ui-text-input placeholder="Parallelität" v-model="parallelitaet" type="text" />
 			<svws-ui-text-input placeholder="Sortierung" v-model="inputSortierung" type="text" />
 			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge"
 				:item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

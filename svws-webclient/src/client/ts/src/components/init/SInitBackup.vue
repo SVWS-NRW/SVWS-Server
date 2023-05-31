@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="SQLite-Datenbank auswählen">
-		<div class="content-wrapper">
+		<div class="flex items-start gap-3">
 			<input type="file" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			{{

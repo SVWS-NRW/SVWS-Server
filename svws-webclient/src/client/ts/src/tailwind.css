@@ -6,32 +6,8 @@
 	@apply flex h-screen w-full flex-grow flex-col;
 }
 
-.content-wrapper {
-	@apply flex flex-row items-start space-x-4;
-}
-
-.input-wrapper-1-col {
-	@apply grid flex-grow grid-cols-1 gap-3;
-}
-
-.input-wrapper {
-	@apply grid flex-grow grid-cols-1 gap-3 md:grid-cols-2;
-}
-
-.input-wrapper--checkboxes {
-	@apply gap-x-3 gap-y-0;
-}
-
-.input-wrapper .col-span-2 {
-	@apply max-md:col-span-1;
-}
-
 .secondary-menu--header .input-wrapper {
 	@apply max-2xl:grid-cols-1;
-}
-
-.input-wrapper-3-cols {
-	@apply col-span-2 grid grid-cols-3 gap-3;
 }
 
 .app-container {

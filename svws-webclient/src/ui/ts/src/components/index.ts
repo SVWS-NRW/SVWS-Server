@@ -37,3 +37,5 @@ export { default as SvwsUiDropData } from "./SvwsUiDropData.vue";
 export { default as SvwsUiDataTable } from "./Layout/DataTable/SvwsUiDataTable.vue";
 export { default as SvwsUiSpinner } from "./SvwsUiSpinner.vue";
 export { default as SvwsUiSubNav } from "./Controls/SvwsUiSubNav.vue";
+export { default as SvwsUiInputWrapper } from "./Layout/SvwsUiInputWrapper.vue";
+export { default as SvwsUiSpacing } from "./Layout/SvwsUiSpacing.vue";

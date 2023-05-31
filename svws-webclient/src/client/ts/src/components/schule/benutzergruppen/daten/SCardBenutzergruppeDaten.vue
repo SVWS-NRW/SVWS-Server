@@ -3,9 +3,9 @@
 		<template #actions>
 			<svws-ui-checkbox v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 		</template>
-		<div class="input-wrapper-1-col">
+		<svws-ui-input-wrapper>
 			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

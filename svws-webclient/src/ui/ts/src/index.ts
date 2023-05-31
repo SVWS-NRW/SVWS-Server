@@ -41,6 +41,8 @@ export {
 	SvwsUiDataTable,
 	SvwsUiSpinner,
 	SvwsUiSubNav,
+	SvwsUiInputWrapper,
+	SvwsUiSpacing,
 } from './components'
 
 export type { DataTableColumn, DataTableItem } from './components/Layout/DataTable/types'

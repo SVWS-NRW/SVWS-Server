@@ -1,12 +1,10 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
-			</div>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" span="full" />
 			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputText" type="text" />
 			<svws-ui-text-input placeholder="Zeugnisbezeichnung" v-model="inputTextzeugnis" type="text" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
 		<template #title>
@@ -15,12 +13,10 @@
 				<span>Statistik</span>
 			</div>
 		</template>
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
-					:item-text="(i: Religion) => i.daten.kuerzel" required />
-			</div>
-		</div>
+		<svws-ui-input-wrapper>
+			<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
+				:item-text="(i: Religion) => i.daten.kuerzel" required />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

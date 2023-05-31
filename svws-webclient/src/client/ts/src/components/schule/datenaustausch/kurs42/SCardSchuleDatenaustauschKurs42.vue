@@ -23,7 +23,7 @@
 				</template>
 			</svws-ui-tooltip>
 		</template>
-		<div class="input-wrapper-1-col">
+		<svws-ui-input-wrapper>
 			<input type="file" accept=".zip" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			<br>{{
@@ -33,7 +33,7 @@
 						? "Upload erfolgreich"
 						: ""
 			}}
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

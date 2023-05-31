@@ -1,9 +1,7 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required :valid="eingabeStrasseOk" />
-			</div>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required :valid="eingabeStrasseOk" span="full" />
 			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort"
@@ -12,7 +10,7 @@
 			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
 			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="Private E-Mail-Adresse" verify-email />
 			<svws-ui-text-input v-model="inputEmailDienstlich" type="email" placeholder="Schulische E-Mail-Adresse" verify-email />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-content-card title="Allgemeine Angaben">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined"
 				@update:model-value="doPatch({ datumAnfang: String($event) })" type="date" />
 			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined"
 				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
-
-			<div class="col-span-2 flex flex-wrap gap-2 mt-4" :class="{'opacity-50': !klassenlehrer.length}">
+			<svws-ui-spacing />
+			<div class="col-span-full flex flex-wrap gap-3" :class="{'opacity-50': !klassenlehrer.length}">
 				<span class="font-bold">Klassenlehrer:</span>
 				<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
 				<div v-else v-for="kl in klassenlehrer" :key="kl.id"> {{ getLehrerText(kl) }}  </div>
@@ -16,40 +16,43 @@
 			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
 			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer"
 				:item-text="getLehrerText" autocomplete />
-			<div class="mt-4 input-wrapper-3-cols col-span-2">
-				<span class="font-bold col-span-full">Fehlstunden</span>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper class="col-span-full" :grid="4">
+				<span class="font-bold">Fehlstunden</span>
 				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined"
 					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined"
 					@update:model-value="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
 				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined"
 					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
-			</div>
-			<div class="mt-4 col-span-full input-wrapper">
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
 				<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="data.pruefungsOrdnung || undefined" />
 				<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => `${i.beschreibung}`" autocomplete />
 				<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
-			</div>
-			<div class="mt-4 col-span-full input-wrapper">
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte"
 					:item-text="i => `${i.text}`" autocomplete />
 				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte"
 					:item-text="i => `${i.text}`" autocomplete />
-				<div class="col-span-2">
-					<svws-ui-checkbox v-model="schwerbehinderung"> Schwerstbehinderung </svws-ui-checkbox>
-				</div>
-			</div>
-			<div class="mt-4 col-span-full input-wrapper">
+				<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper :grid="2">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
 				<svws-ui-multi-select title="Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
 					:item-text="i => `${i.kuerzel}`" autocomplete />
 				<svws-ui-multi-select title="Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
 					:item-text="i => `${i.kuerzel}`" autocomplete />
-			</div>
-			<div class="mt-4 col-span-full input-wrapper">
-				<div class="col-span-2 font-bold opacity-50"> TODO: Nachprüfungen </div>
-				<div class="col-span-2" v-if="data.nachpruefungen !== null">
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper>
+				<div class="font-bold opacity-50"> TODO: Nachprüfungen </div>
+				<div v-if="data.nachpruefungen !== null">
 					<div>mögliche Nachprüfungsfächer</div>
 					<div v-for="fach in data.nachpruefungen.moegliche" :key="fach">
 						{{ fach }}
@@ -59,8 +62,8 @@
 						{{ `${pruefung.grund} ${pruefung.datum} ${pruefung.fachID} ${pruefung.note}` }}
 					</div>
 				</div>
-			</div>
-		</div>
+			</svws-ui-input-wrapper>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

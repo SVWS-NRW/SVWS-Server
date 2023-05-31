@@ -1,13 +1,12 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" :valid="eingabeStrasseOk" />
-			</div>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" :valid="eingabeStrasseOk" span="full" />
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
 				:item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
+			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Telefon" :model-value="data().telefon"
 				@update:model-value="doPatch({ telefon: String($event) })" type="tel" />
 			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data().telefonMobil"
@@ -16,7 +15,7 @@
 				@update:model-value="doPatch({ emailPrivat: String($event) })" type="email" verify-email />
 			<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :model-value="data().emailSchule"
 				@update:model-value="doPatch({ emailSchule: String($event) })" type="email" verify-email />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

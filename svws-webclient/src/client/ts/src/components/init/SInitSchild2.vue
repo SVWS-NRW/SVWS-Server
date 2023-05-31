@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Datenbank auswählen">
-		<div class="content-wrapper">
+		<div class="flex items-start gap-3">
 			<div class="flex flex-col gap-3">
 				<svws-ui-select-input v-model="db" :options="[{index: 'mysql', label: 'MySQL'}, {index: 'mariadb', label: 'MariaDB'},{index: 'mssql', label: 'MSSQL'},{index: 'mdb', label: 'Access (MDB)'}]" @update:model-value="setDB" />
 				<div class="flex flex-col gap-3" v-if="db && db !== 'mdb'">

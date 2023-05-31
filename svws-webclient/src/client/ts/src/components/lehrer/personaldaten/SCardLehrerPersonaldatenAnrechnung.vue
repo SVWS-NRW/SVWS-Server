@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
-		<div class="input-wrapper-1-col">
+		<svws-ui-input-wrapper>
 			<svws-ui-multi-select title="Mehrleistung" v-model="mehrleistungsgrund" :items="LehrerMehrleistungArt.values()"
 				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text" />
 			<svws-ui-multi-select title="Minderleistung" v-model="minderleistungsgrund" :items="LehrerMinderleistungArt.values()"
@@ -9,7 +9,7 @@
 			<svws-ui-multi-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
 				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Stammschulnummer" v-model="stammschulnummer" type="text" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

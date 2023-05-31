@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="KAoA" class="opacity-50">
-		<div class="input-wrapper">
-			<div class="col-span-2">
+		<svws-ui-input-wrapper>
+			<div class="opacity-50">
 				Hier werden die KAoA-Daten abgelegt
 			</div>
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

@@ -11,7 +11,7 @@
 										<span class="font-bold">SVWS <span class="font-normal">NRW</span></span>
 									</h1>
 								</div>
-								<div class="w-full mt-1 flex flex-col gap-2 items-center px-8">
+								<svws-ui-input-wrapper class="px-8" center>
 									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
 									<svws-ui-button type="secondary" @click="connect" :disabled="connecting" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
@@ -19,9 +19,9 @@
 										<svws-ui-spinner :spinning="connecting" />
 										<i-ri-check-line v-if="!connecting && inputDBSchemata.size() > 0 && !inputFocus" />
 									</svws-ui-button>
-								</div>
+								</svws-ui-input-wrapper>
 								<Transition>
-									<div v-if="inputDBSchemata.size() > 0 && !connecting" class="flex flex-col gap-2 items-center mt-8 px-8">
+									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-9 px-8" center>
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
@@ -30,7 +30,7 @@
 											<svws-ui-spinner v-if="authenticating" spinning />
 											<i-ri-login-circle-line v-else />
 										</svws-ui-button>
-									</div>
+									</svws-ui-input-wrapper>
 								</Transition>
 								<div class="mt-12 text-center text-sm">
 									<p class="mb-2 opacity-50">

@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Lehramtsangaben">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()"
 				:item-text="(i: LehrerLehramt) => i.daten.text" required />
 			<svws-ui-multi-select title="Anerkennung Lehramt" v-model="lehramt_anerkennung" :items="LehrerLehramtAnerkennung.values()"
@@ -13,7 +13,7 @@
 				:item-text="(i: LehrerFachrichtung) => i.daten.text" required />
 			<svws-ui-multi-select title="Anerkennung Fachrichtung" v-model="fachrichtung_anerkennung" :items="LehrerFachrichtungAnerkennung.values()"
 				:item-text="(i: LehrerFachrichtungAnerkennung) => i.daten.text" required />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

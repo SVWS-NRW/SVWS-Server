@@ -54,19 +54,19 @@
 					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 				</template>
 				<div class="flex flex-col gap-4">
-					<div class="input-wrapper-1-col">
+					<svws-ui-input-wrapper>
 						<svws-ui-radio-group id="rbgKursart" :row="true">
 							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 						</svws-ui-radio-group>
 						<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
-					</div>
+					</svws-ui-input-wrapper>
 					<svws-ui-radio-group id="rbgQuartal" :row="true">
 						<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
 					</svws-ui-radio-group>
-					<div class="input-wrapper-1-col">
+					<svws-ui-input-wrapper>
 						<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" />
 						<svws-ui-text-input placeholder="Auswahlzeit" type="number" v-model:modelValue="activeVorgabe.auswahlzeit" />
-					</div>
+					</svws-ui-input-wrapper>
 					<div class="flex flex-col gap-1">
 						<div class="flex flex-row items-center">
 							<label for="rbgMdlPruefung">Mündliche Prüfung: </label>

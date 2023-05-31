@@ -12,13 +12,15 @@
 		circle?: boolean;
 		headless?: boolean;
 		bw?: boolean;
+		span?: 'full';
 	}>(), {
 		value: '',
 		statistics: false,
 		disabled: false,
 		circle: false,
 		headless: false,
-		bw: false
+		bw: false,
+		span: undefined
 	});
 
 
@@ -43,6 +45,7 @@
 			'checkbox--headless': headless,
 			'checkbox--indeterminate': value === undefined || value === 'indeterminate',
 			'checkbox--bw': bw,
+			'col-span-full': span === 'full'
 		}">
 		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
 		<svws-ui-icon v-if="value === 'indeterminate' && typeof value !== 'undefined'" role="checkbox">

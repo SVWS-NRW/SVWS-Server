@@ -1,24 +1,18 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
-		<div class="input-wrapper">
-			<div class="col-span-full">
-				<svws-ui-text-input placeholder="Identnummer" v-model="inputIdentNrTeil1" type="text" />
-			</div>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-text-input placeholder="Identnummer" v-model="inputIdentNrTeil1" type="text" span="full" />
 			<svws-ui-text-input placeholder="Seriennummer" v-model="inputIdentNrTeil2SerNr" type="text" />
 			<svws-ui-text-input placeholder="Vergütungsschlüssel" v-model="inputLbvVerguetungsschluessel" type="text" />
 			<svws-ui-text-input placeholder="PA-Nummer" v-model="inputPersonalaktennummer" type="text" />
 			<svws-ui-text-input placeholder="LBV-Pers.Nummer" v-model="inputLbvPersonalnummer" type="text" />
-			<div class="col-span-full">
-				<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
-					:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required />
-			</div>
-			<div class="col-span-full">
-				<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
-					:item-text="(i: LehrerFachrichtung) =>i.daten.text" required />
-			</div>
+			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
+				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required span="full" />
+			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
+				:item-text="(i: LehrerFachrichtung) =>i.daten.text" required span="full" />
 			<svws-ui-text-input placeholder="Zugangsdatum" v-model="inputZugangsdatum" type="date" />
 			<svws-ui-text-input placeholder="Abgangsdatum" v-model="inputAbgangsdatum" type="date" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

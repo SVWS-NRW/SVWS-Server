@@ -6,7 +6,7 @@
 				<span class="ml-2">Löschen</span>
 			</svws-ui-button>
 		</template>
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<div class="entry-wrapper">
 				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
 				<div class="entry-content">
@@ -57,7 +57,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
@@ -157,10 +157,6 @@
 </script>
 
 <style scoped>
-
-	.input-wrapper {
-		@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;
-	}
 
 	.entry-content {
 		@apply grid flex-grow grid-cols-1 gap-4 xl:grid-cols-2;

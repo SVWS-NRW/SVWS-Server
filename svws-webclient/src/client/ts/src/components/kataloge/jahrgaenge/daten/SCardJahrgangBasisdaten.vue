@@ -1,12 +1,12 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
 			<svws-ui-text-input placeholder="Kürzel Schulgliederung" v-model="inputKuerzelSchulgliederung" type="text" />
 			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
 			<svws-ui-multi-select title="Folgejahrgang" v-model="inputIdFolgejahrgang"
 				:items="inputJahrgaenge" :item-text="(e: JahrgangsListeEintrag) => e.bezeichnung ?? ''" />
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
 		<template #title>
@@ -15,11 +15,9 @@
 				<span>Statistik</span>
 			</div>
 		</template>
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputKuerzelStatistik" type="text" />
-			</div>
-		</div>
+		<svws-ui-input-wrapper>
+			<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputKuerzelStatistik" type="text" />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

@@ -22,6 +22,7 @@
 		removable?: boolean;
 		rounded?: boolean;
 		required?: boolean;
+		span?: 'full';
 	}>(), {
 		placeholder: '',
 		title: '',
@@ -35,6 +36,7 @@
 		headless: false,
 		removable: false,
 		rounded: false,
+		span: undefined
 	})
 
 	const emit = defineEmits<{
@@ -255,7 +257,7 @@
 
 <template>
 	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList }">
+		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList, 'col-span-full': span === 'full' }">
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">

@@ -1,13 +1,13 @@
 <template>
 	<svws-ui-content-card title="Sonderpädagogische Förderung">
-		<div class="input-wrapper">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Haupt-Förderschwerpunkt" v-model="inputFoerderschwerpunktID" :items="mapFoerderschwerpunkte" :item-text="i=>i.text" />
 			<svws-ui-multi-select title="Weiterer-Förderschwerpunkt" v-model="inputFoerderschwerpunkt2ID" :items="mapFoerderschwerpunkte" :item-text="i=>i.text" />
 			<div class="flex flex-col">
 				<svws-ui-checkbox :model-value="data().istAOSF || false" @update:model-value="doPatch({ istAOSF: Boolean($event) })">AOSF</svws-ui-checkbox>
 				<svws-ui-checkbox :model-value="data().istLernenZieldifferent || false" @update:model-value="doPatch({ istLernenZieldifferent: Boolean($event) })">Zieldifferntes Lernen</svws-ui-checkbox>
 			</div>
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

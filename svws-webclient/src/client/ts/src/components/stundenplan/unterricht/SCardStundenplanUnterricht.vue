@@ -1,11 +1,9 @@
 <template>
 	<svws-ui-content-card title="Unterricht">
-		<div class="content-wrapper">
-			<div class="input-wrapper">
-				<!-- <svws-ui-text-input placeholder="Nachname" :model-value="data().nachname"
+		<svws-ui-input-wrapper :grid="2">
+			<!-- <svws-ui-text-input placeholder="Nachname" :model-value="data().nachname"
 					@update:model-value="doPatch({ nachname: String($event) })" type="text" /> -->
-			</div>
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
