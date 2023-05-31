@@ -1,5 +1,6 @@
 package de.svws_nrw.core.exceptions;
 
+import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.constraints.NotNull;
@@ -176,6 +177,22 @@ public class DeveloperNotificationException extends RuntimeException {
 		if (value == null)
 			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL mapped!");
 		return value;
+	}
+
+	/**
+	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
+	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
+	 */
+	public static <@NotNull E> void ifListAddsDuplicate(final @NotNull String listName, @NotNull final List<@NotNull E> list, final @NotNull E value) throws DeveloperNotificationException {
+		if (list.contains(value))
+			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!");
+		list.add(value);
 	}
 
 }

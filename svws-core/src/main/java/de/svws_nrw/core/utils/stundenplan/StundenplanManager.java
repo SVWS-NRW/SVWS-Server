@@ -42,7 +42,6 @@ public class StundenplanManager {
 	// Mappings von DTO-StundenplanUnterrichtsverteilung.
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_fachID_zu_fach = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_klasseID_zu_klasse = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull Long>> _map_klasseID_zu_jahrgangIDs = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_jahrgangID_zu_jahrgang = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _map_lehrerID_zu_lehrer = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
@@ -86,10 +85,10 @@ public class StundenplanManager {
 		checkWochentypenKonsistenz();
 
 		// Maps: DTO-StundenplanUnterrichtsverteilung.
-		initMapFach();              // hat ---
-		initMapJahrgang();          // hat ---
-		initMapLehrer();            // hat [Fach]
-		initMapKlasse();            // hat [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
+		initMapFach();              // ✔, hat ---
+		initMapJahrgang();          // ✔, hat ---
+		initMapLehrer();            // ✔, hat [Fach]
+		initMapKlasse();            // ✔, hat [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		initMapSchueler();          // hat Klasse
 		initMapKurs();              // hat [Schienen], [Jahrgang], [Schüler]
 
@@ -140,30 +139,9 @@ public class StundenplanManager {
 		}
 	}
 
-	private void initMapKlasse() {
-		_map_klasseID_zu_klasse.clear();
-		_map_klasseID_zu_jahrgangIDs.clear();
-		for (final @NotNull StundenplanKlasse klasse: _datenUV.klassen) {
-			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-			// klasse.bezeichnung darf "blank" sein
-			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", klasse.kuerzel.isBlank());
-			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", _map_klasseID_zu_klasse, klasse.id);
-			_map_klasseID_zu_klasse.put(klasse.id, klasse);
-
-			// Jahrgänge der Klasse hinzufügen.
-			final @NotNull ArrayList<@NotNull Long> listJ = new ArrayList<>();
-			for (final @NotNull Long jahrgangID : klasse.jahrgaenge) {
-				DeveloperNotificationException.ifTrue("!_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID)", !_map_jahrgangID_zu_jahrgang.containsKey(jahrgangID));
-				DeveloperNotificationException.ifTrue("jahrgaenge.contains(jahrgangID)", listJ.contains(jahrgangID));
-				listJ.add(jahrgangID);
-			}
-			_map_klasseID_zu_jahrgangIDs.put(klasse.id, listJ);
-		}
-	}
-
 	private void initMapJahrgang() {
 		_map_jahrgangID_zu_jahrgang.clear();
-		for (final @NotNull StundenplanJahrgang jahrgang: _datenUV.jahrgaenge) {
+		for (final @NotNull StundenplanJahrgang jahrgang : _datenUV.jahrgaenge) {
 			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
 			DeveloperNotificationException.ifTrue("jahrgang.bezeichnung.isBlank()", jahrgang.bezeichnung.isBlank());
 			DeveloperNotificationException.ifTrue("jahrgang.kuerzel.isBlank()", jahrgang.kuerzel.isBlank());
@@ -183,11 +161,28 @@ public class StundenplanManager {
 			_map_lehrerID_zu_lehrer.put(lehrer.id, lehrer);
 
 			// Konsistenz der Fächer der Lehrkraft überprüfen.
-			final @NotNull ArrayList<@NotNull Long> listF = new ArrayList<>();
+			final @NotNull ArrayList<@NotNull Long> listFaecherDerLehrkraft = new ArrayList<>();
 			for (final @NotNull Long fachID : lehrer.faecher) {
 				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_fachID_zu_fach, fachID);
-				DeveloperNotificationException.ifTrue("listF.contains(" + fachID + ")", listF.contains(fachID));
-				listF.add(fachID);
+				DeveloperNotificationException.ifListAddsDuplicate("listFaecherDerLehrkraft", listFaecherDerLehrkraft, fachID);
+			}
+		}
+	}
+
+	private void initMapKlasse() {
+		_map_klasseID_zu_klasse.clear();
+		for (final @NotNull StundenplanKlasse klasse: _datenUV.klassen) {
+			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+			DeveloperNotificationException.ifTrue("klasse.kuerzel.isBlank()", klasse.kuerzel.isBlank());
+			// klasse.bezeichnung darf "blank" sein
+			DeveloperNotificationException.ifMapContains("_map_klasseID_zu_klasse", _map_klasseID_zu_klasse, klasse.id);
+			_map_klasseID_zu_klasse.put(klasse.id, klasse);
+
+			// Konsistenz der Jahrgänge der Klasse überprüfen.
+			final @NotNull ArrayList<@NotNull Long> listJahrgaengeDerKlasse = new ArrayList<>();
+			for (final @NotNull Long jahrgangID : klasse.jahrgaenge) {
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_jahrgangID_zu_jahrgang, jahrgangID);
+				DeveloperNotificationException.ifListAddsDuplicate("listJahrgaengeDerKlasse", listJahrgaengeDerKlasse, jahrgangID);
 			}
 		}
 	}

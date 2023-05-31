@@ -1,4 +1,5 @@
 import { RuntimeException } from '../../java/lang/RuntimeException';
+import { List } from '../../java/util/List';
 import { JavaMap } from '../../java/util/JavaMap';
 
 export class DeveloperNotificationException extends RuntimeException {
@@ -167,6 +168,22 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (value === null)
 			throw new DeveloperNotificationException("GET von " + key + " fehlgeschlagen, da es auf NULL mapped!")
 		return value;
+	}
+
+	/**
+	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
+	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
+	 */
+	public static ifListAddsDuplicate<E>(listName : string, list : List<E>, value : E) : void {
+		if (list.contains(value))
+			throw new DeveloperNotificationException(listName! + " hat bereits das Element " + value + "!")
+		list.add(value);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
