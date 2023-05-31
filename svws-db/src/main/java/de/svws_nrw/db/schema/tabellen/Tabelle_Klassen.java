@@ -113,6 +113,14 @@ public class Tabelle_Klassen extends SchemaTabelle {
 		.setJavaComment("Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden");
 
 
+	/** Die Definition des Fremdschlüssels Klassen_Schuljahresabschnitt_FK */
+	public SchemaTabelleFremdschluessel fk_Klassen_Schuljahresabschnitt_FK = addForeignKey(
+		"Klassen_Schuljahresabschnitt_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
+	);
+
 	/** Die Definition des Fremdschlüssels Klassen_Fachklasse_FK */
 	public SchemaTabelleFremdschluessel fk_Klassen_Fachklasse_FK = addForeignKey(
 			"Klassen_Fachklasse_FK",
