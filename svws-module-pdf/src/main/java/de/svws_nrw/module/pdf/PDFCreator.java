@@ -65,6 +65,9 @@ public class PDFCreator {
 	/** Der Titel des PDF-Dokuments */
 	private final String title;
 
+	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolge haben. */
+	private PDFCreator next = null;
+
 
 	/**
 	 * Erstellt einen neuen Manager für PDF-Dokumente.
@@ -78,6 +81,16 @@ public class PDFCreator {
 		this.title = title;
 		this.body = body;
 		this.css = css;
+	}
+
+
+	/**
+	 * Setzt den PDF-Creator, der für Folgeseiten genutzt wird (nur body).
+	 *
+	 * @param next   der nachfolgende PDF-Creator
+	 */
+	public void setNext(final PDFCreator next) {
+		this.next = next;
 	}
 
 
@@ -102,6 +115,10 @@ public class PDFCreator {
 				else
 					throw new IOException("Fehlerhaftes HTML-Template in Klasse " + this.getClass().getCanonicalName());
 			}
+		}
+		if (next != null) {
+			result.append("<div style=\"page-break-after: always;\"></div>");
+			result.append(next.getBody());
 		}
 		return result.toString();
 	}
@@ -194,7 +211,7 @@ public class PDFCreator {
 	 */
 	public byte[] toByteArray() {
 		try {
-			final ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream(32768);
 			runBuilder(baos);
 			return baos.toByteArray();
 		} catch (@SuppressWarnings("unused") final IOException e) {

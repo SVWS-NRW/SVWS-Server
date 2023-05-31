@@ -38,6 +38,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
 import jakarta.persistence.TypedQuery;
@@ -70,11 +71,15 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	/** Der Abiturdaten-Manager */
 	private final AbiturdatenManager manager;
 
+	/** Der Dateiname für die PDF-Datei */
+	private final String filename;
+
 
 	/**
 	 * Erstellt einen neuen PDF-Wahlbogen mit den übergebenen Daten.
 	 *
-	 * @param schuelerName        der Name des Schülers bestehend aus Vorname und Nachname getrennt durch ein Leerzeichen
+	 * @param schuelerVorname     der Vorname des Schülers
+	 * @param schuelerNachname    der Nachname des Schülers
 	 * @param geschlecht          das Geschlecht des Schülers
 	 * @param klasse              die Klasse des Schülers
 	 * @param schulbezeichnung    die Bezeichnung der Schule bestehend aus drei Teilen
@@ -86,23 +91,30 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
-	private PDFGostWahlbogen(final String schuelerName, final Geschlecht geschlecht, final String klasse, final String[] schulbezeichnung, final Abiturdaten abidaten,
+	private PDFGostWahlbogen(final String schuelerVorname, final String schuelerNachname, final Geschlecht geschlecht, final String klasse, final String[] schulbezeichnung, final Abiturdaten abidaten,
                              final GostJahrgangsdaten gostJahrgangsdaten, final GostFaecherManager gostFaecher, final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen,
                              final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang,
 			                 final String datumBeratung) {
 		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument
-		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerName, html, css);
+		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerVorname + " " + schuelerNachname, html, css);
 		this.abidaten = abidaten;
 		this.gostJahrgangsdaten = gostJahrgangsdaten;
 		this.gostFaecher = gostFaecher;
 		this.gostFaecherkombinationen = gostFaecherkombinationen;
 		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.gostFaecher.toList(), this.gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
+		this.filename = "Laufbahnplanung_%d_%s_%s_%s_%d.pdf".formatted(
+			gostJahrgangsdaten.abiturjahr,
+			gostJahrgangsdaten.jahrgang,
+			schuelerNachname.replace(' ', '_'),
+			schuelerVorname.replace(' ', '_'),
+			abidaten.schuelerID
+		);
 		// Ersetze die Felder des Templates mit den Daten
 		bodyData.put("PRUEFUNGSORDNUNG", "APO-GOSt");
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
 		bodyData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
 		bodyData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
-		bodyData.put("SCHUELER_NAME", schuelerName);
+		bodyData.put("SCHUELER_NAME", schuelerVorname + " " + schuelerNachname);
 		bodyData.put("KLASSE", klasse);
 		bodyData.put("ABITURJAHR", "" + abidaten.abiturjahr);
 		bodyData.put("PLANUNGSHALBJAHR", planungsHalbjahr.kuerzel);
@@ -203,10 +215,11 @@ public final class PDFGostWahlbogen extends PDFCreator {
 				final Sprachbelegung sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
 				final Sprachpruefung sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
 				if (sprachbelegung != null) {
-					if ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) {
+					if (((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
+							&& ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty()
+									|| (zfach.daten.abJahrgang.compareToIgnoreCase(sprachbelegung.belegungVonJahrgang) <= 0))) {
 						// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
-						if ((zfach.daten.abJahrgang == null) || zfach.daten.abJahrgang.isEmpty() || (zfach.daten.abJahrgang.compareToIgnoreCase(sprachbelegung.belegungVonJahrgang) <= 0))
-							rows.append("<td>").append(sprachbelegung.reihenfolge).append(" (ab Jg. ").append(sprachbelegung.belegungVonJahrgang).append(")").append("</td>");
+						rows.append("<td>").append(sprachbelegung.reihenfolge).append(" (ab Jg. ").append(sprachbelegung.belegungVonJahrgang).append(")").append("</td>");
 					}
 				} else if ((sprachpruefung != null) && (sprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben)) {
 					rows.append("<td>");
@@ -285,28 +298,30 @@ public final class PDFGostWahlbogen extends PDFCreator {
 
 
 	/**
-	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn
+	 * Erstellt ein neues Objekt des Typs PDFGostWahlbogen für den Wahlbogen zu der Laufbahn
 	 * eines Schülers der gymnasialen Oberstufe.
 	 *
 	 * @param conn          die Datenbank-Verbindung
 	 * @param schueler_id   die ID des Schülers
 	 *
-	 * @return die HTTP-Response mit dem PDF-Dokument
+	 * @return das Objekt zum Erstellen eines PDFs
+	 *
+	 * @throws WebApplicationException
 	 */
-	public static Response query(final DBEntityManager conn, final Long schueler_id) {
+	private static PDFGostWahlbogen getWahlbogen(final DBEntityManager conn, final Long schueler_id) throws WebApplicationException {
 		// Lese die Laufbahndaten aus der DB
 		if (schueler_id == null)
-	    	return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
     	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
 		if (schueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
 		if (gostSchueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schueler.Schuljahresabschnitts_ID);
 		if (abschnitt == null)
-    		return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
     	final TypedQuery<DTOSchuelerLernabschnittsdaten> queryAktAbschnitt = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = :schueler_id AND e.Schuljahresabschnitts_ID = :abschnitt_id", DTOSchuelerLernabschnittsdaten.class);
     	final DTOSchuelerLernabschnittsdaten aktAbschnitt = queryAktAbschnitt
     			.setParameter("schueler_id", schueler_id)
@@ -316,29 +331,29 @@ public final class PDFGostWahlbogen extends PDFCreator {
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
     	final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, aktAbschnitt.Klassen_ID);
 		if (klasse == null)
-    		return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
     	final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
 		if (daten == null)
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
 		final @NotNull GostJahrgangsdaten gostJahrgangsdaten;
 		try {
 			gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, daten.abiturjahr);
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException wae)
-				return wae.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
+				throw wae;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 		}
-    	// TODO Bei Schulen mit Quartalen fehlt die Bestimmung des Halbjahres anstatt abschnitt.Abschnitt...
     	final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	if (planungsHalbjahr == null)
     		planungsHalbjahr = (halbjahr == null) ? GostHalbjahr.EF1 : GostHalbjahr.Q22;
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
     	if (gostFaecher.isEmpty())
-    		return OperationError.NOT_FOUND.getResponse();
+    		throw OperationError.NOT_FOUND.exception();
     	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, daten.abiturjahr);
-    	final PDFGostWahlbogen wahlbogen = new PDFGostWahlbogen(
-    		schueler.Vorname + " " + schueler.Nachname,
+    	return new PDFGostWahlbogen(
+    		schueler.Vorname,
+    		schueler.Nachname,
     		schueler.Geschlecht,
     		klasse.Klasse,
     		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 },
@@ -350,11 +365,60 @@ public final class PDFGostWahlbogen extends PDFCreator {
     		gostJahrgangsdaten.textBeratungsbogen,
     		gostSchueler.DatumBeratung
     	);
+	}
+
+
+	/**
+	 * Erstellt das PDF-Dokument für den Wahlbogen zu der Laufbahn
+	 * eines Schülers der gymnasialen Oberstufe.
+	 *
+	 * @param conn          die Datenbank-Verbindung
+	 * @param schueler_id   die ID des Schülers
+	 *
+	 * @return die HTTP-Response mit dem PDF-Dokument
+	 */
+	public static Response query(final DBEntityManager conn, final Long schueler_id) {
+		final PDFGostWahlbogen wahlbogen = getWahlbogen(conn, schueler_id);
 		final byte[] data = wahlbogen.toByteArray();
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		return Response.status(Status.OK).type("application/pdf")
-			.header("Content-Disposition", "attachment; filename=Laufbahnplanung_" + schueler.Nachname.replace(' ', '_') + "_" + schueler.Vorname.replace(' ', '_') + ".pdf")  // TODO ergänze Informationen zum Dateinamen, z.B. Schülername oder ID
+		return Response.status(Status.OK).type("application/pdf").header("Content-Disposition", "attachment; filename=" + wahlbogen.filename)
+			.entity(data).build();
+	}
+
+
+	/**
+	 * Erstellt das PDF-Dokument für den Wahlbogen zu den Schüler-Laufbahnen
+	 * eines Abiturjahrgangs der gymnasialen Oberstufe.
+	 *
+	 * @param conn         die Datenbank-Verbindung
+	 * @param abiturjahr   das Abiturjahr
+	 *
+	 * @return die HTTP-Response mit dem PDF-Dokument
+	 */
+	public static Response queryJahrgang(final DBEntityManager conn, final int abiturjahr) {
+		// Bestimme alle Schüler des Abiturjahrgangs
+		final List<DTOViewGostSchuelerAbiturjahrgang> liste = (abiturjahr == -1)
+				? conn.queryAll(DTOViewGostSchuelerAbiturjahrgang.class)
+				: conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
+		PDFGostWahlbogen wahlboegen = null;
+		PDFGostWahlbogen aktuell = null;
+		for (final DTOViewGostSchuelerAbiturjahrgang s : liste) {
+			final PDFGostWahlbogen wahlbogen = getWahlbogen(conn, s.ID);
+			if (aktuell == null) {
+				wahlboegen = wahlbogen;
+			} else {
+				aktuell.setNext(wahlbogen);
+			}
+			aktuell = wahlbogen;
+		}
+		if (wahlboegen == null)
+			return OperationError.NOT_FOUND.getResponse();
+		final String filename = "Laufbahnplanung_%d_%s.pdf".formatted(wahlboegen.gostJahrgangsdaten.abiturjahr, wahlboegen.gostJahrgangsdaten.jahrgang);
+		final byte[] data = wahlboegen.toByteArray();
+		if (data == null)
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		return Response.status(Status.OK).type("application/pdf").header("Content-Disposition", "attachment; filename=" + filename)
 			.entity(data).build();
 	}
 
