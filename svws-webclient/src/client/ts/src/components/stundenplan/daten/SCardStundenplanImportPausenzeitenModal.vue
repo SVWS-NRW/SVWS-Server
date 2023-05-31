@@ -1,12 +1,12 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal ref="modal">
-		<template #modalTitle>Räume aus Katalog importieren</template>
+		<template #modalTitle>Pausenzeiten aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-data-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-bind="selected" />
-				<div v-else>Keine Einträge im Raum-Katalog hinterlegt.</div>
-				<div>Neue Einträge im Raum-Katalog können unter Schule angelegt werden</div>
+				<svws-ui-data-table v-if="listPausenzeiten.size()" :items="listPausenzeiten" clickable :clicked="pausenzeit" selectable v-bind="selected" />
+				<div v-else>Keine Einträge im Pausenzeiten-Katalog hinterlegt.</div>
+				<div>Neue Einträge im Pausenzeiten-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
 			</div>
 		</template>
@@ -18,17 +18,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { List, Raum } from "@svws-nrw/svws-core";
+	import type { List, StundenplanPausenzeit } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		importRaeume: (raeume: Raum[]) => Promise<void>;
-		listRaeume: List<Raum>;
+		importPausenzeiten: (Pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
+		listPausenzeiten: List<StundenplanPausenzeit>;
 	}>();
 
 	const modal = ref();
-	const selected = ref<Raum[]>([]);
-	const raum = ref<Raum>()
+	const selected = ref<StundenplanPausenzeit[]>([]);
+	const pausenzeit = ref<StundenplanPausenzeit>()
 
 	const openModal = () => {
 		modal.value.openModal();

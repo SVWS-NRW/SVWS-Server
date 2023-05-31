@@ -32,21 +32,21 @@ public enum Wochentag {
 	/** Sonntag */
 	SONNTAG(7, "Sonntag", "So");
 
-	/** Die eindeutige ID der Kursart der Gymnasialen Oberstufe*/
+	/** Die eindeutige ID des Wochentags*/
 	public final @NotNull int id;
 
-	/** Die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe */
+	/** Der voll ausgeschriebene Wochentag, z.B. Montag*/
 	public final @NotNull String beschreibung;
 
-	/** Das Kürzel der Kursart der Gymnasialen Oberstufe */
+	/** Das Kürzel des Wochentags, z.B. Mo */
 	public final @NotNull String kuerzel;
 
 	/**
 	 * Erzeugt einen neuen Wochentag für die Aufzählung.
 	 *
-	 * @param id             die eindeutige ID der Kursart der Gymnasialen Oberstufe
-	 * @param kuerzel        das Kürzel der Kursart der Gymnasialen Oberstufe
-	 * @param beschreibung   die textuelle Beschreibung der allgemeinen Kursart der Gymnasialen Oberstufe
+	 * @param id             die eindeutige ID des Wochentags
+	 * @param kuerzel        das Kürzel des Wochentags
+	 * @param beschreibung   der ausgeschriebene Wochentag
 	 */
 	Wochentag(final @NotNull int id, final @NotNull String beschreibung, final @NotNull String kuerzel) {
 		this.id = id;

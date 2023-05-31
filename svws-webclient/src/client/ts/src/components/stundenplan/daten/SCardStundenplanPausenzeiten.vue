@@ -4,7 +4,7 @@
 			<div class="input-wrapper">
 				<svws-ui-data-table :columns="cols" :items="stundenplanManager().getListPausenzeit()" clickable v-model:clicked="zeit" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 					<template #cell(wochentag)="{ rowData }">
-						<SvwsUiTextInput type="number" :model-value="rowData.wochentag" @update:model-value="patchPausenzeit({wochentag: Number($event)}, rowData.id)" headless />
+						<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 					</template>
 					<template #cell(beginn)="{ rowData }">
 						<SvwsUiTextInput type="number" :model-value="rowData.beginn" @update:model-value="patchPausenzeit({beginn: Number($event)}, rowData.id)" headless />
@@ -13,6 +13,9 @@
 						<SvwsUiTextInput type="number" :model-value="rowData.ende" @update:model-value="patchPausenzeit({ende: Number($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
+						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeiten">
+							<svws-ui-button @click="openModal()" type="secondary" title="Pausenzeiten importieren">Aus Katalog importieren</svws-ui-button>
+						</s-card-stundenplan-import-pausenzeiten-modal>
 						<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
 							<svws-ui-button @click="openModal()" type="secondary" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 						</s-card-stundenplan-add-pausenzeit-modal>
@@ -28,7 +31,8 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanManager, StundenplanPausenzeit } from "@svws-nrw/svws-core";
+	import type { List, StundenplanManager, StundenplanPausenzeit} from "@svws-nrw/svws-core";
+	import { Wochentag } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -36,6 +40,8 @@
 		patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (raeume: StundenplanPausenzeit[]) => Promise<void>;
+		importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
+		listPausenzeiten: List<StundenplanPausenzeit>;
 	}>();
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();

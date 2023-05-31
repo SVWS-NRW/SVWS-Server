@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit} from "@svws-nrw/svws-core";
+import type { StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@svws-nrw/svws-core";
 import type { RouteNode } from "~/router/RouteNode";
 import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@svws-nrw/svws-core";
 import { useDebounceFn } from "@vueuse/core";
@@ -7,12 +7,16 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "../RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
+import { R } from "vitest/dist/types-73d6349f";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 	daten: Stundenplan | undefined;
 	stundenplanManager: StundenplanManager | undefined;
+	listRaeume: List<Raum>;
+	listPausenzeiten: List<StundenplanPausenzeit>;
+	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
@@ -22,6 +26,9 @@ export class RouteDataStundenplan {
 		mapKatalogeintraege: new Map(),
 		daten: undefined,
 		stundenplanManager: undefined,
+		listRaeume: new ArrayList(),
+		listPausenzeiten: new ArrayList(),
+		listAufsichtsbereiche: new ArrayList(),
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -67,6 +74,18 @@ export class RouteDataStundenplan {
 		if (this._state.value.stundenplanManager === undefined)
 			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.stundenplanManager;
+	}
+
+	get listRaeume(): List<Raum> {
+		return this._state.value.listRaeume;
+	}
+
+	get listPausenzeiten(): List<StundenplanPausenzeit> {
+		return this._state.value.listPausenzeiten;
+	}
+
+	get listAufsichtsbereiche(): List<StundenplanAufsichtsbereich> {
+		return this._state.value.listAufsichtsbereiche;
 	}
 
 	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
@@ -173,7 +192,10 @@ export class RouteDataStundenplan {
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
+		const listRaeume = await api.server.getRaeume(api.schema);
+		const listPausenzeiten = await api.server.getPausenzeiten(api.schema);
+		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche })
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {

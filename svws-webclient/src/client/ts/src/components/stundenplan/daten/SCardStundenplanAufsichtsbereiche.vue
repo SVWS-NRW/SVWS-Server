@@ -10,6 +10,9 @@
 						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchAufsichtsbereich({beschreibung: String($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
+						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereiche" :import-aufsichtsbereiche="importAufsichtsbereiche">
+							<svws-ui-button @click="openModal()" type="secondary" title="Aufsichtsbereiche importieren">Aus Katalog importieren</svws-ui-button>
+						</s-card-stundenplan-import-aufsichtsbereiche-modal>
 						<s-card-stundenplan-add-aufsichtsbereich-modal v-slot="{ openModal }" :add-aufsichtsbereich="addAufsichtsbereich">
 							<svws-ui-button @click="openModal()" type="secondary" title="Aufsichtsbereich hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 						</s-card-stundenplan-add-aufsichtsbereich-modal>
@@ -25,7 +28,7 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanAufsichtsbereich, StundenplanManager } from "@svws-nrw/svws-core";
+	import type { List, StundenplanAufsichtsbereich, StundenplanManager } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -33,6 +36,8 @@
 		patchAufsichtsbereich: (daten: Partial<StundenplanAufsichtsbereich>, id: number) => Promise<void>;
 		addAufsichtsbereich: (aufsichtsbereich: StundenplanAufsichtsbereich) => Promise<void>;
 		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
+		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
+		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	}>();
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();

@@ -13,7 +13,7 @@
 						<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
 					</template>
 					<template #footerActions>
-						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume">
+						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="listRaeume">
 							<svws-ui-button @click="openModal()" type="secondary" title="Räume importieren">Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-raeume-modal>
 						<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum="addRaum">
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanManager, StundenplanRaum } from "@svws-nrw/svws-core";
+	import type { List, Raum, StundenplanManager, StundenplanRaum } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -40,6 +40,7 @@
 		addRaum: (raum: StundenplanRaum) => Promise<void>;
 		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 		importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
+		listRaeume: List<Raum>;
 	}>();
 
 	const raum = ref<StundenplanRaum | undefined>();

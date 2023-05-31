@@ -4,9 +4,9 @@
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<SvwsUiTextInput type="number" v-model="item.wochentag" required placeholder="Wochentag" />
+				<svws-ui-multi-select :model-value="Wochentag.MONTAG" @update:model-value="item.wochentag=$event.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
 				<SvwsUiTextInput type="number" v-model="item.beginn" required placeholder="Beginn" />
-				<SvwsUiTextInput type="number" v-model="item.ende" placeholder="Ende" />
+				<SvwsUiTextInput type="number" v-model="item.ende" required placeholder="Ende" />
 			</div>
 		</template>
 		<template #modalActions>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanPausenzeit } from "@svws-nrw/svws-core";
+	import { StundenplanPausenzeit, Wochentag } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
