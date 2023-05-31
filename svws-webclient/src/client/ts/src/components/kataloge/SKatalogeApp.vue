@@ -1,5 +1,5 @@
 <template>
-	<div class="app-layout--main--placeholder">
+	<div class="app--content--placeholder">
 		<i-ri-archive-line />
 	</div>
 </template>

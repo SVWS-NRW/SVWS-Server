@@ -1,5 +1,5 @@
 <template>
-	<div v-if="jahrgangsdaten !== undefined" class="app-container">
+	<div v-if="jahrgangsdaten !== undefined" class="page--content">
 		<s-card-gost-beratungslehrer v-if="istAbiturjahrgang" :jahrgangsdaten="jahrgangsdaten" />
 		<div class="flex flex-col gap-3">
 			<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />

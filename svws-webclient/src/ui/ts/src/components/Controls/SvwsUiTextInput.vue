@@ -94,10 +94,10 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input-filled': `${tmp}`.length > 0,
-			'text-input-invalid': (valid === false) || (emailValid === false) || (maxLenValid === false),
-			'text-input-disabled': disabled,
-			'text-input-readonly': readonly,
+			'text-input--filled': `${tmp}`.length > 0 && `${tmp}` !== 'null',
+			'text-input--invalid': (valid === false) || (emailValid === false) || (maxLenValid === false),
+			'text-input--disabled': disabled,
+			'text-input--readonly': readonly,
 			'text-input--icon': hasIcon,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
@@ -176,11 +176,11 @@
 	}
 
 	.text-input-component:focus-within .icon,
-	.text-input-filled .icon {
+	.text-input--filled .icon {
 		@apply opacity-100;
 	}
 
-	.text-input-invalid .icon {
+	.text-input--invalid .icon {
 		@apply text-error;
 	}
 
@@ -211,13 +211,13 @@
 	}
 
 	.text-input-component:focus-within .text-input--control,
-	.text-input-filled .text-input--control {
+	.text-input--filled .text-input--control {
 		@apply border-black;
 		@apply outline-none;
 	}
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
-	.text-input--statistics.text-input-filled .text-input--control {
+	.text-input--statistics.text-input--filled .text-input--control {
 		@apply border-purple-500;
 	}
 
@@ -229,12 +229,12 @@
 			top: 50%;
 			transform: translateY(-50%);
 
-			.text-input-component:not(.text-input-filled):not(:focus-within):not(.text-input-disabled):hover & {
+			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
 				@apply opacity-60;
 			}
 
 			.text-input-component:focus-within &,
-			.text-input-filled & {
+			.text-input--filled & {
 				@apply opacity-100;
 			}
 		}
@@ -244,11 +244,11 @@
 		}
 	}
 
-	/*.text-input--search:not(.text-input-filled) .text-input--placeholder {
+	/*.text-input--search:not(.text-input--filled) .text-input--placeholder {
 		@apply sr-only;
 	}
 
-	.text-input--search:not(.text-input-filled) .text-input--control {
+	.text-input--search:not(.text-input--filled) .text-input--control {
 		@apply border-transparent bg-transparent text-transparent;
 		margin-bottom: -2em;
 	}
@@ -257,7 +257,7 @@
 		@apply mb-0;
 	}
 
-	.text-input--search:not(.text-input-filled) .icon {
+	.text-input--search:not(.text-input--filled) .icon {
 		@apply bg-primary;
 	}*/
 
@@ -272,19 +272,19 @@
 	}
 
 	.text-input-component:focus-within .text-input--control[type="date"],
-	.text-input-filled .text-input--control[type="date"] {
+	.text-input--filled .text-input--control[type="date"] {
 		@apply text-black;
 		@apply pr-1;
 	}
 
 	@-moz-document url-prefix() {
 		.text-input-component:focus-within .text-input--calendar-icon,
-		.text-input-filled .text-input--calendar-icon {
+		.text-input--filled .text-input--calendar-icon {
 			@apply hidden;
 		}
 	}
 
-	.text-input-readonly .text-input--control {
+	.text-input--readonly .text-input--control {
 		@apply pointer-events-none cursor-default select-none;
 	}
 
@@ -300,7 +300,7 @@
 		line-height: 1.33;
 	}
 
-	.text-input-component:not(.text-input-filled):not(:focus-within):not(.text-input-disabled):hover .text-input--placeholder {
+	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {
 		@apply opacity-60;
 	}
 
@@ -314,7 +314,7 @@
 	}
 
 	.text-input-component:focus-within .text-input--placeholder,
-	.text-input-filled .text-input--placeholder {
+	.text-input--filled .text-input--placeholder {
 		@apply -translate-y-1/2;
 		@apply bg-white opacity-100;
 		@apply rounded;
@@ -329,18 +329,12 @@
 		}
 	}
 
-	.app-layout--secondary.text-input--control,
-	.app-layout--secondary.text-input-component:focus-within .text-input--placeholder,
-	.app-layout--secondary.text-input-filled .text-input--placeholder {
-		@apply bg-light;
-	}
-
 	.text-input--statistics .text-input--control {
 		@apply border-purple-500;
 		/*@apply bg-purple/5;*/
 	}
 
-	.text-input-invalid:not(:focus-within) .text-input--control {
+	.text-input--invalid:not(:focus-within) .text-input--control {
 		@apply border-error;
 	}
 
@@ -348,12 +342,12 @@
 		@apply font-bold text-purple-500;
 	}
 
-	.text-input-invalid:not(:focus-within) .text-input--placeholder,
-	.text-input-invalid:not(:focus-within) .text-input--control {
+	.text-input--invalid:not(:focus-within) .text-input--placeholder,
+	.text-input--invalid:not(:focus-within) .text-input--control {
 		@apply text-error;
 	}
 
-	.text-input-disabled {
+	.text-input--disabled {
 		@apply cursor-not-allowed;
 
 		.text-input--placeholder {
@@ -368,7 +362,7 @@
 	}
 
 	.text-input-component:focus-within,
-	.text-input-filled {
+	.text-input--filled {
 		@apply overflow-visible;
 	}
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-schule-datenaustausch-laufbahnplanung :set-gost-lupo-import-m-d-b-fuer-jahrgang="setGostLupoImportMDBFuerJahrgang" />
 	</div>
 </template>

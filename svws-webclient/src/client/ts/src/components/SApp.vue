@@ -38,10 +38,10 @@
 			<router-view :key="app.name" name="liste" />
 		</template>
 		<template #main>
-			<div class="page-wrapper" :class="app.name">
-				<main class="relative h-full">
+			<div class="app--page" :class="app.name">
+				<div class="page--wrapper">
 					<router-view :key="app.name" />
-				</main>
+				</div>
 			</div>
 		</template>
 	</svws-ui-app-layout>
@@ -135,3 +135,21 @@
 	});
 
 </script>
+
+<style lang="postcss">
+.app--page {
+	@apply flex flex-grow flex-col justify-between;
+	@apply h-screen;
+	@apply overflow-hidden;
+	@apply relative;
+	@apply bg-white;
+}
+
+ .page--wrapper {
+	 @apply relative h-full;
+ }
+
+ .page--flex {
+	 @apply flex flex-col w-full h-full;
+ }
+</style>

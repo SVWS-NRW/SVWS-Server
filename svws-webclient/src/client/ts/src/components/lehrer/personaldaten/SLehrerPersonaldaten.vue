@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-lehrer-personaldaten-allgemein :personaldaten="personaldaten" @patch="doPatch" />
 		<s-card-lehrer-personaldaten-lehraemter :personaldaten="personaldaten" @patch="doPatch" />
 		<s-card-lehrer-personaldaten-beschaeftigung :personaldaten="personaldaten" @patch="doPatch" />

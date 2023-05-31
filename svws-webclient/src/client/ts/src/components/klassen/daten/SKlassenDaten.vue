@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-klasse-basisdaten :data="data" :map-jahrgaenge="mapJahrgaenge" @patch="doPatch" />
 		<s-card-klasse-klassenleitungen :data="data" :map-lehrer="mapLehrer" @patch="doPatch" />
 		<s-card-klasse-schueler :list-schueler="data.schueler" :goto-schueler="gotoSchueler" />

@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-stundenplan-pausenaufsicht />
 	</div>
 </template>

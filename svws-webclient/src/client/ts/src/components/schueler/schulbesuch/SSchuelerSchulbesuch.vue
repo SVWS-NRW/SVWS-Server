@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-schueler-herkunft :data="data" @patch="doPatch" />
 		<s-card-schueler-entlassung :data="data" @patch="doPatch" />
 		<s-card-schueler-wechsel :data="data" @patch="doPatch" />

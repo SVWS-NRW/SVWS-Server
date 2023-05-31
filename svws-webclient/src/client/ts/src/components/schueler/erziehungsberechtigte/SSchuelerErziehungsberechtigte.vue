@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container relative">
+	<div class="page--content relative">
 		<div v-for="(e, i) in data" :key="i" class="col-span-full">
 			<s-card-schueler-erziehungsberechtigte :erzieher="e" @patch="patch" :map-erzieherarten="mapErzieherarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
 		</div>

@@ -18,7 +18,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</template>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-team-line />
 	</div>
 </template>

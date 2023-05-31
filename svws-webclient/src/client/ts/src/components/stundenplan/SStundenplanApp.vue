@@ -1,5 +1,5 @@
 <template>
-	<div v-if="true" class="flex w-full flex-col h-full">
+	<div v-if="true" class="page--flex">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div>
@@ -15,7 +15,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-calendar-event-line />
 	</div>
 </template>

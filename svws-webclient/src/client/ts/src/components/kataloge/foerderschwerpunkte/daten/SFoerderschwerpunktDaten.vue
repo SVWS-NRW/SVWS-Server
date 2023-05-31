@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-foerderschwerpunkt-daten :data="data" @patch="doPatch" />
 	</div>
 </template>

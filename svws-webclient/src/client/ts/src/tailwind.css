@@ -10,7 +10,7 @@
 	@apply max-2xl:grid-cols-1;
 }
 
-.app-container {
+.page--content {
 	@apply grid grid-cols-1 lg:grid-cols-2 4xl:grid-cols-3;
 	@apply gap-12 lg:gap-16;
 	@apply min-h-full;

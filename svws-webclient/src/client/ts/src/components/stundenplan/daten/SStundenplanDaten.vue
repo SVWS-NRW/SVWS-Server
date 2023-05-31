@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-stundenplan-daten :stundenplan-manager="stundenplanManager" :patch="patch" />
 		<s-card-stundenplan-raeume :stundenplan-manager="stundenplanManager" :patch-raum="patchRaum" :add-raum="addRaum" :remove-raeume="removeRaeume" :import-raeume="importRaeume" :list-raeume="listRaeume" />
 		<s-card-stundenplan-pausenzeiten :stundenplan-manager="stundenplanManager" :patch-pausenzeit="patchPausenzeit" :add-pausenzeit="addPausenzeit" :remove-pausenzeiten="removePausenzeiten" :list-pausenzeiten="listPausenzeiten" :import-pausenzeiten="importPausenzeiten" />

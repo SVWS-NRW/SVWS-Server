@@ -18,17 +18,17 @@
 	}
 </script>
 <template>
-	<div class="app-layout--wrapper" :class="{'app-layout--has-aside': $slots.aside}">
-		<div v-if="$slots.sidebar && !contentIsFullscreen" class="app-layout--sidebar-wrapper">
+	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside}">
+		<div v-if="$slots.sidebar && !contentIsFullscreen" class="app--menu">
 			<slot name="sidebar" />
 		</div>
-		<div v-if="$slots.secondaryMenu && !contentIsFullscreen" class="app-layout--secondary">
-			<div class="app-layout--secondary-container">
+		<div v-if="$slots.secondaryMenu && !contentIsFullscreen" class="app--sidebar">
+			<div class="app--sidebar-container">
 				<slot name="secondaryMenu" />
 			</div>
 		</div>
-		<main class="app-layout--main">
-			<div class="app-layout--main-container relative" :class="{'fullwidth-content' : fullwidthContent}">
+		<main class="app--content">
+			<div class="app--content-container relative" :class="{'fullwidth-content' : fullwidthContent}">
 				<slot name="main" />
 			</div>
 			<aside class="app-layout--aside" v-if="$slots.aside">
@@ -51,34 +51,26 @@
 		}
 	}
 
-	.page-wrapper {
-		@apply flex flex-grow flex-col justify-between;
-		@apply h-screen;
-		@apply overflow-hidden;
-		@apply relative;
-		@apply bg-white;
-	}
-
-	.app-layout--wrapper {
+	.app--layout {
 		@apply relative h-screen w-full overflow-hidden;
 		@apply flex flex-row gap-2 p-2;
 		@apply bg-light;
 	}
 
-	.app-layout--secondary {
+	.app--sidebar {
 		@apply flex-shrink-0;
 		width: 23.6%;
 		min-width: 24rem;
 		max-width: 30rem;
 	}
 
-	.app-layout--main {
+	.app--content {
 		@apply flex-1 overflow-hidden relative;
 		@apply flex flex-row md:flex-row;
 	}
 
-	.app-layout--secondary-container,
-	.app-layout--main-container,
+	.app--sidebar-container,
+	.app--content-container,
 	.app-layout--aside-container {
 		@apply bg-white rounded-2xl;
 		@apply h-full w-full;
@@ -88,8 +80,8 @@
 		@apply overflow-y-auto;
 	}
 
-	.app-layout--has-aside {
-		.app-layout--main-container {
+	.app--layout--has-aside {
+		.app--content-container {
 			padding-right: 50%;
 		}
 	}
@@ -102,7 +94,7 @@
 		@apply rounded-xl shadow-lg;
 	}
 
-	.app-layout--secondary-container {
+	.app--sidebar-container {
 		@apply overflow-hidden;
 	}
 
@@ -112,7 +104,7 @@
 		@apply px-7;
 	}
 
-	.app-layout--main-container:not(.fullwidth-content) {
+	.app--content-container:not(.fullwidth-content) {
 		@apply max-lg:px-0;
 	}
 
@@ -137,14 +129,14 @@
 			@apply pl-8;
 		}
 
-		.app-layout--wrapper {
+		.app--layout {
 			@apply gap-3 p-3;
 		}
 	}
 
 	.sidebar--menu--header,
 	.secondary-menu--headline,
-	.header--wrapper {
+	.page--header {
 		@apply flex flex-col items-start justify-center;
 		min-height: 6.5rem;
 	}
@@ -152,12 +144,12 @@
 	@media (min-width: 1280px) or (orientation: portrait) {
 		.sidebar--menu--header,
 		.secondary-menu--headline,
-		.header--wrapper {
+		.page--header {
 			min-height: 8rem;
 		}
 	}
 
-	.app-layout--main--placeholder {
+	.app--content--placeholder {
 		@apply w-full h-full flex justify-center items-center;
 		/*background: radial-gradient(ellipse 50% 50%, rgba(var(--color-dark-20), 1) 0%, rgba(var(--color-dark-20), 0) 100%);*/
 		/*background-image: radial-gradient(ellipse 25% 4% at 50% 58%, rgba(var(--color-dark-20), 0.6) 0%, rgba(var(--color-dark-20), 0) 100%);*/
@@ -166,85 +158,6 @@
 			@apply w-full h-1/5 text-light;
 			max-width: 20vw;
 		}
-	}
-
-	.app-layout--main-sidebar {
-		@apply fixed top-0 right-0 bottom-0 z-30 p-6 h-full flex flex-col;
-		max-width: 32vw;
-	}
-
-	.app-layout--main-sidebar--container {
-		@apply rounded-xl h-full overflow-hidden flex flex-col;
-		@apply shadow-lg bg-white;
-		@apply border border-dark-20 border-opacity-60;
-	}
-
-	.app-layout--main-sidebar--content {
-		@apply bg-light h-full p-3;
-		@apply overflow-y-auto;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.app-layout--main-sidebar--trigger {
-		@apply pointer-events-auto;
-		@apply w-full cursor-pointer relative;
-		@apply p-6 pl-3;
-		@apply text-headline;
-	}
-
-	.sidebar-trigger--text {
-		@apply flex items-center opacity-50;
-
-		.button--icon {
-			@apply p-1;
-			width: 2.5rem;
-			height: 2.5rem;
-
-			svg {
-				width: 2rem;
-				height: 2rem;
-			}
-		}
-	}
-
-	.app-layout--main-sidebar--collapsed {
-		@apply pointer-events-none;
-		@apply py-4 pr-4 rounded-none;
-
-		.app-layout--main-sidebar--container {
-			@apply shadow-transparent border-none bg-transparent pr-8 pt-8;
-		}
-
-		.app-layout--main-sidebar--trigger {
-			@apply px-6 py-2 rounded-full bg-primary text-white text-base font-bold cursor-pointer border-2;
-
-			&:hover,
-			&:focus {
-				@apply bg-light text-primary;
-			}
-
-			&:focus {
-				@apply outline-none ring ring-primary ring-opacity-50;
-			}
-		}
-
-		.sidebar-trigger--text {
-			@apply whitespace-nowrap opacity-100;
-		}
-
-		.app-layout--main-sidebar--content {
-			@apply hidden;
-		}
-	}
-
-	.app-layout--main-sidebar--trigger-count {
-		@apply text-white font-bold rounded-full text-sm text-center w-auto;
-		@apply absolute;
-		background-color: #f00;
-		padding: 0.1em 0.4em;
-		top: -0.5em;
-		right: -0.5em;
-		min-width: 1.6em;
 	}
 
 	.app-layout--notification-list {

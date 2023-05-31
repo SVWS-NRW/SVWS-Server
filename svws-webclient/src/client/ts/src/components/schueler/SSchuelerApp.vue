@@ -1,5 +1,5 @@
 <template>
-	<div v-if="stammdaten !== undefined" class="flex w-full flex-col h-full">
+	<div v-if="stammdaten !== undefined" class="page--flex">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div class="w-20 mr-4">
@@ -20,7 +20,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-group-line />
 	</div>
 </template>

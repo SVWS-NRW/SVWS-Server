@@ -338,7 +338,7 @@
 	@apply tabular-nums;
 	@apply max-h-full overflow-y-visible overflow-x-auto;
 
-	.app-layout--secondary-container & {
+	.app--sidebar-container & {
 		@apply border-x-0;
 	}
 
@@ -382,7 +382,7 @@
 		}
 
 		&:first-child:not(.data-table__cell-select) {
-			.app-layout--secondary-container & {
+			.app--sidebar-container & {
 				@apply pl-3 2xl:pl-7 4xl:pl-8;
 			}
 		}
@@ -771,7 +771,7 @@
 		@apply pb-2 gap-2 mb-1 -mb-px;
 		transition: box-shadow 0.15s ease-out;
 
-		.app-layout--secondary & {
+		.app--sidebar & {
 			@apply px-7 4xl:px-8;
 		}
 
@@ -790,7 +790,7 @@
 				@apply border-black/25;
 			}
 
-			&.text-input-filled {
+			&.text-input--filled {
 				.text-input--search-icon {
 					@apply text-primary;
 				}

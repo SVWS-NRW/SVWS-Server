@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<div>
 			<s-card-schueler-add-adresse-modal :id-schueler="idSchueler" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
 				:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"

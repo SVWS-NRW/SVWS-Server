@@ -23,8 +23,8 @@
 	@apply relative z-20;
 }
 
-.app-layout--secondary-container .v-table th:last-child,
-.app-layout--secondary-container .v-table td:last-child {
+.app--sidebar-container .v-table th:last-child,
+.app--sidebar-container .v-table td:last-child {
 	@apply border-r-0;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .input--schule-abschnitte input.text-input--control,
-.input--schule-abschnitte .text-input-readonly input.text-input--control {
+.input--schule-abschnitte .text-input--readonly input.text-input--control {
 	@apply cursor-pointer;
 }
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-schueler-basisdaten :data="data" @patch="patch" />
 		<s-card-schueler-kontaktdaten :data="data" @patch="patch" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
 		<s-card-schueler-staat-religion :data="data" @patch="patch" :map-religionen="mapReligionen" />

@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-lehrer-basisdaten :stammdaten="stammdaten" @patch="doPatch" />
 		<s-card-lehrer-kontaktdaten :stammdaten="stammdaten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" @patch="doPatch" />
 	</div>

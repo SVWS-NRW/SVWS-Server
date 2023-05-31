@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="flex w-full flex-col h-full">
+	<div v-if="visible" class="page--flex">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ bezeichnung }}</span>
@@ -13,7 +13,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-school-line />
 	</div>
 </template>

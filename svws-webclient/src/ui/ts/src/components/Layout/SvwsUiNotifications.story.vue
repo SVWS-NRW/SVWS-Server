@@ -16,7 +16,7 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template #main>
-				<!--<div class="app-layout--main--placeholder">
+				<!--<div class="app--content--placeholder">
 					<i-ri-archive-line/>
 				</div>-->
 				<svws-ui-menu-header>

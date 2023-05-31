@@ -11,7 +11,7 @@
 			</svws-ui-router-tab-bar>
 		</div>
 	</div>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-graduation-cap-line />
 	</div>
 </template>

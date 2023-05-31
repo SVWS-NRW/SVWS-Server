@@ -1,5 +1,5 @@
 <template>
-	<div class="header--wrapper">
+	<div class="page--header">
 		<h2 class="text-headline">
 			<slot />
 		</h2>
@@ -10,14 +10,14 @@
 </script>
 
 <style>
-	.header--wrapper {
+	.page--header {
 		@apply flex flex-row items-center justify-start;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
 		@apply py-2 space-x-2;
 		@apply flex-shrink-0;
 	}
 
-	.tab-container .header--wrapper {
+	.tab-container .page--header {
 		@apply px-0;
 	}
 </style>

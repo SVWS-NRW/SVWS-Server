@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-stundenplan-unterricht />
 	</div>
 </template>

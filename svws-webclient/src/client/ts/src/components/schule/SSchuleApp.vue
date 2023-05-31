@@ -1,5 +1,5 @@
 <template>
-	<div class="app-layout--main--placeholder flex flex-col items-center">
+	<div class="app--content--placeholder flex flex-col items-center">
 		<i-ri-school-line />
 		<span class="text-headline">{{ schulname }}</span>
 	</div>

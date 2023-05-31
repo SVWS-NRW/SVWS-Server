@@ -1,5 +1,5 @@
 <template>
-	<div v-if="visible" class="app-container">
+	<div v-if="visible" class="page--content">
 		<s-card-schueler-halbjahr :data="data!" @patch="patch" :map-lehrer="mapLehrer" :map-jahrgaenge="mapJahrgaenge" :map-klassen="mapKlassen"
 			:schule="schule" :map-foerderschwerpunkte="mapFoerderschwerpunkte" />
 		<s-card-schueler-zeugnis-abschluss :data="data!" @patch="patch" @patch-bemerkungen="patchBemerkungen" :map-klassen="mapKlassen" />

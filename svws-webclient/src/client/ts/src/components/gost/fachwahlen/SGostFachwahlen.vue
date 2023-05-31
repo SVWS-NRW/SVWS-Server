@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-gost-fachwahlen :fachwahlen="fachwahlen" />
 	</div>
 </template>

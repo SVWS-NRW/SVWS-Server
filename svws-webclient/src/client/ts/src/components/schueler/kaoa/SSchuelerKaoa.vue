@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-schueler-kaoa :data="data" @patch="doPatch" />
 	</div>
 </template>

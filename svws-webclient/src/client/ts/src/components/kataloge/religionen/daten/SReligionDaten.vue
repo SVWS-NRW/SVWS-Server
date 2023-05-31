@@ -1,5 +1,5 @@
 <template>
-	<div class="app-container">
+	<div class="page--content">
 		<s-card-religion-daten :auswahl="auswahl" @patch="doPatch" />
 	</div>
 </template>
