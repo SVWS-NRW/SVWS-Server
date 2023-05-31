@@ -75,9 +75,12 @@
 		@apply bg-white rounded-2xl;
 		@apply h-full w-full;
 		@apply flex flex-col;
-		@apply shadow-dark-20 shadow-sm;
-		@apply border border-dark-20 border-opacity-60;
+		@apply border border-black/25;
 		@apply overflow-y-auto;
+	}
+
+	.app--content-container.fullwidth-content {
+		@apply rounded-none border-none;
 	}
 
 	.app--layout--has-aside {
@@ -91,7 +94,7 @@
 	}
 
 	.app-layout--aside-container {
-		@apply rounded-xl shadow-lg;
+		@apply rounded-2xl shadow-lg;
 	}
 
 	.app--sidebar-container {

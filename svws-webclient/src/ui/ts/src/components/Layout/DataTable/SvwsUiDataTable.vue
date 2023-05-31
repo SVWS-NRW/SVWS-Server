@@ -802,12 +802,12 @@
 				}
 
 				input {
-					@apply bg-primary bg-opacity-5 text-primary border-transparent;
+					@apply bg-primary/5 text-primary border-transparent;
 				}
 			}
 
 			&:hover:not(:focus-within):not(.text-input-filled) input {
-				@apply bg-dark-20 bg-opacity-25;
+				@apply border-black/25;
 			}
 		}
 

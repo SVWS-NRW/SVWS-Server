@@ -59,11 +59,11 @@
 }
 
 .toggle--statistics {
-	@apply text-purple-500;
+	@apply text-violet-500;
 }
 
 .toggle--statistics .toggle--indicator {
-	@apply border-purple-500;
+	@apply border-violet-500;
 }
 
 .toggle--indicator:before {
@@ -79,7 +79,7 @@
 }
 
 .toggle--statistics .toggle--indicator:before {
-	@apply bg-purple-500;
+	@apply bg-violet-500;
 }
 
 .toggle input:checked+.toggle--indicator {
@@ -88,8 +88,8 @@
 }
 
 .toggle.toggle--statistics input:checked+.toggle--indicator {
-	@apply bg-purple-500;
-	@apply border-purple-500;
+	@apply bg-violet-500;
+	@apply border-violet-500;
 }
 
 .toggle input:checked+.toggle--indicator:before {

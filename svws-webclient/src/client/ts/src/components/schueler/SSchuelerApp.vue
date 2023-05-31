@@ -2,7 +2,7 @@
 	<div v-if="stammdaten !== undefined" class="page--flex">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<div class="w-20 mr-4">
+				<div class="w-20 mr-6">
 					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
 				</div>
 				<div>

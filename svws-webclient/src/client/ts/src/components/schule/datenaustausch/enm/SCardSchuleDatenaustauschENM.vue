@@ -1,10 +1,12 @@
 <template>
 	<svws-ui-content-card title="ENM-Datei">
-		<div class="flex items-start gap-3">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" />
 			<svws-ui-text-input v-model="salt" type="password" placeholder="Salt" />
-			<input type="file" accept=".base64" @change="import_file" :disabled="loading">
-			<svws-ui-spinner :spinning="loading" />
+			<div class="col-span-full">
+				<input type="file" accept=".base64" @change="import_file" :disabled="loading">
+				<svws-ui-spinner :spinning="loading" />
+			</div>
 			<br>{{
 				status === false
 					? "Fehler beim Upload"
@@ -12,7 +14,7 @@
 						? "Upload erfolgreich"
 						: ""
 			}}
-		</div>
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 

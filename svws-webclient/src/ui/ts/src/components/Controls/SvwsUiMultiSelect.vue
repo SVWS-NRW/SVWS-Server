@@ -370,11 +370,11 @@
 	@apply inline-block overflow-visible;
 
 	&--statistics {
-		@apply border-purple-500;
-		@apply bg-purple-500 bg-opacity-[0.02];
+		@apply border-violet-500;
+		@apply bg-violet-500 bg-opacity-[0.02];
 
 		.multiselect-tags--placeholder {
-			@apply text-purple-500;
+			@apply text-violet-500;
 		}
 	}
 
@@ -489,7 +489,7 @@
 .multiselect--items-wrapper {
 	@apply absolute z-50 w-full min-w-[11rem];
 	@apply rounded-md border border-black/25 bg-white;
-	@apply shadow-xl shadow-black/25;
+	@apply shadow-2xl shadow-black/25;
 	@apply overflow-hidden;
 }
 
@@ -533,7 +533,7 @@
 
 				&:after {
 					@apply opacity-75 font-normal;
-					content: '\0000a0entfernen';
+					content: '\0000a0entfernen \00D7';
 				}
 			}
 		}

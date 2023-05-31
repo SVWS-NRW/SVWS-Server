@@ -149,15 +149,19 @@
 	@apply flex h-full flex-col justify-between;
 }
 
+.app--layout {
+	@apply p-0;
+}
+
 .login-container {
-	@apply bg-cover bg-top rounded-t-2xl h-full flex flex-col justify-center items-center px-4;
+	@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
 	/*background-image: radial-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.3)), url("/images/login-background-1.jpg");*/
 	/*background-image: radial-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.2)), url("/images/placeholder-background.jpg");*/
 	background-image: url("/images/placeholder-background.jpg");
 }
 
 .modal {
-	@apply shadow-black/25 rounded-xl;
+	@apply shadow-2xl shadow-black/50 rounded-2xl;
 }
 
 .login-form .modal--content {

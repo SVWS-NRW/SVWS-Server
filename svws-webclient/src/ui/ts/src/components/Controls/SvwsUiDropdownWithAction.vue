@@ -90,10 +90,7 @@
 }
 
 .dropdown-with-action--button:disabled {
-	@apply bg-disabled;
-	@apply border-disabled-medium;
 	@apply cursor-not-allowed;
-	@apply text-disabled-dark;
 }
 
 .dropdown-with-action--icon {

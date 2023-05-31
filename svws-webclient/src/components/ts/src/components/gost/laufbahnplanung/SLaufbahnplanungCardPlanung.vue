@@ -173,9 +173,9 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-yellow-400': jahrgang < 10,
-								'bg-green-300': jahrgang > 9 && jahrgang < 12,
-								'bg-green-600': jahrgang > 11
+								'bg-amber-400': jahrgang < 10,
+								'bg-lime-300': jahrgang > 9 && jahrgang < 12,
+								'bg-lime-600': jahrgang > 11
 							}">
 							{{ jahrgang }}
 						</span>
@@ -188,10 +188,10 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-red-400': kurse_summe < 30,
-								'bg-yellow-400': kurse_summe >= 31 && kurse_summe <= 32,
-								'bg-green-300': kurse_summe > 32 && kurse_summe < 37,
-								'bg-green-600': kurse_summe > 36
+								'bg-rose-700 text-white': kurse_summe < 30,
+								'bg-amber-400': kurse_summe >= 31 && kurse_summe <= 32,
+								'bg-lime-300': kurse_summe > 32 && kurse_summe < 37,
+								'bg-lime-600': kurse_summe > 36
 							}">
 							{{ kurse_summe }}
 						</span>
@@ -208,10 +208,10 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in wochenstunden" :key="i">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-red-400': jahrgang < 30,
-								'bg-yellow-400': jahrgang >= 31 && jahrgang <= 32,
-								'bg-green-300': jahrgang > 32 && jahrgang < 37,
-								'bg-green-600': jahrgang > 36
+								'bg-rose-700 text-white': jahrgang < 30,
+								'bg-amber-400': jahrgang >= 31 && jahrgang <= 32,
+								'bg-lime-300': jahrgang > 32 && jahrgang < 37,
+								'bg-lime-600': jahrgang > 36
 							}">
 							{{ jahrgang }}
 						</span>
@@ -219,10 +219,10 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-red-400': wst_summe < 100,
-								'bg-yellow-400': wst_summe >= 100 && wst_summe < 102,
-								'bg-green-300': wst_summe >= 102 && wst_summe <= 108,
-								'bg-green-600': wst_summe > 108
+								'bg-rose-700 text-white': wst_summe < 100,
+								'bg-amber-400': wst_summe >= 100 && wst_summe < 102,
+								'bg-lime-300': wst_summe >= 102 && wst_summe <= 108,
+								'bg-lime-600': wst_summe > 108
 							}">
 							{{ wst_summe }}
 						</span>
@@ -233,9 +233,9 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-2">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-red-400': wst_d_ef < 34,
-								'bg-green-300': wst_d_ef >= 34 && wst_d_ef < 37,
-								'bg-green-600': wst_d_ef >= 37
+								'bg-rose-700 text-white': wst_d_ef < 34,
+								'bg-lime-300': wst_d_ef >= 34 && wst_d_ef < 37,
+								'bg-lime-600': wst_d_ef >= 37
 							}">
 							{{ wst_d_ef }}
 						</span>
@@ -243,9 +243,9 @@
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-4">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
-								'bg-red-400': wst_d_q < 34,
-								'bg-green-300': wst_d_q >= 34 && wst_d_q < 37,
-								'bg-green-600': wst_d_q >= 37
+								'bg-rose-700 text-white': wst_d_q < 34,
+								'bg-lime-300': wst_d_q >= 34 && wst_d_q < 37,
+								'bg-lime-600': wst_d_q >= 37
 							}">
 							{{ wst_d_q }}
 						</span>

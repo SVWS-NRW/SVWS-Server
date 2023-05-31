@@ -28,7 +28,6 @@
 	}
 
 	.dropdown--item:disabled {
-		@apply text-disabled-dark;
 		@apply bg-transparent;
 		@apply cursor-not-allowed;
 	}

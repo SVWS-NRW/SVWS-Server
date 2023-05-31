@@ -40,6 +40,5 @@
 
 .tab:disabled {
   @apply cursor-not-allowed;
-  @apply text-disabled-dark;
 }
 </style>

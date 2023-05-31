@@ -198,8 +198,8 @@
 	}
 
 	.textarea-input--statistics .textarea-input--control {
-		@apply border-purple-500;
-		@apply bg-purple-500 bg-opacity-[0.02];
+		@apply border-violet-500;
+		@apply bg-violet-500 bg-opacity-[0.02];
 	}
 
 	.textarea-input--statistics.textarea-input-invalid .textarea-input--control {
@@ -207,11 +207,11 @@
 	}
 
 	.textarea-input--statistics .textarea-input--placeholder {
-		@apply text-purple-500;
+		@apply text-violet-500;
 	}
 
 	.textarea-input--statistics.textarea-input-invalid .textarea-input--placeholder {
-		@apply text-purple-500;
+		@apply text-violet-500;
 	}
 
 	.textarea-input-focus .textarea-input--placeholder,

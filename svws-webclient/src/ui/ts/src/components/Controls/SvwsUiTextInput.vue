@@ -187,11 +187,15 @@
 
 	.text-input--control {
 		@apply bg-white;
-		@apply rounded-md border border-black border-opacity-25;
+		@apply rounded-md border border-black/5;
 		@apply h-9 w-full;
 		@apply text-base;
 		@apply whitespace-nowrap;
 		padding: 0.5em 0.7em;
+
+		&:hover {
+			@apply border-black/25;
+		}
 	}
 
 	.text-input--control[type="number"] {
@@ -217,9 +221,17 @@
 		@apply outline-none;
 	}
 
+	.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
+		@apply border-black/25;
+	}
+
+	.text-input--filled:not(:focus-within):hover .text-input--control {
+		@apply border-black/50;
+	}
+
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input--filled .text-input--control {
-		@apply border-purple-500;
+		@apply border-violet-500;
 	}
 
 	.text-input--search {
@@ -244,23 +256,6 @@
 			@apply pl-8;
 		}
 	}
-
-	/*.text-input--search:not(.text-input--filled) .text-input--placeholder {
-		@apply sr-only;
-	}
-
-	.text-input--search:not(.text-input--filled) .text-input--control {
-		@apply border-transparent bg-transparent text-transparent;
-		margin-bottom: -2em;
-	}
-
-	.text-input-component.text-input--search:focus-within .text-input--control {
-		@apply mb-0;
-	}
-
-	.text-input--search:not(.text-input--filled) .icon {
-		@apply bg-primary;
-	}*/
 
 	.text-input--control[type="date"]::-webkit-inner-spin-button,
 	.text-input--control[type="date"]::-webkit-calendar-picker-indicator {
@@ -292,7 +287,7 @@
 	.text-input--placeholder {
 		@apply absolute;
 		@apply pointer-events-none;
-		@apply opacity-40;
+		@apply opacity-60;
 		@apply transform;
 		@apply flex items-center;
 
@@ -301,8 +296,12 @@
 		line-height: 1.33;
 	}
 
+	.text-input-component:not(.text-input--filled) {
+		@apply italic;
+	}
+
 	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {
-		@apply opacity-60;
+		@apply opacity-100;
 	}
 
 	.text-input--placeholder--prefix {
@@ -331,7 +330,7 @@
 	}
 
 	.text-input--statistics .text-input--control {
-		@apply border-purple-500;
+		@apply border-violet-500;
 		/*@apply bg-purple/5;*/
 	}
 
@@ -340,7 +339,7 @@
 	}
 
 	.text-input--statistics .text-input--placeholder {
-		@apply font-bold text-purple-500;
+		@apply font-bold text-violet-500;
 	}
 
 	.text-input--invalid:not(:focus-within) .text-input--placeholder,
@@ -357,7 +356,7 @@
 	}
 
 	.text-input--control:disabled {
-		@apply bg-black bg-opacity-10 border-black border-opacity-50 text-black;
+		@apply bg-black/10 border-black/25 text-black;
 		@apply opacity-20;
 		@apply pointer-events-none;
 	}

@@ -8,7 +8,7 @@
 				<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" :short="true">
 					{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}
 				</svws-ui-badge>
-				<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision, 'text-dark-80': !kollision, }">
+				<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision, 'text-black': !kollision, }">
 					<svws-ui-tooltip v-if="kollision && !nichtwahl">
 						<i-ri-alert-line />
 						<template #content>

@@ -45,8 +45,8 @@
 
 .app--menu--initials .app--menu--initials--icon {
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
-	@apply rounded-full overflow-hidden bg-dark-80 text-white;
-	@apply w-10 xl:w-12 h-10 xl:h-12;
+	@apply rounded-full overflow-hidden bg-svws-950 text-white font-bold;
+	@apply w-12 h-12 xl:w-14 xl:h-14;
 }
 
 .app--menu--initials svg {

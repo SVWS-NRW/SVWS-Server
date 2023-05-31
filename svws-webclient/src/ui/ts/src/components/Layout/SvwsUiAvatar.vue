@@ -106,11 +106,12 @@
 
 <style lang="postcss">
 .avatar {
-	@apply w-full rounded-full overflow-hidden relative bg-dark-20 bg-opacity-50;
+	@apply w-full rounded-full overflow-hidden relative bg-light;
+	@apply border border-black/10;
 	padding-bottom: 100%;
 
 	svg {
-		@apply absolute bottom-0 w-full h-4/5 text-dark-80 opacity-20;
+		@apply absolute bottom-0 w-full h-4/5 text-svws-950 opacity-20;
 		margin-bottom: -5%;
 	}
 
@@ -157,7 +158,7 @@
 			}
 
 			+ .avatar {
-				@apply opacity-25;
+				@apply opacity-25 border-black/50;
 			}
 		}
 

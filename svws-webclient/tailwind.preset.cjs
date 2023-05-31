@@ -1,5 +1,5 @@
 function withOpacity(cssVariale) {
-	return ({ opacityValue }) => {
+	return ({opacityValue}) => {
 		if (opacityValue !== undefined) {
 			return `rgba(var(${cssVariale}), ${opacityValue})`;
 		}
@@ -62,21 +62,32 @@ module.exports = {
 				"4xl": "2160px"
 			},
 			colors: {
-				disabled: {
-					light: "#F3F3F3",
-					DEFAULT: "#D9D9D9",
-					medium: "#C0C0C0",
-					dark: "#959595"
-				},
 				transparent: "transparent",
 				current: "currentColor",
+				'svws': {
+					'50': '#f1f7fe',
+					'100': '#e3eefb',
+					'200': '#c0dcf7',
+					'300': '#88c0f1',
+					'400': '#4ba1e7',
+					'500': '#2285d5',
+					DEFAULT: '#2285d5',
+					'600': '#1467b5',
+					'700': '#115393',
+					'800': '#12477a',
+					'900': '#153d65',
+					'950': '#0e2743',
+					'smoke': '#F6F5F4',
+					'ash': '#B8CCC4',
+					'olive': '#2B3B36',
+					'night': '#141414',
+				},
 				white: withOpacity("--color-white"),
 				black: withOpacity("--color-black"),
 				gray: withOpacity("--color-gray"),
 				primary: withOpacity("--color-primary"),
 				light: withOpacity("--color-light"),
 				"dark-20": withOpacity("--color-dark-20"),
-				"dark-80": withOpacity("--color-dark-80"),
 				dark: withOpacity("--color-dark"),
 				error: withOpacity("--color-error"),
 				success: withOpacity("--color-success"),

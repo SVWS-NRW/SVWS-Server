@@ -2,7 +2,7 @@
 	<template v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<div class="w-20 mr-4">
+				<div class="w-20 mr-6">
 					<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten?.foto ?? undefined"
 						:alt="(stammdaten !== undefined) && (stammdaten.foto !== null) ? 'Foto ' + stammdaten.vorname + ' ' + stammdaten.nachname : ''" upload capture />
 				</div>
