@@ -56,7 +56,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 			connectTo: api.connectTo,
 			authenticated: api.authenticated,
 			hostname: api.hostname,
-			schema: this.schema.value,
+			schemaPrevious: this.schema.value,
 		}
 	}
 

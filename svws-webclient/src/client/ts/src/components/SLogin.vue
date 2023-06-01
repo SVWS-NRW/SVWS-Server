@@ -23,9 +23,9 @@
 								<Transition>
 									<div v-if="inputDBSchemata.size() > 0 && !connecting" class="flex flex-col gap-2 items-center mt-8 px-8">
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
-										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="login" />
-										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="login" />
-										<svws-ui-button @click="login" type="primary" :disabled="authenticating">
+										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
+										<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 											Anmelden
 											<svws-ui-spinner v-if="authenticating" spinning />
 											<i-ri-login-circle-line v-else />
@@ -117,7 +117,7 @@
 				schema.value = s;
 				hasDefault = true;
 			}
-			if (s.name === props.schema) {
+			if (s.name === props.schemaPrevious) {
 				schema.value = s;
 				hasDefault = true;
 				break;
@@ -130,7 +130,7 @@
 		connecting.value = false;
 	}
 
-	async function login() {
+	async function doLogin() {
 		inputFocus.value = false;
 		if ((schema.value === undefined) || (schema.value.name === null))
 			throw new Error("Es muss ein gültiges Schema ausgewählt sein.");
