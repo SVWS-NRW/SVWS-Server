@@ -86,6 +86,9 @@ task createScripts {
 			file("./migrate_db.sh").text = 
 			  '#! /bin/bash\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.MigrateDB "$@"\n'
+			file("./create_db.sh").text = 
+			  '#! /bin/bash\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.CreateSchema "$@"\n'  
 			file("./lupo_import.sh").text = 
 			  '#! /bin/bash\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.lupo.app.ImportLupoMDB "$@"\n'
@@ -100,6 +103,7 @@ task createScripts {
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportDB "$@"\n'
 			project.exec {
 				commandLine('chmod',  '+x', './migrate_db.sh')
+				commandLine('chmod',  '+x', './create_db.sh')
 				commandLine('chmod',  '+x', './lupo_import.sh')
 				commandLine('chmod',  '+x', './kurs42_import.sh')
 				commandLine('chmod',  '+x', './export.sh')
@@ -108,6 +112,8 @@ task createScripts {
 		} else if (OperatingSystem.current().isWindows()) {
 			file("./migrate_db.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.MigrateDB %*\n'
+			file("./creat_db.cmd").text = 
+			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.CreateSchema %*\n'  
 			file("./lupo_import.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.lupo.app.ImportLupoMDB %*\n'
 			file("./kurs42_import.cmd").text = 
@@ -120,6 +126,9 @@ task createScripts {
 			file("./migrate_db.sh").text = 
 			  '#! /bin/zsh\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.MigrateDB "$@"\n'
+			file("./create_db.sh").text = 
+			  '#! /bin/zsh\n' +
+			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.CreateSchema "$@"\n'  
 			file("./lupo_import.sh").text = 
 			  '#! /bin/zsh\n' +
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.lupo.app.ImportLupoMDB "$@"\n'
@@ -134,6 +143,7 @@ task createScripts {
 			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.db.utils.app.ImportDB "$@"\n'
 			project.exec {
 				commandLine('chmod',  '+x', './migrate_db.sh')
+				commandLine('chmod',  '+x', './create_db.sh')
 				commandLine('chmod',  '+x', './lupo_import.sh')
 				commandLine('chmod',  '+x', './kurs42_import.sh')
 				commandLine('chmod',  '+x', './export.sh')
