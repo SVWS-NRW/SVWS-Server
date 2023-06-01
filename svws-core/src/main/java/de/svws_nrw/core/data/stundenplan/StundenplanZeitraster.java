@@ -20,11 +20,11 @@ public class StundenplanZeitraster {
 
 	/** Der {@link Wochentag} an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
 	@Schema(description = "der Wochentag an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
-	public int wochentag = -1;
+	public int wochentag = 1;
 
 	/** Die Nummer der Unterrichtsstunde an dem Wochentag */
 	@Schema(description = "die Nummer der Unterrichtsstunde an dem Wochentag", example = "1")
-	public int unterrichtstunde = -1;
+	public int unterrichtstunde = 1;
 
 	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert". */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt", example = "430")

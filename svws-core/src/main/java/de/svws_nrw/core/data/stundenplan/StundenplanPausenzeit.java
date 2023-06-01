@@ -20,7 +20,7 @@ public class StundenplanPausenzeit {
 
 	/** Der {@link Wochentag} für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag) */
 	@Schema(description = "der Wochentag für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag)", example = "1")
-	public int wochentag = -1;
+	public int wochentag = 1;
 
 	/** Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt. NULL bedeutet "noch nicht definiert". */
 	@Schema(description = "die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt", example = "610")
