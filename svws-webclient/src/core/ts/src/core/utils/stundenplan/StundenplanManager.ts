@@ -664,8 +664,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
 	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const result : List<StundenplanZeitraster> = new ArrayList();
-		return result;
+		throw new DeveloperNotificationException("Noch nicht implementiert")
 	}
 
 	/**
@@ -678,8 +677,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
 	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, stundenbeginn : string, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const result : List<StundenplanZeitraster> = new ArrayList();
-		return result;
+		throw new DeveloperNotificationException("Noch nicht implementiert")
 	}
 
 	/**
