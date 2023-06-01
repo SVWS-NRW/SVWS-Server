@@ -7,8 +7,8 @@
 				</div>
 				<div>
 					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge type="light" title="ID" class="font-mono">
-						<i-ri-fingerprint-line />
+					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+						ID:
 						{{ stammdaten()?.id || "" }}
 					</svws-ui-badge>
 					<br>

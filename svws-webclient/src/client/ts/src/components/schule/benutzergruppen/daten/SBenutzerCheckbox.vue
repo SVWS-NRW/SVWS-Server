@@ -14,7 +14,7 @@
 					<svws-ui-icon v-if="spalteLinks" v-show="showIcon"> <i-ri-add-circle-fill class="text-primary" /> </svws-ui-icon>
 					<svws-ui-icon v-if="!spalteLinks" v-show="showIcon"> <i-ri-close-circle-line /> </svws-ui-icon>
 				</span>
-				<span class="font-mono inline-flex items-center gap-0.5"><i-ri-fingerprint-line class="opacity-25" />{{ benutzer.id }}</span>
+				<span class="font-mono inline-flex items-center gap-0.5"><i-ri-fingerprint-line class="opacity-25" />ID: {{ benutzer.id }}</span>
 			</span>
 		</label>
 	</li>

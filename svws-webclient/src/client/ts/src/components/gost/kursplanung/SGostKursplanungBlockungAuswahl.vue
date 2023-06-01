@@ -22,10 +22,10 @@
 						</svws-ui-tooltip>
 					</div>
 					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="inline-flex -my-0.5 gap-1">
-						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
 						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
 							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
 						</s-gost-kursplanung-remove-blockung-modal>
+						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
 					</div>
 				</div>
 			</template>

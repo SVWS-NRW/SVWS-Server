@@ -3,6 +3,7 @@
 		<template #actions>
 			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()">
 				Zur Laufbahnplanung
+				<i-ri-group-line />
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">

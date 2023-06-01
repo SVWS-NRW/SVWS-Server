@@ -210,7 +210,7 @@
 	}
 
 	.textarea-input:not(.textarea-input--filled) .textarea-input--placeholder {
-		@apply font-normal italic;
+		@apply font-normal;
 	}
 
 	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {

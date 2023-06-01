@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card class="flex-grow" style="height: auto;">
 		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline cursor-auto">
+			<h3 class="text-headline-md cursor-auto">
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
 					{{ blockungsname }}
 					<template #icon>
@@ -17,10 +17,10 @@
 			</h3>
 			<div class="flex items-center gap-2">
 				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="secondary" @click="openModal()">Aktivieren</svws-ui-button>
+					<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="secondary" size="small" @click="openModal()">Aktivieren</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-aktivieren-modal>
 				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="secondary" @click="openModal()">Hochschreiben</svws-ui-button>
+					<svws-ui-button type="secondary" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 				<slot name="triggerRegeln" />
 			</div>

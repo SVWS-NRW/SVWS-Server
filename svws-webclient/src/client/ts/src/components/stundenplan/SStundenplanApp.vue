@@ -4,8 +4,8 @@
 			<div class="flex items-center">
 				<div>
 					<span class="inline-block mr-3"> {{ data().bezeichnungStundenplan }} </span>
-					<svws-ui-badge type="light" title="ID" class="font-mono">
-						<i-ri-fingerprint-line />
+					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+						ID:
 						{{ data().id }}
 					</svws-ui-badge>
 				</div>

@@ -111,7 +111,7 @@
 
 .modal {
 	@apply align-bottom sm:align-middle my-8 transform transition-all overflow-hidden;
-	@apply bg-white max-h-full max-w-modal-sm;
+	@apply bg-white max-h-full max-w-modal-sm border border-black/20;
 	@apply flex flex-col items-center;
 	@apply w-full mx-auto;
 	@apply relative z-50;
@@ -159,7 +159,7 @@
 
 .modal--title {
 	@apply flex-grow px-2;
-	@apply text-sm-bold uppercase;
+	@apply text-sm-bold;
 }
 
 .modal--content-wrapper {

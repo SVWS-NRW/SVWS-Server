@@ -58,7 +58,12 @@
 }
 
 .input--schule-abschnitte {
-	@apply -mt-1;
+	@apply -mt-0.5;
+}
+
+.input--schule-abschnitte .dropdown-icon {
+	@apply pl-0;
+	font-size: 0.8rem;
 }
 
 .input--schule-abschnitte .dropdown-icon:hover span.icon,
@@ -69,7 +74,7 @@
 .input--schule-abschnitte input.text-input--control {
 	@apply border-0 p-0 h-auto;
 	@apply font-bold;
-	width: 7.8em;
+	width: 8ch;
 	padding-right: 1.4rem !important;
 }
 

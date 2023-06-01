@@ -1,24 +1,24 @@
 <template>
-	<div class="px-7 3xl:px-8 pb-4 bg-light">
-		<div class="flex justify-between items-start flex-wrap gap-x-4 gap-y-1 bg-white rounded-t-lg px-3 pt-4 pb-3 -mx-3" :class="{'rounded-b-lg': !regeln.length}">
+	<div class="pl-5 pr-3 bg-light rounded-lg mb-3">
+		<div class="flex justify-between items-start flex-wrap gap-x-4 gap-y-1 rounded-t-lg px-3 pt-4 pb-3 -mx-3" :class="{'rounded-b-lg': !regeln.length}">
 			<span class="text-headline-sm w-1/2">
 				{{ regelTyp.bezeichnung }}
 			</span>
-			<svws-ui-button @click="regel_hinzufuegen" type="transparent" size="small" :disabled="modelValue?.typ === regelTyp.typ">
-				Regel hinzufügen <i-ri-add-circle-line class="-mr-1" />
+			<svws-ui-button @click="regel_hinzufuegen" type="secondary" size="small" :disabled="modelValue?.typ === regelTyp.typ" class="-mt-0.5">
+				Regel <i-ri-add-circle-line class="-mr-1" />
 			</svws-ui-button>
 		</div>
-		<div v-for="r in regeln" :key="r.id" class="flex justify-between last:pb-3 bg-white px-3 py-0.5 -mx-3" :class="{'rounded-b-lg': modelValue?.typ !== regelTyp.typ}">
+		<div v-for="r in regeln" :key="r.id" class="flex justify-between last:pb-5 px-3 py-0.5 -mx-3" :class="{'rounded-b-lg': modelValue?.typ !== regelTyp.typ}">
 			<div class="cursor-pointer" :class="{'text-primary font-bold':r===modelValue}" @click="select_regel(r)">
 				<slot name="beschreibung" :regel="r" />
 			</div>
 			<svws-ui-button type="trash" @click="regel_entfernen(r)" />
 		</div>
-		<div v-if="modelValue?.typ === regelTyp.typ" class="bg-white rounded-b-lg px-3 py-3 -mx-3">
+		<div v-if="modelValue?.typ === regelTyp.typ" class="px-3 pt-5 pb-3 -mx-3">
 			<div class="inline-flex items-center gap-2 w-full">
 				<slot />
 			</div>
-			<div class="flex flex-wrap gap-2 mt-8">
+			<div class="flex flex-wrap gap-2 mt-5">
 				<svws-ui-button type="secondary" @click="emit('update:modelValue', undefined)">
 					Abbrechen
 				</svws-ui-button>

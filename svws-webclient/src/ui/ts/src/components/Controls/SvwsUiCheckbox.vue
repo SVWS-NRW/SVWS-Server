@@ -96,6 +96,11 @@
 			@apply text-black/75;
 		}
 	}
+
+	.input-wrapper .text-input-component + &,
+	.input-wrapper .wrapper + & {
+		@apply items-center;
+	}
 }
 
 .checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) {

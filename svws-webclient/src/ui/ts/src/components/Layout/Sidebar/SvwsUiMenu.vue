@@ -98,20 +98,7 @@
 
 <style lang="postcss">
 .sidebar--menu {
-	@apply flex min-h-full flex-1 flex-col;
-	@apply w-16;
-}
-
-@media (min-width: 1280px) {
-	.sidebar--menu {
-		@apply w-20;
-	}
-}
-
-@media (min-width: 2000px) {
-	.sidebar--menu {
-		@apply w-20;
-	}
+	@apply flex min-h-full flex-1 flex-col w-full;
 }
 
 .sidebar--menu--body {

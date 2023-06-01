@@ -440,7 +440,7 @@
 		}
 
 		&--clicked {
-			@apply bg-primary bg-opacity-5 font-bold text-primary;
+			@apply bg-svws/5 font-bold text-primary;
 		}
 	}
 
@@ -687,6 +687,10 @@
 			&__tr {
 				&:hover {
 					@apply cursor-pointer;
+				}
+
+				&:not(.data-table__tr--clicked):hover {
+					@apply bg-light;
 				}
 			}
 		}

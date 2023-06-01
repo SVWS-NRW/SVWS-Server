@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline>Abiturjahrgänge</template>
+		<template #headline>Oberstufe</template>
 		<template #abschnitt>
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
@@ -8,8 +8,21 @@
 			<div class="flex flex-col gap-12">
 				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoAbiturjahrgang" :items="rows" :columns="cols">
 					<template #cell(abiturjahr)="{ value }">
-						{{ value === -1 ? '' : value }}
+						<span v-if="value === -1" class="opacity-25">
+							—
+						</span>
+						<span v-else>
+							{{ value }}
+						</span>
 						<svws-ui-spinner :spinning="(pending && value === auswahl?.abiturjahr)" />
+					</template>
+					<template #cell(jahrgang)="{ value }">
+						<span v-if="!value" class="opacity-25">
+							—
+						</span>
+						<span v-else>
+							{{ value }}
+						</span>
 					</template>
 					<template #footerActions>
 						<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang" :add-abiturjahrgang="addAbiturjahrgang">
@@ -34,8 +47,8 @@
 	const props = defineProps<GostAuswahlProps>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
-		{ key: "abiturjahr", label: "Abiturjahr", sortable: true },
+		{ key: "bezeichnung", label: "Abiturjahrgang", sortable: true, span: 2 },
+		{ key: "abiturjahr", label: "Jahr", sortable: true },
 		{ key: "jahrgang", label: "Stufe", sortable: true }];
 
 	const rows: ComputedRef<GostJahrgang[]> = computed(() => {

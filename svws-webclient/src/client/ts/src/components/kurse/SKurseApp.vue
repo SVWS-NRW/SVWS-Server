@@ -3,8 +3,8 @@
 		<svws-ui-header>
 			<div class="flex items-center">
 				<span class="inline-block mr-3">{{ kuerzel }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono">
-					<i-ri-fingerprint-line />
+				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+					ID:
 					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>

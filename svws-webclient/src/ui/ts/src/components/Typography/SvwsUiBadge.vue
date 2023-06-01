@@ -23,6 +23,7 @@
 				'badge--light': type === 'light',
 				'badge--lg': size === 'big',
 				'badge--normal': size === 'normal',
+				'badge--small': size === 'small',
 				'badge--short': short,
 			}">
 				<slot />
@@ -41,6 +42,7 @@
 			'badge--light': type === 'light',
 			'badge--lg': size === 'big',
 			'badge--normal': size === 'normal',
+			'badge--small': size === 'small',
 			'badge--short': short,
 		}">
 			<slot />
@@ -98,5 +100,12 @@
 
 .badge--short {
 	@apply overflow-hidden relative line-clamp-1 overflow-ellipsis w-full max-w-full break-all;
+}
+
+.badge--small {
+	font-size: 0.5em;
+	margin-top: 0.4em;
+	margin-bottom: -0.5em;
+	padding: 0.25em 0.45em;
 }
 </style>

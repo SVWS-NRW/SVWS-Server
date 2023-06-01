@@ -1,10 +1,9 @@
 <template>
-	<div class="px-7 3xl:px-8 pb-4 bg-light">
-		<div class="flex justify-between gap-4 bg-white rounded-lg px-3 pt-4 pb-3 -mx-3">
-			<span class="text-headline-sm inline-flex items-center gap-1">
+	<div class="pl-5 pr-3 bg-light rounded-lg mb-3">
+		<div class="flex gap-4 px-3 pt-4 pb-3 -mx-3">
+			<svws-ui-toggle v-model="hatRegel">
 				{{ regel_typ.bezeichnung }}
-			</span>
-			<svws-ui-toggle v-model="hatRegel" />
+			</svws-ui-toggle>
 		</div>
 	</div>
 </template>

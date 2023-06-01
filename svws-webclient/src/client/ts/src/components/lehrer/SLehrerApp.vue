@@ -8,8 +8,8 @@
 				</div>
 				<div v-if="stammdaten !== undefined">
 					<span class="inline-block mr-3">{{ stammdaten.titel }} {{ stammdaten.vorname }} {{ stammdaten.nachname }}</span>
-					<svws-ui-badge type="light" title="ID" class="font-mono">
-						<i-ri-fingerprint-line />
+					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+						ID:
 						{{ stammdaten.id }}
 					</svws-ui-badge>
 					<br>

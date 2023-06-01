@@ -388,7 +388,10 @@
 			@apply border-black;
 			@apply outline-none;
 		}
+	}
 
+	&.with-open-list,
+	&:focus-within {
 		.dropdown-icon {
 			@apply opacity-100;
 		}
@@ -415,7 +418,7 @@
 	}
 
 	&:not(.with-value) .multiselect-tags--placeholder {
-		@apply font-normal italic;
+		@apply font-normal;
 	}
 
 	&:not(.with-open-list):not(.with-value):not(:focus-within):hover .multiselect-tags--placeholder {

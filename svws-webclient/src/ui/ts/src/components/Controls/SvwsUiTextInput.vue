@@ -297,7 +297,7 @@
 	}
 
 	.text-input-component:not(.text-input--filled) .text-input--placeholder {
-		@apply font-normal italic;
+		@apply font-normal;
 	}
 
 	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {

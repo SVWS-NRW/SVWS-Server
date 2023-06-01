@@ -57,11 +57,17 @@
 		@apply bg-light;
 	}
 
+	.app--menu {
+		min-width: 4rem;
+		width: 3%;
+		max-width: 7rem;
+	}
+
 	.app--sidebar {
 		@apply flex-shrink-0;
-		width: 23.6%;
+		width: 20%;
 		min-width: 24rem;
-		max-width: 30rem;
+		max-width: 34rem;
 	}
 
 	.app--content {
@@ -70,13 +76,18 @@
 	}
 
 	.app--sidebar-container,
-	.app--content-container,
-	.app-layout--aside-container {
+	.app--content-container {
 		@apply bg-white rounded-2xl;
 		@apply h-full w-full;
 		@apply flex flex-col;
 		@apply border border-black/25;
 		@apply overflow-y-auto;
+	}
+
+	.app-layout--aside-container {
+		@apply overflow-y-auto;
+		@apply h-full w-full;
+		@apply flex flex-col py-5;
 	}
 
 	.app--content-container.fullwidth-content {
@@ -90,11 +101,8 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 p-3 absolute top-2 right-2 bottom-2;
-	}
-
-	.app-layout--aside-container {
-		@apply rounded-2xl shadow-lg;
+		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
+		@apply shadow-2xl shadow-black/50 bg-white border-l border-black/25;
 	}
 
 	.app--sidebar-container {
