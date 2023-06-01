@@ -63,6 +63,7 @@
 	const displayPeriodUom = ref("month");
 
 	const currentWeekNumber = 0;
+	const numberDays = 5;
 
 	const showDate = ref(new Date());
 
@@ -122,6 +123,49 @@
 </script>
 
 <style lang="postcss">
+
+.dow0, .dow6 { display: none}
+.cv-item.offset1 {
+	left: calc((100% / v-bind(numberDays)));
+}
+.cv-item.offset2 {
+	left: calc((200% / v-bind(numberDays)));
+}
+.cv-item.offset3 {
+	left: calc((300% / v-bind(numberDays)));
+}
+.cv-item.offset4 {
+	left: calc((400% / v-bind(numberDays)));
+}
+.cv-item.offset5 {
+	left: calc((500% / v-bind(numberDays)));
+}
+.cv-item.offset6 {
+	left: calc((600% / v-bind(numberDays)));
+}
+
+.cv-item.span1 {
+	width: calc((100% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span2 {
+	width: calc((200% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span3 {
+	width: calc((300% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span4 {
+	width: calc((400% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span5 {
+	width: calc((500% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span6 {
+	width: calc((600% / v-bind(numberDays)) - 0.05em);
+}
+.cv-item.span7 {
+	width: calc((700% / v-bind(numberDays)) - 0.05em);
+}
+
 .theme-default .cv-header,
 .theme-default .cv-header-day {
 	@apply bg-white;
