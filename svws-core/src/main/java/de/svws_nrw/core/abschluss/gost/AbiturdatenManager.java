@@ -71,6 +71,9 @@ public class AbiturdatenManager {
 	/** Die Prüfungsergebnisse der einzelnen Teilprüfungen der Belegprüfung */
 	private @NotNull List<@NotNull GostBelegpruefung> belegpruefungen = new ArrayList<>();
 
+	/** Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden */
+	private KurszahlenUndWochenstunden belegpruefungKurszahlenUndWochenstunden = null;
+
 	/** Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind. */
 	private @NotNull List<@NotNull GostBelegungsfehler> belegpruefungsfehler = new ArrayList<>();
 
@@ -131,7 +134,8 @@ public class AbiturdatenManager {
 		pruefungen.add(new Schwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
 		pruefungen.add(new AbiFaecher(this, pruefungsArt));
 		// Die Prüfung der Kurszahlen und Wochenstunden ist abhängig von den Projektkursergebnissen - sie muss nach den Projektkursergebnissen durchgeführt werden!!!
-		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse));
+		belegpruefungKurszahlenUndWochenstunden = new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(belegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
 		// Die Prüfung von schulspezifischen Fachkombinationen
 		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
@@ -213,48 +217,6 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull Sprachendaten getSprachendaten() {
 		return abidaten.sprachendaten;
-	}
-
-
-	/**
-	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
-	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
-	 *
-	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
-	 */
-	public @NotNull int[] getWochenstunden() {
-		final @NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
-		for (int i = 0; i < 6; i++) {
-			for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
-				final AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
-				if ((hjb == null) || ("AT".equals(hjb.kursartKuerzel)))
-					continue;
-				stunden[i] += hjb.wochenstunden;
-			}
-		}
-		return stunden;
-	}
-
-	/**
-	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
-	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
-	 *
-	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
-	 */
-	public @NotNull int[] getAnrechenbareKurse() {
-		final @NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
-		final GostBesondereLernleistung bll = GostBesondereLernleistung.fromKuerzel(abidaten.besondereLernleistung);
-		for (int i = 0; i < 6; i++) {
-			for (final AbiturFachbelegung fb : abidaten.fachbelegungen) {
-				final AbiturFachbelegungHalbjahr hjb = fb.belegungen[i];
-				if ((hjb == null) || ("AT".equals(hjb.kursartKuerzel)))
-					continue;
-				final GostKursart kursart = GostKursart.fromKuerzel(hjb.kursartKuerzel);
-				if ((kursart != GostKursart.VTF) && (!((kursart == GostKursart.PJK) && (bll == GostBesondereLernleistung.PROJEKTKURS))))
-					anzahl[i]++;
-			}
-		}
-		return anzahl;
 	}
 
 
@@ -1773,6 +1735,47 @@ public class AbiturdatenManager {
 		}
 		// TODO Ergänze das Ergebnis um einen Log der Belegprüfung
 		return ergebnis;
+	}
+
+	/**
+	 * Gibt das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden zurück, welches für
+	 * die Belegprüfung genutzt wurde und die Statistiken dazu erstellt hat.
+	 *
+	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
+	 */
+	private @NotNull KurszahlenUndWochenstunden getKurszahlenUndWochenstunden() {
+		if (this.belegpruefungKurszahlenUndWochenstunden == null)
+			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.");
+		return this.belegpruefungKurszahlenUndWochenstunden;
+	}
+
+
+	/**
+	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
+	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
+	 *
+	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
+	 */
+	public @NotNull int[] getWochenstunden() {
+		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
+		final @NotNull int[] stunden = new int[] {0, 0, 0, 0, 0, 0};
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			stunden[hj.id] = kuw.getWochenstunden(hj);
+		return stunden;
+	}
+
+	/**
+	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
+	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
+	 *
+	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
+	 */
+	public @NotNull int[] getAnrechenbareKurse() {
+		final @NotNull KurszahlenUndWochenstunden kuw = getKurszahlenUndWochenstunden();
+		final @NotNull int[] anzahl = new int[] {0, 0, 0, 0, 0, 0};
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
+		return anzahl;
 	}
 
 }

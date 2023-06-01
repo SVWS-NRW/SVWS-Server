@@ -17,6 +17,7 @@ import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemei
 import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
+import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
@@ -82,6 +83,11 @@ export class AbiturdatenManager extends JavaObject {
 	private belegpruefungen : List<GostBelegpruefung> = new ArrayList();
 
 	/**
+	 * Die zuletzt durchgeführte Belegprüfung bezüglich der Kurszahlen und der Wochenstunden
+	 */
+	private belegpruefungKurszahlenUndWochenstunden : KurszahlenUndWochenstunden | null = null;
+
+	/**
 	 * Die Menge der Belegprüfungsfehler, die bei den durchgeführten Belegprüfungen aufgetreten sind.
 	 */
 	private belegpruefungsfehler : List<GostBelegungsfehler> = new ArrayList();
@@ -140,7 +146,8 @@ export class AbiturdatenManager extends JavaObject {
 		pruefungen.add(pruefungProjektkurse);
 		pruefungen.add(new Schwerpunkt(this, pruefungsArt, pruefungFremdsprachen, pruefungNaturwissenschaften));
 		pruefungen.add(new AbiFaecher(this, pruefungsArt));
-		pruefungen.add(new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse));
+		this.belegpruefungKurszahlenUndWochenstunden = new KurszahlenUndWochenstunden(this, pruefungsArt, pruefungProjektkurse);
+		pruefungen.add(this.belegpruefungKurszahlenUndWochenstunden);
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
 		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
 		return pruefungen;
@@ -213,47 +220,6 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getSprachendaten() : Sprachendaten {
 		return this.abidaten.sprachendaten;
-	}
-
-	/**
-	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
-	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
-	 *
-	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
-	 */
-	public getWochenstunden() : Array<number> {
-		const stunden : Array<number> = [0, 0, 0, 0, 0, 0];
-		for (let i : number = 0; i < 6; i++) {
-			for (const fb of this.abidaten.fachbelegungen) {
-				const hjb : AbiturFachbelegungHalbjahr | null = fb.belegungen[i];
-				if ((hjb === null) || (JavaObject.equalsTranspiler("AT", (hjb.kursartKuerzel))))
-					continue;
-				stunden[i] += hjb.wochenstunden;
-			}
-		}
-		return stunden;
-	}
-
-	/**
-	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
-	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
-	 *
-	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
-	 */
-	public getAnrechenbareKurse() : Array<number> {
-		const anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
-		const bll : GostBesondereLernleistung | null = GostBesondereLernleistung.fromKuerzel(this.abidaten.besondereLernleistung);
-		for (let i : number = 0; i < 6; i++) {
-			for (const fb of this.abidaten.fachbelegungen) {
-				const hjb : AbiturFachbelegungHalbjahr | null = fb.belegungen[i];
-				if ((hjb === null) || (JavaObject.equalsTranspiler("AT", (hjb.kursartKuerzel))))
-					continue;
-				const kursart : GostKursart | null = GostKursart.fromKuerzel(hjb.kursartKuerzel);
-				if ((kursart as unknown !== GostKursart.VTF as unknown) && (!((kursart as unknown === GostKursart.PJK as unknown) && (bll as unknown === GostBesondereLernleistung.PROJEKTKURS as unknown))))
-					anzahl[i]++;
-			}
-		}
-		return anzahl;
 	}
 
 	private static getSchuelerFachwahlFromBelegung(belegung : AbiturFachbelegung, halbjahr : GostHalbjahr) : string | null {
@@ -1679,6 +1645,46 @@ export class AbiturdatenManager extends JavaObject {
 			ergebnis.fehlercodes.add(new GostBelegpruefungErgebnisFehler(fehler, this.pruefungsArt));
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Gibt das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden zurück, welches für
+	 * die Belegprüfung genutzt wurde und die Statistiken dazu erstellt hat.
+	 *
+	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
+	 */
+	private getKurszahlenUndWochenstunden() : KurszahlenUndWochenstunden {
+		if (this.belegpruefungKurszahlenUndWochenstunden === null)
+			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+		return this.belegpruefungKurszahlenUndWochenstunden;
+	}
+
+	/**
+	 * Berechnet die Wochenstunden, welche von dem Schüler in den einzelnen
+	 * Halbjahren der gymnasialen Oberstufe für das Abitur relevant belegt wurden.
+	 *
+	 * @return ein Array mit den Wochenstunden für die sechs Halbjahre
+	 */
+	public getWochenstunden() : Array<number> {
+		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
+		const stunden : Array<number> = [0, 0, 0, 0, 0, 0];
+		for (const hj of GostHalbjahr.values())
+			stunden[hj.id] = kuw.getWochenstunden(hj);
+		return stunden;
+	}
+
+	/**
+	 * Berechnet die Anzahl der anrechenbaren Kurse, welche von dem Schüler in den einzelnen
+	 * Halbjahren der gymnasialen Oberstufe für das Abitur belegt wurden.
+	 *
+	 * @return ein Array mit den anrechenbaren Kursen für die sechs Halbjahre
+	 */
+	public getAnrechenbareKurse() : Array<number> {
+		const kuw : KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
+		const anzahl : Array<number> = [0, 0, 0, 0, 0, 0];
+		for (const hj of GostHalbjahr.values())
+			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
+		return anzahl;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
