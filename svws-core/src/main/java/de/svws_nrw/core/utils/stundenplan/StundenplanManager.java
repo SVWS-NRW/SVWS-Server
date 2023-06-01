@@ -100,8 +100,8 @@ public class StundenplanManager {
 		initMapZeitraster();        // ✔, referenziert ---
 		initMapRaum();              // ✔, referenziert ---
 		initMapPausenzeit();        // ✔, referenziert ---
-		initMapAufsicht();          // referenziert ---
-		initMapKWZuordnung();       // referenziert ---
+		initMapAufsicht();          // ✔, referenziert ---
+		initMapKWZuordnung();       // ✔, referenziert ---
 
 		// Maps: DTO-StundenplanUnterricht
 		initMapKursZuUnterrichte(); // referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
@@ -273,9 +273,11 @@ public class StundenplanManager {
 
 	private void initMapAufsicht() {
 		_map_aufsichtsbereichID_zu_aufsichtsbereich.clear();
+		final @NotNull HashSet<@NotNull String> setAufsichtKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsicht : _daten.aufsichtsbereiche) {
 			DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsicht.id);
 			DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsicht.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setAufsichtKuerzel", setAufsichtKuerzel, aufsicht.kuerzel);
 			// aufsicht.beschreibung darf "blank" sein
 			DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtsbereichID_zu_aufsichtsbereich, aufsicht.id, aufsicht);
 		}
@@ -289,9 +291,9 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
 			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
 			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > _daten.wochenTypModell);
-			DeveloperNotificationException.ifTrue("kwz.wochentyp == 0", kwz.wochentyp == 0);
-			_map_jahr_kw_zu_kwz.put(kwz.jahr, kwz.kw, kwz);
-			_map_kwzID_zu_kwz.put(kwz.id, kwz);
+			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+			DeveloperNotificationException.ifMap2DPutOverwrites(_map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kwzID_zu_kwz, kwz.id, kwz);
 		}
 	}
 

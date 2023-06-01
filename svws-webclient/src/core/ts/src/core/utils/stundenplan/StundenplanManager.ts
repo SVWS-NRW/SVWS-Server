@@ -248,9 +248,11 @@ export class StundenplanManager extends JavaObject {
 
 	private initMapAufsicht() : void {
 		this._map_aufsichtsbereichID_zu_aufsichtsbereich.clear();
+		const setAufsichtKuerzel : HashSet<string> = new HashSet();
 		for (const aufsicht of this._daten.aufsichtsbereiche) {
 			DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsicht.id);
 			DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsicht.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setAufsichtKuerzel", setAufsichtKuerzel, aufsicht.kuerzel);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_aufsichtsbereichID_zu_aufsichtsbereich, aufsicht.id, aufsicht);
 		}
 	}
@@ -263,9 +265,9 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
 			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
 			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > this._daten.wochenTypModell);
-			DeveloperNotificationException.ifTrue("kwz.wochentyp == 0", kwz.wochentyp === 0);
-			this._map_jahr_kw_zu_kwz.put(kwz.jahr, kwz.kw, kwz);
-			this._map_kwzID_zu_kwz.put(kwz.id, kwz);
+			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
 		}
 	}
 
