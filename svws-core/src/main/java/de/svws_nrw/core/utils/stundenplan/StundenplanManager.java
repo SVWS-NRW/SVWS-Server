@@ -691,7 +691,7 @@ public class StundenplanManager {
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
 	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByStartVerstrichen(final @NotNull StundenplanZeitraster zeitrasterStart, final int minutenVerstrichen) {
-		// TODO BAR programmieren nachdem BACHRAN "Uhrzeit" definiert hat.
+		// TODO BAR nachdem BACHRAN "Uhrzeit" definiert hat.
 		throw new DeveloperNotificationException("Noch nicht implementiert");
 	}
 
@@ -705,7 +705,7 @@ public class StundenplanManager {
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
 	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final @NotNull String stundenbeginn, final int minutenVerstrichen) {
-		// TODO BAR programmieren nachdem BACHRAN "Uhrzeit" definiert hat.
+		// TODO BAR nachdem BACHRAN "Uhrzeit" definiert hat.
 		throw new DeveloperNotificationException("Noch nicht implementiert");
 	}
 
