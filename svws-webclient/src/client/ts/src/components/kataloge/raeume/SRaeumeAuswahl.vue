@@ -12,10 +12,10 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" selectable v-model="selected">
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
 					<template #footerActions>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
-							<svws-ui-button @click="deleteEintraege(selected)" type="trash" class="cursor-pointer"
+							<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer"
 								:disabled="selected.length === 0" />
 						</div>
 						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
@@ -45,5 +45,10 @@
 		{ key: "beschreibung", label: "Beschreibung", sortable: true },
 		{ key: "groesse", label: "Größe", sortable: true },
 	];
+
+	async function doDeleteEintraege() {
+		await props.deleteEintraege(selected.value);
+		selected.value = [];
+	}
 
 </script>

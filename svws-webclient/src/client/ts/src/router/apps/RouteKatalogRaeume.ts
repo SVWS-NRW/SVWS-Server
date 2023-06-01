@@ -92,6 +92,7 @@ export class RouteDataKatalogRaeume {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		mapKatalogeintraege.set(raum.id, raum);
 		this.setPatchedState({mapKatalogeintraege});
+		await this.gotoEintrag(raum);
 	}
 
 	deleteEintraege = async (eintraege: Raum[]) => {
@@ -100,7 +101,10 @@ export class RouteDataKatalogRaeume {
 			const raum = await api.server.deleteRaum(api.schema, eintrag.id);
 			mapKatalogeintraege.delete(raum.id);
 		}
-		this.setPatchedState({mapKatalogeintraege});
+		let auswahl;
+		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
+			auswahl = mapKatalogeintraege.values().next().value;
+		this.setPatchedState({mapKatalogeintraege, auswahl});
 	}
 
 	patch = async (eintrag : Partial<Raum>) => {
@@ -166,7 +170,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 	public getAuswahlProps(to: RouteLocationNormalized): RaeumeAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,

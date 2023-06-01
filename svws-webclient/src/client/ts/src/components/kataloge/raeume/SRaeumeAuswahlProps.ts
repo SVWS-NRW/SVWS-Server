@@ -2,7 +2,7 @@ import type { Raum, Schuljahresabschnitt } from "@svws-nrw/svws-core";
 
 export interface RaeumeAuswahlProps {
 	auswahl: Raum | undefined;
-	mapKatalogeintraege: Map<number, Raum>;
+	mapKatalogeintraege: () => Map<number, Raum>;
 	addEintrag: (religion: Raum) => Promise<void>;
 	deleteEintraege: (eintraege: Raum[]) => Promise<void>;
 	gotoEintrag: (eintrag: Raum) => Promise<void>;

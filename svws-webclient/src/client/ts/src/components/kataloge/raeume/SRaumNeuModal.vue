@@ -17,15 +17,15 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanRaum } from "@svws-nrw/svws-core";
+	import { Raum } from "@svws-nrw/svws-core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		addRaum: (raum: StundenplanRaum) => Promise<void>;
+		addRaum: (raum: Raum) => Promise<void>;
 	}>();
 
 	const modal = ref();
-	const item = ref<StundenplanRaum>(new StundenplanRaum());
+	const item = ref<Raum>(new Raum());
 
 	const openModal = () => {
 		modal.value.openModal();
@@ -33,6 +33,7 @@
 
 	async function importer() {
 		await props.addRaum(item.value);
+		item.value = new Raum();
 		modal.value.closeModal();
 	}
 </script>

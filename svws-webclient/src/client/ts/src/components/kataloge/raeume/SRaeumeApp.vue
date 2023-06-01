@@ -8,9 +8,6 @@
 					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
-			<div>
-				<span class="opacity-50">{{ auswahl?.kuerzel }}</span>
-			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
