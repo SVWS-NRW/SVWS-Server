@@ -459,6 +459,44 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Filtert aus der Liste der Kurs-IDs diejenigen heraus,
+	 * deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 *
+	 * @param kursIDs          Die Liste aller Kurs-IDs.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public getKurseGefiltert(kursIDs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
+		const result : ArrayList<number> = new ArrayList();
+		for (const kursID of kursIDs)
+			if (this.testKursHatUnterrichtAm(kursID!, wochentyp, wochentag, unterrichtstunde))
+				result.add(kursID);
+		return result;
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Kurs am (Wochentyp / Wochentag / Unterrichtsstunde)  hat.
+	 *
+	 * @param kursID           Die ID des Kurses.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls der übergebene Kurs am (wochentyp / wochentag / Unterrichtsstunde)  hat.
+	 */
+	public testKursHatUnterrichtAm(kursID : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
+		for (const u of this.getUnterrichtDesKursesByWochentyp(kursID, wochentyp)) {
+			const z : StundenplanZeitraster = this.getZeitraster(u.idZeitraster);
+			if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === unterrichtstunde))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
 	 *
 	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}

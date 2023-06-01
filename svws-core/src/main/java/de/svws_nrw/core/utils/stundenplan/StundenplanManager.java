@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
@@ -24,6 +25,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.utils.ListUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -497,6 +499,44 @@ public class StundenplanManager {
 	public @NotNull List<@NotNull StundenplanUnterricht> getUnterrichtDerKurseByKW(final @NotNull long[] kursIDs, final int jahr, final int kalenderwoche) {
 		final int wochentyp = getWochentypOrDefault(jahr, kalenderwoche);
 		return getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
+	}
+
+	/**
+	 * Filtert aus der Liste der Kurs-IDs diejenigen heraus,
+	 * deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 *
+	 * @param kursIDs          Die Liste aller Kurs-IDs.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull Long> getKurseGefiltert(final @NotNull List<@NotNull Long> kursIDs, final int wochentyp, final @NotNull Wochentag wochentag, final int unterrichtstunde) {
+		final @NotNull ArrayList<@NotNull Long> result = new ArrayList<>();
+		for (final @NotNull Long kursID : kursIDs)
+			if (testKursHatUnterrichtAm(kursID, wochentyp, wochentag, unterrichtstunde))
+				result.add(kursID);
+		return result;
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Kurs am (Wochentyp / Wochentag / Unterrichtsstunde)  hat.
+	 *
+	 * @param kursID           Die ID des Kurses.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls der übergebene Kurs am (wochentyp / wochentag / Unterrichtsstunde)  hat.
+	 */
+	public boolean testKursHatUnterrichtAm(final long kursID, final int wochentyp, final @NotNull Wochentag wochentag, final int unterrichtstunde) {
+		for (final @NotNull StundenplanUnterricht u : getUnterrichtDesKursesByWochentyp(kursID, wochentyp)) {
+			final @NotNull StundenplanZeitraster z =  getZeitraster(u.idZeitraster);
+			if ((z.wochentag == wochentag.id) && (z.unterrichtstunde == unterrichtstunde))
+				return true;
+		}
+		return false;
 	}
 
 	/**
