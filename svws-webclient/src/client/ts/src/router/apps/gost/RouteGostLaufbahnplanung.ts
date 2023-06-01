@@ -70,9 +70,20 @@ export class RouteDataGostLaufbahnplanung  {
 		this.setPatchedState({ gostBelegpruefungsArt });
 	}
 
-	gotoLaufbahnplanung = async (idSchueler: number) => {
+	gotoLaufbahnplanung = async (idSchueler: number) =>
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+
+	getPdfWahlbogen = async() => {
+		try {
+			api.status.start();
+			return await api.server.getGostAbiturjahrgangPDFWahlboegen(api.schema, this.abiturjahr);
+		} catch(e) {
+			throw new DeveloperNotificationException("Fehler beim Herunterladen der Wahlbögen");
+		} finally {
+			api.status.stop();
+		}
 	}
+
 }
 
 const SGostLaufbahnplanung = () => import("~/components/gost/laufbahnplanung/SGostLaufbahnplanung.vue");
@@ -134,6 +145,9 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
+			getPdfWahlbogen: this.data.getPdfWahlbogen,
+			abiturjahr: this.data.abiturjahr,
+			apiStatus: api.status,
 		};
 	}
 

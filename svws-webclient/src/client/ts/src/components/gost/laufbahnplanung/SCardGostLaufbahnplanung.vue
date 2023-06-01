@@ -1,6 +1,11 @@
 <template>
 	<svws-ui-content-card>
-		<div class="flex justify-between mb-2">
+		<svws-ui-sub-nav>
+			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
+				Wahlbögen herunterladen<svws-ui-spinner :spinning="apiStatus.pending" />
+			</svws-ui-button>
+		</svws-ui-sub-nav>
+		<div class="flex justify-between mb-2 mt-4">
 			<svws-ui-toggle v-model="filterFehler"> Nur Ergebnisse mit Fehlern anzeigen</svws-ui-toggle>
 			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 		</div>
@@ -30,6 +35,7 @@
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { Config } from '~/components/Config';
+	import type { ApiStatus } from '~/components/ApiStatus';
 	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
 	import { toRaw} from 'vue';
 	import { computed, ref } from 'vue';
@@ -40,6 +46,9 @@
 		gostBelegpruefungsArt: () => 'ef1'|'gesamt';
 		setGostBelegpruefungsArt: (value: 'ef1'|'gesamt') => Promise<void>;
 		gotoLaufbahnplanung: (id: number) => Promise<void>;
+		getPdfWahlbogen: () => Promise<Blob>;
+		abiturjahr: number;
+		apiStatus: ApiStatus;
 	}>();
 
 	const cols = [{key: 'schueler', label: 'Name, Vorname', span: 3}, {key: 'ergebnis', label: 'Anzahl Fehler', span: 1}]
@@ -86,4 +95,15 @@
 				res++;
 		return res;
 	}
+
+	async function download_file() {
+		const pdf = await props.getPdfWahlbogen();
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(pdf);
+		link.download = `Laufbahnplanung_${props.abiturjahr}.pdf`;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
 </script>
