@@ -439,3 +439,4 @@ svwsconfig.json
 
 # Local Netlify folder
 .netlify
+svws-db-utils/create_db.sh
