@@ -112,7 +112,7 @@ task createScripts {
 		} else if (OperatingSystem.current().isWindows()) {
 			file("./migrate_db.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.MigrateDB %*\n'
-			file("./creat_db.cmd").text = 
+			file("./create_db.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.app.CreateSchema %*\n'  
 			file("./lupo_import.cmd").text = 
 			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.db.utils.lupo.app.ImportLupoMDB %*\n'

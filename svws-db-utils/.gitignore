@@ -2,11 +2,13 @@
 /svws_export.sqlite
 /Laufbahnplanung.lup
 /migrate_db.cmd
+/create_db.cmd
 /lupo_import.cmd
 /kurs42_import.cmd
 /export.cmd
 /import.cmd
 /migrate_db.sh
+/create_db.sh
 /lupo_import.sh
 /kurs42_import.sh
 /export.sh
