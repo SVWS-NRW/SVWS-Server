@@ -100,10 +100,10 @@
 <template>
 	<label class="textarea-input"
 		:class="{
-			'textarea-input-focus': focused,
-			'textarea-input-filled': !!modelValue,
-			'textarea-input-invalid': valid === false,
-			'textarea-input-disabled': disabled,
+			'textarea-input--focus': focused,
+			'textarea-input--filled': !!modelValue,
+			'textarea-input--invalid': valid === false,
+			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
@@ -120,7 +120,7 @@
 			{{ placeholder }}
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
+					<i-ri-bar-chart-line class="pointer-events-auto ml-1" />
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -134,16 +134,24 @@
 	.textarea-input {
 		@apply flex;
 		@apply relative;
+
+		textarea::placeholder {
+			@apply text-black/25;
+		}
 	}
 
 	.textarea-input--control {
 		@apply bg-white;
-		@apply rounded-md border border-black border-opacity-20;
+		@apply rounded-md border border-black/5;
 		@apply w-full;
 		@apply text-base;
 		@apply cursor-text;
 		padding: 0.5em 0.7em;
 		min-height: theme("spacing.9");
+
+		&:hover {
+			@apply border-black/25;
+		}
 	}
 
 	span.textarea-input--control {
@@ -151,17 +159,25 @@
 		padding-bottom: 0.4em;
 	}
 
-	.textarea-input-focus .textarea-input--control,
-	.textarea-input-filled .textarea-input--control {
-		@apply border-gray border-opacity-100;
+	.textarea-input--focus .textarea-input--control,
+	.textarea-input--filled .textarea-input--control {
+		@apply border-black;
 		@apply outline-none;
 	}
 
-	.textarea-input-disabled .textarea-input--control {
+	.textarea-input--filled:not(:focus-within):not(:hover) .textarea-input--control {
+		@apply border-black/25;
+	}
+
+	.textarea-input--filled:not(:focus-within):hover .textarea-input--control {
+		@apply border-black/50;
+	}
+
+	.textarea-input--disabled .textarea-input--control {
 		@apply cursor-not-allowed;
 	}
 
-	.textarea-input-invalid:not(:focus-within) .textarea-input--control {
+	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
 		@apply border-error;
 	}
 
@@ -184,25 +200,28 @@
 	.textarea-input--placeholder {
 		@apply absolute;
 		@apply pointer-events-none;
-		@apply opacity-40;
+		@apply opacity-60;
 		@apply transform;
-		@apply flex items-center;
+		@apply flex items-center font-medium;
 
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
 	}
 
-	.textarea-input-component:not(.textarea-input-filled):not(:focus-within):not(.textarea-input-disabled):hover .textarea-input--placeholder {
-		@apply opacity-60;
+	.textarea-input:not(.textarea-input--filled) .textarea-input--placeholder {
+		@apply font-normal italic;
+	}
+
+	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {
+		@apply opacity-100;
 	}
 
 	.textarea-input--statistics .textarea-input--control {
 		@apply border-violet-500;
-		@apply bg-violet-500 bg-opacity-[0.02];
 	}
 
-	.textarea-input--statistics.textarea-input-invalid .textarea-input--control {
+	.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
 		@apply border-error;
 	}
 
@@ -210,12 +229,12 @@
 		@apply text-violet-500;
 	}
 
-	.textarea-input--statistics.textarea-input-invalid .textarea-input--placeholder {
-		@apply text-violet-500;
+	.textarea-input--statistics.textarea-input--invalid .textarea-input--placeholder {
+		@apply text-violet-500 font-medium;
 	}
 
-	.textarea-input-focus .textarea-input--placeholder,
-	.textarea-input-filled .textarea-input--placeholder {
+	.textarea-input--focus .textarea-input--placeholder,
+	.textarea-input--filled .textarea-input--placeholder {
 		@apply -translate-y-1/2;
 		@apply bg-white opacity-100;
 		@apply rounded;
@@ -230,12 +249,12 @@
 		}
 	}
 
-	.textarea-input-invalid:not(:focus-within) .textarea-input--placeholder,
-	.textarea-input-invalid:not(:focus-within) .textarea-input--control {
+	.textarea-input--invalid:not(:focus-within) .textarea-input--placeholder,
+	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
 		@apply text-error;
 	}
 
-	.textarea-input-disabled {
+	.textarea-input--disabled {
 		@apply cursor-not-allowed;
 
 		.textarea-input--placeholder {
@@ -243,34 +262,14 @@
 		}
 
 		.textarea-input--control {
-			@apply bg-black bg-opacity-10 border-black border-opacity-50 text-black;
+			@apply bg-black/10 border-black/25 text-black;
 			@apply opacity-20;
-			@apply cursor-not-allowed;
+			@apply cursor-not-allowed pointer-events-none;
 		}
 	}
 
 	.textarea-input--placeholder--required:after {
 		@apply text-error;
 		content: " *";
-	}
-
-	.textarea--disguise {
-		&:not(.textarea-input-filled):not(.textarea-input-focus) {
-			.textarea-input--placeholder {
-				&:after {
-					content: '\0000a0hinzufügen…';
-				}
-			}
-		}
-
-		&:not(.textarea-input-filled):not(.textarea-input-focus):not(:hover):not(:focus) {
-			.textarea-input--control {
-				@apply border-transparent resize-none;
-			}
-
-			.textarea-input--placeholder {
-				@apply left-0;
-			}
-		}
 	}
 </style>

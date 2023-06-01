@@ -11,8 +11,10 @@
 		</div>
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
-				<svws-ui-icon @click.stop="gotoLaufbahnplanung(s.id)" class="mr-2 text-primary hover:opacity-50 cursor-pointer"> <i-ri-link /> </svws-ui-icon>
-				<div class="flex justify-between w-full">
+				<svws-ui-button type="icon" size="small" @click.stop="gotoLaufbahnplanung(s.id)">
+					<i-ri-link />
+				</svws-ui-button>
+				<div class="flex justify-between w-full ml-2">
 					<div>{{ s.nachname }}, {{ s.vorname }}</div>
 					<div class="mr-5">
 						<svws-ui-badge v-if="s.status !== 2" type="light" size="big" :short="true">
@@ -26,7 +28,7 @@
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
-	<svws-ui-content-card>
+	<svws-ui-content-card :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`">
 		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt()" />
 	</svws-ui-content-card>
 </template>

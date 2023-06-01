@@ -133,7 +133,7 @@
 			{{ placeholder }}
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-fill class="pointer-events-auto ml-1" />
+					<i-ri-bar-chart-line class="pointer-events-auto ml-1" />
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -289,15 +289,15 @@
 		@apply pointer-events-none;
 		@apply opacity-60;
 		@apply transform;
-		@apply flex items-center;
+		@apply flex items-center font-medium;
 
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
 	}
 
-	.text-input-component:not(.text-input--filled) {
-		@apply italic;
+	.text-input-component:not(.text-input--filled) .text-input--placeholder {
+		@apply font-normal italic;
 	}
 
 	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {
@@ -331,7 +331,6 @@
 
 	.text-input--statistics .text-input--control {
 		@apply border-violet-500;
-		/*@apply bg-purple/5;*/
 	}
 
 	.text-input--invalid:not(:focus-within) .text-input--control {
@@ -339,7 +338,7 @@
 	}
 
 	.text-input--statistics .text-input--placeholder {
-		@apply font-bold text-violet-500;
+		@apply text-violet-500 font-medium;
 	}
 
 	.text-input--invalid:not(:focus-within) .text-input--placeholder,

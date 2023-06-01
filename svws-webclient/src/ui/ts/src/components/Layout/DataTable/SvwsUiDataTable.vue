@@ -22,7 +22,7 @@
 				<slot name="filter" />
 				<template v-if="filtered && filterReset">
 					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen"
-						class="justify-center">
+						class="justify-center mr-auto">
 						<i-ri-filter-off-line />
 						Zurücksetzen
 					</svws-ui-button>

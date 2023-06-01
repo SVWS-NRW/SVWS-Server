@@ -13,6 +13,7 @@
 		headless?: boolean;
 		bw?: boolean;
 		span?: 'full';
+		title?: string;
 	}>(), {
 		value: '',
 		statistics: false,
@@ -20,7 +21,8 @@
 		circle: false,
 		headless: false,
 		bw: false,
-		span: undefined
+		span: undefined,
+		title: undefined
 	});
 
 
@@ -43,11 +45,11 @@
 			'checkbox--checked': value,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': value === undefined || value === 'indeterminate',
+			'checkbox--indeterminate': value === 'indeterminate' && typeof value !== 'undefined',
 			'checkbox--bw': bw,
 			'col-span-full': span === 'full'
 		}">
-		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Deaktiviert' : ''">
+		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
 		<svws-ui-icon v-if="value === 'indeterminate' && typeof value !== 'undefined'" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
@@ -59,8 +61,13 @@
 			<i-ri-checkbox-blank-line v-if="!circle" />
 			<i-ri-checkbox-blank-circle-line v-if="circle" />
 		</svws-ui-icon>
-		<span class="checkbox--label" v-if="$slots.default || statistics">
-			<slot />
+		<span class="checkbox--label" v-if="$slots.default || statistics || title">
+			<template v-if="$slots.default">
+				<slot />
+			</template>
+			<template v-else>
+				{{ title }}
+			</template>
 			<svws-ui-icon v-if="statistics" class="ml-1">
 				<i-ri-bar-chart-fill />
 			</svws-ui-icon>
@@ -86,7 +93,7 @@
 	&:hover,
 	&:focus {
 		.icon {
-			@apply opacity-75;
+			@apply text-black/75;
 		}
 	}
 }
@@ -100,12 +107,26 @@
 	&:focus {
 		.icon {
 			@apply opacity-100;
+			@apply text-svws;
 		}
 	}
 }
 
 .checkbox--control {
-	@apply hidden;
+	@apply w-0 h-0 absolute opacity-0;
+
+	&:focus-visible ~ .icon {
+		@apply text-black/75;
+
+		.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) & {
+			@apply opacity-100 !important;
+			@apply text-svws;
+		}
+
+		svg {
+			@apply rounded-sm ring-1 ring-svws ring-offset-0;
+		}
+	}
 }
 
 .checkbox--disabled {
