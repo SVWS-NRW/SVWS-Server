@@ -682,9 +682,9 @@
 			@apply opacity-25;
 		}
 
-		.data-table__tfoot {
+		/* .data-table__tfoot {
 			@apply hidden;
-		}
+		} */
 
 		.no-data {
 			@apply border-0 py-2;
