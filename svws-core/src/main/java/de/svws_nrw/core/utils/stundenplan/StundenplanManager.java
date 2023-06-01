@@ -239,7 +239,7 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			Wochentag.fromIDorException(zeit.wochentag);
-			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
+			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde < 0);
 			// zeit.stundenbeginn darf NULL sein
 			// zeit.stundenende darf NULL sein
 			DeveloperNotificationException.ifMapPutOverwrites(_map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
@@ -325,29 +325,35 @@ public class StundenplanManager {
 	}
 
 	private void initMapKursZuUnterrichte() {
-		// TODO BAR Check alle Attribute von StundenplanUnterricht!
-
+		// Leere Listen pro Kurs-ID zuordnen.
 		_map_kursID_zu_unterrichte.clear();
+		for (final @NotNull Long idKurs : _map_kursID_zu_kurs.keySet())
+			_map_kursID_zu_unterrichte.put(idKurs, new ArrayList<>());
+
 		for (final @NotNull StundenplanUnterricht u : _datenU) {
-			// Ignoriere, falls es kein Kurs-Unterricht ist.
+			// Überspringe den Unterricht, falls es kein Kurs-Unterricht ist.
 			if (u.idKurs == null)
 				continue;
 
-			// Konsistenz überprüfen.
+			// Konsistenz der Attribute überprüfen.
+			DeveloperNotificationException.ifInvalidID("u.id", u.id);
+			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, u.idZeitraster);
+			DeveloperNotificationException.ifTrue("u.wochentyp > _daten.wochenTypModell", u.wochentyp > _daten.wochenTypModell);
+			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
 			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, u.idKurs);
 			DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_fachID_zu_fach, u.idFach);
-			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, u.idZeitraster);
+			for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
+				DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_lehrerID_zu_lehrer, idLehrkraftDesUnterrichts);
+			for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
+				DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", _map_klasseID_zu_klasse, idKlasseDesUnterrichts);
+			for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
+				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", _map_raumID_zu_raum, idRaumDesUnterrichts);
+			for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
+				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_schieneID_zu_schiene, idSchieneDesUnterrichts);
 
-			// Liste des Kurses: get
-			List<@NotNull StundenplanUnterricht> listU = _map_kursID_zu_unterrichte.get(u.idKurs); // Kann NULL sein!
-			if (listU == null) {
-				listU = new ArrayList<>();
-				_map_kursID_zu_unterrichte.put(u.idKurs, listU);
-			}
-			DeveloperNotificationException.ifTrue("listU.contains(u)", listU.contains(u));
-
-			// List des Kurses: add
-			listU.add(u);
+			// Unterricht der Kurs-Unterricht-Liste hinzufügen
+			final @NotNull List<@NotNull StundenplanUnterricht> listDerUnterrichte = DeveloperNotificationException.ifMapGetIsNull(_map_kursID_zu_unterrichte, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
 		}
 	}
 

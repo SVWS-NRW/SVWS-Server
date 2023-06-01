@@ -219,7 +219,7 @@ export class StundenplanManager extends JavaObject {
 		for (const zeit of this._daten.zeitraster) {
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			Wochentag.fromIDorException(zeit.wochentag);
-			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
+			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde < 0);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeit.wochentag, zeit.unterrichtstunde, zeit);
 		}
@@ -293,19 +293,27 @@ export class StundenplanManager extends JavaObject {
 
 	private initMapKursZuUnterrichte() : void {
 		this._map_kursID_zu_unterrichte.clear();
+		for (const idKurs of this._map_kursID_zu_kurs.keySet())
+			this._map_kursID_zu_unterrichte.put(idKurs, new ArrayList());
 		for (const u of this._datenU) {
 			if (u.idKurs === null)
 				continue;
+			DeveloperNotificationException.ifInvalidID("u.id", u.id);
+			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, u.idZeitraster);
+			DeveloperNotificationException.ifTrue("u.wochentyp > _daten.wochenTypModell", u.wochentyp > this._daten.wochenTypModell);
+			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
 			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, u.idKurs);
 			DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", this._map_fachID_zu_fach, u.idFach);
-			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, u.idZeitraster);
-			let listU : List<StundenplanUnterricht> | null = this._map_kursID_zu_unterrichte.get(u.idKurs);
-			if (listU === null) {
-				listU = new ArrayList();
-				this._map_kursID_zu_unterrichte.put(u.idKurs, listU);
-			}
-			DeveloperNotificationException.ifTrue("listU.contains(u)", listU.contains(u));
-			listU.add(u);
+			for (const idLehrkraftDesUnterrichts of u.lehrer)
+				DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, idLehrkraftDesUnterrichts);
+			for (const idKlasseDesUnterrichts of u.klassen)
+				DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, idKlasseDesUnterrichts);
+			for (const idRaumDesUnterrichts of u.raeume)
+				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", this._map_raumID_zu_raum, idRaumDesUnterrichts);
+			for (const idSchieneDesUnterrichts of u.schienen)
+				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, idSchieneDesUnterrichts);
+			const listDerUnterrichte : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_zu_unterrichte, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
 		}
 	}
 
