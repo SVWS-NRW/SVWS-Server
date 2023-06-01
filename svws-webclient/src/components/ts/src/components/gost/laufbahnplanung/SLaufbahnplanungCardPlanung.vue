@@ -169,7 +169,7 @@
 			</template>
 			<template #footer>
 				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Anzahl Kurse </div>
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Anzahl der anrechenbaren Kurse </div>
 					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
@@ -304,8 +304,10 @@
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager.getAnrechenbareKurse());
 
-	const kurse_summe: ComputedRef<number> = computed(() => kurszahlen.value.reduce((p, c) => p + c, 0));
-	//TODO korrigieren
+	const kurse_summe: ComputedRef<number> = computed(() => {
+		const k = kurszahlen.value;
+		return k[2] + k[3] + k[4] + k[5];
+	});
 
 	const wochenstunden: ComputedRef<number[]> = computed(() => props.abiturdatenManager.getWochenstunden());
 
