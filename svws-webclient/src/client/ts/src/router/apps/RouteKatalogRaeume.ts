@@ -47,7 +47,7 @@ export class RouteDataKatalogRaeume {
 		if (routeKatalogRaeume.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {
@@ -86,14 +86,29 @@ export class RouteDataKatalogRaeume {
 		await RouteManager.doRoute(routeKatalogRaeume.getRoute(eintrag.id));
 	}
 
-	addEintrag = async (eintrag: Raum) => {
+	addEintrag = async (eintrag: Partial<Raum>) => {
+		delete eintrag.id;
+		const raum = await api.server.addRaum(eintrag, api.schema);
+		const mapKatalogeintraege = this.mapKatalogeintraege;
+		mapKatalogeintraege.set(raum.id, raum);
+		this.setPatchedState({mapKatalogeintraege});
 	}
 
-	patch = async (data : Partial<Raum>) => {
+	deleteEintraege = async (eintraege: Raum[]) => {
+		const mapKatalogeintraege = this.mapKatalogeintraege;
+		for (const eintrag of eintraege) {
+			const raum = await api.server.deleteRaum(api.schema, eintrag.id);
+			mapKatalogeintraege.delete(raum.id);
+		}
+		this.setPatchedState({mapKatalogeintraege});
+	}
+
+	patch = async (eintrag : Partial<Raum>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patch...Daten", data);
-		//await api.server.patch...Daten(data, api.schema, this.item.id);
+		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
+		const auswahl = this.auswahl;
+		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
 	}
 }
 
@@ -158,6 +173,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
 			addEintrag: this.data.addEintrag,
+			deleteEintraege: this.data.deleteEintraege,
 			returnToKataloge: routeKataloge.returnToKataloge
 		};
 	}

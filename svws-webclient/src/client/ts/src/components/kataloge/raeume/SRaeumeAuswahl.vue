@@ -14,6 +14,10 @@
 			<div class="container">
 				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" selectable v-model="selected">
 					<template #footerActions>
+						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
+							<svws-ui-button @click="deleteEintraege(selected)" type="trash" class="cursor-pointer"
+								:disabled="selected.length === 0" />
+						</div>
 						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
 							<button @click="openModal()" class="flex h-10 w-10 items-center justify-center">
 								<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
@@ -41,4 +45,5 @@
 		{ key: "beschreibung", label: "Beschreibung", sortable: true },
 		{ key: "groesse", label: "Größe", sortable: true },
 	];
+
 </script>
