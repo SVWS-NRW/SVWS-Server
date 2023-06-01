@@ -87,7 +87,9 @@ export class StundenplanManager extends JavaObject {
 			this._datenUV = unterrichtsverteilung;
 		}
 		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", this._daten.id !== this._datenUV.id);
-		this.checkWochentypenKonsistenz();
+		DeveloperNotificationException.ifTrue("_daten.wochenTypModell < 0", this._daten.wochenTypModell < 0);
+		DeveloperNotificationException.ifTrue("_daten.wochenTypModell == 1", this._daten.wochenTypModell === 1);
+		this.initMapKWZuordnung();
 		this.initMapFach();
 		this.initMapJahrgang();
 		this.initMapLehrer();
@@ -99,22 +101,21 @@ export class StundenplanManager extends JavaObject {
 		this.initMapRaum();
 		this.initMapPausenzeit();
 		this.initMapAufsicht();
-		this.initMapKWZuordnung();
 		this.initMapKursZuUnterrichte();
 		this.initMapPausenaufsichten();
 	}
 
-	private checkWochentypenKonsistenz() : void {
-		const wochentyp : number = this._daten.wochenTypModell;
-		DeveloperNotificationException.ifTrue("_daten.wochenTypModell < 0", wochentyp < 0);
-		DeveloperNotificationException.ifTrue("_daten.wochenTypModell == 1", wochentyp === 1);
-		for (const z of this._daten.kalenderwochenZuordnung) {
-			DeveloperNotificationException.ifTrue("z.wochentyp <= 0", z.wochentyp <= 0);
-			DeveloperNotificationException.ifTrue("z.wochentyp > wochentyp", z.wochentyp > wochentyp);
-		}
-		for (const u of this._datenU) {
-			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
-			DeveloperNotificationException.ifTrue("u.wochentyp > wochentyp", u.wochentyp > wochentyp);
+	private initMapKWZuordnung() : void {
+		this._map_kwzID_zu_kwz.clear();
+		this._map_jahr_kw_zu_kwz.clear();
+		for (const kwz of this._daten.kalenderwochenZuordnung) {
+			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
+			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
+			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
+			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > this._daten.wochenTypModell);
+			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
 		}
 	}
 
@@ -257,52 +258,20 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private initMapKWZuordnung() : void {
-		this._map_kwzID_zu_kwz.clear();
-		this._map_jahr_kw_zu_kwz.clear();
-		for (const kwz of this._daten.kalenderwochenZuordnung) {
-			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
-			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
-			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
-			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > this._daten.wochenTypModell);
-			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
-		}
-	}
-
-	private initMapPausenaufsichten() : void {
-		this._map_pausenaufsichtID_zu_pausenaufsicht.clear();
-		for (const pa of this._datenP) {
-			DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell)", (pa.wochentyp > 0) && (pa.wochentyp > this._daten.wochenTypModell));
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.id);
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.idLehrer);
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.idPausenzeit);
-			DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, pa.idLehrer);
-			DeveloperNotificationException.ifMapNotContains("_map_pausenzeitID_zu_pausenzeit", this._map_pausenzeitID_zu_pausenzeit, pa.idPausenzeit);
-			DeveloperNotificationException.ifMapContains("_map_pausenaufsichtID_zu_pausenaufsicht", this._map_pausenaufsichtID_zu_pausenaufsicht, pa.id);
-			const listAB : ArrayList<number> = new ArrayList();
-			for (const aufsichtsbereichID of pa.bereiche) {
-				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", this._map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereichID);
-				DeveloperNotificationException.ifTrue("listAB.contains(" + aufsichtsbereichID! + ")", listAB.contains(aufsichtsbereichID));
-				listAB.add(aufsichtsbereichID);
-			}
-			this._map_pausenaufsichtID_zu_pausenaufsicht.put(pa.id, pa);
-		}
-	}
-
 	private initMapKursZuUnterrichte() : void {
 		this._map_kursID_zu_unterrichte.clear();
 		for (const idKurs of this._map_kursID_zu_kurs.keySet())
 			this._map_kursID_zu_unterrichte.put(idKurs, new ArrayList());
 		for (const u of this._datenU) {
-			if (u.idKurs === null)
-				continue;
 			DeveloperNotificationException.ifInvalidID("u.id", u.id);
 			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, u.idZeitraster);
 			DeveloperNotificationException.ifTrue("u.wochentyp > _daten.wochenTypModell", u.wochentyp > this._daten.wochenTypModell);
 			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
-			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, u.idKurs);
+			if (u.idKurs !== null) {
+				DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", this._map_kursID_zu_kurs, u.idKurs);
+				const listDerUnterrichte : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_zu_unterrichte, u.idKurs);
+				DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
+			}
 			DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", this._map_fachID_zu_fach, u.idFach);
 			for (const idLehrkraftDesUnterrichts of u.lehrer)
 				DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, idLehrkraftDesUnterrichts);
@@ -312,8 +281,22 @@ export class StundenplanManager extends JavaObject {
 				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", this._map_raumID_zu_raum, idRaumDesUnterrichts);
 			for (const idSchieneDesUnterrichts of u.schienen)
 				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, idSchieneDesUnterrichts);
-			const listDerUnterrichte : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_zu_unterrichte, u.idKurs);
-			DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
+		}
+	}
+
+	private initMapPausenaufsichten() : void {
+		this._map_pausenaufsichtID_zu_pausenaufsicht.clear();
+		for (const pa of this._datenP) {
+			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.id);
+			DeveloperNotificationException.ifMapNotContains("_map_pausenzeitID_zu_pausenzeit", this._map_pausenzeitID_zu_pausenzeit, pa.idPausenzeit);
+			DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", this._map_lehrerID_zu_lehrer, pa.idLehrer);
+			DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell)", (pa.wochentyp > 0) && (pa.wochentyp > this._daten.wochenTypModell));
+			const setBereicheDieserAufsicht : HashSet<number> = new HashSet();
+			for (const idAufsichtsbereich of pa.bereiche) {
+				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", this._map_aufsichtsbereichID_zu_aufsichtsbereich, idAufsichtsbereich);
+				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
+			}
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pa.id, pa);
 		}
 	}
 

@@ -85,9 +85,11 @@ public class StundenplanManager {
 
 		// Spezielle Prüfungen.
 		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", _daten.id != _datenUV.id);
-		checkWochentypenKonsistenz();
+		DeveloperNotificationException.ifTrue("_daten.wochenTypModell < 0", _daten.wochenTypModell < 0);
+		DeveloperNotificationException.ifTrue("_daten.wochenTypModell == 1", _daten.wochenTypModell == 1);
 
-		// Maps: DTO-StundenplanUnterrichtsverteilung.
+		// Initialisierungen der Maps und Prüfung der Integrität.
+		initMapKWZuordnung();       // ✔, referenziert ---
 		initMapFach();              // ✔, referenziert ---
 		initMapJahrgang();          // ✔, referenziert ---
 		initMapLehrer();            // ✔, referenziert [Fach]
@@ -95,39 +97,25 @@ public class StundenplanManager {
 		initMapSchueler();          // ✔, referenziert Klasse
 		initMapSchiene();           // ✔, referenziert Jahrgang
 		initMapKurs();              // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
-
-		// Maps: DTO-Stundenplan.
 		initMapZeitraster();        // ✔, referenziert ---
 		initMapRaum();              // ✔, referenziert ---
 		initMapPausenzeit();        // ✔, referenziert ---
 		initMapAufsicht();          // ✔, referenziert ---
-		initMapKWZuordnung();       // ✔, referenziert ---
-
-		// Maps: DTO-StundenplanUnterricht
-		initMapKursZuUnterrichte(); // referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
-
-		// Maps: DTO-StundenplanPausenaufsicht.
-		initMapPausenaufsichten();  // referenziert Lehrer, Pausenzeit
+		initMapKursZuUnterrichte(); // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		initMapPausenaufsichten();  // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
 	}
 
-	private void checkWochentypenKonsistenz() {
-		// Der globale Wochentyp darf nur 0 oder >= 2 sein.
-		final int wochentyp = _daten.wochenTypModell;
-		DeveloperNotificationException.ifTrue("_daten.wochenTypModell < 0", wochentyp < 0);
-		DeveloperNotificationException.ifTrue("_daten.wochenTypModell == 1", wochentyp == 1);
-
-		for (final @NotNull StundenplanKalenderwochenzuordnung z : _daten.kalenderwochenZuordnung) {
-			// Der Wochentyp einer KW-Zuordnung muss >= 1 sein.
-			DeveloperNotificationException.ifTrue("z.wochentyp <= 0", z.wochentyp <= 0);
-			// Liegt die Zuordnung in einer bestimmten Woche, muss es so viele Wochen auch global geben.
-			DeveloperNotificationException.ifTrue("z.wochentyp > wochentyp", z.wochentyp > wochentyp);
-		}
-
-		for (final @NotNull StundenplanUnterricht u : _datenU) {
-			// Der Wochentyp eines Unterrichts muss >= 0 sein.
-			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
-			// Liegt der Unterricht in einer bestimmten Woche, muss es so viele Wochen auch global geben.
-			DeveloperNotificationException.ifTrue("u.wochentyp > wochentyp", u.wochentyp > wochentyp);
+	private void initMapKWZuordnung() {
+		_map_kwzID_zu_kwz.clear();
+		_map_jahr_kw_zu_kwz.clear();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _daten.kalenderwochenZuordnung) {
+			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
+			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
+			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
+			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > _daten.wochenTypModell);
+			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+			DeveloperNotificationException.ifMap2DPutOverwrites(_map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kwzID_zu_kwz, kwz.id, kwz);
 		}
 	}
 
@@ -283,47 +271,6 @@ public class StundenplanManager {
 		}
 	}
 
-	private void initMapKWZuordnung() {
-		_map_kwzID_zu_kwz.clear();
-		_map_jahr_kw_zu_kwz.clear();
-		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _daten.kalenderwochenZuordnung) {
-			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
-			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
-			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
-			DeveloperNotificationException.ifTrue("kwz.wochentyp > _daten.wochenTypModell", kwz.wochentyp > _daten.wochenTypModell);
-			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
-			DeveloperNotificationException.ifMap2DPutOverwrites(_map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
-			DeveloperNotificationException.ifMapPutOverwrites(_map_kwzID_zu_kwz, kwz.id, kwz);
-		}
-	}
-
-	private void initMapPausenaufsichten() {
-
-		_map_pausenaufsichtID_zu_pausenaufsicht.clear();
-		for (final @NotNull StundenplanPausenaufsicht pa : _datenP) {
-			// Konsistenz der Attribute überprüfen.
-			DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell)", (pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell));
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.id);
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.idLehrer);
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.idPausenzeit);
-			DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_lehrerID_zu_lehrer, pa.idLehrer);
-			DeveloperNotificationException.ifMapNotContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pa.idPausenzeit);
-			DeveloperNotificationException.ifMapContains("_map_pausenaufsichtID_zu_pausenaufsicht", _map_pausenaufsichtID_zu_pausenaufsicht, pa.id);
-
-			// Konsistenz der Aufsichtsbereiche überprüfen.
-			final @NotNull ArrayList<@NotNull Long> listAB = new ArrayList<>();
-			for (final @NotNull Long aufsichtsbereichID : pa.bereiche) {
-				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", _map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereichID);
-				DeveloperNotificationException.ifTrue("listAB.contains(" + aufsichtsbereichID + ")", listAB.contains(aufsichtsbereichID));
-				listAB.add(aufsichtsbereichID);
-			}
-
-			// Hinzufügen
-			_map_pausenaufsichtID_zu_pausenaufsicht.put(pa.id, pa);
-		}
-
-	}
-
 	private void initMapKursZuUnterrichte() {
 		// Leere Listen pro Kurs-ID zuordnen.
 		_map_kursID_zu_unterrichte.clear();
@@ -331,16 +278,19 @@ public class StundenplanManager {
 			_map_kursID_zu_unterrichte.put(idKurs, new ArrayList<>());
 
 		for (final @NotNull StundenplanUnterricht u : _datenU) {
-			// Überspringe den Unterricht, falls es kein Kurs-Unterricht ist.
-			if (u.idKurs == null)
-				continue;
-
 			// Konsistenz der Attribute überprüfen.
 			DeveloperNotificationException.ifInvalidID("u.id", u.id);
 			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, u.idZeitraster);
 			DeveloperNotificationException.ifTrue("u.wochentyp > _daten.wochenTypModell", u.wochentyp > _daten.wochenTypModell);
 			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
-			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, u.idKurs);
+
+			// Ist es Kurs-Unterricht?
+			if (u.idKurs != null) {
+				DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, u.idKurs);
+				final @NotNull List<@NotNull StundenplanUnterricht> listDerUnterrichte = DeveloperNotificationException.ifMapGetIsNull(_map_kursID_zu_unterrichte, u.idKurs);
+				DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
+			}
+
 			DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_fachID_zu_fach, u.idFach);
 			for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
 				DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_lehrerID_zu_lehrer, idLehrkraftDesUnterrichts);
@@ -350,10 +300,25 @@ public class StundenplanManager {
 				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", _map_raumID_zu_raum, idRaumDesUnterrichts);
 			for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
 				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_schieneID_zu_schiene, idSchieneDesUnterrichts);
+		}
+	}
 
-			// Unterricht der Kurs-Unterricht-Liste hinzufügen
-			final @NotNull List<@NotNull StundenplanUnterricht> listDerUnterrichte = DeveloperNotificationException.ifMapGetIsNull(_map_kursID_zu_unterrichte, u.idKurs);
-			DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", listDerUnterrichte, u);
+	private void initMapPausenaufsichten() {
+		_map_pausenaufsichtID_zu_pausenaufsicht.clear();
+		for (final @NotNull StundenplanPausenaufsicht pa : _datenP) {
+			// Konsistenz der Attribute überprüfen.
+			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.id);
+			DeveloperNotificationException.ifMapNotContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pa.idPausenzeit);
+			DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_lehrerID_zu_lehrer, pa.idLehrer);
+			DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell)", (pa.wochentyp > 0) && (pa.wochentyp > _daten.wochenTypModell));
+
+			final @NotNull HashSet<@NotNull Long> setBereicheDieserAufsicht = new HashSet<>();
+			for (final @NotNull Long idAufsichtsbereich : pa.bereiche) {
+				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", _map_aufsichtsbereichID_zu_aufsichtsbereich, idAufsichtsbereich);
+				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
+			}
+
+			DeveloperNotificationException.ifMapPutOverwrites(_map_pausenaufsichtID_zu_pausenaufsicht, pa.id, pa);
 		}
 	}
 

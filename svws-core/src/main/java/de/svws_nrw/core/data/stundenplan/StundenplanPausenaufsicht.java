@@ -14,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  * Sie liefert die Informationen zu den Pausenaufsichten im Stundenplan.
  */
 @XmlRootElement
-@Schema(description = "der Unterricht im Stundenplan.")
+@Schema(description = "die Pausenaufsicht im Stundenplan.")
 @TranspilerDTO
 public class StundenplanPausenaufsicht {
 
