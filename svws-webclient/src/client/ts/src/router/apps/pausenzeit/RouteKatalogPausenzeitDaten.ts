@@ -5,7 +5,7 @@ import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogPausenzeiten } from "../RouteKatalogPausenzeiten";
 
-const SPausenzeitDaten = () => import("~/components/kataloge/raeume/daten/SPausenzeitDaten.vue");
+const SPausenzeitDaten = () => import("~/components/kataloge/pausenzeiten/daten/SPausenzeitDaten.vue");
 
 export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalogRaeume> {
 
