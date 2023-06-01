@@ -1,5 +1,5 @@
 <template>
-	<div class="inline-block rounded bg-dark-20 ml-10 top-5 h-5">
+	<div class="inline-block rounded bg-dark-20 ml-10 top-10 h-5">
 		{{ klausurBezeichnungen() }}
 	</div>
 </template>
@@ -8,7 +8,7 @@
 	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@svws-nrw/svws-core";
 
 	const props = defineProps<{
-		itemTop: number;
+		//itemTop: number;
 		termin: GostKlausurtermin;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
