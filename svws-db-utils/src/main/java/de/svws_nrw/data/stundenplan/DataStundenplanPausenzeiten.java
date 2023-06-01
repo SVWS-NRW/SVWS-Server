@@ -101,7 +101,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		}),
 		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToInteger(value, false)),
 		Map.entry("beginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-		Map.entry("end", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+		Map.entry("ende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 	);
 
 	@Override
