@@ -10,7 +10,7 @@ export class StundenplanPausenzeit extends JavaObject {
 	/**
 	 * Der {@link Wochentag} für die Pausenzeit (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 */
-	public wochentag : number = -1;
+	public wochentag : number = 1;
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Pause beginnt. NULL bedeutet "noch nicht definiert".

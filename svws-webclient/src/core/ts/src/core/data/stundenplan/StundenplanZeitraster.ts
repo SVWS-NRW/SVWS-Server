@@ -10,12 +10,12 @@ export class StundenplanZeitraster extends JavaObject {
 	/**
 	 * Der {@link Wochentag} an dem der Unterricht stattfindet (1=Montag, 2=Dienstag, ..., 7=Sonntag)
 	 */
-	public wochentag : number = -1;
+	public wochentag : number = 1;
 
 	/**
 	 * Die Nummer der Unterrichtsstunde an dem Wochentag
 	 */
-	public unterrichtstunde : number = -1;
+	public unterrichtstunde : number = 1;
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert".
