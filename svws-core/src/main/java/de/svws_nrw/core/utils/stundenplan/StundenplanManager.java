@@ -92,21 +92,21 @@ public class StundenplanManager {
 		initMapLehrer();            // ✔, referenziert [Fach]
 		initMapKlasse();            // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		initMapSchueler();          // ✔, referenziert Klasse
-		initMapSchiene();           // hat Jahrgang
-		initMapKurs();              // referenziert [Schienen], [Jahrgang], [Schüler]
+		initMapSchiene();           // ✔, referenziert Jahrgang
+		initMapKurs();              // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
 
 		// Maps: DTO-Stundenplan.
-		initMapZeitraster();        // hat ---
-		initMapRaum();              // hat ---
-		initMapPausenzeit();        // hat ---
-		initMapAufsicht();          // hat ---
-		initMapKWZuordnung();       // hat ---
+		initMapZeitraster();        // ✔, referenziert ---
+		initMapRaum();              // referenziert ---
+		initMapPausenzeit();        // referenziert ---
+		initMapAufsicht();          // referenziert ---
+		initMapKWZuordnung();       // referenziert ---
 
 		// Maps: DTO-StundenplanUnterricht
-		initMapKursZuUnterrichte(); // hat Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		initMapKursZuUnterrichte(); // referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
 
 		// Maps: DTO-StundenplanPausenaufsicht.
-		initMapPausenaufsichten();  // hat Lehrer, Pausenzeit
+		initMapPausenaufsichten();  // referenziert Lehrer, Pausenzeit
 	}
 
 	private void checkWochentypenKonsistenz() {
@@ -215,12 +215,12 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_zu_kurs, kurs.id, kurs);
 
 			// Konsistenz der Referenzen überprüfen.
-			for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
-				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
-			for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_jahrgangID_zu_jahrgang, idJahrgangDesKurses);
 			for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
 				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_schieneID_zu_schiene, idSchieneDesKurses);
+			for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_jahrgangID_zu_jahrgang, idJahrgangDesKurses);
+			for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
+				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
 		}
 	}
 
@@ -228,14 +228,13 @@ public class StundenplanManager {
 		_map_zeitrasterID_zu_zeitraster.clear();
 		_map_wochentag_stunde_zu_zeitraster.clear();
 		for (final @NotNull StundenplanZeitraster zeit : _daten.zeitraster) {
-			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
-			DeveloperNotificationException.ifNull("zeit.stundenbeginn == null", zeit.stundenbeginn);
-			DeveloperNotificationException.ifNull("zeit.stundenende == null", zeit.stundenende);
+			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
-			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, zeit.id);
-			_map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
-			_map_wochentag_stunde_zu_zeitraster.put(zeit.wochentag, zeit.unterrichtstunde, zeit);
+			// zeit.stundenbeginn darf NULL sein
+			// zeit.stundenende darf NULL sein
+			DeveloperNotificationException.ifMapPutOverwrites(_map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
+			DeveloperNotificationException.ifMap2DPutOverwrites(_map_wochentag_stunde_zu_zeitraster, zeit.wochentag, zeit.unterrichtstunde, zeit);
 		}
 	}
 

@@ -3,6 +3,7 @@ package de.svws_nrw.core.exceptions;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -141,21 +142,41 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
-	 * Fügt das Mapping 'K pKey' --> 'V pValue' der Map hinzu.
+	 * Fügt das Mapping K --> V der Map hinzu. <br>
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 *
 	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
 	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
-	 * @param pMap   Die Map.
-	 * @param pKey   Der Schlüssel des Mappings K --> V.
-	 * @param pValue Der Wert des Mappings K --> V.
+	 * @param map   Die Map.
+	 * @param key   Der Schlüssel des Mappings K --> V.
+	 * @param value Der Wert des Mappings K --> V.
 	 *
 	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
 	 */
-	public static <@NotNull K, @NotNull V>  void ifMapPutOverwrites(@NotNull final Map<@NotNull K, @NotNull V> pMap, final @NotNull K pKey, final @NotNull V pValue) throws DeveloperNotificationException {
-		if (pMap.containsKey(pKey))
-			throw new DeveloperNotificationException("PUT von " + pKey + " --> " + pValue + " fehlgeschlagen, da " + pKey + " --> " + pMap.get(pKey) + " bereits existiert!");
-		pMap.put(pKey, pValue);
+	public static <@NotNull K, @NotNull V>  void ifMapPutOverwrites(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key, final @NotNull V value) throws DeveloperNotificationException {
+		if (map.containsKey(key))
+			throw new DeveloperNotificationException("PUT von " + key + " --> " + value + " fehlgeschlagen, da bereits " + map.get(key) + " zugeordnet ist!");
+		map.put(key, value);
+	}
+
+	/**
+	 * Fügt das Mapping (K1, K2) --> V der Map hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 *
+	 * @param <K1>  Der Typ des 1. Schlüssels.
+	 * @param <K2>  Der Typ des 2. Schlüssels.
+	 * @param <V>   Der Typ des zugeordneten Wertes.
+	 * @param map   Die Map.
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param value Der zugeordnete Wert.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static <@NotNull K1, @NotNull K2, @NotNull V>  void ifMap2DPutOverwrites(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> map, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) throws DeveloperNotificationException {
+		if (map.contains(key1, key2))
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2) + " zugeordnet ist!");
+		map.put(key1, key2, value);
 	}
 
 	/**

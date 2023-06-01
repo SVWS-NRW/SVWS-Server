@@ -196,12 +196,12 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 			DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_zu_kurs, kurs.id, kurs);
-			for (const idSchuelerDesKurses of kurs.schueler)
-				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, idSchuelerDesKurses);
-			for (const idJahrgangDesKurses of kurs.jahrgaenge)
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, idJahrgangDesKurses);
 			for (const idSchieneDesKurses of kurs.schienen)
 				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, idSchieneDesKurses);
+			for (const idJahrgangDesKurses of kurs.jahrgaenge)
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_jahrgangID_zu_jahrgang, idJahrgangDesKurses);
+			for (const idSchuelerDesKurses of kurs.schueler)
+				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, idSchuelerDesKurses);
 		}
 	}
 
@@ -209,14 +209,11 @@ export class StundenplanManager extends JavaObject {
 		this._map_zeitrasterID_zu_zeitraster.clear();
 		this._map_wochentag_stunde_zu_zeitraster.clear();
 		for (const zeit of this._daten.zeitraster) {
-			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
-			DeveloperNotificationException.ifNull("zeit.stundenbeginn == null", zeit.stundenbeginn);
-			DeveloperNotificationException.ifNull("zeit.stundenende == null", zeit.stundenende);
+			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde <= 0);
-			DeveloperNotificationException.ifMapContains("_map_zeitrasterID_zu_zeitraster", this._map_zeitrasterID_zu_zeitraster, zeit.id);
-			this._map_zeitrasterID_zu_zeitraster.put(zeit.id, zeit);
-			this._map_wochentag_stunde_zu_zeitraster.put(zeit.wochentag, zeit.unterrichtstunde, zeit);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeit.wochentag, zeit.unterrichtstunde, zeit);
 		}
 	}
 
