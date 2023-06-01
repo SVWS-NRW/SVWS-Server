@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.stundenplan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -97,8 +98,8 @@ public class StundenplanManager {
 
 		// Maps: DTO-Stundenplan.
 		initMapZeitraster();        // ✔, referenziert ---
-		initMapRaum();              // referenziert ---
-		initMapPausenzeit();        // referenziert ---
+		initMapRaum();              // ✔, referenziert ---
+		initMapPausenzeit();        // ✔, referenziert ---
 		initMapAufsicht();          // referenziert ---
 		initMapKWZuordnung();       // referenziert ---
 
@@ -132,55 +133,63 @@ public class StundenplanManager {
 
 	private void initMapFach() {
 		_map_fachID_zu_fach.clear();
+		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanFach fach: _datenUV.faecher) {
 			DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
 			DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
 			DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_fachID_zu_fach, fach.id, fach);
 		}
 	}
 
 	private void initMapJahrgang() {
 		_map_jahrgangID_zu_jahrgang.clear();
+		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : _datenUV.jahrgaenge) {
 			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
 		}
 	}
 
 	private void initMapLehrer() {
 		_map_lehrerID_zu_lehrer.clear();
+		final @NotNull HashSet<@NotNull String> setLehrerKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : _datenUV.lehrer) {
 			DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
 			DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setLehrerKuerzel", setLehrerKuerzel, lehrer.kuerzel);
 			DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
 			DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_lehrerID_zu_lehrer, lehrer.id, lehrer);
 
 			// Konsistenz der Fächer der Lehrkraft überprüfen.
-			final @NotNull ArrayList<@NotNull Long> listFaecherDerLehrkraft = new ArrayList<>();
+			final @NotNull HashSet<@NotNull Long> setFaecherDerLehrkraft = new HashSet<>();
 			for (final @NotNull Long idFachDerLehrkraft : lehrer.faecher) {
 				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_fachID_zu_fach, idFachDerLehrkraft);
-				DeveloperNotificationException.ifListAddsDuplicate("listFaecherDerLehrkraft", listFaecherDerLehrkraft, idFachDerLehrkraft);
+				DeveloperNotificationException.ifSetAddsDuplicate("setFaecherDerLehrkraft", setFaecherDerLehrkraft, idFachDerLehrkraft);
 			}
 		}
 	}
 
 	private void initMapKlasse() {
 		_map_klasseID_zu_klasse.clear();
+		final @NotNull HashSet<@NotNull String> setKlasseKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanKlasse klasse: _datenUV.klassen) {
 			DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
 			DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_klasseID_zu_klasse, klasse.id, klasse);
 			// klasse.bezeichnung darf "blank" sein
 
 			// Konsistenz der Jahrgänge der Klasse überprüfen.
-			final @NotNull ArrayList<@NotNull Long> listJahrgaengeDerKlasse = new ArrayList<>();
+			final @NotNull HashSet<@NotNull Long> setJahrgaengeDerKlasse = new HashSet<>();
 			for (final @NotNull Long idJahrgangDerKlasse : klasse.jahrgaenge) {
 				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_jahrgangID_zu_jahrgang, idJahrgangDerKlasse);
-				DeveloperNotificationException.ifListAddsDuplicate("listJahrgaengeDerKlasse", listJahrgaengeDerKlasse, idJahrgangDerKlasse);
+				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
 			}
 		}
 	}
@@ -240,25 +249,25 @@ public class StundenplanManager {
 
 	private void initMapRaum() {
 		_map_raumID_zu_raum.clear();
+		final @NotNull HashSet<@NotNull String> setRaumKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : _daten.raeume) {
 			DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
+			DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
+			DeveloperNotificationException.ifSetAddsDuplicate("setRaumKuerzel", setRaumKuerzel, raum.kuerzel);
+			// raum.beschreibung darf "blank" sein!
 			DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
-			DeveloperNotificationException.ifTrue("raum.kuerzel.isBlank()", raum.kuerzel.isBlank());
-			DeveloperNotificationException.ifMapContains("_map_raumID_zu_raum", _map_raumID_zu_raum, raum.id);
-			_map_raumID_zu_raum.put(raum.id, raum);
+			DeveloperNotificationException.ifMapPutOverwrites(_map_raumID_zu_raum, raum.id, raum);
 		}
-
 	}
 
 	private void initMapPausenzeit() {
 		_map_pausenzeitID_zu_pausenzeit.clear();
-		for (final @NotNull StundenplanPausenzeit pause : _daten.pausenzeiten) {
-			Wochentag.fromIDorException(pause.wochentag);
-			DeveloperNotificationException.ifInvalidID("pause.id", pause.id);
-			DeveloperNotificationException.ifNull("pause.beginn == null", pause.beginn);
-			DeveloperNotificationException.ifNull("pause.ende == null", pause.ende);
-			DeveloperNotificationException.ifMapContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pause.id);
-			_map_pausenzeitID_zu_pausenzeit.put(pause.id, pause);
+		for (final @NotNull StundenplanPausenzeit pausenzeit : _daten.pausenzeiten) {
+			DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
+			Wochentag.fromIDorException(pausenzeit.wochentag);
+			// pausenzeit.beginn darf NULL sein
+			// pausenzeit.ende darf NULL sein
+			DeveloperNotificationException.ifMapPutOverwrites(_map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		}
 	}
 
@@ -266,9 +275,9 @@ public class StundenplanManager {
 		_map_aufsichtsbereichID_zu_aufsichtsbereich.clear();
 		for (final @NotNull StundenplanAufsichtsbereich aufsicht : _daten.aufsichtsbereiche) {
 			DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsicht.id);
-			DeveloperNotificationException.ifTrue("aufsicht.kuerzel.isBlank()", aufsicht.kuerzel.isBlank());
-			DeveloperNotificationException.ifMapContains("_map_aufsichtID_zu_aufsicht", _map_aufsichtsbereichID_zu_aufsichtsbereich, aufsicht.id);
-			_map_aufsichtsbereichID_zu_aufsichtsbereich.put(aufsicht.id, aufsicht);
+			DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsicht.kuerzel);
+			// aufsicht.beschreibung darf "blank" sein
+			DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtsbereichID_zu_aufsichtsbereich, aufsicht.id, aufsicht);
 		}
 	}
 

@@ -1,5 +1,6 @@
 import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import { RuntimeException } from '../../java/lang/RuntimeException';
+import { JavaSet } from '../../java/util/JavaSet';
 import { List } from '../../java/util/List';
 import { JavaString } from '../../java/lang/JavaString';
 import { JavaMap } from '../../java/util/JavaMap';
@@ -99,6 +100,19 @@ export class DeveloperNotificationException extends RuntimeException {
 	public static ifEqual(pVariablenname : string, pVariable : number, pWert : number) : void {
 		if (pVariable === pWert)
 			throw new DeveloperNotificationException(pVariablenname! + "(" + pWert + ") darf nicht gleich " + pWert + " sein!")
+	}
+
+	/**
+	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param nameDerVariablen Der Name der Variablen.
+	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 *
+	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 */
+	public static ifStringIsBlank(nameDerVariablen : string, zeichenkette : string) : void {
+		if (JavaString.isBlank(zeichenkette))
+			throw new DeveloperNotificationException(nameDerVariablen! + " darf nicht 'blank' sein!")
 	}
 
 	/**
@@ -209,16 +223,18 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
-	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param nameDerVariablen Der Name der Variablen.
-	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set..
+	 * @param value    Das Element, welches hinzugefügt werden soll.
 	 *
-	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
-	public static ifStringIsBlank(nameDerVariablen : string, zeichenkette : string) : void {
-		if (JavaString.isBlank(zeichenkette))
-			throw new DeveloperNotificationException(nameDerVariablen! + " darf nicht 'blank' sein!")
+	public static ifSetAddsDuplicate<E>(setName : string, set : JavaSet<E>, value : E) : void {
+		if (!set.add(value))
+			throw new DeveloperNotificationException(setName! + " hat bereits das Element " + value + "!")
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -2,6 +2,7 @@ package de.svws_nrw.core.exceptions;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import jakarta.validation.constraints.NotNull;
@@ -107,6 +108,19 @@ public class DeveloperNotificationException extends RuntimeException {
 	public static void ifEqual(final @NotNull String pVariablenname, final int pVariable, final int pWert) throws DeveloperNotificationException {
 		if (pVariable == pWert)
 			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")" + " darf nicht gleich " + pWert + " sein!");
+	}
+
+	/**
+	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param nameDerVariablen Der Name der Variablen.
+	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 *
+	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 */
+	public static void ifStringIsBlank(final @NotNull String nameDerVariablen, final @NotNull String zeichenkette) {
+		if (zeichenkette.isBlank())
+			throw new DeveloperNotificationException(nameDerVariablen + " darf nicht 'blank' sein!");
 	}
 
 	/**
@@ -217,16 +231,18 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
-	 * Überprüft, ob ein String leer ist und wirft in diesem Fall eine DeveloperNotificationException.
+	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
-	 * @param nameDerVariablen Der Name der Variablen.
-	 * @param zeichenkette     Der String, welcher nicht "blank" sein darf.
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set..
+	 * @param value    Das Element, welches hinzugefügt werden soll.
 	 *
-	 * @throws DeveloperNotificationException falls der übergebene String leer ist.
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
 	 */
-	public static void ifStringIsBlank(final @NotNull String nameDerVariablen, final @NotNull String zeichenkette) {
-		if (zeichenkette.isBlank())
-			throw new DeveloperNotificationException(nameDerVariablen + " darf nicht 'blank' sein!");
+	public static <@NotNull E> void ifSetAddsDuplicate(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
+		if (!set.add(value))
+			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!");
 	}
 
 }
