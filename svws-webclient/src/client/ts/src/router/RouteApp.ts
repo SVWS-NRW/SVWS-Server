@@ -29,6 +29,8 @@ import { RouteManager } from "./RouteManager";
 import { routeStundenplan } from "./apps/RouteStundenplan";
 import SApp from "~/components/SApp.vue";
 import { routeKatalogRaeume } from "./apps/RouteKatalogRaeume";
+import { routeKatalogAufsichtsbereiche } from "./apps/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "./apps/RouteKatalogPausenzeiten";
 
 interface RouteStateApp {
 	idSchuljahresabschnitt: number,
@@ -143,6 +145,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,
+			routeKatalogAufsichtsbereiche,
+			routeKatalogPausenzeiten,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,

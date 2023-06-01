@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
 import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
 import { shallowRef } from "vue";
@@ -8,11 +8,13 @@ import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
+import { routeKatalogRaeume } from "./RouteKatalogRaeume";
+import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
 import { routeApp } from "~/router/RouteApp";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";
-import { routeKatalogRaeume } from "./RouteKatalogRaeume";
 
 interface RouteStateKataloge {
 	view: RouteNode<any, any>;
@@ -65,6 +67,8 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,
+			routeKatalogAufsichtsbereiche,
+			routeKatalogPausenzeiten,
 			// TODO { title: "Haltestellen", value: "haltestellen" },
 			// TODO { title: "Betriebe", value: "betriebe" }
 		];

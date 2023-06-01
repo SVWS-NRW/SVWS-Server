@@ -1425,7 +1425,7 @@ public class APISchule {
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = StundenplanPausenzeit.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit bei der Schule gefunden")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenzeit mit der angegebenen ID bei der Schule gefunden")
     public Response getPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKatalogPausenzeiten(conn)).get(id);
@@ -1483,7 +1483,7 @@ public class APISchule {
     		    + "besitzt.")
     @ApiResponse(responseCode = "201", description = "Die Pausenzeit wurde erfolgreich hinzugefügt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = Aufsichtsbereich.class)))
+            schema = @Schema(implementation = StundenplanPausenzeit.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für die Schule anzulegen.")
     @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")

@@ -7887,7 +7887,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: StundenplanPausenzeit
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
-	 *   Code 404: Keine Pausenzeit bei der Schule gefunden
+	 *   Code 404: Keine Pausenzeit mit der angegebenen ID bei der Schule gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
@@ -7967,7 +7967,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Aufsichtsbereich
+	 *     - Rückgabe-Typ: StundenplanPausenzeit
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Pausenzeit für die Schule anzulegen.
 	 *   Code 404: Die Katalogdaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -7977,13 +7977,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Pausenzeit wurde erfolgreich hinzugefügt.
 	 */
-	public async addPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string) : Promise<Aufsichtsbereich> {
+	public async addPausenzeit(data : Partial<StundenplanPausenzeit>, schema : string) : Promise<StundenplanPausenzeit> {
 		const path = "/db/{schema}/schule/pausenzeiten/create"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return Aufsichtsbereich.transpilerFromJSON(text);
+		return StundenplanPausenzeit.transpilerFromJSON(text);
 	}
 
 
