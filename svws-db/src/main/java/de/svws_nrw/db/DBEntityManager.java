@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.Query;
 import jakarta.persistence.RollbackException;
@@ -851,8 +852,12 @@ public final class DBEntityManager implements AutoCloseable {
 		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
 		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");
 		q.setParameter("tableName", tableName);
-		final Long currentID = (Long) q.getSingleResult();
-		return currentID == null ? 1 : currentID + 1;
+		try {
+			final Long currentID = (Long) q.getSingleResult();
+			return currentID == null ? 1 : currentID + 1;
+		} catch (@SuppressWarnings("unused") final NoResultException e) {
+			return 1;
+		}
 	}
 
 
