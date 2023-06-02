@@ -8337,7 +8337,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 * Implementierung der GET-Methode getZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
 	 *
 	 * Gibt den Zeitraster-Eintrag der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
@@ -8353,7 +8353,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag der Schule
 	 */
-	public async getZeitrastereintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async getZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
@@ -8364,7 +8364,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 * Implementierung der PATCH-Methode patchZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
 	 *
 	 * Passt den Zeitraster-Eintrag der Schule mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
 	 *
@@ -8380,7 +8380,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchZeitrastereintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
+	public async patchZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
@@ -8390,7 +8390,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/{id : \d+}
 	 *
 	 * Entfernt einen Zeitraster-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
 	 *
@@ -8408,7 +8408,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag wurde erfolgreich entfernt.
 	 */
-	public async deleteZeitrastereintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
+	public async deleteZeitrasterEintrag(schema : string, id : number) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
@@ -8419,7 +8419,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addZeitrastereintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/create
+	 * Implementierung der POST-Methode addZeitrasterEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/create
 	 *
 	 * Erstellt einen neue Zeitraster-Eintrag für die Schule und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
 	 *
@@ -8436,7 +8436,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Zeitraster-Eintrag wurde erfolgreich hinzugefügt.
 	 */
-	public async addZeitrastereintrag(data : Partial<StundenplanZeitraster>, schema : string) : Promise<StundenplanZeitraster> {
+	public async addZeitrasterEintrag(data : Partial<StundenplanZeitraster>, schema : string) : Promise<StundenplanZeitraster> {
 		const path = "/db/{schema}/schule/zeitraster/create"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const body : string = StundenplanZeitraster.transpilerToJSONPatch(data);

@@ -1570,7 +1570,7 @@ public class APISchule {
                  schema = @Schema(implementation = StundenplanZeitraster.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag bei der Schule gefunden")
-    public Response getZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    public Response getZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
     		return (new DataKatalogZeitraster(conn)).get(id);
     	}
@@ -1599,7 +1599,7 @@ public class APISchule {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    public Response patchZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Der Patch für den Zeitraster-Eintrag der Schule", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
@@ -1631,7 +1631,7 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Zeitraster-Eintrag für die Schule anzulegen.")
     @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response addZeitrastereintrag(@PathParam("schema") final String schema,
+    public Response addZeitrasterEintrag(@PathParam("schema") final String schema,
     		@RequestBody(description = "Die Daten des zu erstellenden Zeitraster-Eintrags ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
@@ -1661,7 +1661,7 @@ public class APISchule {
     @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response deleteZeitrastereintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    public Response deleteZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataKatalogZeitraster(conn)).delete(id);

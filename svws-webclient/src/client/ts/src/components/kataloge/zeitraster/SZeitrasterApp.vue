@@ -1,0 +1,31 @@
+<template>
+	<template v-if="visible">
+		<svws-ui-header>
+			<div class="flex items-center">
+				<span class="inline-block mr-3">{{ auswahl?.wochentag }} – {{ auswahl?.unterrichtstunde }}</span>
+				<svws-ui-badge type="light" title="ID" class="font-mono">
+					<i-ri-fingerprint-line />
+					{{ auswahl?.id }}
+				</svws-ui-badge>
+			</div>
+		</svws-ui-header>
+		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+			<router-view />
+		</svws-ui-router-tab-bar>
+	</template>
+	<div v-else class="app-layout--main--placeholder">
+		<i-ri-archive-line />
+	</div>
+</template>
+
+<script setup lang="ts">
+
+	import type { ZeitrasterAppProps } from "./SZeitrasterAppProps";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
+
+	const props = defineProps<ZeitrasterAppProps>();
+
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
+
+</script>

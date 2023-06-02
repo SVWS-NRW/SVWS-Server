@@ -3,6 +3,8 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
 import type { WritableComputedRef } from "vue";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core";
+import { computed, shallowRef } from "vue";
 import { routeSchule } from "~/router/apps/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
@@ -12,25 +14,23 @@ import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogFoerderschwerpunkte } from "./apps/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogRaeume } from "./apps/RouteKatalogRaeume";
+import { routeKatalogAufsichtsbereiche } from "./apps/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "./apps/RouteKatalogPausenzeiten";
+import { routeKatalogZeitraster } from "./apps/RouteKatalogZeitraster";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { routeKlassen } from "~/router/apps/RouteKlassen";
 import { routeKurse } from "~/router/apps/RouteKurse";
 import { routeGost } from "~/router/apps/RouteGost";
 import { routeStatistik } from "~/router/apps/RouteStatistik";
+import { routeStundenplan } from "./apps/RouteStundenplan";
 import { routeLogin } from "./RouteLogin";
 import { RouteNode } from "~/router/RouteNode";
-
-import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core";
-import { computed, shallowRef } from "vue";
 import { api } from "./Api";
 import { ConfigElement } from "~/components/Config";
 import { RouteManager } from "./RouteManager";
-import { routeStundenplan } from "./apps/RouteStundenplan";
 import SApp from "~/components/SApp.vue";
-import { routeKatalogRaeume } from "./apps/RouteKatalogRaeume";
-import { routeKatalogAufsichtsbereiche } from "./apps/RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "./apps/RouteKatalogPausenzeiten";
 
 interface RouteStateApp {
 	idSchuljahresabschnitt: number,
@@ -147,6 +147,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogRaeume,
 			routeKatalogAufsichtsbereiche,
 			routeKatalogPausenzeiten,
+			routeKatalogZeitraster,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,
