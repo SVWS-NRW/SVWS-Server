@@ -94,8 +94,8 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 7)),
-		Map.entry("unterrichtstunde", (dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 0, 30)),
+		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
+		Map.entry("unterrichtstunde", (dto, value, map) -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30)),
 		Map.entry("stundenbeginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
 		Map.entry("stundenende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 	);
