@@ -5,7 +5,7 @@
 				<div class="flex-grow" v-if="$slots.search">
 					<slot name="search" />
 				</div>
-				<div v-if="$slots.filterSimple">
+				<div v-if="$slots.filterSimple" class="data-table__filter-simple">
 					<slot name="filterSimple" />
 				</div>
 				<div v-if="$slots.filter && filterHide" class="ml-auto flex flex-shrink-0">
@@ -713,10 +713,23 @@
 	}
 
 	&__no-data {
-		@apply border-black/10 border-b;
+		@apply border-black/10;
 
 		.data-table__thead {
-			@apply text-black/25 pointer-events-none border-b-black/10;
+			@apply border-b-black/10;
+		}
+
+		.data-table__thead,
+		.data-table__tfoot .data-table__cell-select {
+			@apply text-black/25 pointer-events-none;
+		}
+
+		.data-table__tbody {
+			@apply border-b border-b-black/10;
+		}
+
+		.data-table__tfoot {
+			@apply border-y-black/10;
 		}
 
 		.data-table__th,
@@ -783,6 +796,10 @@
 
 		&-open {
 			/*box-shadow: inset 0 4px 6px 2px theme("colors.light");*/
+		}
+
+		&-simple {
+			@apply flex;
 		}
 
 		.text-input--search {

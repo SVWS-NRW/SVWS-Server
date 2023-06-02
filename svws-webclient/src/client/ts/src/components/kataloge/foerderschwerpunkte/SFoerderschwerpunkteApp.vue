@@ -1,7 +1,7 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-header>
-			<div class="flex items-center">
+			<div>
 				<span class="inline-block mr-3">{{ auswahl?.text }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 					ID:

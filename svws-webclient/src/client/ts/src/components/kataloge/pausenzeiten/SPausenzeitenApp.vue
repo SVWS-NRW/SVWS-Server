@@ -1,10 +1,10 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-header>
-			<div class="flex items-center">
+			<div>
 				<span class="inline-block mr-3">{{ 'Pausenzeit' }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono">
-					<i-ri-fingerprint-line />
+				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+					ID:
 					{{ auswahl?.id }}
 				</svws-ui-badge>
 			</div>
@@ -13,7 +13,7 @@
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</template>
-	<div v-else class="app-layout--main--placeholder">
+	<div v-else class="app--content--placeholder">
 		<i-ri-archive-line />
 	</div>
 </template>

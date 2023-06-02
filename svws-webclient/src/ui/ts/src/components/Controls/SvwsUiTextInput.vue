@@ -366,8 +366,12 @@
 	}
 
 	.text-input--placeholder--required:after {
-		@apply text-error;
+		@apply text-error inline-block font-normal relative;
 		content: "*";
+		font-size: 1.2em;
+		margin-bottom: -0.2em;
+		top: -0.1em;
+		left: 0.1em;
 	}
 
 	.text-input--icon .text-input--control {

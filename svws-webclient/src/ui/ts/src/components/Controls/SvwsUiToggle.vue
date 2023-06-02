@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import { computed } from 'vue';
+	import {computed, ref} from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue?: boolean;
@@ -34,7 +34,7 @@
 		<span class="toggle--indicator" />
 		<span v-if="$slots.default || statistics" class="toggle--label">
 			<slot />
-			<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
+			<i-ri-bar-chart-line v-if="statistics" class="ml-2" />
 		</span>
 	</label>
 </template>
@@ -42,20 +42,50 @@
 <style>
 .toggle {
 	@apply cursor-pointer;
-	@apply inline-flex;
+	@apply inline-flex gap-2 items-center;
 	@apply select-none;
 	@apply text-base;
+
+	.data-table__filter-simple & {
+		@apply my-auto;
+	}
+
+	.data-table__filter__fields & {
+
+	}
 }
 
 .toggle--control {
-	@apply hidden;
+	@apply w-0 h-0 absolute opacity-0;
+
+	&:focus-visible ~ .toggle--indicator {
+		@apply ring-svws ring-2 ring-offset-1;
+
+		&:before {
+			@apply bg-svws;
+		}
+	}
 }
 
 .toggle--indicator {
 	@apply bg-white;
-	@apply rounded-full border-2 border-black;
+	@apply rounded-full ring-1 ring-black;
 	@apply relative;
-	@apply h-5 w-9;
+	@apply h-4 w-8;
+
+	&:before {
+		@apply absolute;
+		@apply bg-black border border-white;
+		@apply block;
+		@apply rounded-full;
+		@apply h-4 w-4;
+		@apply left-0 top-0;
+		content: "";
+
+		.toggle:hover & {
+			@apply translate-x-[10%];
+		}
+	}
 }
 
 .toggle--statistics {
@@ -66,25 +96,22 @@
 	@apply border-violet-500;
 }
 
-.toggle--indicator:before {
-	@apply absolute;
-	@apply bg-black;
-	@apply block;
-	@apply rounded-full;
-	@apply h-3 w-3;
-
-	content: "";
-	left: 0.125rem;
-	top: 0.125rem;
-}
-
 .toggle--statistics .toggle--indicator:before {
 	@apply bg-violet-500;
 }
 
 .toggle input:checked+.toggle--indicator {
-	@apply bg-primary;
-	@apply border-primary;
+	@apply bg-svws ring-svws;
+
+	&:before {
+		@apply bg-white translate-x-full border-svws;
+	}
+}
+
+.toggle:hover input:checked+.toggle--indicator {
+	&:before {
+		@apply translate-x-[90%];
+	}
 }
 
 .toggle.toggle--statistics input:checked+.toggle--indicator {
@@ -92,15 +119,8 @@
 	@apply border-violet-500;
 }
 
-.toggle input:checked+.toggle--indicator:before {
-	@apply bg-white;
-
-	left: auto;
-	right: 0.125rem;
-}
-
 .toggle--label {
-	@apply flex items-center ml-3;
+	@apply flex items-center gap-1 font-medium;
 }
 
 .toggle--headless {

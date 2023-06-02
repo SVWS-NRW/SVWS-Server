@@ -28,9 +28,9 @@
 								:disabled="selected.length === 0" />
 						</div>
 						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeit="addEintrag">
-							<button @click="openModal()" class="flex h-10 w-10 items-center justify-center">
-								<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-							</button>
+							<svws-ui-button type="icon" @click="openModal()">
+								<i-ri-add-line />
+							</svws-ui-button>
 						</s-pausenzeit-neu-modal>
 					</template>
 				</svws-ui-data-table>

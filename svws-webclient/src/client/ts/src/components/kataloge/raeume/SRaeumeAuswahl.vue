@@ -19,9 +19,9 @@
 								:disabled="selected.length === 0" />
 						</div>
 						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
-							<button @click="openModal()" class="flex h-10 w-10 items-center justify-center">
-								<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-							</button>
+							<svws-ui-button type="icon" @click="openModal()">
+								<i-ri-add-line />
+							</svws-ui-button>
 						</s-raum-neu-modal>
 					</template>
 				</svws-ui-data-table>
