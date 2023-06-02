@@ -7,7 +7,6 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "../RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { R } from "vitest/dist/types-73d6349f";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;

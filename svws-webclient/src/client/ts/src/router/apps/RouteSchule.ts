@@ -1,13 +1,15 @@
-import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { BenutzerKompetenz, BenutzerKompetenzGruppe, List, Schulform } from "@svws-nrw/svws-core";
-import { RouteNode } from "../RouteNode";
-import { RouteManager } from "../RouteManager";
+import type { BenutzerKompetenzGruppe, List} from "@svws-nrw/svws-core";
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
+import type { RouteApp } from "~/router/RouteApp";
+import { shallowRef } from "vue";
+import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
+import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { RouteNode } from "../RouteNode";
+import { RouteManager } from "../RouteManager";
 import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";
 import { api } from "../Api";
 
@@ -51,7 +53,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "/schule", SSchuleApp, new RouteDataSchule());
-		super.propHandler = (route) => this.getNoProps(route);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
@@ -72,6 +74,12 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { }};
+	}
+
+	public getProps(to: RouteLocationNormalized): SchuleAppProps {
+		return {
+			schule: api.schuleStammdaten,
+		};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {

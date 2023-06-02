@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import { StundenplanPausenaufsichtProps } from "./SStundenplanPausenaufsichtProps";
+	import type { StundenplanPausenaufsichtProps } from "./SStundenplanPausenaufsichtProps";
 
 	const props = defineProps<StundenplanPausenaufsichtProps>();
 

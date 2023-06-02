@@ -5,13 +5,11 @@
 	</div>
 </template>
 <script setup lang="ts">
-	import type {SchuleStammdaten} from "@svws-nrw/svws-core";
+	import type { SchuleAppProps } from "./SSchuleAppProps";
 	import type { ComputedRef} from "vue";
 	import {computed} from "vue";
 
-	const props = defineProps<{
-		schule: SchuleStammdaten;
-	}>();
+	const props = defineProps<SchuleAppProps>();
 
 	const schulname: ComputedRef<string> = computed(() => {
 		const name = props.schule?.bezeichnung1;

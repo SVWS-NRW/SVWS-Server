@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import { StundenplanUnterrichtProps } from "./SStundenplanUnterrichtProps";
+	import type { StundenplanUnterrichtProps } from "./SStundenplanUnterrichtProps";
 
 	const props = defineProps<StundenplanUnterrichtProps>();
 
