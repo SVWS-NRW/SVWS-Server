@@ -31,9 +31,10 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign}"
+		ref="tableRef"
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign, 'data-table--no-footer-scroll-bottom': tableScrollable && !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)) && !tableScrolledToBottom}"
 		v-bind="computedTableAttributes">
-		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead">
+		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="tableScrolledToTop ? '' : 'shadow-lg'">
 			<slot name="header"
 				:all-rows-selected="allRowsSelected"
 				:toggle-all-rows="toggleBulkSelection"
@@ -76,12 +77,12 @@
 					<div v-if="rowActions"
 						class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions"
 						role="none" title="Aktionen">
-						<i-ri-settings3-line />
+						<i-ri-edit-2-line />
 					</div>
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Tabelleninhalt" class="data-table__tbody">
+		<div role="rowgroup" aria-label="Tabelleninhalt" class="data-table__tbody" ref="tableTbodyRef">
 			<slot name="body" :rows="sortedRows">
 				<div role="row" v-if="showNoDataHtml" key="showNoDataHtml">
 					<div role="cell" class="no-data data-table__td data-table__tbody__td"
@@ -154,7 +155,7 @@
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot"
+		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" :class="tableScrolledToBottom ? '' : 'shadow-lg-up'"
 			v-if="!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)">
 			<slot name="footer"
 				:all-rows-selected="allRowsSelected"
@@ -193,7 +194,7 @@
 
 <script lang="ts" setup>
 	import type { TableHTMLAttributes} from "vue";
-	import { defineComponent, computed, ref, useAttrs } from "vue";
+	import {defineComponent, computed, ref, useAttrs, onMounted, watch, onUpdated, onBeforeUnmount} from "vue";
 
 	import useColumns from "./hooks/useColumns";
 	import useRows from "./hooks/useRows";
@@ -233,6 +234,7 @@
 			filterReset?: () => void;
 			filterReverse?: boolean;
 			disableFooter?: boolean;
+			disableHeader?: boolean;
 			collapsible?: boolean;
 			noData?: boolean;
 			scrollIntoView?: boolean;
@@ -260,6 +262,7 @@
 			filterReset: () => {},
 			filterReverse: false,
 			disableFooter: false,
+			disableHeader: false,
 			collapsible: false,
 			noData: undefined,
 			scrollIntoView: undefined,
@@ -323,6 +326,54 @@
 		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
 	} as TableHTMLAttributes));
 
+	const tableRef = ref<HTMLDivElement | null>(null);
+	const tableTbodyRef = ref<HTMLDivElement | null>(null);
+	const tableScrollable = ref(false);
+	const tableRefScrollHeight = ref(0);
+	const tableScrolledToBottom = ref(true);
+	const tableScrolledToTop = ref(true);
+
+	const checkTableScrollable = () => {
+		if (tableRef.value && tableTbodyRef.value) {
+			if ("scrollHeight" in tableTbodyRef.value && "clientHeight" in tableRef.value) {
+				tableScrollable.value = tableTbodyRef.value.scrollHeight > tableRef.value.clientHeight;
+			}
+		}
+	}
+
+	const updateScrollValues = () => {
+		if (tableScrollable.value === false) {
+			return;
+		}
+
+		if (tableRef.value && "scrollHeight" in tableRef.value && "scrollTop" in tableRef.value) {
+			tableRefScrollHeight.value = tableRef.value.scrollHeight;
+			tableScrolledToTop.value = tableRef.value.scrollTop < 5;
+			tableScrolledToBottom.value = tableRef.value.scrollTop >= (tableRef.value.scrollHeight - tableRef.value.offsetHeight - 5);
+		}
+	}
+
+	onUpdated(() => {
+		checkTableScrollable();
+		updateScrollValues();
+	});
+
+	onMounted(() => {
+		checkTableScrollable();
+		updateScrollValues();
+		window.addEventListener("resize", checkTableScrollable);
+		if ("addEventListener" in tableRef.value) {
+			tableRef.value.addEventListener("scroll", updateScrollValues);
+		}
+	});
+
+	onBeforeUnmount(() => {
+		window.removeEventListener("resize", checkTableScrollable);
+		if ("removeEventListener" in tableRef.value) {
+			tableRef.value.removeEventListener("scroll", updateScrollValues);
+		}
+	});
+
 </script>
 
 <style lang="postcss">
@@ -338,7 +389,7 @@
 	@apply flex flex-col;
 	@apply w-full border border-black/25 bg-white border-b-0;
 	@apply tabular-nums;
-	@apply max-h-full overflow-y-visible overflow-x-auto;
+	@apply max-h-full overflow-auto;
 
 	.app--sidebar-container & {
 		@apply border-x-0;
@@ -463,8 +514,12 @@
 	}
 
 	&__cell-select {
-		@apply flex items-center justify-center p-0;
+		@apply flex items-center justify-center p-0 bg-white;
 		@apply sticky left-0 z-10;
+
+		.data-table__tfoot & {
+			@apply relative;
+		}
 
 		.checkbox:before {
 			content: '';
@@ -505,10 +560,10 @@
 	}
 
 	&__thead {
-		@apply w-full bg-white;
+		@apply w-min min-w-full bg-white;
 		@apply font-bold text-button;
 		@apply border-b border-black/25;
-		padding-right: var(--scrollbar-width);
+		@apply sticky top-0 z-20;
 
 		.data-table__tr:last-child {
 			.data-table__td,
@@ -549,16 +604,7 @@
 	}
 
 	&__tbody {
-		@apply h-full overflow-y-auto overflow-x-visible flex flex-col;
-		background:
-			linear-gradient(white 30%, rgba(255,255,255,0)),
-			linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-			linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0)),
-			linear-gradient(to top, rgba(0,0,0,0.1) 0, rgba(0,0,0,0.1) 1px, rgba(0,0,0,0)) 0 100%;
-		background-repeat: no-repeat;
-		background-color: #fff;
-		background-size: 100% 4em, 100% 4em, 100% 1em, 100% 1em;
-		background-attachment: local, local, scroll, scroll;
+		@apply h-auto flex flex-col;
 
 		&__tr {
 			@apply min-h-[1.7rem];
@@ -620,14 +666,30 @@
 		}
 	}
 
+	&.data-table--no-footer-scroll-bottom {
+		background:
+			linear-gradient(white 30%, rgba(255,255,255,0)),
+			linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+			linear-gradient(to bottom, rgba(0,0,0,0.05), rgba(0,0,0,0)),
+			linear-gradient(to top, rgba(0,0,0,0.25) 0, rgba(0,0,0,0.25) 1px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0)) 0 100%;
+		background-repeat: no-repeat;
+		background-color: transparent;
+		background-size: 100% 0, 100% 0, 100% 0, 100% 2em;
+		background-attachment: local, local, scroll, scroll;
+	}
+
 	&__tfoot {
-		@apply w-full bg-white;
-		@apply sticky bottom-0 left-0 z-20;
+		@apply w-max min-w-full bg-white;
+		@apply sticky bottom-0 z-20;
 		@apply border-y border-black/25 -mt-px;
 
 		&__tr {
 			@apply w-full flex items-center;
 			@apply h-[2.75rem];
+
+			> * {
+				@apply flex-shrink-0;
+			}
 		}
 
 		.data-table__tr:last-child {
@@ -639,11 +701,10 @@
 
 		&__th,
 		&__td {
-			@apply border-0;
+			@apply border-transparent;
 		}
 
 		.data-table__cell-select {
-			@apply border-r-0;
 			width: var(--checkbox-width);
 		}
 
@@ -663,7 +724,7 @@
 			@apply border-0 m-0 !important;
 
 			.popper {
-				@apply text-sm flex flex-col gap-1;
+				@apply text-sm flex flex-col gap-4 px-1 py-3 shadow ring-1 ring-black/10;
 				margin-right: -0.5rem !important;
 
 				.button {

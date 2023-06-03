@@ -362,7 +362,6 @@
 			label: "ID",
 			sortable: true,
 			fixedWidth: 4,
-			align: "right",
 		},
 		{
 			key: "name",
@@ -472,7 +471,7 @@
 <template>
 	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
 		<Variant title="Basic">
-			<section class="flex flex-col">
+			<section class="flex flex-col h-[50vh]">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
 					:columns="columns"

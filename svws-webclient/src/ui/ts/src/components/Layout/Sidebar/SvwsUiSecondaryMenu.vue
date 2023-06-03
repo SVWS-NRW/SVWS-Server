@@ -84,10 +84,10 @@
 }
 
 .input--schule-abschnitte .multiselect-input-component {
-	@apply cursor-pointer opacity-50;
+	@apply cursor-pointer opacity-40;
 
 	&:hover,
-	&:focus-within,
+	&.with-open-list,
 	&--danger {
 		@apply opacity-100;
 	}
@@ -95,7 +95,7 @@
 
 .input--schule-abschnitte .multiselect--items-wrapper {
 	@apply mt-2;
-	min-width: 12em;
+	min-width: 14ch;
 }
 
 .secondary-menu--breadcrumbs {

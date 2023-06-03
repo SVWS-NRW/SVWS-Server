@@ -72,6 +72,7 @@
 		--popper-theme-text-color: theme("colors.black");
 		--popper-theme-padding: theme("spacing.2");
 		--popper-theme-border-radius: theme("borderRadius.lg");
+		--popper-theme-border-style: solid thin;
 	}
 
 	.popper--statistics {

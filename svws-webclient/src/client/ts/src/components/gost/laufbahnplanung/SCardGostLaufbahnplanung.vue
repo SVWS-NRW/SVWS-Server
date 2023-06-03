@@ -2,10 +2,10 @@
 	<svws-ui-content-card>
 		<svws-ui-sub-nav>
 			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
-				Wahlbögen herunterladen<svws-ui-spinner :spinning="apiStatus.pending" />
+				Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
 			</svws-ui-button>
 		</svws-ui-sub-nav>
-		<div class="flex justify-between mb-2 mt-4">
+		<div class="flex justify-between mb-4 mt-1">
 			<svws-ui-toggle v-model="filterFehler"> Nur Ergebnisse mit Fehlern anzeigen</svws-ui-toggle>
 			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 		</div>

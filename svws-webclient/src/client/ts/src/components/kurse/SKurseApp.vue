@@ -9,7 +9,7 @@
 				</svws-ui-badge>
 			</div>
 			<div v-if="inputFachlehrer">
-				<span class="opacity-50">{{ inputFachlehrer }}</span>
+				<span class="opacity-40">{{ inputFachlehrer }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">

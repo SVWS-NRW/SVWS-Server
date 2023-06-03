@@ -2,7 +2,7 @@
 	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': schiene_hat_kollisionen }">
 		<div role="cell" class="data-table__td" :class="{ 'text-error': schiene_hat_kollisionen }">
 			<div class="flex flex-col py-1">
-				<span class="font-bold inline-flex items-center gap-1">
+				<span class="font-bold inline-flex items-center gap-1 text-sm">
 					<svws-ui-tooltip v-if="schiene_hat_kollisionen">
 						<i-ri-alert-line />
 						<template #content>
@@ -11,7 +11,7 @@
 					</svws-ui-tooltip>
 					{{ schiene_g?.bezeichnung }}
 				</span>
-				<span class="text-sm">{{ schiene.kurse.size() }} Kurse</span>
+				<span class="text-sm">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
 				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
 			</div>
 		</div>

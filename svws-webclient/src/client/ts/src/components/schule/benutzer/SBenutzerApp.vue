@@ -9,7 +9,7 @@
 				</svws-ui-badge>
 			</div>
 			<div>
-				<span class="opacity-50">{{ name }}</span>
+				<span class="opacity-40">{{ name }}</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" @update:model-value="setTab" :model-value="tab">

@@ -102,7 +102,7 @@
 
 	.app-layout--aside {
 		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
-		@apply shadow-2xl shadow-black/50 bg-white border-l border-black/25;
+		@apply shadow-2xl shadow-black/25 bg-white border-l border-black/25;
 	}
 
 	.app--sidebar-container {

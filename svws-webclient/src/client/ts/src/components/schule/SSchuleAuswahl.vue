@@ -1,6 +1,9 @@
 <template>
 	<svws-ui-secondary-menu>
-		<template #headline>Schule</template>
+		<template #headline>
+			<span>Schule</span>
+			<span class="opacity-50 line-clamp-1" :title="schulname">{{ schulname }}</span>
+		</template>
 		<template #header />
 		<template #content>
 			<div class="secondary-menu--navigation">
@@ -16,5 +19,13 @@
 
 <script setup lang="ts">
 	import type { SchuleAuswahlProps } from './SSchuleAuswahlProps';
+	import type { ComputedRef} from "vue";
+	import {computed} from "vue";
+
 	const props = defineProps<SchuleAuswahlProps>();
+
+	const schulname: ComputedRef<string> = computed(() => {
+		const name = props.schule?.bezeichnung1;
+		return name ? name : "";
+	});
 </script>
