@@ -14,7 +14,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class StundenplanJahrgang {
 
-	/** Die ID der Klasse. */
+	/** Die ID des Jahrgangs. */
 	@Schema(description = "die ID der Jahrgangs", example = "4711")
 	public long id = -1;
 
