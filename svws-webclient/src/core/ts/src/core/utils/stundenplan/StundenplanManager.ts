@@ -221,6 +221,11 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			Wochentag.fromIDorException(zeit.wochentag);
 			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde < 0);
+			if ((zeit.stundenbeginn !== null) && (zeit.stundenende !== null)) {
+				const beginn : number = zeit.stundenbeginn.valueOf();
+				const ende : number = zeit.stundenende.valueOf();
+				DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+			}
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeit.wochentag, zeit.unterrichtstunde, zeit);
 		}
@@ -243,6 +248,11 @@ export class StundenplanManager extends JavaObject {
 		for (const pausenzeit of this._daten.pausenzeiten) {
 			DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
 			Wochentag.fromIDorException(pausenzeit.wochentag);
+			if ((pausenzeit.beginn !== null) && (pausenzeit.ende !== null)) {
+				const beginn : number = pausenzeit.beginn.valueOf();
+				const ende : number = pausenzeit.ende.valueOf();
+				DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+			}
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		}
 	}
@@ -656,28 +666,55 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berühren.
 	 *
 	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
-	 * @param minutenVerstrichen Die verstrichene Zeit seit dem Start des Zeitrasters.
+	 * @param minutenVerstrichen Die verstrichene Zeit (in Minuten) seit der "startzeit" .
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
 	 */
 	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		throw new DeveloperNotificationException("Noch nicht implementiert")
+		const wochentag : Wochentag | null = Wochentag.fromIDorException(zeitrasterStart.wochentag);
+		const startzeit : number = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn).valueOf();
+		return this.getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
 	}
 
 	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren. <br>
 	 *
-	 * @param wochentag DUMMY
-	 * @param stundenbeginn DUMMY
-	 * @param minutenVerstrichen DUMMY
+	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
+	 * @param beginn             Der Beginn des Zeit-Intervalls.
+	 * @param minutenVerstrichen Daraus ergibt sich das Ende des Zeit-Intervalls.
 	 *
 	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
 	 */
-	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, stundenbeginn : string, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		throw new DeveloperNotificationException("Noch nicht implementiert")
+	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
+		const ende : number = beginn + minutenVerstrichen;
+		const result : ArrayList<StundenplanZeitraster> = new ArrayList();
+		for (const zeitraster of this._daten.zeitraster) {
+			const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", zeitraster.stundenbeginn).valueOf();
+			const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", zeitraster.stundenende).valueOf();
+			if (this.testIntervalleSchneidenSich(beginn, ende, beginn2, ende2))
+				result.add(zeitraster);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param beginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param ende2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 *
+	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 */
+	public testIntervalleSchneidenSich(beginn1 : number, ende1 : number, beginn2 : number, ende2 : number) : boolean {
+		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
+		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
+		DeveloperNotificationException.ifTrue("beginn1 >= ende1", beginn1 >= ende1);
+		DeveloperNotificationException.ifTrue("beginn2 >= ende2", beginn2 >= ende2);
+		return !((ende1 < beginn2) || (ende2 < beginn1));
 	}
 
 	/**
