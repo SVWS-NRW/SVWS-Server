@@ -35,6 +35,8 @@ export { default as SvwsUiRouterVerticalTabBar } from "./Controls/SvwsUiRouterVe
 export { default as SvwsUiDragData } from "./SvwsUiDragData.vue";
 export { default as SvwsUiDropData } from "./SvwsUiDropData.vue";
 export { default as SvwsUiDataTable } from "./Layout/DataTable/SvwsUiDataTable.vue";
+export { default as SvwsUiDataTableRow } from "./Layout/DataTable/SvwsUiTableRow.vue";
+export { default as SvwsUiDataTableCell } from "./Layout/DataTable/SvwsUiTableCell.vue";
 export { default as SvwsUiSpinner } from "./SvwsUiSpinner.vue";
 export { default as SvwsUiSubNav } from "./Controls/SvwsUiSubNav.vue";
 export { default as SvwsUiInputWrapper } from "./Layout/SvwsUiInputWrapper.vue";

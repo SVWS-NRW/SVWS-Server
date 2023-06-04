@@ -12,7 +12,7 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<unknown, RouteSchule
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm.daten", "enm", SSchuleDatenaustauschENM);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "ENM";
+		super.text = "ENM Notenmanager";
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

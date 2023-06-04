@@ -456,6 +456,16 @@
 
 .wrapper {
 	@apply relative;
+
+	.data-table & {
+		@apply w-full;
+	}
+
+	.data-table .data-table__td__no-padding & {
+		.text-input-component {
+			padding-left: 0.5rem;
+		}
+	}
 }
 
 .dropdown-icon {

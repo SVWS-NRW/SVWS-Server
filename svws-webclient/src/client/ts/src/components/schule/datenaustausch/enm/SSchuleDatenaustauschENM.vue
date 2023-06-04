@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page--content page--content--full">
 		<s-card-schule-datenaustausch-e-n-m :set-import-e-n-m="setImportENM" />
 	</div>
 </template>

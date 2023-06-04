@@ -11,6 +11,7 @@ export type DataTableColumn = {
   fixedWidth?: string | number
   minWidth?: string | number
   align?: 'left' | 'center' | 'right'
+  tooltip?: string
 }
 
 export type DataTableColumnSource = DataTableColumn | string
@@ -27,6 +28,7 @@ export interface DataTableColumnInternal {
   fixedWidth: string | number
   minWidth: string | number
   align: 'left' | 'center' | 'right'
+  tooltip: string
 }
 
 export type DataTableItem = Record<string, any>

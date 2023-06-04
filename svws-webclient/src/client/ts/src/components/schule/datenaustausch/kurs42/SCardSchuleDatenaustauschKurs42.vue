@@ -1,28 +1,21 @@
 <template>
-	<svws-ui-content-card title="Blockung aus Kurs42">
-		<template #actions>
-			<svws-ui-tooltip :hover="false" indicator="help">
-				Info
-				<template #content>
-					<div class="flex flex-col gap-2">
-						<p> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs 42 exportiert werden müssen: </p>
-						<ul class="list-disc list-inside">
-							<li> Schueler.txt </li>
-							<li> Faecher.txt </li>
-							<li> Kurse.txt </li>
-							<li> Schienen.txt </li>
-							<li> Blockplan.txt </li>
-							<li> Fachwahlen.txt </li>
-						</ul>
-						<p> Diese Text-Dateien müssen für den Import im Hauptverzeichnis einer zip-Datei vorliegen. </p>
-						<p>
-							Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs 42 gut zu den Daten der Schild-Datenbank passen!
-							Ist dies nicht der Fall, so schlägt der Import fehl.
-						</p>
-					</div>
-				</template>
-			</svws-ui-tooltip>
-		</template>
+	<svws-ui-content-card title="Blockung aus Kurs42 hochladen">
+		<div class="flex flex-col gap-2 mb-16 lg:mb-20">
+			<p><i-ri-information-line class="inline align-text-top" /> Der Import besteht aus den folgenden Text-Dateien, die aus Kurs 42 exportiert werden müssen: </p>
+			<ul class="list-disc list-inside">
+				<li> Schueler.txt </li>
+				<li> Faecher.txt </li>
+				<li> Kurse.txt </li>
+				<li> Schienen.txt </li>
+				<li> Blockplan.txt </li>
+				<li> Fachwahlen.txt </li>
+			</ul>
+			<p> Diese Text-Dateien müssen für den Import im Hauptverzeichnis einer zip-Datei vorliegen. </p>
+			<p>
+				Ein Import kann nur erfolgreich sein, wenn die Daten aus Kurs 42 gut zu den Daten der Schild-Datenbank passen!<br>
+				Ist dies nicht der Fall, so schlägt der Import fehl.
+			</p>
+		</div>
 		<svws-ui-input-wrapper>
 			<input type="file" accept=".zip" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />

@@ -54,11 +54,19 @@
 						@click.exact="column.sortable && toggleSorting(column)">
 						<div class="data-table__th-wrapper"
 							:class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}"
-							:title="column.label">
+							:title="column.tooltip ? null : column.label">
 							<span class="data-table__th-title">
 								<slot :name="`header(${column.key})`"
 									:column="column">
-									{{ column.label }}
+									<svws-ui-tooltip v-if="column.tooltip">
+										{{ column.label }}
+										<template #content>
+											{{ column.tooltip }}
+										</template>
+									</svws-ui-tooltip>
+									<template v-else>
+										{{ column.label }}
+									</template>
 								</slot>
 							</span>
 							<span v-if="column.sortable" :role=" column.sortable ? 'button' : undefined"
@@ -596,15 +604,15 @@
 		}
 
 		.data-table__th-title {
-			@apply overflow-hidden text-ellipsis;
-			max-width: 100%;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 1;
+			@apply line-clamp-1;
 			word-break: break-all;
 			min-width: 1rem;
 			line-height: 1.25;
 			width: auto;
+		}
+
+		.tooltip-trigger {
+			@apply line-clamp-1;
 		}
 
 		&__tr__compact {

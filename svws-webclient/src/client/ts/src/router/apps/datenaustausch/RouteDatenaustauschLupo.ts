@@ -12,7 +12,7 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<unknown,
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.laufbahnplanung.daten", "laufbahnplanung", SSchuleDatenaustauschLaufbahnplanung);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Laufbahnplanung";
+		super.text = "LuPO Laufbahnplanung";
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

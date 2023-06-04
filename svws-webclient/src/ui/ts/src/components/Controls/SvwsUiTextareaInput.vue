@@ -109,7 +109,8 @@
 			'textarea-input--resize-horizontal': resizeable === 'horizontal',
 			'textarea-input--resize-vertical': resizeable === 'vertical',
 			'textarea-input--resize-both': resizeable === 'both',
-			'col-span-full': span === 'full'
+			'col-span-full': span === 'full',
+			'flex-grow': span === 'grow'
 		}">
 		<component :is="tag" v-bind="bindings" class="textarea-input--control" ref="element" />
 		<span v-if="placeholder"

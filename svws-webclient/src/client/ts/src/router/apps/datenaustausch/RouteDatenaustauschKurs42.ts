@@ -12,7 +12,7 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<unknown, RouteSch
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.daten", "kurs42", SSchuleDatenaustauschKurs42);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Kurs42";
+		super.text = "Kurs42 Blockungen";
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

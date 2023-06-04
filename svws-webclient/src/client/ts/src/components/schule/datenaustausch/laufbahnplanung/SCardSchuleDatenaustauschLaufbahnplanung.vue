@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Lupo-Datei für die Laufbahnplanung">
+	<svws-ui-content-card title="LuPO-Datei für die Laufbahnplanung hochladen">
 		<div class="flex items-start gap-3">
 			<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">Zurücksetzen …</svws-ui-button>
+		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">Zurücksetzen…</svws-ui-button>
 		<svws-ui-modal ref="modal" size="small" type="danger">
 			<template #modalTitle>Alle Kurswahlen löschen</template>
 			<template #modalDescription>
@@ -10,7 +10,7 @@
 			</template>
 			<template #modalActions>
 				<svws-ui-button @click="toggle_modal" type="secondary">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja <i-ri-delete-bin-line /></svws-ui-button>
+				<svws-ui-button @click="reset_fachwahlen" type="danger">Ja, löschen</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 	</div>

@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Benutzer">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
 			<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
+			<svws-ui-text-input v-model="name" type="text" placeholder="Name" />
 			<!-- <svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="manager.istInAdminGruppe()"> Admin ? </svws-ui-checkbox> -->
 			<svws-ui-text-input v-model="kennwort1" type="password" placeholder="Neues Passwort" />
 			<svws-ui-text-input v-model="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />

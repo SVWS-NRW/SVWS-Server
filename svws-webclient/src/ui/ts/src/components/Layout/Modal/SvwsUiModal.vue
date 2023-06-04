@@ -159,7 +159,7 @@
 
 .modal--title {
 	@apply flex-grow px-2;
-	@apply text-sm-bold;
+	@apply text-headline-sm;
 }
 
 .modal--content-wrapper {

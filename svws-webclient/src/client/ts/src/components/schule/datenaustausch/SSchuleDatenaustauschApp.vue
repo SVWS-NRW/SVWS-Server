@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<svws-ui-header>
-			<span class="inline-block mr-3">Daten</span>
+			<span class="inline-block mr-3">Importieren</span>
 			<br>
-			<span class="opacity-50">Importieren</span>
+			<span class="opacity-50"><i-ri-download2-line /></span>
 		</svws-ui-header>
 		<div class="router-tab-bar--area">
 			<div class="router-tab-bar--panel pt-0">

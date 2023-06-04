@@ -217,22 +217,22 @@
 
 	.data-table__tfoot-actions &.button {
 		@apply text-button h-7 w-7;
-		padding: 0.3em !important;
+		padding: 0.15em !important;
 
 		svg {
-			width: 1.2em;
-			height: 1.2em;
+			width: 1.3em;
+			height: 1.3em;
 		}
 	}
 }
 
 .button--icon {
-	@apply p-2 justify-center border-0 items-center;
-	@apply w-8 h-8;
+	@apply p-1.5 justify-center border-0 items-center;
+	@apply w-9 h-9;
 
 	svg {
-		width: 1.2rem;
-		height: 1.2rem;
+		width: 1.3rem;
+		height: 1.3rem;
 	}
 
 	&:hover, &:focus {

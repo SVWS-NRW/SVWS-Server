@@ -127,7 +127,8 @@
 	@apply flex items-center gap-1 font-medium;
 }
 
-.toggle--headless {
+.toggle--headless,
+.data-table .toggle {
 	@apply h-full w-full;
 
 	.toggle--indicator {

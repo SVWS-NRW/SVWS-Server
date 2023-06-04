@@ -92,21 +92,20 @@
 }
 
 .secondary-menu--content .sidebar--menu-item {
-	@apply text-dark px-3 inline-block my-1;
+	@apply text-black px-3 inline-block my-1;
+
+	&:hover,
+	&:focus {
+		@apply bg-light;
+	}
+
+	&.sidebar--menu-item--active {
+		@apply bg-svws/5 text-svws;
+	}
 }
 
 .secondary-menu--content .sidebar--menu-item--label {
 	@apply text-base;
-}
-
-.secondary-menu--content .sidebar--menu-item:hover,
-.secondary-menu--content .sidebar--menu-item:focus {
-	@apply bg-light;
-}
-
-.secondary-menu--content .sidebar--menu-item--active {
-	@apply border-dark;
-	@apply font-bold;
 }
 
 .sidebar--menu-item--icon {

@@ -103,8 +103,8 @@ module.exports = {
 			maxWidth: {
 				116: "29rem",
 				"modal-sm": "28rem",
-				"modal-md": "76rem",
-				"modal-lg": "116rem"
+				"modal-md": "58rem",
+				"modal-lg": "90rem"
 			},
 			minWidth: {
 				64: "16rem",

@@ -2,9 +2,8 @@
 	<slot :open-modal="openModal" />
 	<svws-ui-modal ref="modal" size="small">
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
-		<template #modalDescription>
-			Bitte eine Datei auswählen, die importiert werden soll.
-			<br><input type="file" accept=".lp" @change="import_file" :disabled="loading">
+		<template #modalContent>
+			<input type="file" accept=".lp" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			<br>{{
 				status === false

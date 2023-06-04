@@ -1,25 +1,26 @@
 <template>
-	<svws-ui-modal ref="modal" size="medium">
-		<template #modalTitle>Ansprechpartner Editieren</template>
+	<svws-ui-modal ref="modal" class="hidden">
+		<template #modalTitle>Ansprechpartner bearbeiten</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Name" v-model="name" type="text" />
-				<svws-ui-text-input placeholder="Vorname" v-model="vorname" type="text" />
+				<svws-ui-text-input placeholder="Name" v-model="name" type="text" span="full" />
+				<svws-ui-text-input placeholder="Vorname" v-model="vorname" type="text" span="full" />
 				<svws-ui-text-input placeholder="Anrede" v-model="anrede" type="text" />
 				<svws-ui-text-input placeholder="Titel" v-model="titel" type="text" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Abteilung" v-model="abteilung" type="text" />
-				<svws-ui-text-input placeholder="Telefon-Nr." v-model="telefonnr" type="tel" />
-				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="email" type="email" verify-email span="full" />
+				<svws-ui-text-input placeholder="Abteilung" v-model="abteilung" type="text" span="full" />
+				<svws-ui-text-input placeholder="Telefon" v-model="telefonnr" type="tel" span="full" />
+				<svws-ui-text-input placeholder="E-Mail" v-model="email" type="email" verify-email span="full" />
+				<span class="opacity-50 col-span-full text-sm mt-3">Die Daten werden automatisch gespeichert.</span>
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<!-- <svws-ui-button type="secondary" @click="$refs.modalEdit.closeModal"> Abbrechen </svws-ui-button> -->
-			<svws-ui-button type="primary" @click="modal.closeModal"> Schließen </svws-ui-button>
+			<svws-ui-button type="primary" @click="modal.closeModal"> Fertig </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-button type="secondary" @click="modal.openModal()">
-		<svws-ui-icon> <i-ri-draft-line /> </svws-ui-icon>
+	<svws-ui-button type="icon" @click="modal.openModal()" title="Ansprechpartner bearbeiten">
+		<i-ri-edit-2-line />
 	</svws-ui-button>
 </template>
 

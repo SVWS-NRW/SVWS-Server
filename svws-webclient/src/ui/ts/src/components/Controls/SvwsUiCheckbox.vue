@@ -177,7 +177,8 @@
 	margin-left: 1rem;
 }
 
-.checkbox--headless {
+.checkbox--headless,
+.data-table .checkbox {
 	margin: 0;
 }
 </style>

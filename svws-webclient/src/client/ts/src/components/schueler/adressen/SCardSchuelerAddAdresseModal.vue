@@ -15,7 +15,7 @@
 				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" />
 				<svws-ui-multi-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 				<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
-				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Anschreiben </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Erhält Anschreiben </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

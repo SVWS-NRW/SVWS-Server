@@ -386,7 +386,8 @@
 		@apply pr-8;
 	}
 
-	.text-input--headless {
+	.text-input--headless,
+	.data-table .text-input--control {
 		@apply w-full whitespace-nowrap border-0 outline-none;
 
 		&:not([class*="bg-"]) {
@@ -394,7 +395,7 @@
 		}
 
 		&::placeholder {
-			@apply opacity-40;
+			@apply font-normal;
 			color: inherit;
 		}
 

@@ -1,62 +1,43 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card :title="`Details zu ${name}`" class="mt-16 lg:mt-20">
 		<template #actions>
+			<svws-ui-checkbox class="mr-3" v-model="anschreiben"> Erhält Anschreiben </svws-ui-checkbox>
 			<svws-ui-button type="error">
-				<svws-ui-icon> <i-ri-delete-bin-2-line /> </svws-ui-icon>
-				<span class="ml-2">Löschen</span>
+				<i-ri-delete-bin-line />
+				<span>Eintrag löschen</span>
 			</svws-ui-button>
 		</template>
-		<svws-ui-input-wrapper :grid="2">
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2">Basisdaten</h2>
-				<div class="entry-content">
-					<svws-ui-text-input placeholder="Name" v-model="name" type="text" />
-					<svws-ui-text-input placeholder="Namensergänzung" v-model="namezusatz" type="text" />
-					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="telefon1" type="text" />
-					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="telefon2" type="text" />
-					<svws-ui-text-input placeholder="Fax-Nr." v-model="fax" type="text" />
-					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="email" type="email" verify-email />
-					<svws-ui-text-input placeholder="Branche" v-model="branche" title="Branche" type="text" />
-					<div class="flex w-full flex-row items-center space-x-4">
-						<div class="flex-grow">
-							<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
-								:items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
-							<p v-else>Kein Ansprechpartner</p>
-						</div>
-						<div class="flex flex-row space-x-4">
-							<s-schueler-adresse-modal-ansprechpartner v-if="ansprechpartner !== undefined" :ansprechpartner="ansprechpartner" :patch-ansprechpartner="patchAnsprechpartner" />
-							<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
-						</div>
-					</div>
-					<svws-ui-multi-select title="betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+		<svws-ui-input-wrapper :grid="4">
+			<svws-ui-text-input placeholder="Name" v-model="name" type="text" span="2" />
+			<svws-ui-text-input placeholder="Namensergänzung" v-model="namezusatz" type="text" />
+			<svws-ui-text-input placeholder="Branche" v-model="branche" title="Branche" type="text" />
+			<svws-ui-text-input placeholder="Telefon" v-model="telefon1" type="text" />
+			<svws-ui-text-input placeholder="2. Telefon" v-model="telefon2" type="text" />
+			<svws-ui-text-input placeholder="Fax" v-model="fax" type="text" />
+			<svws-ui-text-input placeholder="E-Mail" v-model="email" type="email" verify-email />
+			<svws-ui-spacing />
+			<svws-ui-multi-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+			<div class="flex gap-1 h-min items-center">
+				<div class="flex-grow">
+					<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
+						:items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
+					<span v-else class="opacity-50">Kein Ansprechpartner</span>
 				</div>
+				<s-schueler-adresse-modal-ansprechpartner v-if="ansprechpartner !== undefined" :ansprechpartner="ansprechpartner" :patch-ansprechpartner="patchAnsprechpartner" />
+				<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
 			</div>
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2">Adresse</h2>
-				<div class="entry-content">
-					<div class="col-span-2">
-						<svws-ui-text-input placeholder="Straße / Hausnummer" v-model="strassenname" type="text" />
-					</div>
-					<div class="col-span-2">
-						<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerzusatz" type="text" />
-					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
-						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-					<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
-					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
-						:item-sort="ortsteilSort" :item-text="i => i.ortsteil" />
-					-->
-					<svws-ui-checkbox v-model="anschreiben"> erhält Anschreiben </svws-ui-checkbox>
-				</div>
-			</div>
-			<div class="entry-wrapper">
-				<h2 class="svws-ui-text-black col-span-2"> Bemerkungen </h2>
-				<div class="entry-content">
-					<div class="col-span-2">
-						<svws-ui-textarea-input v-model="bemerkungen" placeholder="Bemerkungen" />
-					</div>
-				</div>
-			</div>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" v-model="strassenname" type="text" />
+			<svws-ui-text-input placeholder="Zusatz" v-model="hausnummerzusatz" type="text" />
+			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
+				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+			<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
+			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
+				:item-sort="ortsteilSort" :item-text="i => i.ortsteil" />
+			-->
+			<svws-ui-multi-select title="Ortsteil" disabled :items="[]" />
+			<svws-ui-spacing :size="2" />
+			<svws-ui-textarea-input v-model="bemerkungen" placeholder="Bemerkungen" autoresize span="full" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

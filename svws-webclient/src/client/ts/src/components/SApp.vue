@@ -74,6 +74,8 @@
 
 	function is_active(current: AuswahlChildData): boolean {
 		const routename = props.app.name?.toString().split('.')[0];
+		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
+			return true;
 		if (routename !== current.name)
 			return false;
 		document.title = current.text + " - " + schulname.value;

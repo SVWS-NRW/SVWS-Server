@@ -36,6 +36,56 @@
 	content: ', ';
 }
 
+input[type="file"]::file-selector-button {
+	@apply bg-svws text-white;
+	@apply rounded-md border-0;
+	@apply select-none relative;
+	@apply text-button font-bold;
+	@apply inline-flex items-center;
+	gap: 0.25em;
+	padding: 0.45em 0.75em;
+	@apply shadow-none;
+}
+
+input[type="file"] {
+	@apply text-black/50 cursor-pointer;
+}
+
+input[type="file"]:hover {
+	@apply text-black/75;
+}
+
+input[type="file"]:hover::file-selector-button {
+	@apply brightness-110;
+}
+
+input[type="file"]:focus,
+input[type="file"]:focus::file-selector-button {
+	 @apply outline-none;
+}
+
+input[type="file"]:focus-visible {
+	@apply ring ring-svws/50 rounded-md;
+}
+
+input[type="file"]:focus::file-selector-button {
+	@apply ring-0;
+}
+
+input[type="file"]::file-selector-button:active {
+	@apply ring-0 brightness-100;
+}
+
+input[type="file"]:invalid {
+	@apply text-error;
+}
+
+input[type="file"]:hover::file-selector-button,
+input[type="file"]:focus-visible::file-selector-button {
+	@apply opacity-100;
+}
+
+
 /* Default Theme (Light) */
 :root {
 	--table-head-background-color: rgb(50, 156, 213);

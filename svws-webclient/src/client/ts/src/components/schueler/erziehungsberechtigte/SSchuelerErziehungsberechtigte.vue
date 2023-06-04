@@ -1,10 +1,13 @@
 <template>
 	<div class="page--content relative">
-		<div v-for="(e, i) in data" :key="i" class="col-span-full">
+		<template v-for="(e, i) in data" :key="i">
 			<s-card-schueler-erziehungsberechtigte :erzieher="e" @patch="patch" :map-erzieherarten="mapErzieherarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" />
-		</div>
-		<div>
-			<svws-ui-button>Erziehungsberechtigten hinzufügen</svws-ui-button>
+		</template>
+		<svws-ui-content-card v-if="data.size() < 1" class="col-span-full" title="Erziehungsberechtigte">
+			<div>Noch keine Einträge vorhanden.</div>
+		</svws-ui-content-card>
+		<div :class="data.size() ? 'mt-9' : ''">
+			<svws-ui-button>Person hinzufügen</svws-ui-button>
 		</div>
 	</div>
 </template>

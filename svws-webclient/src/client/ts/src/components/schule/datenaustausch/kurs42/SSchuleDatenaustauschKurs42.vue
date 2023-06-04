@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page--content page--content--full">
 		<s-card-schule-datenaustausch-kurs42 :set-gost-kurs42-import-zip="setGostKurs42ImportZip" />
 	</div>
 </template>

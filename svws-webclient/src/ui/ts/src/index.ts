@@ -39,6 +39,8 @@ export {
 	SvwsUiDragData,
 	SvwsUiDropData,
 	SvwsUiDataTable,
+	SvwsUiDataTableRow,
+	SvwsUiDataTableCell,
 	SvwsUiSpinner,
 	SvwsUiSubNav,
 	SvwsUiInputWrapper,
