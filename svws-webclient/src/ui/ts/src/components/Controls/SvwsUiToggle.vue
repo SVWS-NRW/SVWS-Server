@@ -34,7 +34,7 @@
 		<span class="toggle--indicator" />
 		<span v-if="$slots.default || statistics" class="toggle--label">
 			<slot />
-			<i-ri-bar-chart-line v-if="statistics" class="ml-2" />
+			<i-ri-bar-chart-2-line v-if="statistics" class="ml-2" />
 		</span>
 	</label>
 </template>
@@ -90,6 +90,10 @@
 
 .toggle--statistics {
 	@apply text-violet-500;
+
+	.tooltip-trigger--triggered svg {
+		@apply text-violet-800;
+	}
 }
 
 .toggle--statistics .toggle--indicator {

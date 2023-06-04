@@ -69,7 +69,7 @@
 				{{ title }}
 			</template>
 			<svws-ui-icon v-if="statistics" class="ml-1">
-				<i-ri-bar-chart-fill />
+				<i-ri-bar-chart-2-line />
 			</svws-ui-icon>
 		</span>
 	</label>
@@ -153,6 +153,10 @@
 }
 .checkbox--statistics {
 	@apply text-violet-500;
+
+	.tooltip-trigger--triggered svg {
+		@apply text-violet-800;
+	}
 }
 
 .checkbox--statistics .checkbox--label .icon {

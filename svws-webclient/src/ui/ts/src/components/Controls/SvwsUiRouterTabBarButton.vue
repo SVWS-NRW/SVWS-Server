@@ -55,13 +55,21 @@
     }
 
     .router-tab-bar-button:focus {
-		@apply text-primary;
-		@apply bg-primary bg-opacity-5;
-	}
+				@apply text-primary;
+				@apply bg-svws/5;
+
+				.page--statistik & {
+					@apply bg-violet-500/5;
+				}
+			}
 
     .router-tab-bar-button:focus-visible {
-		@apply ring-primary ring-opacity-50;
-	}
+				@apply ring-svws/50;
+
+				.page--statistik & {
+
+				}
+		}
 
     .router-tab-bar-button:focus,
     .router-tab-bar-button--active {

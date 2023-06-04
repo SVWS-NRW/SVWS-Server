@@ -87,10 +87,18 @@
 }
 
 .button--primary {
-	@apply bg-primary text-white border-primary;
+	@apply bg-svws text-white border-svws;
+
+	.page--statistik & {
+		@apply bg-violet-500 border-violet-500;
+	}
 
 	&:focus-visible {
-		@apply ring-primary ring-opacity-50;
+		@apply ring-svws/50;
+
+		.page--statistik & {
+			@apply ring-violet-500/50;
+		}
 	}
 }
 
@@ -102,7 +110,11 @@
 	}
 
 	&:hover {
-		@apply border-primary text-primary;
+		@apply border-svws text-svws;
+
+		.page--statistik & {
+			@apply border-violet-500 text-violet-500;
+		}
 
 		.notification--error & {
 			@apply border-white text-white brightness-100;
@@ -110,7 +122,11 @@
 	}
 
 	&:focus-visible {
-		@apply ring-primary ring-opacity-25 border-primary;
+		@apply ring-svws/25 border-svws;
+
+		.page--statistik & {
+			@apply ring-violet-500/25 border-violet-500;
+		}
 
 		.notification--error & {
 			@apply ring-white/25 border-white;
@@ -118,7 +134,7 @@
 	}
 
 	&:active {
-		@apply bg-primary/5 brightness-100;
+		@apply bg-svws/5 brightness-100;
 
 		.notification--error & {
 			@apply bg-white/10;
@@ -135,7 +151,7 @@
 	}
 
 	&:focus-visible {
-		@apply bg-light ring-dark-20 ring-opacity-75;
+		@apply bg-light ring-black/25;
 	}
 }
 
@@ -148,7 +164,7 @@
 	}
 
 	&:focus-visible {
-		@apply ring-error ring-opacity-50;
+		@apply ring-error/50;
 	}
 }
 
@@ -183,7 +199,7 @@
 	}
 
 	&:focus-visible {
-		@apply ring-error ring-opacity-25;
+		@apply ring-error/25;
 	}
 }
 
@@ -220,11 +236,11 @@
 	}
 
 	&:hover, &:focus {
-		@apply bg-dark-20 bg-opacity-50 rounded;
+		@apply bg-black/10 rounded;
 	}
 
 	&:focus-visible {
-		@apply ring-dark ring-opacity-50;
+		@apply ring-black/25;
 	}
 }
 
@@ -234,7 +250,7 @@
 	&:hover,
 	&:focus,
 	&:focus-visible {
-		@apply bg-black bg-opacity-25 border-black border-opacity-50 text-black;
+		@apply bg-black/25 border-black/50 text-black;
 		@apply opacity-20;
 		@apply cursor-not-allowed pointer-events-none;
 	}

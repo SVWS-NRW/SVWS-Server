@@ -53,7 +53,7 @@
 				<i-ri-checkbox-circle-line v-if="!$slots.default" class="radio--indicator-icon--checked" />
 			</template>
 		</span>
-		<span class="radio--label--text"> {{ label }} <i-ri-bar-chart-fill v-if="statistics" class="ml-2" /> </span>
+		<span class="radio--label--text"> {{ label }} <i-ri-bar-chart-2-line v-if="statistics" class="ml-2" /> </span>
 	</label>
 </template>
 
@@ -79,7 +79,11 @@
 	}
 
 	&:focus {
-		@apply ring-primary ring-opacity-50;
+		@apply ring-svws/50;
+
+		.page--statistik & {
+			@apply ring-violet-500/50;
+		}
 	}
 }
 
@@ -89,7 +93,11 @@
 	}
 
 	.radio--indicator ~ .radio--indicator-icon {
-		@apply opacity-100 text-primary;
+		@apply opacity-100 text-svws;
+
+		.page--statistik & {
+			@apply text-violet-500;
+		}
 	}
 }
 
@@ -103,7 +111,11 @@
 
 .radio--indicator:checked ~ .radio--label--text,
 .radio--label--checked .radio--label--text {
-	@apply bg-primary bg-opacity-5 text-primary;
+	@apply bg-svws/5 text-svws;
+
+	.page--statistik & {
+		@apply bg-violet-500/5 text-violet-500;
+	}
 }
 
 .radio--indicator ~ .radio--indicator-icon {
@@ -125,7 +137,11 @@
 }
 
 .radio--label--checked .radio--indicator-icon {
-	@apply opacity-100 text-primary;
+	@apply opacity-100 text-svws;
+
+	.page--statistik {
+		@apply text-violet-500;
+	}
 }
 
 .radio--label--checked .radio--indicator-icon .radio--indicator-icon--blank {

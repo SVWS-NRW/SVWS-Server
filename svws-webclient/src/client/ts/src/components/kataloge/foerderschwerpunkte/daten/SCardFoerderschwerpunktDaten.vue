@@ -9,7 +9,7 @@
 	<svws-ui-content-card>
 		<template #title>
 			<div class="content-card--header content-card--headline text-headline-sm">
-				<i-ri-bar-chart-fill class="mr-1 opacity-50" />
+				<i-ri-bar-chart-2-line class="mr-1 opacity-50" />
 				<span>Statistik</span>
 			</div>
 		</template>

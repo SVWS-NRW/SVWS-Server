@@ -17,12 +17,12 @@
 		</template>
 	</span>
 	<Teleport to="body">
-		<Transition enterActiveClass="duration-200 ease-out"
-			enterFromClass="transform opacity-0"
-			enterToClass="opacity-100"
-			leaveActiveClass="duration-100 ease-in"
-			leaveFromClass="opacity-100"
-			leaveToClass="transform opacity-0">
+		<Transition enter-active-class="duration-200 ease-out"
+			enter-from-class="transform opacity-0"
+			enter-to-class="opacity-100"
+			leave-active-class="duration-100 ease-in"
+			leave-from-class="opacity-100"
+			leave-to-class="transform opacity-0">
 			<div v-if="isOpen"
 				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 				class="tooltip transition-opacity"
@@ -142,7 +142,11 @@
 
 	&--triggered {
 		svg {
-			@apply text-primary;
+			@apply text-svws;
+
+			.page--statistik & {
+				@apply text-violet-500;
+			}
 
 			.text-error & {
 				color: inherit;
@@ -172,8 +176,12 @@
 	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
 
 	&--primary {
-		@apply bg-primary text-white border-none;
+		@apply bg-svws text-white border-none;
 		@apply shadow-sm shadow-black/25;
+
+		.page--statistik & {
+			@apply bg-violet-500;
+		}
 	}
 
 	&--dark {

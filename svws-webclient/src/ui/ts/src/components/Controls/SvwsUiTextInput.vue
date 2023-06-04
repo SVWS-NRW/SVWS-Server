@@ -60,7 +60,7 @@
 	const maxLenValid = computed(()=>{
 		if (props.maxLen === undefined)
 			return true;
-		return typeof tmp.value === 'string' && tmp.value?.toLocaleString().length < props.maxLen;
+		return typeof tmp.value === 'string' && tmp.value?.toLocaleString().length <= props.maxLen;
 	})
 
 	const emailValid = computed(() => {
@@ -130,10 +130,12 @@
 				'text-input--placeholder--required': required,
 				'text-input--placeholder--prefix': url
 			}">
+			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" />
 			{{ placeholder }}
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': tmp?.toLocaleString().length > maxLen, 'opacity-50': tmp?.toLocaleString().length <= maxLen}">{{ maxLen ? ` (${tmp?.toLocaleString().length > 0 ? tmp?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-line class="pointer-events-auto ml-1" />
+					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -232,6 +234,12 @@
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input--filled .text-input--control {
 		@apply border-violet-500;
+	}
+
+	.text-input--statistics {
+		.tooltip-trigger--triggered svg {
+			@apply text-violet-800;
+		}
 	}
 
 	.text-input--search {

@@ -4,11 +4,13 @@
 		collapsed?: boolean;
 		disabled?: boolean;
 		subline?: string;
+		statistik?: boolean;
 	}>(), {
 		active: false,
 		collapsed: false,
 		disabled: false,
 		subline: '',
+		statistik: false,
 	});
 
 	const emit = defineEmits<{
@@ -24,7 +26,8 @@
 	<a class="sidebar--menu-item" :class="{
 		'sidebar--menu-item--active': active,
 		'sidebar--menu-item--collapsed': collapsed,
-		'sidebar--menu-item--disabled': disabled
+		'sidebar--menu-item--disabled': disabled,
+		'sidebar--menu-item--statistik': $slots.label()[0].children === 'Statistik' || statistik,
 	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : ($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
@@ -53,9 +56,12 @@
 	@apply mb-0;
 }
 
-.sidebar--menu-item--active,
 .sidebar--menu-item--active {
-	@apply bg-dark-20;
+	@apply bg-svws/10 text-svws;
+
+	&.sidebar--menu-item--statistik {
+		@apply bg-violet-500/10 text-violet-500;
+	}
 }
 
 .sidebar--menu-item:hover,
@@ -64,7 +70,9 @@
 .sidebar--menu--body .sidebar--menu-item:focus,
 .sidebar--menu--footer .sidebar--menu-item:hover,
 .sidebar--menu--footer .sidebar--menu-item:focus {
-	@apply text-primary bg-primary bg-opacity-10;
+	&:not(.sidebar--menu-item--active) {
+		@apply bg-black/10;
+	}
 }
 
 .sidebar--menu-item--label {
@@ -93,7 +101,7 @@
 
 .secondary-menu--content .sidebar--menu-item:hover,
 .secondary-menu--content .sidebar--menu-item:focus {
-	@apply text-primary bg-primary bg-opacity-10;
+	@apply bg-light;
 }
 
 .secondary-menu--content .sidebar--menu-item--active {

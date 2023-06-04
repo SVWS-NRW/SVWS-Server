@@ -308,7 +308,7 @@
 				</div>
 				<span v-if="!showInput" class="multiselect-tags--placeholder">
 					{{ title }}
-					<i-ri-bar-chart-fill v-if="statistics" class="ml-2" />
+					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
 				</span>
 			</div>
 			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
@@ -374,6 +374,10 @@
 
 		.multiselect-tags--placeholder {
 			@apply text-violet-500;
+		}
+
+		.tooltip-trigger--triggered svg {
+			@apply text-violet-800;
 		}
 	}
 
@@ -512,16 +516,28 @@
 		@apply py-1 my-1 px-2;
 
 		&.active {
-			@apply ring ring-primary ring-opacity-50 border-primary bg-primary text-white;
+			@apply ring ring-svws/50 border-svws bg-svws text-white;
+
+			.page--statistik & {
+				@apply ring-violet-500/50 border-violet-500 bg-violet-500;
+			}
 		}
 
 		&:hover {
 			@apply cursor-pointer;
-			@apply bg-primary text-white;
+			@apply bg-svws text-white;
+
+			.page--statistik & {
+				@apply bg-violet-500;
+			}
 		}
 
 		&.selected {
-			@apply font-bold bg-primary text-white flex w-full items-center justify-between gap-1;
+			@apply font-bold bg-svws text-white flex w-full items-center justify-between gap-1;
+
+			.page--statistik & {
+				@apply bg-violet-500;
+			}
 		}
 	}
 
@@ -578,9 +594,13 @@
 
 .tag-badge {
 	@apply rounded cursor-auto relative z-10;
-	@apply bg-primary bg-opacity-5 text-primary border-primary border border-opacity-10;
+	@apply bg-svws/5 text-svws border-svws border border-opacity-10;
 	@apply flex items-center leading-none;
 	padding: 0.2em 0.4em 0.2em 0.7em;
+
+	.page--statistik & {
+		@apply bg-violet-500/5 text-violet-500 border-violet-500;
+	}
 
 	.tag-remove {
 		@apply text-sm -mr-0.5;

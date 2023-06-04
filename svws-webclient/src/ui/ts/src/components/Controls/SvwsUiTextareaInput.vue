@@ -120,7 +120,7 @@
 			{{ placeholder }}
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-line class="pointer-events-auto ml-1" />
+					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -227,6 +227,12 @@
 
 	.textarea-input--statistics .textarea-input--placeholder {
 		@apply text-violet-500;
+	}
+
+	.textarea-input--statistics {
+		.tooltip-trigger--triggered svg {
+			@apply text-violet-800;
+		}
 	}
 
 	.textarea-input--statistics.textarea-input--invalid .textarea-input--placeholder {
