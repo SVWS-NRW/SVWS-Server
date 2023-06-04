@@ -19,7 +19,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Benutzergruppe";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any>{

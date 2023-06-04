@@ -3,11 +3,11 @@
 	<svws-ui-modal ref="modal">
 		<template #modalTitle>Raum hinzufügen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<SvwsUiTextInput v-model="item.kuerzel" required placeholder="Kürzel" />
-				<SvwsUiTextInput type="number" v-model="item.groesse" required placeholder="Raumgröße" />
-				<SvwsUiTextInput v-model="item.beschreibung" placeholder="Beschreibung" />
-			</div>
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-text-input v-model="item.kuerzel" required placeholder="Kürzel" />
+				<svws-ui-text-input type="number" v-model="item.groesse" required placeholder="Raumgröße" />
+				<svws-ui-text-input v-model="item.beschreibung" placeholder="Beschreibung" span="full" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>

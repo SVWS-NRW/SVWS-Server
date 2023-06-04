@@ -12,7 +12,7 @@ export class RouteKatalogAufsichtsbereichDaten extends RouteNode<unknown, RouteK
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.aufsichtsbereiche.daten", "daten", SAufsichtsbereichDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Aufsichtsbereich";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

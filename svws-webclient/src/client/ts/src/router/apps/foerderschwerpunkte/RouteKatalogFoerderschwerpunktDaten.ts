@@ -11,7 +11,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<unknown, Rout
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Förderschwerpunkt";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

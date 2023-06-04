@@ -3,15 +3,15 @@
 	<svws-ui-modal ref="modal">
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
+			<svws-ui-input-wrapper>
 				<svws-ui-multi-select :model-value="Wochentag.MONTAG" @update:model-value="item.wochentag=$event.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
-				<SvwsUiTextInput type="number" v-model="item.beginn" required placeholder="Beginn" />
-				<SvwsUiTextInput type="number" v-model="item.ende" required placeholder="Ende" />
-			</div>
+				<svws-ui-text-input type="number" v-model="item.beginn" required placeholder="Beginn" />
+				<svws-ui-text-input type="number" v-model="item.ende" required placeholder="Ende" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || !item.beginn || !item.ende"> Pausenzeit Hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || !item.beginn || !item.ende"> Pausenzeit hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

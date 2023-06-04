@@ -19,7 +19,7 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer_daten", "daten", SBenutzer, new RouteDataSchuleBenutzerDaten());
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Benutzer";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {

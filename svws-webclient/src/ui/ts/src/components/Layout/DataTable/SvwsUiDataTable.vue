@@ -258,7 +258,7 @@
 			clickable: false,
 			allowUnclick: false,
 			selectable: false,
-			noDataHtml: "Keine Einträge vorhanden",
+			noDataHtml: "Keine Einträge vorhanden.",
 			uniqueKey: undefined,
 			count: false,
 			rowActions: undefined,
@@ -351,6 +351,8 @@
 
 	const updateScrollValues = () => {
 		if (tableScrollable.value === false) {
+			tableScrolledToBottom.value = true;
+			tableScrolledToTop.value = true;
 			return;
 		}
 
@@ -811,6 +813,11 @@
 
 		.data-table__tfoot {
 			@apply border-y-black/10;
+
+			.data-table__td,
+			.data-table__th {
+				@apply border-x-transparent;
+			}
 		}
 
 		.data-table__th,

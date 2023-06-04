@@ -12,7 +12,7 @@ export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogRe
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen.daten", "daten", SReligionDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Religion";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

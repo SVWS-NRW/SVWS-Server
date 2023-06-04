@@ -12,7 +12,7 @@ export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen.daten", "daten", SKlassenDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Klasse";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

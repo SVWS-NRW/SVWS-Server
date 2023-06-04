@@ -12,7 +12,7 @@ export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.daten", "daten", SRaumDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Raum";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {

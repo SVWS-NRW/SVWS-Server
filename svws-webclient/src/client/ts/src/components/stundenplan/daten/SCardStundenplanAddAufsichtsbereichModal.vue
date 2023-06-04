@@ -3,14 +3,14 @@
 	<svws-ui-modal ref="modal">
 		<template #modalTitle>Aufsichtsbereich hinzufügen</template>
 		<template #modalContent>
-			<div class="flex justify-center flex-wrap items-center gap-1">
-				<SvwsUiTextInput v-model="item.kuerzel" required placeholder="Kürzel" />
-				<SvwsUiTextInput v-model="item.beschreibung" placeholder="Beschreibung" />
-			</div>
+			<svws-ui-input-wrapper>
+				<svws-ui-text-input v-model="item.kuerzel" required placeholder="Kürzel" />
+				<svws-ui-text-input v-model="item.beschreibung" placeholder="Beschreibung" />
+			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel">Aufsichtsbereich Hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel">Aufsichtsbereich hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

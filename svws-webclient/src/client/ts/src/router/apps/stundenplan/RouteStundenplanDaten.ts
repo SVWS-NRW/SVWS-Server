@@ -12,7 +12,7 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.daten", "daten", SStundenplanDaten);
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Daten";
+		super.text = "Stundenplan";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
