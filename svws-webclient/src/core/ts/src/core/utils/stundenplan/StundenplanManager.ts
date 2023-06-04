@@ -6,7 +6,9 @@ import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKla
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
+import { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
@@ -21,10 +23,91 @@ import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/Stun
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { Wochentag } from '../../../core/types/Wochentag';
 import { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanManager extends JavaObject {
+
+	/**
+	 * Ein Comparator für die Räume.
+	 */
+	private static readonly _compRaum : Comparator<StundenplanRaum> = { compare : (a: StundenplanRaum, b: StundenplanRaum) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Comparator für die Pausenzeiten.
+	 */
+	private static readonly _compPausenzeit : Comparator<StundenplanPausenzeit> = { compare : (a: StundenplanPausenzeit, b: StundenplanPausenzeit) => {
+		if (a.wochentag < b.wochentag)
+			return -1;
+		if (a.wochentag > b.wochentag)
+			return +1;
+		const beginnA : number = a.beginn === null ? -1 : a.beginn;
+		const beginnB : number = b.beginn === null ? -1 : b.beginn;
+		if (beginnA < beginnB)
+			return -1;
+		if (beginnA > beginnB)
+			return +1;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Comparator für die Aufsichtsbereiche.
+	 */
+	private static readonly _compAufsichtsbereich : Comparator<StundenplanAufsichtsbereich> = { compare : (a: StundenplanAufsichtsbereich, b: StundenplanAufsichtsbereich) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Comparator für die Pausenaufsichten.
+	 */
+	private static readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht> = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => {
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Comparator für die Zeitraster.
+	 */
+	private static readonly _compZeitraster : Comparator<StundenplanZeitraster> = { compare : (a: StundenplanZeitraster, b: StundenplanZeitraster) => {
+		if (a.wochentag < b.wochentag)
+			return -1;
+		if (a.wochentag > b.wochentag)
+			return +1;
+		const beginnA : number = a.stundenbeginn === null ? -1 : a.stundenbeginn;
+		const beginnB : number = b.stundenbeginn === null ? -1 : b.stundenbeginn;
+		if (beginnA < beginnB)
+			return -1;
+		if (beginnA > beginnB)
+			return +1;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
+	/**
+	 * Ein Comparator für die StundenplanKalenderwochenzuordnung.
+	 */
+	private static readonly _compKWZ : Comparator<StundenplanKalenderwochenzuordnung> = { compare : (a: StundenplanKalenderwochenzuordnung, b: StundenplanKalenderwochenzuordnung) => {
+		if (a.jahr < b.jahr)
+			return -1;
+		if (a.jahr > b.jahr)
+			return +1;
+		if (a.kw < b.kw)
+			return -1;
+		if (a.kw > b.kw)
+			return +1;
+		if (a.wochentyp < b.wochentyp)
+			return -1;
+		if (a.wochentyp > b.wochentyp)
+			return +1;
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 	private readonly _daten : Stundenplan;
 
@@ -103,6 +186,7 @@ export class StundenplanManager extends JavaObject {
 		this.initMapAufsicht();
 		this.initMapKursZuUnterrichte();
 		this.initMapPausenaufsichten();
+		this.initSortierungen();
 	}
 
 	private initMapKWZuordnung() : void {
@@ -220,7 +304,7 @@ export class StundenplanManager extends JavaObject {
 		for (const zeit of this._daten.zeitraster) {
 			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
 			Wochentag.fromIDorException(zeit.wochentag);
-			DeveloperNotificationException.ifTrue("zeit.unterrichtstunde <= 0", zeit.unterrichtstunde < 0);
+			DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29));
 			if ((zeit.stundenbeginn !== null) && (zeit.stundenende !== null)) {
 				const beginn : number = zeit.stundenbeginn.valueOf();
 				const ende : number = zeit.stundenende.valueOf();
@@ -308,6 +392,15 @@ export class StundenplanManager extends JavaObject {
 			}
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pa.id, pa);
 		}
+	}
+
+	private initSortierungen() : void {
+		this._daten.raeume.sort(StundenplanManager._compRaum);
+		this._daten.pausenzeiten.sort(StundenplanManager._compPausenzeit);
+		this._daten.aufsichtsbereiche.sort(StundenplanManager._compAufsichtsbereich);
+		this._daten.kalenderwochenZuordnung.sort(StundenplanManager._compKWZ);
+		this._datenP.sort(StundenplanManager._compPausenaufsicht);
+		this._daten.zeitraster.sort(StundenplanManager._compZeitraster);
 	}
 
 	/**
@@ -725,6 +818,7 @@ export class StundenplanManager extends JavaObject {
 	public addRaum(raum : StundenplanRaum) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_raumID_zu_raum, raum.id, raum);
 		this._daten.raeume.add(raum);
+		this._daten.raeume.sort(StundenplanManager._compRaum);
 	}
 
 	/**
@@ -735,6 +829,7 @@ export class StundenplanManager extends JavaObject {
 	public addPausenzeit(pausenzeit : StundenplanPausenzeit) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		this._daten.pausenzeiten.add(pausenzeit);
+		this._daten.pausenzeiten.sort(StundenplanManager._compPausenzeit);
 	}
 
 	/**
@@ -745,6 +840,7 @@ export class StundenplanManager extends JavaObject {
 	public addAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereich.id, aufsichtsbereich);
 		this._daten.aufsichtsbereiche.add(aufsichtsbereich);
+		this._daten.aufsichtsbereiche.sort(StundenplanManager._compAufsichtsbereich);
 	}
 
 	/**
@@ -755,6 +851,7 @@ export class StundenplanManager extends JavaObject {
 	public addKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
 		this._daten.kalenderwochenZuordnung.add(kwz);
+		this._daten.kalenderwochenZuordnung.sort(StundenplanManager._compKWZ);
 	}
 
 	/**
@@ -765,6 +862,7 @@ export class StundenplanManager extends JavaObject {
 	public addPausenaufsicht(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
 		this._datenP.add(pausenaufsicht);
+		this._datenP.sort(StundenplanManager._compPausenaufsicht);
 	}
 
 	/**
@@ -775,6 +873,7 @@ export class StundenplanManager extends JavaObject {
 	public addZeitraster(zeitraster : StundenplanZeitraster) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
 		this._daten.zeitraster.add(zeitraster);
+		this._daten.zeitraster.sort(StundenplanManager._compZeitraster);
 	}
 
 	/**
