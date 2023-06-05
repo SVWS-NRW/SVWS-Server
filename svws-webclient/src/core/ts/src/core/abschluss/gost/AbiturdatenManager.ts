@@ -1418,6 +1418,31 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob das fach mit der übergebenen ID als Abiturfach möglich ist und mit welcher Kursart
+	 * dieses Fach aufgrund der Belegungen im Abitur gewählt werden kann.
+	 *
+	 * @param id   die ID des Fachs
+	 *
+	 * @return die mögliche Kursart des Faches im Abitur oder null, falls das Fach nicht als Abiturfach
+	 *         ausgewählt werden kann.
+	 */
+	public getMoeglicheKursartAlsAbiturfach(id : number) : GostKursart | null {
+		const fach : GostFach | null = this.gostFaecher.get(id);
+		if (fach === null)
+			return null;
+		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(id);
+		if ((belegung === null) || (belegung.letzteKursart === null))
+			return null;
+		const kursart : GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
+		if ((kursart === null) || ((kursart as unknown === GostKursart.LK as unknown) && (!fach.istMoeglichAbiLK)) || ((kursart as unknown === GostKursart.GK as unknown) && (!fach.istMoeglichAbiGK)) || ((kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown)))
+			return null;
+		if (kursart as unknown === GostKursart.LK as unknown)
+			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
+		const fachbelegungen : List<AbiturFachbelegung> = this.getFachbelegungByFachkuerzel(fach.kuerzel);
+		return this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21) ? kursart : null;
+	}
+
+	/**
 	 * Liefert für die übergebene Fachbelegung die Halbjahre, in denen das Fach mit einer der angebenen
 	 * Kursarten belegt wurde. Ist keine Kursart angegeben, so werden die Halbjahre aller Belegungen
 	 * zurückgegeben. Ist keine Fachbelegung angegeben, so wird eine leere Liste zurückgegeben.

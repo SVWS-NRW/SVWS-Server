@@ -128,7 +128,7 @@
 	})
 
 
-	const getAbiLKMoeglich: ComputedRef<boolean> = computed(()=> {
+	const getAbiLKMoeglich: ComputedRef<boolean> = computed(() => {
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		const fachgruppe = fach.getFachgruppe();
 		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX
@@ -138,23 +138,7 @@
 	})
 
 
-	const getAbiMoeglich: ComputedRef<boolean> = computed(()=> {
-		const fachbelegung = props.abiturdatenManager.getFachbelegungByID(props.fach.id);
-		if (!fachbelegung?.letzteKursart)
-			return false;
-		switch (GostKursart.fromKuerzel(fachbelegung.letzteKursart)) {
-			case GostKursart.LK:
-				return getAbiLKMoeglich.value;
-			case GostKursart.GK: {
-				if (!props.abiturdatenManager.pruefeBelegungMitKursart(fachbelegung, GostKursart.GK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
-					return false;
-				if (!props.abiturdatenManager.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
-					return false;
-				return getAbiGKMoeglich.value;
-			}
-		}
-		return false;
-	})
+	const getAbiMoeglich: ComputedRef<boolean> = computed(() => props.abiturdatenManager.getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
 
 	/**

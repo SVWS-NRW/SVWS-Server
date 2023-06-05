@@ -1492,6 +1492,40 @@ public class AbiturdatenManager {
 
 
 	/**
+	 * Prüft, ob das fach mit der übergebenen ID als Abiturfach möglich ist und mit welcher Kursart
+	 * dieses Fach aufgrund der Belegungen im Abitur gewählt werden kann.
+	 *
+	 * @param id   die ID des Fachs
+	 *
+	 * @return die mögliche Kursart des Faches im Abitur oder null, falls das Fach nicht als Abiturfach
+	 *         ausgewählt werden kann.
+	 */
+	public GostKursart getMoeglicheKursartAlsAbiturfach(final long id) {
+		final GostFach fach = gostFaecher.get(id);
+		if (fach == null)
+			return null;
+		final AbiturFachbelegung belegung = getFachbelegungByID(id);
+		if ((belegung == null) || (belegung.letzteKursart == null))
+			return null;
+		final GostKursart kursart = GostKursart.fromKuerzel(belegung.letzteKursart);
+		if ((kursart == null) || ((kursart == GostKursart.LK) && (!fach.istMoeglichAbiLK))
+				 || ((kursart == GostKursart.GK) && (!fach.istMoeglichAbiGK))
+				 || ((kursart != GostKursart.GK) && (kursart != GostKursart.LK)))
+			return null;
+		// LK ?
+		if (kursart == GostKursart.LK)
+			return pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+					? kursart : null;
+		// GK ?
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+		return pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
+				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)
+				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)
+				? kursart : null;
+	}
+
+
+	/**
 	 * Liefert für die übergebene Fachbelegung die Halbjahre, in denen das Fach mit einer der angebenen
 	 * Kursarten belegt wurde. Ist keine Kursart angegeben, so werden die Halbjahre aller Belegungen
 	 * zurückgegeben. Ist keine Fachbelegung angegeben, so wird eine leere Liste zurückgegeben.

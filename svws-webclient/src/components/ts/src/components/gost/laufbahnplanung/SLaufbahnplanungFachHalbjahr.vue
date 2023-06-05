@@ -34,8 +34,9 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import type { AbiturdatenManager, GostFach, GostFaecherManager,
+	import type { AbiturFachbelegung, AbiturFachbelegungHalbjahr, AbiturdatenManager, GostFach, GostFaecherManager,
 		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@svws-nrw/svws-core";
+	import { GostSchriftlichkeit } from "@svws-nrw/svws-core";
 	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
 	import { computed } from "vue";
 
@@ -130,7 +131,6 @@
 		if (!props.moeglich)
 			return bgColorDisabled.value;
 		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`;
-		//return ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(0.7)
 	});
 
 
@@ -647,45 +647,41 @@
 
 
 	function setAbiturWahl(wahl: GostSchuelerFachwahl): void {
-		if (wahl.halbjahre[GostHalbjahr.Q11.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q12.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q21.id] === "LK" && wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") {
-			if (!getAbiLKMoeglich.value) {
-				wahl.abiturFach = null;
-			} else {
-				switch (wahl.abiturFach) {
-					case 1:
-						wahl.abiturFach = 2;
-						break;
-					case 2:
-						// TODO Prüfe zuvor, ob das Fach überhaupt als erster LK wählbar ist
-						wahl.abiturFach = 1;
-						break;
-					default:
-						wahl.abiturFach = 2;
-						break;
-				}
-			}
-		} else if ((wahl.halbjahre[GostHalbjahr.Q11.id] === "S" || wahl.halbjahre[GostHalbjahr.Q11.id] === "LK") && (wahl.halbjahre[GostHalbjahr.Q12.id] === "S" || wahl.halbjahre[GostHalbjahr.Q12.id] === "LK")
-			&& (wahl.halbjahre[GostHalbjahr.Q21.id] === "S" || wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") && (wahl.halbjahre[GostHalbjahr.Q22.id] === "S" || wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" || wahl.halbjahre[GostHalbjahr.Q22.id] === "M")) {
-			if (!getAbiGKMoeglich.value) {
-				wahl.abiturFach = null;
-			} else {
-				switch (wahl.abiturFach) {
-					case null:
-						wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : 3;
-						break;
-					case 4:
-						wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "S" ? 3 : null;
-						break;
-					case 3:
-						wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : null;
-						break;
-					default:
-						wahl.abiturFach = null;
-						break;
-				}
-			}
-		} else {
+		const abiMoeglicheKursart : GostKursart | null = props.abiturdatenManager.getMoeglicheKursartAlsAbiturfach(props.fach.id);
+		if (abiMoeglicheKursart === null) {
 			wahl.abiturFach = null;
+			return;
+		}
+		// LK...
+		if (abiMoeglicheKursart === GostKursart.LK) {
+			switch (wahl.abiturFach) {
+				case 1:
+					wahl.abiturFach = 2;
+					break;
+				case 2:
+					// TODO Prüfe zuvor, ob das Fach überhaupt als erster LK wählbar ist
+					wahl.abiturFach = 1;
+					break;
+				default:
+					wahl.abiturFach = 2;
+					break;
+			}
+			return;
+		}
+		// GK...
+		switch (wahl.abiturFach) {
+			case null:
+				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : 3;
+				break;
+			case 4:
+				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "S" ? 3 : null;
+				break;
+			case 3:
+				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : null;
+				break;
+			default:
+				wahl.abiturFach = null;
+				break;
 		}
 	}
 
