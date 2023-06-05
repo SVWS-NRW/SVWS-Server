@@ -118,9 +118,8 @@
     }
 
     .router-tab-bar--panel {
-        @apply h-full;
-        @apply overflow-hidden w-full;
-		@apply relative;
+        @apply h-full w-full relative;
+        @apply overflow-auto;
 
 		&.pt-0 {
 			padding-top: 0;

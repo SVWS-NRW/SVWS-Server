@@ -13,7 +13,7 @@
 		<div v-if="title || $slots.actions" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
-			<h3 v-if="title" class="content-card--headline">
+			<h3 v-if="title" class="content-card--headline" :title="title">
 				{{ title }}
 			</h3>
 			<div v-if="$slots.actions" class="content-card--actions">
@@ -44,14 +44,14 @@
 		&--headline {
 			@apply text-headline-md;
 			@apply text-black;
-			@apply flex-shrink-0;
+			@apply flex-shrink-0 line-clamp-1 max-w-full;
 		}
 
 		&--header {
 			@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
 
 			&--has-actions {
-				@apply flex flex-wrap gap-x-4 gap-y-2 w-full items-start;
+				@apply flex flex-wrap gap-x-4 gap-y-1 w-full items-start;
 			}
 		}
 

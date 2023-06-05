@@ -5,32 +5,34 @@
 			'notification--success': type === 'success',
 			'notification--error': type === 'error' || type === 'bug',
 			'notification--warning': type === 'warning',
+			'notification--details-open': stackOpen,
 		}">
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
-				<svws-ui-icon v-if="icon || type" class="notification--icon">
-					<i-ri-lock-2-line v-if="icon === 'login'" />
-					<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
-					<i-ri-bug-fill v-else-if="icon === 'bug' || type === 'bug'" />
-					<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
-					<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
-					<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
-				</svws-ui-icon>
-				<div class="notification--header" v-if="$slots.header">
+				<div class="notification--header">
+					<svws-ui-icon v-if="icon || type" class="notification--icon">
+						<i-ri-lock-2-line v-if="icon === 'login'" />
+						<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
+						<i-ri-bug-fill v-else-if="icon === 'bug' || type === 'bug'" />
+						<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
+						<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
+						<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
+					</svws-ui-icon>
 					<slot name="header" />
 				</div>
 				<div class="notification--text">
 					<slot />
 				</div>
 				<div class="mt-3 -mb-1 flex flex-wrap gap-4" v-if="$slots.stack || type === 'bug'">
-					<svws-ui-button v-if="type === 'bug'" type="secondary">
+					<svws-ui-button v-if="type === 'bug'" type="secondary" class="-ml-3 -mb-1">
 						Fehler melden
 						<i-ri-send-plane-fill />
 					</svws-ui-button>
-					<button v-if="$slots.stack" @click="toggleStackOpen" class="inline-flex px-1 border border-transparent items-center font-bold text-button normal-case opacity-50 hover:opacity-100 focus-visible:opacity-100 rounded-md focus:outline-none focus-visible:ring focus-visible:border-white focus-visible:ring-white/25">
+					<svws-ui-button type="transparent" @click="toggleStackOpen" v-if="$slots.stack" class="-mb-1" :class="type === 'bug' ? '' : '-ml-3'">
 						<span>Details</span>
-						<i-ri-arrow-up-s-line v-if="stackOpen" />
-					</button>
+						<i-ri-arrow-up-s-line v-if="stackOpen" class="-ml-1" />
+						<i-ri-arrow-down-s-line v-else class="-ml-1" />
+					</svws-ui-button>
 				</div>
 				<div class="notification--stack" v-if="$slots.stack && stackOpen">
 					<slot name="stack" />
@@ -79,10 +81,9 @@
 
 <style lang="postcss">
 .notification {
-	@apply max-h-full;
 	@apply flex flex-col flex-shrink-0;
 	@apply w-full;
-	@apply relative z-50;
+	@apply relative z-40;
 	@apply rounded-lg overflow-hidden;
 	@apply shadow-lg shadow-black/10;
 	@apply text-base pointer-events-auto;
@@ -132,7 +133,7 @@
 	@apply px-4 py-2.5 overflow-hidden;
 
 	.notification--icon {
-		@apply mr-2 text-base leading-none pt-0.5;
+		@apply inline-block mr-1 text-base leading-none -mb-1;
 	}
 
 	.notification--text {
@@ -151,12 +152,12 @@
 		}
 
 		.notification--text {
-			@apply w-full font-normal;
+			@apply w-full font-medium break-words;
 		}
 	}
 
 	.notification--stack {
-		@apply whitespace-pre-wrap bg-black mt-2 -mb-1.5 -mx-2 p-2 font-mono overflow-auto min-w-full rounded-md;
+		@apply whitespace-pre-wrap bg-black mt-4 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-md;
 	}
 }
 

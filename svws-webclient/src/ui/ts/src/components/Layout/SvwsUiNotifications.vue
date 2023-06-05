@@ -2,13 +2,14 @@
 	<!--	<svws-ui-button type="icon" class="notifications&#45;&#45;trigger" @click="toggleModal">
 		<i-ri-notification-3-line/>
 	</svws-ui-button>-->
-	<Dialog class="notifications--wrapper" :initial-focus="null" :open="true">
-		<slot />
-	</Dialog>
+	<Teleport to="body">
+		<div class="notifications--wrapper">
+			<slot />
+		</div>
+	</Teleport>
 </template>
 
 <script setup lang='ts'>
-	import {Dialog} from "@headlessui/vue";
 	import {ref} from "vue";
 
 	const isOpen = ref(false);
