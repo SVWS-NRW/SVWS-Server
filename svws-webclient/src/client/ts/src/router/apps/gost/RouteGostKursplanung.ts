@@ -1,14 +1,14 @@
-import { RouteNode } from "~/router/RouteNode";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
+import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 import type { RouteGost} from "~/router/apps/RouteGost";
+import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
 import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { routeApp } from "~/router/RouteApp";
 import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
 import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
 import { api } from "~/router/Api";
-import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
-import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 
 
@@ -102,8 +102,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 		}
 		if (!this.data.hatBlockung || (this.data.auswahlBlockung.id !== blockungsEintrag.id)) {
-			// ... wurde die ID der Blockung verändert, so setze den neu ausgewählten Blockungs-Eintrag und aktualisiere ggf. die Route
 			await this.data.setAuswahlBlockung(blockungsEintrag);
+			// ... wurde die ID der Blockung verändert, so setze den neu ausgewählten Blockungs-Eintrag und aktualisiere ggf. die Route
 			if (idErgebnis === undefined) {
 				if (this.data.ergebnisse.size() <= 0)
 					throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
@@ -144,6 +144,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		// Setze die aktuelle Route auf die Schüler-Route, so dass die Auswahl geladen wird.
 		if (this.name === to.name)
 			return routeGostKursplanungSchueler.getRoute(abiturjahr, halbjahr.id, ergebnisEintrag.blockungID, ergebnisEintrag.id, undefined);
+	}
+
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await this.data.setAuswahlBlockung(undefined);
 	}
 
 	public getRoute() : RouteLocationRaw {

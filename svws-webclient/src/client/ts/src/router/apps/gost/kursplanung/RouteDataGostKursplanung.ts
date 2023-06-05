@@ -98,7 +98,6 @@ export class RouteDataGostKursplanung {
 			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
 				mapSchueler.set(s.id, s);
 		}
-		api.status.stop();
 		// Lade die Fachwahlstatistik des Abiturjahrgangs
 		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
 		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
@@ -109,6 +108,7 @@ export class RouteDataGostKursplanung {
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
+		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
 			abiturjahr: abiturjahr,
