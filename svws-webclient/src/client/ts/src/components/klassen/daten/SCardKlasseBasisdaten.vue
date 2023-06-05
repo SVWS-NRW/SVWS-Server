@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Basisdaten" class="col-span-full">
+	<svws-ui-content-card title="Allgemein" class="col-span-full">
 		<template #actions>
 			<svws-ui-checkbox v-model="inputIstSichtbar"> Ist sichtbar </svws-ui-checkbox>
 		</template>

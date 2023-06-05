@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Benutzer">
+	<svws-ui-content-card title="Login">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input v-model="anzeigename" type="text" placeholder="Anzeigename" />
 			<svws-ui-text-input v-model="name" type="text" placeholder="Name" />

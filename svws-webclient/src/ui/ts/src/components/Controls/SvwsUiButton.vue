@@ -308,5 +308,10 @@
 	@apply px-1.5;
 	@apply h-5;
 	font-size: 0.8rem;
+
+	.router-tab-bar--subnav & {
+		@apply -mt-1 h-4;
+		font-size: 0.7rem;
+	}
 }
 </style>

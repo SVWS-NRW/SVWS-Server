@@ -2,9 +2,11 @@
 	const props = withDefaults(defineProps<{
 		title?: string;
 		overflowScroll?: boolean;
+		largeTitle?: boolean;
 	}>(), {
 		title: '',
-		overflowScroll: false
+		overflowScroll: false,
+		largeTitle: false
 	});
 </script>
 
@@ -13,7 +15,7 @@
 		<div v-if="title || $slots.actions" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
-			<h3 v-if="title" class="content-card--headline" :title="title">
+			<h3 v-if="title" class="content-card--headline" :class="{'content-card--headline--large': largeTitle}" :title="title">
 				{{ title }}
 			</h3>
 			<div v-if="$slots.actions" class="content-card--actions">
@@ -45,6 +47,10 @@
 			@apply text-headline-md;
 			@apply text-black;
 			@apply flex-shrink-0 line-clamp-1 max-w-full;
+
+			&--large {
+				@apply text-headline;
+			}
 		}
 
 		&--header {

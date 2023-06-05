@@ -1,6 +1,6 @@
 <template>
-	<div class="page--content page--content--full">
-		<div v-if="hatBlockung" class="content-card--blockungsuebersicht flex h-full gap-x-8 gap-y-16">
+	<div class="page--content page--content--full page--content--gost-grid">
+		<template v-if="hatBlockung">
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
@@ -10,7 +10,7 @@
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :ergebnis-hochschreiben="ergebnisHochschreiben"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs">
 				<template #triggerRegeln>
-					<svws-ui-button @click="onToggle" :disabled="!allow_regeln" size="small" type="secondary">
+					<svws-ui-button @click="onToggle" :disabled="!allow_regeln" size="small" type="transparent">
 						<i-ri-settings3-line />
 						<span class="pr-1">Regeln zur Blockung</span>
 						<template #badge v-if="regelzahl">
@@ -19,14 +19,8 @@
 					</svws-ui-button>
 				</template>
 			</s-card-gost-kursansicht>
-			<section class="content-card flex gap-8 min-w-[50%] h-full">
-				<div class="min-w-[21rem] w-[21rem] h-full">
-					<router-view name="gost_kursplanung_schueler_auswahl" />
-				</div>
-				<div class="flex-grow">
-					<router-view />
-				</div>
-			</section>
+			<router-view name="gost_kursplanung_schueler_auswahl" />
+			<router-view />
 			<Teleport to="body">
 				<aside class="app-layout--aside max-w-2xl h-auto" v-if="allow_regeln && !collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
@@ -42,7 +36,7 @@
 					</div>
 				</aside>
 			</Teleport>
-		</div>
+		</template>
 		<div v-else>
 			<h3 class="text-headline-md mb-2"><i-ri-information-line class="inline align-text-top" /> Es liegt noch keine Planung für dieses Halbjahr vor.</h3>
 			<p>Klicken Sie auf „Neue Blockung“, um eine neue Kursplanung zu erstellen oder auf „Wiederherstellen“, um aus bestehenden Leistungsdaten ein Blockung zu restaurieren.</p>

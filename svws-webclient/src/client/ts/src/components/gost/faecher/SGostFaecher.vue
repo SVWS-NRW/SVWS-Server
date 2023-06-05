@@ -26,7 +26,7 @@
 
 <style>
 	.s-gost-faecher--wrapper {
-		@apply grid grid-cols-1 gap-8;
+		@apply grid grid-cols-1 gap-16;
 
 		@media (min-width: theme("screens.2xl")) {
 			grid-template-columns: 1.5fr 1fr;

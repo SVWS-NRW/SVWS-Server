@@ -21,9 +21,9 @@
 					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper class="col-span-full" v-if="fach_filter_toggle">
-					<svws-ui-multi-select v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
-					<svws-ui-multi-select v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
+				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="fach_filter_toggle">
+					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
+					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">

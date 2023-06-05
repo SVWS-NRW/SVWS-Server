@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content mt-8">
+	<div class="page--content">
 		<s-card-gost-laufbahnplanung :list-belegpruefungs-ergebnisse="listBelegpruefungsErgebnisse" :config="config"
 			:set-gost-belegpruefungs-art="setGostBelegpruefungsArt" :gost-belegpruefungs-art="gostBelegpruefungsArt"
 			:goto-laufbahnplanung="gotoLaufbahnplanung" :get-pdf-wahlbogen="getPdfWahlbogen" :abiturjahr="abiturjahr" :api-status="apiStatus" />

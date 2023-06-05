@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card title="Angebotene Fächer im Jahrgang">
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">

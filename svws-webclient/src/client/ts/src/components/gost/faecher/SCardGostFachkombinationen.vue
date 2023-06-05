@@ -9,7 +9,7 @@
 					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-4">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
-								Fachkombination
+								{{ title.replace('e Fachkombinationen', '') }}
 							</div>
 						</div>
 					</div>

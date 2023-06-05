@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Basisdaten">
+	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper>
 			<svws-ui-text-input placeholder="ID" v-model="id" type="text" />
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Basisdaten">
+	<svws-ui-content-card title="Allgemein">
 		<div class="input-wrapper">
 			<svws-ui-multi-select :model-value="Wochentag.fromIDorException(data.wochentag)" @update:model-value="doPatch({wochentag: Number($event.id)})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
 			<SvwsUiTextInput type="number" :model-value="data.beginn" @update:model-value="doPatch({beginn: Number($event)})" />

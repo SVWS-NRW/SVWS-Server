@@ -32,6 +32,13 @@
 	max-width: unset;
 }
 
+.page--content.page--content--gost-grid {
+	@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
+	grid-auto-rows: 100%;
+	grid-template-columns: minmax(64rem, 2fr) minmax(18rem, 0.4fr) minmax(64rem, 1fr);
+	grid-auto-columns: max-content;
+}
+
 .separate-items--custom > *:not(:last-child):after {
 	content: ', ';
 }

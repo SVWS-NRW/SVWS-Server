@@ -420,7 +420,8 @@
 		}
 
 		&__separate {
-			padding-right: 3px;
+			@apply border-r-2;
+			/*padding-right: 3px;
 			margin-right: 3px;
 			position: relative;
 
@@ -437,7 +438,7 @@
 			+ .data-table__td,
 			+ .data-table__th {
 				@apply border-l;
-			}
+			}*/
 		}
 
 		&:last-child {

@@ -1,7 +1,7 @@
 <template>
-	<svws-ui-content-card class="flex-grow" style="height: auto;">
+	<svws-ui-content-card class="h-full" overflow-scroll>
 		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline-md cursor-auto">
+			<h3 class="text-headline cursor-auto">
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
 					{{ blockungsname }}
 					<template #icon>
@@ -15,18 +15,20 @@
 					</template>
 				</svws-ui-tooltip>
 			</h3>
-			<div class="flex items-center gap-2">
-				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="secondary" size="small" @click="openModal()">Aktivieren</svws-ui-button>
-				</s-card-gost-kursansicht-blockung-aktivieren-modal>
-				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="secondary" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
-				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-				<slot name="triggerRegeln" />
-			</div>
+			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+				<svws-ui-sub-nav>
+					<slot name="triggerRegeln" />
+					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+					</s-card-gost-kursansicht-blockung-aktivieren-modal>
+					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+						<svws-ui-button type="transparent" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
+					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+				</svws-ui-sub-nav>
+			</Teleport>
 		</div>
 		<svws-ui-data-table :items="GostKursart.values()"
-			:columns="cols">
+			:columns="cols" disable-footer>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
@@ -134,7 +136,7 @@
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@svws-nrw/svws-core";
 	import { GostKursart } from "@svws-nrw/svws-core";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-	import { computed, ref } from "vue";
+	import {computed, onMounted, ref} from "vue";
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type {DataTableColumn} from "@ui";
@@ -236,4 +238,9 @@
 		// TODO: Update cols value mit neuer Anzahl von Schienen
 		return await props.removeSchiene(schiene);
 	}
+
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
 </script>

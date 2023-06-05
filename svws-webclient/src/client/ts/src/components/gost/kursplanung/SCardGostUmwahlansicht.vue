@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-content-card v-if="schueler" :title="'Kurszuordnungen für ' + schueler?.vorname + ' ' + schueler?.nachname" class="w-full min-w-[40rem] sticky top-0">
+	<svws-ui-content-card v-if="schueler" title="Kurszuordnungen">
 		<template #actions>
-			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()">
-				Zur Laufbahnplanung
+			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler?.vorname + ' ' + schueler?.nachname}`">
 				<i-ri-group-line />
+				{{ schueler?.vorname + ' ' + schueler?.nachname }}
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">

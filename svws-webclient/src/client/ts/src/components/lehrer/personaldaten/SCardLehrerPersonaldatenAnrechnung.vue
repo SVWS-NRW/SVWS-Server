@@ -8,6 +8,7 @@
 			<svws-ui-text-input placeholder="Stundensumme" v-model="pflichtstundensoll" type="text" />
 			<svws-ui-multi-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
 				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
+			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Stammschulnummer" v-model="stammschulnummer" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>

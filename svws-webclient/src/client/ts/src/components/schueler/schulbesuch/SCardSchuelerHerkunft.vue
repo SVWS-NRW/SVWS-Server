@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Vor der Aufnahme besuchte Schule/Einrichtung/Herkunftsarten">
+	<svws-ui-content-card title="Vor der Aufnahme besuchte Schule, Einrichtung, Herkunftsarten">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.vorigeSchulnummer"
 				@update:model-value="doPatch({ vorigeSchulnummer: String($event) })" type="text" />

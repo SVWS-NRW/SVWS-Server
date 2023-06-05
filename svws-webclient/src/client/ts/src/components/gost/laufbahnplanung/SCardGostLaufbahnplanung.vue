@@ -1,13 +1,15 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-sub-nav>
-			<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
-				Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
-			</svws-ui-button>
-		</svws-ui-sub-nav>
-		<div class="flex justify-between mb-4 mt-1">
-			<svws-ui-toggle v-model="filterFehler"> Nur Ergebnisse mit Fehlern anzeigen</svws-ui-toggle>
+		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+			<svws-ui-sub-nav>
+				<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
+					Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
+				</svws-ui-button>
+			</svws-ui-sub-nav>
+		</Teleport>
+		<div class="flex justify-between items-center gap-12 mb-4 mt-1">
 			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
+			<svws-ui-toggle v-model="filterFehler">Nur Fehler</svws-ui-toggle>
 		</div>
 		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
@@ -16,19 +18,23 @@
 				</svws-ui-button>
 				<div class="flex justify-between w-full ml-2">
 					<div>{{ s.nachname }}, {{ s.vorname }}</div>
-					<div class="mr-5">
-						<svws-ui-badge v-if="s.status !== 2" type="light" size="big" :short="true">
-							{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
-						</svws-ui-badge>
-					</div>
+					<svws-ui-badge v-if="s.status !== 2" size="big" title="Status" class="-my-0.5 leading-none">
+						{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
+					</svws-ui-badge>
 				</div>
 			</template>
 			<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
-				{{ counter(f.fehlercodes) }}
+				<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
-	<svws-ui-content-card :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`">
+	<svws-ui-content-card :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`" class="sticky top-8" large-title>
+		<template #actions>
+			<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(s.id)">
+				<i-ri-group-line />
+				Zur Laufbahnplanung
+			</svws-ui-button>
+		</template>
 		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt()" />
 	</svws-ui-content-card>
 </template>
@@ -39,7 +45,7 @@
 	import type { Config } from '~/components/Config';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
-	import { toRaw} from 'vue';
+	import {onMounted, toRaw} from 'vue';
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -53,7 +59,7 @@
 		apiStatus: ApiStatus;
 	}>();
 
-	const cols = [{key: 'schueler', label: 'Name, Vorname', span: 3}, {key: 'ergebnis', label: 'Anzahl Fehler', span: 1}]
+	const cols = [{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true}, {key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if (!filterFehler.value)
@@ -107,5 +113,10 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
+
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
 
 </script>

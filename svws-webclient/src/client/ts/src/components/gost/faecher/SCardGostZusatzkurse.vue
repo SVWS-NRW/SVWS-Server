@@ -1,16 +1,12 @@
 <template>
 	<svws-ui-content-card title="Angebot von Zusatzkursen">
-		<svws-ui-input-wrapper :grid="2">
-			<div class="flex flex-col gap-3">
-				<svws-ui-checkbox v-model="inputHatZusatzkursGE">Zusatzkurs in GE wird angeboten</svws-ui-checkbox>
-				<svws-ui-multi-select title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE"
-					:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursGE" />
-			</div>
-			<div class="flex flex-col gap-3">
-				<svws-ui-checkbox v-model="inputHatZusatzkursSW">Zusatzkurs in SW wird angeboten</svws-ui-checkbox>
-				<svws-ui-multi-select title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW"
-					:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursSW" />
-			</div>
+		<svws-ui-input-wrapper :grid="4">
+			<svws-ui-toggle v-model="inputHatZusatzkursGE">Zusatzkurs GE</svws-ui-toggle>
+			<svws-ui-multi-select class="col-span-3" title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE"
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursGE" />
+			<svws-ui-toggle v-model="inputHatZusatzkursSW">Zusatzkurs SW</svws-ui-toggle>
+			<svws-ui-multi-select class="col-span-3" title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW"
+				:items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursSW" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

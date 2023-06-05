@@ -1,13 +1,12 @@
 <template>
-	<svws-ui-content-card title="Basisdaten">
-		<div class="input-wrapper">
+	<svws-ui-content-card title="Allgemein">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="ID" v-model="id" type="text" readonly />
 			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
 			<svws-ui-text-input placeholder="Größe" v-model="groesse" type="number" />
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Beschreibung" v-model="beschreibung" type="text" />
-			</div>
-		</div>
+			<svws-ui-spacing />
+			<svws-ui-text-input placeholder="Beschreibung" v-model="beschreibung" type="text" span="full" />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
