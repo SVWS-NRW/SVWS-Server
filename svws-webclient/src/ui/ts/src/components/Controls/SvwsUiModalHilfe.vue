@@ -4,9 +4,9 @@
 			<span>Hilfe</span>
 			<i-ri-question-line />
 		</svws-ui-button>
-		<svws-ui-modal ref="modal" size="help">
+		<svws-ui-modal ref="modal" size="help" class="hidden">
 			<template #modalTitle>
-				<div class="inline-flex items-center gap-1">
+				<div class="inline-flex items-center gap-1 mr-4">
 					Hilfe <i-ri-question-line />
 				</div>
 			</template>

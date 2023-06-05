@@ -6,7 +6,7 @@
 				:import-laufbahnplanung="importLaufbahnplanung" :zwischenspeicher="zwischenspeicher" :save-laufbahnplanung="saveLaufbahnplanung" :restore-laufbahnplanung="restoreLaufbahnplanung" />
 		</div>
 		<div class="w-1/3 4xl:w-2/5">
-			<div class="flex flex-col gap-3 sticky -top-8 pt-8">
+			<div class="flex flex-col gap-3 sticky top-0">
 				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen"
 					:fehlerliste="gostBelegpruefungErgebnis.fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten="gostLaufbahnBeratungsdaten" :patch-beratungsdaten="patchBeratungsdaten" :map-lehrer="mapLehrer" :id="id" />

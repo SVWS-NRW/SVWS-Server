@@ -95,7 +95,7 @@
 .modal--pageWrapper {
 	@apply flex items-center justify-center;
 	@apply h-screen;
-	@apply p-4;
+	@apply p-6;
 	@apply pointer-events-auto;
 }
 
@@ -135,9 +135,9 @@
 
 .modal--help {
 	@apply m-0 h-full;
-	@apply shadow-dark-20 shadow-lg;
-	@apply border border-dark-20 border-opacity-60;
-	@apply pointer-events-auto rounded-xl;
+	@apply shadow-xl;
+	@apply border border-black/25;
+	@apply pointer-events-auto rounded-lg;
 
 	.modal--description,
 	.modal--content {

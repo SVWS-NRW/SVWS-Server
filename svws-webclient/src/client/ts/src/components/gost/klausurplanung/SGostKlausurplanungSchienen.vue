@@ -50,7 +50,7 @@
 				</svws-ui-button>
 			</template>
 		</svws-ui-modal>
-		<svws-ui-content-card class="pt-8">
+		<svws-ui-content-card>
 			<div class="flex flex-wrap justify-between items-start">
 				<div class="flex flex-wrap items-center gap-2">
 					<label class="font-bold" for="rgQuartalAuswahl">Quartal:</label>

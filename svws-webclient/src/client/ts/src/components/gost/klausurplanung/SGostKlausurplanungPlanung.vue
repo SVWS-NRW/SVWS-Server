@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="pt-8">
+	<svws-ui-content-card>
 		<div class="flex h-full gap-4 mt-4">
 			<ul class="flex flex-col gap-y-1">
 				<li v-for="termin in termine" :key="termin.id">

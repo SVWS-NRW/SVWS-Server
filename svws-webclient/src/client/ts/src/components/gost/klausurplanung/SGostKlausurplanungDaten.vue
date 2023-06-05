@@ -1,7 +1,7 @@
 <template>
 	<div class="flex gap-x-8 2xl:gap-x-16">
 		<div class="flex-grow">
-			<svws-ui-content-card class="pt-8">
+			<svws-ui-content-card>
 				<div class="flex flex-wrap gap-2 mb-4">
 					<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
 					<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
@@ -49,7 +49,7 @@
 			</svws-ui-content-card>
 		</div>
 		<div class="w-1/4" v-if="activeVorgabe.idVorgabe >= 0">
-			<svws-ui-content-card title="Klausurvorgabe" class="w-full pt-8">
+			<svws-ui-content-card title="Klausurvorgabe" class="w-full">
 				<template #actions>
 					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 				</template>

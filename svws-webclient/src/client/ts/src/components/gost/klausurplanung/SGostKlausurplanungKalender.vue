@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="pt-8">
+	<svws-ui-content-card>
 		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />

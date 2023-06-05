@@ -17,6 +17,7 @@
 				</button>
 			</div>
 		</div>
+		<div class="router-tab-bar--subnav-target" />
 		<div class="router-tab-bar--panel">
 			<slot />
 		</div>
@@ -193,13 +194,8 @@
 		@apply outline-none ring ring-primary ring-opacity-50 ring-inset;
     }
 
-	.router-tab-bar--subnav {
-		@apply absolute inset-0 z-20;
-		@apply flex items-center gap-2;
-		@apply bg-light bg-opacity-50;
-		@apply border-b-2 border-light;
-		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
-		@apply h-9 text-sm;
+	.router-tab-bar--subnav-target {
+		@apply w-full overflow-x-auto flex-shrink-0;
 	}
 
 </style>

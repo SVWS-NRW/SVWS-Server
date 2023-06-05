@@ -2,7 +2,7 @@
 	<router-view />
 	<svws-ui-notifications v-if="errors.length">
 		<template v-if="errors.length > 1">
-			<svws-ui-button @click="errors = []" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle Meldungen schließen</svws-ui-button>
+			<svws-ui-button @click="errors = []" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.length }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</template>
 		<template v-for="error of errors.reverse().slice(0, 20)" :key="error.message">
