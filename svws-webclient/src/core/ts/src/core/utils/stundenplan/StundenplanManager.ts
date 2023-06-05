@@ -69,9 +69,7 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Ein Comparator für die Pausenaufsichten.
 	 */
-	private static readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht> = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => {
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht>;
 
 	/**
 	 * Ein Comparator für die Zeitraster.
@@ -186,6 +184,9 @@ export class StundenplanManager extends JavaObject {
 		this.initMapAufsicht();
 		this.initMapKursZuUnterrichte();
 		this.initMapPausenaufsichten();
+		this._compPausenaufsicht = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => {
+			return JavaLong.compare(a.id, b.id);
+		} };
 		this.initSortierungen();
 	}
 
@@ -399,7 +400,7 @@ export class StundenplanManager extends JavaObject {
 		this._daten.pausenzeiten.sort(StundenplanManager._compPausenzeit);
 		this._daten.aufsichtsbereiche.sort(StundenplanManager._compAufsichtsbereich);
 		this._daten.kalenderwochenZuordnung.sort(StundenplanManager._compKWZ);
-		this._datenP.sort(StundenplanManager._compPausenaufsicht);
+		this._datenP.sort(this._compPausenaufsicht);
 		this._daten.zeitraster.sort(StundenplanManager._compZeitraster);
 	}
 
@@ -862,7 +863,7 @@ export class StundenplanManager extends JavaObject {
 	public addPausenaufsicht(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
 		this._datenP.add(pausenaufsicht);
-		this._datenP.sort(StundenplanManager._compPausenaufsicht);
+		this._datenP.sort(this._compPausenaufsicht);
 	}
 
 	/**

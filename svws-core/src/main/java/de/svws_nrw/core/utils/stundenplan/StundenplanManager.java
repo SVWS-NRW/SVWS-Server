@@ -65,9 +65,7 @@ public class StundenplanManager {
 	};
 
 	/** Ein Comparator für die Pausenaufsichten. */
-	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> {
-		return Long.compare(a.id, b.id);
-	};
+	private final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht;
 
 	/** Ein Comparator für die Zeitraster. */
 	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
@@ -165,6 +163,10 @@ public class StundenplanManager {
 		initMapAufsicht();          // ✔, referenziert ---
 		initMapKursZuUnterrichte(); // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
 		initMapPausenaufsichten();  // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
+
+		_compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> {
+			return Long.compare(a.id, b.id);
+		};
 
 		// Sortieren der Original-Daten.
 		initSortierungen();
