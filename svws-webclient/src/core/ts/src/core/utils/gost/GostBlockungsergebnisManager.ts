@@ -20,6 +20,7 @@ import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/Schue
 import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
@@ -67,6 +68,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Schüler-ID --> Set<GostBlockungsergebnisKurs>
 	 */
 	private readonly _map_schuelerID_kurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap();
+
+	/**
+	 * Schüler-ID --> Set<GostBlockungsergebnisKurs>
+	 */
+	private readonly _map_schuelerID_ungueltige_kurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = new HashMap();
 
 	/**
 	 * Schüler-ID --> Integer (Kollisionen)
@@ -164,6 +170,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_schienenID_kollisionen.clear();
 		this._map_schienenID_fachartID_kurse.clear();
 		this._map_schuelerID_kurse.clear();
+		this._map_schuelerID_ungueltige_kurse.clear();
 		this._map_schuelerID_kollisionen.clear();
 		this._map_schuelerID_fachID_kurs.clear();
 		this._map_schuelerID_schienenID_kurse.clear();
@@ -367,18 +374,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt den Schüler dem Kurs hinzu.
+	 * Fügt den Schüler dem Kurs hinzu.<br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
+	 *          Stattdessen wird diese ungültige Wahl gespeichert.
 	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 *
-	 * @return             FALSE, falls der Schüler bereits zugeordnet war, sonst TRUE.
 	 */
-	private stateSchuelerKursHinzufuegen(pSchuelerID : number, pKursID : number) : boolean {
+	private stateSchuelerKursHinzufuegen(pSchuelerID : number, pKursID : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const fachID : number = kurs.fachID;
+		if (!this.getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
+			this.stateSchuelerKursUngueltigeWahlHinzufuegen(pSchuelerID, kurs);
+			return;
+		}
 		if (this.getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) !== null)
-			return false;
+			return;
 		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
 		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
 		const mapSFK : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
@@ -392,7 +403,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const schieneID of kurs.schienen)
 			this.stateSchuelerSchieneHinzufuegen(pSchuelerID, schieneID!, kurs);
 		this.stateRegelvalidierung();
-		return true;
 	}
 
 	/**
@@ -400,14 +410,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 *
-	 * @return             FALSE, falls der Schüler bereits nicht zugeordnet war, sonst TRUE.
 	 */
-	private stateSchuelerKursEntfernen(pSchuelerID : number, pKursID : number) : boolean {
+	private stateSchuelerKursEntfernen(pSchuelerID : number, pKursID : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const fachID : number = kurs.fachID;
+		if (!this.getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
+			this.stateSchuelerKursUngueltigeWahlEntfernen(pSchuelerID, kurs);
+			return;
+		}
 		if (this.getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) as unknown !== kurs as unknown)
-			return false;
+			return;
 		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(pSchuelerID);
 		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(pKursID);
 		const mapSFK : JavaMap<number, GostBlockungsergebnisKurs | null> = this.getOfSchuelerFachIDKursMap(pSchuelerID);
@@ -421,7 +433,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const schieneID of kurs.schienen)
 			this.stateSchuelerSchieneEntfernen(pSchuelerID, schieneID!, kurs);
 		this.stateRegelvalidierung();
-		return true;
+	}
+
+	private stateSchuelerKursUngueltigeWahlHinzufuegen(pSchuelerID : number, pKurs : GostBlockungsergebnisKurs) : void {
+		const set : JavaSet<GostBlockungsergebnisKurs> = MapUtils.getOrCreateHashSet(this._map_schuelerID_ungueltige_kurse, pSchuelerID);
+		set.add(pKurs);
+	}
+
+	private stateSchuelerKursUngueltigeWahlEntfernen(pSchuelerID : number, pKurs : GostBlockungsergebnisKurs) : void {
+		const set : JavaSet<GostBlockungsergebnisKurs> = DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_ungueltige_kurse, pSchuelerID);
+		set.remove(pKurs);
+		if (set.isEmpty())
+			this._map_schuelerID_ungueltige_kurse.remove(pSchuelerID);
 	}
 
 	/**
@@ -1044,6 +1067,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 *
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pSubString   Der zu suchende Sub-String.
+	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 */
+	public getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : string) : boolean {
+		const schueler : Schueler = this.getSchuelerG(pSchuelerID);
+		const text : string = pSubString.toLowerCase();
+		if (JavaString.contains(schueler.nachname.toLowerCase(), text))
+			return true;
+		return (JavaString.contains(schueler.vorname.toLowerCase(), text));
+	}
+
+	/**
 	 * Ermittelt den Kurs für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
 	 *
@@ -1411,6 +1450,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet. <br>
+	 * Hinweis 1: Hat ein Schüler keine ungültige Kurse, dann gibt es die ID nicht. <br>
+	 * Hinweis 2: Gibt es keine ungültigen Wahlen, so ist die Map leer. <br>
+	 *
+	 * @return Die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet.
+	 */
+	public getMappingSchuelerIDzuUngueltigeKurse() : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> {
+		return this._map_schuelerID_ungueltige_kurse;
+	}
+
+	/**
 	 * Liefert die Map, welche jedem Kurs seine Schienenmenge zuordnet.
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schienenmenge zuordnet.
@@ -1475,22 +1525,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			menge.add(schueler);
 		}
 		return menge;
-	}
-
-	/**
-	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 * Groß- und Kleinschreibung wird dabei ignoriert.
-	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pSubString   Der zu suchende Sub-String.
-	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 */
-	public getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : string) : boolean {
-		const schueler : Schueler = this.getSchuelerG(pSchuelerID);
-		const text : string = pSubString.toLowerCase();
-		if (JavaString.contains(schueler.nachname.toLowerCase(), text))
-			return true;
-		return (JavaString.contains(schueler.vorname.toLowerCase(), text));
 	}
 
 	/**
@@ -1577,14 +1611,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pKursID                   Die Datenbank-ID des Kurses.
 	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
-	 *
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public setSchuelerKurs(pSchuelerID : number, pKursID : number, pHinzufuegenOderEntfernen : boolean) : boolean {
+	public setSchuelerKurs(pSchuelerID : number, pKursID : number, pHinzufuegenOderEntfernen : boolean) : void {
 		if (pHinzufuegenOderEntfernen)
-			return this.stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
-		return this.stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+			this.stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
+		else
+			this.stateSchuelerKursEntfernen(pSchuelerID, pKursID);
 	}
 
 	/**

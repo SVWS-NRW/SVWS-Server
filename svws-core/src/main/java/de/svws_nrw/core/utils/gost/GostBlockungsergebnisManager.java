@@ -28,6 +28,7 @@ import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -60,6 +61,9 @@ public class GostBlockungsergebnisManager {
 
 	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
+
+	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_ungueltige_kurse = new HashMap<>();
 
 	/** Schüler-ID --> Integer (Kollisionen) */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_schuelerID_kollisionen = new HashMap<>();
@@ -127,6 +131,7 @@ public class GostBlockungsergebnisManager {
 		_map_schienenID_kollisionen.clear();
 		_map_schienenID_fachartID_kurse.clear();
 		_map_schuelerID_kurse.clear();
+		_map_schuelerID_ungueltige_kurse.clear();
 		_map_schuelerID_kollisionen.clear();
 		_map_schuelerID_fachID_kurs.clear();
 		_map_schuelerID_schienenID_kurse.clear();
@@ -360,18 +365,26 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Fügt den Schüler dem Kurs hinzu.
+	 * Fügt den Schüler dem Kurs hinzu.<br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
+	 *          Stattdessen wird diese ungültige Wahl gespeichert.
 	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 *
-	 * @return             FALSE, falls der Schüler bereits zugeordnet war, sonst TRUE.
 	 */
-	private boolean stateSchuelerKursHinzufuegen(final long pSchuelerID, final long pKursID) {
+	private void stateSchuelerKursHinzufuegen(final long pSchuelerID, final long pKursID) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
 		final long fachID = kurs.fachID;
+
+		// Ungültige Wahlen extra behandeln.
+		if (!getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
+			stateSchuelerKursUngueltigeWahlHinzufuegen(pSchuelerID, kurs);
+			return;
+		}
+
+		// Wurde das Fach bereits einem anderen Kurs zugeordnet?
 		if (getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) != null) // wirft ggf. Exception
-			return false; // Das Fach wurde bereits einem anderen Kurs zugeordnet!
+			return;
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(pKursID);
@@ -388,8 +401,6 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneHinzufuegen(pSchuelerID, schieneID, kurs);
 		stateRegelvalidierung();
-
-		return true;
 	}
 
 	/**
@@ -397,14 +408,20 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
 	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 *
-	 * @return             FALSE, falls der Schüler bereits nicht zugeordnet war, sonst TRUE.
 	 */
-	private boolean stateSchuelerKursEntfernen(final long pSchuelerID, final long pKursID) {
+	private void stateSchuelerKursEntfernen(final long pSchuelerID, final long pKursID) {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
 		final long fachID = kurs.fachID;
+
+		// Ungültige Wahlen extra behandeln.
+		if (!getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
+			stateSchuelerKursUngueltigeWahlEntfernen(pSchuelerID, kurs);
+			return;
+		}
+
+		// Der Kurs ist derzeit gar nicht zugeordnet!
 		if (getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) != kurs) // wirft ggf. Exception
-			return false; // Der Kurs ist derzeit gar nicht zugeordnet!
+			return;
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(pKursID);
@@ -421,8 +438,18 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneEntfernen(pSchuelerID, schieneID, kurs);
 		stateRegelvalidierung();
+	}
 
-		return true;
+	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long pSchuelerID, final @NotNull GostBlockungsergebnisKurs pKurs) {
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, pSchuelerID);
+		set.add(pKurs);
+	}
+
+	private void stateSchuelerKursUngueltigeWahlEntfernen(final long pSchuelerID, final @NotNull GostBlockungsergebnisKurs pKurs) {
+	    final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_ungueltige_kurse, pSchuelerID);
+		set.remove(pKurs);
+		if (set.isEmpty())
+			_map_schuelerID_ungueltige_kurse.remove(pSchuelerID);
 	}
 
 	/**
@@ -839,7 +866,6 @@ public class GostBlockungsergebnisManager {
 		return schueler.nachname + ", " + schueler.vorname;
 	}
 
-
 	/**
 	 * Liefert die Menge aller Kurse, die dem Schüler zugeordnet sind. <br>
 	 * Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
@@ -1102,6 +1128,22 @@ public class GostBlockungsergebnisManager {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 *
+	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
+	 * @param pSubString   Der zu suchende Sub-String.
+	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 */
+	public boolean getOfSchuelerHatImNamenSubstring(final long pSchuelerID, final @NotNull String pSubString) {
+		final @NotNull Schueler schueler = getSchuelerG(pSchuelerID);
+		final @NotNull String text = pSubString.toLowerCase();
+		if (schueler.nachname.toLowerCase().contains(text))
+			return true;
+		return (schueler.vorname.toLowerCase().contains(text));
 	}
 
 	/**
@@ -1474,6 +1516,17 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet. <br>
+	 * Hinweis 1: Hat ein Schüler keine ungültige Kurse, dann gibt es die ID nicht. <br>
+	 * Hinweis 2: Gibt es keine ungültigen Wahlen, so ist die Map leer. <br>
+	 *
+	 * @return Die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet.
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>>  getMappingSchuelerIDzuUngueltigeKurse() {
+		return _map_schuelerID_ungueltige_kurse;
+	}
+
+	/**
 	 * Liefert die Map, welche jedem Kurs seine Schienenmenge zuordnet.
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schienenmenge zuordnet.
@@ -1545,22 +1598,6 @@ public class GostBlockungsergebnisManager {
 		return menge;
 	}
 
-
-	/**
-	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 * Groß- und Kleinschreibung wird dabei ignoriert.
-	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pSubString   Der zu suchende Sub-String.
-	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 */
-	public boolean getOfSchuelerHatImNamenSubstring(final long pSchuelerID, final @NotNull String pSubString) {
-		final @NotNull Schueler schueler = getSchuelerG(pSchuelerID);
-		final @NotNull String text = pSubString.toLowerCase();
-		if (schueler.nachname.toLowerCase().contains(text))
-			return true;
-		return (schueler.vorname.toLowerCase().contains(text));
-	}
 
 	/**
 	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
@@ -1646,14 +1683,13 @@ public class GostBlockungsergebnisManager {
 	 * @param  pKursID                   Die Datenbank-ID des Kurses.
 	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
-	 *
 	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public boolean setSchuelerKurs(final long pSchuelerID, final long pKursID, final boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
+	public void setSchuelerKurs(final long pSchuelerID, final long pKursID, final boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
 		if (pHinzufuegenOderEntfernen)
-			return stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
-		return stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+			stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
+		else
+			stateSchuelerKursEntfernen(pSchuelerID, pKursID);
 	}
 
 	/**

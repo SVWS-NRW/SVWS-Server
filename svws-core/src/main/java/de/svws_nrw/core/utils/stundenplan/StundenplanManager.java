@@ -38,8 +38,7 @@ public class StundenplanManager {
 	/** Ein Comparator für die Räume. */
 	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0)
-			return result;
+		if (result != 0) return result;
 
 		return Long.compare(a.id, b.id);
 	};
@@ -60,15 +59,13 @@ public class StundenplanManager {
 	/** Ein Comparator für die Aufsichtsbereiche. */
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0)
-			return result;
+		if (result != 0) return result;
 
 		return Long.compare(a.id, b.id);
 	};
 
 	/** Ein Comparator für die Pausenaufsichten. */
 	private static final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> {
-		// TODO BAR ... ggf. besser sortieren?
 		return Long.compare(a.id, b.id);
 	};
 

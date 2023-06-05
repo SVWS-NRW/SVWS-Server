@@ -459,6 +459,7 @@ export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/Wei
 export { AdressenUtils } from './core/utils/AdressenUtils';
 export { KursManager } from './core/utils/KursManager';
 export { ListUtils } from './core/utils/ListUtils';
+export { MapUtils } from './core/utils/MapUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
 export { ENMDatenManager } from './core/utils/enm/ENMDatenManager';
