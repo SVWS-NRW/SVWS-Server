@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.AnnotatedTypeTree;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -98,7 +99,6 @@ public final class ExpressionTypeLambda extends ExpressionType {
 					if (type == null)
 						throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + ident.getName().toString());
 					if (type instanceof final ExpressionClassType classType)
-						// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
 						return classType.getFullQualifiedName();
 				}
 			}
@@ -107,7 +107,14 @@ public final class ExpressionTypeLambda extends ExpressionType {
 		if (parent instanceof final MethodInvocationTree mit) {
 			// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
 		}
-		// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
+		if (parent instanceof final AssignmentTree at) {
+			final ExpressionType type = transpiler.getExpressionType(at.getVariable());
+			if (type == null)
+				throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + at.getVariable().toString());
+			if (type instanceof final ExpressionClassType classType)
+				return classType.getFullQualifiedName();
+		}
+		// TODO improve type analyses to determine the name if lambdas are used in other situations
 		return "java.util.function.Consumer";
 	}
 
