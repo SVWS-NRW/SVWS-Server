@@ -1,13 +1,13 @@
 package de.svws_nrw.core.utils.gost;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-import java.util.ArrayList;
+import java.util.Set;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -225,17 +225,16 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Schüler kopieren und hinzufügen.
-		final String strErrorDoppelteSchuelerID = "Schüler-ID %d doppelt!";
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
 			// Schueler --> GostBlockungsergebnisKurs
 			final @NotNull Long eSchuelerID = gSchueler.id;
 
-			// Hinzufügen.
+			// Kurse von "eSchuelerID" --> []
 			final HashSet<@NotNull GostBlockungsergebnisKurs> newSetKurse = new HashSet<>();
-			if (_map_schuelerID_kurse.put(eSchuelerID, newSetKurse) != null)
-				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
-			if (_map_schuelerID_kollisionen.put(eSchuelerID, 0) != null)
-				throw new DeveloperNotificationException(strErrorDoppelteSchuelerID.formatted(eSchuelerID));
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kurse, eSchuelerID, newSetKurse);
+
+			// Kollisionen von "eSchuelerID" --> 0
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, eSchuelerID, 0);
 		}
 
 		// Fachwahlen kopieren und hinzufügen.
@@ -553,8 +552,7 @@ public class GostBlockungsergebnisManager {
 	private void stateSchuelerSchieneEntfernen(final long pSchuelerID, final long pSchienenID, final @NotNull GostBlockungsergebnisKurs pKurs) {
 		// // Schiene --> Integer (verringern)
 		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(pSchienenID);
-		if (schieneSchuelerzahl == 0)
-			throw new DeveloperNotificationException("schieneSchuelerzahl == 0 --> Entfernen unmöglich!");
+		DeveloperNotificationException.ifTrue("schieneSchuelerzahl == 0 --> Entfernen unmöglich!", schieneSchuelerzahl == 0);
 		_map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl - 1);
 
 		// Schiene --> Schüler --> Integer (verringern)
@@ -565,19 +563,16 @@ public class GostBlockungsergebnisManager {
 		if (!kursmenge.isEmpty()) {
 			// Kollisionen der Schiene.
 			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
-			if (schieneKollisionen == 0)
-				throw new DeveloperNotificationException("schieneKollisionen == 0 --> Entfernen unmöglich!");
+			DeveloperNotificationException.ifTrue("schieneKollisionen == 0 --> Entfernen unmöglich!", schieneKollisionen == 0);
 			_map_schienenID_kollisionen.put(pSchienenID, schieneKollisionen - 1);
 
 			// Kollisionen des Schülers.
 			final int schuelerKollisionen = getOfSchuelerAnzahlKollisionen(pSchuelerID);
-			if (schuelerKollisionen == 0)
-				throw new DeveloperNotificationException("schuelerKollisionen == 0 --> Entfernen unmöglich!");
+			DeveloperNotificationException.ifTrue("schuelerKollisionen == 0 --> Entfernen unmöglich!", schuelerKollisionen == 0);
 			_map_schuelerID_kollisionen.put(pSchuelerID, schuelerKollisionen - 1);
 
 			// Kollisionen insgesamt.
-			if (_ergebnis.bewertung.anzahlSchuelerKollisionen == 0)
-				throw new DeveloperNotificationException("Gesamtkollisionen == 0 --> Entfernen unmöglich!");
+			DeveloperNotificationException.ifTrue("Gesamtkollisionen == 0 --> Entfernen unmöglich!", _ergebnis.bewertung.anzahlSchuelerKollisionen == 0);
 			_ergebnis.bewertung.anzahlSchuelerKollisionen--;
 		}
 	}
@@ -870,24 +865,23 @@ public class GostBlockungsergebnisManager {
 	 * Liefert die Menge aller Kurse, die dem Schüler zugeordnet sind. <br>
 	 * Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
-	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmenge(final long pSchuelerID) {
-		final Set<@NotNull GostBlockungsergebnisKurs> kursIDs = _map_schuelerID_kurse.get(pSchuelerID);
-		if (kursIDs == null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!");
-		return kursIDs;
+	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmenge(final long idSchueler) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler);
 	}
 
 	/**
 	 * Liefert die Menge aller Kurse des Schülers mit Kollisionen.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
-	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeMitKollisionen(final long pSchuelerID) {
-		final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> mapSchieneKurse = getOfSchuelerSchienenKursmengeMap(pSchuelerID);
+	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeMitKollisionen(final long idSchueler) {
+		final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> mapSchieneKurse = getOfSchuelerSchienenKursmengeMap(idSchueler);
 
 		final @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
 		for (final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseDerSchiene : mapSchieneKurse.values())
@@ -1365,45 +1359,39 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Schiene  zur übergebenen ID. <br>
+	 * Liefert die Schiene zur übergebenen ID. <br>
 	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
-	 * @return Die Schiene (des Blockungsergebnisses) zur übergebenen ID.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return Die Schiene zur übergebenen ID.
 	 */
-	public @NotNull GostBlockungsergebnisSchiene getSchieneE(final long pSchienenID) {
-		final GostBlockungsergebnisSchiene schiene = _map_schienenID_schiene.get(pSchienenID);
-		if (schiene == null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!");
-		return schiene;
+	public @NotNull GostBlockungsergebnisSchiene getSchieneE(final long idSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_schiene, idSchiene);
 	}
 
 	/**
-	 * Liefert die Schiene mit der übergebenen Schienen-NR. <br>
-	 * Wirft eine Exception, wenn eine Schiene mit NR nicht existiert.
+	 * Liefert die Schiene mit der übergebenen Nummer. <br>
+	 * Wirft eine {@link DeveloperNotificationException} wenn eine solche Schiene nicht existiert.
 	 *
-	 * @param pSchienenNr Die Nummer der Schiene.
+	 * @param nrSchiene Die Nummer der Schiene.
+	 *
 	 * @return Die Schiene mit der übergebenen Schienen-NR.
 	 */
-	public @NotNull GostBlockungsergebnisSchiene getSchieneEmitNr(final int pSchienenNr) {
-		final GostBlockungsergebnisSchiene schiene = _map_schienenNr_schiene.get(pSchienenNr);
-		if (schiene == null)
-			throw new DeveloperNotificationException("Schienen-NR " + pSchienenNr + " unbekannt!");
-		return schiene;
+	public @NotNull GostBlockungsergebnisSchiene getSchieneEmitNr(final int nrSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenNr_schiene, nrSchiene);
 	}
 
 	/**
 	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück. <br>
 	 * Falls ein Schüler mehrfach in der Schiene ist, wird er mehrfach gezählt!
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Anzahl an Schülern in der Schiene.
 	 */
-	public int getOfSchieneAnzahlSchueler(final long pSchienenID) {
-		final Integer anzahl = _map_schienenID_schuelerAnzahl.get(pSchienenID);
-		if (anzahl == null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!");
-		return anzahl;
+	public int getOfSchieneAnzahlSchueler(final long idSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_schuelerAnzahl, idSchiene);
 	}
 
 	/**
@@ -1418,37 +1406,37 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 */
-	public boolean getOfSchieneHatKollision(final long pSchienenID) {
-		return getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID) > 0;
+	public boolean getOfSchieneHatKollision(final long idSchiene) {
+		return getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) > 0;
 	}
 
 	/**
 	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene zurück. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Anzahl an Schüler-Kollisionen in der Schiene.
 	 */
-	public int getOfSchieneAnzahlSchuelerMitKollisionen(final long pSchienenID) {
-		final Integer anzahl = _map_schienenID_kollisionen.get(pSchienenID);
-		if (anzahl == null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!");
-		return anzahl;
+	public int getOfSchieneAnzahlSchuelerMitKollisionen(final long idSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_kollisionen, idSchiene);
 	}
 
 	/**
 	 * Liefert die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
-	public @NotNull Set<@NotNull Long> getOfSchieneSchuelermengeMitKollisionen(final long pSchienenID) {
+	public @NotNull Set<@NotNull Long> getOfSchieneSchuelermengeMitKollisionen(final long idSchiene) {
 		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
 		for (final @NotNull Long schuelerID : _map_schuelerID_kollisionen.keySet())
-			if (getOfSchuelerOfSchieneKursmenge(schuelerID, pSchienenID).size() > 1)
+			if (getOfSchuelerOfSchieneKursmenge(schuelerID, idSchiene).size() > 1)
 				set.add(schuelerID);
 		return set;
 	}
@@ -1488,10 +1476,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> getOfSchieneFachartKursmengeMap(final long pSchienenID) {
-		final Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> map = _map_schienenID_fachartID_kurse.get(pSchienenID);
-		if (map == null)
-			throw new DeveloperNotificationException("Die Schienen-ID " + pSchienenID + " ist unbekannt!");
-		return map;
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_fachartID_kurse, pSchienenID);
 	}
 
 	/**
@@ -1644,19 +1629,17 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Verknüpft einen Kurs mit einer Schiene. Die Schiene wird anhand ihrer Nummer (nicht die Datenbank-ID)
-	 * identifiziert.
+	 * Verknüpft einen Kurs mit einer Schiene.
+	 * Die Schiene wird anhand ihrer Nummer (nicht anhand der Datenbank-ID) identifiziert.
 	 *
-	 * @param  pKursID              Die Datenbank-ID des Kurses.
-	 * @param  pSchienenNr          Die Nummer der Schiene (nicht die Datenbank-ID).
+	 * @param  kursID      Die Datenbank-ID des Kurses.
+	 * @param  schienenNr  Die Nummer der Schiene (nicht die Datenbank-ID).
 	 *
-	 * @throws DeveloperNotificationException Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public void setKursSchienenNr(final long pKursID, final int pSchienenNr) throws DeveloperNotificationException {
-		final GostBlockungsergebnisSchiene eSchiene = _map_schienenNr_schiene.get(pSchienenNr);
-		if (eSchiene == null)
-			throw new DeveloperNotificationException("Schienen-Nr. " + pSchienenNr + " unbekannt!");
-		stateKursSchieneHinzufuegen(pKursID, eSchiene.id);
+	public void setKursSchienenNr(final long kursID, final int schienenNr) throws DeveloperNotificationException {
+		final @NotNull GostBlockungsergebnisSchiene eSchiene = DeveloperNotificationException.ifMapGetIsNull(_map_schienenNr_schiene, schienenNr);
+		stateKursSchieneHinzufuegen(kursID, eSchiene.id);
 	}
 
 	/**

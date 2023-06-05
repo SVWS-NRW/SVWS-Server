@@ -457,6 +457,7 @@ export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
+export { CollectionUtils } from './core/utils/CollectionUtils';
 export { KursManager } from './core/utils/KursManager';
 export { ListUtils } from './core/utils/ListUtils';
 export { MapUtils } from './core/utils/MapUtils';

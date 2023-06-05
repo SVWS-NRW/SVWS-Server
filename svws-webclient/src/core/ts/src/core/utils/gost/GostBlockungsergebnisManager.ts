@@ -239,14 +239,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
 				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList());
 		}
-		const strErrorDoppelteSchuelerID : string | null = "Schüler-ID %d doppelt!";
 		for (const gSchueler of this._parent.daten().schueler) {
 			const eSchuelerID : number = gSchueler.id;
 			const newSetKurse : HashSet<GostBlockungsergebnisKurs> | null = new HashSet();
-			if (this._map_schuelerID_kurse.put(eSchuelerID, newSetKurse) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
-			if (this._map_schuelerID_kollisionen.put(eSchuelerID, 0) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteSchuelerID, eSchuelerID))
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kurse, eSchuelerID, newSetKurse);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kollisionen, eSchuelerID, 0);
 		}
 		for (const gSchueler of this._parent.daten().schueler)
 			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
@@ -527,22 +524,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private stateSchuelerSchieneEntfernen(pSchuelerID : number, pSchienenID : number, pKurs : GostBlockungsergebnisKurs) : void {
 		const schieneSchuelerzahl : number = this.getOfSchieneAnzahlSchueler(pSchienenID);
-		if (schieneSchuelerzahl === 0)
-			throw new DeveloperNotificationException("schieneSchuelerzahl == 0 --> Entfernen unmöglich!")
+		DeveloperNotificationException.ifTrue("schieneSchuelerzahl == 0 --> Entfernen unmöglich!", schieneSchuelerzahl === 0);
 		this._map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl - 1);
 		const kursmenge : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
 		kursmenge.remove(pKurs);
 		if (!kursmenge.isEmpty()) {
 			const schieneKollisionen : number = this.getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
-			if (schieneKollisionen === 0)
-				throw new DeveloperNotificationException("schieneKollisionen == 0 --> Entfernen unmöglich!")
+			DeveloperNotificationException.ifTrue("schieneKollisionen == 0 --> Entfernen unmöglich!", schieneKollisionen === 0);
 			this._map_schienenID_kollisionen.put(pSchienenID, schieneKollisionen - 1);
 			const schuelerKollisionen : number = this.getOfSchuelerAnzahlKollisionen(pSchuelerID);
-			if (schuelerKollisionen === 0)
-				throw new DeveloperNotificationException("schuelerKollisionen == 0 --> Entfernen unmöglich!")
+			DeveloperNotificationException.ifTrue("schuelerKollisionen == 0 --> Entfernen unmöglich!", schuelerKollisionen === 0);
 			this._map_schuelerID_kollisionen.put(pSchuelerID, schuelerKollisionen - 1);
-			if (this._ergebnis.bewertung.anzahlSchuelerKollisionen === 0)
-				throw new DeveloperNotificationException("Gesamtkollisionen == 0 --> Entfernen unmöglich!")
+			DeveloperNotificationException.ifTrue("Gesamtkollisionen == 0 --> Entfernen unmöglich!", this._ergebnis.bewertung.anzahlSchuelerKollisionen === 0);
 			this._ergebnis.bewertung.anzahlSchuelerKollisionen--;
 		}
 	}
@@ -824,24 +817,23 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert die Menge aller Kurse, die dem Schüler zugeordnet sind. <br>
 	 * Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Menge aller Kurse, die dem Schüler zugeordnet sind.
 	 */
-	public getOfSchuelerKursmenge(pSchuelerID : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const kursIDs : JavaSet<GostBlockungsergebnisKurs> | null = this._map_schuelerID_kurse.get(pSchuelerID);
-		if (kursIDs === null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
-		return kursIDs;
+	public getOfSchuelerKursmenge(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kurse, idSchueler);
 	}
 
 	/**
 	 * Liefert die Menge aller Kurse des Schülers mit Kollisionen.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
-	public getOfSchuelerKursmengeMitKollisionen(pSchuelerID : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const mapSchieneKurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID);
+	public getOfSchuelerKursmengeMitKollisionen(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
+		const mapSchieneKurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> = this.getOfSchuelerSchienenKursmengeMap(idSchueler);
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
 		for (const kurseDerSchiene of mapSchieneKurse.values())
 			if (kurseDerSchiene.size() > 1)
@@ -1299,45 +1291,39 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Schiene  zur übergebenen ID. <br>
+	 * Liefert die Schiene zur übergebenen ID. <br>
 	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
-	 * @return Die Schiene (des Blockungsergebnisses) zur übergebenen ID.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return Die Schiene zur übergebenen ID.
 	 */
-	public getSchieneE(pSchienenID : number) : GostBlockungsergebnisSchiene {
-		const schiene : GostBlockungsergebnisSchiene | null = this._map_schienenID_schiene.get(pSchienenID);
-		if (schiene === null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!")
-		return schiene;
+	public getSchieneE(idSchiene : number) : GostBlockungsergebnisSchiene {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schiene, idSchiene);
 	}
 
 	/**
-	 * Liefert die Schiene mit der übergebenen Schienen-NR. <br>
-	 * Wirft eine Exception, wenn eine Schiene mit NR nicht existiert.
+	 * Liefert die Schiene mit der übergebenen Nummer. <br>
+	 * Wirft eine {@link DeveloperNotificationException} wenn eine solche Schiene nicht existiert.
 	 *
-	 * @param pSchienenNr Die Nummer der Schiene.
+	 * @param nrSchiene Die Nummer der Schiene.
+	 *
 	 * @return Die Schiene mit der übergebenen Schienen-NR.
 	 */
-	public getSchieneEmitNr(pSchienenNr : number) : GostBlockungsergebnisSchiene {
-		const schiene : GostBlockungsergebnisSchiene | null = this._map_schienenNr_schiene.get(pSchienenNr);
-		if (schiene === null)
-			throw new DeveloperNotificationException("Schienen-NR " + pSchienenNr + " unbekannt!")
-		return schiene;
+	public getSchieneEmitNr(nrSchiene : number) : GostBlockungsergebnisSchiene {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenNr_schiene, nrSchiene);
 	}
 
 	/**
 	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück. <br>
 	 * Falls ein Schüler mehrfach in der Schiene ist, wird er mehrfach gezählt!
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Anzahl an Schülern in der Schiene.
 	 */
-	public getOfSchieneAnzahlSchueler(pSchienenID : number) : number {
-		const anzahl : number | null = this._map_schienenID_schuelerAnzahl.get(pSchienenID);
-		if (anzahl === null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!")
-		return anzahl!;
+	public getOfSchieneAnzahlSchueler(idSchiene : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schuelerAnzahl, idSchiene);
 	}
 
 	/**
@@ -1352,37 +1338,37 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 */
-	public getOfSchieneHatKollision(pSchienenID : number) : boolean {
-		return this.getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID) > 0;
+	public getOfSchieneHatKollision(idSchiene : number) : boolean {
+		return this.getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene) > 0;
 	}
 
 	/**
 	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene zurück. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Anzahl an Schüler-Kollisionen in der Schiene.
 	 */
-	public getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID : number) : number {
-		const anzahl : number | null = this._map_schienenID_kollisionen.get(pSchienenID);
-		if (anzahl === null)
-			throw new DeveloperNotificationException("Schienen-ID " + pSchienenID + " unbekannt!")
-		return anzahl!;
+	public getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_kollisionen, idSchiene);
 	}
 
 	/**
 	 * Liefert die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Menge an Schüler-IDs, die in der Schiene eine Kollision haben.
 	 */
-	public getOfSchieneSchuelermengeMitKollisionen(pSchienenID : number) : JavaSet<number> {
+	public getOfSchieneSchuelermengeMitKollisionen(idSchiene : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schuelerID of this._map_schuelerID_kollisionen.keySet())
-			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, pSchienenID).size() > 1)
+			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, idSchiene).size() > 1)
 				set.add(schuelerID);
 		return set;
 	}
@@ -1422,10 +1408,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
 	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : JavaMap<number, List<GostBlockungsergebnisKurs>> {
-		const map : JavaMap<number, List<GostBlockungsergebnisKurs>> | null = this._map_schienenID_fachartID_kurse.get(pSchienenID);
-		if (map === null)
-			throw new DeveloperNotificationException("Die Schienen-ID " + pSchienenID + " ist unbekannt!")
-		return map;
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_fachartID_kurse, pSchienenID);
 	}
 
 	/**
@@ -1572,19 +1555,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Verknüpft einen Kurs mit einer Schiene. Die Schiene wird anhand ihrer Nummer (nicht die Datenbank-ID)
-	 * identifiziert.
+	 * Verknüpft einen Kurs mit einer Schiene.
+	 * Die Schiene wird anhand ihrer Nummer (nicht anhand der Datenbank-ID) identifiziert.
 	 *
-	 * @param  pKursID              Die Datenbank-ID des Kurses.
-	 * @param  pSchienenNr          Die Nummer der Schiene (nicht die Datenbank-ID).
+	 * @param  kursID      Die Datenbank-ID des Kurses.
+	 * @param  schienenNr  Die Nummer der Schiene (nicht die Datenbank-ID).
 	 *
-	 * @throws DeveloperNotificationException Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public setKursSchienenNr(pKursID : number, pSchienenNr : number) : void {
-		const eSchiene : GostBlockungsergebnisSchiene | null = this._map_schienenNr_schiene.get(pSchienenNr);
-		if (eSchiene === null)
-			throw new DeveloperNotificationException("Schienen-Nr. " + pSchienenNr + " unbekannt!")
-		this.stateKursSchieneHinzufuegen(pKursID, eSchiene.id);
+	public setKursSchienenNr(kursID : number, schienenNr : number) : void {
+		const eSchiene : GostBlockungsergebnisSchiene = DeveloperNotificationException.ifMapGetIsNull(this._map_schienenNr_schiene, schienenNr);
+		this.stateKursSchieneHinzufuegen(kursID, eSchiene.id);
 	}
 
 	/**
