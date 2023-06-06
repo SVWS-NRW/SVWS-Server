@@ -30,7 +30,7 @@
 	</svws-ui-content-card>
 	<svws-ui-content-card :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`" class="sticky top-8" large-title>
 		<template #actions>
-			<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(s.id)">
+			<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(schueler.schueler.id)">
 				<i-ri-group-line />
 				Zur Laufbahnplanung
 			</svws-ui-button>
@@ -41,11 +41,12 @@
 
 <script setup lang="ts">
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
-	import type { ComputedRef, WritableComputedRef} from 'vue';
-	import type { Config } from '~/components/Config';
+	import type { ComputedRef, WritableComputedRef } from 'vue';
+	import type { DataTableColumn } from '@ui';
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import type { Config } from '~/components/Config';
 	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
-	import {onMounted, toRaw} from 'vue';
+	import { onMounted, toRaw } from 'vue';
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -59,7 +60,7 @@
 		apiStatus: ApiStatus;
 	}>();
 
-	const cols = [{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true}, {key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}];
+	const cols: DataTableColumn[] = [{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true}, {key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if (!filterFehler.value)

@@ -4,8 +4,8 @@
 	};
 </script>
 <script setup lang="ts">
-	import { useSlots, ref, computed, watch } from "vue";
 	import type { InputType } from "../../types";
+	import { useSlots, ref, computed } from "vue";
 	import { genId } from "../../utils";
 
 	const props = withDefaults(defineProps<{
@@ -45,11 +45,6 @@
 	}>();
 
 	const slots = useSlots();
-
-	const tmp = ref<string | number | null>(props.modelValue);
-
-	watch(()=>props.modelValue, (neu)=>tmp.value = neu);
-
 	const input = ref<null | HTMLElement>(null);
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
@@ -60,19 +55,19 @@
 	const maxLenValid = computed(()=>{
 		if (props.maxLen === undefined)
 			return true;
-		return typeof tmp.value === 'string' && tmp.value?.toLocaleString().length <= props.maxLen;
+		return typeof props.modelValue === 'string' && props.modelValue.toLocaleString().length <= props.maxLen;
 	})
 
 	const emailValid = computed(() => {
-		if (props.type !== "email" || !tmp.value)
+		if (props.type !== "email" || !props.modelValue || typeof props.modelValue === 'number')
 			return true;
 		else
 			return (
 				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(tmp.value as string) ||
+				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(props.modelValue) ||
 				// eslint-disable-next-line no-useless-escape
 				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-					tmp.value as string
+					props.modelValue
 				)
 			);
 	});
@@ -80,7 +75,6 @@
 	const hasIcon = computed(() => !!slots.default);
 
 	function onInput(event: Event) {
-		tmp.value = (event.target as HTMLInputElement).value;
 		emit("update:modelValue", (event.target as HTMLInputElement).value);
 	}
 
@@ -94,7 +88,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input--filled': `${tmp}`.length > 0 && `${tmp}` !== 'null',
+			'text-input--filled': `${modelValue}`.length > 0 && `${modelValue}` !== 'null',
 			'text-input--invalid': (valid === false) || (emailValid === false) || (maxLenValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
@@ -116,7 +110,7 @@
 			}"
 			v-bind="{ ...$attrs }"
 			:type="type"
-			:value="tmp"
+			:value="modelValue"
 			:disabled="disabled"
 			:required="required"
 			:readonly="readonly"
@@ -132,7 +126,7 @@
 			}">
 			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" />
 			{{ placeholder }}
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': tmp?.toLocaleString().length > maxLen, 'opacity-50': tmp?.toLocaleString().length <= maxLen}">{{ maxLen ? ` (${tmp?.toLocaleString().length > 0 ? tmp?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${modelValue?.toLocaleString() ? modelValue?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />

@@ -14,7 +14,7 @@
 		autoresize?: boolean;
 		cols?: number;
 		rows?: number;
-		span?: 'full';
+		span?: 'full'|'grow';
 	}>(), {
 		modelValue: "",
 		placeholder: "",

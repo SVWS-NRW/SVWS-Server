@@ -45,12 +45,12 @@
 			'checkbox--checked': value,
 			'checkbox--circle': circle,
 			'checkbox--headless': headless,
-			'checkbox--indeterminate': value === 'indeterminate' && typeof value !== 'undefined',
+			'checkbox--indeterminate': value === 'indeterminate' && value !== undefined,
 			'checkbox--bw': bw,
 			'col-span-full': span === 'full'
 		}">
 		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
-		<svws-ui-icon v-if="value === 'indeterminate' && typeof value !== 'undefined'" role="checkbox">
+		<svws-ui-icon v-if="value === 'indeterminate' && value !== undefined" role="checkbox">
 			<i-ri-checkbox-indeterminate-line />
 		</svws-ui-icon>
 		<svws-ui-icon v-else-if="value" role="checkbox" :class="{'text-primary': !bw}">

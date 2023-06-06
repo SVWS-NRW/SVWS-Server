@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
 	<span @mouseenter="hoverEnterTooltip"
 		@mouseleave="hoverLeaveTooltip"
@@ -17,12 +18,12 @@
 		</template>
 	</span>
 	<Teleport to="body">
-		<Transition enter-active-class="duration-200 ease-out"
-			enter-from-class="transform opacity-0"
-			enter-to-class="opacity-100"
-			leave-active-class="duration-100 ease-in"
-			leave-from-class="opacity-100"
-			leave-to-class="transform opacity-0">
+		<Transition enterActiveClass="duration-200 ease-out"
+			enterFromClass="transform opacity-0"
+			enterToClass="opacity-100"
+			leaveActiveClass="duration-100 ease-in"
+			leaveFromClass="opacity-100"
+			leaveToClass="transform opacity-0">
 			<div v-if="isOpen"
 				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 				class="tooltip transition-opacity"
@@ -43,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-	import {Teleport, Transition, ref, computed} from "vue";
-	import {useFloating, autoUpdate, arrow, flip, offset, shift} from "@floating-ui/vue";
+	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
+	import { Teleport, Transition, ref, computed } from "vue";
 
 	const props = withDefaults(defineProps<{
 		position?: "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "left" | "left-start" | "left-end" | "right" | "right-start" | "right-end";

@@ -27,7 +27,7 @@
 		'sidebar--menu-item--active': active,
 		'sidebar--menu-item--collapsed': collapsed,
 		'sidebar--menu-item--disabled': disabled,
-		'sidebar--menu-item--statistik': $slots.label()[0].children === 'Statistik' || statistik,
+		'sidebar--menu-item--statistik': $slots.label?.()[0].children === 'Statistik' || statistik,
 	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : ($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">

@@ -31,10 +31,9 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		ref="tableRef"
-		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign, 'data-table--no-footer-scroll-bottom': tableScrollable && !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)) && !tableScrolledToBottom}"
+		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign, 'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count))}"
 		v-bind="computedTableAttributes">
-		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="tableScrolledToTop ? '' : 'shadow-lg'">
+		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="{'shadow-lg-up': false}">
 			<slot name="header"
 				:all-rows-selected="allRowsSelected"
 				:toggle-all-rows="toggleBulkSelection"
@@ -54,7 +53,7 @@
 						@click.exact="column.sortable && toggleSorting(column)">
 						<div class="data-table__th-wrapper"
 							:class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}"
-							:title="column.tooltip ? null : column.label">
+							:title="column.tooltip ? '' : column.label">
 							<span class="data-table__th-title">
 								<slot :name="`header(${column.key})`"
 									:column="column">
@@ -90,7 +89,7 @@
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Tabelleninhalt" class="data-table__tbody" ref="tableTbodyRef">
+		<div role="rowgroup" aria-label="Tabelleninhalt" class="data-table__tbody">
 			<slot name="body" :rows="sortedRows">
 				<div role="row" v-if="showNoDataHtml" key="showNoDataHtml">
 					<div role="cell" class="no-data data-table__td data-table__tbody__td"
@@ -163,7 +162,7 @@
 				</div>
 			</slot>
 		</div>
-		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" :class="tableScrolledToBottom ? '' : 'shadow-lg-up'"
+		<div role="rowgroup" aria-label="Fußzeile" class="data-table__tfoot" :class="{'shadow-lg-up': false}"
 			v-if="!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)">
 			<slot name="footer"
 				:all-rows-selected="allRowsSelected"
@@ -201,8 +200,8 @@
 </script>
 
 <script lang="ts" setup>
-	import type { TableHTMLAttributes} from "vue";
-	import {defineComponent, computed, ref, useAttrs, onMounted, watch, onUpdated, onBeforeUnmount} from "vue";
+	import type { TableHTMLAttributes } from "vue";
+	import { defineComponent, computed, ref, useAttrs } from "vue";
 
 	import useColumns from "./hooks/useColumns";
 	import useRows from "./hooks/useRows";
@@ -334,55 +333,55 @@
 		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
 	} as TableHTMLAttributes));
 
-	const tableRef = ref<HTMLDivElement | null>(null);
-	const tableTbodyRef = ref<HTMLDivElement | null>(null);
-	const tableScrollable = ref(false);
-	const tableRefScrollHeight = ref(0);
-	const tableScrolledToBottom = ref(true);
-	const tableScrolledToTop = ref(true);
+	// const tableRef = ref<HTMLDivElement | null>(null);
+	// const tableTbodyRef = ref<HTMLDivElement | null>(null);
+	// const tableScrollable = ref(false);
+	// const tableRefScrollHeight = ref(0);
+	// const tableScrolledToBottom = ref(true);
+	// const tableScrolledToTop = ref(true);
 
-	const checkTableScrollable = () => {
-		if (tableRef.value && tableTbodyRef.value) {
-			if ("scrollHeight" in tableTbodyRef.value && "clientHeight" in tableRef.value) {
-				tableScrollable.value = tableTbodyRef.value.scrollHeight > tableRef.value.clientHeight;
-			}
-		}
-	}
+	// const checkTableScrollable = () => {
+	// 	if (tableRef.value && tableTbodyRef.value) {
+	// 		if ("scrollHeight" in tableTbodyRef.value && "clientHeight" in tableRef.value) {
+	// 			tableScrollable.value = tableTbodyRef.value.scrollHeight > tableRef.value.clientHeight;
+	// 		}
+	// 	}
+	// }
 
-	const updateScrollValues = () => {
-		if (tableScrollable.value === false) {
-			tableScrolledToBottom.value = true;
-			tableScrolledToTop.value = true;
-			return;
-		}
+	// const updateScrollValues = () => {
+	// 	if (tableScrollable.value === false) {
+	// 		tableScrolledToBottom.value = true;
+	// 		tableScrolledToTop.value = true;
+	// 		return;
+	// 	}
 
-		if (tableRef.value && "scrollHeight" in tableRef.value && "scrollTop" in tableRef.value) {
-			tableRefScrollHeight.value = tableRef.value.scrollHeight;
-			tableScrolledToTop.value = tableRef.value.scrollTop < 5;
-			tableScrolledToBottom.value = tableRef.value.scrollTop >= (tableRef.value.scrollHeight - tableRef.value.offsetHeight - 5);
-		}
-	}
+	// 	if (tableRef.value && "scrollHeight" in tableRef.value && "scrollTop" in tableRef.value) {
+	// 		tableRefScrollHeight.value = tableRef.value.scrollHeight;
+	// 		tableScrolledToTop.value = tableRef.value.scrollTop < 5;
+	// 		tableScrolledToBottom.value = tableRef.value.scrollTop >= (tableRef.value.scrollHeight - tableRef.value.offsetHeight - 5);
+	// 	}
+	// }
 
-	onUpdated(() => {
-		checkTableScrollable();
-		updateScrollValues();
-	});
+	// onUpdated(() => {
+	// 	checkTableScrollable();
+	// 	updateScrollValues();
+	// });
 
-	onMounted(() => {
-		checkTableScrollable();
-		updateScrollValues();
-		window.addEventListener("resize", checkTableScrollable);
-		if ("addEventListener" in tableRef.value) {
-			tableRef.value.addEventListener("scroll", updateScrollValues);
-		}
-	});
+	// onMounted(() => {
+	// 	checkTableScrollable();
+	// 	updateScrollValues();
+	// 	window.addEventListener("resize", checkTableScrollable);
+	// 	if ("addEventListener" in tableRef.value) {
+	// 		tableRef.value.addEventListener("scroll", updateScrollValues);
+	// 	}
+	// });
 
-	onBeforeUnmount(() => {
-		window.removeEventListener("resize", checkTableScrollable);
-		if ("removeEventListener" in tableRef.value) {
-			tableRef.value.removeEventListener("scroll", updateScrollValues);
-		}
-	});
+	// onBeforeUnmount(() => {
+	// 	window.removeEventListener("resize", checkTableScrollable);
+	// 	if ("removeEventListener" in tableRef.value) {
+	// 		tableRef.value.removeEventListener("scroll", updateScrollValues);
+	// 	}
+	// });
 
 </script>
 

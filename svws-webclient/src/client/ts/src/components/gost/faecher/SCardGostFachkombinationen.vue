@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card :title="title">
+	<svws-ui-content-card :title="title+'e Fachkombinationen'">
 		<template #actions>
 			<svws-ui-button size="small" type="secondary" @click="add_kurskombi">Hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
@@ -9,7 +9,7 @@
 					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-4">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
-								{{ title.replace('e Fachkombinationen', '') }}
+								{{ title }}
 							</div>
 						</div>
 					</div>
@@ -132,11 +132,11 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@svws-nrw/svws-core";
+	import type { DataTableColumn } from "@ui";
+	import type { ComputedRef } from "vue";
 	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
-	import type {DataTableColumn} from "@ui";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
@@ -150,9 +150,9 @@
 	const title: ComputedRef<string> = computed(() => {
 		switch(props.typ) {
 			case GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH:
-				return "Geforderte Fachkombinationen";
+				return "Gefordert";
 			case GostLaufbahnplanungFachkombinationTyp.VERBOTEN:
-				return "Unzulässige Fachkombinationen";
+				return "Unzulässig";
 			default:
 				return "Fehler: Typ für die Fachkombination unbekannt";
 		}

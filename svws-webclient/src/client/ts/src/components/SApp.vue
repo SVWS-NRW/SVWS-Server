@@ -49,12 +49,11 @@
 
 <script setup lang="ts">
 
+	import type { AuswahlChildData } from './AuswahlChildData';
 	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
-	import type { AuswahlChildData } from './AuswahlChildData';
 	import { computed, ref, watch } from "vue";
 	import { version } from '../../version';
-	import {router} from "~/router/RouteManager";
 
 	const props = defineProps<AppProps>();
 

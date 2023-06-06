@@ -88,6 +88,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			child: this.getChild(),
 			children: this.getChildData(),
 			childrenHidden: this.children_hidden().value,
+			schule: api.schuleStammdaten,
 		};
 	}
 

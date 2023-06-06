@@ -205,5 +205,5 @@ export class RouteDataSchueler {
 	}
 
 	setFilter = (value: Filter) => this.setPatchedState({filter: Object.assign(this._state.value.filter, value)});
-	setAuswahlGruppe = (value: SchuelerListeEintrag[]) => this._state.value.auswahlGruppe = value;
+	setAuswahlGruppe = (auswahlGruppe: SchuelerListeEintrag[]) =>	this.setPatchedState({auswahlGruppe});
 }
