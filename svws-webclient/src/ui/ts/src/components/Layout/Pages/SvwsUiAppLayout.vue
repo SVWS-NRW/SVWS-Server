@@ -43,6 +43,7 @@
 <style lang="postcss">
 	html {
 		font-size: 10px;
+		@apply bg-light;
 	}
 
 	@media (min-width: 1280px) {
@@ -54,20 +55,21 @@
 	.app--layout {
 		@apply relative h-screen w-full overflow-hidden;
 		@apply flex flex-row gap-2 p-2;
-		@apply bg-light;
+		/*@apply max-w-[220rem] mx-auto;*/
 	}
 
 	.app--menu {
+		@apply overflow-y-auto -mr-3 pr-3 -my-3 py-3;
 		min-width: 4rem;
-		width: 3%;
-		max-width: 7rem;
+		width: 4%;
+		max-width: 8rem;
 	}
 
 	.app--sidebar {
 		@apply flex-shrink-0;
 		width: 20%;
 		min-width: 24rem;
-		max-width: 34rem;
+		max-width: 36rem;
 	}
 
 	.app--content {

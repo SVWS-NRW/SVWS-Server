@@ -27,19 +27,42 @@
 					{{ value === null ? "--" : mapKlassen.get(value)?.kuerzel }}
 				</template>
 				<template #footerActions>
-					<button class="button button--icon" @click="addLine()">
-						<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-					</button>
-					<button class="button button--icon">
-						<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
-					</button>
-					<button class="button button--icon">
-						<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
-					</button>
+					<svws-ui-button v-if="selectedItems.length" type="transparent" size="small" @click="modalGruppenaktionen.openModal()">
+						<i-ri-edit-2-line />
+						Auswahl bearbeiten
+					</svws-ui-button>
+					<svws-ui-button type="icon" @click="addLine()">
+						<i-ri-add-line />
+					</svws-ui-button>
+					<svws-ui-button type="icon" disabled>
+						<i-ri-file-copy-line />
+					</svws-ui-button>
+					<svws-ui-button type="icon" disabled>
+						<i-ri-more-2-line />
+					</svws-ui-button>
 				</template>
 			</svws-ui-data-table>
 		</template>
 	</svws-ui-secondary-menu>
+	<svws-ui-modal ref="modalGruppenaktionen" size="medium">
+		<template #modalTitle>
+			Aktionen für {{ selectedItems.length }} ausgewählte Schüler
+		</template>
+
+		<template #modalContent>
+			<div class="opacity-50 mb-4">
+				{{ selectedItems.splice(0,10).map(schueler => schueler.vorname + ' ' + schueler.nachname).join(', ') }}
+				{{ selectedItems.length > 10 ? ' und ' + (selectedItems.length - 10) + ' weitere' : '' }}
+			</div>
+			<svws-ui-input-wrapper :grid="4">
+				<svws-ui-button type="transparent">Button</svws-ui-button>
+				<svws-ui-button type="transparent">Button</svws-ui-button>
+				<svws-ui-button type="transparent">Button</svws-ui-button>
+				<svws-ui-button type="transparent">Button</svws-ui-button>
+				<svws-ui-button type="transparent">Button</svws-ui-button>
+			</svws-ui-input-wrapper>
+		</template>
+	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
@@ -216,4 +239,6 @@
 		props.setFilter(filter);
 		filtered.value = false;
 	}
+
+	const modalGruppenaktionen = ref();
 </script>

@@ -194,13 +194,13 @@
 
 	function calculateColumns(): DataTableColumn[] {
 		const cols: Array<DataTableColumn> = [{ key: "kurs", label: "Kurs", span: 2, minWidth: 8 },
-			{ key: "lehrer", label: "Lehrer" },
+			{ key: "lehrer", label: "Lehrer", minWidth: 6 },
 			{ key: "koop", label: "Kooperation", align: 'center' },
 			{ key: "FW", label: "Fachwahl", align: 'center' },
 			{ key: "Diff", label: "Diff", align: 'center' }];
 
 		for (let i = 0; i < schienen.value.size(); i++) {
-			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), minWidth: 3, align: 'center' });
+			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), minWidth: 3.5, align: 'center' });
 		}
 
 		if (allow_regeln.value) {

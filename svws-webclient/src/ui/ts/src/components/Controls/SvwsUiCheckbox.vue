@@ -51,9 +51,9 @@
 		}">
 		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
 		<svws-ui-icon v-if="value === 'indeterminate' && value !== undefined" role="checkbox">
-			<i-ri-checkbox-indeterminate-line />
+			<i-ri-checkbox-indeterminate-fill />
 		</svws-ui-icon>
-		<svws-ui-icon v-else-if="value" role="checkbox" :class="{'text-primary': !bw}">
+		<svws-ui-icon v-else-if="value" role="checkbox">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-fill v-if="circle" />
 		</svws-ui-icon>
@@ -93,7 +93,16 @@
 	&:hover,
 	&:focus {
 		.icon {
-			@apply text-black/75;
+			@apply text-svws/75;
+		}
+	}
+
+	&.checkbox--bw {
+		&:hover,
+		&:focus {
+			.icon {
+				@apply text-black;
+			}
 		}
 	}
 
@@ -115,13 +124,22 @@
 			@apply text-svws;
 		}
 	}
+
+	&.checkbox--bw {
+		&:hover,
+		&:focus {
+			.icon {
+				@apply text-black;
+			}
+		}
+	}
 }
 
 .checkbox--control {
 	@apply w-0 h-0 absolute opacity-0;
 
 	&:focus-visible ~ .icon {
-		@apply text-black/75;
+		@apply text-svws/75;
 
 		.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) & {
 			@apply opacity-100 !important;
@@ -142,6 +160,10 @@
 .checkbox--checked,
 .checkbox--indeterminate {
 	@apply font-medium;
+
+	&:not(.checkbox--bw) .icon {
+		@apply text-svws;
+	}
 }
 
 .checkbox--label {

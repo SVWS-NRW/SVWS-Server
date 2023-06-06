@@ -1,13 +1,13 @@
 <template>
 	<svws-ui-drag-data :key="kurs.id" tag="div" role="cell" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
-		class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative data-table__td__no-padding p-1" :class="{ 'is-drop-zone': is_drop_zone, 'cursor-grab': is_draggable }"
+		class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative data-table__td__no-padding p-0.5" :class="{ 'is-drop-zone': is_drop_zone, 'cursor-grab': is_draggable }"
 		:draggable="is_draggable" @drag-start="drag_started" @drag-end="drag_ended">
 		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" :drop-allowed="is_drop_zone" class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor }">
-			<span class="group-hover:bg-light rounded w-3 absolute top-2 left-2" v-if="is_draggable">
-				<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-50 group-hover:text-black" />
+			<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5" v-if="is_draggable">
+				<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 			</span>
-			<span>{{ kurs_name }} <span class="text-sm opacity-50 relative -top-0.5" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span></span>
-			<br>
+			<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
+			<span class="py-0.5 font-medium">{{ kurs_name }}</span>
 			<span class="inline-flex items-center gap-1">
 				<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
 					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle" :title="verbieten_regel ? 'Verboten' : 'Verbieten'">

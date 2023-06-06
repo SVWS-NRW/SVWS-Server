@@ -23,8 +23,8 @@
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center">
 			<svws-ui-checkbox headless circle bw v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
-			<svws-ui-icon v-else class="inline-block opacity-50">
-				<i-ri-check-line v-if="kurs.istKoopKurs" />
+			<svws-ui-icon v-else class="inline-block">
+				<i-ri-check-fill v-if="kurs.istKoopKurs" />
 				<i-ri-close-line v-else />
 			</svws-ui-icon>
 		</div>
@@ -119,7 +119,7 @@
 	const kuerzel = computed(()=> props.getErgebnismanager().getFach(props.kurs.fach_id).kuerzel);
 
 	const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
-		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(kuerzel.value).getHMTLFarbeRGB()}, rgb(170,170,170)`);
+		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(kuerzel.value).getHMTLFarbeRGB()}, rgb(255,255,255)`);
 
 	function toggle_active_fachwahl() {
 		if (props.schuelerFilter === undefined)

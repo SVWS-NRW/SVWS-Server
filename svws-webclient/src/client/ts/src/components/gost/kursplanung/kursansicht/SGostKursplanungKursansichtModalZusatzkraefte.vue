@@ -10,7 +10,12 @@
 				<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
 			</template>
 		</svws-ui-modal>
-		<svws-ui-button size="small" type="secondary" @click="toggle_zusatzkraefte_modal">Zusatzkräfte anlegen {{ anzahl_zusatzkraefte }}<i-ri-briefcase-line class="ml-1 my-0.5" /></svws-ui-button>
+		<svws-ui-button type="secondary" @click="toggle_zusatzkraefte_modal">
+			Zusatzkräfte anlegen
+			<template #badge v-if="anzahl_zusatzkraefte">
+				{{ anzahl_zusatzkraefte }}
+			</template>
+		</svws-ui-button>
 	</div>
 </template>
 
@@ -38,7 +43,7 @@
 
 	const anzahl_zusatzkraefte = computed(()=>{
 		const nr = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id).size();
-		return nr ? `(${nr})` : ""
+		return nr ? `${nr}` : ""
 	})
 
 </script>

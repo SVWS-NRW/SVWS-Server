@@ -13,16 +13,16 @@
 			:data="{kurs, schiene}"
 			class="select-none w-full h-full rounded flex items-center justify-center relative group"
 			:draggable="true"
-			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
+			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-light/75': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
 			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
 			@drag-start="drag_started"
 			@drag-end="drag_ended"
 			@click="toggle_active_kurs">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
-			<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5">
-				<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-50 group-hover:text-black" />
+			<span class="group-hover:bg-white rounded w-3 absolute top-0 left-0">
+				<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 			</span>
-			<svws-ui-icon class="cursor-pointer group absolute right-1" @click.stop="fixieren_regel_toggle">
+			<svws-ui-icon class="cursor-pointer group absolute right-0.5 text-sm" @click.stop="fixieren_regel_toggle">
 				<i-ri-pushpin-fill v-if="istFixiert" class="inline-block group-hover:opacity-75" />
 				<i-ri-pushpin-line v-if="!istFixiert && allowRegeln" class="inline-block opacity-25 group-hover:opacity-100" />
 			</svws-ui-icon>

@@ -1,18 +1,18 @@
 <template>
 	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': schiene_hat_kollisionen }">
 		<div role="cell" class="data-table__td" :class="{ 'text-error': schiene_hat_kollisionen }">
-			<div class="flex flex-col py-1">
-				<span class="font-bold inline-flex items-center gap-1 text-sm">
+			<div class="flex flex-col py-1" :title="schiene_g?.bezeichnung">
+				<span class="font-medium inline-flex items-center gap-1 text-sm">
 					<svws-ui-tooltip v-if="schiene_hat_kollisionen">
 						<i-ri-alert-line />
 						<template #content>
 							<span>Kollision in dieser Schiene</span>
 						</template>
 					</svws-ui-tooltip>
-					{{ schiene_g?.bezeichnung }}
+					<span class="line-clamp-1">{{ schiene_g?.bezeichnung }}</span>
 				</span>
-				<span class="text-sm">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
-				<span class="text-sm">{{ anzahl_schueler }} Schüler</span>
+				<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
+				<span class="text-sm font-medium opacity-50">{{ anzahl_schueler }} Schüler</span>
 			</div>
 		</div>
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"

@@ -133,7 +133,7 @@
 
     .router-tab-bar--wrapper {
 		@apply flex items-center;
-		@apply relative z-50;
+		@apply relative z-30;
 		@apply w-full;
 		@apply flex-shrink-0;
 
@@ -149,7 +149,7 @@
 		@apply flex flex-row items-center;
 		@apply overflow-x-scroll pb-2;
 		@apply relative w-full space-x-2;
-		@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
 		-webkit-overflow-scrolling: touch;
 
 		-ms-overflow-style: none;

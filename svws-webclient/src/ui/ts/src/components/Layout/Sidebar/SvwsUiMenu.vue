@@ -111,6 +111,8 @@
 }
 
 .sidebar--menu--footer {
+	@apply pt-16;
+
 	.text-ellipsis-line-clamp {
 		overflow: hidden;
 		text-overflow: ellipsis;

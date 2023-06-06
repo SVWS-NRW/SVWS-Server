@@ -7,7 +7,7 @@
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
-			<div class="w-1/6 min-w-[9rem]">
+			<div class="w-1/6 min-w-[8rem]">
 				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
 					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
 						<div class="">

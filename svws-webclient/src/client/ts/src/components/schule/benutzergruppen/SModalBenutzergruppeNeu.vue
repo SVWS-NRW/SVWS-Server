@@ -17,21 +17,19 @@
 		</template>
 	</svws-ui-modal>
 
-	<button class="button button--icon" @click="modalNeueBenutzergruppe.openModal()">
-		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n" />
 
-	<button class="button button--icon" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n">
-		<svws-ui-icon><i-ri-delete-bin-2-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" @click="modalNeueBenutzergruppe.openModal()">
+		<i-ri-add-line />
+	</svws-ui-button>
 
-	<button class="button button--icon">
-		<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" disabled>
+		<i-ri-file-copy-line />
+	</svws-ui-button>
 
-	<button class="button button--icon">
-		<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" disabled>
+		<i-ri-more-2-line />
+	</svws-ui-button>
 </template>
 
 <script setup lang="ts">

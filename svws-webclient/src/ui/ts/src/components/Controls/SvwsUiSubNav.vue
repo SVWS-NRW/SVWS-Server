@@ -10,7 +10,7 @@
 	@apply flex items-center gap-2 flex-shrink-0 min-h-fit;
 	@apply bg-light;
 	@apply border-b-2 border-light;
-	@apply px-6 lg:px-9 3xl:px-12 4xl:px-16;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
 	@apply h-9 text-sm;
 
 	> * {

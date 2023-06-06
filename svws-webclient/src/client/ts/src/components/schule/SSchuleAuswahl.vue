@@ -1,8 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<span>Schule</span>
-			<span class="opacity-50 line-clamp-1" :title="schulname">{{ schulname }}</span>
+			<span class="line-clamp-1" :title="schulname">{{ schulname }}</span>
 		</template>
 		<template #header />
 		<template #content>

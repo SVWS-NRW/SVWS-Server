@@ -78,6 +78,7 @@
 		if (routename !== current.name)
 			return false;
 		document.title = current.text + " - " + schulname.value;
+		document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon' + (props.app.name === 'statistik' ? '-statistik' : '') + '.svg')
 		return true;
 	}
 

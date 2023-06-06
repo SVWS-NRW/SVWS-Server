@@ -31,7 +31,16 @@
 		</div>
 	</div>
 	<div role="table" aria-label="Tabelle" class="data-table"
-		:class="{'data-table__selectable': selectable, 'data-table__sortable': sortBy, 'data-table__clickable': clickable, 'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml, 'data-table__has-row-actions': rowActions || manualRowActions, 'data-table__collapsible': collapsible, 'data-table--tab-bar': tabBarDesign, 'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count))}"
+		:class="{
+			'data-table__selectable': selectable,
+			'data-table__sortable': sortBy,
+			'data-table__clickable': clickable,
+			'data-table__no-data': typeof noData !== 'undefined' ? noData : showNoDataHtml,
+			'data-table__has-row-actions': rowActions || manualRowActions,
+			'data-table__collapsible': collapsible,
+			'data-table--tab-bar': tabBarDesign,
+			'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count))
+		}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="{'shadow-lg-up': false}">
 			<slot name="header"
@@ -178,7 +187,7 @@
 					<div v-if="count && modelValue" role="cell"
 						class="data-table__th data-table__tfoot__th data-table__tfoot-count text-sm">
 						<span v-if="someNotAllRowsSelected || allRowsSelected"
-							class="font-bold opacity-50">{{ modelValue.length }}/{{
+							class="font-medium">{{ modelValue.length }}/{{
 								sortedRows.length
 							}} ausgewählt</span>
 						<span v-else class="opacity-50">{{ sortedRows.length === 1 ? '1 Ergebnis': `${sortedRows.length} Ergebnisse` }}</span>
@@ -388,10 +397,6 @@
 <style lang="postcss">
 :root {
 	--checkbox-width: 1.75rem;
-
-	@media (min-width: 2000px) {
-		--checkbox-width: 2rem;
-	}
 }
 
 .data-table {
@@ -688,7 +693,7 @@
 		}
 	}
 
-	&.data-table--no-footer-scroll-bottom {
+	/*&.data-table--no-footer-scroll-bottom {
 		background:
 			linear-gradient(white 30%, rgba(255,255,255,0)),
 			linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
@@ -698,7 +703,7 @@
 		background-color: transparent;
 		background-size: 100% 0, 100% 0, 100% 0, 100% 2em;
 		background-attachment: local, local, scroll, scroll;
-	}
+	}*/
 
 	&__tfoot {
 		@apply w-max min-w-full bg-white;
@@ -943,7 +948,7 @@
 		&__fields {
 			@apply w-full grid gap-3;
 			@apply pt-5 pb-2;
-			grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
 
 			&.-order-1 {
 				@apply pt-0;

@@ -12,15 +12,13 @@
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
-				<i-ri-filter-line class="invisible absolute right-0 group-hover:visible opacity-25" />
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center">
 				<span class="opacity-25">–</span>
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + schienen.size()}">
-				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs hinzufügen">
-					Kurs
-					<i-ri-add-circle-line class="-mr-0.5" />
+				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="bg-white/50 hover:bg-white">
+					Kurs anlegen <i-ri-add-circle-line class="-mr-0.5" />
 				</svws-ui-button>
 			</div>
 			<div role="cell" class="data-table__td" />
@@ -73,7 +71,7 @@
 	}>();
 
 	const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
-		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);
+		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(75,75,75)`);
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 

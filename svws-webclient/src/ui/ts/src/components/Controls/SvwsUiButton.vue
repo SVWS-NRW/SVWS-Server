@@ -217,7 +217,7 @@
 
 	.data-table__tfoot-actions &.button {
 		@apply text-button h-7 w-7;
-		padding: 0.15em !important;
+		padding: 0.25em !important;
 
 		svg {
 			width: 1.3em;
@@ -250,8 +250,8 @@
 	&:hover,
 	&:focus,
 	&:focus-visible {
-		@apply bg-black/25 border-black/50 text-black;
-		@apply opacity-20;
+		@apply bg-black/25 border-black/75 text-black;
+		@apply opacity-25;
 		@apply cursor-not-allowed pointer-events-none;
 	}
 }
@@ -309,9 +309,16 @@
 	@apply h-5;
 	font-size: 0.8rem;
 
-	.router-tab-bar--subnav & {
-		@apply -mt-1 h-4;
+	.data-table__tbody .button &,
+	.content-card--header .button &,
+	.router-tab-bar--subnav .button &,
+	.cv-wrapper .cv-header button & {
+		@apply -mt-1 h-4 -ml-1.5;
 		font-size: 0.7rem;
+	}
+
+	.router-tab-bar--subnav .button & {
+		@apply -ml-3;
 	}
 }
 </style>

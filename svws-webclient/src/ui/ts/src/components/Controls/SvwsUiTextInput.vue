@@ -154,6 +154,10 @@
 
 		input::placeholder {
 			@apply text-black/25;
+
+			.placeholder--visible & {
+				@apply text-black;
+			}
 		}
 	}
 
@@ -394,7 +398,7 @@
 		}
 
 		&:hover:not(:focus) {
-			@apply underline decoration-dashed underline-offset-2;
+			@apply underline decoration-dotted underline-offset-2;
 
 			&::placeholder {
 				@apply opacity-60;
@@ -402,6 +406,6 @@
 		}
 	}
 	.text-input--inline {
-		@apply cursor-text underline decoration-dashed underline-offset-2;
+		@apply cursor-text underline decoration-dotted underline-offset-2;
 	}
 </style>

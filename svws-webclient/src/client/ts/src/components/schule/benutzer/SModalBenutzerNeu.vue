@@ -20,21 +20,19 @@
 		</template>
 	</svws-ui-modal>
 
-	<button class="button button--icon" @click="modalNeuerBenutzer.openModal()">
-		<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzerAllgemein()" />
 
-	<button v-if="showDeleteIcon" class="button button--icon" @click="deleteBenutzerAllgemein()">
-		<svws-ui-icon><i-ri-delete-bin2-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" @click="modalNeuerBenutzer.openModal()">
+		<i-ri-add-line />
+	</svws-ui-button>
 
-	<button class="button button--icon">
-		<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" disabled>
+		<i-ri-file-copy-line />
+	</svws-ui-button>
 
-	<button class="button button--icon">
-		<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
-	</button>
+	<svws-ui-button type="icon" disabled>
+		<i-ri-more-2-line />
+	</svws-ui-button>
 </template>
 
 <script setup lang="ts">

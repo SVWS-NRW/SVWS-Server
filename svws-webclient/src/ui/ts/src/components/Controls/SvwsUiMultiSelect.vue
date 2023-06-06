@@ -604,7 +604,7 @@
 
 .tag-badge {
 	@apply rounded cursor-auto relative z-10;
-	@apply bg-svws/5 text-svws border-svws border border-opacity-10;
+	@apply bg-svws/5 text-svws border-svws/25 border font-medium;
 	@apply flex items-center leading-none;
 	padding: 0.2em 0.4em 0.2em 0.7em;
 
@@ -638,6 +638,11 @@
 	@apply opacity-50;
 	right: 1.4em;
 	font-size: 1em;
+
+	.data-table & {
+		right: 1em;
+		font-size: 0.9em;
+	}
 
 	&:hover {
 		@apply opacity-100 text-error;

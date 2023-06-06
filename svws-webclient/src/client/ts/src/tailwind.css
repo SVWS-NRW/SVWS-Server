@@ -11,12 +11,11 @@
 }
 
 .page--content {
-	@apply grid grid-cols-1 lg:grid-cols-2;
+	@apply grid grid-cols-1 lg:grid-cols-2 w-full;
 	@apply gap-x-6 gap-y-16 lg:gap-y-20 lg:gap-x-16;
-	@apply px-6 lg:px-9 3xl:px-12 4xl:px-16 pt-8 pb-16;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
 	grid-auto-rows: min-content;
-	max-width: 123rem;
-	@apply mx-auto;
+	max-width: 140rem;
 }
 
 .page--content .page--content {
@@ -35,7 +34,7 @@
 .page--content.page--content--gost-grid {
 	@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
 	grid-auto-rows: 100%;
-	grid-template-columns: minmax(64rem, 2fr) minmax(18rem, 0.4fr) minmax(64rem, 1fr);
+	grid-template-columns: minmax(64rem, 2fr) minmax(18rem, 0.4fr) minmax(58rem, 1fr);
 	grid-auto-columns: max-content;
 }
 

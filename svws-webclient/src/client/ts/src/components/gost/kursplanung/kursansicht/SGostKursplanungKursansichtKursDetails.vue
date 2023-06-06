@@ -1,47 +1,45 @@
 <template>
 	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
-		<div class="py-4 flex justify-center">
-			<div class="flex justify-between items-center gap-2">
-				<div class="flex items-center gap-12">
-					<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
-						:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
-					<div class="flex items-center text-base">
-						<div class="mr-2">Schienen</div>
-						<button class="group" @click="del_schiene">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-						<span class="mx-1">{{ kurs.anzahlSchienen }}</span>
-						<button class="group" @click="add_schiene">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-					</div>
-					<div class="flex items-center text-sm font-bold">
-						<div class="mr-2 text-base">Kurse</div>
-						<button @click="del_kurs" class="group">
-							<i-ri-indeterminate-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-indeterminate-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-						<span class="mx-0.5" />
-						<button @click="add_kurs" class="group">
-							<i-ri-add-circle-line class="w-5 h-5 group-hover:hidden" />
-							<i-ri-add-circle-fill class="w-5 h-5 hidden group-hover:inline-block" />
-						</button>
-					</div>
-				</div>
-				<div class="flex items-center gap-2">
-					<svws-ui-dropdown v-if="kurseMitKursart.size() > 1" type="icon">
-						<template #dropdownButton>Zusammenlegen</template>
-						<template #dropdownItems>
-							<svws-ui-dropdown-item v-for="k in andereKurse.values()" :key="k.id" class="px-2" @click="combineKurs(kurs, k)">
-								{{ get_kursbezeichnung(k.id) }}
-							</svws-ui-dropdown-item>
-						</template>
-					</svws-ui-dropdown>
-					<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
-				</div>
+		<div class="px-2 py-4 flex gap-12 items-center">
+			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
+				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+			<div class="flex items-center gap-1">
+				<div class="mr-1">Schienen:</div>
+				<svws-ui-button type="icon" @click="del_schiene" size="small">
+					<i-ri-subtract-line />
+				</svws-ui-button>
+				<div class="font-bold mx-1">{{ kurs.anzahlSchienen }}</div>
+				<svws-ui-button type="icon" @click="add_schiene" size="small">
+					<i-ri-add-line />
+				</svws-ui-button>
 			</div>
+			<div class="flex items-center gap-2">
+				<svws-ui-button type="secondary" @click="del_kurs" title="Kurs entfernen">
+					Kurs <i-ri-subtract-line />
+				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">
+					Kurs <i-ri-add-line />
+				</svws-ui-button>
+			</div>
+			<div>
+				<!--TODO: richtige daten für v-model, Kursbezeichnung als item-text-->
+				<svws-ui-multi-select v-model="undefined"
+					title="Zusammenlegen mit…"
+					class="placeholder--visible"
+					headless
+					v-if="kurseMitKursart.size() > 1"
+					:item-text="item => item?.id || ''"
+					:items="andereKurse.values()" />
+			<!--<svws-ui-dropdown v-if="kurseMitKursart.size() > 1" type="icon">
+				<template #dropdownButton>Zusammenlegen</template>
+				<template #dropdownItems>
+					<svws-ui-dropdown-item v-for="k in andereKurse.values()" :key="k.id" class="px-2" @click="combineKurs(kurs, k)">
+						{{ get_kursbezeichnung(k.id) }}
+					</svws-ui-dropdown-item>
+				</template>
+			</svws-ui-dropdown>-->
+			</div>
+			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 		</div>
 	</div>
 </template>
@@ -103,8 +101,8 @@
 <style lang="postcss">
 
 	.table--row-kursdetail {
-		@apply relative z-10 border-b border-black/25;
-		box-shadow: inset 0 -4px 8px 0 rgba(0, 0, 0, 0.1);
+		@apply relative z-10 border-b-2 border-black/25;
+		box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);
 	}
 
 </style>

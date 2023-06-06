@@ -33,7 +33,7 @@
 
 <style lang="postcss">
 	.popper {
-		@apply w-max z-50 leading-tight;
+		@apply w-max z-50 leading-tight font-medium;
 		max-width: 16rem;
 		color: var(--popper-theme-text-color);
 	}

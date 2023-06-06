@@ -23,7 +23,7 @@
 		href="#" @click.prevent="onClick">
 		<svws-ui-tooltip position="right" v-if="user">
 			<div class="app--menu--initials--icon">
-				{{ user.charAt(0).toUpperCase() }}
+				{{ user.charAt(0).toUpperCase() }}{{ user.charAt(1).toUpperCase() }}
 			</div>
 			<template #content>
 				<div class="app--menu--initials--label">

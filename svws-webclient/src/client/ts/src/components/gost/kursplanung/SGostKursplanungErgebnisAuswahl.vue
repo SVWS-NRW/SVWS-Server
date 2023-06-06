@@ -3,8 +3,8 @@
 		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
 			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse" :count="selected_ergebnisse.length !== rows_ergebnisse.size()">
 			<template #header(bewertung)>
-				<div style="flex-grow: 10;">
-					<svws-ui-tooltip indicator="help" position="top">
+				<div style="flex-grow: 10;" class="inline-flex">
+					<svws-ui-tooltip position="top">
 						Bewertungen
 						<template #content>
 							<div class="normal-case text-base rich-text">
