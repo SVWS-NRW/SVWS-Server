@@ -19,6 +19,7 @@ import { SchuelerblockungOutput } from '../../../core/data/kursblockung/Schueler
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
 import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/SchuelerblockungAlgorithmus';
+import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
@@ -1538,11 +1539,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Eine Menge aller Schienen mit mindestens einer Kollision.
 	 */
 	public getMengeDerSchienenMitKollisionen() : JavaSet<GostBlockungsergebnisSchiene> {
-		const set : HashSet<GostBlockungsergebnisSchiene> = new HashSet();
-		for (const schiene of this._map_schienenID_schiene.values())
-			if (this.getOfSchieneHatKollision(schiene.id))
-				set.add(schiene);
-		return set;
+		return CollectionUtils.toFilteredHashSet(this._map_schienenID_schiene.values(), { test : (s: GostBlockungsergebnisSchiene) => this.getOfSchieneHatKollision(s.id) });
 	}
 
 	/**

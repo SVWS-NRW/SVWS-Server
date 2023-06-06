@@ -1093,6 +1093,138 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Finds the most fitting methods excutable element for the methode invocation tree passed here.
+	 *
+	 * @param mit              the method invocation tree
+	 *
+	 * @return the most fitting executable element
+	 */
+	ExecutableElement findExecutableElement(final MethodInvocationTree mit) {
+		final TranspilerUnit transpilerUnit = getTranspilerUnit(mit);
+		if ((mit.getMethodSelect() instanceof final MemberSelectTree mst)
+				&& (getExpressionType(mst.getExpression()) instanceof final ExpressionClassType exprClassType)) {
+			final String memberName = mst.getIdentifier().toString();
+
+			// Bestimme das TypeElement für die Klasse, um ggf. Typ-Parameter zu bestimmen
+			final String fullClassName = exprClassType.getFullQualifiedName();
+			final TypeElement classElement = getTypeElement(fullClassName);
+			if (classElement == null)
+				throw new TranspilerException("Transpiler Error: Cannot retrieve class element.");
+
+			// create a map for the type argument of the class
+			final List<? extends TypeParameterElement> classTypeParams = classElement.getTypeParameters();
+			if (exprClassType.getTypeArgumentCount() != classTypeParams.size())
+				throw new TranspilerException("Transpiler Error: Number of class type argument do not match");
+			final HashMap<String, ExpressionType> mapClassTypeArgs = new HashMap<>();
+			for (int i = 0; i < classTypeParams.size(); i++)
+				mapClassTypeArgs.put(classTypeParams.get(i).toString(), exprClassType.getTypeArguments().get(i));
+
+			// determine the requested method parameter types
+			final ArrayList<ExpressionType> paramTypes = new ArrayList<>();
+			for (final ExpressionTree param : mit.getArguments()) {
+				final ExpressionType paramType = transpilerUnit.allExpressionTypes.get(param);
+				if (paramType == null)
+					throw new TranspilerException("Transpiler Error: Could not retrieve parameter type for " + param + " of method " + memberName + " in class " + fullClassName);
+				paramTypes.add(paramType);
+			}
+
+			// try to find a method
+			ExecutableElement found = null;
+			int found_rated = Integer.MAX_VALUE;
+			for (final Element e : elementUtils.getAllMembers(classElement)) {
+				boolean doRating = true;
+				if (e instanceof final ExecutableElement ee) {
+					if (!memberName.equals(ee.getSimpleName().toString()))
+						continue;
+					// check method parameter types
+					final List<? extends VariableElement> elemParams = ee.getParameters();
+					if (!((elemParams.size() == paramTypes.size()) || ((!elemParams.isEmpty()) && (elemParams.size() - 1 <= paramTypes.size()) && ee.isVarArgs())))
+						continue;
+					int rated = 0;
+					final HashMap<String, ExpressionType> mapMethodTypeArgs = new HashMap<>(mapClassTypeArgs);
+					for (final TypeParameterElement typeParam : ee.getTypeParameters())
+						mapMethodTypeArgs.put(typeParam.toString(), new ExpressionTypeNone(TypeKind.NONE));
+					for (int i = 0; i < paramTypes.size(); i++) {
+						final ExpressionType paramType = paramTypes.get(i);
+
+						// Determine vararg Type of the executable element
+						TypeMirror tmpType;
+						if ((i >= elemParams.size() - 1) && ee.isVarArgs()) {
+							tmpType = elemParams.get(elemParams.size() - 1).asType();
+							if (tmpType.getKind() != TypeKind.ARRAY)
+								continue;
+							// special check whether to skip determining the array component type if an array is passed as parameter type (also check whether the vararg is a vararg of arrays)
+							boolean doGetComponent = true;
+							final ExpressionType tmpElemType = ExpressionType.getExpressionType(this, tmpType);
+							if ((paramType instanceof final ExpressionArrayType eat) && (tmpElemType instanceof final ExpressionArrayType eat2) && (eat.getDimensions() == eat2.getDimensions()))
+								doGetComponent = false;
+							if (doGetComponent)
+								tmpType = ((ArrayType) tmpType).getComponentType();
+						} else { // assume that no varargs are used
+							tmpType = elemParams.get(i).asType();
+						}
+						ExpressionType elemType = ExpressionType.getExpressionType(this, tmpType);
+
+						// substitute the type if a type variable is directly used
+						if (elemType instanceof final ExpressionTypeVar tv) {
+							// substitute the type if a class type variable is used
+							if (mapClassTypeArgs.get(tv.getName()) != null)
+								elemType = mapClassTypeArgs.get(tv.getName());
+							// substitute the type if a method type variable is used
+							final ExpressionType exprType = mapMethodTypeArgs.get(tv.getName());
+							if (exprType != null) {
+								if (exprType instanceof ExpressionTypeNone) {
+									elemType = paramType;
+									mapMethodTypeArgs.put(tv.getName(), elemType);
+								} else {
+									elemType = exprType;
+								}
+							}
+						}
+
+						// substitute the type if a type variable is used inside an array type
+						if ((elemType instanceof final ExpressionArrayType et) && (et.getType() instanceof final ExpressionTypeVar tv) && (paramType instanceof final ExpressionArrayType pt)) {
+							// substitute the type if a class type variable is used
+							if (mapClassTypeArgs.get(tv.getName()) != null)
+								elemType = new ExpressionArrayType(mapClassTypeArgs.get(tv.getName()), et.getDimensions());
+							// substitute the type if a method type variable is used
+							final ExpressionType exprType = mapMethodTypeArgs.get(tv.getName());
+							if (exprType != null) {
+								if (exprType instanceof ExpressionTypeNone) {
+									elemType = paramType;
+									mapMethodTypeArgs.put(tv.getName(), (ExpressionType) pt.getType());
+								} else {
+									elemType = new ExpressionArrayType(exprType, et.getDimensions());
+								}
+							}
+						}
+
+						// TODO substitute the type if a type variable is used inside a class expression type - check recursively
+
+						// Check whether it is assignable
+						final int a = elemType.isAssignable(this, paramType);
+						if (a < 0) {
+							// no fitting parameter type found - skip this method
+							doRating = false;
+							break;
+						}
+						// adjust the rating
+						rated += a;
+					}
+					// determine the best method implementation and its return type by their rating
+					if ((doRating) && ((found == null) || (rated < found_rated))) {
+						found = ee;
+						found_rated = rated;
+					}
+				}
+			}
+			return found;
+		}
+		throw new TranspilerException("Transpiler Error: Cannot find executable element for method invocation " + mit.toString());
+	}
+
+
+	/**
 	 * Returns the type of the specified class attribute member.
 	 *
 	 * @param className    the full qualified name of the class, i.e. the canonical name

@@ -28,6 +28,7 @@ import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -1611,13 +1612,10 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return Eine Menge aller Schienen mit mindestens einer Kollision.
 	 */
-	public @NotNull Set<@NotNull GostBlockungsergebnisSchiene> getMengeDerSchienenMitKollisionen() {
-		final @NotNull HashSet<@NotNull GostBlockungsergebnisSchiene> set = new HashSet<>();
-		for (final @NotNull GostBlockungsergebnisSchiene schiene : _map_schienenID_schiene.values())
-			if (getOfSchieneHatKollision(schiene.id))
-				set.add(schiene);
-		return set;
-	}
+    public @NotNull Set<@NotNull GostBlockungsergebnisSchiene> getMengeDerSchienenMitKollisionen() {
+        return CollectionUtils.toFilteredHashSet(_map_schienenID_schiene.values(), (@NotNull final GostBlockungsergebnisSchiene s) -> getOfSchieneHatKollision(s.id));
+    }
+
 
 	/**
 	 * Liefert die Menge aller Schienen.

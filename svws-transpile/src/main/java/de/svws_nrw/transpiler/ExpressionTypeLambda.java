@@ -1,10 +1,14 @@
 package de.svws_nrw.transpiler;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AssignmentTree;
@@ -105,7 +109,16 @@ public final class ExpressionTypeLambda extends ExpressionType {
 			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces");
 		}
 		if (parent instanceof final MethodInvocationTree mit) {
-			// TODO improve type analyses to determine the name if lambdas are used in method invocation parameters
+			// determine the index in the parameter list where the lambda is used as parameter
+			final int index = mit.getArguments().indexOf(tree);
+			if (index < 0)
+				throw new TranspilerException("Transpiler Error: Lambda Expression is expected to be in the method invocation argument list.");
+			final ExecutableElement ee = transpiler.findExecutableElement(mit);
+			if (index >= ee.getParameters().size())
+				throw new TranspilerException("Transpiler Error: Unexpected internal error.");
+			final VariableElement ve = ee.getParameters().get(index);
+			final Element type = ((DeclaredType) ve.asType()).asElement();
+			return type.toString();
 		}
 		if (parent instanceof final AssignmentTree at) {
 			final ExpressionType type = transpiler.getExpressionType(at.getVariable());
