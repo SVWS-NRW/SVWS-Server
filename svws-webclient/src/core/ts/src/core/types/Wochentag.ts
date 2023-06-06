@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 

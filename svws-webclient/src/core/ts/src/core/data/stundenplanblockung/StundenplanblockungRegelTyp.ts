@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanblockungRegel, cast_de_svws_nrw_core_data_stundenplanblockung_StundenplanblockungRegel } from '../../../core/data/stundenplanblockung/StundenplanblockungRegel';
 import { StundenplanblockungRegelParameterTyp } from '../../../core/data/stundenplanblockung/StundenplanblockungRegelParameterTyp';

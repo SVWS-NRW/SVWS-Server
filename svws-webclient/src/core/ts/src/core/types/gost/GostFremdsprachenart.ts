@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 
 export class GostFremdsprachenart extends JavaObject implements JavaEnum<GostFremdsprachenart> {

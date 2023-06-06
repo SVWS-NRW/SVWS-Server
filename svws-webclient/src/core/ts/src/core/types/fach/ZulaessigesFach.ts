@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';

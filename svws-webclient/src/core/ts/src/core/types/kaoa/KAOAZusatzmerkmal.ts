@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOAZusatzmerkmalEintrag } from '../../../core/data/kaoa/KAOAZusatzmerkmalEintrag';
 import { KAOAZusatzmerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAZusatzmerkmaleOptionsarten';

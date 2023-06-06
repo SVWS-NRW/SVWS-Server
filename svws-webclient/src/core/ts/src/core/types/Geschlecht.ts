@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../java/lang/JavaEnum';
 import { JavaObject } from '../../java/lang/JavaObject';
 
 export class Geschlecht extends JavaObject implements JavaEnum<Geschlecht> {

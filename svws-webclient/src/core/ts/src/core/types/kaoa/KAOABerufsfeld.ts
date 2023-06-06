@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOABerufsfeldEintrag } from '../../../core/data/kaoa/KAOABerufsfeldEintrag';
 import { HashMap } from '../../../java/util/HashMap';

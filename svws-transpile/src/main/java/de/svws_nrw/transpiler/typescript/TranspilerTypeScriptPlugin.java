@@ -2417,6 +2417,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		};
 	}
 
+	/** Ein Set mit allen im Transpiler umbenannten interfaces */
+	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.langTranspiledObject",
+			"java.util.JavaIterator", "java.util.JavaMap", "java.util.JavaSet", "java.util.function.JavaFunction");
+
 	/**
 	 * Prints the import information of the transpiler unit
 	 *
@@ -2474,8 +2478,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final boolean hasCast = body.contains(importCast);
 
 					final TypeElement elem = transpiler.getTypeElement(value + "." + key);
-					final boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
-
+					boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
+					if (renamedInterfaces.contains(importPackage + "." + importName))
+						isImportType = true;
 					if (hasClass && hasCast && !isImportType) {
 						sb.append("import { %s, %s } from '%s';".formatted(importName, importCast, importPath + importName));
 						sb.append(System.lineSeparator());

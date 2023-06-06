@@ -1,4 +1,4 @@
-import { JavaEnum } from '../../../java/lang/JavaEnum';
+import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftSchulformKatalogEintrag } from '../../../core/data/schule/HerkunftSchulformKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
