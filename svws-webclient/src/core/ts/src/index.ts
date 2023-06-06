@@ -552,7 +552,7 @@ export { StringBuilder } from './java/lang/StringBuilder';
 export { StringIndexOutOfBoundsException } from './java/lang/StringIndexOutOfBoundsException';
 export { System } from './java/lang/System';
 export { Throwable } from './java/lang/Throwable';
-export { TranspiledObject } from './java/lang/TranspiledObject';
+export type { TranspiledObject } from './java/lang/TranspiledObject';
 export { UnsupportedOperationException } from './java/lang/UnsupportedOperationException';
 export { AbstractCollection } from './java/util/AbstractCollection';
 export { AbstractList } from './java/util/AbstractList';

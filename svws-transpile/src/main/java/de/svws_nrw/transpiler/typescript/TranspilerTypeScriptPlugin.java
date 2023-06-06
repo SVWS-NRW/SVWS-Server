@@ -2418,7 +2418,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	}
 
 	/** Ein Set mit allen im Transpiler umbenannten interfaces */
-	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.langTranspiledObject",
+	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.lang.TranspiledObject",
 			"java.util.JavaIterator", "java.util.JavaMap", "java.util.JavaSet", "java.util.function.JavaFunction");
 
 	/**
