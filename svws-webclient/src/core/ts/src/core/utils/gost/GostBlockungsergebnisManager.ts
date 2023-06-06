@@ -750,10 +750,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
 	public getOfFachKursmenge(pFachID : number) : List<GostBlockungsergebnisKurs> {
-		const kurseOfFach : List<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(pFachID);
-		if (kurseOfFach === null)
-			throw new DeveloperNotificationException("Fach-ID " + pFachID + " unbekannt!")
-		return kurseOfFach;
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachID_kurse, pFachID);
 	}
 
 	/**
@@ -767,10 +764,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursmenge(pFachartID : number) : List<GostBlockungsergebnisKurs> {
-		const fachartGruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(pFachartID);
-		if (fachartGruppe === null)
-			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!")
-		return fachartGruppe;
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kurse, pFachartID);
 	}
 
 	/**
@@ -784,10 +778,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(pFachartID : number) : number {
-		const kursdifferenz : number | null = this._map_fachartID_kursdifferenz.get(pFachartID);
-		if (kursdifferenz === null)
-			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!")
-		return kursdifferenz!;
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, pFachartID);
 	}
 
 	/**
@@ -870,27 +861,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
-	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
-	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
-	 * @return              TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 * @param idSchueler   Die Datenbank.ID des Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param idKursart    Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 */
-	public getOfSchuelerHatFachwahl(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
-		return this._parent.getOfSchuelerHatFachart(pSchuelerID, pFach, pKursart);
+	public getOfSchuelerHatFachwahl(idSchueler : number, idFach : number, idKursart : number) : boolean {
+		return this._parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
 	}
 
 	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Anzahl an Kollisionen des Schülers.
 	 */
-	public getOfSchuelerAnzahlKollisionen(pSchuelerID : number) : number {
-		const anzahl : number | null = this._map_schuelerID_kollisionen.get(pSchuelerID);
-		if (anzahl === null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
-		return anzahl!;
+	public getOfSchuelerAnzahlKollisionen(idSchueler : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kollisionen, idSchueler);
 	}
 
 	/**
@@ -905,41 +895,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 */
-	public getOfSchuelerFachIDKursMap(pSchuelerID : number) : JavaMap<number, GostBlockungsergebnisKurs | null> {
-		const mapFachKurs : JavaMap<number, GostBlockungsergebnisKurs | null> | null = this._map_schuelerID_fachID_kurs.get(pSchuelerID);
-		if (mapFachKurs === null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
-		return mapFachKurs;
+	public getOfSchuelerFachIDKursMap(idSchueler : number) : JavaMap<number, GostBlockungsergebnisKurs | null> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_fachID_kurs, idSchueler);
 	}
 
 	/**
 	 * Liefert die Map des Schülers, die einer Schiene die Kurse des Schülers zuordnet.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Map des Schülers, die der Schiene die Kurse des Schülers zuordnet.
 	 */
-	public getOfSchuelerSchienenKursmengeMap(pSchuelerID : number) : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> {
-		const mapSchuelerKurse : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> | null = this._map_schuelerID_schienenID_kurse.get(pSchuelerID);
-		if (mapSchuelerKurse === null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!")
-		return mapSchuelerKurse;
+	public getOfSchuelerSchienenKursmengeMap(idSchueler : number) : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_schienenID_kurse, idSchueler);
 	}
 
 	/**
 	 * Liefert die Kursmenge des Schülers in der Schiene.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Kursmenge des Schülers in der Schiene.
 	 */
-	public getOfSchuelerOfSchieneKursmenge(pSchuelerID : number, pSchienenID : number) : JavaSet<GostBlockungsergebnisKurs> {
-		const kursmenge : JavaSet<GostBlockungsergebnisKurs> | null = this.getOfSchuelerSchienenKursmengeMap(pSchuelerID).get(pSchienenID);
-		if (kursmenge === null)
-			throw new DeveloperNotificationException("Schüler-ID=" + pSchuelerID + ", Schienen-ID=" + pSchienenID + " unbekannt!")
-		return kursmenge;
+	public getOfSchuelerOfSchieneKursmenge(idSchueler : number, idSchiene : number) : JavaSet<GostBlockungsergebnisKurs> {
+		return DeveloperNotificationException.ifMapGetIsNull(this.getOfSchuelerSchienenKursmengeMap(idSchueler), idSchiene);
 	}
 
 	/**

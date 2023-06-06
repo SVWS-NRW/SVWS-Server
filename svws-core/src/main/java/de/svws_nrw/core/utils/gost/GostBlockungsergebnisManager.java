@@ -798,10 +798,7 @@ public class GostBlockungsergebnisManager {
 	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachKursmenge(final long pFachID) {
-		final List<@NotNull GostBlockungsergebnisKurs> kurseOfFach = _map_fachID_kurse.get(pFachID);
-		if (kurseOfFach == null)
-			throw new DeveloperNotificationException("Fach-ID " + pFachID + " unbekannt!");
-		return kurseOfFach;
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachID_kurse, pFachID);
 	}
 
 	/**
@@ -815,10 +812,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(final long pFachartID) throws DeveloperNotificationException {
-		final List<@NotNull GostBlockungsergebnisKurs> fachartGruppe = _map_fachartID_kurse.get(pFachartID);
-		if (fachartGruppe == null)
-			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!");
-		return fachartGruppe;
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, pFachartID);
 	}
 
 	/**
@@ -832,10 +826,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public int getOfFachartKursdifferenz(final long pFachartID) throws DeveloperNotificationException {
-		final Integer kursdifferenz = _map_fachartID_kursdifferenz.get(pFachartID);
-		if (kursdifferenz == null)
-			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " unbekannt!");
-		return kursdifferenz;
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, pFachartID);
 	}
 
 	/**
@@ -922,27 +913,26 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
-	 * @param pSchuelerID   Die Datenbank.ID des Schülers.
-	 * @param pFach         Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param pKursart      Die Datenbank-ID der Kursart der Fachwahl des Schülers.
-	 * @return              TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 * @param idSchueler   Die Datenbank.ID des Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param idKursart    Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 */
-	public boolean getOfSchuelerHatFachwahl(final long pSchuelerID, final long pFach, final long pKursart) {
-		return _parent.getOfSchuelerHatFachart(pSchuelerID, pFach, pKursart);
+	public boolean getOfSchuelerHatFachwahl(final long idSchueler, final long idFach, final long idKursart) {
+		return _parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
 	}
 
 	/**
 	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Anzahl an Kollisionen des Schülers.
 	 */
-	public int getOfSchuelerAnzahlKollisionen(final long pSchuelerID) {
-		final Integer anzahl = _map_schuelerID_kollisionen.get(pSchuelerID);
-		if (anzahl == null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!");
-		return anzahl;
+	public int getOfSchuelerAnzahlKollisionen(final long idSchueler) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kollisionen, idSchueler);
 	}
 
 	/**
@@ -957,43 +947,36 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 */
-	public @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> getOfSchuelerFachIDKursMap(final long pSchuelerID) {
-		final Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = _map_schuelerID_fachID_kurs.get(pSchuelerID);
-		if (mapFachKurs == null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!");
-		return mapFachKurs;
+	public @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> getOfSchuelerFachIDKursMap(final long idSchueler) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, idSchueler);
 	}
 
 	/**
 	 * Liefert die Map des Schülers, die einer Schiene die Kurse des Schülers zuordnet.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 *
 	 * @return Die Map des Schülers, die der Schiene die Kurse des Schülers zuordnet.
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerSchienenKursmengeMap(final long pSchuelerID) {
-		final Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> mapSchuelerKurse = _map_schuelerID_schienenID_kurse.get(pSchuelerID);
-		if (mapSchuelerKurse == null)
-			throw new DeveloperNotificationException("Schüler-ID " + pSchuelerID + " unbekannt!");
-		return mapSchuelerKurse;
+	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerSchienenKursmengeMap(final long idSchueler) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_schienenID_kurse, idSchueler);
 	}
 
 	/**
 	 * Liefert die Kursmenge des Schülers in der Schiene.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
 	 * @return Die Kursmenge des Schülers in der Schiene.
 	 */
-	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerOfSchieneKursmenge(final long pSchuelerID, final long pSchienenID) {
-		final Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerSchienenKursmengeMap(pSchuelerID).get(pSchienenID);
-		if (kursmenge == null)
-			throw new DeveloperNotificationException("Schüler-ID=" + pSchuelerID + ", Schienen-ID=" + pSchienenID +  " unbekannt!");
-		return kursmenge;
+	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerOfSchieneKursmenge(final long idSchueler, final long idSchiene) {
+		return DeveloperNotificationException.ifMapGetIsNull(getOfSchuelerSchienenKursmengeMap(idSchueler), idSchiene);
 	}
-
 
 	/**
 	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
