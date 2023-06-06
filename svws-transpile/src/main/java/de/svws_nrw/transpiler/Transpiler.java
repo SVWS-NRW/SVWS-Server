@@ -253,7 +253,8 @@ public final class Transpiler extends AbstractProcessor {
 	 * @param node   the class tree node
 	 */
 	void visitIdentifierTree(final TreePath path, final IdentifierTree node) {
-		getTranspilerUnit(path).allIdentifier.add(new AbstractMap.SimpleEntry<>(node, path));
+		final TranspilerUnit transpilerUnit = getTranspilerUnit(path);
+		transpilerUnit.allIdentifier.add(new AbstractMap.SimpleEntry<>(node, path));
 	}
 
 

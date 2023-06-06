@@ -18,6 +18,8 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 
 
 /**
@@ -213,6 +215,31 @@ public final class ExpressionClassType extends ExpressionType {
 		final ExpressionClassType result = new ExpressionClassType(Kind.PARAMETERIZED_TYPE, "Class", "java.lang");
 		result.typeArguments.add(clParamType);
 		return result;
+	}
+
+
+	/**
+	 * Create a new class type instance for the specified identifier node object.
+	 *
+	 * @param transpiler    the transpiler used for determining the expression type
+	 * @param node          the identifier node instance
+	 *
+	 * @return the new expression class type instance or null on error
+	 */
+	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final IdentifierTree node) {
+		final TranspilerUnit transpilerUnit = transpiler.getTranspilerUnit(node);
+		TreePath curPath = transpilerUnit.mapTreePath.get(node).getParentPath();
+		while (curPath.getLeaf() instanceof MemberSelectTree)
+			curPath = curPath.getParentPath();
+		final Tree curNode = curPath.getLeaf();
+		if (curNode instanceof final VariableTree vt) {
+			final String strType = vt.getType().toString();
+			final int pos = strType.lastIndexOf(".");
+			final String packageName = strType.substring(0, pos);
+			final String className = strType.substring(pos + 1);
+			return new ExpressionClassType(Kind.CLASS, className, packageName);
+		}
+		return null;
 	}
 
 

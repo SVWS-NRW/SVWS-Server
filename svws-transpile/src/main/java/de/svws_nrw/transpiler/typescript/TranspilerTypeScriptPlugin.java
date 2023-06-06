@@ -676,6 +676,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			if (!first)
 				sb.append(", ");
 			first = false;
+			// TODO Bestimme über den Parent von node, welchen Typ die Variable des Lambdas hat und frage
+			// die @NotNull-Annotationen von dort ab. Das ist notwendig, wenn der Typ beim Lambda selbst weggelassen wird.
+			// In diesem Fall muss die Variablendeklaration oder die Methodendeklaration, wo der Lambda verwendet wird
+			// analysiert werden
 			final TypeNode typeNode = new TypeNode(this, p.getType(), true, transpiler.hasNotNullAnnotation(p));
 			if (p.toString().contains("..."))
 				sb.append("...");

@@ -232,12 +232,14 @@ public final class TranspilerUnit {
 	 * Retrieves the package name of an identifier from the imports of this compilation
 	 * unit.
 	 *
-	 * @param className   the name of the class
+	 * @param node        the identifier node for the class
+	 * @param path        the tree path for the identifier node
 	 * @param isImport    decides whether the class should be imported or handled as an annotation class
 	 *
 	 * @return  the package name of the identifier
 	 */
-	private String getPackageName(final String className, final boolean isImport) {
+	private String getPackageName(final IdentifierTree node, final TreePath path, final boolean isImport) {
+		final String className = node.getName().toString();
 		final String name = className.replaceAll("<.*>", "");
 		// check whether name is the local class - in this case we need no import, but return the packagename
 		if ((name.equals(classTree.getSimpleName().toString())))
@@ -306,6 +308,20 @@ public final class TranspilerUnit {
 			final String packageName = importsSuper.get(name);
 			final String fullClassName = importsFullClassnames.get(name);
 			imports.put(fullClassName, packageName);
+			return packageName;
+		}
+
+		// check whether the identifier ist the first part of the full class name (i.e. the first part of the package)
+		TreePath curPath = path.getParentPath();
+		while (curPath.getLeaf() instanceof MemberSelectTree)
+			curPath = curPath.getParentPath();
+		final Tree curNode = curPath.getLeaf();
+		if (curNode instanceof final VariableTree vt) {
+			final String strType = vt.getType().toString();
+			final int pos = strType.lastIndexOf(".");
+			final String packageName = strType.substring(0, pos);
+			final String tmpClassName = strType.substring(pos + 1);
+			imports.put(tmpClassName, packageName);
 			return packageName;
 		}
 
@@ -551,16 +567,16 @@ public final class TranspilerUnit {
 			final Tree parent = path.getParentPath().getLeaf();
 			// skip annotations and add all non local identifiers to the import map, also skip case trees
 			if (!((parent instanceof CaseTree) || (parent instanceof AnnotationTree) || (isLocal(path, node)) || ("super".equals(node.getName().toString())) || typeParameters.contains(node.getName().toString()))) {
-				allImports.put(node, getPackageName(node.getName().toString(), true));
+				allImports.put(node, getPackageName(node, path, true));
 				// TODO handle static imports...
 			} else if (parent instanceof AnnotationTree) {
-				allAnnotations.put(node, getPackageName(node.getName().toString(), false));
+				allAnnotations.put(node, getPackageName(node, path, false));
 			} else if (transpiler.isAnnotationArgument(node)) {
 				switch (parent.getKind()) {
 					case ASSIGNMENT:
 						break;
 					default:
-						allImportsForAnnotations.put(node, getPackageName(node.getName().toString(), true));
+						allImportsForAnnotations.put(node, getPackageName(node, path, true));
 						break;
 				}
 			}
@@ -663,6 +679,13 @@ public final class TranspilerUnit {
 		final Element element = transpiler.getElement(node);
 		if ((element != null) && (element instanceof final ExecutableElement ee))
 			return ExpressionClassType.getExpressionClassType(transpiler, ee.getReturnType());
+
+
+		// check whether the identifier ist the first part of the full class name (i.e. the first part of the package)
+		final ExpressionClassType ect = ExpressionClassType.getExpressionClassType(transpiler, node);
+		if (ect != null)
+			return ect;
+
 		throw new TranspilerException("Transpiler Error: Cannot determine type of identifier '" + nodeName + "' in transpiler unit " + classTree.getSimpleName());
 	}
 
@@ -719,6 +742,8 @@ public final class TranspilerUnit {
 		}
 		if ("super".equals(name))
 			return ExpressionClassType.getExpressionSuperClassType();
+		if (type instanceof ExpressionPackageType)
+			return type;
 		if (!(type instanceof ExpressionClassType))
 			throw new TranspilerException("Transpiler Error: Expression Type " + type.getKind() + " not supported for the member select expression");
 		final ExpressionClassType typeOfClass = (ExpressionClassType) type;
@@ -736,7 +761,7 @@ public final class TranspilerUnit {
 			result = transpiler.getNestedType(packageName + "." + typeName, member);
 			if (result != null)
 				return result;
-			throw new TranspilerException("Transpiler Error: Could not retrieve parameter type for " + name + "." + member);
+			return ExpressionPackageType.getExpressionPackageType(node.toString());
 		}
 
 		// check method invocation
