@@ -4,7 +4,7 @@ import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegun
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';

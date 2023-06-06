@@ -5,7 +5,7 @@ import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockun
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
 import { StundenplanblockungLerngruppe } from '../../../core/data/stundenplanblockung/StundenplanblockungLerngruppe';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
 export class StundenplanblockungInput extends JavaObject {

@@ -2,8 +2,9 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { KursListeEintrag } from '../../core/data/kurse/KursListeEintrag';
 import { HashMap } from '../../java/util/HashMap';
 import { ArrayList } from '../../java/util/ArrayList';
-import { Collection } from '../../java/util/Collection';
-import { List, cast_java_util_List } from '../../java/util/List';
+import type { Collection } from '../../java/util/Collection';
+import type { List } from '../../java/util/List';
+import { cast_java_util_List } from '../../java/util/List';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class KursManager extends JavaObject {

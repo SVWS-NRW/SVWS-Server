@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class SchuelerblockungInput extends JavaObject {
 

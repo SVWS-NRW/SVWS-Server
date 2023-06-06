@@ -3,9 +3,9 @@ import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanblockungManagerLerngruppe, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 

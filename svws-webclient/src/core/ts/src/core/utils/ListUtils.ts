@@ -1,7 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { ArrayList } from '../../java/util/ArrayList';
-import { List } from '../../java/util/List';
-import { Predicate } from '../../java/util/function/Predicate';
+import type { List } from '../../java/util/List';
+import type { Predicate } from '../../java/util/function/Predicate';
 
 export class ListUtils extends JavaObject {
 

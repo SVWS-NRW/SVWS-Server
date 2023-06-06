@@ -3,7 +3,8 @@ import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/Schul
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { BerufskollegAnlage, cast_de_svws_nrw_core_types_schule_BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlage';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 
 export class SchulgliederungKatalogEintrag extends JavaObject {

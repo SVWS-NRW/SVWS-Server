@@ -4,8 +4,8 @@ import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanblockungManagerLehrkraft, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLehrkraft } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLehrkraft';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerLehrkraftMenge extends JavaObject {
 

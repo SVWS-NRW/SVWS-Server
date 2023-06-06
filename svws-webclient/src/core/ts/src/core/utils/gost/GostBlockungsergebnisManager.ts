@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlockungsergebnisSchiene';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { JavaSet } from '../../../java/util/JavaSet';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -11,7 +11,7 @@ import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -26,7 +26,7 @@ import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungserg
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { Arrays } from '../../../java/util/Arrays';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostBlockungsergebnisManager extends JavaObject {
 

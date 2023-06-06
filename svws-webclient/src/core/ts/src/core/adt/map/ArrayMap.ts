@@ -1,16 +1,17 @@
-import { JavaMapEntry } from '../../../java/util/JavaMapEntry';
+import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import { cast_java_lang_Enum } from '../../../java/lang/JavaEnum';
 import { ArrayMapKeySet } from '../../../core/adt/map/ArrayMapKeySet';
-import { JavaSet } from '../../../java/util/JavaSet';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { ArrayMapCollection } from '../../../core/adt/map/ArrayMapCollection';
 import { ArrayMapEntrySet } from '../../../core/adt/map/ArrayMapEntrySet';
-import { JavaFunction, cast_java_util_function_Function } from '../../../java/util/function/JavaFunction';
+import type { JavaFunction } from '../../../java/util/function/JavaFunction';
+import { cast_java_util_function_Function } from '../../../java/util/function/JavaFunction';
 import { ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { Collection } from '../../../java/util/Collection';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Arrays } from '../../../java/util/Arrays';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { ArrayIndexOutOfBoundsException } from '../../../java/lang/ArrayIndexOutOfBoundsException';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 

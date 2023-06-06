@@ -14,7 +14,7 @@ import { KlausurblockungSchienenAlgorithmusGreedy1b } from '../../../core/utils/
 import { KlausurblockungSchienenAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusAbstract';
 import { KlausurblockungSchienenAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurblockungSchienenAlgorithmusGreedy2b';
 import { Random } from '../../../java/util/Random';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 

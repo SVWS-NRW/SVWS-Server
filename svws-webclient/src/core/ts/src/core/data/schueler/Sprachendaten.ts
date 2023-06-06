@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class Sprachendaten extends JavaObject {
 

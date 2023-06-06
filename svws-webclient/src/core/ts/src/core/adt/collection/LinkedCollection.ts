@@ -1,11 +1,12 @@
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { IndexOutOfBoundsException } from '../../../java/lang/IndexOutOfBoundsException';
-import { Deque } from '../../../java/util/Deque';
+import type { Deque } from '../../../java/util/Deque';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator } from '../../../java/util/JavaIterator';
-import { Collection, cast_java_util_Collection } from '../../../java/util/Collection';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
+import type { Collection } from '../../../java/util/Collection';
+import { cast_java_util_Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
 import { LinkedCollectionDescendingIterator } from '../../../core/adt/collection/LinkedCollectionDescendingIterator';
 import { LinkedCollectionIterator } from '../../../core/adt/collection/LinkedCollectionIterator';

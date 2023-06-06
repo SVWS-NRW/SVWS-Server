@@ -7,7 +7,7 @@ import { LogLevel } from '../../../core/logger/LogLevel';
 import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
 import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { ServiceAbschlussMSA } from '../../../core/abschluss/ge/ServiceAbschlussMSA';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { ServiceAbschlussHA9 } from '../../../core/abschluss/ge/ServiceAbschlussHA9';

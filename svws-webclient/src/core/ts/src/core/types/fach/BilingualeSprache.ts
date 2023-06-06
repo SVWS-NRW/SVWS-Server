@@ -5,7 +5,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class BilingualeSprache extends JavaObject implements JavaEnum<BilingualeSprache> {

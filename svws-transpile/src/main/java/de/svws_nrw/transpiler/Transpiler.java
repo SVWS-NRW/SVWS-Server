@@ -1087,7 +1087,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the type element
 	 */
-	TypeElement getTypeElement(final String name) {
+	public TypeElement getTypeElement(final String name) {
 		return elementUtils.getTypeElement(name);
 	}
 

@@ -8,11 +8,11 @@ import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs'
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
 import { HashSet } from '../../../java/util/HashSet';
@@ -25,7 +25,7 @@ import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSc
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Wochentag } from '../../../core/types/Wochentag';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanManager extends JavaObject {
 

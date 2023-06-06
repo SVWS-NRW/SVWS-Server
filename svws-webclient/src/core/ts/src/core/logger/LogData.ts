@@ -1,4 +1,4 @@
-import { Comparable } from '../../java/lang/Comparable';
+import type { Comparable } from '../../java/lang/Comparable';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { Arrays } from '../../java/util/Arrays';
 import { LogLevel } from '../../core/logger/LogLevel';

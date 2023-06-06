@@ -12,7 +12,7 @@ import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { Random } from '../../java/util/Random';
-import { List } from '../../java/util/List';
+import type { List } from '../../java/util/List';
 import { HashSet } from '../../java/util/HashSet';
 import { GostBlockungKurs } from '../../core/data/gost/GostBlockungKurs';
 import { GostFach } from '../../core/data/gost/GostFach';
@@ -23,7 +23,7 @@ import { ArrayMap } from '../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { GostBlockungSchiene } from '../../core/data/gost/GostBlockungSchiene';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
-import { JavaMap } from '../../java/util/JavaMap';
+import type { JavaMap } from '../../java/util/JavaMap';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
 export class KursblockungDynDaten extends JavaObject {

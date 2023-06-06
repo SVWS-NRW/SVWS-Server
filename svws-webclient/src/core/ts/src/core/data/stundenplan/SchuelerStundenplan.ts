@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 
 export class SchuelerStundenplan extends JavaObject {

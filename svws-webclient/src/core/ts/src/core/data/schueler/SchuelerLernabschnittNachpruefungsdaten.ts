@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { SchuelerLernabschnittNachpruefung, cast_de_svws_nrw_core_data_schueler_SchuelerLernabschnittNachpruefung } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefung';
 
 export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {

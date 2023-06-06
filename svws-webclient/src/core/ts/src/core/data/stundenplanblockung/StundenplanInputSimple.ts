@@ -5,7 +5,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanInputSimpleFach } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleFach';
 import { StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 import { StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimple extends JavaObject {

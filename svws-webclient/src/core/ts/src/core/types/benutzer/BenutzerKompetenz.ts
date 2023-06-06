@@ -5,10 +5,10 @@ import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKompetenz> {
 

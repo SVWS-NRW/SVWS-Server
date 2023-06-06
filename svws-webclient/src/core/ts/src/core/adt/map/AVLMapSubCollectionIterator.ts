@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { AVLMapNode } from '../../../core/adt/map/AVLMapNode';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 

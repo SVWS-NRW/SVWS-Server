@@ -3,7 +3,8 @@ import { KAOAKategorie, cast_de_svws_nrw_core_types_kaoa_KAOAKategorie } from '.
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { KAOAMerkmaleOptionsarten, cast_de_svws_nrw_core_types_kaoa_KAOAMerkmaleOptionsarten } from '../../../core/types/kaoa/KAOAMerkmaleOptionsarten';
 
 export class KAOAMerkmalEintrag extends JavaObject {

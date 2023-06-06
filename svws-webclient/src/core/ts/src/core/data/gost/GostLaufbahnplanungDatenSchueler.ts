@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/GostLaufbahnplanungDatenFachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {

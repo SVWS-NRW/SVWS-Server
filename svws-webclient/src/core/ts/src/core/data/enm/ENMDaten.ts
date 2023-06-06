@@ -8,7 +8,7 @@ import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
 import { ENMFloskelgruppe } from '../../../core/data/enm/ENMFloskelgruppe';
 

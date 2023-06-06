@@ -5,7 +5,7 @@ import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 

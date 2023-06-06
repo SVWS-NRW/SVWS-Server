@@ -3,7 +3,7 @@ import { BerufskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_Berufsk
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { WeiterbildungskollegBildungsgangTyp, cast_de_svws_nrw_core_types_schule_WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/WeiterbildungskollegBildungsgangTyp';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 

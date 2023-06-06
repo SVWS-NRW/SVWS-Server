@@ -13,7 +13,7 @@ import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/K
 import { KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class KlausurterminblockungAlgorithmus extends JavaObject {
 

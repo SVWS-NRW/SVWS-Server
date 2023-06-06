@@ -11,7 +11,7 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { NullPointerException } from '../../../../java/lang/NullPointerException';
 import { Note } from '../../../../core/types/Note';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class KurszahlenUndWochenstunden extends GostBelegpruefung {

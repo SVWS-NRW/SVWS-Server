@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';

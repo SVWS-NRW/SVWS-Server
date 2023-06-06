@@ -4,7 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';

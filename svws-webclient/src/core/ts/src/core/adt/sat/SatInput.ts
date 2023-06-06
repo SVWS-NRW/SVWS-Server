@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { JavaIterator } from '../../../java/util/JavaIterator';
-import { List } from '../../../java/util/List';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
+import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class SatInput extends JavaObject {

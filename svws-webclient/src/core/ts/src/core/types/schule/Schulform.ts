@@ -3,7 +3,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { SchulformKatalogEintrag } from '../../../core/data/schule/SchulformKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 

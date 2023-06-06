@@ -11,7 +11,7 @@ import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
 import { Note } from '../../../core/types/Note';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
 import { Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';

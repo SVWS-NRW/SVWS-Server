@@ -1,9 +1,9 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Comparable } from '../../../java/lang/Comparable';
+import type { Comparable } from '../../../java/lang/Comparable';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 

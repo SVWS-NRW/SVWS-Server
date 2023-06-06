@@ -1,15 +1,17 @@
-import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
+import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
+import { cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { ArrayMapEntrySetIterator } from '../../../core/adt/map/ArrayMapEntrySetIterator';
-import { JavaSet } from '../../../java/util/JavaSet';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { ArrayMapEntry, cast_de_svws_nrw_core_adt_map_ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
-import { Collection } from '../../../java/util/Collection';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { List } from '../../../java/util/List';
-import { JavaMap, cast_java_util_Map } from '../../../java/util/JavaMap';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { cast_java_util_Map } from '../../../java/util/JavaMap';
 
 export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMapEntry<K, V>> {
 

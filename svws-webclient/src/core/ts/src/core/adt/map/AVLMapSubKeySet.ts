@@ -1,10 +1,10 @@
-import { NavigableSet } from '../../../java/util/NavigableSet';
-import { JavaIterator } from '../../../java/util/JavaIterator';
-import { Collection } from '../../../java/util/Collection';
+import type { NavigableSet } from '../../../java/util/NavigableSet';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SortedSet } from '../../../java/util/SortedSet';
+import type { SortedSet } from '../../../java/util/SortedSet';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K> {
 

@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { GostBlockungKurs, cast_de_svws_nrw_core_data_gost_GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostBlockungKursAufteilung extends JavaObject {

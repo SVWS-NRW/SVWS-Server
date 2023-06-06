@@ -1,4 +1,5 @@
-import { JavaMapEntry, cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
+import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
+import { cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 

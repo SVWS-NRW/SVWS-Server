@@ -3,9 +3,10 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashSet } from '../../../java/util/HashSet';
 
 export class GostFachwahlManager extends JavaObject {

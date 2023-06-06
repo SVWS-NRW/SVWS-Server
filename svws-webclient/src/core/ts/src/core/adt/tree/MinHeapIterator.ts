@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
 import { MinHeap, cast_de_svws_nrw_core_adt_tree_MinHeap } from '../../../core/adt/tree/MinHeap';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 

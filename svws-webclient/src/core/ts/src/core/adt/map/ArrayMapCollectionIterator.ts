@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 

@@ -4,9 +4,9 @@ import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../cor
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbereich> {
 

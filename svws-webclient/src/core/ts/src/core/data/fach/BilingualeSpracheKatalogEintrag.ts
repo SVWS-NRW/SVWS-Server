@@ -2,7 +2,8 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ZulaessigesFach, cast_de_svws_nrw_core_types_fach_ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 
 export class BilingualeSpracheKatalogEintrag extends JavaObject {
 

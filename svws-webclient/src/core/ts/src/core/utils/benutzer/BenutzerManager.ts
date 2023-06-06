@@ -6,8 +6,8 @@ import { BenutzerDaten, cast_de_svws_nrw_core_data_benutzer_BenutzerDaten } from
 import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
-import { List } from '../../../java/util/List';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
 

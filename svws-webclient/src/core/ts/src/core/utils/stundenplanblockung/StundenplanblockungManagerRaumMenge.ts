@@ -4,8 +4,8 @@ import { Random } from '../../../java/util/Random';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerRaumMenge extends JavaObject {
 

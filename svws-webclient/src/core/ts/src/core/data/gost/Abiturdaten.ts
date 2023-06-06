@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class Abiturdaten extends JavaObject {

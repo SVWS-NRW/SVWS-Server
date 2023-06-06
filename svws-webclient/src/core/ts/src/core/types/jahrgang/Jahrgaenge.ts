@@ -4,7 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { JahrgangsKatalogEintrag } from '../../../core/data/jahrgang/JahrgangsKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
 import { JahrgangsKatalogEintragBezeichnung } from '../../../core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';

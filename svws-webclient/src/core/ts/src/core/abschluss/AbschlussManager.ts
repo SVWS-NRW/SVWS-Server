@@ -6,7 +6,7 @@ import { GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher
 import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { ArrayList } from '../../java/util/ArrayList';
-import { List } from '../../java/util/List';
+import type { List } from '../../java/util/List';
 import { GELeistungsdifferenzierteKursart } from '../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { HashSet } from '../../java/util/HashSet';
 

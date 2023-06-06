@@ -4,7 +4,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { GostLaufbahnplanungDatenSchueler } from '../../../core/data/gost/GostLaufbahnplanungDatenSchueler';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class GostLaufbahnplanungDaten extends JavaObject {
 

@@ -4,7 +4,7 @@ import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLeh
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
 

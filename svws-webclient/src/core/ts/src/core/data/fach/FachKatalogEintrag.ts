@@ -5,7 +5,8 @@ import { Fachgruppe, cast_de_svws_nrw_core_types_fach_Fachgruppe } from '../../.
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { Pair } from '../../../core/adt/Pair';
 
 export class FachKatalogEintrag extends JavaObject {

@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KalenderEintrag } from '../../../core/data/kalender/KalenderEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class Kalender extends JavaObject {
 

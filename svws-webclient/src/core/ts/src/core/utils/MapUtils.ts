@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { JavaSet } from '../../java/util/JavaSet';
-import { JavaMap } from '../../java/util/JavaMap';
+import type { JavaSet } from '../../java/util/JavaSet';
+import type { JavaMap } from '../../java/util/JavaMap';
 import { HashSet } from '../../java/util/HashSet';
 
 export class MapUtils extends JavaObject {

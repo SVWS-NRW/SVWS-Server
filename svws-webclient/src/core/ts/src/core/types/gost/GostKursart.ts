@@ -3,11 +3,11 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays } from '../../../java/util/Arrays';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
 export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {

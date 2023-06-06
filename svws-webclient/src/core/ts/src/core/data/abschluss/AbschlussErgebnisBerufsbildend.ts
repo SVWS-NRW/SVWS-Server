@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class AbschlussErgebnisBerufsbildend extends JavaObject {
 

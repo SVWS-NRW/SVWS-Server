@@ -4,10 +4,11 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { Collection } from '../../../java/util/Collection';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { Collection } from '../../../java/util/Collection';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 

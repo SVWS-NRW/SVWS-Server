@@ -12,7 +12,7 @@ import { SprachendatenUtils } from '../../../../core/utils/schueler/Sprachendate
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Fremdsprachen extends GostBelegpruefung {

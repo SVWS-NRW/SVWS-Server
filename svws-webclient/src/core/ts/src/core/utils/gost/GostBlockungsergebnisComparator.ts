@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostBlockungsergebnisComparator extends JavaObject implements Comparator<GostBlockungsergebnisListeneintrag> {
 

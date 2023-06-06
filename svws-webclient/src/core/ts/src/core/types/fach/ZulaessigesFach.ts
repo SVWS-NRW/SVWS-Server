@@ -7,7 +7,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { RGBFarbe } from '../../../core/data/RGBFarbe';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { FachKatalogEintrag } from '../../../core/data/fach/FachKatalogEintrag';
 import { Pair } from '../../../core/adt/Pair';

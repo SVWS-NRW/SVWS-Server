@@ -1,9 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { AbschlussFaecherGruppe, cast_de_svws_nrw_core_abschluss_ge_AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
-import { Predicate, cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
+import type { Predicate } from '../../../java/util/function/Predicate';
+import { cast_java_util_function_Predicate } from '../../../java/util/function/Predicate';
 
 export class AbschlussFaecherGruppen extends JavaObject {
 

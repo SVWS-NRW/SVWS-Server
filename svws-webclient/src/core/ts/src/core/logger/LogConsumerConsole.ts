@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData } from '../../core/logger/LogData';
-import { Consumer } from '../../java/util/function/Consumer';
+import type { Consumer } from '../../java/util/function/Consumer';
 
 export class LogConsumerConsole extends JavaObject implements Consumer<LogData> {
 

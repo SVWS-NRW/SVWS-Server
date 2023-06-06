@@ -3,9 +3,9 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/SchuelerStundenplanUnterricht';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { IntegerComparator } from '../../../core/utils/stundenplan/IntegerComparator';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { SchuelerStundenplan } from '../../../core/data/stundenplan/SchuelerStundenplan';
 

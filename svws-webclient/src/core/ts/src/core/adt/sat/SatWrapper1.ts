@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaFunction } from '../../../java/util/function/JavaFunction';
+import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { Random } from '../../../java/util/Random';
 import { SatInput } from '../../../core/adt/sat/SatInput';
 import { SatOutput } from '../../../core/adt/sat/SatOutput';

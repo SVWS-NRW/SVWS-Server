@@ -1,9 +1,9 @@
 import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import { RuntimeException } from '../../java/lang/RuntimeException';
-import { JavaSet } from '../../java/util/JavaSet';
-import { List } from '../../java/util/List';
+import type { JavaSet } from '../../java/util/JavaSet';
+import type { List } from '../../java/util/List';
 import { JavaString } from '../../java/lang/JavaString';
-import { JavaMap } from '../../java/util/JavaMap';
+import type { JavaMap } from '../../java/util/JavaMap';
 
 export class DeveloperNotificationException extends RuntimeException {
 

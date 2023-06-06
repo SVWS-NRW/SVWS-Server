@@ -1,7 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schulstufe } from '../../../core/types/schule/Schulstufe';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List, cast_java_util_List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
+import { cast_java_util_List } from '../../../java/util/List';
 import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAAnschlussoptionEintrag extends JavaObject {

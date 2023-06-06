@@ -3,7 +3,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 
 export class GostBelegpruefungsdaten extends JavaObject {

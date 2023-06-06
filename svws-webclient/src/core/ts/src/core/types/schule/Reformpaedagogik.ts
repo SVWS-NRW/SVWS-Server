@@ -4,7 +4,7 @@ import { ReformpaedagogikKatalogEintrag } from '../../../core/data/schule/Reform
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class Reformpaedagogik extends JavaObject implements JavaEnum<Reformpaedagogik> {

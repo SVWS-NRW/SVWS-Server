@@ -9,7 +9,7 @@ import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenM
 import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 import { HashSet } from '../../../../java/util/HashSet';
 

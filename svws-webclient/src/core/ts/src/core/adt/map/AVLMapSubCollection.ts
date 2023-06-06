@@ -1,6 +1,6 @@
 import { StringBuilder } from '../../../java/lang/StringBuilder';
-import { JavaIterator } from '../../../java/util/JavaIterator';
-import { Collection } from '../../../java/util/Collection';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';

@@ -1,9 +1,9 @@
-import { JavaMapEntry } from '../../../java/util/JavaMapEntry';
-import { JavaSet } from '../../../java/util/JavaSet';
-import { JavaIterator } from '../../../java/util/JavaIterator';
-import { Collection } from '../../../java/util/Collection';
+import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
 export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaMapEntry<K, V>> {

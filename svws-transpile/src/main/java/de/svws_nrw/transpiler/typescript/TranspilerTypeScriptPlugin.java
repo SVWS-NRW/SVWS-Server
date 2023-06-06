@@ -14,7 +14,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -2424,7 +2426,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 *
 	 * @return the imports for the transpiled typescript class
 	 */
-	public static String getImports(final TranspilerUnit unit, final String strIgnoreJavaPackagePrefix, final String body) {
+	public String getImports(final TranspilerUnit unit, final String strIgnoreJavaPackagePrefix, final String body) {
 		final String packageName = unit.getPackageName();
 		final String shortPackageName = packageName.replace(strIgnoreJavaPackagePrefix + ".", "");
 		final String importPathPrefix = "../".repeat((int) (shortPackageName.chars().filter(c -> c == '.').count()) + 1);
@@ -2470,15 +2472,23 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final String importPath = importPathPrefix + importPackage.replace('.', '/') + "/";
 					final boolean hasClass = body.contains(importName);
 					final boolean hasCast = body.contains(importCast);
-					if (hasClass && hasCast) {
+
+					final TypeElement elem = transpiler.getTypeElement(value + "." + key);
+					final boolean isImportType = (elem.getKind() == ElementKind.INTERFACE);
+
+					if (hasClass && hasCast && !isImportType) {
 						sb.append("import { %s, %s } from '%s';".formatted(importName, importCast, importPath + importName));
 						sb.append(System.lineSeparator());
-					} else if (hasClass) {
-						sb.append("import { %s } from '%s';".formatted(importName, importPath + importName));
-						sb.append(System.lineSeparator());
-					} else if (hasCast) {
-						sb.append("import { %s } from '%s';".formatted(importCast, importPath + importName));
-						sb.append(System.lineSeparator());
+					} else {
+						if (hasClass) {
+							final String strImport = isImportType ? "import type" : "import";
+							sb.append("%s { %s } from '%s';".formatted(strImport, importName, importPath + importName));
+							sb.append(System.lineSeparator());
+						}
+						if (hasCast) {
+							sb.append("import { %s } from '%s';".formatted(importCast, importPath + importName));
+							sb.append(System.lineSeparator());
+						}
 					}
 				}
 			}

@@ -4,7 +4,7 @@ import { ENMLernabschnitt } from '../../../core/data/enm/ENMLernabschnitt';
 import { ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerkungen';
 import { ENMZP10 } from '../../../core/data/enm/ENMZP10';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
 import { ENMSprachenfolge } from '../../../core/data/enm/ENMSprachenfolge';
 

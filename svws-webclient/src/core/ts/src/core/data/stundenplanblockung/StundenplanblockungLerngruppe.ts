@@ -4,7 +4,7 @@ import { StundenplanblockungKopplung } from '../../../core/data/stundenplanblock
 import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockung/StundenplanblockungKlasse';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 

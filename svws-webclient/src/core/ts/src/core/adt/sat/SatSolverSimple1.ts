@@ -1,5 +1,5 @@
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SatInput } from '../../../core/adt/sat/SatInput';
 import { SatOutput } from '../../../core/adt/sat/SatOutput';

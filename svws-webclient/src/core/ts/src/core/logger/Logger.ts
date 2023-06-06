@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData, cast_de_svws_nrw_core_logger_LogData } from '../../core/logger/LogData';
-import { Consumer } from '../../java/util/function/Consumer';
+import type { Consumer } from '../../java/util/function/Consumer';
 import { ArrayList } from '../../java/util/ArrayList';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 

@@ -3,7 +3,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { FoerderschwerpunktKatalogEintrag } from '../../../core/data/schule/FoerderschwerpunktKatalogEintrag';
 import { JavaString } from '../../../java/lang/JavaString';
 import { Arrays } from '../../../java/util/Arrays';

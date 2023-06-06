@@ -5,7 +5,7 @@ import { KursartKatalogEintrag } from '../../../core/data/kurse/KursartKatalogEi
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { Pair } from '../../../core/adt/Pair';
 

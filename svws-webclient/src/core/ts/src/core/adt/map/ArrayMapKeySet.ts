@@ -1,13 +1,13 @@
-import { JavaSet } from '../../../java/util/JavaSet';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
-import { JavaIterator } from '../../../java/util/JavaIterator';
+import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { ArrayMapKeySetIterator } from '../../../core/adt/map/ArrayMapKeySetIterator';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
-import { Collection } from '../../../java/util/Collection';
+import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {

@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMFloskel, cast_de_svws_nrw_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class ENMFloskelgruppe extends JavaObject {
 

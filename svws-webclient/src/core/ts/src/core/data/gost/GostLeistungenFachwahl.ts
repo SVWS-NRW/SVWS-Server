@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { GostLeistungenFachbelegung } from '../../../core/data/gost/GostLeistungenFachbelegung';
 
 export class GostLeistungenFachwahl extends JavaObject {

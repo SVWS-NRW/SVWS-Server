@@ -5,10 +5,10 @@ import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
 import { Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { HashSet } from '../../../java/util/HashSet';
-import { Comparator } from '../../../java/util/Comparator';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class SprachendatenUtils extends JavaObject {
 

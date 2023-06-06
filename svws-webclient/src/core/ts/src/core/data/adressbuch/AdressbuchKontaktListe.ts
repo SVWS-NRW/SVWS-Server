@@ -1,7 +1,7 @@
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
 import { AdressbuchKontakt, cast_de_svws_nrw_core_data_adressbuch_AdressbuchKontakt } from '../../../core/data/adressbuch/AdressbuchKontakt';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class AdressbuchKontaktListe extends AdressbuchEintrag {
 

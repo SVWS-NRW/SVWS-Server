@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { BetriebAnsprechpartner } from '../../../core/data/betrieb/BetriebAnsprechpartner';
 
 export class BetriebStammdaten extends JavaObject {

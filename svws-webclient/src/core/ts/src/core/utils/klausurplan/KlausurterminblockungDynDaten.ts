@@ -8,7 +8,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
 

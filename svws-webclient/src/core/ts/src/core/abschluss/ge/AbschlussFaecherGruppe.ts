@@ -2,10 +2,10 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
-import { Predicate } from '../../../java/util/function/Predicate';
+import type { Predicate } from '../../../java/util/function/Predicate';
 
 export class AbschlussFaecherGruppe extends JavaObject {
 

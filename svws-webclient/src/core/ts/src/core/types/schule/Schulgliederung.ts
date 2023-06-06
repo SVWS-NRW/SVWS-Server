@@ -7,7 +7,7 @@ import { BerufskollegAnlage } from '../../../core/types/schule/BerufskollegAnlag
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchulgliederungKatalogEintrag } from '../../../core/data/schule/SchulgliederungKatalogEintrag';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { JavaString } from '../../../java/lang/JavaString';
 import { Arrays } from '../../../java/util/Arrays';
 

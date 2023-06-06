@@ -11,7 +11,7 @@ import { NullPointerException } from '../../../../java/lang/NullPointerException
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {

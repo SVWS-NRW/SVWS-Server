@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten, cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
 

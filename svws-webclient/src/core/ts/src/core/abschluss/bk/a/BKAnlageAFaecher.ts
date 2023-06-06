@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
-import { List } from '../../../../java/util/List';
+import type { List } from '../../../../java/util/List';
 import { BKAnlageAFach } from '../../../../core/abschluss/bk/a/BKAnlageAFach';
 
 export class BKAnlageAFaecher extends JavaObject {

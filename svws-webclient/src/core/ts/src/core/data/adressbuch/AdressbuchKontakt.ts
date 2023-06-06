@@ -1,7 +1,7 @@
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Telefonnummer } from '../../../core/data/adressbuch/Telefonnummer';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class AdressbuchKontakt extends AdressbuchEintrag {
 

@@ -1,9 +1,9 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { JavaSet } from '../../java/util/JavaSet';
-import { Collection } from '../../java/util/Collection';
-import { JavaMap } from '../../java/util/JavaMap';
+import type { JavaSet } from '../../java/util/JavaSet';
+import type { Collection } from '../../java/util/Collection';
+import type { JavaMap } from '../../java/util/JavaMap';
 import { HashSet } from '../../java/util/HashSet';
-import { Predicate } from '../../java/util/function/Predicate';
+import type { Predicate } from '../../java/util/function/Predicate';
 
 export class CollectionUtils extends JavaObject {
 

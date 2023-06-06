@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class Adressbuch extends JavaObject {
 

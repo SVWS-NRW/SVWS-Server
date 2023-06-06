@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { List } from '../../../java/util/List';
+import type { List } from '../../../java/util/List';
 
 export class BenutzerDaten extends JavaObject {
 

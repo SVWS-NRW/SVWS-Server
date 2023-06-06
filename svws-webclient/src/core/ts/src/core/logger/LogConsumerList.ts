@@ -1,9 +1,9 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData } from '../../core/logger/LogData';
-import { Consumer } from '../../java/util/function/Consumer';
+import type { Consumer } from '../../java/util/function/Consumer';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { ArrayList } from '../../java/util/ArrayList';
-import { List } from '../../java/util/List';
+import type { List } from '../../java/util/List';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class LogConsumerList extends JavaObject implements Consumer<LogData> {
