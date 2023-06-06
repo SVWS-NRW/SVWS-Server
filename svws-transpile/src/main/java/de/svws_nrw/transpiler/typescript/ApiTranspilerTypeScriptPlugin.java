@@ -189,6 +189,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 			final String filename = apiClassName + ".ts";
 			final Path path = Paths.get(outputDir + "/api/" + filename);
 			super.outputFiles.add("api/" + filename);
+			super.outputFilesTypeOnly.add(false);
 			try {
 				Files.createDirectories(path.getParent());
 				Files.writeString(path, fileImports + fileData, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);

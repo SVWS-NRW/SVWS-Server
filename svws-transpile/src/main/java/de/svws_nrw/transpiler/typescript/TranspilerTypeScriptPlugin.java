@@ -2508,6 +2508,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			System.out.println("  -> " + fileName);
 			final Path path = Paths.get(outputDir + "/" + fileName);
 			super.outputFiles.add(fileName);
+			super.outputFilesTypeOnly.add(classTree.getKind() == Tree.Kind.INTERFACE);
 			try {
 				Files.createDirectories(path.getParent());
 				final TranspilerUnit transpilerUnit = transpiler.getTranspilerUnit(classTree);
@@ -2529,10 +2530,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		System.out.println("Writing prepared TypeScript resources...");
 		for (final TranspilerResource res : tsResources) {
 			// remove package prefix "typescript." from package path and replace all dots by slashes
-			final String fileName = res.packageName.substring(11).replace(".", "/") + "/" + res.className + res.extension;
+			final String packageName = res.packageName.substring(11);
+			final String fileName = packageName.replace(".", "/") + "/" + res.className + res.extension;
 			System.out.println("  -> " + fileName);
 			final Path path = Paths.get(outputDir + "/" + fileName);
 			super.outputFiles.add(fileName);
+			final TypeElement elem = transpiler.getTypeElement(packageName + "." + res.className);
+			super.outputFilesTypeOnly.add((elem != null) && (elem.getKind() == ElementKind.INTERFACE));
 			try {
 				Files.createDirectories(path.getParent());
 				Files.writeString(path, res.data, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);

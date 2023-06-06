@@ -7,7 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
@@ -115,15 +116,29 @@ public class CoreTranspiler {
 		final ArrayList<String> outputs = new ArrayList<>();
 		outputs.addAll(typescriptPlugin.getOutputFiles());
 		outputs.addAll(apiGeneratorPlugin.getOutputFiles());
-		final String strExports = outputs.stream().sorted()
-				.map(filename -> {
-					final String importName = filename.replace(".ts", "");
-					final String classname = importName.replaceFirst(".*/", "");
-					return "export { " + classname + " } from './" + importName + "';";
-				})
-				.collect(Collectors.joining("\n", "", "\n"));
+		final ArrayList<Boolean> outputsTypeOnly = new ArrayList<>();
+		outputsTypeOnly.addAll(typescriptPlugin.getOutputFilesTypeOnly());
+		outputsTypeOnly.addAll(apiGeneratorPlugin.getOutputFilesTypeOnly());
+
+		if (outputs.size() != outputsTypeOnly.size())
+			throw new TranspilerException("Transpiler Error: output arrays do not have the same size");
+
+		final Map<String, Boolean> mapTypeOnly = new HashMap<>();
+		for (int i = 0; i < outputs.size(); i++)
+			mapTypeOnly.put(outputs.get(i), outputsTypeOnly.get(i));
+
+		final StringBuilder sbExports = new StringBuilder();
+		for (final String filename : outputs.stream().sorted().toList()) {
+			final String importName = filename.replace(".ts", "");
+			final String classname = importName.replaceFirst(".*/", "");
+			sbExports.append("export ");
+			if (Boolean.TRUE.equals(mapTypeOnly.get(filename)))
+				sbExports.append("type ");
+			sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
+		}
+
 		try {
-			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), strExports, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), sbExports.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			throw new TranspilerException("Transpiler Error: Cannot generated index.ts file.");
 		}
