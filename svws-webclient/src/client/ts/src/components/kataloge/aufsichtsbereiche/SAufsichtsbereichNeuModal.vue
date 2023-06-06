@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-	import { Aufsichtsbereich } from "@svws-nrw/svws-core";
+	import { Aufsichtsbereich } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

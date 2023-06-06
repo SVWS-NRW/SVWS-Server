@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList } from "@core";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 

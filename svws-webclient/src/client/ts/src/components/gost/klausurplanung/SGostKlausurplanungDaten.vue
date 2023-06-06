@@ -100,9 +100,9 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostFach } from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostFach } from "@core";
 	import type { Ref , WritableComputedRef } from 'vue'
-	import { GostKlausurvorgabe } from "@svws-nrw/svws-core";
+	import { GostKlausurvorgabe } from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{

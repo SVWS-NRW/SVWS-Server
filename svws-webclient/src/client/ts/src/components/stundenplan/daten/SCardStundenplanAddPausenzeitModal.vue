@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanPausenzeit, Wochentag } from "@svws-nrw/svws-core";
+	import { StundenplanPausenzeit, Wochentag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

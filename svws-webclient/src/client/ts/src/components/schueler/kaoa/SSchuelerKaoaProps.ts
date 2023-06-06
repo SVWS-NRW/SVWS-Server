@@ -1,4 +1,4 @@
-import type { SchuelerKAoADaten } from "@svws-nrw/svws-core";
+import type { SchuelerKAoADaten } from "@core";
 
 export interface SchuelerKAoAProps {
 	data: SchuelerKAoADaten;

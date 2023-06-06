@@ -25,8 +25,8 @@
 	import { computed, ref } from "vue";
 	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 
-	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core";
-	import { AdressenUtils } from "@svws-nrw/svws-core";
+	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@core";
+	import { AdressenUtils } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;

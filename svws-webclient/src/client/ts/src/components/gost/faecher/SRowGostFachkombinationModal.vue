@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangFachkombination } from '@svws-nrw/svws-core';
+	import type { GostJahrgangFachkombination } from '@core';
 	import { ref } from 'vue';
 
 	const props = defineProps<{

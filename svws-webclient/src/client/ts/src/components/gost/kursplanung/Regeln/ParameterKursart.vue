@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-	import { GostKursart } from "@svws-nrw/svws-core";
+	import { GostKursart } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

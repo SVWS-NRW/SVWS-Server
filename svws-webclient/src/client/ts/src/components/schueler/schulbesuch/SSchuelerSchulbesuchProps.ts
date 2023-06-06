@@ -1,4 +1,4 @@
-import type { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core";
+import type { SchuelerSchulbesuchsdaten } from "@core";
 
 export interface SchuelerSchulbesuchProps {
 	data: SchuelerSchulbesuchsdaten;

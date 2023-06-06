@@ -1,5 +1,5 @@
-import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";

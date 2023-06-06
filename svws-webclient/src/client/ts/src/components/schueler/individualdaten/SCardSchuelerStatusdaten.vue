@@ -24,10 +24,10 @@
 
 <script setup lang="ts">
 
-	import type { KatalogEintrag, SchuelerStammdaten} from "@svws-nrw/svws-core";
+	import type { KatalogEintrag, SchuelerStammdaten} from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { SchuelerStatus } from "@svws-nrw/svws-core";
+	import { SchuelerStatus } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;

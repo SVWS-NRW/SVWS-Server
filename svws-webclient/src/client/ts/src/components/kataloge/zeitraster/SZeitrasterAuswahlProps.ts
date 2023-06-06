@@ -1,4 +1,4 @@
-import type { StundenplanZeitraster, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { StundenplanZeitraster, Schuljahresabschnitt } from "@core";
 
 export interface ZeitrasterAuswahlProps {
 	auswahl: StundenplanZeitraster | undefined;

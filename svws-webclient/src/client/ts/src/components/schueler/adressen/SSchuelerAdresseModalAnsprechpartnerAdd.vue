@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebStammdaten } from "@svws-nrw/svws-core";
-	import { BetriebAnsprechpartner } from "@svws-nrw/svws-core";
+	import type { BetriebStammdaten } from "@core";
+	import { BetriebAnsprechpartner } from "@core";
 	import type { Ref} from 'vue';
 	import { ref } from 'vue';
 

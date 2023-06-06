@@ -63,8 +63,8 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@svws-nrw/svws-core";
-	import { GostKursart } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
+	import { GostKursart } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";

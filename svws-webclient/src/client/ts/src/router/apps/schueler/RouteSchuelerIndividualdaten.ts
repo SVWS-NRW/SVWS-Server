@@ -1,5 +1,5 @@
-import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
 import { api } from "~/router/Api";

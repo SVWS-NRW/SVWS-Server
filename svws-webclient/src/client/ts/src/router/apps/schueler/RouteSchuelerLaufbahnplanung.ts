@@ -1,8 +1,8 @@
-import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
-import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";

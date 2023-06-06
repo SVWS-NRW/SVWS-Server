@@ -1,4 +1,4 @@
-import type { List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@svws-nrw/svws-core";
+import type { List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;

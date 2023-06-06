@@ -1,10 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AufsichtsbereicheAuswahlProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
-import type { StundenplanAufsichtsbereich} from "@svws-nrw/svws-core";
+import type { StundenplanAufsichtsbereich} from "@core";
 import type { AufsichtsbereicheAppProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { shallowRef } from "vue";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";

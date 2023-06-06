@@ -1,4 +1,4 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, List, Schuljahresabschnitt } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {

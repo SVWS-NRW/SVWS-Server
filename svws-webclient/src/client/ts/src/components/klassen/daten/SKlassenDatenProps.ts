@@ -1,4 +1,4 @@
-import type { KlassenDaten, LehrerListeEintrag, JahrgangsListeEintrag, Schueler} from "@svws-nrw/svws-core";
+import type { KlassenDaten, LehrerListeEintrag, JahrgangsListeEintrag, Schueler} from "@core";
 
 export interface KlassenDatenProps {
 	patch: (data : Partial<KlassenDaten>) => Promise<void>;

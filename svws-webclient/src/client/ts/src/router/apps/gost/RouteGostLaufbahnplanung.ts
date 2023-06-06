@@ -1,8 +1,8 @@
-import type { GostBelegpruefungsErgebnisse, List } from "@svws-nrw/svws-core";
+import type { GostBelegpruefungsErgebnisse, List } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
 import type { RouteGost } from "~/router/apps/RouteGost";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform } from "@svws-nrw/svws-core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform } from "@core";
 import { shallowRef } from "vue";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";

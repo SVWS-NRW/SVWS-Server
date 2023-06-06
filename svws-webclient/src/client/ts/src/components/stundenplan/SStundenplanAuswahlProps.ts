@@ -1,4 +1,4 @@
-import type { Schuljahresabschnitt, StundenplanListeEintrag } from "@svws-nrw/svws-core";
+import type { Schuljahresabschnitt, StundenplanListeEintrag } from "@core";
 
 export interface StundenplanAuswahlProps {
 	auswahl: StundenplanListeEintrag | undefined;

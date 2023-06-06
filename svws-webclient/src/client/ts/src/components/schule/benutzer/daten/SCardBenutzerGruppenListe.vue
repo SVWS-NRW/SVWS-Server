@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppeListeEintrag, BenutzerManager, List } from "@svws-nrw/svws-core";
+	import type { BenutzergruppeListeEintrag, BenutzerManager, List } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

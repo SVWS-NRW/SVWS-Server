@@ -8,7 +8,7 @@ import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlaus
 import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
 import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
-import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@core";
 import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";

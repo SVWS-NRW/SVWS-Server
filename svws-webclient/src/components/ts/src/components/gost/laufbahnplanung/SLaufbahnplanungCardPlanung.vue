@@ -264,8 +264,8 @@
 	import type { ComputedRef } from "vue";
 	import {computed, onMounted, ref} from "vue";
 
-	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@svws-nrw/svws-core";
-	import { GostHalbjahr } from "@svws-nrw/svws-core";
+	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@core";
+	import { GostHalbjahr } from "@core";
 	import type {DataTableColumn} from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{

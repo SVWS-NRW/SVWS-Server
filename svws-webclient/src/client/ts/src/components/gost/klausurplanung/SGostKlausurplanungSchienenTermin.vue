@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@core";
 	import { computed } from 'vue';
 
 	const props = defineProps<{

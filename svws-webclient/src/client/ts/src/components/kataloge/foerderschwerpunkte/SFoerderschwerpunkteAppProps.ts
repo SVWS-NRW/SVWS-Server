@@ -1,4 +1,4 @@
-import type { FoerderschwerpunktEintrag  } from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag  } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface FoerderschwerpunkteAppProps {

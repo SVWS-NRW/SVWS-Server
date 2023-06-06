@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
 	import type { DataTableItem } from "@ui";
 	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';

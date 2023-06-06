@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import type { SchuelerStammdaten } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;

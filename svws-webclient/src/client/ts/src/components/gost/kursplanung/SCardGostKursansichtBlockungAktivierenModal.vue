@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostBlockungsdatenManager } from '@svws-nrw/svws-core';
+	import type { GostBlockungsdatenManager } from '@core';
 	import { ref } from 'vue';
 
 

@@ -1,4 +1,4 @@
-import type { Raum } from "@svws-nrw/svws-core";
+import type { Raum } from "@core";
 
 export interface RaumDatenProps {
 	patch: (data : Partial<Raum>) => Promise<void>;

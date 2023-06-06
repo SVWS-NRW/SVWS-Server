@@ -1,6 +1,6 @@
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from "@svws-nrw/svws-core";
-import { Schulform, Schulgliederung, BenutzerTyp } from "@svws-nrw/svws-core";
+	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from "@core";
+import { Schulform, Schulgliederung, BenutzerTyp } from "@core";
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
 import type { ComputedRef} from "vue";

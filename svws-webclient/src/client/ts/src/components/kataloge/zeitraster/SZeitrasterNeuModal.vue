@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanZeitraster, Wochentag } from "@svws-nrw/svws-core";
+	import { StundenplanZeitraster, Wochentag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

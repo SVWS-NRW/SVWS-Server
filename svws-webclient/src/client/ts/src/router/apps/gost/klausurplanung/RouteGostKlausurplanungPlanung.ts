@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, Vector } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostKursklausurManager, Schulform, Vector } from "@core";
 
 const SGostKlausurplanungPlanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue");
 

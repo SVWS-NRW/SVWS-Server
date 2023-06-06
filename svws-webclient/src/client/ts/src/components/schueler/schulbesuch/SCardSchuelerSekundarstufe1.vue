@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerSchulbesuchsdaten } from "@svws-nrw/svws-core";
+	import type { SchuelerSchulbesuchsdaten } from "@core";
 
 	defineProps<{
 		data: SchuelerSchulbesuchsdaten;

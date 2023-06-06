@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteKatalogRaeume} from "../RouteKatalogRaeume";
 import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogRaeume } from "../RouteKatalogRaeume";
 

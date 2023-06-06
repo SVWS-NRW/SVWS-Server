@@ -38,8 +38,8 @@
 
 <script setup lang="ts">
 
-	import type {GostBlockungsergebnisManager, SchuelerListeEintrag} from "@svws-nrw/svws-core";
-	import { SchuelerStatus} from "@svws-nrw/svws-core";
+	import type {GostBlockungsergebnisManager, SchuelerListeEintrag} from "@core";
+	import { SchuelerStatus} from "@core";
 	import type {ComputedRef} from "vue";
 	import { computed} from "vue";
 	import type {GostKursplanungSchuelerFilter} from "../GostKursplanungSchuelerFilter";

@@ -13,7 +13,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef, WritableComputedRef } from "vue";
-	import type { Aufsichtsbereich } from "@svws-nrw/svws-core";
+	import type { Aufsichtsbereich } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{

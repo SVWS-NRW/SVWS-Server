@@ -1,4 +1,4 @@
-import type { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag } from "@core";
 
 export interface FoerderschwerpunktDatenProps {
 	patch: (data : Partial<FoerderschwerpunktEintrag>) => Promise<void>;

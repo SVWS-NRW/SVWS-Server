@@ -7,8 +7,8 @@
 
 <script setup lang="ts">
 
-	import type { FaecherListeEintrag } from "@svws-nrw/svws-core";
-	import { ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { FaecherListeEintrag } from "@core";
+	import { ZulaessigesFach } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 

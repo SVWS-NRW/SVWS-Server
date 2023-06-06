@@ -1,4 +1,4 @@
-import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 
 export interface LehrerIndividualdatenProps {
 	patch: (data : Partial<LehrerStammdaten>) => Promise<void>;

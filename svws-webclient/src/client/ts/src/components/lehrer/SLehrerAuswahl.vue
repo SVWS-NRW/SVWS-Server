@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag} from "@svws-nrw/svws-core";
-	import { PersonalTyp } from "@svws-nrw/svws-core";
+	import type { LehrerListeEintrag} from "@core";
+	import { PersonalTyp } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";

@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@svws-nrw/svws-core";
-	import { GostLaufbahnplanungBeratungsdaten } from "@svws-nrw/svws-core";
+	import type { LehrerListeEintrag } from "@core";
+	import { GostLaufbahnplanungBeratungsdaten } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{

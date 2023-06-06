@@ -19,7 +19,7 @@ export default defineConfig({
 			dirs: [
 				'src/components',
 				resolve(__dirname, '../../ui/ts/src/components'),
-				resolve(__dirname, '../../components/ts/src/components')
+				resolve(__dirname, '../../components/ts/src/components'),
 			],
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
@@ -32,6 +32,7 @@ export default defineConfig({
 			"~": resolve(__dirname, "src"),
 			"@comp": resolve(__dirname, '../../components/ts/src/index.ts'),
 			"@ui": resolve(__dirname, '../../ui/ts/src/index.ts'),
+			"@core": resolve(__dirname, '../../core/ts/src/index.ts')
 		}
 	},
 	build: {

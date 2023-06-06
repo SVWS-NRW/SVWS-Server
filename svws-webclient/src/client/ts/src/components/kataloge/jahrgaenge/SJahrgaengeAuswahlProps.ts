@@ -1,4 +1,4 @@
-import type { JahrgangsListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { JahrgangsListeEintrag, Schuljahresabschnitt } from "@core";
 
 export interface JahrgaengeAuswahlProps {
 	auswahl: JahrgangsListeEintrag | undefined;

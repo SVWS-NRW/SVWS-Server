@@ -1,6 +1,6 @@
 import { routeSchuleBenutzergruppeDaten } from "./RouteSchuleBenutzergruppeDaten";
-import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@svws-nrw/svws-core";
-import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@svws-nrw/svws-core";
+import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@core";
+import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

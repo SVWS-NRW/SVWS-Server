@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { routeApp } from "~/router/RouteApp";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";

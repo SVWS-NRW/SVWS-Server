@@ -68,10 +68,10 @@
 
 <script setup lang="ts">
 
-	import type { DBSchemaListeEintrag, List } from "@svws-nrw/svws-core";
 	import type { LoginProps } from "./SLoginProps";
-	import { computed, ref } from "vue";
-	import { ArrayList } from "@svws-nrw/svws-core";
+	import type { DBSchemaListeEintrag, List} from "@core";
+	import {computed, ref} from "vue";
+	import { ArrayList } from "@core";
 	import { version } from '../../version';
 
 	const props = defineProps<LoginProps>();

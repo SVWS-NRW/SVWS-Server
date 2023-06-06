@@ -3,7 +3,7 @@ import type { RouteLehrer} from "~/router/apps/RouteLehrer";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { LehrerUnterrichtsdatenProps } from "~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdatenProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 
 const SLehrerUnterrichtsdaten = () => import("~/components/lehrer/unterrichtsdaten/SLehrerUnterrichtsdaten.vue");
 

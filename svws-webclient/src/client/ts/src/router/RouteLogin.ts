@@ -1,8 +1,8 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { DBSchemaListeEintrag} from "@svws-nrw/svws-core";
+import type { DBSchemaListeEintrag} from "@core";
 import type { Ref} from "vue";
 import type { LoginProps } from "~/components/SLoginProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "./Api";
 import { RouteManager } from "./RouteManager";

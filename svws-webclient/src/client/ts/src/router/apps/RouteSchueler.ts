@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";

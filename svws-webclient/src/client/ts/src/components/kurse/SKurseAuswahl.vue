@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-	import type { ArrayList } from "@svws-nrw/svws-core";
+	import type { ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { Ref} from "vue";
 	import { ref, computed } from "vue";

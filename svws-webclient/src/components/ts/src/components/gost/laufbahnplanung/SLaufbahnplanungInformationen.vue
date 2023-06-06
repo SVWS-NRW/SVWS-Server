@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 
-	import { type List, type GostBelegpruefungErgebnisFehler, ArrayList, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
+	import { type List, type GostBelegpruefungErgebnisFehler, ArrayList, GostBelegungsfehlerArt } from "@core";
 	import { type ComputedRef, computed } from 'vue';
 
 	const props = defineProps<{

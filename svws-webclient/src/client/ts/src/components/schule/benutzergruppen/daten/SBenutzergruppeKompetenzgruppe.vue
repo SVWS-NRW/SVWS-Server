@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppenManager, BenutzerKompetenzGruppe, List} from "@svws-nrw/svws-core";
-	import { BenutzerKompetenz} from "@svws-nrw/svws-core";
+	import type { BenutzergruppenManager, BenutzerKompetenzGruppe, List} from "@core";
+	import { BenutzerKompetenz} from "@core";
 	import type { Ref,WritableComputedRef } from "vue";
 	import { ref, computed } from "vue";
 

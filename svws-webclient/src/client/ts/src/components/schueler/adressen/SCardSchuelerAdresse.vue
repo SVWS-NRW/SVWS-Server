@@ -46,7 +46,7 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
+	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import { orte_filter, orte_sort } from "~/helfer";
 
 	const props = defineProps<{

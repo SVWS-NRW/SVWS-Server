@@ -23,8 +23,8 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { ReligionEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core";
-	import { Nationalitaeten } from "@svws-nrw/svws-core";
+	import type { ReligionEintrag, SchuelerStammdaten } from "@core";
+	import { Nationalitaeten } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
 
 	const props = defineProps<{

@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import type { List, StundenplanAufsichtsbereich, StundenplanManager } from "@svws-nrw/svws-core";
+	import type { List, StundenplanAufsichtsbereich, StundenplanManager } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

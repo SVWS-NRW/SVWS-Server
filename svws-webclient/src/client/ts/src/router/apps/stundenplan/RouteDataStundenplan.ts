@@ -1,6 +1,6 @@
-import type { StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@svws-nrw/svws-core";
+import type { StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@svws-nrw/svws-core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
 import { useDebounceFn } from "@vueuse/core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";

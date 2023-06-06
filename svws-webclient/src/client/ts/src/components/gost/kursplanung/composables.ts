@@ -1,5 +1,5 @@
-import type { GostBlockungRegel, GostFach } from "@svws-nrw/svws-core";
-import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { GostBlockungRegel, GostFach } from "@core";
+import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@core";
 import type { Ref, WritableComputedRef } from 'vue';
 import { computed } from 'vue';
 

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuelerListeEintrag } from "@svws-nrw/svws-core";
+	import type { SchuelerListeEintrag } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

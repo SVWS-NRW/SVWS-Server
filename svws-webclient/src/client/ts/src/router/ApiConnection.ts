@@ -1,5 +1,5 @@
-import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@svws-nrw/svws-core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList } from "@svws-nrw/svws-core";
+import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList } from "@core";
 import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 import { Config } from "~/components/Config";

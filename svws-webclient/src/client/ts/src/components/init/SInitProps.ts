@@ -1,4 +1,4 @@
-import type { SchulenKatalogEintrag, List } from "@svws-nrw/svws-core";
+import type { SchulenKatalogEintrag, List } from "@core";
 
 export interface InitProps {
 	setSource: (source: string) => Promise<void>;

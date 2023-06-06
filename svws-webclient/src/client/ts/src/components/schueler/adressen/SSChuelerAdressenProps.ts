@@ -1,4 +1,4 @@
-import type { BetriebStammdaten, SchuelerBetriebsdaten, BetriebAnsprechpartner, OrtKatalogEintrag, OrtsteilKatalogEintrag, List, KatalogEintrag, LehrerListeEintrag, BetriebListeEintrag } from "@svws-nrw/svws-core";
+import type { BetriebStammdaten, SchuelerBetriebsdaten, BetriebAnsprechpartner, OrtKatalogEintrag, OrtsteilKatalogEintrag, List, KatalogEintrag, LehrerListeEintrag, BetriebListeEintrag } from "@core";
 
 export interface SchuelerAdressenProps {
 	patchBetrieb: (data : Partial<BetriebStammdaten>, id : number) => Promise<void>;

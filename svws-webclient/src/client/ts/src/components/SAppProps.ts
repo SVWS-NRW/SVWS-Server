@@ -1,4 +1,4 @@
-import type { SchuleStammdaten, Schulform } from "@svws-nrw/svws-core";
+import type { SchuleStammdaten, Schulform } from "@core";
 import type { AuswahlChildData } from "./AuswahlChildData";
 
 export interface AppProps {

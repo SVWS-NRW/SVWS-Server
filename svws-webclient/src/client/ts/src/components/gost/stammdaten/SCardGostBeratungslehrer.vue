@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangsdaten } from "@svws-nrw/svws-core";
+	import type { GostJahrgangsdaten } from "@core";
 
 	const props = defineProps<{
 		jahrgangsdaten: () => GostJahrgangsdaten;

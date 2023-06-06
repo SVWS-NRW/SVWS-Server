@@ -24,13 +24,18 @@ export default defineConfig({
 			resolvers: [IconsResolver()],
 			dirs: [
 				'src/components',
-				resolve(__dirname, '../../ui/ts/src/components')
+				resolve(__dirname, '../../ui/ts/src/components'),
 			],
 			extensions: ['vue', 'md'],
 			include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
 		}),
 		Icons(),
 	],
+	resolve: {
+		alias: {
+			"@core": resolve(__dirname, '../../core/ts/src/index.ts')
+		}
+	},
 	build: {
 		lib: {
 			entry: resolve(__dirname, "src/index.ts"),

@@ -28,7 +28,7 @@
 <script setup lang="ts">
 
 	import type { GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostBlockungsergebnisSchiene, SchuelerListeEintrag, List } from "@svws-nrw/svws-core";
+		GostBlockungsergebnisSchiene, SchuelerListeEintrag, List } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";

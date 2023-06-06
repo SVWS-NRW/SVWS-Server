@@ -17,10 +17,10 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag} from "@svws-nrw/svws-core";
+	import type { JahrgangsListeEintrag, KursDaten, LehrerListeEintrag} from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList } from "@svws-nrw/svws-core";
+	import { ArrayList } from "@core";
 
 	const props = defineProps<{
 		data: KursDaten;

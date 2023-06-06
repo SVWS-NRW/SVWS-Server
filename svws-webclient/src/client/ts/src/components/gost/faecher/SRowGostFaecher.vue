@@ -81,10 +81,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostFach, GostFaecherManager} from "@svws-nrw/svws-core";
+	import type { GostFach, GostFaecherManager} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;

@@ -1,4 +1,4 @@
-import type { GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisManager, SchuelerListeEintrag } from "@svws-nrw/svws-core";
+import type { GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisManager, SchuelerListeEintrag } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostUmwahlansichtProps {

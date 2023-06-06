@@ -25,8 +25,8 @@
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
-	import type { FoerderschwerpunktEintrag } from "@svws-nrw/svws-core";
-	import { Foerderschwerpunkt } from "@svws-nrw/svws-core";
+	import type { FoerderschwerpunktEintrag } from "@core";
+	import { Foerderschwerpunkt } from "@core";
 
 	const props = defineProps<{
 		data: FoerderschwerpunktEintrag

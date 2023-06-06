@@ -68,10 +68,10 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List} from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List} from "@core";
 	import type { ComputedRef, Ref } from "vue";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, ZulaessigesFach } from "@core";
 	import { computed, ref } from "vue";
 	import { lehrer_filter } from "~/helfer";
 

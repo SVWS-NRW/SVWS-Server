@@ -47,8 +47,8 @@
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@svws-nrw/svws-core";
-	import { Wochentag } from "@svws-nrw/svws-core/dist/core/types/Wochentag";
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@core";
+	import { Wochentag } from "@core";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten | undefined;

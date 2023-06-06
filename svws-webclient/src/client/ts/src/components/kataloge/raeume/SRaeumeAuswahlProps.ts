@@ -1,4 +1,4 @@
-import type { Raum, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { Raum, Schuljahresabschnitt } from "@core";
 
 export interface RaeumeAuswahlProps {
 	auswahl: Raum | undefined;

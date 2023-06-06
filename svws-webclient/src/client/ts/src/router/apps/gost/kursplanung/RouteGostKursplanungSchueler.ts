@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteGostKursplanung} from "../RouteGostKursplanung";
 import { routeGostKursplanung } from "../RouteGostKursplanung";

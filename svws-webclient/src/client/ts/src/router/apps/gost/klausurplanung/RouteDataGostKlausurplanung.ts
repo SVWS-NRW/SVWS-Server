@@ -1,7 +1,7 @@
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe} from "@svws-nrw/svws-core";
-import { StundenplanManager} from "@svws-nrw/svws-core";
-import { KursManager } from "@svws-nrw/svws-core";
-import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@svws-nrw/svws-core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe} from "@core";
+import { StundenplanManager} from "@core";
+import { KursManager } from "@core";
+import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

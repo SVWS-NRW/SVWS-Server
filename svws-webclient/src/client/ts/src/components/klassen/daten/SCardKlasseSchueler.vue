@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 
-	import type { List, Schueler} from "@svws-nrw/svws-core";
-	import { SchuelerStatus } from "@svws-nrw/svws-core";
+	import type { List, Schueler} from "@core";
+	import { SchuelerStatus } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{

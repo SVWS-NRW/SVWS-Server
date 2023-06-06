@@ -16,8 +16,8 @@
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
-	import type { GostJahrgangsdaten } from "@svws-nrw/svws-core";
-	import { GostHalbjahr } from "@svws-nrw/svws-core";
+	import type { GostJahrgangsdaten } from "@core";
+	import { GostHalbjahr } from "@core";
 
 	const props = defineProps<{
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;

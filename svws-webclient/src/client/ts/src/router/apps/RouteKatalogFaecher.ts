@@ -1,5 +1,5 @@
-import type { FachDaten, FaecherListeEintrag, List} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { FachDaten, FaecherListeEintrag, List} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
 import type { ShallowRef} from "vue";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";

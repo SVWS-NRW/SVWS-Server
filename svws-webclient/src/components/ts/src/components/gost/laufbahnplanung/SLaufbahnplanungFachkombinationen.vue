@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@svws-nrw/svws-core";
-	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@svws-nrw/svws-core";
+	import type { GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@core";
+	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{

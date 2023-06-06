@@ -1,5 +1,5 @@
-import type { GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { GostStatistikFachwahl, List} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";

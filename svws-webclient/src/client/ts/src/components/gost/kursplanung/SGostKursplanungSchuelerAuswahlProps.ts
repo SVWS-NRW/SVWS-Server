@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager } from "@svws-nrw/svws-core";
+import type { SchuelerListeEintrag, GostBlockungsergebnisManager, GostFaecherManager } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
 export interface KursplanungSchuelerAuswahlProps {

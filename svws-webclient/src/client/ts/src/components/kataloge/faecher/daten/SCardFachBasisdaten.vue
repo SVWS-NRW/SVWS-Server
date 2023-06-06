@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import type { FachDaten } from "@svws-nrw/svws-core";
+	import type { FachDaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

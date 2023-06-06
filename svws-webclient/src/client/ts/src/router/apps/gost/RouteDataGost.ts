@@ -1,5 +1,5 @@
-import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@svws-nrw/svws-core";
-import { GostFaecherManager, ArrayList } from "@svws-nrw/svws-core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
+import { GostFaecherManager, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import type { RouteParams } from "vue-router";
 import { api } from "~/router/Api";

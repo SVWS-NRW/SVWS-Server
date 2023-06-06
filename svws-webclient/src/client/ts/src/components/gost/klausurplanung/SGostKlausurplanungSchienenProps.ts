@@ -6,7 +6,7 @@ import type {
 	KursManager,
 	LehrerListeEintrag,
 	SchuelerListeEintrag,
-} from "@svws-nrw/svws-core";
+} from "@core";
 
 export interface GostKlausurplanungSchienenProps {
 	kursklausurmanager: () => GostKursklausurManager;

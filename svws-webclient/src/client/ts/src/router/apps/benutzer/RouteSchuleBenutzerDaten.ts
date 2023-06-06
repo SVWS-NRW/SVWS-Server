@@ -1,5 +1,5 @@
-import type { BenutzerKompetenzGruppe, BenutzerListeEintrag} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { BenutzerKompetenzGruppe, BenutzerListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 import type { RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";

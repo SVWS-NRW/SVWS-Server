@@ -40,14 +40,13 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@svws-nrw/svws-core';
+	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@core';
 	import type { ComputedRef, WritableComputedRef } from 'vue';
 	import type { DataTableColumn } from '@ui';
-	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { Config } from '~/components/Config';
-	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@svws-nrw/svws-core';
-	import { onMounted, toRaw } from 'vue';
-	import { computed, ref } from 'vue';
+	import type { ApiStatus } from '~/components/ApiStatus';
+	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
+	import { computed, ref, toRaw } from 'vue';
 
 	const props = defineProps<{
 		config: Config;

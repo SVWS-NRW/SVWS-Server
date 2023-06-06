@@ -1,5 +1,5 @@
-import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
-import { BenutzergruppeDaten } from "@svws-nrw/svws-core";
+import type { BenutzergruppeListeEintrag, List, BenutzerListeEintrag, BenutzergruppenManager, BenutzerKompetenz, BenutzerKompetenzGruppe } from "@core";
+import { BenutzergruppeDaten } from "@core";
 
 export interface BenutzergruppeProps{
     auswahl: () => BenutzergruppeListeEintrag | undefined;

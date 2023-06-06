@@ -1,4 +1,4 @@
-import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, KatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag } from "@svws-nrw/svws-core";
+import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, KatalogEintrag, FoerderschwerpunktEintrag, ReligionEintrag } from "@core";
 
 export interface SchuelerIndividualdatenProps {
 	patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;

@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		List, SchuelerListeEintrag} from "@svws-nrw/svws-core";
-	import { GostBlockungRegel, GostKursblockungRegelTyp, ZulaessigesFach } from "@svws-nrw/svws-core";
+		List, SchuelerListeEintrag} from "@core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp, ZulaessigesFach } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { ApiStatus } from "~/components/ApiStatus";

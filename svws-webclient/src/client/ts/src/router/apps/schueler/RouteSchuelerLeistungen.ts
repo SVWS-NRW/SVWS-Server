@@ -1,5 +1,5 @@
-import type { List, SchuelerLernabschnittListeEintrag} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@svws-nrw/svws-core";
+import type { List, SchuelerLernabschnittListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";

@@ -40,8 +40,8 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerKompetenz, BenutzergruppenManager, List} from "@svws-nrw/svws-core";
-	import { BenutzerKompetenzGruppe } from "@svws-nrw/svws-core";
+	import type { BenutzerKompetenz, BenutzergruppenManager, List} from "@core";
+	import { BenutzerKompetenzGruppe } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	const props = defineProps<{

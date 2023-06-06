@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag } from "@svws-nrw/svws-core";
+import type { StundenplanListeEintrag } from "@core";
 
 export interface SchuelerStundenplanAuswahlProps {
 	stundenplan: StundenplanListeEintrag | undefined;

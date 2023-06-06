@@ -103,8 +103,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, GostKlausurtermin} from "@svws-nrw/svws-core";
-	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@svws-nrw/svws-core";
+	import type { GostKursklausur, GostKlausurtermin} from "@core";
+	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 

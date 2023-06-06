@@ -44,12 +44,12 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@svws-nrw/svws-core";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@core";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { computed, ref, watch } from "vue";
-	import { SchuelerStatus } from "@svws-nrw/svws-core";
+	import { SchuelerStatus } from "@core";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 

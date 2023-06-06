@@ -26,7 +26,7 @@
 	import type { ComputedRef } from 'vue';
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 	import { computed } from 'vue';
-	import { GostHalbjahr } from "@svws-nrw/svws-core";
+	import { GostHalbjahr } from "@core";
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 

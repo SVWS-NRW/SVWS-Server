@@ -1,4 +1,4 @@
-import type { FaecherListeEintrag  } from "@svws-nrw/svws-core";
+import type { FaecherListeEintrag  } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface FaecherAppProps {

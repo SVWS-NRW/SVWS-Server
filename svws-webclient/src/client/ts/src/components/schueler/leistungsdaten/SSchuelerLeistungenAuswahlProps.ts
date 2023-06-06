@@ -1,4 +1,4 @@
-import type { SchuelerLernabschnittListeEintrag, List } from "@svws-nrw/svws-core";
+import type { SchuelerLernabschnittListeEintrag, List } from "@core";
 
 export interface SchuelerLeistungenAuswahlProps {
 	lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;

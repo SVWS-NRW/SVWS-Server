@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { KlassenDatenProps } from "~/components/klassen/daten/SKlassenDatenProps";
 import { RouteNode } from "~/router/RouteNode";

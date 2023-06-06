@@ -156,8 +156,8 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 
-	import type { GostFach, GostFaecherManager, LinkedCollection} from "@svws-nrw/svws-core";
-	import { Fachgruppe, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { GostFach, GostFaecherManager, LinkedCollection} from "@core";
+	import { Fachgruppe, ZulaessigesFach } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{

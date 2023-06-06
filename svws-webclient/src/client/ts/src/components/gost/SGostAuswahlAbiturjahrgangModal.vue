@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { JahrgangsListeEintrag } from "@svws-nrw/svws-core";
+	import type { JahrgangsListeEintrag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

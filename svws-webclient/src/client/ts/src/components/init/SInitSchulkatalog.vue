@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 
-	import type { List, SchulenKatalogEintrag } from "@svws-nrw/svws-core";
+	import type { List, SchulenKatalogEintrag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

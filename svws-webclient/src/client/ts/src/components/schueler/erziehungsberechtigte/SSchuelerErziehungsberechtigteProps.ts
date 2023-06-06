@@ -1,4 +1,4 @@
-import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+import type { List, ErzieherStammdaten, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 
 export interface SchuelerErziehungsberechtigteProps {
 	data: List<ErzieherStammdaten>;

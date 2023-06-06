@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

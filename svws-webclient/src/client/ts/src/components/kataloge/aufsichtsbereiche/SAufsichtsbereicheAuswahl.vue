@@ -34,7 +34,7 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { AufsichtsbereicheAuswahlProps } from "./SAufsichtsbereicheAuswahlProps";
-	import type { Aufsichtsbereich } from "@svws-nrw/svws-core";
+	import type { Aufsichtsbereich } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<AufsichtsbereicheAuswahlProps>();

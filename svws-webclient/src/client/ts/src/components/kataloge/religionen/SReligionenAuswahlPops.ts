@@ -1,4 +1,4 @@
-import type { ReligionEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { ReligionEintrag, Schuljahresabschnitt } from "@core";
 
 export interface ReligionenAuswahlProps {
 	auswahl: ReligionEintrag | undefined;

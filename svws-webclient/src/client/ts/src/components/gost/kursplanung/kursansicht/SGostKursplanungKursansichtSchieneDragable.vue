@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungRegel, GostBlockungSchiene } from "@svws-nrw/svws-core";
+	import type { GostBlockungRegel, GostBlockungSchiene } from "@core";
 	import type { ComputedRef, Ref } from "vue";
 	import { computed, ref } from "vue";
 

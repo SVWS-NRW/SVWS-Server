@@ -1,5 +1,5 @@
-import type { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@svws-nrw/svws-core";
-import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, Credentials, ArrayList } from "@svws-nrw/svws-core";
+import type { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@core";
+import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, Credentials, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

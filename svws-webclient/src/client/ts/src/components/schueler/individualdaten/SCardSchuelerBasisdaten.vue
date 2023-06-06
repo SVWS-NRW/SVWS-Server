@@ -22,10 +22,10 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import type { SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { Geschlecht } from "@svws-nrw/svws-core";
+	import { Geschlecht } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;

@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager} from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager} from "@core";
 	import type { ComputedRef, Ref} from 'vue';
-	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@core";
 	import { computed, ref } from 'vue';
 	import { lehrer_filter } from '~/helfer';
 

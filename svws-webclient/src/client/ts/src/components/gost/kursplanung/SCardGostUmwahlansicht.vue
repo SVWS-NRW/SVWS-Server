@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@svws-nrw/svws-core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";

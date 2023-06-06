@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppeListeEintrag } from "@svws-nrw/svws-core";
+	import type { BenutzergruppeListeEintrag } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";

@@ -17,7 +17,7 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { JahrgangsListeEintrag, KlassenDaten } from "@svws-nrw/svws-core";
+	import type { JahrgangsListeEintrag, KlassenDaten } from "@core";
 
 	const props = defineProps<{
 		data: KlassenDaten,

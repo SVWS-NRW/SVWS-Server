@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { RouteStundenplan} from "../RouteStundenplan";
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
 import { routeStundenplan} from "../RouteStundenplan";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");

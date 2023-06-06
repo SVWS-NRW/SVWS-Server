@@ -44,11 +44,11 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection} from "@svws-nrw/svws-core";
+	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
-	import { GostKursart, GostHalbjahr } from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
+	import { GostKursart, GostHalbjahr } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

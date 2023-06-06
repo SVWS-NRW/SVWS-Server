@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 
-	import type {BenutzergruppenManager, BenutzerKompetenz } from "@svws-nrw/svws-core";
+	import type {BenutzergruppenManager, BenutzerKompetenz } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

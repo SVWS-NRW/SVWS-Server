@@ -1,4 +1,4 @@
-import type { DBSchemaListeEintrag, List } from "@svws-nrw/svws-core";
+import type { DBSchemaListeEintrag, List } from "@core";
 
 export interface LoginProps {
 	authenticated: boolean;

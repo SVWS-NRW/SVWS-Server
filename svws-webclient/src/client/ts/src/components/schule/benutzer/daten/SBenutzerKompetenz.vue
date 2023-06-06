@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { BenutzerKompetenz, BenutzerManager } from "@svws-nrw/svws-core";
+	import type { BenutzerKompetenz, BenutzerManager } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

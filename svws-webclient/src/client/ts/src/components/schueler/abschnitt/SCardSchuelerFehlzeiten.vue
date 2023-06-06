@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
+	import type { SchuelerLernabschnittsdaten } from "@core";
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;

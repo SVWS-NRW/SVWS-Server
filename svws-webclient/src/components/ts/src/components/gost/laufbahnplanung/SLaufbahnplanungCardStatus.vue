@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, Sprachendaten } from "@svws-nrw/svws-core";
+	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, Sprachendaten } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

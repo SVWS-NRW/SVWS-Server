@@ -1,4 +1,4 @@
-import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@svws-nrw/svws-core";
+import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

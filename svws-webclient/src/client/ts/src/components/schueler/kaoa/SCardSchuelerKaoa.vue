@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerKAoADaten } from "@svws-nrw/svws-core";
+	import type { SchuelerKAoADaten } from "@core";
 
 	defineProps<{
 		data: SchuelerKAoADaten;

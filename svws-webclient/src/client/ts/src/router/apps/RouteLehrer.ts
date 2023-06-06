@@ -10,7 +10,7 @@ import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
 import { api } from "../Api";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 

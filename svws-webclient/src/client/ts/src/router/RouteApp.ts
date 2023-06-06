@@ -1,9 +1,9 @@
 import type { AppProps } from "~/components/SAppProps";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
+import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import type { WritableComputedRef } from "vue";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@svws-nrw/svws-core";
+import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@core";
 import { computed, shallowRef } from "vue";
 import { routeSchule } from "~/router/apps/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";

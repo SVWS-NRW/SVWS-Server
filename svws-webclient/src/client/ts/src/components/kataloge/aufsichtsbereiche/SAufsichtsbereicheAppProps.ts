@@ -1,4 +1,4 @@
-import type { Aufsichtsbereich  } from "@svws-nrw/svws-core";
+import type { Aufsichtsbereich  } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface AufsichtsbereicheAppProps {

@@ -1,4 +1,4 @@
-import type { Aufsichtsbereich, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { Aufsichtsbereich, Schuljahresabschnitt } from "@core";
 
 export interface AufsichtsbereicheAuswahlProps {
 	auswahl: Aufsichtsbereich | undefined;

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@svws-nrw/svws-core";
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@core";
 
 	const props = defineProps<{
 		//itemTop: number;

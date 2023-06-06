@@ -1,4 +1,4 @@
-import type { GostJahrgang, JahrgangsListeEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { GostJahrgang, JahrgangsListeEintrag, Schuljahresabschnitt } from "@core";
 import type { ApiStatus } from "../ApiStatus";
 
 export interface GostAuswahlProps {

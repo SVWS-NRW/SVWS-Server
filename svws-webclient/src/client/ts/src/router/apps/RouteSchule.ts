@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { BenutzerKompetenzGruppe, List} from "@svws-nrw/svws-core";
+import type { BenutzerKompetenzGruppe, List} from "@core";
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
@@ -7,7 +7,7 @@ import type { RouteApp } from "~/router/RouteApp";
 import { shallowRef } from "vue";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "../RouteNode";
 import { RouteManager } from "../RouteManager";
 import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";

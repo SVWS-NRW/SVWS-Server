@@ -34,7 +34,7 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
-	import type { Raum } from "@svws-nrw/svws-core";
+	import type { Raum } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<RaeumeAuswahlProps>();

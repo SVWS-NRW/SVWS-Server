@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@svws-nrw/svws-core";
-	import { Note } from "@svws-nrw/svws-core";
+	import type { SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
+	import { Note } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

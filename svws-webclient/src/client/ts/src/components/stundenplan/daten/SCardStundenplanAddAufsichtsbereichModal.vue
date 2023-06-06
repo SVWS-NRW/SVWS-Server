@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanAufsichtsbereich } from "@svws-nrw/svws-core";
+	import { StundenplanAufsichtsbereich } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

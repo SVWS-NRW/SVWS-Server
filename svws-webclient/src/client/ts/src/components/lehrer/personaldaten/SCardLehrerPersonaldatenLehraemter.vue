@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { LehrerPersonaldaten } from "@svws-nrw/svws-core";
+	import type { LehrerPersonaldaten } from "@core";
 	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung, LehrerLehrbefaehigung,
-		LehrerLehrbefaehigungAnerkennung } from "@svws-nrw/svws-core";
+		LehrerLehrbefaehigungAnerkennung } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

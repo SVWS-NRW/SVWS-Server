@@ -40,8 +40,8 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { ZeitrasterAuswahlProps } from "./SZeitrasterAuswahlProps";
-	import { Wochentag } from "@svws-nrw/svws-core";
-	import type { StundenplanZeitraster } from "@svws-nrw/svws-core";
+	import { Wochentag } from "@core";
+	import type { StundenplanZeitraster } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<ZeitrasterAuswahlProps>();

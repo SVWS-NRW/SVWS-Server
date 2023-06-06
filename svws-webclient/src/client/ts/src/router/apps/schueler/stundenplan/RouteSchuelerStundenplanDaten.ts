@@ -1,5 +1,5 @@
-import type { StundenplanListeEintrag } from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, SchuelerStundenplanManager, Schulform } from "@svws-nrw/svws-core";
+import type { StundenplanListeEintrag } from "@core";
+import { BenutzerKompetenz, SchuelerStundenplanManager, Schulform } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";

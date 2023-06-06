@@ -27,8 +27,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@svws-nrw/svws-core";
-	import { SchuelerBetriebsdaten } from "@svws-nrw/svws-core";
+	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
+	import { SchuelerBetriebsdaten } from "@core";
 	import type { Ref, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
 

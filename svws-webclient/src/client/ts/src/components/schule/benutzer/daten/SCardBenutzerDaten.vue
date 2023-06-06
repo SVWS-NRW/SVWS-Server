@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { BenutzerManager } from "@svws-nrw/svws-core";
+	import type { BenutzerManager } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
 

@@ -1,4 +1,4 @@
-import type { JavaObject } from "@svws-nrw/svws-core";
+import type { JavaObject } from "@core";
 import { useDebounceFn } from '@vueuse/shared';
 import { type Ref, shallowRef, watch } from 'vue';
 

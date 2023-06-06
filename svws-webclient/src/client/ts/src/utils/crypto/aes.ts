@@ -1,4 +1,4 @@
-import { ArrayIndexOutOfBoundsException } from "@svws-nrw/svws-core";
+import { ArrayIndexOutOfBoundsException } from "@core";
 import type { AESAlgo } from "./aesAlgo";
 import { AESException } from "./aesException";
 

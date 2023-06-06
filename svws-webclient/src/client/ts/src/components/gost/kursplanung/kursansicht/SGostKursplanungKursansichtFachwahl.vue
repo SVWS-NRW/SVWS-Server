@@ -39,11 +39,11 @@
 <script setup lang="ts">
 
 	import type { List, GostBlockungKurs, GostBlockungSchiene, GostStatistikFachwahl, GostFach, LehrerListeEintrag, GostBlockungRegel, GostFaecherManager, GostBlockungKursLehrer,
-		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs } from "@svws-nrw/svws-core";
+		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs } from "@core";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 	import type { ComputedRef } from "vue";
 	import type { Config } from "~/components/Config";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@svws-nrw/svws-core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{

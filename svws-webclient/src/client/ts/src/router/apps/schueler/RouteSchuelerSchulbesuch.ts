@@ -1,5 +1,5 @@
-import type { SchuelerSchulbesuchsdaten} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { SchuelerSchulbesuchsdaten} from "@core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";

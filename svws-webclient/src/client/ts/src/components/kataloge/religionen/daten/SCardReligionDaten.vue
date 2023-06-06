@@ -22,9 +22,9 @@
 
 <script setup lang="ts">
 
-	import type { ReligionEintrag } from "@svws-nrw/svws-core";
+	import type { ReligionEintrag } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
-	import { Religion } from "@svws-nrw/svws-core";
+	import { Religion } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{

@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler} from "@svws-nrw/svws-core";
-	import { ArrayList, GostBelegungsfehlerArt } from "@svws-nrw/svws-core";
+	import type { List, GostBelegpruefungErgebnisFehler} from "@core";
+	import { ArrayList, GostBelegungsfehlerArt } from "@core";
 	import type { ComputedRef} from 'vue';
 	import { computed } from 'vue';
 

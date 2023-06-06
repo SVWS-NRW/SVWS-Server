@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@svws-nrw/svws-core";
+	import type { LehrerListeEintrag } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { KlassenAppProps } from "./SKlassenAppProps";

@@ -1,4 +1,4 @@
-import type { GostJahrgang } from "@svws-nrw/svws-core";
+import type { GostJahrgang } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface GostAppProps {

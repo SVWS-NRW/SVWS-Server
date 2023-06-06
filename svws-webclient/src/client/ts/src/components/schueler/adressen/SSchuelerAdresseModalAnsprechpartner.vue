@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner } from "@svws-nrw/svws-core";
+	import type { BetriebAnsprechpartner } from "@core";
 	import type { WritableComputedRef } from 'vue';
 	import { computed, ref } from 'vue';
 

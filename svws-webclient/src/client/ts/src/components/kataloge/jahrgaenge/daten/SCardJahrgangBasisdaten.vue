@@ -23,8 +23,8 @@
 
 <script setup lang="ts">
 
-	import type { JahrgangsDaten, JahrgangsListeEintrag} from "@svws-nrw/svws-core";
-	import { List } from "@svws-nrw/svws-core";
+	import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
+	import { List } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

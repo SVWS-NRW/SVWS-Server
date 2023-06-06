@@ -1,7 +1,7 @@
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw} from "vue-router";
-import type { Schulform } from "@svws-nrw/svws-core";
+import type { Schulform } from "@core";
 import type { ComputedRef, Ref } from "vue";
-import { BenutzerKompetenz } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz } from "@core";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "./Api";

@@ -10,8 +10,8 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanPausenzeit } from "@svws-nrw/svws-core";
-	import { Wochentag } from "@svws-nrw/svws-core";
+	import type { StundenplanPausenzeit } from "@core";
+	import { Wochentag } from "@core";
 
 
 	const props = defineProps<{

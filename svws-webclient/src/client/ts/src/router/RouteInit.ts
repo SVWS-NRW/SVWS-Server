@@ -1,9 +1,9 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { InitProps } from "~/components/init/SInitProps";
-import type { List, SchulenKatalogEintrag} from "@svws-nrw/svws-core";
+import type { List, SchulenKatalogEintrag} from "@core";
 import type { Ref} from "vue";
-import { DatenbankVerbindungsdaten} from "@svws-nrw/svws-core";
-import { ArrayList, BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { DatenbankVerbindungsdaten} from "@core";
+import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { ref} from "vue";

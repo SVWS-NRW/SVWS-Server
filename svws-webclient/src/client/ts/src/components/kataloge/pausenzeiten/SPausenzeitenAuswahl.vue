@@ -42,8 +42,8 @@
 <script setup lang="ts">
 
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
-	import type { StundenplanPausenzeit } from "@svws-nrw/svws-core";
-	import { Wochentag } from "@svws-nrw/svws-core";
+	import type { StundenplanPausenzeit } from "@core";
+	import { Wochentag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();

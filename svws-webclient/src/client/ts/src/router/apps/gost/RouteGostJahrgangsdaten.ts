@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteGost} from "~/router/apps/RouteGost";
 import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import type { GostStammdatenProps } from "~/components/gost/stammdaten/SGostStammdatenProps";
 
 const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdaten.vue");

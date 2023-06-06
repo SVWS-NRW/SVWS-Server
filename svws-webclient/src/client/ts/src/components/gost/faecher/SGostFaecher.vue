@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 
-	import { GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
+	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
 
 	const props = defineProps<GostFaecherProps>();

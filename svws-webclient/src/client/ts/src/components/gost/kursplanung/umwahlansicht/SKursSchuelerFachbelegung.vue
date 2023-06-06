@@ -27,8 +27,8 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostFach, GostFachwahl} from "@svws-nrw/svws-core";
-	import { GostKursart, ZulaessigesFach } from "@svws-nrw/svws-core";
+		GostFach, GostFachwahl} from "@core";
+	import { GostKursart, ZulaessigesFach } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 

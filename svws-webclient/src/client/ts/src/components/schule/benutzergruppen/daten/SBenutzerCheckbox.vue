@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-	import type {BenutzerListeEintrag } from "@svws-nrw/svws-core";
+	import type {BenutzerListeEintrag } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

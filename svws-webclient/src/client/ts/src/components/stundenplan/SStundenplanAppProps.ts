@@ -1,4 +1,4 @@
-import type { Stundenplan } from "@svws-nrw/svws-core";
+import type { Stundenplan } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface StundenplanAppProps {

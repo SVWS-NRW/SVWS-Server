@@ -395,8 +395,8 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { GostStatistikFachwahl, List} from "@svws-nrw/svws-core";
-	import { ZulaessigesFach } from "@svws-nrw/svws-core";
+	import type { GostStatistikFachwahl, List} from "@core";
+	import { ZulaessigesFach } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{

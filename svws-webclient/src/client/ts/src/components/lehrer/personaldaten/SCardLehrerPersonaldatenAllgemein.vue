@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 
-	import type { LehrerPersonaldaten} from "@svws-nrw/svws-core";
-	import { LehrerAbgangsgrund, LehrerFachrichtung, LehrerLehrbefaehigung, LehrerZugangsgrund } from "@svws-nrw/svws-core";
+	import type { LehrerPersonaldaten} from "@core";
+	import { LehrerAbgangsgrund, LehrerFachrichtung, LehrerLehrbefaehigung, LehrerZugangsgrund } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

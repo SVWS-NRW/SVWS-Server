@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteKatalogAufsichtsbereiche} from "../RouteKatalogAufsichtsbereiche";
 import type { AufsichtsbereichDatenProps } from "~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDatenProps";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogAufsichtsbereiche } from "../RouteKatalogAufsichtsbereiche";
 

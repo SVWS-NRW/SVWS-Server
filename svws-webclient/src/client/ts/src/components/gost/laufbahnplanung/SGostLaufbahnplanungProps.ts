@@ -1,4 +1,4 @@
-import type { GostBelegpruefungsErgebnisse, List } from "@svws-nrw/svws-core";
+import type { GostBelegpruefungsErgebnisse, List } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { Config } from "~/components/Config";
 

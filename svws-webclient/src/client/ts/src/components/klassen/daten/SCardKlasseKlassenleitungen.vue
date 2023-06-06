@@ -8,8 +8,8 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { KlassenDaten, LehrerListeEintrag} from "@svws-nrw/svws-core";
-	import { PersonalTyp } from "@svws-nrw/svws-core";
+	import type { KlassenDaten, LehrerListeEintrag} from "@core";
+	import { PersonalTyp } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	type Lehrer = {

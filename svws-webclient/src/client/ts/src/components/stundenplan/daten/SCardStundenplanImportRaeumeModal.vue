@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { List, Raum } from "@svws-nrw/svws-core";
+	import type { List, Raum } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{

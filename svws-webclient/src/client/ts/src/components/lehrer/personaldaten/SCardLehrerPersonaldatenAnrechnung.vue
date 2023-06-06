@@ -18,8 +18,8 @@
 
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { LehrerPersonaldaten } from "@svws-nrw/svws-core";
-	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@svws-nrw/svws-core";
+	import type { LehrerPersonaldaten } from "@core";
+	import { LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@core";
 
 	const props = defineProps<{
 		personaldaten: LehrerPersonaldaten

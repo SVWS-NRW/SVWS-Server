@@ -6,7 +6,8 @@
 		"paths": {
 			"~/*": ["./src/*"],
 			"@comp": ["../../components/ts/src/index.ts"],
-			"@ui": ["../../ui/ts/src/index.ts"]
+			"@ui": ["../../ui/ts/src/index.ts"],
+			"@core": ["../../core/ts/src/index.ts"]
 		}
 	},
 	"include": [

@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { shallowRef } from "vue";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";

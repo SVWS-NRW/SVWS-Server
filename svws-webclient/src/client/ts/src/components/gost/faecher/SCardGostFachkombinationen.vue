@@ -132,11 +132,11 @@
 
 <script setup lang="ts">
 
-	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@svws-nrw/svws-core";
-	import type { DataTableColumn } from "@ui";
+	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@core";
+	import type {DataTableColumn} from "@ui";
 	import type { ComputedRef } from "vue";
-	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@svws-nrw/svws-core";
 	import { computed } from "vue";
+	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;

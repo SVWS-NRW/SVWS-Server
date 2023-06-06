@@ -24,9 +24,9 @@
 <script setup lang="ts">
 
 	import type { WritableComputedRef } from "vue";
-	import type { LehrerStammdaten} from "@svws-nrw/svws-core";
+	import type { LehrerStammdaten} from "@core";
 	import { computed } from "vue";
-	import { DeveloperNotificationException, Geschlecht, Nationalitaeten, PersonalTyp } from "@svws-nrw/svws-core";
+	import { DeveloperNotificationException, Geschlecht, Nationalitaeten, PersonalTyp } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
 
 	const props = defineProps<{

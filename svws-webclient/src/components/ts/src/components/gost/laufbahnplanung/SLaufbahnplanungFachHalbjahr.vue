@@ -35,9 +35,9 @@
 
 	import type { ComputedRef } from "vue";
 	import type { AbiturFachbelegung, AbiturFachbelegungHalbjahr, AbiturdatenManager, GostFach, GostFaecherManager,
-		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@svws-nrw/svws-core";
-	import { GostSchriftlichkeit } from "@svws-nrw/svws-core";
-	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@svws-nrw/svws-core";
+		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@core";
+	import { GostSchriftlichkeit } from "@core";
+	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{

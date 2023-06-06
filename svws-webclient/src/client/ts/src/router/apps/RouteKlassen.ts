@@ -1,5 +1,5 @@
-import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, List, Schulform } from "@svws-nrw/svws-core";
+import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import { BenutzerKompetenz, List, Schulform } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";

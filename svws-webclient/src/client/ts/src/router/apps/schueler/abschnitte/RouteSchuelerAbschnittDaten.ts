@@ -1,5 +1,5 @@
-import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@svws-nrw/svws-core";
-import { BenutzerKompetenz, Schulform } from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@core";
+import { BenutzerKompetenz, Schulform } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";

@@ -1,4 +1,4 @@
-import type { KursListeEintrag, LehrerListeEintrag } from "@svws-nrw/svws-core";
+import type { KursListeEintrag, LehrerListeEintrag } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface KurseAppProps {

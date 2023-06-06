@@ -13,7 +13,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef, WritableComputedRef } from "vue";
-	import type { Raum } from "@svws-nrw/svws-core";
+	import type { Raum } from "@core";
 	import { computed } from "vue";
 
 

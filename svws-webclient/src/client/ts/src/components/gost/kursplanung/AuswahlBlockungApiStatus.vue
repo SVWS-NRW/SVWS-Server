@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungListeneintrag } from "@svws-nrw/svws-core";
+	import type { GostBlockungListeneintrag } from "@core";
 	import type { ApiStatus } from "~/components/ApiStatus";
 
 	const props = defineProps<{

@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager } from '@svws-nrw/svws-core';
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager } from '@core';
 	import { computed } from 'vue';
 
 	const props = defineProps<{

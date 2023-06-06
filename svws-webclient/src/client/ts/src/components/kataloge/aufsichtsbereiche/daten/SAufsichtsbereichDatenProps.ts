@@ -1,4 +1,4 @@
-import type { Aufsichtsbereich } from "@svws-nrw/svws-core";
+import type { Aufsichtsbereich } from "@core";
 
 export interface AufsichtsbereichDatenProps {
 	patch: (data : Partial<Aufsichtsbereich>) => Promise<void>;

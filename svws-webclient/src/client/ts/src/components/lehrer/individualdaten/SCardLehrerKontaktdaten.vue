@@ -20,8 +20,8 @@
 	import type { Ref, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
 
-	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@svws-nrw/svws-core";
-	import { AdressenUtils } from "@svws-nrw/svws-core";
+	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { AdressenUtils } from "@core";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
 
 	const eingabeStrasseOk: Ref<boolean> = ref(true);

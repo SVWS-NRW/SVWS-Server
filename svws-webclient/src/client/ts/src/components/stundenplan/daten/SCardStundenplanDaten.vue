@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 
-	import type { Stundenplan, StundenplanManager } from "@svws-nrw/svws-core";
+	import type { Stundenplan, StundenplanManager } from "@core";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;

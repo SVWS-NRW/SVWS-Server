@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungSchiene } from "@svws-nrw/svws-core";
+	import type { GostBlockungSchiene } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

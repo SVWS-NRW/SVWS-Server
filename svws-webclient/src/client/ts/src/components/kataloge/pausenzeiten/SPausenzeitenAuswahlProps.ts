@@ -1,4 +1,4 @@
-import type { StundenplanPausenzeit, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { StundenplanPausenzeit, Schuljahresabschnitt } from "@core";
 
 export interface PausenzeitenAuswahlProps {
 	auswahl: StundenplanPausenzeit | undefined;

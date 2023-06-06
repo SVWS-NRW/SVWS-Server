@@ -3,7 +3,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteLehrer } from "~/router/apps/RouteLehrer";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
-import { BenutzerKompetenz, LehrerPersonaldaten, Schulform } from "@svws-nrw/svws-core";
+import { BenutzerKompetenz, LehrerPersonaldaten, Schulform } from "@core";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 

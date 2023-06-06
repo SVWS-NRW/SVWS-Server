@@ -1,4 +1,4 @@
-import type { Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { Schuljahresabschnitt } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface KatalogeAuswahlProps {

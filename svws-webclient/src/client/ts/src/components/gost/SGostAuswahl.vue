@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgang } from "@svws-nrw/svws-core";
+	import type { GostJahrgang } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";

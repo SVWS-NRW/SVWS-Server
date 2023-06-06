@@ -79,10 +79,10 @@
 <script setup lang="ts">
 
 	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag,
-		SchuelerLernabschnittsdaten, SchuleStammdaten} from "@svws-nrw/svws-core";
+		SchuelerLernabschnittsdaten, SchuleStammdaten} from "@core";
 	import type { ComputedRef, WritableComputedRef } from 'vue';
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		Klassenart, Note, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@svws-nrw/svws-core";
+		Klassenart, Note, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
 	import { computed } from 'vue';
 
 	const props = defineProps<{

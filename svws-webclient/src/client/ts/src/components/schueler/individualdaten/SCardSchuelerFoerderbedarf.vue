@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 
-	import type { FoerderschwerpunktEintrag, SchuelerStammdaten } from "@svws-nrw/svws-core";
+	import type { FoerderschwerpunktEintrag, SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 

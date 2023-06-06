@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 
-	import type { List} from "@svws-nrw/svws-core";
-	import { GostBelegpruefungErgebnisFehler, GostBelegungsfehlerArt, ArrayList } from "@svws-nrw/svws-core";
+	import type { List} from "@core";
+	import { GostBelegpruefungErgebnisFehler, GostBelegungsfehlerArt, ArrayList } from "@core";
 
 	const fehlerliste: List<GostBelegpruefungErgebnisFehler> = new ArrayList()
 	const f1 = new GostBelegpruefungErgebnisFehler();

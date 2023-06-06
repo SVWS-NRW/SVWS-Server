@@ -1,4 +1,4 @@
-import type { FoerderschwerpunktEintrag, Schuljahresabschnitt } from "@svws-nrw/svws-core";
+import type { FoerderschwerpunktEintrag, Schuljahresabschnitt } from "@core";
 
 export interface FoerderschwerpunkteAuswahlProps {
 	auswahl: FoerderschwerpunktEintrag | undefined;

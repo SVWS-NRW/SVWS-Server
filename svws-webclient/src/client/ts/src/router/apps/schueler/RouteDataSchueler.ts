@@ -1,8 +1,8 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang} from "@svws-nrw/svws-core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang} from "@core";
 import type { ShallowReactive} from "vue";
 import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { RouteNode } from "~/router/RouteNode";
-import { SchuelerStatus } from "@svws-nrw/svws-core";
+import { SchuelerStatus } from "@core";
 import { shallowReactive, shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

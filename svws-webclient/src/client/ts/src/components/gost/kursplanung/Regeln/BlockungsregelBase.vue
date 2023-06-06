@@ -32,8 +32,8 @@
 
 <script setup lang="ts">
 
-	import type { GostKursblockungRegelTyp } from "@svws-nrw/svws-core";
-	import { GostBlockungRegel } from "@svws-nrw/svws-core";
+	import type { GostKursblockungRegelTyp } from "@core";
+	import { GostBlockungRegel } from "@core";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
