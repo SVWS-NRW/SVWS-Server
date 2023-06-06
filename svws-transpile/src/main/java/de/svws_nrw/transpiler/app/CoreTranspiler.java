@@ -9,6 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
@@ -128,11 +129,17 @@ public class CoreTranspiler {
 			mapTypeOnly.put(outputs.get(i), outputsTypeOnly.get(i));
 
 		final StringBuilder sbExports = new StringBuilder();
+		final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.langTranspiledObject",
+				"java.util.JavaIterator", "java.util.JavaMap", "java.util.JavaSet", "java.util.function.JavaFunction");
 		for (final String filename : outputs.stream().sorted().toList()) {
 			final String importName = filename.replace(".ts", "");
+			final String fullclassname = importName.replace('/', '.');
 			final String classname = importName.replaceFirst(".*/", "");
+			boolean isTypeOnly = mapTypeOnly.get(filename);
+			if (renamedInterfaces.contains(fullclassname))
+				isTypeOnly = true;
 			sbExports.append("export ");
-			if (Boolean.TRUE.equals(mapTypeOnly.get(filename)))
+			if (isTypeOnly)
 				sbExports.append("type ");
 			sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
 		}
