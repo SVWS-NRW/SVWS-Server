@@ -41,12 +41,12 @@
 
 <script setup lang="ts">
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@core';
-	import type { ComputedRef, WritableComputedRef } from 'vue';
+	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { DataTableColumn } from '@ui';
-	import type { Config } from '~/components/Config';
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import type { Config } from '~/components/Config';
 	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
-	import { computed, ref, toRaw } from 'vue';
+	import { computed, ref, toRaw, onMounted } from 'vue';
 
 	const props = defineProps<{
 		config: Config;

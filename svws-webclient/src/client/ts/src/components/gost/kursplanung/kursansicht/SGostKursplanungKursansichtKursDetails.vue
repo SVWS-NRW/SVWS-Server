@@ -22,22 +22,10 @@
 				</svws-ui-button>
 			</div>
 			<div>
-				<!--TODO: richtige daten für v-model, Kursbezeichnung als item-text-->
-				<svws-ui-multi-select v-model="undefined"
-					title="Zusammenlegen mit…"
-					class="placeholder--visible"
-					headless
-					v-if="kurseMitKursart.size() > 1"
-					:item-text="item => item?.id || ''"
-					:items="andereKurse.values()" />
-			<!--<svws-ui-dropdown v-if="kurseMitKursart.size() > 1" type="icon">
-				<template #dropdownButton>Zusammenlegen</template>
-				<template #dropdownItems>
-					<svws-ui-dropdown-item v-for="k in andereKurse.values()" :key="k.id" class="px-2" @click="combineKurs(kurs, k)">
-						{{ get_kursbezeichnung(k.id) }}
-					</svws-ui-dropdown-item>
-				</template>
-			</svws-ui-dropdown>-->
+				<svws-ui-multi-select v-if="kurseMitKursart.size()"
+					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
+					title="Zusammenlegen mit…" class="placeholder--visible" headless
+					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
 			</div>
 			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 		</div>
