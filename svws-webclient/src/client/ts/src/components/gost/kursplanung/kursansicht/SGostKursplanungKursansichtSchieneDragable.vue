@@ -1,5 +1,8 @@
 <template>
-	<svws-ui-drop-data class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black relative group" :class="{'bg-primary/5 text-primary hover:text-primary': is_drop_zone }"
+	<svws-ui-drop-data class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black relative group"
+		:class="{
+			'bg-primary/5 text-primary hover:text-primary': is_drop_zone,
+		}"
 		tag="div" :drop-allowed="is_drop_zone"
 		@drop="openModal">
 		<svws-ui-drag-data :key="schiene.id"

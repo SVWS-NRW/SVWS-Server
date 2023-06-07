@@ -352,7 +352,7 @@
 								!tags && closeListbox();
 							}
 						">
-						<span v-if="itemText?.(item).length === 0" class="opacity-25">–</span>
+						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
 						{{ itemText(item) }}
 						<i-ri-check-line v-if="selectedItemList.has(item)" class="opacity-50" />
 					</li>

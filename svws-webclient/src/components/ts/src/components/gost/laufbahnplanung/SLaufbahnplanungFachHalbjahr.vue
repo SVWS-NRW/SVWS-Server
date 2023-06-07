@@ -1,6 +1,13 @@
 <template>
-	<div role="cell" class="data-table__td data-table__td__align-center select-none" :class="[ { 'cursor-pointer': moeglich && !bewertet, '': moeglich, 'text-black/50': bewertet, 'cursor-not-allowed': cursorNotAllowed } ]"
-		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
+	<div role="cell" class="data-table__td data-table__td__align-center select-none font-medium" :class="
+		{
+			'cursor-pointer': moeglich && !bewertet, '': moeglich,
+			'text-black/50 data-table__td__disabled': bewertet,
+			'data-table__td__disabled cursor-not-allowed': cursorNotAllowed,
+			'data-table__th__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
+		}
+	"
+		:style=" { 'background-color': bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
@@ -23,10 +30,22 @@
 				<span>{{ wahl }}</span>
 				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />
 			</div>
-			<span v-else>{{ wahl }}</span>
+			<span v-else>
+				<template v-if="wahl">
+					{{ wahl }}
+				</template>
+				<template v-else-if="bewertet || !moeglich">
+					<i-ri-prohibited-line />
+				</template>
+			</span>
 		</template>
 		<template v-else>
-			{{ wahl }}
+			<template v-if="wahl">
+				{{ wahl }}
+			</template>
+			<template v-else-if="bewertet || !moeglich">
+				<i-ri-prohibited-line />
+			</template>
 		</template>
 	</div>
 </template>
@@ -117,7 +136,8 @@
 			!props.moeglich || props.bewertet || istFachkombiVerboten.value
 	);
 
-	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
+	/*const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(255,255,255)`);*/
+	const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
@@ -127,11 +147,11 @@
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
 	});
 
-	const bgColorTransparent: ComputedRef<string> = computed(() => {
+	/*const bgColorTransparent: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
 			return bgColorDisabled.value;
-		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`;
-	});
+		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(0,0,0)`;
+	});*/
 
 
 	const ist_VTF: ComputedRef<boolean> = computed(() =>

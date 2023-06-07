@@ -7,7 +7,7 @@
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
-			<div class="w-1/6 min-w-[8rem]">
+			<div class="w-1/6 min-w-[9rem]">
 				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
 					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
 						<div class="">
@@ -125,10 +125,10 @@
 	});
 
 	function calculateColumns(): DataTableColumn[] {
-		const cols: Array<DataTableColumn> = [{ key: "schiene", label: "Schiene", minWidth: 8, span: 0.1 }];
+		const cols: Array<DataTableColumn> = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1 }];
 
 		for (let i = 0; i < maxKurseInSchienen?.value; i++) {
-			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center' });
+			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6 });
 		}
 
 		return cols;

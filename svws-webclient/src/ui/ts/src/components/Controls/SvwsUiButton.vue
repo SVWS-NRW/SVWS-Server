@@ -250,7 +250,7 @@
 	&:hover,
 	&:focus,
 	&:focus-visible {
-		@apply bg-black/25 border-black/75 text-black;
+		@apply bg-black/25 border-black/50 text-black;
 		@apply opacity-25;
 		@apply cursor-not-allowed pointer-events-none;
 	}

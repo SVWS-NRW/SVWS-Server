@@ -13,34 +13,36 @@
 			<i-ri-close-line v-else class="opacity-25" />
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs" class="flex items-center border border-black/25 rounded group">
-				<span class="px-1 py-0.5 rounded-l" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 2, 'text-black/50 bg-white group-hover:text-black': fach.wochenstundenQualifikationsphase === 3}">2</span>
-				<span class="px-1 py-0.5 rounded-r" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 3, 'text-black/50 bg-white group-hover:text-black': fach.wochenstundenQualifikationsphase === 2}">3</span>
+			<div v-if="istProjektkurs" class="flex items-center border border-black/25 rounded group w-full">
+				<span class="px-1 py-0.5 rounded-l flex-grow" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 2, 'text-black/50 bg-transparent group-hover:text-black': fach.wochenstundenQualifikationsphase === 3}">2</span>
+				<span class="px-1 py-0.5 rounded-r flex-grow" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 3, 'text-black/50 bg-transparent group-hover:text-black': fach.wochenstundenQualifikationsphase === 2}">3</span>
 			</div>
 			<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center">
-			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
+		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding">
+			<div class="flex p-0 flex-grow" v-if="istJahrgangAllgemein && hatLeitfach1">
 				<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-				<svws-ui-button type="trash" @click="leitfach1=undefined" />
+				<svws-ui-button type="trash" @click="leitfach1=undefined" :disabled="!leitfach1" />
 			</div>
-			<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
+			<span v-else class="px-2" :class="{'opacity-20 w-full text-center': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
+		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding data-table__td__separate">
+			<div class="flex p-0" v-if="istJahrgangAllgemein && istProjektkurs">
 				<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-				<svws-ui-button type="trash" @click="leitfach2=undefined" />
+				<svws-ui-button type="trash" @click="leitfach2=undefined" :disabled="!leitfach2" />
 			</div>
-			<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
+			<span v-else class="px-2" :class="{'opacity-20 w-full text-center': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': ef_moeglich ? bgColor : bgColorNichtMoeglich }">
+			:class="{'data-table__td__disabled': !ef_moeglich}"
+			:style="{ 'background-color': bgColor }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
 				<svws-ui-checkbox v-model="ef1" circle bw />
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate"
-			:style="{ 'background-color': ef_moeglich ? bgColor : bgColorNichtMoeglich }">
+			:class="{'data-table__td__disabled': !ef_moeglich}"
+			:style="{ 'background-color': bgColor }">
 			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
 				<svws-ui-checkbox v-model="ef2" circle bw />
 			</span>
@@ -66,13 +68,15 @@
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': abi_gk_moeglich ? bgColor : bgColorNichtMoeglich }">
+			:class="{'data-table__td__disabled': !abi_gk_moeglich}"
+			:style="{ 'background-color': bgColor }">
 			<span class="faecher-toggle--checkbox" v-if="abi_gk_moeglich">
 				<svws-ui-checkbox v-model="abiGK" circle bw />
 			</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
-			:style="{ 'background-color': abi_lk_moeglich ? bgColor : bgColorNichtMoeglich }">
+			:class="{'data-table__td__disabled': !abi_lk_moeglich}"
+			:style="{ 'background-color': bgColor }">
 			<span class="faecher-toggle--checkbox" v-if="abi_lk_moeglich">
 				<svws-ui-checkbox v-model="abiLK" circle bw />
 			</span>
@@ -156,8 +160,7 @@
 	});
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB());
-
-	const bgColorNichtMoeglich: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);
+	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);*/
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
 		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();

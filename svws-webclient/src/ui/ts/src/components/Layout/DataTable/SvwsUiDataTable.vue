@@ -39,7 +39,8 @@
 			'data-table__has-row-actions': rowActions || manualRowActions,
 			'data-table__collapsible': collapsible,
 			'data-table--tab-bar': tabBarDesign,
-			'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count))
+			'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)),
+			'data-table__contrast-border': contrastBorder,
 		}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="{'shadow-lg-up': false}">
@@ -255,6 +256,7 @@
 			noData?: boolean;
 			scrollIntoView?: boolean;
 			tabBarDesign?: boolean;
+			contrastBorder?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -283,6 +285,7 @@
 			noData: undefined,
 			scrollIntoView: undefined,
 			tabBarDesign: undefined,
+			contrastBorder: false,
 		}
 	);
 
@@ -405,6 +408,10 @@
 	@apply tabular-nums;
 	@apply max-h-full overflow-auto;
 
+	&__contrast-border {
+		@apply border-0;
+	}
+
 	.app--sidebar-container & {
 		@apply border-x-0;
 	}
@@ -414,6 +421,28 @@
 		@apply flex h-full items-center border-r border-b border-black/25 leading-none;
 		padding: 0.1rem 0.5rem 0.1rem;
 		line-height: 1;
+
+		.data-table__contrast-border & {
+			@apply border-black;
+		}
+
+		&__disabled,
+		.data-table__tr__disabled & {
+			@apply cursor-not-allowed relative;
+
+			&:before {
+				@apply absolute inset-0 bg-black/20 border border-black/5;
+				content: '';
+			}
+
+			svg {
+				@apply opacity-10;
+			}
+
+			.button svg {
+				@apply opacity-100;
+			}
+		}
 
 		&__no-padding {
 			@apply p-0;
@@ -592,10 +621,21 @@
 		@apply border-b border-black/25;
 		@apply sticky top-0 z-20;
 
+		.data-table__contrast-border & {
+			@apply border border-black;
+		}
+
 		.data-table__tr:last-child {
 			.data-table__td,
 			.data-table__th {
 				@apply border-b-0;
+			}
+		}
+
+		.data-table__th,
+		.data-table__td {
+			.data-table__contrast-border & {
+				@apply border-black;
 			}
 		}
 
@@ -628,10 +668,24 @@
 				@apply h-[1.9rem];
 			}
 		}
+
+		.data-table__thead__tr__compact {
+			&:last-child {
+				@apply border-b border-black/25;
+
+				.data-table__contrast-border & {
+					@apply border-b-0;
+				}
+			}
+		}
 	}
 
 	&__tbody {
 		@apply h-auto flex flex-col;
+
+		.data-table__contrast-border & {
+			@apply border-black border-x;
+		}
 
 		&__tr {
 			@apply min-h-[1.7rem];
@@ -709,6 +763,10 @@
 		@apply w-max min-w-full bg-white;
 		@apply sticky bottom-0 z-20;
 		@apply border-y border-black/25 -mt-px;
+
+		.data-table__contrast-border & {
+			@apply border-black border-x;
+		}
 
 		&__tr {
 			@apply w-full flex items-center;

@@ -1,6 +1,6 @@
 <template>
 	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
-		<div class="px-2 py-4 flex gap-12 items-center">
+		<div class="pr-2 pl-6 py-4 flex gap-12 items-center">
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			<div class="flex items-center gap-1">
@@ -91,6 +91,10 @@
 	.table--row-kursdetail {
 		@apply relative z-10 border-b-2 border-black/25;
 		box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);
+
+		.data-table__contrast-border & {
+			@apply border-black/50;
+		}
 	}
 
 </style>

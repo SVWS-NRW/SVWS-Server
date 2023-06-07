@@ -55,7 +55,7 @@
 		</svws-ui-icon>
 		<svws-ui-icon v-else-if="value" role="checkbox">
 			<i-ri-checkbox-fill v-if="!circle" />
-			<i-ri-checkbox-circle-fill v-if="circle" />
+			<i-ri-checkbox-circle-line v-if="circle" />
 		</svws-ui-icon>
 		<svws-ui-icon v-else-if="!value" role="checkbox">
 			<i-ri-checkbox-blank-line v-if="!circle" />

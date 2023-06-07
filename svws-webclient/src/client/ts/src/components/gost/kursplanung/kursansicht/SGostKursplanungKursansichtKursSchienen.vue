@@ -1,7 +1,11 @@
 <template>
 	<svws-ui-drop-data v-slot="{ active }" v-if="!blockungAktiv"
 		class="data-table__td data-table__td__no-padding data-table__td__align-center"
-		:class="{'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id, 'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id}"
+		:class="{
+			'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id,
+			'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id,
+			'data-table__td__disabled': schiene_gesperrt,
+		}"
 		:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
 		tag="div"
 		role="cell"
@@ -13,8 +17,12 @@
 			:data="{kurs, schiene}"
 			class="select-none w-full h-full rounded flex items-center justify-center relative group"
 			:draggable="true"
-			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-light/75': !selected_kurs, 'p-0.5': !active && !is_drop_zone, 'p-0': active || is_drop_zone}"
-			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
+			:class="{
+				'bg-light text-primary font-bold': selected_kurs,
+				'bg-light/75': !selected_kurs,
+				'p-0.5': !active && !is_drop_zone,
+				'p-0': active || is_drop_zone,
+			}"
 			@drag-start="drag_started"
 			@drag-end="drag_ended"
 			@click="toggle_active_kurs">
@@ -29,26 +37,26 @@
 		</svws-ui-drag-data>
 		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
 			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
-			:class="{'bg-white': active && is_drop_zone}">
+			:class="{'bg-white': active && is_drop_zone, 'data-table__td__disabled': schiene_gesperrt}">
 			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
 			<svws-ui-icon>
-				<i-ri-prohibited-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block" />
-				<i-ri-prohibited-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block opacity-0 group-hover:opacity-25" />
+				<i-ri-lock2-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block !opacity-100" />
+				<i-ri-lock2-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block !opacity-0 group-hover:!opacity-25" />
 			</svws-ui-icon>
 		</div>
 	</svws-ui-drop-data>
 	<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
 		<div v-if="kurs_schiene_zugeordnet"
 			class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
-			:class="{'bg-light text-primary font-bold': selected_kurs, 'bg-white/50': !selected_kurs}"
+			:class="{'bg-light text-primary font-bold border border-black/50': selected_kurs, 'bg-white/50 border border-black/25': !selected_kurs}"
 			@click="toggle_active_kurs">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
 			<svws-ui-icon class="absolute right-1" v-if="istFixiert">
 				<i-ri-pushpin-fill class="inline-block" />
 			</svws-ui-icon>
 			<svws-ui-icon v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)">
-				<i-ri-prohibited-line class="inline-block" />
+				<i-ri-lock2-line class="inline-block" />
 			</svws-ui-icon>
 		</div>
 	</div>

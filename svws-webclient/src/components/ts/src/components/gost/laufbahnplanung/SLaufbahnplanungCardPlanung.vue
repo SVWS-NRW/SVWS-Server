@@ -24,7 +24,7 @@
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fach
@@ -32,7 +32,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Sprachen
@@ -40,7 +40,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								EF
@@ -48,7 +48,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4">
+						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Qualifikationsphase
@@ -82,7 +82,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" title="Wochenstunden">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate" title="Wochenstunden">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								WStd.
@@ -98,7 +98,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								ab Jg
@@ -114,7 +114,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								EF.2
@@ -146,7 +146,7 @@
 						</div>
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Q2.2
@@ -171,8 +171,8 @@
 			</template>
 			<template #footer>
 				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Anzahl der anrechenbaren Kurse </div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate"> Anzahl der anrechenbaren Kurse </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i" :class="{'data-table__th__separate': (i === 1 || i === 5)}">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-amber-400': jahrgang < 10,
@@ -187,7 +187,7 @@
 						<i-ri-error-warning-line class="text-yellow-400" v-else-if="jahrgang < 10" />
 						-->
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center data-table__th__separate">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-rose-700 text-white': kurse_summe < 30,
@@ -206,8 +206,8 @@
 					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Wochenstunden </div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in wochenstunden" :key="i">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate"> Wochenstunden </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in wochenstunden" :key="i" :class="{'data-table__th__separate': (i === 1 || i === 5)}">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-rose-700 text-white': jahrgang < 30,
@@ -231,8 +231,8 @@
 					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5"> Durchschnitt </div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-2">
+					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate"> Durchschnitt </div>
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-2 data-table__th__separate">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-rose-700 text-white': wst_d_ef < 34,
@@ -242,7 +242,7 @@
 							{{ wst_d_ef }}
 						</span>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-4">
+					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-4 data-table__th__separate">
 						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
 							:class="{
 								'bg-rose-700 text-white': wst_d_q < 34,

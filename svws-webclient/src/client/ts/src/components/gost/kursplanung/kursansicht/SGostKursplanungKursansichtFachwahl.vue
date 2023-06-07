@@ -1,27 +1,27 @@
 <template>
 	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
-		<div role="row" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': bgColorNichtMoeglich }" :key="kursart.id">
-			<div role="cell" class="data-table__td">
-				<span title="Fach">{{ fach.kuerzel }}</span><span class="opacity-50">–</span><span title="Kursart">{{ kursart.kuerzel }}</span>
+		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled" :style="{ 'background-color': bgColor }" :key="kursart.id">
+			<div role="cell" class="data-table__td" />
+			<div role="cell" class="data-table__td text-black/50">
+				<span title="Fach">{{ fach.kuerzel }}</span><span class="opacity-50">-</span><span title="Kursart">{{ kursart.kuerzel }}</span>
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-left">
+				<span class="opacity-25">—</span>
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center">
-				<span class="opacity-25">–</span>
+				<span class="opacity-25">—</span>
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center">
-				<span class="opacity-25">–</span>
-			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative" @click="toggle_active_fachwahl">
+			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative text-black/50" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center">
-				<span class="opacity-25">–</span>
+				<span class="opacity-25">—</span>
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + schienen.size()}">
-				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="bg-white/50 hover:bg-white">
+			<div role="cell" class="data-table__td data-table__td__align-right" :style="{'gridColumn': 'span ' + schienen.size()}">
+				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="bg-white/50 hover:bg-white -mr-1.5">
 					Kurs anlegen <i-ri-add-circle-line class="-mr-0.5" />
 				</svws-ui-button>
 			</div>
-			<div role="cell" class="data-table__td" />
 		</div>
 	</template>
 	<template v-else>
@@ -70,8 +70,8 @@
 		allowRegeln: boolean;
 	}>();
 
-	const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
-		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(75,75,75)`);
+	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
+		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(75,75,75)`);*/
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 

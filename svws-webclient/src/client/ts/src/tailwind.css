@@ -34,7 +34,7 @@
 .page--content.page--content--gost-grid {
 	@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
 	grid-auto-rows: 100%;
-	grid-template-columns: minmax(64rem, 2fr) minmax(18rem, 0.4fr) minmax(58rem, 1fr);
+	grid-template-columns: minmax(min-content, 2fr) minmax(18rem, 0.4fr) minmax(min-content, 1fr);
 	grid-auto-columns: max-content;
 }
 
@@ -89,14 +89,4 @@ input[type="file"]:invalid {
 input[type="file"]:hover::file-selector-button,
 input[type="file"]:focus-visible::file-selector-button {
 	@apply opacity-100;
-}
-
-
-/* Default Theme (Light) */
-:root {
-	--table-head-background-color: rgb(50, 156, 213);
-	--table-head-foreground-color: rgb(36, 36, 36);
-	--table-selection-background-color: rgb(184, 221, 233);
-	--table-selection-foreground-color: rgb(0, 0, 0, 1);
-	--table-cell-default-padding: 0px 0.25em 0px 0.25em;
 }

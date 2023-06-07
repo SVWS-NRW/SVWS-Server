@@ -1,11 +1,9 @@
 <template>
 	<svws-ui-content-card title="Beratung" class="mt-9">
-		<svws-ui-input-wrapper>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-multi-select :items="mapLehrer.values()" v-model="beratungslehrer" :item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`" @update:model-value="dirty = true" :item-filter="filter" removable autocomplete title="Letzte Beratung durchgeführt von" />
 			<svws-ui-text-input v-model="beratungsdatum" type="date" placeholder="Beratungsdatum" @update:model-value="dirty = true" />
-			<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" @update:model-value="dirty = true" />
-			<svws-ui-spacing />
-			<svws-ui-multi-select :items="mapLehrer.values()" v-model="beratungslehrer" :item-text="(i: LehrerListeEintrag)=>i.kuerzel" @update:model-value="dirty = true" :item-filter="filter" removable autocomplete title="Letzte Beratung durchgeführt von" />
-			<svws-ui-spacing />
+			<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" @update:model-value="dirty = true" span="full" />
 			<svws-ui-button :disabled="!dirty" @click="speichern()">Beratungsdaten speichern</svws-ui-button>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
