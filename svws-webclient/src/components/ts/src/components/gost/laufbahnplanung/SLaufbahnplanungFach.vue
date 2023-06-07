@@ -34,7 +34,7 @@
 		GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, Sprachbelegung} from "@core";
 	import { computed } from "vue";
-	import { AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp, GostSchriftlichkeit, Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
+	import { Note, AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp, Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		abiturdatenManager: AbiturdatenManager;
@@ -206,6 +206,9 @@
 			b = b ? b : new AbiturFachbelegungHalbjahr();
 			if (b.halbjahrKuerzel === undefined)
 				return "";
+			const note : Note = Note.fromKuerzel(b.notenkuerzel);
+			if (note === Note.UNGENUEGEND)
+				return "6";
 			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
 			if (!kursart)
 				return b.kursartKuerzel;
