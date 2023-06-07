@@ -15,10 +15,10 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 	SvwsMavenPublishPluginExtension extension
 
 	/**
-	 * Wendet die Konfiguration für das Signieren von JARs an.
+	 * Wendet die Konfiguration für das Signieren von Artefakten an.
 	 */
 	void configSigning() {
-		// Das Signieren von JARs soll nur bei RELEASES erfolgen, nicht bei SNAPSHOTS.
+		// Das Signieren von Artefakten soll nur bei RELEASES erfolgen, nicht bei SNAPSHOTS.
 		project.ext.isReleaseVersion = !project.version.endsWith('SNAPSHOT')
 		project.signing {
 			required { project.ext.isReleaseVersion && project.gradle.taskGraph.hasTask("publish") }
@@ -64,6 +64,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 				'weil die Zugangsdaten nicht hinterlegt sind.')
 		}
 
+
 		if (nexus_publish_ready && github_publish_ready) {
 			project.publishing.repositories {
 				maven {
@@ -84,6 +85,7 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 						password = nexus_token
 					}
 				}
+
 				maven {
 					name = "githubreleases"
 					url = this.extension.getGithubReleasesRepositoryUrl()
@@ -115,10 +117,10 @@ class SvwsMavenPublishPlugin extends SvwsMavenRepoCredentialsPlugin implements P
 		}
 		project.tasks.register('publishReleaseAll') {
 			group = "publishing"
-			description = 'Publishes all Maven publications to the Nexus Maven release repository AND to Github repository additionally.'
+			description = 'Publishes all Maven publications to the Nexus Maven release repository AND to Github repository.'
 			dependsOn project.tasks.withType(PublishToMavenRepository).matching {
 				it.repository == project.publishing.repositories.svwsreleases ||
-					it.repository == project.publishing.repositories.githubreleases
+				it.repository == project.publishing.repositories.githubreleases
 			}
 		}
 	}

@@ -1,0 +1,70 @@
+// Dieses GradleSkript gibt die Publishing-Definition für Java-Artefakte vor
+// Gradle Module können dies dann Nutzen und einzelne Informationen überschreiben
+// um Redundanz vorzubeugen, bspw:
+/*
+apply from: "$rootDir/publish-helper.gradle"
+publishing {
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-server-app'
+      pom {
+        name = 'SVWS Server Application'
+        description = 'Diese Bibliothek enthält den Java-Server für die Schulverwaltungssoftware in NRW'
+      }
+    }
+  }
+}
+*/
+publishing {
+  publications {
+    publishJava(MavenPublication) {
+      from components.java
+      versionMapping {
+        usage('java-api') {
+          fromResolutionOf('runtimeClasspath')
+        }
+        usage('java-runtime') {
+          fromResolutionResult()
+        }
+      }
+      pom {
+        name = 'name'
+        description = 'description'
+        url = 'http://www.svws.nrw.de'
+        licenses {
+          license {
+            name = 'BSD-3-Clause'
+            url = 'https://opensource.org/licenses/BSD-3-Clause'
+          }
+        }
+        scm {
+          connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
+          developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
+          url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
+        }
+        developers {
+                    developer {
+                        id = 'svws-nrw'
+                        name = 'Schulverwaltung NRW'
+                        email = 'npm@svws-nrw.de'
+                    }
+                }
+      }
+    }
+  }
+}
+//Signing Jars
+task signJar(dependsOn: 'jar',description: 'to Sign JAR.',group: 'Build'){
+    doLast{
+      println ":$project.name:${name}"
+      ant.signjar(
+                  jar: 'build/libs/*.jar',
+                  alias:jarsign_keyalias,
+                  storetype:"pkcs12",
+                  keystore:jarsign_keystoreFile,
+                  storepass:jarsign_keystorepass,
+                  verbose:true,
+                  preservelastmodified:"true"
+      )
+    }
+  }

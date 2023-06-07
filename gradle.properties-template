@@ -8,6 +8,11 @@
 #nexus_actor=<Persönlicher Nexus-Benutzername>
 #nexus_token=<Persönliches Nexus-Passwort>
 
+# Zugangsdaten zum OSS Repository Hosting (Staging Umgebung für Maven Central) 
+# für Publishing bei Maven Central
+#ossrh_actor=<Anmeldename beim OSSRH Jira>
+#ossrh_token=<Passwort beim OSSRH Jira>
+
 # Zertifikatsinformationen für die Signierung von JARs
 #signing.keyId=<Die letzten 8 Stellen der Schlüssel-Kennung des Zertifikats>
 #signing.password=<Das Passwort für den Zugriff auf den Schlüssel>

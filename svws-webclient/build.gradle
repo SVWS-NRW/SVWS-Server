@@ -341,7 +341,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackagesSVWSClient"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Packages"
+            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
             credentials {
             	username = getGithubActor()
                 password = getGithubToken()
@@ -363,9 +363,16 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
-                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
+                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
+                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
+                    url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
+                }
+                developers {
+                    developer {
+                        id = 'svws-nrw'
+                        name = 'Schulverwaltung NRW'
+                        email = 'npm@svws-nrw.de'
+                    }
                 }
             }
         }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import de.nrw.schule.svws.ext.jbcrypt.BCrypt;
+import de.svws_nrw.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 
 

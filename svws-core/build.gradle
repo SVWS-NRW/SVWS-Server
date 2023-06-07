@@ -5,35 +5,16 @@ configurations {
 dependencies {
 }
 
+apply from: "$rootDir/publish-helper.gradle"
+
 publishing {
-    publications {
-        mavenSVWSCore(MavenPublication) {
-            artifactId = 'svws-core'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = 'SVWS Core Library'
-                description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen der Server-Applikation der Schulverwaltungssoftware in NRW bereit'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
-        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
-                }
-            }
-        }
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-core'
+      pom {
+        name = 'SVWS Core Library'
+        description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen der Server-Applikation der Schulverwaltungssoftware in NRW bereit'
+      }
     }
+  }
 }

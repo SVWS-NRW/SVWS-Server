@@ -19,9 +19,9 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addCrypto() {
-	    def versionJCCrypt = '0.4.0';
+	    def versionJCCrypt = '0.4.7';
 	    project.configurations.create('crypto');
-	    project.dependencies.add('crypto', 'de.nrw.schule.svws.ext.jbcrypt:jbcrypt:' + versionJCCrypt);
+	    project.dependencies.add('crypto', 'de.svws-nrw.ext:jbcrypt:' + versionJCCrypt);
     }
 
 

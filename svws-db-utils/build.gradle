@@ -22,37 +22,17 @@ extraJavaModuleInfo {
 }
 */
 
+apply from: "$rootDir/publish-helper.gradle"
 publishing {
-    publications {
-        mavenSVWSDBUtils(MavenPublication) {
-            artifactId = 'svws-db-utils'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = 'SVWS DB Utils Library'
-                description = 'Diese Bibliothek unterstützt bei dem Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
-        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
-                }
-            }
-        }
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-db-utils'
+      pom {
+        name = 'SVWS DB Utils Library'
+        description = 'Diese Bibliothek unterstützt bei dem Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
+      }
     }
+  }
 }
 
 task generateLegacyMDBs(type: JavaExec) {

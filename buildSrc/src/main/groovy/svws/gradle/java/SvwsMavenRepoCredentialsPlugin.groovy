@@ -59,6 +59,30 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		}
 	}
 	
+	void addOssrhActor() {
+		project.ext.getOssrhActor = { ->
+			if (project.hasProperty('ossrh_actor'))
+				return project.ossrh_actor
+			def username = System.getenv("OSSRH_ACTOR")
+			if (username != null)
+				return username
+			project.logger.info('Info: Der Ossrh Repository Manager kann nicht genutzt werden, weil die Zugangsdaten nicht hinterlegt sind. Der Ossrh-Benutzer wurde weder in USERHOME/.gradle/gradle.properties als nexus_actor, noch als Umgebungsvariable NEXUS_ACTOR festgelegt!')
+			return null
+		}
+	}
+
+	void addOssrhToken() {
+		project.ext.getOssrhToken = { ->
+			if (project.hasProperty('ossrh_token'))
+				return project.ossrh_token
+			def token = System.getenv("OSSRH_TOKEN")
+			if (token != null)
+				return token
+			project.logger.info('Info: Der Ossrh Repository Manager kann nicht genutzt werden, weil die Zugangsdaten nicht hinterlegt sind. Der Ossrh-Token wurde weder in USERHOME/.gradle/gradle.properties als nexus_token, noch als Umgebungsvariable NEXUS_TOKEN festgelegt!')
+			return null
+		}
+	}
+	
 	void addNexusNpmBase64Token() {
 		def nexus_actor = project.ext.getNexusActor()
 		def nexus_token = project.ext.getNexusToken()
@@ -88,6 +112,8 @@ abstract class SvwsMavenRepoCredentialsPlugin implements Plugin<Project> {
 		this.addGithubToken()
 		this.addNexusActor()
 		this.addNexusToken()
+		this.addOssrhActor()
+		this.addOssrhToken()
 		this.addNexusNpmBase64Token()
 		this.addNpmToken()
     }

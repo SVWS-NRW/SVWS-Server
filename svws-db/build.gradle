@@ -9,38 +9,19 @@ dependencies {
     dto fileTree(dir: "${project.rootProject.projectDir}/svws-base/src/main/resources/schema", includes: ['**/*.csv'])
 }
 
+apply from: "$rootDir/publish-helper.gradle"
 publishing {
-    publications {
-        mavenSVWSDB(MavenPublication) {
-            artifactId = 'svws-db'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = 'SVWS DB Library'
-                description = 'Diese Bibliothek regelt den Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
-        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
-                }
-            }
-        }
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-db'
+      pom {
+        name = 'SVWS DB Library'
+        description = 'Diese Bibliothek regelt den Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
+      }
     }
+  }
 }
+
 
 task createJavaDTOs(type: JavaExec) {
 	group = 'svws'

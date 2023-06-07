@@ -62,38 +62,16 @@ task createVersionProperties() {
 processResources.dependsOn createVersionProperties
 sourcesJar.dependsOn createVersionProperties
 
+apply from: "$rootDir/publish-helper.gradle"
 publishing {
-    publications {
-        mavenSVWSOpenAPI(MavenPublication) {
-            artifactId = 'svws-openapi'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = 'SVWS OpenApi Library'
-                description = 'Diese Bibliothek enthält die Java-Server-Definition der OpenApi-Schnittstelle für die Schulverwaltungssoftware in NRW'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-        			connection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages'
-        			developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Packages.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Packages.git'
-                }
-            }
-        }
+  publications {
+    publishJava(MavenPublication) {
+    artifactId = 'svws-openapi'
+      pom {
+        name = 'SVWS OpenApi Library'
+        description = 'Diese Bibliothek enthält die Java-Server-Definition der OpenApi-Schnittstelle für die Schulverwaltungssoftware in NRW'
+      }
     }
+  }
 }
-
-
 
