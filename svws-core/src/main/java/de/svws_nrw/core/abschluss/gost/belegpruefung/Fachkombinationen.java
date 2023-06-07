@@ -7,6 +7,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
+import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
@@ -39,7 +40,8 @@ public final class Fachkombinationen extends GostBelegpruefung {
 		if (belegung2 == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegung2Halbjahr = belegung2.belegungen[halbjahr.id];
-		return ((belegung2Halbjahr != null) && ((kombi.kursart2 == null) || GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart2)));
+		return ((belegung2Halbjahr != null) && (Note.fromKuerzel(belegung2Halbjahr.notenkuerzel) != Note.UNGENUEGEND)
+				&& ((kombi.kursart2 == null) || GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart2)));
 	}
 
 
@@ -52,7 +54,7 @@ public final class Fachkombinationen extends GostBelegpruefung {
 		final AbiturFachbelegung belegung2 = manager.getFachbelegungByID(kombi.fachID2);
 		for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
 			final AbiturFachbelegungHalbjahr belegung1Halbjahr = belegung1.belegungen[halbjahr.id];
-			if (belegung1Halbjahr == null)
+			if ((belegung1Halbjahr == null) || (Note.fromKuerzel(belegung1Halbjahr.notenkuerzel) == Note.UNGENUEGEND))
 				continue;
 			if ((kombi.kursart1 == null) || GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart1)) {
 				// Die Fachkombinations-Regel wurde durch dir Fachbelegung des ersten Faches aktiviert - Prüfe nun auf eine Regelverletzung
