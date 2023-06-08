@@ -201,7 +201,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_schuelerAnzahl, gSchiene.id, 0);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_kollisionen, gSchiene.id, 0);
 		}
-		const strErrorDoppelteKursID : string | null = "Kurs-ID %d doppelt!";
 		for (const gKurs of this._parent.daten().kurse) {
 			const eKurs : GostBlockungsergebnisKurs = new GostBlockungsergebnisKurs();
 			eKurs.id = gKurs.id;
@@ -210,26 +209,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_kurs, eKurs.id, eKurs);
-			const newSetSchiene : HashSet<GostBlockungsergebnisSchiene> | null = new HashSet();
-			if (this._map_kursID_schienen.put(eKurs.id, newSetSchiene) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
-			const newSetSchueler : HashSet<number> | null = new HashSet();
-			if (this._map_kursID_schuelerIDs.put(eKurs.id, newSetSchueler) !== null)
-				throw new DeveloperNotificationException(JavaString.format(strErrorDoppelteKursID, eKurs.id))
-			if (!this._map_fachID_kurse.containsKey(eKurs.fachID))
-				this._map_fachID_kurse.put(eKurs.fachID, new ArrayList());
-			const fachgruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachID_kurse.get(eKurs.fachID);
-			if (fachgruppe !== null)
-				fachgruppe.add(eKurs);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schienen, eKurs.id, new HashSet<GostBlockungsergebnisSchiene>());
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schuelerIDs, eKurs.id, new HashSet<number>());
+			const fachKursliste : List<GostBlockungsergebnisKurs> = MapUtils.getOrCreateArrayList(this._map_fachID_kurse, eKurs.fachID);
+			fachKursliste.add(eKurs);
 			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			if (!this._map_fachartID_kurse.containsKey(fachartID)) {
-				this._map_fachartID_kurse.put(fachartID, new ArrayList());
+			const facharKursliste : List<GostBlockungsergebnisKurs> = MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, fachartID);
+			facharKursliste.add(eKurs);
+			if (!this._map_fachartID_kursdifferenz.containsKey(fachartID)) {
 				this._map_fachartID_kursdifferenz.put(fachartID, 0);
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
 			}
-			const fachartgruppe : List<GostBlockungsergebnisKurs> | null = this._map_fachartID_kurse.get(fachartID);
-			if (fachartgruppe !== null)
-				fachartgruppe.add(eKurs);
 		}
 		for (const gFachwahl of this._parent.daten().fachwahlen) {
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
@@ -1591,8 +1581,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			input.fachwahlenText.add(this._parent.getNameOfFachwahl(fachwahl));
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
 			for (const kursE of this.getOfFachartKursmenge(fachartID)) {
-				const idKurs : number = kursE.id;
 				const kursS : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
+				const idKurs : number = kursE.id;
 				kursS.id = idKurs;
 				kursS.fach = kursE.fachID;
 				kursS.kursart = kursE.kursart;

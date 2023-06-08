@@ -164,7 +164,6 @@ public class GostBlockungsergebnisManager {
 			// GostBlockungSchiene --> GostBlockungsergebnisSchiene
 			final @NotNull GostBlockungsergebnisSchiene eSchiene = new GostBlockungsergebnisSchiene();
 			eSchiene.id = gSchiene.id;
-
 			// Hinzufügen.
 			_ergebnis.schienen.add(eSchiene);
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenNr_schiene, gSchiene.nummer, eSchiene);
@@ -174,7 +173,6 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Kurse von '_parent' kopieren und hinzufügen. Fachart-IDs erzeugen.
-		final String strErrorDoppelteKursID = "Kurs-ID %d doppelt!";
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
 			// GostBlockungKurs --> GostBlockungsergebnisKurs
 			final @NotNull GostBlockungsergebnisKurs eKurs = new GostBlockungsergebnisKurs();
@@ -184,31 +182,29 @@ public class GostBlockungsergebnisManager {
 			eKurs.anzahlSchienen = gKurs.anzahlSchienen;
 			_ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 
+			// Map: kursID --> Kurs-Objekt
 			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_kurs, eKurs.id, eKurs);
 
-			final HashSet<@NotNull GostBlockungsergebnisSchiene> newSetSchiene = new HashSet<>();
-			if (_map_kursID_schienen.put(eKurs.id, newSetSchiene) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
+			// Map: kursID --> Schienen des Kurses
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schienen, eKurs.id, new HashSet<@NotNull GostBlockungsergebnisSchiene>());
 
-			final HashSet<@NotNull Long> newSetSchueler = new HashSet<>();
-			if (_map_kursID_schuelerIDs.put(eKurs.id, newSetSchueler) != null)
-				throw new DeveloperNotificationException(String.format(strErrorDoppelteKursID, eKurs.id));
+			// Map: kursID --> Schüler des Kurses
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schuelerIDs, eKurs.id, new HashSet<@NotNull Long>());
 
-			if (!_map_fachID_kurse.containsKey(eKurs.fachID))
-				_map_fachID_kurse.put(eKurs.fachID, new ArrayList<>());
-			final List<@NotNull GostBlockungsergebnisKurs> fachgruppe = _map_fachID_kurse.get(eKurs.fachID);
-			if (fachgruppe != null)
-				fachgruppe.add(eKurs);
+			// Map: fachID --> Kursliste
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> fachKursliste = MapUtils.getOrCreateArrayList(_map_fachID_kurse, eKurs.fachID);
+			fachKursliste.add(eKurs);
 
+			// Map: fachartID --> Kursliste
 			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			if (!_map_fachartID_kurse.containsKey(fachartID)) {
-				_map_fachartID_kurse.put(fachartID, new ArrayList<>());
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> facharKursliste = MapUtils.getOrCreateArrayList(_map_fachartID_kurse, fachartID);
+			facharKursliste.add(eKurs);
+
+			// Map: fachartID --> Kursdifferenz
+			if (!_map_fachartID_kursdifferenz.containsKey(fachartID)) {
 				_map_fachartID_kursdifferenz.put(fachartID, 0);
 				_ergebnis.bewertung.kursdifferenzHistogramm[0]++;
 			}
-			final List<@NotNull GostBlockungsergebnisKurs> fachartgruppe = _map_fachartID_kurse.get(fachartID);
-			if (fachartgruppe != null)
-				fachartgruppe.add(eKurs);
 		}
 
 		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
@@ -1663,14 +1659,16 @@ public class GostBlockungsergebnisManager {
 		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
 		input.schienen = _parent.getSchienenAnzahl();
 
+		// Sammle alle Facharten des Schülers...
 		for (@NotNull final GostFachwahl fachwahl : _parent.getOfSchuelerFacharten(idSchueler)) {
 			input.fachwahlen.add(fachwahl);
 			input.fachwahlenText.add(_parent.getNameOfFachwahl(fachwahl));
 			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
-			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
-				final long idKurs = kursE.id;
 
+			// Sammle alle potentiellen Kurse der Fachart des Schülers...
+			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
 				final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
+				final long idKurs = kursE.id;
 				kursS.id = idKurs;
 				kursS.fach = kursE.fachID;
 				kursS.kursart = kursE.kursart;

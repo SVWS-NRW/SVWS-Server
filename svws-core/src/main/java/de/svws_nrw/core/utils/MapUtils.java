@@ -1,6 +1,8 @@
 package de.svws_nrw.core.utils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +36,26 @@ public final class MapUtils {
 		final @NotNull HashSet<@NotNull V> setNeu = new HashSet<>();
 		map.put(key, setNeu);
 		return setNeu;
+	}
+
+    /**
+     * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
+     *
+     * @param <K>  Der Typ der Schlüssel.
+     * @param <V>  Der Typ des Objekte in der ArrayList.
+     * @param map  Die Map, welche K auf "ArrayList of V" abbildet.
+     * @param key  Der Schlüssel.
+     *
+     * @return die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
+     */
+	public static <@NotNull K, @NotNull V>  @NotNull List<@NotNull V> getOrCreateArrayList(@NotNull final Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key) {
+		final List<@NotNull V> list = map.get(key);
+		if (list != null)
+			return list;
+
+		final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
+		map.put(key, listNeu);
+		return listNeu;
 	}
 
 
