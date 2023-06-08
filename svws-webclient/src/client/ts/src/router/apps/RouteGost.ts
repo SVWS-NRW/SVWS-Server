@@ -73,7 +73,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		let redirect: RouteNode<unknown, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
 		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
 			redirect = this.defaultChild!;
-		return { name: redirect.name, params: this.data.params};
+		return { name: redirect.name, params: { abiturjahr: abiturjahr || -1 }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
