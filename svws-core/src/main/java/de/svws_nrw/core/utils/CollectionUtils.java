@@ -1,7 +1,9 @@
 package de.svws_nrw.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -39,13 +41,13 @@ public final class CollectionUtils {
 	}
 
 	/**
-	 *  dede
+	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
 	 *
-	 * @param <E> ded
-	 * @param values de
-	 * @param predicate ded
+	 * @param <E>       Der Typ der Elemente in der {@link Collection}.
+	 * @param values    Die {@link Collection}.
+	 * @param predicate Das {@link Predicate}, welches entscheidet, ob ein Element zur Ergebnismenge gehört.
 	 *
-	 * @return ded
+	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
 	 */
 	public static <@NotNull E> @NotNull Set<@NotNull E> toFilteredHashSet(final @NotNull Collection<@NotNull E> values, final @NotNull Predicate<@NotNull E> predicate) {
 		final @NotNull HashSet<@NotNull E> set = new HashSet<>();
@@ -55,5 +57,21 @@ public final class CollectionUtils {
 		return set;
 	}
 
+	/**
+	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
+	 *
+	 * @param <E>       Der Typ der Elemente in der {@link Collection}.
+	 * @param values    Die {@link Collection}.
+	 * @param predicate Das {@link Predicate}, welches entscheidet, ob ein Element zur Ergebnismenge gehört.
+	 *
+	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
+	 */
+	public static <@NotNull E> @NotNull List<@NotNull E> toFilteredArrayList(final @NotNull Collection<@NotNull E> values, final @NotNull Predicate<@NotNull E> predicate) {
+		final @NotNull ArrayList<@NotNull E> set = new ArrayList<>();
+		for (final @NotNull E e : values)
+			if (predicate.test(e))
+				set.add(e);
+		return set;
+	}
 
 }

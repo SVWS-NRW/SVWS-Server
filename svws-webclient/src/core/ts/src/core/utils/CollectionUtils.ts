@@ -1,6 +1,8 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
+import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
+import type { List } from '../../java/util/List';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { HashSet } from '../../java/util/HashSet';
 import type { Predicate } from '../../java/util/function/Predicate';
@@ -32,16 +34,33 @@ export class CollectionUtils extends JavaObject {
 	}
 
 	/**
-	 *  dede
+	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
 	 *
-	 * @param <E> ded
-	 * @param values de
-	 * @param predicate ded
+	 * @param <E>       Der Typ der Elemente in der {@link Collection}.
+	 * @param values    Die {@link Collection}.
+	 * @param predicate Das {@link Predicate}, welches entscheidet, ob ein Element zur Ergebnismenge gehört.
 	 *
-	 * @return ded
+	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einem {@link Set}.
 	 */
 	public static toFilteredHashSet<E>(values : Collection<E>, predicate : Predicate<E>) : JavaSet<E> {
 		const set : HashSet<E> = new HashSet();
+		for (const e of values)
+			if (predicate.test(e))
+				set.add(e);
+		return set;
+	}
+
+	/**
+	 * Liefert eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
+	 *
+	 * @param <E>       Der Typ der Elemente in der {@link Collection}.
+	 * @param values    Die {@link Collection}.
+	 * @param predicate Das {@link Predicate}, welches entscheidet, ob ein Element zur Ergebnismenge gehört.
+	 *
+	 * @return eine gefilterte {@link Collection} und liefert die Ergebnismenge in einer {@link List}.
+	 */
+	public static toFilteredArrayList<E>(values : Collection<E>, predicate : Predicate<E>) : List<E> {
+		const set : ArrayList<E> = new ArrayList();
 		for (const e of values)
 			if (predicate.test(e))
 				set.add(e);

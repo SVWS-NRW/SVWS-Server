@@ -17,6 +17,7 @@ import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenpl
 import { Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
 import { HashSet } from '../../../java/util/HashSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
+import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
@@ -499,95 +500,87 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
-	 * @param kursID    Die ID des Kurses.
+	 * @param idKkurs   Die ID des Kurses.
 	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
-	public getUnterrichtDesKursesByWochentyp(kursID : number, wochentyp : number) : List<StundenplanUnterricht> {
+	public getUnterrichtDesKursesByWochentyp(idKkurs : number, wochentyp : number) : List<StundenplanUnterricht> {
 		DeveloperNotificationException.ifTrue("wochentyp > _daten.wochenTypModell", wochentyp > this._daten.wochenTypModell);
-		const list : List<StundenplanUnterricht> = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", this._map_kursID_zu_unterrichte.get(kursID));
-		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
-		for (const u of list)
-			if ((u.wochentyp === 0) || (u.wochentyp === wochentyp))
-				result.add(u);
-		return result;
+		const list : List<StundenplanUnterricht> = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", this._map_kursID_zu_unterrichte.get(idKkurs));
+		return CollectionUtils.toFilteredArrayList(list, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
 	}
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 *
-	 * @param kursID        Die ID des Kurses.
+	 * @param idKurs        Die ID des Kurses.
 	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
 	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
-	public getUnterrichtDesKursesByKW(kursID : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+	public getUnterrichtDesKursesByKW(idKurs : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
 		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
-		return this.getUnterrichtDesKursesByWochentyp(kursID, wochentyp);
+		return this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp);
 	}
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 *
-	 * @param kursIDs   Die IDs aller Kurse.
+	 * @param idsKurs   Die IDs aller Kurse.
 	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
 	 */
-	public getUnterrichtDerKurseByWochentyp(kursIDs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
+	public getUnterrichtDerKurseByWochentyp(idsKurs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
 		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
-		for (const kursID of kursIDs)
-			result.addAll(this.getUnterrichtDesKursesByWochentyp(kursID, wochentyp));
+		for (const idKurs of idsKurs)
+			result.addAll(this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp));
 		return result;
 	}
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
 	 *
-	 * @param kursIDs       Die IDs aller Kurse.
+	 * @param idsKurs       Die IDs aller Kurse.
 	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
 	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
 	 */
-	public getUnterrichtDerKurseByKW(kursIDs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+	public getUnterrichtDerKurseByKW(idsKurs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
 		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
-		return this.getUnterrichtDerKurseByWochentyp(kursIDs, wochentyp);
+		return this.getUnterrichtDerKurseByWochentyp(idsKurs, wochentyp);
 	}
 
 	/**
 	 * Filtert aus der Liste der Kurs-IDs diejenigen heraus,
 	 * deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 *
-	 * @param kursIDs          Die Liste aller Kurs-IDs.
+	 * @param idsKurs          Die Liste aller Kurs-IDs.
 	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
 	 * @param wochentag        Der gewünschte {@link Wochentag}.
 	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
-	public getKurseGefiltert(kursIDs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
-		const result : ArrayList<number> = new ArrayList();
-		for (const kursID of kursIDs)
-			if (this.testKursHatUnterrichtAm(kursID!, wochentyp, wochentag, unterrichtstunde))
-				result.add(kursID);
-		return result;
+	public getKurseGefiltert(idsKurs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
+		return CollectionUtils.toFilteredArrayList(idsKurs, { test : (idKurs: number) => this.testKursHatUnterrichtAm(idKurs!, wochentyp, wochentag, unterrichtstunde) });
 	}
 
 	/**
 	 * Liefert TRUE, falls der übergebene Kurs am (Wochentyp / Wochentag / Unterrichtsstunde)  hat.
 	 *
-	 * @param kursID           Die ID des Kurses.
+	 * @param idKurs           Die ID des Kurses.
 	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
 	 * @param wochentag        Der gewünschte {@link Wochentag}.
 	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
 	 *
 	 * @return TRUE, falls der übergebene Kurs am (wochentyp / wochentag / Unterrichtsstunde)  hat.
 	 */
-	public testKursHatUnterrichtAm(kursID : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
-		for (const u of this.getUnterrichtDesKursesByWochentyp(kursID, wochentyp)) {
+	public testKursHatUnterrichtAm(idKurs : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
+		for (const u of this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp)) {
 			const z : StundenplanZeitraster = this.getZeitraster(u.idZeitraster);
 			if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === unterrichtstunde))
 				return true;
@@ -596,9 +589,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
+	 * Liefert eine Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
 	 *
-	 * @return ein Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
+	 * @return eine Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
 	 */
 	public getMapAufsichtsbereich() : JavaMap<number, StundenplanAufsichtsbereich> {
 		return this._map_aufsichtsbereichID_zu_aufsichtsbereich;
@@ -661,67 +654,67 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
-	 * @param raumID Die ID des angefragten-Objektes.
+	 * @param idRaum Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur raumID zugehörige {@link StundenplanRaum}-Objekt.
 	 */
-	public getRaum(raumID : number) : StundenplanRaum {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_raumID_zu_raum, raumID);
+	public getRaum(idRaum : number) : StundenplanRaum {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_raumID_zu_raum, idRaum);
 	}
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
 	 *
-	 * @param pausenzeitID Die ID des angefragten-Objektes.
+	 * @param idPausenzeit Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
 	 */
-	public getPausenzeit(pausenzeitID : number) : StundenplanPausenzeit {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenzeitID_zu_pausenzeit, pausenzeitID);
+	public getPausenzeit(idPausenzeit : number) : StundenplanPausenzeit {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenzeitID_zu_pausenzeit, idPausenzeit);
 	}
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
 	 *
-	 * @param aufsichtsbereichID Die ID des angefragten-Objektes.
+	 * @param idAufsichtsbereich Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
 	 */
-	public getAufsichtsbereich(aufsichtsbereichID : number) : StundenplanAufsichtsbereich {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereichID);
+	public getAufsichtsbereich(idAufsichtsbereich : number) : StundenplanAufsichtsbereich {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_aufsichtsbereichID_zu_aufsichtsbereich, idAufsichtsbereich);
 	}
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 *
-	 * @param kwzID Die ID des angefragten-Objektes.
+	 * @param idKWZ Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 */
-	public getKalenderwochenzuordnung(kwzID : number) : StundenplanKalenderwochenzuordnung {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_kwzID_zu_kwz, kwzID);
+	public getKalenderwochenzuordnung(idKWZ : number) : StundenplanKalenderwochenzuordnung {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kwzID_zu_kwz, idKWZ);
 	}
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
 	 *
-	 * @param pausenaufsichtID Die ID des angefragten-Objektes.
+	 * @param idPausenaufsicht Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
 	 */
-	public getPausenaufsicht(pausenaufsichtID : number) : StundenplanPausenaufsicht {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsichtID);
+	public getPausenaufsicht(idPausenaufsicht : number) : StundenplanPausenaufsicht {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
 	}
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
 	 *
-	 * @param zeitrasterID Die ID des angefragten-Objektes.
+	 * @param idZeitraster Die ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
 	 */
-	public getZeitraster(zeitrasterID : number) : StundenplanZeitraster {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, zeitrasterID);
+	public getZeitraster(idZeitraster : number) : StundenplanZeitraster {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
 	}
 
 	/**
@@ -784,26 +777,21 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
 		const ende : number = beginn + minutenVerstrichen;
-		const result : ArrayList<StundenplanZeitraster> = new ArrayList();
-		for (const zeitraster of this._daten.zeitraster) {
-			const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", zeitraster.stundenbeginn).valueOf();
-			const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", zeitraster.stundenende).valueOf();
-			if (this.testIntervalleSchneidenSich(beginn, ende, beginn2, ende2))
-				result.add(zeitraster);
-		}
-		return result;
+		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
 	}
 
 	/**
 	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
 	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param beginn2  Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param ende2    Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
 	 *
 	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
 	 */
-	public testIntervalleSchneidenSich(beginn1 : number, ende1 : number, beginn2 : number, ende2 : number) : boolean {
+	public testIntervalleSchneidenSich(beginn1 : number, ende1 : number, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
+		const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", iBeginn2).valueOf();
+		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2).valueOf();
 		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
 		DeveloperNotificationException.ifTrue("beginn1 >= ende1", beginn1 >= ende1);
@@ -880,66 +868,66 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
 	 *
-	 * @param raumID Die ID des {@link StundenplanRaum}-Objekts.
+	 * @param idRaum Die ID des {@link StundenplanRaum}-Objekts.
 	 */
-	public removeRaum(raumID : number) : void {
-		const raum : StundenplanRaum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + raumID + ")", this._map_raumID_zu_raum.get(raumID));
-		this._map_raumID_zu_raum.remove(raumID);
+	public removeRaum(idRaum : number) : void {
+		const raum : StundenplanRaum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + idRaum + ")", this._map_raumID_zu_raum.get(idRaum));
+		this._map_raumID_zu_raum.remove(idRaum);
 		this._daten.raeume.remove(raum);
 	}
 
 	/**
 	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenzeit}-Objekt.
 	 *
-	 * @param pausenzeitID Die ID des {@link StundenplanPausenzeit}-Objekts.
+	 * @param idPausenzeit Die ID des {@link StundenplanPausenzeit}-Objekts.
 	 */
-	public removePausenzeit(pausenzeitID : number) : void {
-		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + pausenzeitID + ")", this._map_pausenzeitID_zu_pausenzeit.get(pausenzeitID));
-		this._map_pausenzeitID_zu_pausenzeit.remove(pausenzeitID);
+	public removePausenzeit(idPausenzeit : number) : void {
+		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + idPausenzeit + ")", this._map_pausenzeitID_zu_pausenzeit.get(idPausenzeit));
+		this._map_pausenzeitID_zu_pausenzeit.remove(idPausenzeit);
 		this._daten.pausenzeiten.remove(pausenzeit);
 	}
 
 	/**
 	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
 	 *
-	 * @param aufsichtsbereichID Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
+	 * @param idAufsichtsbereich Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
 	 */
-	public removeAufsichtsbereich(aufsichtsbereichID : number) : void {
-		const aufsichtsbereich : StundenplanAufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + aufsichtsbereichID + ")", this._map_aufsichtsbereichID_zu_aufsichtsbereich.get(aufsichtsbereichID));
-		this._map_aufsichtsbereichID_zu_aufsichtsbereich.remove(aufsichtsbereichID);
+	public removeAufsichtsbereich(idAufsichtsbereich : number) : void {
+		const aufsichtsbereich : StundenplanAufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + idAufsichtsbereich + ")", this._map_aufsichtsbereichID_zu_aufsichtsbereich.get(idAufsichtsbereich));
+		this._map_aufsichtsbereichID_zu_aufsichtsbereich.remove(idAufsichtsbereich);
 		this._daten.aufsichtsbereiche.remove(aufsichtsbereich);
 	}
 
 	/**
 	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 *
-	 * @param kwzID Die ID des {@link StundenplanKalenderwochenzuordnung}-Objekts.
+	 * @param idKWZ Die ID des {@link StundenplanKalenderwochenzuordnung}-Objekts.
 	 */
-	public removeKalenderwochenzuordnung(kwzID : number) : void {
-		const kwz : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + kwzID + ")", this._map_kwzID_zu_kwz.get(kwzID));
-		this._map_kwzID_zu_kwz.remove(kwzID);
+	public removeKalenderwochenzuordnung(idKWZ : number) : void {
+		const kwz : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + idKWZ + ")", this._map_kwzID_zu_kwz.get(idKWZ));
+		this._map_kwzID_zu_kwz.remove(idKWZ);
 		this._daten.kalenderwochenZuordnung.remove(kwz);
 	}
 
 	/**
 	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsicht}-Objekt.
 	 *
-	 * @param pausenaufsichtID Die ID des {@link StundenplanPausenaufsicht}-Objekts.
+	 * @param idPausenaufsicht Die ID des {@link StundenplanPausenaufsicht}-Objekts.
 	 */
-	public removePausenaufsicht(pausenaufsichtID : number) : void {
-		const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifNull("_map_pausenaufsichtID_zu_pausenaufsicht.get(" + pausenaufsichtID + ")", this._map_pausenaufsichtID_zu_pausenaufsicht.get(pausenaufsichtID));
-		this._map_pausenaufsichtID_zu_pausenaufsicht.remove(pausenaufsichtID);
+	public removePausenaufsicht(idPausenaufsicht : number) : void {
+		const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifNull("_map_pausenaufsichtID_zu_pausenaufsicht.get(" + idPausenaufsicht + ")", this._map_pausenaufsichtID_zu_pausenaufsicht.get(idPausenaufsicht));
+		this._map_pausenaufsichtID_zu_pausenaufsicht.remove(idPausenaufsicht);
 		this._datenP.remove(pa);
 	}
 
 	/**
 	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanZeitraster}-Objekt.
 	 *
-	 * @param zeitrasterID Die ID des {@link StundenplanZeitraster}-Objekts.
+	 * @param idZeitraster Die ID des {@link StundenplanZeitraster}-Objekts.
 	 */
-	public removeZeitraster(zeitrasterID : number) : void {
-		const zr : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + zeitrasterID + ")", this._map_zeitrasterID_zu_zeitraster.get(zeitrasterID));
-		this._map_zeitrasterID_zu_zeitraster.remove(zeitrasterID);
+	public removeZeitraster(idZeitraster : number) : void {
+		const zr : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", this._map_zeitrasterID_zu_zeitraster.get(idZeitraster));
+		this._map_zeitrasterID_zu_zeitraster.remove(idZeitraster);
 		this._daten.zeitraster.remove(zr);
 	}
 
