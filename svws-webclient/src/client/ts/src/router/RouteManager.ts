@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, Router } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/RouteApp";
@@ -28,6 +28,7 @@ export class RouteManager {
 		this.router = router;
 		this.active = false;
 		this.router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized) => RouteManager._instance?.beforeEach(to, from));
+		this.router.afterEach((to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void) => RouteManager._instance?.afterEach(to, from, failure));
 		// Füge die Haupt-Routen hinzu
 		this.router.addRoute(routeLogin.record);
 		this.router.addRoute(routeInit.record);
@@ -69,11 +70,10 @@ export class RouteManager {
 
 	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
-		if (this.active)
+		if ((this.active) && (to.redirectedFrom === undefined))
 			return false;
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		const result = await this.beforeEachHandler(to, from); // Prüfe, ob die Route in Ordnung ist und führe die berforeEach, enter, update und leave-Ereignisse auf der Route aus
-		this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 		return result;
 	}
 
@@ -221,6 +221,25 @@ export class RouteManager {
 		}
 		// Akzeptiere die Route...
 		return true;
+	}
+
+
+	protected afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): any {
+		// TODO Behandle die Leave-Ereignisse hier anstatt in Before-Each
+		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
+		if (failure === undefined) {
+			console.log("Completed Routing:");
+			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
+			console.log("  to: " + to_node?.name + " params=" + JSON.stringify(to.params));
+			console.log("  to-path: " + to.fullPath);
+		} else {
+			console.log("Failed: " + failure.message);
+			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
+			console.log("  to: " + to_node?.name + " params=" + JSON.stringify(to.params));
+			console.log("  to-path: " + to.fullPath);
+		}
+		this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 	}
 
 }
