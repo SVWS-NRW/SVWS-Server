@@ -84,7 +84,7 @@ export class RouteManager {
 			return { name: "login", query: { redirect: to.fullPath } };
 		}
 		// Aktualisiere ggf. den redirect-Parameter
-		if (!api.authenticated && to.name === "login") {
+		if (!api.authenticated && (to.name === "login")) {
 			const redirect = to.query.redirect === undefined ? "/" : to.query.redirect;
 			if ((redirect !== null) && (redirect.toString() !== routeLogin.routepath)) {
 				routeLogin.routepath = redirect.toString();
@@ -164,7 +164,7 @@ export class RouteManager {
 					return result;
 			} else if (from_is_successor) {
 				for (const node of from_is_successor.slice(1).reverse()) {
-					result = await node.leave(from_node, from.params);
+					result = await node.leaveBefore(from_node, from.params);
 					if (result !== undefined)
 						return result;
 				}
@@ -193,11 +193,11 @@ export class RouteManager {
 					from_predecessors = from_predecessors.slice(1);
 					to_predecessors = to_predecessors.slice(1);
 				}
-				result = await from_node.leave(from_node, from.params);
+				result = await from_node.leaveBefore(from_node, from.params);
 				if (result !== undefined)
 					return result;
 				for (const node of [...from_predecessors].reverse()) {
-					result = await node.leave(from_node, from.params);
+					result = await node.leaveBefore(from_node, from.params);
 					if (result !== undefined)
 						return result;
 				}
@@ -224,7 +224,7 @@ export class RouteManager {
 	}
 
 
-	protected afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): any {
+	protected async afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): Promise<any> {
 		// TODO Behandle die Leave-Ereignisse hier anstatt in Before-Each
 		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
@@ -233,6 +233,30 @@ export class RouteManager {
 			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
 			console.log("  to: " + to_node?.name + " params=" + JSON.stringify(to.params));
 			console.log("  to-path: " + to.fullPath);
+			if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
+				// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
+				const equals = (to_node.name === from_node.name);
+				const to_is_successor = to_node.checkSuccessorOf(from_node);
+				if (!to_is_successor) {
+					const from_is_successor = from_node.checkSuccessorOf(to_node);
+					const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
+					if (from_is_successor) {
+						for (const node of from_is_successor.slice(1).reverse())
+							await node.leave(from_node, from.params);
+					} else if (!equals) {
+						let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
+						let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
+						// Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
+						while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
+							from_predecessors = from_predecessors.slice(1);
+							to_predecessors = to_predecessors.slice(1);
+						}
+						await from_node.leave(from_node, from.params);
+						for (const node of [...from_predecessors].reverse())
+							await node.leave(from_node, from.params);
+					}
+				}
+			}
 		} else {
 			console.log("Failed: " + failure.message);
 			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
