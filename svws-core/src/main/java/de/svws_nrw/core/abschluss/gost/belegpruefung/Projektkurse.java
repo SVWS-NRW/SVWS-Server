@@ -12,6 +12,9 @@ import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
@@ -223,12 +226,29 @@ public final class Projektkurse extends GostBelegpruefung {
 			final GostFach fach = manager.getFach(fachbelegung);
 			if (fach == null)
 				continue;
+			// Prüfe nun, ob die Belegung
 			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-			if ((leitfach1 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1))
+			if ((leitfach1 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1)) {
+				// Prüfe, ob die Fachdefinition des Projektkursfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
+				final GostFach lf = manager.getFach(leitfach1);
+				if (lf == null)
+					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
+				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
+					addFehler(GostBelegungsfehler.PF_19);
 				continue;
-			if ((leitfach2 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2))
+			}
+			if ((leitfach2 != null) && pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2)) {
+				// Prüfe, ob die Fachdefinition des Projektkursfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
+				final GostFach lf = manager.getFach(leitfach2);
+				if (lf == null)
+					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
+				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
+					addFehler(GostBelegungsfehler.PF_19);
 				continue;
+			}
 			addFehler(GostBelegungsfehler.PF_13);
 		}
 	}

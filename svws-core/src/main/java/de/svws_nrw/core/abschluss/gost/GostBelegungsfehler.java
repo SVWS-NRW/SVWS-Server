@@ -410,6 +410,11 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs kann nicht in der Q2.2 beginnen.",
 			null),
 
+	/** BelegungsfehlerArt PF_19 */
+	PF_19("PF_19", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann als Leitfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
+			null),
+
 	/** BelegungsfehlerArt RE_10 */
 	RE_10("RE_10", GostBelegungsfehlerArt.BELEGUNG,
 			"Religionslehre muss wenigstens von EF.1-Q1.2 durchgehend belegt werden. Als Ersatz kann Philosophie dienen, sofern Philosophie nicht die einzige von EF.1 bis Q2.2 durchgehend belegte Gesellschaftswissenschaft ist. In diesen Fällen muss ein weiteres Fach der Gesellschaftswissenschaften als Religionsersatz dienen.",

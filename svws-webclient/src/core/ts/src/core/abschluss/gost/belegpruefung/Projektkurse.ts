@@ -7,8 +7,11 @@ import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFac
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
+import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
+import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 import { HashSet } from '../../../../java/util/HashSet';
@@ -162,10 +165,24 @@ export class Projektkurse extends GostBelegpruefung {
 				continue;
 			const leitfach1 : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 			const leitfach2 : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-			if ((leitfach1 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1))
+			if ((leitfach1 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach1)) {
+				const lf : GostFach | null = this.manager.getFach(leitfach1);
+				if (lf === null)
+					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
+				const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (JavaObject.equalsTranspiler(zf, (ZulaessigesFach.PX)) || JavaObject.equalsTranspiler(zf, (ZulaessigesFach.VX)))))
+					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;
-			if ((leitfach2 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2))
+			}
+			if ((leitfach2 !== null) && this.pruefeBelegungLeitfachbelegung(fachbelegung, leitfach2)) {
+				const lf : GostFach | null = this.manager.getFach(leitfach2);
+				if (lf === null)
+					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
+				const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (JavaObject.equalsTranspiler(zf, (ZulaessigesFach.PX)) || JavaObject.equalsTranspiler(zf, (ZulaessigesFach.VX)))))
+					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;
+			}
 			this.addFehler(GostBelegungsfehler.PF_13);
 		}
 	}
