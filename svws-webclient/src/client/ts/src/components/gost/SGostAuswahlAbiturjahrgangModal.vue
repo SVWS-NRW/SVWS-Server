@@ -5,7 +5,7 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-button type="transparent" v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" @click="clickAddAbiturjahrgang(jahrgang.id)" :title="`Stufe ${jahrgang.kuerzel} hinzufügen`">
-					{{ jahrgang.kuerzel }}
+					Abitur {{ props.getAbiturjahrFuerJahrgang(jahrgang.id) }} (Jahrgang {{ jahrgang.kuerzel }})
 				</svws-ui-button>
 			</div>
 		</template>
@@ -22,6 +22,7 @@
 	const props = defineProps<{
 		mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsListeEintrag>;
 		addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
+		getAbiturjahrFuerJahrgang: (idJahrgang: number) => number;
 	}>();
 
 	const modal = ref();

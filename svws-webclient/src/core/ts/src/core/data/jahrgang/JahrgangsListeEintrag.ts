@@ -15,7 +15,7 @@ export class JahrgangsListeEintrag extends JavaObject {
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
 	 */
-	public kuerzelStatistik : string | null = null;
+	public kuerzelStatistik : string = "";
 
 	/**
 	 * Der Name / die Bezeichnung des Jahrgangs.
@@ -30,7 +30,7 @@ export class JahrgangsListeEintrag extends JavaObject {
 	/**
 	 * Die ID der Schulgliederung, der der Eintrag zugeordnet ist.
 	 */
-	public idSchulgliederung : string | null = null;
+	public kuerzelSchulgliederung : string | null = null;
 
 	/**
 	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null
@@ -58,12 +58,14 @@ export class JahrgangsListeEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		if (typeof obj.kuerzelStatistik === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
+		result.kuerzelStatistik = obj.kuerzelStatistik;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.idSchulgliederung = typeof obj.idSchulgliederung === "undefined" ? null : obj.idSchulgliederung === null ? null : obj.idSchulgliederung;
+		result.kuerzelSchulgliederung = typeof obj.kuerzelSchulgliederung === "undefined" ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
 		result.idFolgejahrgang = typeof obj.idFolgejahrgang === "undefined" ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
 		if (typeof obj.istSichtbar === "undefined")
 			 throw new Error('invalid json format, missing attribute istSichtbar');
@@ -75,10 +77,10 @@ export class JahrgangsListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
-		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik! + '"' + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung + '"') + ',';
+		result += '"kuerzelSchulgliederung" : ' + ((!obj.kuerzelSchulgliederung) ? 'null' : '"' + obj.kuerzelSchulgliederung + '"') + ',';
 		result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result = result.slice(0, -1);
@@ -95,7 +97,7 @@ export class JahrgangsListeEintrag extends JavaObject {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+			result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
@@ -103,8 +105,8 @@ export class JahrgangsListeEintrag extends JavaObject {
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
-		if (typeof obj.idSchulgliederung !== "undefined") {
-			result += '"idSchulgliederung" : ' + ((!obj.idSchulgliederung) ? 'null' : '"' + obj.idSchulgliederung + '"') + ',';
+		if (typeof obj.kuerzelSchulgliederung !== "undefined") {
+			result += '"kuerzelSchulgliederung" : ' + ((!obj.kuerzelSchulgliederung) ? 'null' : '"' + obj.kuerzelSchulgliederung + '"') + ',';
 		}
 		if (typeof obj.idFolgejahrgang !== "undefined") {
 			result += '"idFolgejahrgang" : ' + ((!obj.idFolgejahrgang) ? 'null' : obj.idFolgejahrgang) + ',';

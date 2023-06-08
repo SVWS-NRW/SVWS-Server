@@ -11,5 +11,6 @@ export interface GostAuswahlProps {
 	apiStatus: ApiStatus;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
-	gotoAbiturjahrgang: (abiturjahrgang: GostJahrgang) => Promise<void>
+	gotoAbiturjahrgang: (abiturjahrgang: GostJahrgang) => Promise<void>;
+	getAbiturjahrFuerJahrgang: (idJahrgang: number) => number;
 }

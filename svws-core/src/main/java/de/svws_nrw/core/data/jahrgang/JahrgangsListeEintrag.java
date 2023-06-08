@@ -1,5 +1,6 @@
 package de.svws_nrw.core.data.jahrgang;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +24,7 @@ public class JahrgangsListeEintrag {
 
 	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
-	public String kuerzelStatistik;
+	public @NotNull String kuerzelStatistik = "";
 
 	/** Der Name / die Bezeichnung des Jahrgangs. */
 	@Schema(description = "der Name / die Bezeichnung des Jahrgangs", example = "Einführungsphase")
@@ -35,7 +36,7 @@ public class JahrgangsListeEintrag {
 
 	/** Die ID der Schulgliederung, der der Eintrag zugeordnet ist. */
 	@Schema(description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
-	public String idSchulgliederung;
+	public String kuerzelSchulgliederung;
 
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")

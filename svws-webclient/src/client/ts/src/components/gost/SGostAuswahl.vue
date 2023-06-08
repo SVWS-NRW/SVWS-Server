@@ -25,7 +25,8 @@
 						</span>
 					</template>
 					<template #footerActions>
-						<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang" :add-abiturjahrgang="addAbiturjahrgang">
+						<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang"
+							:add-abiturjahrgang="addAbiturjahrgang" :get-abiturjahr-fuer-jahrgang="getAbiturjahrFuerJahrgang">
 							<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 						</s-gost-auswahl-abiturjahrgang-modal>
 					</template>

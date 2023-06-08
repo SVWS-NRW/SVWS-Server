@@ -15,7 +15,7 @@ export class JahrgangsDaten extends JavaObject {
 	/**
 	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
 	 */
-	public kuerzelStatistik : string | null = null;
+	public kuerzelStatistik : string = "";
 
 	/**
 	 * Der Name / die Bezeichnung des Jahrgangs.
@@ -58,7 +58,9 @@ export class JahrgangsDaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = typeof obj.kuerzel === "undefined" ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kuerzelStatistik = typeof obj.kuerzelStatistik === "undefined" ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		if (typeof obj.kuerzelStatistik === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
+		result.kuerzelStatistik = obj.kuerzelStatistik;
 		result.bezeichnung = typeof obj.bezeichnung === "undefined" ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
@@ -75,7 +77,7 @@ export class JahrgangsDaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
-		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik! + '"' + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"kuerzelSchulgliederung" : ' + ((!obj.kuerzelSchulgliederung) ? 'null' : '"' + obj.kuerzelSchulgliederung + '"') + ',';
@@ -95,7 +97,7 @@ export class JahrgangsDaten extends JavaObject {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+			result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik + '"' + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';

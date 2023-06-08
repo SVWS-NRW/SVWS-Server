@@ -1,5 +1,5 @@
-import { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach, DeveloperNotificationException } from "@core";
-import { GostFaecherManager, ArrayList } from "@core";
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
+import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import type { RouteParams } from "vue-router";
 import { api } from "~/router/Api";
@@ -7,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../RouteGost";
 import { routeGostJahrgangsdaten } from "./RouteGostJahrgangsdaten";
+import { routeApp } from "~/router/RouteApp";
 
 interface RouteStateGost {
 	params: RouteParams;
@@ -67,9 +68,13 @@ export class RouteDataGost {
 		for (const j of mapAbiturjahrgaenge.values())
 			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
 		const map = new Map<number, JahrgangsListeEintrag>();
-		for (const j of mapJahrgaenge.values())
-			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel))
-				map.set(j.id, j);
+		for (const j of mapJahrgaenge.values()) {
+			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel)) {
+				const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(j.id, mapJahrgaenge);
+				if (abiturjahr !== null)
+					map.set(j.id, j);
+			}
+		}
 		return map;
 	}
 
@@ -251,5 +256,27 @@ export class RouteDataGost {
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
 	}
+
+
+	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsListeEintrag>) : number | null {
+		const jahrgang = mapJahrgaenge.get(idJahrgang);
+		if (jahrgang === undefined)
+			throw new DeveloperNotificationException("Konnte den Jahrgang für die ID " + idJahrgang + " nicht bestimmen.");
+		const schulgliederung: Schulgliederung | null = Schulgliederung.getByKuerzel(jahrgang.kuerzelSchulgliederung);
+		if (schulgliederung === null)
+			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
+		const abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);
+		if (abiturjahr === null)
+			return null;
+		return abiturjahr;
+	}
+
+	getAbiturjahrFuerJahrgang = (idJahrgang : number) => {
+		const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(idJahrgang, this._state.value.mapJahrgaenge);
+		if (abiturjahr === null)
+			throw new NullPointerException("Dem Jahrgang mit der ID " + idJahrgang + " konnte kein Abiturjahr zugeordnet werden.");
+		return abiturjahr;
+	}
+
 }
 

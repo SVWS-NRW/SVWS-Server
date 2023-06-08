@@ -87,7 +87,8 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			apiStatus: api.status,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
-			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang
+			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
+			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang
 		};
 	}
 
