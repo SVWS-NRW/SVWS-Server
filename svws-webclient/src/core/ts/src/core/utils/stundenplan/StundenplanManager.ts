@@ -185,9 +185,7 @@ export class StundenplanManager extends JavaObject {
 		this.initMapAufsicht();
 		this.initMapKursZuUnterrichte();
 		this.initMapPausenaufsichten();
-		this._compPausenaufsicht = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => {
-			return JavaLong.compare(a.id, b.id);
-		} };
+		this._compPausenaufsicht = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => JavaLong.compare(a.id, b.id) };
 		this.initSortierungen();
 	}
 
