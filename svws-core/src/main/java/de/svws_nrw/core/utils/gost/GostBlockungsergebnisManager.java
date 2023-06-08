@@ -208,11 +208,8 @@ public class GostBlockungsergebnisManager {
 		}
 
 		// Fachwahlen zu denen es keinen Kurs gibt der Map '_map_fachartID_kurse' hinzufügen.
-		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			final long fachartID = GostKursart.getFachartIDByFachwahl(gFachwahl);
-			if (!_map_fachartID_kurse.containsKey(fachartID))
-				_map_fachartID_kurse.put(fachartID, new ArrayList<>());
-		}
+		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
+			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
 
 		// _map_schienenID_fachartID_kurse
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
@@ -223,15 +220,10 @@ public class GostBlockungsergebnisManager {
 
 		// Schüler kopieren und hinzufügen.
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
-			// Schueler --> GostBlockungsergebnisKurs
-			final @NotNull Long eSchuelerID = gSchueler.id;
-
-			// Kurse von "eSchuelerID" --> []
-			final HashSet<@NotNull GostBlockungsergebnisKurs> newSetKurse = new HashSet<>();
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kurse, eSchuelerID, newSetKurse);
-
-			// Kollisionen von "eSchuelerID" --> 0
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, eSchuelerID, 0);
+			// Map: schuelerID --> Kurs-Set
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kurse, gSchueler.id, new HashSet<@NotNull GostBlockungsergebnisKurs>());
+			// Map: schuelerID --> Anzahl Kollisionen
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 		}
 
 		// Fachwahlen kopieren und hinzufügen.

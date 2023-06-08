@@ -221,21 +221,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
 			}
 		}
-		for (const gFachwahl of this._parent.daten().fachwahlen) {
-			const fachartID : number = GostKursart.getFachartIDByFachwahl(gFachwahl);
-			if (!this._map_fachartID_kurse.containsKey(fachartID))
-				this._map_fachartID_kurse.put(fachartID, new ArrayList());
-		}
+		for (const gFachwahl of this._parent.daten().fachwahlen)
+			MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
 		for (const gSchiene of this._parent.daten().schienen) {
 			this._map_schienenID_fachartID_kurse.put(gSchiene.id, new HashMap());
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
 				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList());
 		}
 		for (const gSchueler of this._parent.daten().schueler) {
-			const eSchuelerID : number = gSchueler.id;
-			const newSetKurse : HashSet<GostBlockungsergebnisKurs> | null = new HashSet();
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kurse, eSchuelerID, newSetKurse);
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kollisionen, eSchuelerID, 0);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kurse, gSchueler.id, new HashSet<GostBlockungsergebnisKurs>());
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kollisionen, gSchueler.id, 0);
 		}
 		for (const gSchueler of this._parent.daten().schueler)
 			this._map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap());
