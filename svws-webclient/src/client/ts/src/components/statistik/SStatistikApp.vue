@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-	const data = true;
+	const data = false;
 </script>
 
 <style lang="postcss" scoped>
