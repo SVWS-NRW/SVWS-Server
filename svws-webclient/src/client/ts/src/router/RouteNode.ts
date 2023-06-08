@@ -484,6 +484,16 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
+	public async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) {
+	}
+
+	/**
+     * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
+     * zu dem Zeitpunkt nachdem die Route verlassen wurde.
+     *
+     * @param from   die Route, die verlassen wird
+     * @param from_params   die Routen-Parameter
+     */
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams) {
 	}
 
