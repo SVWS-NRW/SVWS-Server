@@ -846,14 +846,13 @@ public class GostBlockungsergebnisManager {
 	 * Liefert die Kursmenge, die zur Fachart gehört. <br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @return                      Die Kursmenge, die zur Fachart gehört.
-	 *
+	 * @return die Kursmenge, die zur Fachart gehört.
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
-	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(final long pFachartID) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, pFachartID);
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(final long idFachart) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, idFachart);
 	}
 
 	/**
@@ -863,7 +862,6 @@ public class GostBlockungsergebnisManager {
 	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
 	 * @return                      Die Kursdifferenz der Fachart.
-	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public int getOfFachartKursdifferenz(final long pFachartID) throws DeveloperNotificationException {
@@ -875,6 +873,7 @@ public class GostBlockungsergebnisManager {
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
 	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 *
 	 * @return Das Schueler-Objekt.
 	 * @throws     DeveloperNotificationException im Falle, dass die ID nicht bekannt ist
 	 */
@@ -1648,6 +1647,47 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisSchiene> getMengeAllerSchienen() {
 		return _ergebnis.schienen;
+	}
+
+	/**
+	 * Liefert die Menge aller Schienen.
+	 *
+	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
+	 *
+	 * @return Die Menge aller Schienen.
+	 */
+	public @NotNull SchuelerblockungOutput getSchuelerblockungOutput(final long idSchueler, final boolean fixiereBelegteKurse) {
+
+		// Konstruiere die Eingabedaten "input".
+		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
+		input.schienen = _parent.getSchienenAnzahl();
+
+		for (@NotNull final GostFachwahl fachwahl : _parent.getOfSchuelerFacharten(idSchueler)) {
+			input.fachwahlen.add(fachwahl);
+			input.fachwahlenText.add(_parent.getNameOfFachwahl(fachwahl));
+			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
+			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
+				final long idKurs = kursE.id;
+
+				final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
+				kursS.id = idKurs;
+				kursS.fach = kursE.fachID;
+				kursS.kursart = kursE.kursart;
+				kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
+				kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
+                                   || (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+				DeveloperNotificationException.ifTrue("kursS.istGesperrt && kursS.istFixiert", kursS.istGesperrt && kursS.istFixiert);
+				kursS.anzahlSuS = getOfKursAnzahlSchueler(idKurs);
+				kursS.schienen = new int[kursE.schienen.size()];
+				for (int i = 0; i < kursS.schienen.length; i++)
+					kursS.schienen[i] = _parent.getSchiene(kursE.schienen.get(i)).nummer;
+				input.kurse.add(kursS);
+			}
+		}
+
+		// Berechne die Zuordnung und gib sie zurück.
+		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
 	/**

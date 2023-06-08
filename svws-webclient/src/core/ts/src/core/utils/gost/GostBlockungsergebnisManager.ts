@@ -798,14 +798,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert die Kursmenge, die zur Fachart gehört. <br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @return                      Die Kursmenge, die zur Fachart gehört.
-	 *
+	 * @return die Kursmenge, die zur Fachart gehört.
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
-	public getOfFachartKursmenge(pFachartID : number) : List<GostBlockungsergebnisKurs> {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kurse, pFachartID);
+	public getOfFachartKursmenge(idFachart : number) : List<GostBlockungsergebnisKurs> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kurse, idFachart);
 	}
 
 	/**
@@ -815,7 +814,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
 	 * @return                      Die Kursdifferenz der Fachart.
-	 *
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(pFachartID : number) : number {
@@ -827,6 +825,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
 	 *
 	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 *
 	 * @return Das Schueler-Objekt.
 	 * @throws     DeveloperNotificationException im Falle, dass die ID nicht bekannt ist
 	 */
@@ -1574,6 +1573,40 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getMengeAllerSchienen() : List<GostBlockungsergebnisSchiene> {
 		return this._ergebnis.schienen;
+	}
+
+	/**
+	 * Liefert die Menge aller Schienen.
+	 *
+	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
+	 *
+	 * @return Die Menge aller Schienen.
+	 */
+	public getSchuelerblockungOutput(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
+		const input : SchuelerblockungInput = new SchuelerblockungInput();
+		input.schienen = this._parent.getSchienenAnzahl();
+		for (const fachwahl of this._parent.getOfSchuelerFacharten(idSchueler)) {
+			input.fachwahlen.add(fachwahl);
+			input.fachwahlenText.add(this._parent.getNameOfFachwahl(fachwahl));
+			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
+			for (const kursE of this.getOfFachartKursmenge(fachartID)) {
+				const idKurs : number = kursE.id;
+				const kursS : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
+				kursS.id = idKurs;
+				kursS.fach = kursE.fachID;
+				kursS.kursart = kursE.kursart;
+				kursS.istGesperrt = this.getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
+				kursS.istFixiert = this.getOfSchuelerOfKursIstFixiert(idSchueler, idKurs) || (fixiereBelegteKurse && this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+				DeveloperNotificationException.ifTrue("kursS.istGesperrt && kursS.istFixiert", kursS.istGesperrt && kursS.istFixiert);
+				kursS.anzahlSuS = this.getOfKursAnzahlSchueler(idKurs);
+				kursS.schienen = Array(kursE.schienen.size()).fill(0);
+				for (let i : number = 0; i < kursS.schienen.length; i++)
+					kursS.schienen[i] = this._parent.getSchiene(kursE.schienen.get(i)!).nummer;
+				input.kurse.add(kursS);
+			}
+		}
+		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
 	/**
