@@ -12,7 +12,6 @@ import { SchuelerblockungInput } from '../../core/data/kursblockung/Schuelerbloc
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
 import { Arrays } from '../../java/util/Arrays';
-import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 import { HashSet } from '../../java/util/HashSet';
 
 export class SchuelerblockungDynDaten extends JavaObject {
@@ -92,62 +91,43 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		if (pInput.kurse === null)
 			throw new DeveloperNotificationException("pInput.kurse == NULL")
 		const tmpNFachwahlen : number = pInput.fachwahlen.size();
-		if (tmpNFachwahlen < 1)
-			throw new DeveloperNotificationException("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!")
+		DeveloperNotificationException.ifTrue("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!", tmpNFachwahlen < 1);
 		const tmpNSchienen : number = pInput.schienen;
-		if (tmpNSchienen < 1)
-			throw new DeveloperNotificationException("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!")
+		DeveloperNotificationException.ifTrue("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!", tmpNSchienen < 1);
 		const nKurse : number = pInput.kurse.size();
-		if (nKurse < 1)
-			throw new DeveloperNotificationException("Die Kursanzahl (" + nKurse + ") ist zu gering!")
+		DeveloperNotificationException.ifTrue("Die Kursanzahl (" + nKurse + ") ist zu gering!", nKurse < 1);
 		const setKursID : HashSet<number | null> | null = new HashSet();
 		for (const kurs of pInput.kurse) {
-			if (kurs.id < 0)
-				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") ist zu gering!")
-			if (!setKursID.add(kurs.id))
-				throw new DeveloperNotificationException("kurs.id (" + kurs.id + ") existiert doppelt!")
-			if (kurs.fach < 0)
-				throw new DeveloperNotificationException("kurs.fach (" + kurs.fach + ") ist zu gering!")
-			if (kurs.kursart < 0)
-				throw new DeveloperNotificationException("kurs.kursart (" + kurs.kursart + ") ist zu gering!")
-			if (kurs.anzahlSuS < 0)
-				throw new DeveloperNotificationException("kurs.anzahlSuS (" + kurs.anzahlSuS + ") ist zu gering!")
-			if (kurs.schienen === null)
-				throw new DeveloperNotificationException("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!")
-			if (kurs.schienen.length <= 0)
-				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!")
-			if (kurs.schienen.length > tmpNSchienen)
-				throw new DeveloperNotificationException("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!")
+			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
+			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);
+			DeveloperNotificationException.ifInvalidID("kurs.fach", kurs.fach);
+			DeveloperNotificationException.ifTrue("kurs.kursart (" + kurs.kursart + ") ist zu gering!", kurs.kursart < 0);
+			DeveloperNotificationException.ifTrue("kurs.anzahlSuS (" + kurs.anzahlSuS + ") ist zu gering!", kurs.anzahlSuS < 0);
+			DeveloperNotificationException.ifTrue("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!", kurs.schienen === null);
+			DeveloperNotificationException.ifTrue("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!", kurs.schienen.length <= 0);
+			DeveloperNotificationException.ifTrue("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!", kurs.schienen.length > tmpNSchienen);
 			for (const schiene1 of kurs.schienen) {
-				if (schiene1 < 1)
-					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!")
-				if (schiene1 > tmpNSchienen)
-					throw new DeveloperNotificationException("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!")
+				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!", schiene1 < 1);
+				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!", schiene1 > tmpNSchienen);
 			}
-			if (kurs.istFixiert && kurs.istGesperrt)
-				throw new DeveloperNotificationException("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!")
+			DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!", kurs.istFixiert && kurs.istGesperrt);
 		}
 		for (const fachwahl of pInput.fachwahlen) {
-			if (fachwahl.schuelerID < 0)
-				throw new DeveloperNotificationException("fachwahl.schuelerID (" + fachwahl.schuelerID + ") ist zu gering!")
-			if (fachwahl.fachID < 0)
-				throw new DeveloperNotificationException("fachwahl.fachID (" + fachwahl.fachID + ") ist zu gering!")
-			if (fachwahl.kursartID < 0)
-				throw new DeveloperNotificationException("fachwahl.kursartID (" + fachwahl.kursartID + ") ist zu gering!")
+			DeveloperNotificationException.ifInvalidID("fachwahl.schuelerID", fachwahl.schuelerID);
+			DeveloperNotificationException.ifInvalidID("fachwahl.fachID", fachwahl.fachID);
+			DeveloperNotificationException.ifInvalidID("fachwahl.kursartID", fachwahl.kursartID);
 		}
 		for (let iFachwahl : number = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
+			DeveloperNotificationException.ifTrue("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!", iFachwahl >= pInput.fachwahlenText.size());
+			const representation : string = pInput.fachwahlenText.get(iFachwahl);
 			const fachwahl : GostFachwahl = pInput.fachwahlen.get(iFachwahl);
-			if (iFachwahl >= pInput.fachwahlenText.size())
-				throw new DeveloperNotificationException("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!")
-			const representation : string | null = pInput.fachwahlenText.get(iFachwahl);
 			let kursWurdeFixiert : boolean = false;
 			for (const kurs of pInput.kurse)
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart)) {
 					if (kurs.istGesperrt)
 						continue;
 					if (kurs.istFixiert) {
-						if (kursWurdeFixiert)
-							throw new UserNotificationException("Die Fachart/Fachwahl (" + representation! + ") hat mehr als eine Fixierung!")
+						DeveloperNotificationException.ifTrue("Die Fachart/Fachwahl (" + representation! + ") hat mehr als eine Fixierung!", kursWurdeFixiert);
 						kursWurdeFixiert = true;
 					}
 				}
@@ -159,8 +139,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart))
 					gefunden++;
 			}
-			if (gefunden === 0)
-				throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte keiner Fachart/Fachwahl zugeordnet werden!")
+			DeveloperNotificationException.ifTrue("Der Kurs (" + kurs.id + ") konnte keiner Fachart/Fachwahl zugeordnet werden!", gefunden === 0);
 		}
 	}
 
@@ -335,7 +314,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			return;
 		const data : Array<Array<number>> = this._aktuellMatrix.getMatrix();
 		for (let schiene : number = 0; schiene < this.nSchienen; schiene++) {
-			let sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
+			const sData : string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
 			console.log(JSON.stringify(JavaString.format("%5s", sData)));
 		}
 		console.log();

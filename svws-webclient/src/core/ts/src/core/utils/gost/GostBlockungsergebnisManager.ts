@@ -1507,29 +1507,29 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert eine gefilterte Menge aller Schüler.
 	 *
-	 * @param  pKursID      Falls > 0, werden Schüler des Kurses herausgefiltert.
-	 * @param  pFachID      Falls > 0 und
-	 * @param  pKursartID   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
-	 * @param  pKonfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
-	 * @param  pSubString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * @param  idKurs      Falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  idFach      Falls > 0 und
+	 * @param  idKursart   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
+	 * @param  konfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  subString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
 	 *
 	 * @return eine gefilterte Menge aller Schüler.
 	 */
-	public getMengeDerSchuelerGefiltert(pKursID : number, pFachID : number, pKursartID : number, pKonfliktTyp : number, pSubString : string) : List<Schueler> {
+	public getMengeDerSchuelerGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string) : List<Schueler> {
 		const menge : List<Schueler> = new ArrayList();
 		for (const schueler of this._parent.getMengeOfSchueler()) {
-			const pSchuelerID : number = schueler.id;
-			if ((pKonfliktTyp === 1) && (!this.getOfSchuelerHatKollision(pSchuelerID)))
+			const idSchueler : number = schueler.id;
+			if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
 				continue;
-			if ((pKonfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID)))
+			if ((konfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(idSchueler)))
 				continue;
-			if ((pKonfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(pSchuelerID)) && (!this.getOfSchuelerHatNichtwahl(pSchuelerID))))
+			if ((konfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(idSchueler)) && (!this.getOfSchuelerHatNichtwahl(idSchueler))))
 				continue;
-			if ((pSubString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString)))
+			if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 				continue;
-			if ((pKursID > 0) && (!this.getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID)))
+			if ((idKurs > 0) && (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)))
 				continue;
-			if (((pFachID > 0) && (pKursartID > 0)) && (!this.getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID)))
+			if (((idFach > 0) && (idKursart > 0)) && (!this.getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart)))
 				continue;
 			menge.add(schueler);
 		}

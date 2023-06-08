@@ -1576,30 +1576,30 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert eine gefilterte Menge aller Schüler.
 	 *
-	 * @param  pKursID      Falls > 0, werden Schüler des Kurses herausgefiltert.
-	 * @param  pFachID      Falls > 0 und
-	 * @param  pKursartID   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
-	 * @param  pKonfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
-	 * @param  pSubString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * @param  idKurs      Falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  idFach      Falls > 0 und
+	 * @param  idKursart   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
+	 * @param  konfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  subString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
 	 *
 	 * @return eine gefilterte Menge aller Schüler.
 	 */
-	public @NotNull List<@NotNull Schueler> getMengeDerSchuelerGefiltert(final int pKursID, final int pFachID, final int pKursartID, final int pKonfliktTyp, final @NotNull String pSubString) {
+	public @NotNull List<@NotNull Schueler> getMengeDerSchuelerGefiltert(final int idKurs, final int idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString) {
 		final @NotNull List<@NotNull Schueler> menge = new ArrayList<>();
 
 		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler()) {
-			final long pSchuelerID = schueler.id;
-			if ((pKonfliktTyp == 1) && (!getOfSchuelerHatKollision(pSchuelerID)))
+			final long idSchueler = schueler.id;
+			if ((konfliktTyp == 1) && (!getOfSchuelerHatKollision(idSchueler)))
 				continue;
-			if ((pKonfliktTyp == 2) && (!getOfSchuelerHatNichtwahl(pSchuelerID)))
+			if ((konfliktTyp == 2) && (!getOfSchuelerHatNichtwahl(idSchueler)))
 				continue;
-			if ((pKonfliktTyp == 3) && ((!getOfSchuelerHatKollision(pSchuelerID)) && (!getOfSchuelerHatNichtwahl(pSchuelerID))))
+			if ((konfliktTyp == 3) && ((!getOfSchuelerHatKollision(idSchueler)) && (!getOfSchuelerHatNichtwahl(idSchueler))))
 				continue;
-			if ((pSubString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(pSchuelerID, pSubString)))
+			if ((subString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 				continue;
-			if ((pKursID > 0) && (!getOfSchuelerOfKursIstZugeordnet(pSchuelerID, pKursID)))
+			if ((idKurs > 0) && (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)))
 				continue;
-			if (((pFachID > 0) && (pKursartID > 0)) &&  (!getOfSchuelerHatFachwahl(pSchuelerID, pFachID, pKursartID)))
+			if (((idFach > 0) && (idKursart > 0)) &&  (!getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart)))
 				continue;
 			// Der Schüler entspricht allen Filterkriterien.
 			menge.add(schueler);
