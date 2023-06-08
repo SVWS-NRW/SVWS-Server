@@ -1,14 +1,17 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostFach } from '../../../core/data/gost/GostFach';
+import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../../java/util/Comparator';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
+import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 
@@ -30,6 +33,11 @@ export class GostFaecherManager extends JavaObject {
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
 	private readonly _map : HashMap<number, GostFach> = new HashMap();
+
+	/**
+	 * Eine Map für den schnellen Zugriff auf die Leitfächer
+	 */
+	private readonly _leitfaecher : List<GostFach> = new ArrayList();
 
 
 	/**
@@ -72,7 +80,14 @@ export class GostFaecherManager extends JavaObject {
 		const old : GostFach | null = this._map.put(fach.id, fach);
 		if (old !== null)
 			return false;
-		return this._faecher.add(fach);
+		const added : boolean = this._faecher.add(fach);
+		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+			return added;
+		const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+		if ((fg as unknown === Fachgruppe.FG_VX as unknown) || (fg as unknown === Fachgruppe.FG_PX as unknown))
+			return added;
+		this._leitfaecher.add(fach);
+		return added;
 	}
 
 	/**
@@ -80,6 +95,7 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	private sort() : void {
 		this._faecher.sort(GostFaecherManager.comp);
+		this._leitfaecher.sort(GostFaecherManager.comp);
 	}
 
 	/**
@@ -153,6 +169,15 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public faecher() : LinkedCollection<GostFach> {
 		return this._faecher;
+	}
+
+	/**
+	 * Liefert die interne Liste mit den Leitfächern zurück.
+	 *
+	 * @return die interne Liste mit den Leitfächern
+	 */
+	public getLeitfaecher() : List<GostFach> {
+		return this._leitfaecher;
 	}
 
 	/**

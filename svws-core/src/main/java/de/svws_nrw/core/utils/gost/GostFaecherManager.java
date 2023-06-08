@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.fach.Fachgruppe;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,8 +19,6 @@ import jakarta.validation.constraints.NotNull;
  * Typs {@link GostFach}.
  */
 public class GostFaecherManager {
-
-	// TODO create a class for a LinkedCollection with HashMap functionalities and refactor this class
 
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
 	public static final @NotNull Comparator<@NotNull GostFach> comp = (a, b) -> {
@@ -31,6 +32,9 @@ public class GostFaecherManager {
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostFach> _map = new HashMap<>();
+
+	/** Eine Map für den schnellen Zugriff auf die Leitfächer */
+	private final @NotNull List<@NotNull GostFach> _leitfaecher = new ArrayList<>();
 
 
 	/**
@@ -66,7 +70,15 @@ public class GostFaecherManager {
 		final GostFach old = _map.put(fach.id, fach);
 		if (old != null)
 			return false;
-		return _faecher.add(fach);
+		final boolean added = _faecher.add(fach);
+		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
+		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+			return added;
+		final Fachgruppe fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+		if ((fg == Fachgruppe.FG_VX) || (fg == Fachgruppe.FG_PX))
+			return added;
+		_leitfaecher.add(fach);
+		return added;
 	}
 
 
@@ -75,6 +87,7 @@ public class GostFaecherManager {
 	 */
 	private void sort() {
 		_faecher.sort(comp);
+		_leitfaecher.sort(comp);
 	}
 
 
@@ -153,6 +166,16 @@ public class GostFaecherManager {
 	 */
 	public @NotNull LinkedCollection<@NotNull GostFach> faecher() {
 		return _faecher;
+	}
+
+
+	/**
+	 * Liefert die interne Liste mit den Leitfächern zurück.
+	 *
+	 * @return die interne Liste mit den Leitfächern
+	 */
+	public @NotNull List<@NotNull GostFach> getLeitfaecher() {
+		return _leitfaecher;
 	}
 
 

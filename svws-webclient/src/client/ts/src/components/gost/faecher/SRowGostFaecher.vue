@@ -21,14 +21,14 @@
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center">
 			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && hatLeitfach1">
-				<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 				<svws-ui-button type="trash" @click="leitfach1=undefined" />
 			</div>
 			<span v-else>{{ fach.projektKursLeitfach1Kuerzel }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
 			<div class="flex gap-1 p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-				<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="mapLeitfaecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 				<svws-ui-button type="trash" @click="leitfach2=undefined" />
 			</div>
 			<span v-else>{{ fach.projektKursLeitfach2Kuerzel }}</span>
@@ -81,16 +81,15 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostFach, GostFaecherManager} from "@core";
+	import type { List, GostFach, GostFaecherManager} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
+	import { ArrayList, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<boolean>;
 		abiturjahr: number;
 		fachId: number;
-		mapLeitfaecher: Map<number, GostFach>;
 		faecherManager: () => GostFaecherManager;
 	}>();
 
@@ -109,13 +108,41 @@
 		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
 	}
 
+	const leitfaecher1: ComputedRef<List<GostFach>> = computed(() => {
+		const leitfaecher = props.faecherManager().getLeitfaecher();
+		if (leitfach2.value === undefined)
+			return leitfaecher;
+		const result = new ArrayList<GostFach>(leitfaecher);
+		result.removeElementAt(result.indexOf(leitfach2.value));
+		return result;
+	});
+
+	const leitfaecher2: ComputedRef<List<GostFach>> = computed(() => {
+		const leitfaecher = props.faecherManager().getLeitfaecher();
+		if (leitfach1.value === undefined)
+			return leitfaecher;
+		const result = new ArrayList<GostFach>(leitfaecher);
+		result.removeElementAt(result.indexOf(leitfach1.value));
+		return result;
+	});
+
 	const leitfach1: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => fach.value.projektKursLeitfach1ID === null ? undefined : props.mapLeitfaecher.get(fach.value.projektKursLeitfach1ID),
+		get: () => {
+			if (fach.value.projektKursLeitfach1ID === null)
+				return undefined;
+			let result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
+			return result == null ? undefined : result;
+		},
 		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
-		get: () => fach.value.projektKursLeitfach2ID === null ? undefined : props.mapLeitfaecher.get(fach.value.projektKursLeitfach2ID),
+		get: () => {
+			if (fach.value.projektKursLeitfach2ID === null)
+				return undefined;
+			let result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
+			return result == null ? undefined : result;
+		},
 		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
 	});
 

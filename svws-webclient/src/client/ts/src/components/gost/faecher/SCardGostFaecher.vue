@@ -145,7 +145,7 @@
 				</div>
 			</template>
 			<template #body>
-				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach-id="fach.id" :abiturjahr="abiturjahr" :map-leitfaecher="mapLeitfaecher" :patch-fach="patchFach" :faecher-manager="faecherManager" />
+				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
@@ -157,7 +157,6 @@
 	import { computed } from "vue";
 
 	import type { GostFach, GostFaecherManager, LinkedCollection} from "@core";
-	import { Fachgruppe, ZulaessigesFach } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
@@ -168,16 +167,6 @@
 
 	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
 		return props.faecherManager().faecher();
-	});
-
-	const mapLeitfaecher: ComputedRef<Map<number, GostFach>> = computed(() => {
-		const result = new Map<number, GostFach>();
-		for (const fach of faecher.value) {
-			const fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
-			if ((fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX))
-				result.set(fach.id, fach);
-		}
-		return result;
 	});
 
 	const cols: Array<DataTableColumn> = [
