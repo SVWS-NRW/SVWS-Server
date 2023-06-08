@@ -7,6 +7,7 @@ import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungs
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
+import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
@@ -282,85 +283,43 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 			switch (typ) {
 				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS: {
-					if (!this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
-						regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS: {
-					if (this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
-						regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE: {
-					if (!this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
-						regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
-					if (this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
-						regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS: {
-					for (let schienenNr : number = r.parameter.get(1)!; schienenNr <= r.parameter.get(2)!; schienenNr++)
-						for (const eKurs of this.getSchieneEmitNr(schienenNr).kurse)
-							if (eKurs.kursart === r.parameter.get(0)!)
-								regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
-					for (const eKurs of this._map_kursID_kurs.values())
-						for (const eSchieneID of eKurs.schienen) {
-							const nr : number = this.getSchieneG(eSchieneID!).nummer;
-							const b1 : boolean = eKurs.kursart === r.parameter.get(0)!;
-							const b2 : boolean = (r.parameter.get(1)! <= nr) && (nr <= r.parameter.get(2)!);
-							if (b1 !== b2)
-								regelVerletzungen.add(r.id);
-						}
+					this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS: {
-					for (const schiene1 of this.getOfKursSchienenmenge(r.parameter.get(0)!))
-						for (const schiene2 of this.getOfKursSchienenmenge(r.parameter.get(1)!))
-							if (schiene1 as unknown === schiene2 as unknown)
-								regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
-					const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!)
-					const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!)
-					if (set1.size() < set2.size()) {
-						for (const schiene1 of set1)
-							if (!set2.contains(schiene1))
-								regelVerletzungen.add(r.id);
-					} else {
-						for (const schiene2 of set2)
-							if (!set1.contains(schiene2))
-								regelVerletzungen.add(r.id);
-					}
+					this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
-					const externBeachten : boolean = r.parameter.get(0) === 1
-					for (const eSchiene of this._map_schienenID_schiene.values())
-						for (const eKurs1 of eSchiene.kurse)
-							for (const eKurs2 of eSchiene.kurse)
-								if (eKurs1.id < eKurs2.id)
-									for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
-										for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
-											if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
-												regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung9_lehrkraft_beachten(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
-					for (const eSchiene of this._map_schienenID_schiene.values())
-						for (const eKurs1 of eSchiene.kurse)
-							for (const eKurs2 of eSchiene.kurse)
-								if (eKurs1.id < eKurs2.id)
-									for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
-										for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
-											if (gLehr1.id === gLehr2.id)
-												regelVerletzungen.add(r.id);
+					this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
 					break;
 				}
 				default: {
@@ -369,6 +328,88 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 		}
 		this._parent.updateErgebnisBewertung(this._ergebnis);
+	}
+
+	private stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		for (let schienenNr : number = r.parameter.get(1)!; schienenNr <= r.parameter.get(2)!; schienenNr++)
+			for (const eKurs of this.getSchieneEmitNr(schienenNr).kurse)
+				if (eKurs.kursart === r.parameter.get(0)!)
+					regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung2_kurs_fixieren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		if (!this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
+			regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung3_kurs_sperren_in_schiene(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		if (this.getOfKursSchienenmenge(r.parameter.get(0)!).contains(this.getSchieneEmitNr(r.parameter.get(1)!)))
+			regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung4_schueler_fixieren_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		if (!this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
+			regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung5_schueler_verbieten_in_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		if (this.getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0)!, r.parameter.get(1)!))
+			regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		for (const eKurs of this._map_kursID_kurs.values())
+			for (const eSchieneID of eKurs.schienen) {
+				const nr : number = this.getSchieneG(eSchieneID!).nummer;
+				const b1 : boolean = eKurs.kursart === r.parameter.get(0)!;
+				const b2 : boolean = (r.parameter.get(1)! <= nr) && (nr <= r.parameter.get(2)!);
+				if (b1 !== b2)
+					regelVerletzungen.add(r.id);
+			}
+	}
+
+	private stateRegelvalidierung7_kurs_verbieten_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		for (const schiene1 of this.getOfKursSchienenmenge(r.parameter.get(0)!))
+			for (const schiene2 of this.getOfKursSchienenmenge(r.parameter.get(1)!))
+				if (schiene1 as unknown === schiene2 as unknown)
+					regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung8_kurs_zusammen_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!);
+		const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!);
+		if (set1.size() < set2.size()) {
+			for (const schiene1 of set1)
+				if (!set2.contains(schiene1))
+					regelVerletzungen.add(r.id);
+		} else {
+			for (const schiene2 of set2)
+				if (!set1.contains(schiene2))
+					regelVerletzungen.add(r.id);
+		}
+	}
+
+	private stateRegelvalidierung9_lehrkraft_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		const externBeachten : boolean = r.parameter.get(0) === 1;
+		for (const eSchiene of this._map_schienenID_schiene.values())
+			for (const eKurs1 of eSchiene.kurse)
+				for (const eKurs2 of eSchiene.kurse)
+					if (eKurs1.id < eKurs2.id)
+						for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
+							for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
+								if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
+									regelVerletzungen.add(r.id);
+	}
+
+	private stateRegelvalidierung10_lehrkraefte_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		for (const eSchiene of this._map_schienenID_schiene.values())
+			for (const eKurs1 of eSchiene.kurse)
+				for (const eKurs2 of eSchiene.kurse)
+					if (eKurs1.id < eKurs2.id)
+						for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
+							for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
+								if (gLehr1.id === gLehr2.id)
+									regelVerletzungen.add(r.id);
 	}
 
 	/**
@@ -1552,52 +1593,52 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Verknüpft einen Kurs mit einer Schiene oder hebt die Verknüpfung auf.
 	 *
-	 * @param  pKursID                   Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID               Die Datenbank-ID der Schiene.
-	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
+	 * @param  idKurs                    Die Datenbank-ID des Kurses.
+	 * @param  idSchiene                 Die Datenbank-ID der Schiene.
+	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
+	 * @return  TRUE, falls die jeweilige Operation erfolgreich war.
 	 *
-	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public setKursSchiene(pKursID : number, pSchienenID : number, pHinzufuegenOderEntfernen : boolean) : boolean {
-		if (pHinzufuegenOderEntfernen)
-			return this.stateKursSchieneHinzufuegen(pKursID, pSchienenID);
-		return this.stateKursSchieneEntfernen(pKursID, pSchienenID);
+	public setKursSchiene(idKurs : number, idSchiene : number, hinzufuegenOderEntfernen : boolean) : boolean {
+		if (hinzufuegenOderEntfernen)
+			return this.stateKursSchieneHinzufuegen(idKurs, idSchiene);
+		return this.stateKursSchieneEntfernen(idKurs, idSchiene);
 	}
 
 	/**
 	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
 	 *
-	 * @param  pSchuelerID               Die Datenbank-ID des Schülers.
-	 * @param  pKursID                   Die Datenbank-ID des Kurses.
-	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
+	 * @param  idSchueler                Die Datenbank-ID des Schülers.
+	 * @param  idKurs                    Die Datenbank-ID des Kurses.
+	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public setSchuelerKurs(pSchuelerID : number, pKursID : number, pHinzufuegenOderEntfernen : boolean) : void {
-		if (pHinzufuegenOderEntfernen)
-			this.stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
+	public setSchuelerKurs(idSchueler : number, idKurs : number, hinzufuegenOderEntfernen : boolean) : void {
+		if (hinzufuegenOderEntfernen)
+			this.stateSchuelerKursHinzufuegen(idSchueler, idKurs);
 		else
-			this.stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+			this.stateSchuelerKursEntfernen(idSchueler, idKurs);
 	}
 
 	/**
-	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt
-	 * bei Veränderung Kurse des übergebenen Schülers neu.
+	 * Geht die übergebene Fach-Zuordnungen (Fach --> Kurs) eines Schülers durch und
+	 * setzt aktualisiert Veränderung die Kurs-Schüler-Zuordnung.
 	 *
-	 * @param schuelerID  Die Datenbank-ID des Schülers.
-	 * @param pZuordnung  Die gewünschte Zuordnung.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param zuordnung   Die gewünschte Zuordnung.
 	 */
-	public setSchuelerNeuzuordnung(schuelerID : number, pZuordnung : SchuelerblockungOutput) : void {
-		for (const z of pZuordnung.fachwahlenZuKurs) {
-			const kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(schuelerID, z.fachID);
+	public setSchuelerNeuzuordnung(idSchueler : number, zuordnung : SchuelerblockungOutput) : void {
+		for (const z of zuordnung.fachwahlenZuKurs) {
+			const kursV : GostBlockungsergebnisKurs | null = this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
 			const kursN : GostBlockungsergebnisKurs | null = z.kursID < 0 ? null : this.getKursE(z.kursID);
 			if (kursV as unknown !== kursN as unknown) {
 				if (kursV !== null)
-					this.setSchuelerKurs(schuelerID, kursV.id, false);
+					this.setSchuelerKurs(idSchueler, kursV.id, false);
 				if (kursN !== null)
-					this.setSchuelerKurs(schuelerID, kursN.id, true);
+					this.setSchuelerKurs(idSchueler, kursN.id, true);
 			}
 		}
 	}
@@ -1605,87 +1646,84 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Fügt die übergebene Schiene hinzu.
 	 *
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
-	public setAddSchieneByID(pSchienenID : number) : void {
-		if (!this._parent.getSchieneExistiert(pSchienenID))
-			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!")
+	public setAddSchieneByID(idSchiene : number) : void {
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getSchieneExistiert(idSchiene));
 		this.stateRevalidateEverything();
 	}
 
 	/**
 	 * Löscht die übergebene Schiene.
 	 *
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                               falls die Schiene noch Kurszuordnungen hat.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder
+	 *                                         falls die Schiene noch Kurszuordnungen hat.
 	 */
-	public setRemoveSchieneByID(pSchienenID : number) : void {
-		if (this._parent.getSchieneExistiert(pSchienenID))
-			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!")
-		const nKurse : number = this.getSchieneE(pSchienenID).kurse.size();
-		if (nKurse > 0)
-			throw new DeveloperNotificationException("Entfernen unmöglich: Schiene " + pSchienenID + " hat noch " + nKurse + " Kurse!")
+	public setRemoveSchieneByID(idSchiene : number) : void {
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager entfernt werden!", this._parent.getSchieneExistiert(idSchiene));
+		const nKurse : number = this.getSchieneE(idSchiene).kurse.size();
+		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + idSchiene + " hat noch " + nKurse + " Kurse!", nKurse > 0);
 		this.stateRevalidateEverything();
 	}
 
 	/**
 	 * Fügt die übergebene Regel hinzu.
 	 *
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 * @param  idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
-	public setAddRegelByID(pRegelID : number) : void {
-		if (!this._parent.getRegelExistiert(pRegelID))
-			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!")
+	public setAddRegelByID(idRegel : number) : void {
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getRegelExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
 	/**
 	 * Löscht die übergebene Regel.
 	 *
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
+	 * @param  idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
-	public setRemoveRegelByID(pRegelID : number) : void {
-		if (this._parent.getRegelExistiert(pRegelID))
-			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!")
+	public setRemoveRegelByID(idRegel : number) : void {
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", this._parent.getRegelExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
 	/**
 	 * Fügt den übergebenen Kurs hinzu.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
-	public setAddKursByID(pKursID : number) : void {
-		if (!this._parent.getKursExistiert(pKursID))
-			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!")
-		const kurs : GostBlockungKurs = this._parent.getKurs(pKursID);
+	public setAddKursByID(idKurs : number) : void {
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getKursExistiert(idKurs));
+		const kurs : GostBlockungKurs = this._parent.getKurs(idKurs);
 		const nSchienen : number = this._parent.getSchienenAnzahl();
-		if (nSchienen < kurs.anzahlSchienen)
-			throw new DeveloperNotificationException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!")
+		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
 		this.stateRevalidateEverything();
 		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
-			this.setKursSchienenNr(pKursID, nr);
+			this.setKursSchienenNr(idKurs, nr);
 	}
 
 	/**
 	 * Löscht den übergebenen Kurs.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 *                                         falls der Kurs noch Schülerzuordnungen hat.
 	 */
-	public setRemoveKursByID(pKursID : number) : void {
-		if (this._parent.getKursExistiert(pKursID))
-			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!")
-		const nSchueler : number = this.getKursE(pKursID).schueler.size();
-		if (nSchueler > 0)
-			throw new DeveloperNotificationException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!")
-		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+	public setRemoveKursByID(idKurs : number) : void {
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.getKursExistiert(idKurs));
+		const nSchueler : number = this.getKursE(idKurs).schueler.size();
+		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
+		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		for (const schienenID of kurs.schienen)
 			this.getSchieneE(schienenID!).kurse.remove(kurs);
 		kurs.schienen.clear();
@@ -1693,21 +1731,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Verschiebt alles SuS von pKursID2delete nach pKursID1keep und löscht dann den
-	 * Kurs mit der ID beim {@link GostBlockungsdatenManager}, anschließend in diesem
-	 * Manager.
+	 * Verschiebt alles SuS von pKursID2delete nach pKursID1keep und
+	 * löscht dann den Kurs mit der ID beim {@link GostBlockungsdatenManager},
+	 * anschließend in diesem Manager.
 	 *
-	 * @param  pKursID1keep    Die Datenbank-ID des Kurses, der erhalten bleibt.
-	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
+	 * @param  idKursID1keep    Die Datenbank-ID des Kurses, der erhalten bleibt.
+	 * @param  idKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
-	public setMergeKurseByID(pKursID1keep : number, pKursID2delete : number) : void {
-		const kurs2 : GostBlockungsergebnisKurs = this.getKursE(pKursID2delete);
+	public setMergeKurseByID(idKursID1keep : number, idKursID2delete : number) : void {
+		const kurs2 : GostBlockungsergebnisKurs = this.getKursE(idKursID2delete);
 		for (const schuelerID of new ArrayList(kurs2.schueler)) {
-			this.stateSchuelerKursEntfernen(schuelerID!, pKursID2delete);
-			this.stateSchuelerKursHinzufuegen(schuelerID!, pKursID1keep);
+			this.stateSchuelerKursEntfernen(schuelerID!, idKursID2delete);
+			this.stateSchuelerKursHinzufuegen(schuelerID!, idKursID1keep);
 		}
-		this._parent.removeKursByID(pKursID2delete);
-		this.setRemoveKursByID(pKursID2delete);
+		this._parent.removeKursByID(idKursID2delete);
+		this.setRemoveKursByID(idKursID2delete);
 	}
 
 	/**
@@ -1715,41 +1753,37 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * dann bei diesem Manager und
 	 * verschiebt alle SuS des übergebenen Arrays von Kurs1 nach Kurs2.
 	 *
-	 * @param  pKurs1alt     Der Kurs, der gesplittet wird.
-	 * @param  pKurs2neu     Der Kurs, der neu erzeugt wird.
-	 * @param  pSusVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
+	 * @param  kurs1alt     Der Kurs, der gesplittet wird.
+	 * @param  kurs2neu     Der Kurs, der neu erzeugt wird.
+	 * @param  susVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
 	 */
-	public setSplitKurs(pKurs1alt : GostBlockungKurs, pKurs2neu : GostBlockungKurs, pSusVon1nach2 : Array<number>) : void {
-		this._parent.addKurs(pKurs2neu);
-		this.setAddKursByID(pKurs2neu.id);
-		for (const schuelerID of pSusVon1nach2) {
-			this.stateSchuelerKursEntfernen(schuelerID, pKurs1alt.id);
-			this.stateSchuelerKursHinzufuegen(schuelerID, pKurs2neu.id);
+	public setSplitKurs(kurs1alt : GostBlockungKurs, kurs2neu : GostBlockungKurs, susVon1nach2 : Array<number>) : void {
+		this._parent.addKurs(kurs2neu);
+		this.setAddKursByID(kurs2neu.id);
+		for (const schuelerID of susVon1nach2) {
+			this.stateSchuelerKursEntfernen(schuelerID, kurs1alt.id);
+			this.stateSchuelerKursHinzufuegen(schuelerID, kurs2neu.id);
 		}
 	}
 
 	/**
 	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @param  pAnzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param  anzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 *
 	 * @throws DeveloperNotificationException Falls ein unerwarteter Fehler passiert.
 	 */
-	public patchOfKursSchienenAnzahl(pKursID : number, pAnzahlSchienenNeu : number) : void {
-		const kursG : GostBlockungKurs = this.getKursG(pKursID);
-		const kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+	public patchOfKursSchienenAnzahl(idKurs : number, anzahlSchienenNeu : number) : void {
+		const kursG : GostBlockungKurs = this.getKursG(idKurs);
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const nSchienen : number = this._parent.getSchienenAnzahl();
-		if (!this._parent.getIstBlockungsVorlage())
-			throw new DeveloperNotificationException("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!")
-		if (kursE.anzahlSchienen !== kursG.anzahlSchienen)
-			throw new DeveloperNotificationException("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!")
-		if (nSchienen === 0)
-			throw new DeveloperNotificationException("Die Blockung hat 0 Schienen. Das darf nicht passieren!")
-		if (pAnzahlSchienenNeu <= 0)
-			throw new DeveloperNotificationException("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + pAnzahlSchienenNeu + " Schienen!")
-		if (pAnzahlSchienenNeu > nSchienen)
-			throw new DeveloperNotificationException("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + pAnzahlSchienenNeu + " Schienen zugeordnet werden!")
-		while (pAnzahlSchienenNeu > kursG.anzahlSchienen) {
+		DeveloperNotificationException.ifTrue("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!", !this._parent.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
+		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen === 0);
+		DeveloperNotificationException.ifTrue("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + anzahlSchienenNeu + " Schienen!", anzahlSchienenNeu <= 0);
+		DeveloperNotificationException.ifTrue("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + anzahlSchienenNeu + " Schienen zugeordnet werden!", anzahlSchienenNeu > nSchienen);
+		while (anzahlSchienenNeu > kursG.anzahlSchienen) {
 			let hinzugefuegt : boolean = false;
 			for (let nr : number = 1; (nr <= this._map_schienenNr_schiene.size()) && (!hinzugefuegt); nr++) {
 				const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
@@ -1757,13 +1791,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					hinzugefuegt = true;
 					kursG.anzahlSchienen++;
 					kursE.anzahlSchienen++;
-					this.setKursSchiene(pKursID, schiene.id, true);
+					this.setKursSchiene(idKurs, schiene.id, true);
 				}
 			}
-			if (!hinzugefuegt)
-				throw new DeveloperNotificationException("Es wurde keine freie Schiene für den Kurs " + pKursID + " gefunden!")
+			DeveloperNotificationException.ifTrue("Es wurde keine freie Schiene für den Kurs " + idKurs + " gefunden!", !hinzugefuegt);
 		}
-		while (pAnzahlSchienenNeu < kursG.anzahlSchienen) {
+		while (anzahlSchienenNeu < kursG.anzahlSchienen) {
 			let entfernt : boolean = false;
 			for (let nr : number = this._map_schienenNr_schiene.size(); (nr >= 1) && (!entfernt); nr--) {
 				const schiene : GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
@@ -1771,11 +1804,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					entfernt = true;
 					kursG.anzahlSchienen--;
 					kursE.anzahlSchienen--;
-					this.setKursSchiene(pKursID, schiene.id, false);
+					this.setKursSchiene(idKurs, schiene.id, false);
 				}
 			}
-			if (!entfernt)
-				throw new DeveloperNotificationException("Es wurde keine belegte Schiene von Kurs " + pKursID + " gefunden!")
+			DeveloperNotificationException.ifTrue("Es wurde keine belegte Schiene von Kurs " + idKurs + " gefunden!", !entfernt);
 		}
 	}
 
@@ -1790,20 +1822,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Eine Logger-Ausgabe für Debug-Zwecke.
 	 *
-	 * @param pLogger Ein Logger für Debug-Zwecke.
+	 * @param logger Ein Logger für Debug-Zwecke.
 	 */
-	public debug(pLogger : Logger) : void {
-		pLogger.modifyIndent(+4);
-		pLogger.logLn("----- Kurse sortiert nach Fachart -----");
+	public debug(logger : Logger) : void {
+		logger.modifyIndent(+4);
+		logger.logLn("----- Kurse sortiert nach Fachart -----");
 		for (const fachartID of this._map_fachartID_kurse.keySet()) {
-			pLogger.logLn("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
+			logger.logLn("FachartID = " + fachartID! + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
 			for (const kurs of this.getOfFachartKursmenge(fachartID!)) {
-				pLogger.logLn("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS");
+				logger.logLn("    " + this.getOfKursName(kurs.id)! + " : " + kurs.schueler.size() + " SuS");
 			}
 		}
-		pLogger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
-		pLogger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
-		pLogger.modifyIndent(-4);
+		logger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
+		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
+		logger.modifyIndent(-4);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

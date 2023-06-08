@@ -281,79 +281,36 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
-
 			switch (typ) {
 				case SCHUELER_FIXIEREN_IN_KURS: // 4
-					if (!getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
-						regelVerletzungen.add(r.id);
+					stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
 					break;
 				case SCHUELER_VERBIETEN_IN_KURS: // 5
-					if (getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
-						regelVerletzungen.add(r.id);
+					stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
 					break;
 				case KURS_FIXIERE_IN_SCHIENE: // 2
-					if (!getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
-						regelVerletzungen.add(r.id);
+					stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
 					break;
 				case KURS_SPERRE_IN_SCHIENE: // 3
-					if (getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
-						regelVerletzungen.add(r.id);
+					stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
 					break;
 				case KURSART_SPERRE_SCHIENEN_VON_BIS: // 1
-					for (int schienenNr = r.parameter.get(1).intValue(); schienenNr <= r.parameter.get(2).intValue(); schienenNr++)
-						for (final GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse)
-							if (eKurs.kursart == r.parameter.get(0).intValue())
-								regelVerletzungen.add(r.id);
+					stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
 					break;
 				case KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 6
-					for (final GostBlockungsergebnisKurs eKurs : _map_kursID_kurs.values())
-						for (final @NotNull Long eSchieneID : eKurs.schienen) {
-							final int nr  = getSchieneG(eSchieneID).nummer;
-							final boolean b1 = eKurs.kursart == r.parameter.get(0).intValue();
-							final boolean b2 = (r.parameter.get(1).intValue() <= nr) && (nr <= r.parameter.get(2).intValue());
-							if (b1 != b2)
-								regelVerletzungen.add(r.id);
-						}
+					stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
 					break;
 				case KURS_VERBIETEN_MIT_KURS: // 7
-					for (final @NotNull GostBlockungsergebnisSchiene schiene1 : getOfKursSchienenmenge(r.parameter.get(0)))
-						for (final @NotNull GostBlockungsergebnisSchiene schiene2 : getOfKursSchienenmenge(r.parameter.get(1)))
-							if (schiene1 == schiene2)
-								regelVerletzungen.add(r.id);
+					stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
 					break;
 				case KURS_ZUSAMMEN_MIT_KURS: // 8
-					final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(r.parameter.get(0));
-					final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(r.parameter.get(1));
-					if (set1.size() < set2.size()) { // "set1" muss in "set2" enthalten sein.
-						for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
-							if (!set2.contains(schiene1))
-								regelVerletzungen.add(r.id);
-					} else { // "set2" muss in "set1" enthalten sein.
-						for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
-							if (!set1.contains(schiene2))
-								regelVerletzungen.add(r.id);
-					}
+					stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
 					break;
 				case LEHRKRAFT_BEACHTEN: // 9
-					final boolean externBeachten = r.parameter.get(0) == 1L;
-					for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
-						for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
-							for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
-								if (eKurs1.id < eKurs2.id)
-									for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
-										for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
-											if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
-												regelVerletzungen.add(r.id);
+					stateRegelvalidierung9_lehrkraft_beachten(r, regelVerletzungen);
 					break;
 				case LEHRKRAEFTE_BEACHTEN: // 10
-					for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
-						for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
-							for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
-								if (eKurs1.id < eKurs2.id)
-									for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
-										for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
-											if (gLehr1.id == gLehr2.id)
-												regelVerletzungen.add(r.id);
+					stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
 					break;
 				default:
 					throw new IllegalStateException("Der Regel-Typ ist unbekannt: " + typ);
@@ -362,6 +319,90 @@ public class GostBlockungsergebnisManager {
 
 		// Die Bewertung im DatenManager aktualisieren.
 		_parent.updateErgebnisBewertung(_ergebnis);
+	}
+
+	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		for (int schienenNr = r.parameter.get(1).intValue(); schienenNr <= r.parameter.get(2).intValue(); schienenNr++)
+			for (final GostBlockungsergebnisKurs eKurs : getSchieneEmitNr(schienenNr).kurse)
+				if (eKurs.kursart == r.parameter.get(0).intValue())
+					regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung2_kurs_fixieren_in_schiene(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		if (!getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
+			regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung3_kurs_sperren_in_schiene(final @NotNull GostBlockungRegel r, final  @NotNull List<@NotNull Long> regelVerletzungen) {
+		if (getOfKursSchienenmenge(r.parameter.get(0)).contains(getSchieneEmitNr(r.parameter.get(1).intValue())))
+			regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung4_schueler_fixieren_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		if (!getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
+			regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung5_schueler_verbieten_in_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		if (getOfSchuelerOfKursIstZugeordnet(r.parameter.get(0), r.parameter.get(1)))
+			regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		for (final GostBlockungsergebnisKurs eKurs : _map_kursID_kurs.values())
+			for (final @NotNull Long eSchieneID : eKurs.schienen) {
+				final int nr  = getSchieneG(eSchieneID).nummer;
+				final boolean b1 = eKurs.kursart == r.parameter.get(0).intValue();
+				final boolean b2 = (r.parameter.get(1).intValue() <= nr) && (nr <= r.parameter.get(2).intValue());
+				if (b1 != b2)
+					regelVerletzungen.add(r.id);
+			}
+	}
+
+	private void stateRegelvalidierung7_kurs_verbieten_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		for (final @NotNull GostBlockungsergebnisSchiene schiene1 : getOfKursSchienenmenge(r.parameter.get(0)))
+			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : getOfKursSchienenmenge(r.parameter.get(1)))
+				if (schiene1 == schiene2)
+					regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung8_kurs_zusammen_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(r.parameter.get(0));
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(r.parameter.get(1));
+		if (set1.size() < set2.size()) {
+			// "set1" muss in "set2" enthalten sein.
+			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
+				if (!set2.contains(schiene1))
+					regelVerletzungen.add(r.id);
+		} else {
+			// "set2" muss in "set1" enthalten sein.
+			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
+				if (!set1.contains(schiene2))
+					regelVerletzungen.add(r.id);
+		}
+	}
+
+	private void stateRegelvalidierung9_lehrkraft_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		final boolean externBeachten = r.parameter.get(0) == 1L;
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
+			for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
+				for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
+					if (eKurs1.id < eKurs2.id)
+						for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
+							for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
+								if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
+									regelVerletzungen.add(r.id);
+	}
+
+	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
+			for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
+				for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
+					if (eKurs1.id < eKurs2.id)
+						for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
+							for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
+								if (gLehr1.id == gLehr2.id)
+									regelVerletzungen.add(r.id);
 	}
 
 	/**
@@ -1626,56 +1667,56 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Verknüpft einen Kurs mit einer Schiene oder hebt die Verknüpfung auf.
 	 *
-	 * @param  pKursID                   Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID               Die Datenbank-ID der Schiene.
-	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
+	 * @param  idKurs                    Die Datenbank-ID des Kurses.
+	 * @param  idSchiene                 Die Datenbank-ID der Schiene.
+	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @return                           TRUE, falls die jeweilige Operation erfolgreich war.
+	 * @return  TRUE, falls die jeweilige Operation erfolgreich war.
 	 *
-	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public boolean setKursSchiene(final long pKursID, final long pSchienenID, final boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
-		if (pHinzufuegenOderEntfernen)
-			return stateKursSchieneHinzufuegen(pKursID, pSchienenID);
-		return stateKursSchieneEntfernen(pKursID, pSchienenID);
+	public boolean setKursSchiene(final long idKurs, final long idSchiene, final boolean hinzufuegenOderEntfernen) throws DeveloperNotificationException {
+		if (hinzufuegenOderEntfernen)
+			return stateKursSchieneHinzufuegen(idKurs, idSchiene);
+		return stateKursSchieneEntfernen(idKurs, idSchiene);
 	}
 
 	/**
 	 * Verknüpft einen Schüler mit einem Kurs oder hebt die Verknüpfung auf.
 	 *
-	 * @param  pSchuelerID               Die Datenbank-ID des Schülers.
-	 * @param  pKursID                   Die Datenbank-ID des Kurses.
-	 * @param  pHinzufuegenOderEntfernen TRUE=Hinzufügen, FALSE=Entfernen
+	 * @param  idSchueler                Die Datenbank-ID des Schülers.
+	 * @param  idKurs                    Die Datenbank-ID des Kurses.
+	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @throws DeveloperNotificationException      Falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public void setSchuelerKurs(final long pSchuelerID, final long pKursID, final boolean pHinzufuegenOderEntfernen) throws DeveloperNotificationException {
-		if (pHinzufuegenOderEntfernen)
-			stateSchuelerKursHinzufuegen(pSchuelerID, pKursID);
+	public void setSchuelerKurs(final long idSchueler, final long idKurs, final boolean hinzufuegenOderEntfernen) throws DeveloperNotificationException {
+		if (hinzufuegenOderEntfernen)
+			stateSchuelerKursHinzufuegen(idSchueler, idKurs);
 		else
-			stateSchuelerKursEntfernen(pSchuelerID, pKursID);
+			stateSchuelerKursEntfernen(idSchueler, idKurs);
 	}
 
 	/**
-	 * Geht die übergebenen Zuordnungen (Fach --> Kurs) durch und setzt
-	 * bei Veränderung Kurse des übergebenen Schülers neu.
+	 * Geht die übergebene Fach-Zuordnungen (Fach --> Kurs) eines Schülers durch und
+	 * setzt aktualisiert Veränderung die Kurs-Schüler-Zuordnung.
 	 *
-	 * @param schuelerID  Die Datenbank-ID des Schülers.
-	 * @param pZuordnung  Die gewünschte Zuordnung.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param zuordnung   Die gewünschte Zuordnung.
 	 */
-	public void setSchuelerNeuzuordnung(final long schuelerID, final @NotNull SchuelerblockungOutput pZuordnung) {
+	public void setSchuelerNeuzuordnung(final long idSchueler, final @NotNull SchuelerblockungOutput zuordnung) {
 
-		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs z : pZuordnung.fachwahlenZuKurs) {
+		for (final @NotNull SchuelerblockungOutputFachwahlZuKurs z : zuordnung.fachwahlenZuKurs) {
 			// Kurs des Faches 'vorher'.
-			final GostBlockungsergebnisKurs kursV = getOfSchuelerOfFachZugeordneterKurs(schuelerID, z.fachID);
+			final GostBlockungsergebnisKurs kursV = getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
 			// Kurs des Faches 'nachher'.
 			final GostBlockungsergebnisKurs kursN = z.kursID < 0 ? null : getKursE(z.kursID);
 			// Bei Ungleichheit wird der Kurs gewechselt.
 			if (kursV != kursN) {
 				if (kursV != null)
-					setSchuelerKurs(schuelerID, kursV.id, false);
+					setSchuelerKurs(idSchueler, kursV.id, false);
 				if (kursN != null)
-					setSchuelerKurs(schuelerID, kursN.id, true);
+					setSchuelerKurs(idSchueler, kursN.id, true);
 			}
 		}
 
@@ -1684,100 +1725,104 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Fügt die übergebene Schiene hinzu.
 	 *
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
-	public void setAddSchieneByID(final long pSchienenID) throws DeveloperNotificationException {
-		if (!_parent.getSchieneExistiert(pSchienenID))
-			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager hinzugefügt werden!");
+	public void setAddSchieneByID(final long idSchiene) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager hinzugefügt werden!", !_parent.getSchieneExistiert(idSchiene));
 
+		// Bewertungen aktualisieren.
 		stateRevalidateEverything();
 	}
 
 	/**
 	 * Löscht die übergebene Schiene.
 	 *
-	 * @param  pSchienenID           Die Datenbank-ID der Schiene.
-	 * @throws DeveloperNotificationException  Falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                               falls die Schiene noch Kurszuordnungen hat.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst beim Datenmanager entfernt wurde, oder
+	 *                                         falls die Schiene noch Kurszuordnungen hat.
 	 */
-	public void setRemoveSchieneByID(final long pSchienenID) throws DeveloperNotificationException {
-		if (_parent.getSchieneExistiert(pSchienenID))
-			throw new DeveloperNotificationException("Die Schiene " + pSchienenID + " muss erst beim Datenmanager entfernt werden!");
+	public void setRemoveSchieneByID(final long idSchiene) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager entfernt werden!", _parent.getSchieneExistiert(idSchiene));
+		final int nKurse = getSchieneE(idSchiene).kurse.size();
+		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + idSchiene + " hat noch " + nKurse + " Kurse!", nKurse > 0);
 
-		final int nKurse = getSchieneE(pSchienenID).kurse.size();
-		if (nKurse > 0)
-			throw new DeveloperNotificationException("Entfernen unmöglich: Schiene " + pSchienenID + " hat noch " + nKurse + " Kurse!");
-
+		// Bewertungen aktualisieren.
 		stateRevalidateEverything();
 	}
 
 	/**
 	 * Fügt die übergebene Regel hinzu.
 	 *
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 * @param  idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
-	public void setAddRegelByID(final long pRegelID) throws DeveloperNotificationException {
-		if (!_parent.getRegelExistiert(pRegelID))
-			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager hinzugefügt werden!");
+	public void setAddRegelByID(final long idRegel) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager hinzugefügt werden!", !_parent.getRegelExistiert(idRegel));
 
+		// Bewertungen aktualisieren
 		stateRevalidateEverything();
 	}
 
 	/**
 	 * Löscht die übergebene Regel.
 	 *
-	 * @param  pRegelID              Die Datenbank-ID der Regel.
-	 * @throws DeveloperNotificationException  Falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
+	 * @param  idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
-	public void setRemoveRegelByID(final long pRegelID) throws DeveloperNotificationException {
-		if (_parent.getRegelExistiert(pRegelID))
-			throw new DeveloperNotificationException("Die Regel " + pRegelID + " muss erst beim Datenmanager entfernt werden!");
+	public void setRemoveRegelByID(final long idRegel) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", _parent.getRegelExistiert(idRegel));
 
+		// Bewertungen aktualisieren
 		stateRevalidateEverything();
 	}
 
 	/**
 	 * Fügt den übergebenen Kurs hinzu.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
-	public void setAddKursByID(final long pKursID) throws DeveloperNotificationException {
-		if (!_parent.getKursExistiert(pKursID))
-			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager hinzugefügt werden!");
-
-		final @NotNull GostBlockungKurs kurs = _parent.getKurs(pKursID);
+	public void setAddKursByID(final long idKurs) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager hinzugefügt werden!", !_parent.getKursExistiert(idKurs));
+		final @NotNull GostBlockungKurs kurs = _parent.getKurs(idKurs);
 		final int nSchienen = _parent.getSchienenAnzahl();
-		if (nSchienen < kurs.anzahlSchienen)
-			throw new DeveloperNotificationException("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!");
+		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
 
-		stateRevalidateEverything(); // Muss vor 'setKursSchienenNr' aufgerufen werden.
+		// Muss vor 'setKursSchienenNr' aufgerufen werden.
+		stateRevalidateEverything();
 
 		// Kurs automatisch in die ersten 'kurs.anzahlSchienen' Schienen hinzufügen.
 		for (int nr = 1; nr <= kurs.anzahlSchienen; nr++)
-			setKursSchienenNr(pKursID, nr);
-
+			setKursSchienenNr(idKurs, nr);
 	}
 
 	/**
 	 * Löscht den übergebenen Kurs.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                               falls der Kurs noch Schülerzuordnungen hat.
+	 *                                         falls der Kurs noch Schülerzuordnungen hat.
 	 */
-	public void setRemoveKursByID(final long pKursID) throws DeveloperNotificationException {
-		if (_parent.getKursExistiert(pKursID))
-			throw new DeveloperNotificationException("Der Kurs " + pKursID + " muss erst beim Datenmanager entfernt werden!");
-
-		final int nSchueler = getKursE(pKursID).schueler.size();
-		if (nSchueler > 0)
-			throw new DeveloperNotificationException("Entfernen unmöglich: Kurs " + pKursID + " hat noch " + nSchueler + " Schüler!");
+	public void setRemoveKursByID(final long idKurs) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", _parent.getKursExistiert(idKurs));
+		final int nSchueler = getKursE(idKurs).schueler.size();
+		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
 
 		// Kurs aus den Daten löschen, sonst wird die Kurs-Schienen-Zuordnung kopiert.
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		for (final @NotNull Long schienenID : kurs.schienen)
 			getSchieneE(schienenID).kurse.remove(kurs);
 		kurs.schienen.clear();
@@ -1786,26 +1831,26 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Verschiebt alles SuS von pKursID2delete nach pKursID1keep und löscht dann den
-	 * Kurs mit der ID beim {@link GostBlockungsdatenManager}, anschließend in diesem
-	 * Manager.
+	 * Verschiebt alles SuS von pKursID2delete nach pKursID1keep und
+	 * löscht dann den Kurs mit der ID beim {@link GostBlockungsdatenManager},
+	 * anschließend in diesem Manager.
 	 *
-	 * @param  pKursID1keep    Die Datenbank-ID des Kurses, der erhalten bleibt.
-	 * @param  pKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
+	 * @param  idKursID1keep    Die Datenbank-ID des Kurses, der erhalten bleibt.
+	 * @param  idKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
-	public void setMergeKurseByID(final long pKursID1keep, final long pKursID2delete) {
+	public void setMergeKurseByID(final long idKursID1keep, final long idKursID2delete) {
 		// 1) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
-		@NotNull final GostBlockungsergebnisKurs kurs2 = getKursE(pKursID2delete);
+		@NotNull final GostBlockungsergebnisKurs kurs2 = getKursE(idKursID2delete);
 		for (final @NotNull Long schuelerID : new ArrayList<>(kurs2.schueler)) {
-			stateSchuelerKursEntfernen(schuelerID, pKursID2delete);
-			stateSchuelerKursHinzufuegen(schuelerID, pKursID1keep);
+			stateSchuelerKursEntfernen(schuelerID, idKursID2delete);
+			stateSchuelerKursHinzufuegen(schuelerID, idKursID1keep);
 		}
 
 		// 2) Kurs2 löschen (beim Parent-Manager).
-		_parent.removeKursByID(pKursID2delete);
+		_parent.removeKursByID(idKursID2delete);
 
 		// 3) Kurs2 löschen (in diesem Manager).
-		setRemoveKursByID(pKursID2delete);
+		setRemoveKursByID(idKursID2delete);
 	}
 
 	/**
@@ -1813,51 +1858,47 @@ public class GostBlockungsergebnisManager {
 	 * dann bei diesem Manager und
 	 * verschiebt alle SuS des übergebenen Arrays von Kurs1 nach Kurs2.
 	 *
-	 * @param  pKurs1alt     Der Kurs, der gesplittet wird.
-	 * @param  pKurs2neu     Der Kurs, der neu erzeugt wird.
-	 * @param  pSusVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
+	 * @param  kurs1alt     Der Kurs, der gesplittet wird.
+	 * @param  kurs2neu     Der Kurs, der neu erzeugt wird.
+	 * @param  susVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
 	 */
-	public void setSplitKurs(final @NotNull GostBlockungKurs pKurs1alt, final @NotNull GostBlockungKurs pKurs2neu, final @NotNull long[] pSusVon1nach2) {
+	public void setSplitKurs(final @NotNull GostBlockungKurs kurs1alt, final @NotNull GostBlockungKurs kurs2neu, final @NotNull long[] susVon1nach2) {
 		// 1) Kurs2 erzeugen (beim Parent-Manager).
-		_parent.addKurs(pKurs2neu);
+		_parent.addKurs(kurs2neu);
 
 		// 2) Kurs2 erzeugen (in diesem Manager).
-		setAddKursByID(pKurs2neu.id);
+		setAddKursByID(kurs2neu.id);
 
 		// 3) Verschieben der SuS von Kurs1 nach Kurs2 (in diesem Manager).
-		for (final long schuelerID : pSusVon1nach2) {
-			stateSchuelerKursEntfernen(schuelerID, pKurs1alt.id);
-			stateSchuelerKursHinzufuegen(schuelerID, pKurs2neu.id);
+		for (final long schuelerID : susVon1nach2) {
+			stateSchuelerKursEntfernen(schuelerID, kurs1alt.id);
+			stateSchuelerKursHinzufuegen(schuelerID, kurs2neu.id);
 		}
 	}
 
 	/**
 	 * Verändert die Schienenanzahl eines Kurses. Dies ist nur bei einer Blockungsvorlage erlaubt.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @param  pAnzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param  anzahlSchienenNeu Die neue Schienenanzahl des Kurses.
+	 *
 	 * @throws DeveloperNotificationException Falls ein unerwarteter Fehler passiert.
 	 */
-	public void patchOfKursSchienenAnzahl(final long pKursID, final int pAnzahlSchienenNeu) throws DeveloperNotificationException {
+	public void patchOfKursSchienenAnzahl(final long idKurs, final int anzahlSchienenNeu) throws DeveloperNotificationException {
 		// Daten holen.
-		final @NotNull GostBlockungKurs kursG = getKursG(pKursID);
-		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(pKursID);
+		final @NotNull GostBlockungKurs kursG = getKursG(idKurs);
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
 		final int nSchienen = _parent.getSchienenAnzahl();
 
 		// DeveloperNotificationException
-		if (!_parent.getIstBlockungsVorlage())
-			throw new DeveloperNotificationException("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!");
-		if (kursE.anzahlSchienen != kursG.anzahlSchienen)
-			throw new DeveloperNotificationException("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!");
-		if (nSchienen == 0)
-			throw new DeveloperNotificationException("Die Blockung hat 0 Schienen. Das darf nicht passieren!");
-		if (pAnzahlSchienenNeu <= 0)
-			throw new DeveloperNotificationException("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + pAnzahlSchienenNeu + " Schienen!");
-		if (pAnzahlSchienenNeu > nSchienen)
-			throw new DeveloperNotificationException("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + pAnzahlSchienenNeu + " Schienen zugeordnet werden!");
+		DeveloperNotificationException.ifTrue("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!", !_parent.getIstBlockungsVorlage());
+		DeveloperNotificationException.ifTrue("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen != kursG.anzahlSchienen);
+		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen == 0);
+		DeveloperNotificationException.ifTrue("Ein Kurs muss mindestens einer Schiene zugeordnet sein, statt " + anzahlSchienenNeu + " Schienen!", anzahlSchienenNeu <= 0);
+		DeveloperNotificationException.ifTrue("Es gibt nur " + nSchienen + " Schienen, der Kurs kann nicht " + anzahlSchienenNeu + " Schienen zugeordnet werden!", anzahlSchienenNeu > nSchienen);
 
 		// Die Schienenanzahl erhöhen, ggf. mehrfach.
-		while (pAnzahlSchienenNeu > kursG.anzahlSchienen) {
+		while (anzahlSchienenNeu > kursG.anzahlSchienen) {
 			boolean hinzugefuegt = false;
 			for (int nr = 1; (nr <= _map_schienenNr_schiene.size()) && (!hinzugefuegt); nr++) {
 				final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
@@ -1865,15 +1906,14 @@ public class GostBlockungsergebnisManager {
 					hinzugefuegt = true;
 					kursG.anzahlSchienen++;
 					kursE.anzahlSchienen++;
-					setKursSchiene(pKursID, schiene.id, true);
+					setKursSchiene(idKurs, schiene.id, true);
 				}
 			}
-			if (!hinzugefuegt)
-				throw new DeveloperNotificationException("Es wurde keine freie Schiene für den Kurs " + pKursID + " gefunden!");
+			DeveloperNotificationException.ifTrue("Es wurde keine freie Schiene für den Kurs " + idKurs + " gefunden!", !hinzugefuegt);
 		}
 
 		// Die Schienenanzahl verringern, ggf. mehrfach.
-		while (pAnzahlSchienenNeu < kursG.anzahlSchienen) {
+		while (anzahlSchienenNeu < kursG.anzahlSchienen) {
 			boolean entfernt = false;
 			for (int nr = _map_schienenNr_schiene.size(); (nr >= 1) && (!entfernt); nr--) {
 				final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
@@ -1881,11 +1921,10 @@ public class GostBlockungsergebnisManager {
 					entfernt = true;
 					kursG.anzahlSchienen--;
 					kursE.anzahlSchienen--;
-					setKursSchiene(pKursID, schiene.id, false);
+					setKursSchiene(idKurs, schiene.id, false);
 				}
 			}
-			if (!entfernt)
-				throw new DeveloperNotificationException("Es wurde keine belegte Schiene von Kurs " + pKursID + " gefunden!");
+			DeveloperNotificationException.ifTrue("Es wurde keine belegte Schiene von Kurs " + idKurs + " gefunden!", !entfernt);
 		}
 
 	}
@@ -1901,20 +1940,20 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Eine Logger-Ausgabe für Debug-Zwecke.
 	 *
-	 * @param pLogger Ein Logger für Debug-Zwecke.
+	 * @param logger Ein Logger für Debug-Zwecke.
 	 */
-	public void debug(final @NotNull Logger pLogger) {
-		pLogger.modifyIndent(+4);
-		pLogger.logLn("----- Kurse sortiert nach Fachart -----");
+	public void debug(final @NotNull Logger logger) {
+		logger.modifyIndent(+4);
+		logger.logLn("----- Kurse sortiert nach Fachart -----");
 		for (final @NotNull Long fachartID : _map_fachartID_kurse.keySet()) {
-			pLogger.logLn("FachartID = " + fachartID + " (KD = " + getOfFachartKursdifferenz(fachartID) + ")");
+			logger.logLn("FachartID = " + fachartID + " (KD = " + getOfFachartKursdifferenz(fachartID) + ")");
 			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfFachartKursmenge(fachartID)) {
-				pLogger.logLn("    " + getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
+				logger.logLn("    " + getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
 			}
 		}
-		pLogger.logLn("KursdifferenzMax = " + _ergebnis.bewertung.kursdifferenzMax);
-		pLogger.logLn("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
-		pLogger.modifyIndent(-4);
+		logger.logLn("KursdifferenzMax = " + _ergebnis.bewertung.kursdifferenzMax);
+		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(_ergebnis.bewertung.kursdifferenzHistogramm));
+		logger.modifyIndent(-4);
 	}
 
 
