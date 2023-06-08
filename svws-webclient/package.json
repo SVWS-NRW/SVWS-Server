@@ -16,7 +16,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.51.0",
 		"@typescript-eslint/parser": "^5.51.0",
 		"@vitejs/plugin-vue": "^4.0.0",
-		"@vitest/coverage-c8": "^0.32.0",
+		"@vitest/coverage-v8": "^0.32.0",
 		"@vue/tsconfig": "^0.4.0",
 		"@vueuse/core": "^10.0.2",
 		"autoprefixer": "^10.4.13",

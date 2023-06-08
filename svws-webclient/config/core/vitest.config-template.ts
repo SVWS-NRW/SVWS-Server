@@ -8,9 +8,8 @@ export default defineConfig({
     reporters: ["default", "junit"],
     outputFile: "../build/coverage/core/junit.xml",
     coverage: {
-      provider: "c8",
+      provider: "v8",
       reportsDirectory: "../build/coverage/core",
-      allowExternal: true,
     },
   },
   resolve: {
