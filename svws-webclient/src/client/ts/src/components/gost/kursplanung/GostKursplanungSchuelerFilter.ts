@@ -39,13 +39,12 @@ export class GostKursplanungSchuelerFilter {
 			this.kursart.value?.id || 0,
 			pKonfliktTyp,
 			this.name.value);
-		const set = new Set();
-		for (const s of res)
-			set.add(s.id);
 		const gefiltert = new Map<number, SchuelerListeEintrag>();
-		for (const s of this.mapSchueler.values())
-			if (set.has(s.id))
-				gefiltert.set(s.id, s);
+		for (const s of res) {
+			const ss = this.mapSchueler.get(s.id);
+			if (ss !== undefined)
+				gefiltert.set(s.id, ss);
+		}
 		return gefiltert;
 	})
 
