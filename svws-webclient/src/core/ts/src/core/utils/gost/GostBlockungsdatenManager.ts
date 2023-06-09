@@ -434,10 +434,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public addSchuelerOhneSortierung(pSchueler : Schueler) : void {
 		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
-		DeveloperNotificationException.ifMapContains("_map_id_schueler", this._map_schuelerID_schueler, pSchueler.id);
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_schueler, pSchueler.id, pSchueler);
 		this._daten.schueler.add(pSchueler);
-		this._map_schuelerID_schueler.put(pSchueler.id, pSchueler);
 		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
 			this._map_schuelerID_fachwahlen.put(pSchueler.id, new ArrayList());
 		if (!this._map_schuelerID_fachID_fachwahl.containsKey(pSchueler.id))
