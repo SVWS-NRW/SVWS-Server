@@ -30,20 +30,20 @@ export class GostKursplanungSchuelerFilter {
 		return this.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new ArrayList<GostBlockungKurs>();
 	}
 
-	public filtered: ComputedRef<Map<number, SchuelerListeEintrag>> = computed(() => {
+	public filtered: ComputedRef<SchuelerListeEintrag[]> = computed(() => {
+		const gefiltert: SchuelerListeEintrag[] = [];
 		if (this.ergebnismanager === undefined)
-			return new Map<number, SchuelerListeEintrag>();
+			return gefiltert;
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
 		const res = this.ergebnismanager.getMengeDerSchuelerGefiltert(this.kurs.value?.id || 0,
 			this.fach.value || 0,
 			this.kursart.value?.id || 0,
 			pKonfliktTyp,
 			this.name.value);
-		const gefiltert = new Map<number, SchuelerListeEintrag>();
 		for (const s of res) {
 			const ss = this.mapSchueler.get(s.id);
 			if (ss !== undefined)
-				gefiltert.set(s.id, ss);
+				gefiltert.push(ss);
 		}
 		return gefiltert;
 	})

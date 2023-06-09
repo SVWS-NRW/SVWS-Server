@@ -53,7 +53,7 @@
 			</template>
 			<template #body>
 				<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr--clicked': selected === s}"
-					v-for="(s, index) in schuelerFilter.filtered.value.values()" @click="selected = s" :key="index">
+					v-for="(s, index) in schuelerFilter.filtered.value" @click="selected = s" :key="index">
 					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
 				</div>
 			</template>
