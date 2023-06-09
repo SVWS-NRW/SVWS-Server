@@ -323,7 +323,8 @@
 	]);
 	const dataCollapsible = ref([
 		{
-			id: 1,
+			column: 1,
+			content: 2,
 		}
 	]);
 	const set = new Set<DataTableItem>();
@@ -465,7 +466,13 @@
 		logEvent("input", event);
 	}
 
-	const collapsed = ref(false);
+	const collapsed = ref([
+		false,
+		true,
+		true,
+		true,
+		true,
+	]);
 </script>
 
 <template>
@@ -528,26 +535,74 @@
 				<svws-ui-data-table :items="dataCollapsible" collapsible>
 					<template #header />
 					<template #body>
-						<div role="row" class="data-table__tr data-table__tbody__tr">
-							<div role="row" class="data-table__tr data-table__tbody__tr">
-								<div role="cell" class="data-table__td">
-									<div class="flex items-center gap-1">
-										<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed">
-											<i-ri-arrow-right-s-line v-if="collapsed" />
-											<i-ri-arrow-down-s-line v-else />
-										</svws-ui-button>
-										Collapsed Cell Content
-									</div>
+						<svws-ui-table-row>
+							<svws-ui-table-cell span="full">
+								<div class="flex items-center gap-1">
+									<svws-ui-button type="icon" size="small" @click="collapsed[0] = !collapsed[0]">
+										<i-ri-arrow-right-s-line v-if="collapsed[0]" />
+										<i-ri-arrow-down-s-line v-else />
+									</svws-ui-button>
+									Collapsible Row
 								</div>
-							</div>
-							<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr__collapsed': collapsed, 'data-table__tr__expanded': !collapsed}">
-								<div role="cell" class="data-table__td">
-									<div class="flex items-center gap-1">
-										Collapsed Row
-									</div>
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="1" :collapsed="collapsed[0]" :expanded="!collapsed[0]">
+							<svws-ui-table-cell>
+								<div class="flex items-center gap-1">
+									<svws-ui-button type="icon" size="small" @click="collapsed[1] = !collapsed[1]">
+										<i-ri-arrow-right-s-line v-if="collapsed[1]" />
+										<i-ri-arrow-down-s-line v-else />
+									</svws-ui-button>
+									Collapsible Row (Depth 1)
 								</div>
-							</div>
-						</div>
+							</svws-ui-table-cell>
+							<svws-ui-table-cell disabled>
+								Content
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="2" :collapsed="collapsed[0] || collapsed[1]" :expanded="!collapsed[1]">
+							<svws-ui-table-cell span="full">
+								Normal Row
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="2" :collapsed="collapsed[0] || collapsed[1]" :expanded="!collapsed[1]">
+							<svws-ui-table-cell span="full">
+								Normal Row
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="2" :collapsed="collapsed[0] || collapsed[1]" :expanded="!collapsed[1]">
+							<svws-ui-table-cell span="full">
+								<div class="flex items-center gap-1">
+									<svws-ui-button type="icon" size="small" @click="collapsed[2] = !collapsed[2]">
+										<i-ri-arrow-right-s-line v-if="collapsed[2]" />
+										<i-ri-arrow-down-s-line v-else />
+									</svws-ui-button>
+									Collapsible Row (Depth 2)
+								</div>
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="3" :collapsed="collapsed[0] || collapsed[1] || collapsed[2]" :expanded="!collapsed[2]">
+							<svws-ui-table-cell>
+								<div class="flex items-center gap-1">
+									<svws-ui-button type="icon" size="small" @click="collapsed[3] = !collapsed[3]">
+										<i-ri-arrow-right-s-line v-if="collapsed[3]" />
+										<i-ri-arrow-down-s-line v-else />
+									</svws-ui-button>
+									Collapsible Row (Depth 3)
+								</div>
+							</svws-ui-table-cell>
+							<svws-ui-table-cell>
+								Content
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
+						<svws-ui-table-row :depth="4" :collapsed="collapsed[0] || collapsed[1] || collapsed[2] || collapsed[3]" :expanded="!collapsed[3]">
+							<svws-ui-table-cell>
+								Collapsible Row (Depth 4)
+							</svws-ui-table-cell>
+							<svws-ui-table-cell>
+								Content
+							</svws-ui-table-cell>
+						</svws-ui-table-row>
 					</template>
 				</svws-ui-data-table>
 			</section>

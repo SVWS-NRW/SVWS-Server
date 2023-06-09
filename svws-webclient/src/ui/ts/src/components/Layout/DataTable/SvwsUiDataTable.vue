@@ -428,7 +428,7 @@
 
 		&__disabled,
 		.data-table__tr__disabled & {
-			@apply cursor-not-allowed relative;
+			@apply cursor-not-allowed relative text-black/50;
 
 			&:before {
 				@apply absolute inset-0 bg-black/20 border border-black/5;
@@ -694,25 +694,91 @@
 				@apply outline-none;
 			}
 
-			.data-table__tr__collapsed {
+			&.data-table__tr__collapsed {
 				@apply hidden;
 			}
 
-			.data-table__tr__expanded {
-				@apply grid col-span-full;
+			&.data-table__tr__expanded {
+				@apply border-b border-black/25 bg-light;
 
-				&:before {
-					/*@apply absolute h-3 w-3 border-b border-l border-dark-20 top-1;
-					left: 1.175rem;*/
-					@apply absolute h-2/3 w-px bg-black/25;
-					left: 1rem;
-					top: 50%;
-					transform: translateY(-50%) translateX(-50%);
-					content: '';
+				.data-table__td {
+					@apply border-b-0 bg-white;
+
+					&:first-child {
+						@apply border-l pl-2;
+					}
 				}
 
-				.data-table__td:first-child {
+				&.data-table__tr__depth-1 {
+					@apply pl-4;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-2;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-2;
+					}
+				}
+
+				&.data-table__tr__depth-2 {
+					@apply pl-8;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-4;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-4;
+					}
+				}
+
+				&.data-table__tr__depth-3 {
 					@apply pl-12;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-6;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-6;
+					}
+				}
+
+				&.data-table__tr__depth-4 {
+					@apply pl-16;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-8;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-8;
+					}
+				}
+
+				&.data-table__tr__depth-5 {
+					@apply pl-20;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-10;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-10;
+					}
+				}
+
+				&.data-table__tr__depth-6 {
+					@apply pl-24;
+
+					.data-table__td:first-child:not(:last-child) {
+						@apply mr-12;
+					}
+
+					.data-table__td:nth-child(2) {
+						@apply -ml-12;
+					}
 				}
 			}
 		}
@@ -726,7 +792,7 @@
 		}
 
 		&__td {
-			.button {
+			.button-secondary {
 				@apply border;
 				font-size: 0.833rem;
 				padding: 0.1em 0.7em;

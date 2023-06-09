@@ -6,6 +6,8 @@
 		'data-table__td__align-right': align === 'right',
 		'data-table__td__align-center': align === 'center',
 		'data-table__td__align-left': align === 'left',
+		'data-table__td__disabled': disabled,
+		'col-span-full': span === 'full',
 	}">
 		<div class="data-table__th-wrapper" v-if="thead">
 			<span class="data-table__th-title">
@@ -34,12 +36,15 @@
 			tooltip?: string;
 			noPadding?: boolean;
 			align?: 'left' | 'center' | 'right';
+			disabled?: boolean;
+			span?: 'full';
 		}>(),
 		{
 			thead: false,
 			tooltip: '',
 			noPadding: false,
 			align: 'left',
+			disabled: false,
 		}
 	);
 </script>
