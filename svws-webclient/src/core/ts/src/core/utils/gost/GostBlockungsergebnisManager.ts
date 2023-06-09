@@ -408,6 +408,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateSchuelerKursHinzufuegen(pSchuelerID : number, pKursID : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(pKursID);
 		const fachID : number = kurs.fachID;
+	if (pSchuelerID === 1115) {
+		const fach = this.getFach(fachID)
+		console.log(kurs, fach)
+
+	}
 		if (!this.getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
 			this.stateSchuelerKursUngueltigeWahlHinzufuegen(pSchuelerID, kurs);
 			return;

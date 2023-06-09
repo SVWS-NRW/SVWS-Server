@@ -58,6 +58,7 @@
 				</div>
 			</template>
 		</svws-ui-data-table>
+		<s-gost-kursplanung-ungueltige-kurswahl-modal v-if="props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" />
 	</svws-ui-content-card>
 </template>
 
@@ -70,6 +71,7 @@
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
+		console.log(props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse())
 
 	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();
 	const fach_filter_toggle = props.schuelerFilter.fach_filter_toggle();
