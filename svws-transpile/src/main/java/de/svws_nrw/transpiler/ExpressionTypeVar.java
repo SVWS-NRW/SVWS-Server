@@ -87,6 +87,16 @@ public final class ExpressionTypeVar extends ExpressionType {
 
 
 	/**
+	 * Creates a new wildcard (?) type variable expression type instance.
+	 *
+	 * @return the new type variable expression type instance
+	 */
+	public static ExpressionTypeVar getWildcardExpressionTypeVariable()  {
+		return new ExpressionTypeVar(null);
+	}
+
+
+	/**
 	 * Creates a new type variable expression type instance from the specified {@link TypeMirror}
 	 *
 	 * @param transpiler   the transpiler used for determining the expression type

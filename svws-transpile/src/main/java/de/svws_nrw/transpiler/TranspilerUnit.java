@@ -764,6 +764,16 @@ public final class TranspilerUnit {
 			return ExpressionPackageType.getExpressionPackageType(node.toString());
 		}
 
+		if ("this".equals(name)) {
+		    // TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
+		    if ("compareTo".equals(member))
+		        return new ExpressionPrimitiveType(TypeKind.INT);
+		}
+		if (typeOfClass.getKind() == Kind.ENUM) {
+		    if ("compareTo".equals(member))
+		        return new ExpressionPrimitiveType(TypeKind.INT);
+		}
+
 		// check method invocation
 		final ArrayList<ExpressionType> paramTypes = new ArrayList<>();
 		for (final ExpressionTree param : miTree.getArguments()) {
@@ -775,15 +785,6 @@ public final class TranspilerUnit {
 		final ExpressionType result = transpiler.getMethodReturnType(this, node, typeOfClass, member, paramTypes);
 		if (result != null)
 			return result;
-		if ("this".equals(name)) {
-		    // TODO Prüfe zusätzlich, ob es sich um einen Enum-Type handelt. Ansonsten könnte compareTo nicht definiert sein
-		    if ("compareTo".equals(member))
-		        return new ExpressionPrimitiveType(TypeKind.INT);
-		}
-		if (typeOfClass.getKind() == Kind.ENUM) {
-		    if ("compareTo".equals(member))
-		        return new ExpressionPrimitiveType(TypeKind.INT);
-		}
 		throw new TranspilerException("Transpiler Error: Cannot determine method return type for " + name + "." + member + " : " + packageName + "." + typeName);
 	}
 

@@ -97,10 +97,12 @@ public final class ExpressionClassType extends ExpressionType {
 			);
 			for (final TypeMirror typeArg : dt.getTypeArguments()) {
 				if (typeArg instanceof DeclaredType) {
+					result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
 					result.typeArguments.add(getExpressionClassType(transpiler, typeArg));
 					continue;
 				}
 				if ((typeArg instanceof TypeVariable) || (typeArg instanceof WildcardType)) {
+					result.typeVariables.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, typeArg));
 					result.typeArguments.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, typeArg));
 					continue;
 				}
@@ -115,10 +117,12 @@ public final class ExpressionClassType extends ExpressionType {
 						dim++;
 					}
 					if (elemType instanceof DeclaredType) {
+						result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
 						result.typeArguments.add(new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, elemType), dim));
 						continue;
 					}
 					if (elemType instanceof final TypeVariable tv) {
+						result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
 						result.typeVariables.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, tv));
 						continue;
 					}
@@ -150,8 +154,10 @@ public final class ExpressionClassType extends ExpressionType {
 		if (elem.getTypeParameters().isEmpty())
 			kind = (elem.getKind() == ElementKind.ENUM ? Kind.ENUM : Kind.CLASS);
 		final ExpressionClassType result = new ExpressionClassType(kind, elem.getSimpleName().toString(), getPackageName(elem.getQualifiedName().toString()));
-		for (final TypeParameterElement tpe : elem.getTypeParameters())
+		for (final TypeParameterElement tpe : elem.getTypeParameters()) {
+			result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
 			result.typeArguments.add(ExpressionType.getExpressionType(transpiler, tpe.asType()));
+		}
 		return result;
 	}
 
@@ -171,8 +177,10 @@ public final class ExpressionClassType extends ExpressionType {
 			temp.toString(),
 			temp.getPackageName()
 		);
-		for (final Tree typeArgument : tree.getTypeArguments())
+		for (final Tree typeArgument : tree.getTypeArguments()) {
+			result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
 			result.typeArguments.add(getExpressionType(transpiler, typeArgument));
+		}
 		return result;
 	}
 
@@ -323,17 +331,25 @@ public final class ExpressionClassType extends ExpressionType {
 	public boolean resolveTypeVariables(final HashMap<String, ExpressionType> knownTypeVars) {
 		// TODO improvement: allow mixed generic parameters with type variables and fixed types
 		// TODO improvement: replace type variables recursively - see comment in Transpiler
-		if (!typeArguments.isEmpty())
+		if (typeVariables.isEmpty())
 			return true;
 		for (int i = 0; i < typeVariables.size(); i++) {
-			final ExpressionType t = knownTypeVars.get(typeVariables.get(i).getName());
-			if (t == null) {
+			if (typeVariables.get(i) != typeArguments.get(i))
+				continue;
+			final String tvName = typeVariables.get(i).getName();
+			final ExpressionType t = knownTypeVars.get(tvName);
+			if ((t == null) && (!isWildcardType(tvName))) {
 				typeArguments.clear();
 				return false;
 			}
 			typeArguments.add(t);
 		}
 		return true;
+	}
+
+
+	private static boolean isWildcardType(final String typename) {
+		return typename.contains("?");
 	}
 
 

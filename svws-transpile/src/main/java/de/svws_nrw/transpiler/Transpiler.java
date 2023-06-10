@@ -1365,7 +1365,7 @@ public final class Transpiler extends AbstractProcessor {
 				// check method parameter types
 				final List<? extends VariableElement> elemParams = ee.getParameters();
 				if (!((elemParams.size() == parameterTypes.size())
-						|| ((elemParams.size() > 0) && (elemParams.size() - 1 <= parameterTypes.size()) && ee.isVarArgs())))
+						|| ((!elemParams.isEmpty()) && (elemParams.size() - 1 <= parameterTypes.size()) && ee.isVarArgs())))
 					continue;
 				int rated = 0;
 				final HashMap<String, ExpressionType> mapMethodTypeArgs = new HashMap<>(mapClassTypeArgs);
@@ -1451,7 +1451,8 @@ public final class Transpiler extends AbstractProcessor {
 						found = ExpressionType.getExpressionType(this, returnType);
 					}
 					if (found instanceof final ExpressionClassType foundClassType) {
-						if (!foundClassType.resolveTypeVariables(mapMethodTypeArgs))
+						final boolean typeVariablesResolved = foundClassType.resolveTypeVariables(mapMethodTypeArgs);
+						if (!typeVariablesResolved)
 							throw new TranspilerException("Transpiler Error: Cannot resolve all type vars for method return type for " + clazz.getFullQualifiedName() + "." + memberName);
 						// TODO improvement: replace type variables recursively - see comment in ExpressionClassType
 					} else if (found instanceof final ExpressionArrayType foundArrayType)  {
