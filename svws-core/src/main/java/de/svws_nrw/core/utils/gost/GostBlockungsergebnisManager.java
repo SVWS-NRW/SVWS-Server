@@ -913,21 +913,23 @@ public class GostBlockungsergebnisManager {
 	 * Liefert TRUE, falls der Schüler mindestens eine Kollision hat. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
 	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
 	 */
-	public boolean getOfSchuelerHatKollision(final long pSchuelerID) {
-		return getOfSchuelerAnzahlKollisionen(pSchuelerID) > 0;
+	public boolean getOfSchuelerHatKollision(final long idSchueler) {
+		return getOfSchuelerAnzahlKollisionen(idSchueler) > 0;
 	}
 
 	/**
 	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @return             TRUE, falls der Schüler mindestens eine Nichtwahl hat.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
-	public boolean getOfSchuelerHatNichtwahl(final long pSchuelerID) {
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(pSchuelerID);
+	public boolean getOfSchuelerHatNichtwahl(final long idSchueler) {
+		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(idSchueler);
 
 		for (@NotNull final Entry<@NotNull Long, @NotNull GostBlockungsergebnisKurs> e : map.entrySet())
 			if (e.getValue() == null)
@@ -950,12 +952,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Anzahl an Kollisionen des Schülers. <br>
+	 * Liefert die Anzahl an Kollisionen des Schülers.<br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
-	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 *
-	 * @return Die Anzahl an Kollisionen des Schülers.
+	 * @return die Anzahl an Kollisionen des Schülers.
 	 */
 	public int getOfSchuelerAnzahlKollisionen(final long idSchueler) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kollisionen, idSchueler);
@@ -975,89 +977,90 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.
 	 *
-	 * @return Die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
+	 * @return die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
 	 */
 	public @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> getOfSchuelerFachIDKursMap(final long idSchueler) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, idSchueler);
 	}
 
 	/**
-	 * Liefert die Map des Schülers, die einer Schiene die Kurse des Schülers zuordnet.
+	 * Liefert die Map des Schülers, die pro Schiene die belegten Kurse des Schülers zuordnet.
 	 *
 	 * @param idSchueler Die Datenbank-ID des Schülers.
 	 *
-	 * @return Die Map des Schülers, die der Schiene die Kurse des Schülers zuordnet.
+	 * @return die Map des Schülers, die pro Schiene die belegten Kurse des Schülers zuordnet.
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerSchienenKursmengeMap(final long idSchueler) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_schienenID_kurse, idSchueler);
 	}
 
 	/**
-	 * Liefert die Kursmenge des Schülers in der Schiene.
+	 * Liefert die Menge der belegten Kurse des Schülers in der Schiene.
 	 *
 	 * @param idSchueler Die Datenbank-ID des Schülers.
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
-	 * @return Die Kursmenge des Schülers in der Schiene.
+	 * @return die Menge der belegten Kurse des Schülers in der Schiene.
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerOfSchieneKursmenge(final long idSchueler, final long idSchiene) {
 		return DeveloperNotificationException.ifMapGetIsNull(getOfSchuelerSchienenKursmengeMap(idSchueler), idSchiene);
 	}
 
 	/**
-	 * Liefert die zu (Schüler, Fach) die jeweilige Kursart. <br>
-	 * Liefert eine Exception, falls (Schüler, Fach) nicht existiert.
+	 * Liefert die zu (idSchueler, idFach) die jeweilige Kursart. <br>
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID     Die Datenbank-ID des Faches.
+	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 * @param idFach     Die Datenbank-ID des Faches.
 	 *
-	 * @return Die zu (Schüler, Fach) die jeweilige Kursart.
+	 * @return Die zu (idSchueler, idFach) die jeweilige Kursart.
 	 */
-	public @NotNull GostKursart getOfSchuelerOfFachKursart(final long pSchuelerID, final long pFachID) {
-		return _parent.getOfSchuelerOfFachKursart(pSchuelerID, pFachID);
+	public @NotNull GostKursart getOfSchuelerOfFachKursart(final long idSchueler, final long idFach) {
+		return _parent.getOfSchuelerOfFachKursart(idSchueler, idFach);
 	}
 
 	/**
-	 * Ermittelt für den Schüler mit einem Fach den zugeordneten Kurs.
+	 * Liefert den zu (idSchueler, idFach) passenden Kurs.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param  pFachID     Die Datenbank-ID des Faches.
-	 * @return             Der zugeordnete Kurs oder null, falls es keine Zuordnung gibt.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idFach     Die Datenbank-ID des Faches.
+	 *
+	 * @return den zu (idSchueler, idFach) passenden Kurs.
 	 */
-	public GostBlockungsergebnisKurs getOfSchuelerOfFachZugeordneterKurs(final long pSchuelerID, final long pFachID) {
-		if (!getOfSchuelerFachIDKursMap(pSchuelerID).containsKey(pFachID))
-			throw new DeveloperNotificationException("Schüler " + pSchuelerID + " hat das Fach " + pFachID + " nicht gewählt!");
-		return getOfSchuelerFachIDKursMap(pSchuelerID).get(pFachID);
+	public GostBlockungsergebnisKurs getOfSchuelerOfFachZugeordneterKurs(final long idSchueler, final long idFach) {
+		@NotNull final Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachZuKurs = getOfSchuelerFachIDKursMap(idSchueler);
+		DeveloperNotificationException.ifMapNotContains("mapFachZuKurs", mapFachZuKurs, idFach);
+		return mapFachZuKurs.get(idFach);
 	}
 
 	/**
 	 * Liefert TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 *
-	 * @return             TRUE, falls der Schüler dem Kurs zugeordnet ist.
+	 * @return TRUE, falls der Schüler dem Kurs zugeordnet ist.
 	 */
-	public boolean getOfSchuelerOfKursIstZugeordnet(final long pSchuelerID, final long pKursID) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
+	public boolean getOfSchuelerOfKursIstZugeordnet(final long idSchueler, final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
 		return kurseOfSchueler.contains(kurs);
 	}
 
 	/**
-	 * Liefert für den übergebenen Schüler einen Vorschlag für eine Neuzuordnung der Kurse.
+	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * @return             Die Neuzuordnung der Kurse im {@link SchuelerblockungOutput}-Objekt.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
+	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
 	 */
-	public @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnung(final long pSchuelerID) {
+	public @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnung(final long idSchueler) {
 		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
 
 		// Aktuelle Anzahl an Schienen.
 		input.schienen = this.getOfSchieneAnzahl();
 
 		// Fachwahlen des Schülers.
-		final @NotNull List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _parent.getOfSchuelerFacharten(pSchuelerID);
+		final @NotNull List<@NotNull GostFachwahl> fachwahlenDesSchuelers = _parent.getOfSchuelerFacharten(idSchueler);
 		input.fachwahlen.addAll(fachwahlenDesSchuelers);
 
 		for (final @NotNull GostFachwahl fachwahl : fachwahlenDesSchuelers) {
@@ -1074,8 +1077,8 @@ public class GostBlockungsergebnisManager {
 				inKurs.id = kurs.id;
 				inKurs.fach = kurs.fachID;
 				inKurs.kursart = kurs.kursart;
-				inKurs.istGesperrt = getOfSchuelerOfKursIstGesperrt(pSchuelerID, kurs.id);
-				inKurs.istFixiert = getOfSchuelerOfKursIstFixiert(pSchuelerID, kurs.id);
+				inKurs.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, kurs.id);
+				inKurs.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, kurs.id);
 				inKurs.anzahlSuS = getOfKursAnzahlSchueler(kurs.id);
 				inKurs.schienen = getOfKursSchienenNummern(kurs.id);
 				input.kurse.add(inKurs);
@@ -1090,6 +1093,51 @@ public class GostBlockungsergebnisManager {
 		final @NotNull SchuelerblockungAlgorithmus algorithmus = new SchuelerblockungAlgorithmus();
 		final @NotNull SchuelerblockungOutput output = algorithmus.handle(input);
 		return output;
+	}
+
+	/**
+	 * Liefert ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
+	 *
+	 * @param idSchueler           Die Datenbank-ID des Schülers.
+	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
+	 *
+	 * @return ein {@link SchuelerblockungOutput}-Objekt, welches für den Schüler eine Neuzuordnung der Kurse vorschlägt.
+	 */
+	public @NotNull SchuelerblockungOutput getOfSchuelerNeuzuordnungMitFixierung(final long idSchueler, final boolean fixiereBelegteKurse) {
+
+		// Konstruiere die Eingabedaten "input".
+		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
+		input.schienen = _parent.getSchienenAnzahl();
+
+		// Sammle alle Facharten des Schülers...
+		for (final @NotNull GostFachwahl fachwahl : _parent.getOfSchuelerFacharten(idSchueler)) {
+			input.fachwahlen.add(fachwahl);
+			input.fachwahlenText.add(_parent.getNameOfFachwahl(fachwahl));
+			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
+
+			// Sammle alle potentiellen Kurse der Fachart des Schülers...
+			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
+				final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
+				final long idKurs = kursE.id;
+				kursS.id = idKurs;
+				kursS.fach = kursE.fachID;
+				kursS.kursart = kursE.kursart;
+				kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
+				kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
+	                               || (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
+				DeveloperNotificationException.ifTrue("kursS.istGesperrt && kursS.istFixiert", kursS.istGesperrt && kursS.istFixiert);
+				kursS.anzahlSuS = getOfKursAnzahlSchueler(idKurs);
+				kursS.schienen = getOfKursSchienenNummern(idKurs);
+				input.kurse.add(kursS);
+			}
+		}
+
+		// Sonderfall: Der Schüler hat 0 Fachwahlen oder alle Fachwahlen haben 0 Kurse.
+		if (input.kurse.isEmpty())
+			return new SchuelerblockungOutput();
+
+		// Berechne die Zuordnung und gib sie zurück.
+		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
 	/**
@@ -1233,11 +1281,12 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert ein Array aller Schienen-Nummern des Kurses.
 	 *
-	 * @param pKursID  Die Datenbank-ID des Kurses.
-	 * @return         Ein Array aller Schienen-Nummern des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return ein Array aller Schienen-Nummern des Kurses.
 	 */
-	public @NotNull int[] getOfKursSchienenNummern(final long pKursID) {
-		final @NotNull List<@NotNull Long> schienenIDs = getKursE(pKursID).schienen;
+	public @NotNull int[] getOfKursSchienenNummern(final long idKurs) {
+		final @NotNull List<@NotNull Long> schienenIDs = getKursE(idKurs).schienen;
 		final int[] a = new int[schienenIDs.size()];
 		for (int i = 0; i < a.length; i++) {
 			final long schienenID = schienenIDs.get(i);
@@ -1645,49 +1694,6 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisSchiene> getMengeAllerSchienen() {
 		return _ergebnis.schienen;
-	}
-
-	/**
-	 * Liefert die Menge aller Schienen.
-	 *
-	 * @param idSchueler           Die Datenbank-ID des Schülers.
-	 * @param fixiereBelegteKurse  falls TRUE, werden alle Kurse fixiert, in denen der Schüler momentan ist.
-	 *
-	 * @return Die Menge aller Schienen.
-	 */
-	public @NotNull SchuelerblockungOutput getSchuelerblockungOutput(final long idSchueler, final boolean fixiereBelegteKurse) {
-
-		// Konstruiere die Eingabedaten "input".
-		final @NotNull SchuelerblockungInput input = new SchuelerblockungInput();
-		input.schienen = _parent.getSchienenAnzahl();
-
-		// Sammle alle Facharten des Schülers...
-		for (@NotNull final GostFachwahl fachwahl : _parent.getOfSchuelerFacharten(idSchueler)) {
-			input.fachwahlen.add(fachwahl);
-			input.fachwahlenText.add(_parent.getNameOfFachwahl(fachwahl));
-			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
-
-			// Sammle alle potentiellen Kurse der Fachart des Schülers...
-			for (final @NotNull GostBlockungsergebnisKurs kursE : getOfFachartKursmenge(fachartID)) {
-				final @NotNull SchuelerblockungInputKurs kursS = new SchuelerblockungInputKurs();
-				final long idKurs = kursE.id;
-				kursS.id = idKurs;
-				kursS.fach = kursE.fachID;
-				kursS.kursart = kursE.kursart;
-				kursS.istGesperrt = getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs);
-				kursS.istFixiert = getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
-                                   || (fixiereBelegteKurse && getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs));
-				DeveloperNotificationException.ifTrue("kursS.istGesperrt && kursS.istFixiert", kursS.istGesperrt && kursS.istFixiert);
-				kursS.anzahlSuS = getOfKursAnzahlSchueler(idKurs);
-				kursS.schienen = new int[kursE.schienen.size()];
-				for (int i = 0; i < kursS.schienen.length; i++)
-					kursS.schienen[i] = _parent.getSchiene(kursE.schienen.get(i)).nummer;
-				input.kurse.add(kursS);
-			}
-		}
-
-		// Berechne die Zuordnung und gib sie zurück.
-		return new SchuelerblockungAlgorithmus().handle(input);
 	}
 
 	/**
