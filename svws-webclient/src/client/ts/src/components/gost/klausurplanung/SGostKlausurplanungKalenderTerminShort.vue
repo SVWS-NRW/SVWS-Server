@@ -16,7 +16,7 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const klausuren = props.kursklausurmanager().getKursklausuren(props.termin.id);
+	const klausuren = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
 	const klausurBezeichnungen = () => [...klausuren].reduce((retVal, klaus) => retVal += klaus.kursKurzbezeichnung + ", ", "");
 
 </script>

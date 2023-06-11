@@ -133,7 +133,7 @@
 		"bg-error": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
 	});
 
-	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermine(quartal.value));
+	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(quartal.value));
 
 	const algMode = ref("algNormal");
 	const lkgkMode = ref("lkgkMix");
@@ -142,7 +142,7 @@
 	const blocken = async () => {
 		loading.value = true;
 		modal.value.closeModal();
-		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTermin(quartal.value);
+		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(quartal.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
 		if (algMode.value === "algNormal")

@@ -89,7 +89,6 @@ export class RouteDataGostKlausurplanung {
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		let view: RouteNode<any, any> = this._state.value.view;
-		console.log("View", view);
 		// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
 		const listKurse = await api.server.getKurse(api.schema);
 		const kursManager = new KursManager(listKurse);
@@ -160,13 +159,9 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const stundenplandaten = await api.server.getStundenplan(api.schema, 1);
-		console.log("stundenplandaten", stundenplandaten);
 		const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, 1);
-		console.log("unterrichte", unterrichte);
 		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, 1);
-		console.log("pausenaufsichten", pausenaufsichten);
 		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, 1);
-		console.log("unterrichtsverteilung", unterrichtsverteilung);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 		const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);

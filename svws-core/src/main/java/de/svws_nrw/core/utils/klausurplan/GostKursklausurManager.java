@@ -175,7 +175,8 @@ public class GostKursklausurManager {
 
 			// aus _mapTerminKursklausuren löschen
 			for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> e : _mapTerminKursklausuren.entrySet()) {
-				@NotNull ArrayList<@NotNull GostKursklausur> list = e.getValue();
+				@NotNull
+				final ArrayList<@NotNull GostKursklausur> list = e.getValue();
 				if (list.contains(klausur)) {
 					oldTerminId = e.getKey();
 					list.remove(klausur);
@@ -282,7 +283,7 @@ public class GostKursklausurManager {
 		}
 		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
 
-		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(termin.id);
+		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausurenByTermin(termin.id);
 		if (listKlausurenZuTermin != null) {
 			listKlausurenZuTermin = new ArrayList<>(listKlausurenZuTermin);
 			for (final @NotNull GostKursklausur k : listKlausurenZuTermin) {
@@ -296,13 +297,30 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert das GostKursklausur-Objekt zum übergebenen Termin und Kurs
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 * @param idKurs die ID des Kurses
+	 *
+	 * @return das GostKursklausur-Objekt
+	 */
+	public GostKursklausur getKursklausurByTerminKurs(final Long idTermin, final Long idKurs) {
+		final List<@NotNull GostKursklausur> klausuren = getKursklausurenByTermin(idTermin);
+		for (final @NotNull GostKursklausur klaus : klausuren) {
+			if (klaus.idKurs == idKurs)
+				return klaus;
+		}
+		return null;
+	}
+
+	/**
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Termin
 	 *
 	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(final Long idTermin) {
+	public @NotNull List<@NotNull GostKursklausur> getKursklausurenByTermin(final Long idTermin) {
 		final List<@NotNull GostKursklausur> klausuren = _mapTerminKursklausuren.get(idTermin == null ? -1 : idTermin);
 		return klausuren != null ? klausuren : new ArrayList<>();
 	}
@@ -323,7 +341,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public List<@NotNull GostKursklausur> getKursklausuren(final int quartal) {
+	public List<@NotNull GostKursklausur> getKursklausurenByQuartal(final int quartal) {
 		return _mapQuartalKursKlausuren.get(quartal);
 	}
 
@@ -334,7 +352,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin() {
-		return getKursklausuren(-1L);
+		return getKursklausurenByTermin(-1L);
 	}
 
 	/**
@@ -345,7 +363,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
-	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTermin(final int quartal) {
+	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTerminByQuartal(final int quartal) {
 		final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapTerminKursklausuren == null) {
 			// TODO Fehlerbehandlung?
@@ -438,7 +456,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine(final int quartal) {
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByQuartal(final int quartal) {
 		final List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 		return termine != null ? termine : new ArrayList<>();
 	}
@@ -457,7 +475,7 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull Long> gibKonfliktTerminInternKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
 		final @NotNull List<@NotNull Long> konflikte = new ArrayList<>();
 
-		final List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(termin.id);
+		final List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausurenByTermin(termin.id);
 		if (listKlausurenZuTermin == null)
 			return konflikte;
 
@@ -506,7 +524,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausur(final long idTermin, final long idKursklausur) {
+	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausurIds(final long idTermin, final long idKursklausur) {
 		final GostKursklausur klausur = _mapIdKursklausur.get(idKursklausur);
 		final GostKlausurtermin termin = _mapIdKlausurtermin.get(idTermin);
 
@@ -528,13 +546,13 @@ public class GostKursklausurManager {
 	 */
 	public int gibAnzahlKonflikteZuTermin(final long idTermin) {
 		int anzahl = 0;
-		final List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausuren(idTermin);
+		final List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausurenByTermin(idTermin);
 		if (listKlausurenZuTermin != null) {
 			final List<@NotNull GostKursklausur> copyListKlausurenZuTermin = new ArrayList<>(listKlausurenZuTermin);
 			for (final @NotNull GostKursklausur k1 : listKlausurenZuTermin) {
 				copyListKlausurenZuTermin.remove(k1);
 				for (final @NotNull GostKursklausur k2 : copyListKlausurenZuTermin)
-					anzahl += gibKonfliktKursklausurKursklausur(k1.id, k2.id).size();
+					anzahl += gibKonfliktKursklausurKursklausurIds(k1.id, k2.id).size();
 			}
 		}
 		return anzahl;
@@ -550,7 +568,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
-	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausur(final long idKursklausur1, final long idKursklausur2) {
+	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausurIds(final long idKursklausur1, final long idKursklausur2) {
 		final GostKursklausur klausur1 = _mapIdKursklausur.get(idKursklausur1);
 		final GostKursklausur klausur2 = _mapIdKursklausur.get(idKursklausur2);
 		if (klausur1 == null || klausur2 == null) {

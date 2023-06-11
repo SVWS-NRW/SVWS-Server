@@ -12,7 +12,7 @@
 					</svws-ui-drag-data>
 				</ul>
 			</svws-ui-drop-data>
-			<div class="flex flex-row flex-wrap gap-4 w-full h-full">
+			<div class="flex flex-row flex-wrap gap-4 w-full">
 				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 3" :starting-day-of-week="1" :enable-drag-drop="false" :items="termineMit"
 					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell" :display-week-numbers="true">
 					<template #header="{ headerProps }">
@@ -28,7 +28,7 @@
 							<tr class="border-b last:border-0" v-for="stunde in 6" :key="stunde">
 								<td class="border-r">{{ stunde }}</td>
 								<svws-ui-drop-data @drop="onDrop($event, day, stunde)" class="w-full" tag="td">
-									&nbsp;&nbsp;
+									<span v-if="dragTermin !== null && sumSchreiber(day, stunde) > 0">{{ sumSchreiber(day, stunde) }}</span> <span v-for="kurs in kurseGefiltert(day, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
 								</svws-ui-drop-data>
 							</tr>
 						</table>
@@ -47,7 +47,8 @@
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@core";
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@core";
+	import { ArrayList} from "@core";
 	import { Wochentag } from "@core";
 
 	const props = defineProps<{
@@ -75,6 +76,30 @@
 		"bg-green-100": dragTermin.value !== null && dragTermin.value.datum !== null,
 	});
 
+	const kursInfos = (idKurs: number) => {
+		const test = props.kursmanager.get(idKurs);
+		return test!.kuerzel/* + " " + props.kursklausurmanager().getKursklausurByTerminKurs(dragTermin.value!.id, idKurs)!.schuelerIds.size() + "/??"*/;
+	}
+
+	function kurseGefiltert(day: any, stunde: number) {
+		const kursIds = new ArrayList<number>();
+		if (dragTermin.value !== null) {
+			for (const klausur of props.kursklausurmanager().getKursklausurenByTermin(dragTermin.value.id).toArray() as GostKursklausur[]) {
+				kursIds.add(klausur.idKurs);
+			}
+		}
+		return props.stundenplanmanager.getKurseGefiltert( kursIds, 1, Wochentag.fromIDorException(day.getDay() + 1), stunde);
+	}
+
+	function sumSchreiber(day: any, stunde: number) {
+		const kurse = kurseGefiltert(day, stunde);
+		let summe = 0;
+		for (const klausur of kurse) {
+			summe += props.kursklausurmanager().getKursklausurByTerminKurs(dragTermin.value!.id, klausur)!.schuelerIds.size();
+		}
+		return summe;
+	}
+
 	const dragTermin = ref<GostKlausurtermin | null>(null);
 	const dragStatus = (termin: GostKlausurtermin | null) => dragTermin.value = termin;
 
@@ -89,16 +114,13 @@
 	});
 
 	const onDrop = async (item: GostKlausurtermin, date: Date | null, stunde: number) => {
-		console.log(date);
 		const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
 		if (termin !== null) {
 			if (date !== null) {
 				date.setDate(date.getDate() + 1);
 				termin.datum = date.toISOString().split('T')[0];
 				props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde);
-				console.log(props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde));
 				termin.startzeit = props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde).stundenbeginn;
-				console.log(termin);
 			} else {
 				termin.datum = null;
 			}
