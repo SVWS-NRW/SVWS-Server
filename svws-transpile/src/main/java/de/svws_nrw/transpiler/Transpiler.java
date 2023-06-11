@@ -1,6 +1,7 @@
 package de.svws_nrw.transpiler;
 
 import java.io.File;
+import java.text.Collator;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1081,6 +1082,18 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Return the type mirror for the specified tree node
+	 *
+	 * @param node    the tree node
+	 *
+	 * @return the type mirror
+	 */
+	TypeMirror getTypeMirror(final Tree node) {
+		return trees.getTypeMirror(getTreePath(node));
+	}
+
+
+	/**
 	 * Returns the type element for the specified canonical name
 	 *
 	 * @param name   the canonical name
@@ -1426,7 +1439,19 @@ public final class Transpiler extends AbstractProcessor {
 						}
 					}
 
-					// TODO substitute the type if a type variable is used inside a class expression type - check recursively
+					// TODO substitute the type if a type variable is used inside a class expression type
+					if ((elemType instanceof final ExpressionClassType ect) && (paramType instanceof final ExpressionClassType pect)) {
+						// TODO handle case where ect is a supertype of pect
+						// TODO handle case where a type parameter ist deep inside the method parameter definition
+						if (Collator.getInstance().equals(ect.getFullQualifiedName(), pect.getFullQualifiedName())) {
+							final List<ExpressionType> ectArgs = ect.getTypeArguments();
+							final List<ExpressionType> pectArgs = pect.getTypeArguments();
+							if (ectArgs.size() != pectArgs.size())
+								throw new TranspilerException("Transpiler Error: Unexpected transpiler state - number of type arguments do not match during type analysis");
+							for (int j = 0; j < ectArgs.size(); j++)
+								ectArgs.set(j, pectArgs.get(j));
+						}
+					}
 
 					// Check whether it is assignable
 					final int a = elemType.isAssignable(this, paramType);

@@ -172,6 +172,9 @@ public final class ExpressionClassType extends ExpressionType {
 	 */
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final ParameterizedTypeTree tree) {
 		final ExpressionClassType temp = (ExpressionClassType) getExpressionType(transpiler, tree.getType());
+		final TypeMirror type = transpiler.getTypeMirror(tree);
+		if (type != null)
+			return getExpressionClassType(transpiler, type);
 		final ExpressionClassType result = new ExpressionClassType(
 			Kind.PARAMETERIZED_TYPE,
 			temp.toString(),
