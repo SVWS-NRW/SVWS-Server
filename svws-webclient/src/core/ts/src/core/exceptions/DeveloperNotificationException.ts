@@ -207,6 +207,21 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set..
+	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
+	 */
+	public static ifSetAddsDuplicate<E>(setName : string, set : JavaSet<E>, value : E) : void {
+		if (!set.add(value))
+			throw new DeveloperNotificationException(setName! + " hat bereits das Element " + value + "!")
+	}
+
+	/**
 	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @param <E>      Der Typ der Elemente der Liste
@@ -223,18 +238,23 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
-	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
+	 * Liefert das erste NICHT-NULL Element der Liste.
 	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set..
-	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
 	 *
-	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
+	 * @return das erste NICHT-NULL Element der Liste.
+	 *
+	 * @throws DeveloperNotificationException falls kein erstes NICHT-NULL Element existiert.
 	 */
-	public static ifSetAddsDuplicate<E>(setName : string, set : JavaSet<E>, value : E) : void {
-		if (!set.add(value))
-			throw new DeveloperNotificationException(setName! + " hat bereits das Element " + value + "!")
+	public static ifListGetFirstFailes<E>(listName : string, list : List<E>) : E {
+		if (list.isEmpty())
+			throw new DeveloperNotificationException(listName! + " hat kein erstes Element!")
+		const first : E | null = list.get(0);
+		if (first === null)
+			throw new DeveloperNotificationException(listName! + " hat zwar ein erstes Element, aber es ist NULL!")
+		return first;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

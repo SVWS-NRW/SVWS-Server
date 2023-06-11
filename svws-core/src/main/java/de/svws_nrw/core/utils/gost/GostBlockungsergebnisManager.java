@@ -211,9 +211,9 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
 
-		// _map_schienenID_fachartID_kurse
+		// Map: schienenID --> fachartID --> Kurse = Alle Kurse einer Fachart pro Schiene
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
-			_map_schienenID_fachartID_kurse.put(gSchiene.id, new HashMap<>());
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenID_fachartID_kurse, gSchiene.id, new HashMap<>());
 			for (final @NotNull Long fachartID : _map_fachartID_kursdifferenz.keySet())
 				getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList<>());
 		}
@@ -224,36 +224,33 @@ public class GostBlockungsergebnisManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kurse, gSchueler.id, new HashSet<@NotNull GostBlockungsergebnisKurs>());
 			// Map: schuelerID --> Anzahl Kollisionen
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
+			// Map: schuelerID --> (fachID --> Kurs)
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_fachID_kurs, gSchueler.id, new HashMap<>());
+			// Map: schuelerID --> (schienenID --> Kurse)
+			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_schienenID_kurse, gSchueler.id, new HashMap<>());
 		}
 
-		// Fachwahlen kopieren und hinzufügen.
-		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
-			_map_schuelerID_fachID_kurs.put(gSchueler.id, new HashMap<>());
-		final String strErrorUnbekannteFachwahl = "Schüler %d hat eine Fachwahl ist aber unbekannt!";
+		// Map: schuelerID --> (FachID --> Kurs) = Fachwahlen kopieren und hinzufügen
 		final String strErrorDoppeltesFach = "Schüler %d hat Fach %d doppelt!";
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			final Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = _map_schuelerID_fachID_kurs.get(gFachwahl.schuelerID);
-			if (mapFachKurs == null)
-				throw new DeveloperNotificationException(strErrorUnbekannteFachwahl.formatted(gFachwahl.schuelerID));
+			final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, gFachwahl.schuelerID);
 			if (mapFachKurs.put(gFachwahl.fachID, null) != null)
 				throw new DeveloperNotificationException(strErrorDoppeltesFach.formatted(gFachwahl.schuelerID, gFachwahl.fachID));
 		}
 
-		// _map_schuelerID_schienenID_kurse
-		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
-			_map_schuelerID_schienenID_kurse.put(gSchueler.id, new HashMap<>());
+		// Map: schuelerID --> (schienenID --> Kurse) = Alle Kurse des Schülers pro Schiene
+		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
 			for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 				final HashSet<@NotNull GostBlockungsergebnisKurs> newSet = new HashSet<>();
 				getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, newSet);
 			}
-		}
 
 		// Zuordnungen kopieren (diese können leer sein).
 		final HashSet<@NotNull Long> kursBearbeitet = new HashSet<>();
 		for (final @NotNull GostBlockungsergebnisSchiene schieneOld : pOld.schienen)
 			for (final @NotNull GostBlockungsergebnisKurs kursOld : schieneOld.kurse) {
 				setKursSchiene(kursOld.id, schieneOld.id, true);
-				if (kursBearbeitet.add(kursOld.id))
+				if (kursBearbeitet.add(kursOld.id)) // Bei Multikursen dürfen SuS nicht doppelt hinzugefügt werden.
 					for (final @NotNull Long schuelerID : kursOld.schueler)
 						setSchuelerKurs(schuelerID, kursOld.id, true);
 			}
@@ -270,11 +267,8 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
 			switch (typ) {
-				case SCHUELER_FIXIEREN_IN_KURS: // 4
-					stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
-					break;
-				case SCHUELER_VERBIETEN_IN_KURS: // 5
-					stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
+				case KURSART_SPERRE_SCHIENEN_VON_BIS: // 1
+					stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
 					break;
 				case KURS_FIXIERE_IN_SCHIENE: // 2
 					stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
@@ -282,8 +276,11 @@ public class GostBlockungsergebnisManager {
 				case KURS_SPERRE_IN_SCHIENE: // 3
 					stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
 					break;
-				case KURSART_SPERRE_SCHIENEN_VON_BIS: // 1
-					stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
+				case SCHUELER_FIXIEREN_IN_KURS: // 4
+					stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
+					break;
+				case SCHUELER_VERBIETEN_IN_KURS: // 5
+					stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
 					break;
 				case KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 6
 					stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
@@ -396,112 +393,112 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Fügt den Schüler dem Kurs hinzu.<br>
 	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, wird der Schüler nicht hinzugefügt.
-	 *          Stattdessen wird diese ungültige Wahl gespeichert.
+	 *          Stattdessen wird die ungültige Wahl in einer Map gespeichert.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
-	private void stateSchuelerKursHinzufuegen(final long pSchuelerID, final long pKursID) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
+	private void stateSchuelerKursHinzufuegen(final long idSchueler, final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
 		// Ungültige Wahlen extra behandeln.
-		if (!getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
-			stateSchuelerKursUngueltigeWahlHinzufuegen(pSchuelerID, kurs);
+		if (!getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
+			stateSchuelerKursUngueltigeWahlHinzufuegen(idSchueler, kurs);
 			return;
 		}
 
 		// Wurde das Fach bereits einem anderen Kurs zugeordnet?
-		if (getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) != null) // wirft ggf. Exception
+		if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) != null) // wirft ggf. Exception
 			return;
 
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
-		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(pKursID);
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(pSchuelerID);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
+		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
+		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(idSchueler);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
-		kurs.schueler.add(pSchuelerID); // Data-Objekt aktualisieren
+		kurs.schueler.add(idSchueler); // Data-Objekt aktualisieren
 		kurseOfSchueler.add(kurs);
-		schuelerIDsOfKurs.add(pSchuelerID);
+		schuelerIDsOfKurs.add(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		mapSFK.put(fachID, kurs);
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
-			stateSchuelerSchieneHinzufuegen(pSchuelerID, schieneID, kurs);
+			stateSchuelerSchieneHinzufuegen(idSchueler, schieneID, kurs);
 		stateRegelvalidierung();
 	}
 
 	/**
-	 * Entfernt den Schüler aus dem Kurs.
+	 * Entfernt den Schüler aus dem Kurs.<br>
+	 * Hinweis: Ist die Wahl des Kurses für diesen Schüler ungültig, so wird der Schüler aus der zuvor gespeichert
+	 *          Zuordnung aller ungültigen Wahlen gelöscht.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 */
-	private void stateSchuelerKursEntfernen(final long pSchuelerID, final long pKursID) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
+	private void stateSchuelerKursEntfernen(final long idSchueler, final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final long fachID = kurs.fachID;
 
 		// Ungültige Wahlen extra behandeln.
-		if (!getOfSchuelerHatFachwahl(pSchuelerID, fachID, kurs.kursart)) {
-			stateSchuelerKursUngueltigeWahlEntfernen(pSchuelerID, kurs);
+		if (!getOfSchuelerHatFachwahl(idSchueler, fachID, kurs.kursart)) {
+			stateSchuelerKursUngueltigeWahlEntfernen(idSchueler, kurs);
 			return;
 		}
 
 		// Der Kurs ist derzeit gar nicht zugeordnet!
-		if (getOfSchuelerOfFachZugeordneterKurs(pSchuelerID, fachID) != kurs) // wirft ggf. Exception
+		if (getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID) != kurs) // wirft ggf. Exception
 			return;
 
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(pSchuelerID);
-		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(pKursID);
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(pSchuelerID);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
+		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
+		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(idSchueler);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
-		kurs.schueler.remove(pSchuelerID); // Data-Objekt aktualisieren
+		kurs.schueler.remove(idSchueler); // Data-Objekt aktualisieren
 		kurseOfSchueler.remove(kurs);
-		schuelerIDsOfKurs.remove(pSchuelerID);
+		schuelerIDsOfKurs.remove(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		mapSFK.put(fachID, null);
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
-			stateSchuelerSchieneEntfernen(pSchuelerID, schieneID, kurs);
+			stateSchuelerSchieneEntfernen(idSchueler, schieneID, kurs);
 		stateRegelvalidierung();
 	}
 
-	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long pSchuelerID, final @NotNull GostBlockungsergebnisKurs pKurs) {
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, pSchuelerID);
-		set.add(pKurs);
+	private void stateSchuelerKursUngueltigeWahlHinzufuegen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs idKurs) {
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = MapUtils.getOrCreateHashSet(_map_schuelerID_ungueltige_kurse, idSchueler);
+		set.add(idKurs);
 	}
 
-	private void stateSchuelerKursUngueltigeWahlEntfernen(final long pSchuelerID, final @NotNull GostBlockungsergebnisKurs pKurs) {
-	    final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_ungueltige_kurse, pSchuelerID);
-		set.remove(pKurs);
+	private void stateSchuelerKursUngueltigeWahlEntfernen(final long idSchueler, final @NotNull GostBlockungsergebnisKurs idKurs) {
+	    final @NotNull Set<@NotNull GostBlockungsergebnisKurs> set = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_ungueltige_kurse, idSchueler);
+		set.remove(idKurs);
 		if (set.isEmpty())
-			_map_schuelerID_ungueltige_kurse.remove(pSchuelerID);
+			_map_schuelerID_ungueltige_kurse.remove(idSchueler);
 	}
 
 	/**
 	 * Fügt den Kurs der Schiene hinzu.
 	 *
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 *
-	 * @return             FALSE, falls der Kurs bereits in der Schiene war, sonst TRUE.
+	 * @return FALSE, falls der Kurs bereits in der Schiene war, sonst TRUE.
 	 */
-	private boolean stateKursSchieneHinzufuegen(final long pKursID, final long pSchienenID) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
-		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(pSchienenID);
-		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(pKursID);
-		final long fachID = kurs.fachID;
-		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
+	private boolean stateKursSchieneHinzufuegen(final long idKurs, final long idSchiene) {
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(idKurs);
+		final long idFach = kurs.fachID;
+		final long idFachart = GostKursart.getFachartID(idFach, kurs.kursart);
 
 		if (schienenOfKurs.contains(schiene))
 			return false;
 
-		final List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
-		if (kursGruppe == null)
-			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL");
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
 
 		// Hinzufügen
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
@@ -521,24 +518,22 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Entfernt den Kurs aus der Schiene.
 	 *
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene Die Datenbank-ID der Schiene.
 	 *
-	 * @return             FALSE, falls der Kurs bereits nicht in der Schiene war, sonst TRUE.
+	 * @return FALSE, falls der Kurs bereits nicht in der Schiene war, sonst TRUE.
 	 */
-	private boolean stateKursSchieneEntfernen(final long pKursID, final long pSchienenID) {
-		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(pKursID);
-		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(pSchienenID);
-		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(pKursID);
-		final long fachID = kurs.fachID;
-		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
+	private boolean stateKursSchieneEntfernen(final long idKurs, final long idSchiene) {
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(idKurs);
+		final long idFach = kurs.fachID;
+		final long idFachart = GostKursart.getFachartID(idFach, kurs.kursart);
 
 		if (!schienenOfKurs.contains(schiene))
 			return false;
 
-		final List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneFachartKursmengeMap(pSchienenID).get(fachartID);
-		if (kursGruppe == null)
-			throw new DeveloperNotificationException("SchieneID=" + pSchienenID + " --> FachartID=" + fachartID + " --> NULL");
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
 
 		// Entfernen
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
@@ -555,51 +550,51 @@ public class GostBlockungsergebnisManager {
 		return true;
 	}
 
-	private void stateSchuelerSchieneHinzufuegen(final long pSchuelerID, final long pSchienenID, final @NotNull GostBlockungsergebnisKurs pKurs) {
+	private void stateSchuelerSchieneHinzufuegen(final long idSchueler, final long idSchiene, final @NotNull GostBlockungsergebnisKurs kurs) {
 		// Schiene --> Integer (erhöhen)
-		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(pSchienenID);
-		_map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl + 1);
+		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(idSchiene);
+		_map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl + 1);
 
 		// Schiene --> Schüler --> Kurse (erhöhen)
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
-		kursmenge.add(pKurs);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene);
+		kursmenge.add(kurs);
 
 		// Kollisionen erhöhen?
 		if (kursmenge.size() > 1) {
 			// Kollisionen der Schiene.
-			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
-			_map_schienenID_kollisionen.put(pSchienenID, schieneKollisionen + 1);
+			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene);
+			_map_schienenID_kollisionen.put(idSchiene, schieneKollisionen + 1);
 
 			// Kollisionen des Schülers.
-			final int schuelerKollisionen = getOfSchuelerAnzahlKollisionen(pSchuelerID);
-			_map_schuelerID_kollisionen.put(pSchuelerID, schuelerKollisionen + 1);
+			final int schuelerKollisionen = getOfSchuelerAnzahlKollisionen(idSchueler);
+			_map_schuelerID_kollisionen.put(idSchueler, schuelerKollisionen + 1);
 
 			// Kollisionen insgesamt.
 			_ergebnis.bewertung.anzahlSchuelerKollisionen++;
 		}
 	}
 
-	private void stateSchuelerSchieneEntfernen(final long pSchuelerID, final long pSchienenID, final @NotNull GostBlockungsergebnisKurs pKurs) {
+	private void stateSchuelerSchieneEntfernen(final long idSchueler, final long idSchiene, final @NotNull GostBlockungsergebnisKurs kurs) {
 		// // Schiene --> Integer (verringern)
-		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(pSchienenID);
+		final int schieneSchuelerzahl = getOfSchieneAnzahlSchueler(idSchiene);
 		DeveloperNotificationException.ifTrue("schieneSchuelerzahl == 0 --> Entfernen unmöglich!", schieneSchuelerzahl == 0);
-		_map_schienenID_schuelerAnzahl.put(pSchienenID, schieneSchuelerzahl - 1);
+		_map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl - 1);
 
 		// Schiene --> Schüler --> Integer (verringern)
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(pSchuelerID, pSchienenID);
-		kursmenge.remove(pKurs);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene);
+		kursmenge.remove(kurs);
 
 		// Kollisionen verringern?
 		if (!kursmenge.isEmpty()) {
 			// Kollisionen der Schiene.
-			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(pSchienenID);
+			final int schieneKollisionen = getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene);
 			DeveloperNotificationException.ifTrue("schieneKollisionen == 0 --> Entfernen unmöglich!", schieneKollisionen == 0);
-			_map_schienenID_kollisionen.put(pSchienenID, schieneKollisionen - 1);
+			_map_schienenID_kollisionen.put(idSchiene, schieneKollisionen - 1);
 
 			// Kollisionen des Schülers.
-			final int schuelerKollisionen = getOfSchuelerAnzahlKollisionen(pSchuelerID);
+			final int schuelerKollisionen = getOfSchuelerAnzahlKollisionen(idSchueler);
 			DeveloperNotificationException.ifTrue("schuelerKollisionen == 0 --> Entfernen unmöglich!", schuelerKollisionen == 0);
-			_map_schuelerID_kollisionen.put(pSchuelerID, schuelerKollisionen - 1);
+			_map_schuelerID_kollisionen.put(idSchueler, schuelerKollisionen - 1);
 
 			// Kollisionen insgesamt.
 			DeveloperNotificationException.ifTrue("Gesamtkollisionen == 0 --> Entfernen unmöglich!", _ergebnis.bewertung.anzahlSchuelerKollisionen == 0);
@@ -607,17 +602,15 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-	private void stateKursdifferenzUpdate(final long pFachartID) {
-		// Alte Kursdifferenz ist noch gespeichert.
-		final int oldKD = getOfFachartKursdifferenz(pFachartID);
+	private void stateKursdifferenzUpdate(final long idFachart) {
+		// Den ersten Kurs der Fachart holen.
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfFachartKursmenge(idFachart);
+		final @NotNull GostBlockungsergebnisKurs kurs1 = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
 
-		// Neue Kursdifferenz wird berechnet
-		final GostBlockungsergebnisKurs kurs1 = getOfFachartKursmenge(pFachartID).get(0);
-		if (kurs1 == null)
-			throw new DeveloperNotificationException("Fachart-ID " + pFachartID + " ohne Kurs!");
+		// Neue Kursdifferenz berechnen
 		int min = kurs1.schueler.size();
 		int max = min;
-		for (final @NotNull GostBlockungsergebnisKurs kurs : getOfFachartKursmenge(pFachartID)) {
+		for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
 			final int size = kurs.schueler.size();
 			min = Math.min(min, size);
 			max = Math.max(max, size);
@@ -625,16 +618,19 @@ public class GostBlockungsergebnisManager {
 		final int newKD = max - min;
 
 		// Kursdifferenz ändert sich nicht.
+		final int oldKD = getOfFachartKursdifferenz(idFachart);
 		if (newKD == oldKD)
 			return;
 
-		// Kursdifferenz ändert sich.
-		_map_fachartID_kursdifferenz.put(pFachartID, newKD);
+		// Kursdifferenz-Map aktualisieren.
+		_map_fachartID_kursdifferenz.put(idFachart, newKD);
 
+		// Kursdifferenz-Histogramm aktualisieren.
 		final int[] kursdifferenzen = _ergebnis.bewertung.kursdifferenzHistogramm;
 		kursdifferenzen[oldKD]--;
 		kursdifferenzen[newKD]++;
 
+		// Kursdifferenz-Max aktualisieren.
 		if (oldKD == _ergebnis.bewertung.kursdifferenzMax) {
 			if (newKD > oldKD) {
 				// Neues Maximum
@@ -648,27 +644,27 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager zurück.
+	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
 	 *
-	 * @return Der Daten-Manager, der zu diesem Ergebnis-Manager gehört.
+	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
 	 */
 	public GostBlockungsdatenManager getParent() {
 		return _parent;
 	}
 
 	/**
-	 * Liefert die Blockungs-ID. Das ist die ID des Elternteils.
+	 * Liefert die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
 	 *
-	 * @return Liefert die Blockungs-ID. Das ist die ID des Elternteils.
+	 * @return die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
 	 */
 	public long getBlockungsdatenID() {
 		return _ergebnis.blockungID;
 	}
 
 	/**
-	 * Liefert das Blockungsergebnis zurück.
+	 * Liefert das Blockungsergebnis.
 	 *
-	 * @return das Blockungsergebnis
+	 * @return das Blockungsergebnis.
 	 */
 	public @NotNull GostBlockungsergebnis getErgebnis() {
 		return _ergebnis;
@@ -779,20 +775,20 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülerkollisionen. Ist ein Schüler x mal in einer Schiene und ist x > 1, dann wird dies
-	 * als x-1 Kollisionen gezählt.
+	 * Liefert die Anzahl an Schülerkollisionen.<br>
+	 * Ist ein Schüler x mal in einer Schiene und ist x > 1, dann wird dies als x-1 Kollisionen gezählt.
 	 *
-	 * @return Die Gesamtzahl der Kollisionen zurück.
+	 * @return die Anzahl an Schülerkollisionen.
 	 */
 	public int getOfBewertungAnzahlKollisionen() {
 		return _ergebnis.bewertung.anzahlSchuelerKollisionen;
 	}
 
 	/**
-	 * Liefert die Anzahl nicht vollständig verteilter Kurse. Ein Multikurse der über zwei Schienen geht und gar nicht
-	 * zugeteilt wurde, wird doppelt gezählt.
+	 * Liefert die Anzahl nicht vollständig verteilter Kurse.<br>
+	 * Ein Multikurse der über mehrere Schienen geht und gar nicht zugeteilt wurde, wird mehrfach gezählt.
 	 *
-	 * @return Liefert die Anzahl nicht vollständig verteilter Kurse.
+	 * @return die Anzahl nicht vollständig verteilter Kurse.
 	 */
 	public int getOfBewertungAnzahlNichtZugeordneterKurse() {
 		return _ergebnis.bewertung.anzahlKurseNichtZugeordnet;
@@ -801,83 +797,85 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert die Anzahl an Fachwahlen, die nicht zugeordnet wurden.
 	 *
-	 * @return Die Anzahl an Fachwahlen, die nicht zugeordnet wurden.
+	 * @return die Anzahl an Fachwahlen, die nicht zugeordnet wurden.
 	 */
 	public int getOfBewertungAnzahlNichtzugeordneterFachwahlen() {
 		return _ergebnis.bewertung.anzahlSchuelerNichtZugeordnet;
 	}
 
 	/**
-	 * Ermittelt das Fach für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.
+	 * Ermittelt das {@link GostFach} für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.
 	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
 	 *
-	 * @param pFachID Die Datenbank-ID des Faches.
+	 * @param idFach Die Datenbank-ID des Faches.
+	 *
 	 * @return Das GostFach-Objekt.
 	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
 	 */
-	public @NotNull GostFach getFach(final long pFachID) throws DeveloperNotificationException {
-		return _parent.faecherManager().getOrException(pFachID);
+	public @NotNull GostFach getFach(final long idFach) throws DeveloperNotificationException {
+		return _parent.faecherManager().getOrException(idFach);
 	}
 
 	/**
-	 * Liefert die Menge aller Kurse mit dem angegebenen Fach. <br>
-	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
+	 * Liefert die Menge aller Kurse mit dem angegebenen Fach-ID.<br>
 	 *
-	 * @param pFachID  Die Datenbank-ID des Faches.
-	 * @return         Die Menge aller Kurse mit dem angegebenen Fach.
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Menge aller Kurse mit dem angegebenen Fach-ID.
+	 * @throws DeveloperNotificationException falls die Fach-ID unbekannt ist.
 	 */
-	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachKursmenge(final long pFachID) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachID_kurse, pFachID);
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachKursmenge(final long idFach) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachID_kurse, idFach);
 	}
 
 	/**
-	 * Liefert die Kursmenge, die zur Fachart gehört. <br>
+	 * Liefert die Kursmenge, die zur Fachart gehört.<br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
 	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
 	 * @return die Kursmenge, die zur Fachart gehört.
-	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
+	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfFachartKursmenge(final long idFachart) throws DeveloperNotificationException {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, idFachart);
 	}
 
 	/**
-	 * Liefert die Kursdifferenz der Fachart. <br>
+	 * Liefert die Kursdifferenz der Fachart.<br>
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @param  pFachartID           Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @return                      Die Kursdifferenz der Fachart.
+	 * @return die Kursdifferenz der Fachart.
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
-	public int getOfFachartKursdifferenz(final long pFachartID) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, pFachartID);
+	public int getOfFachartKursdifferenz(final long idFachart) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kursdifferenz, idFachart);
 	}
 
 	/**
-	 * Ermittelt den Schüler für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
-	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
+	 * Liefert das {@link Schueler}-Objekt zur übergebenen ID.<br>
+	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 *
-	 * @return Das Schueler-Objekt.
-	 * @throws     DeveloperNotificationException im Falle, dass die ID nicht bekannt ist
+	 * @return das {@link Schueler}-Objekt zur übergebenen ID.
+	 * @throws DeveloperNotificationException falls die Schüler-ID unbekannt ist.
 	 */
-	public @NotNull Schueler getSchuelerG(final long pSchuelerID) throws DeveloperNotificationException {
-		return _parent.getSchueler(pSchuelerID);
+	public @NotNull Schueler getSchuelerG(final long idSchueler) throws DeveloperNotificationException {
+		return _parent.getSchueler(idSchueler);
 	}
 
 	/**
 	 * Liefert einen Schüler-String im Format: 'Nachname, Vorname'.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param  idSchueler  Die Datenbank-ID des Schülers.
 	 *
-	 * @return             Einen Schüler-String im Format: 'Nachname, Vorname'.
+	 * @return einen Schüler-String im Format: 'Nachname, Vorname'.
 	 */
-	public @NotNull String getOfSchuelerNameVorname(final long pSchuelerID) {
-		final @NotNull Schueler schueler = _parent.getSchueler(pSchuelerID);
+	public @NotNull String getOfSchuelerNameVorname(final long idSchueler) {
+		final @NotNull Schueler schueler = _parent.getSchueler(idSchueler);
 		return schueler.nachname + ", " + schueler.vorname;
 	}
 
@@ -1489,6 +1487,18 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> getOfSchieneFachartKursmengeMap(final long pSchienenID) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_fachartID_kurse, pSchienenID);
+	}
+
+	/**
+	 * Liefert alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
+	 *
+	 * @param idSchienen Die Datenbank-ID der Schiene.
+	 * @param idFachart  Die ID der Fachart.
+	 *
+	 * @return alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
+	 */
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfSchieneOfFachartKursmenge(final long idSchienen, final long idFachart) {
+		return DeveloperNotificationException.ifMapGetIsNull(getOfSchieneFachartKursmengeMap(idSchienen), idFachart);
 	}
 
 	/**
