@@ -215,21 +215,6 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
-	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
-	 *
-	 * @param <E>      Der Typ der Elemente des Sets
-	 * @param setName  Der Name des Sets.
-	 * @param set      Das Set..
-	 * @param value    Das Element, welches hinzugefügt werden soll.
-	 *
-	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
-	 */
-	public static <@NotNull E> void ifSetAddsDuplicate(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
-		if (!set.add(value))
-			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!");
-	}
-
-	/**
 	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @param <E>      Der Typ der Elemente der Liste
@@ -243,6 +228,21 @@ public class DeveloperNotificationException extends RuntimeException {
 		if (list.contains(value))
 			throw new DeveloperNotificationException(listName + " hat bereits das Element " + value + "!");
 		list.add(value);
+	}
+
+	/**
+	 * Entfernt ein Element aus der Liste, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
+	 * @param value    Das Element, welches entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element nicht in der Liste existiert.
+	 */
+	public static <@NotNull E> void ifListRemoveFailes(final @NotNull String listName, @NotNull final List<@NotNull E> list, final @NotNull E value) throws DeveloperNotificationException {
+		if (!list.remove(value))
+			throw new DeveloperNotificationException(listName + " konnte Element " + value + " nicht entfernen!");
 	}
 
 	/**
@@ -264,5 +264,66 @@ public class DeveloperNotificationException extends RuntimeException {
 			throw new DeveloperNotificationException(listName + " hat zwar ein erstes Element, aber es ist NULL!");
 		return first;
 	}
+
+	/**
+	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set.
+	 * @param value    Das Element, welches hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
+	 */
+	public static <@NotNull E> void ifSetAddsDuplicate(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
+		if (!set.add(value))
+			throw new DeveloperNotificationException(setName + " hat bereits das Element " + value + "!");
+	}
+
+	/**
+	 * Entfernt ein Element aus dem Set, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set.
+	 * @param value    Das Element, welches entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
+	 */
+	public static <@NotNull E> void ifSetRemoveFailes(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
+		if (!set.remove(value))
+			throw new DeveloperNotificationException(setName + " konnte Element " + value + " nicht entfernen!");
+	}
+
+	/**
+	 * Überprüft, ob ein Set ein Element bereits enthält, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set.
+	 * @param value    Das Element, welches nicht vorkommen darf.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits im Set existiert.
+	 */
+	public static <@NotNull E>  void ifSetContains(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
+		if (set.contains(value))
+			throw new DeveloperNotificationException(setName + " hat darf " + value + " nicht enthalten!");
+	}
+
+	/**
+	 * Überprüft, ob ein Set ein Element nicht enthält, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente des Sets
+	 * @param setName  Der Name des Sets.
+	 * @param set      Das Set.
+	 * @param value    Das Element, welches vorkommen muss.
+	 *
+	 * @throws DeveloperNotificationException falls das Element nicht im Set existiert.
+	 */
+	public static <@NotNull E>  void ifSetNotContains(final @NotNull String setName, @NotNull final Set<@NotNull E> set, final @NotNull E value) throws DeveloperNotificationException {
+		if (!set.contains(value))
+			throw new DeveloperNotificationException(setName + " muss " + value + " enthalten!");
+	}
+
 
 }

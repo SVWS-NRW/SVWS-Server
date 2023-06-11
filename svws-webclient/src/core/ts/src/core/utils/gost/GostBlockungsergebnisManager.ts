@@ -459,8 +459,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateSchuelerKursUngueltigeWahlHinzufuegen(idSchueler : number, idKurs : GostBlockungsergebnisKurs) : void {
-		const set : JavaSet<GostBlockungsergebnisKurs> = MapUtils.getOrCreateHashSet(this._map_schuelerID_ungueltige_kurse, idSchueler);
-		set.add(idKurs);
+		MapUtils.getOrCreateHashSet(this._map_schuelerID_ungueltige_kurse, idSchueler).add(idKurs);
 	}
 
 	private stateSchuelerKursUngueltigeWahlEntfernen(idSchueler : number, idKurs : GostBlockungsergebnisKurs) : void {
@@ -475,29 +474,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 * @param  idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return FALSE, falls der Kurs bereits in der Schiene war, sonst TRUE.
 	 */
-	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : boolean {
+	private stateKursSchieneHinzufuegen(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
+		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
 		const idFach : number = kurs.fachID;
 		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		if (schienenOfKurs.contains(schiene))
-			return false;
 		const kursGruppe : List<GostBlockungsergebnisKurs> = this.getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
-		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kurs.schienen.add(schiene.id);
-		schiene.kurse.add(kurs);
-		schienenOfKurs.add(schiene);
+		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
+		DeveloperNotificationException.ifListAddsDuplicate("kurs.schienen", kurs.schienen, schiene.id);
+		DeveloperNotificationException.ifListAddsDuplicate("schiene.kurse", schiene.kurse, kurs);
+		DeveloperNotificationException.ifSetAddsDuplicate("setSchienenOfKurs", setSchienenOfKurs, schiene);
 		for (const schuelerID of kurs.schueler)
 			this.stateSchuelerSchieneHinzufuegen(schuelerID!, schiene.id, kurs);
-		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
+		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene += kursGruppe.isEmpty() ? 0 : 1;
-		kursGruppe.add(kurs);
+		DeveloperNotificationException.ifListAddsDuplicate("kursGruppe", kursGruppe, kurs);
 		this.stateRegelvalidierung();
-		return true;
 	}
 
 	/**
@@ -505,29 +499,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 * @param  idSchiene Die Datenbank-ID der Schiene.
-	 *
-	 * @return FALSE, falls der Kurs bereits nicht in der Schiene war, sonst TRUE.
 	 */
-	private stateKursSchieneEntfernen(idKurs : number, idSchiene : number) : boolean {
+	private stateKursSchieneEntfernen(idKurs : number, idSchiene : number) : void {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
-		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
+		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
 		const idFach : number = kurs.fachID;
 		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		if (!schienenOfKurs.contains(schiene))
-			return false;
 		const kursGruppe : List<GostBlockungsergebnisKurs> = this.getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
-		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kurs.schienen.remove(schiene.id);
-		schiene.kurse.remove(kurs);
-		schienenOfKurs.remove(schiene);
+		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
+		DeveloperNotificationException.ifListRemoveFailes("kurs.schienen", kurs.schienen, schiene.id);
+		DeveloperNotificationException.ifListRemoveFailes("schiene.kurse", schiene.kurse, kurs);
+		DeveloperNotificationException.ifSetRemoveFailes("setSchienenOfKurs", setSchienenOfKurs, schiene);
 		for (const schuelerID of kurs.schueler)
 			this.stateSchuelerSchieneEntfernen(schuelerID!, schiene.id, kurs);
-		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - schienenOfKurs.size());
-		kursGruppe.remove(kurs);
+		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
+		DeveloperNotificationException.ifListRemoveFailes("kursGruppe", kursGruppe, kurs);
 		this._ergebnis.bewertung.anzahlKurseMitGleicherFachartProSchiene -= kursGruppe.isEmpty() ? 0 : 1;
 		this.stateRegelvalidierung();
-		return true;
 	}
 
 	private stateSchuelerSchieneHinzufuegen(idSchueler : number, idSchiene : number, kurs : GostBlockungsergebnisKurs) : void {
@@ -855,18 +844,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler mindestens eine Kollision hat. <br>
-	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 *
-	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
-	 */
-	public getOfSchuelerHatKollision(idSchueler : number) : boolean {
-		return this.getOfSchuelerAnzahlKollisionen(idSchueler) > 0;
-	}
-
-	/**
 	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -892,6 +869,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerHatFachwahl(idSchueler : number, idFach : number, idKursart : number) : boolean {
 		return this._parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler mindestens eine Kollision hat. <br>
+	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
+	 */
+	public getOfSchuelerHatKollision(idSchueler : number) : boolean {
+		return this.getOfSchuelerAnzahlKollisionen(idSchueler) > 0;
 	}
 
 	/**
@@ -1221,11 +1210,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Kurs mindestens eine Kollision hat.
 	 */
 	public getOfKursHatKollision(idKurs : number) : boolean {
-		for (const schiene of this.getOfKursSchienenmenge(idKurs))
-			for (const idSchueler of this.getKursE(idKurs).schueler)
-				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
-					return true;
-		return false;
+		return this.getOfKursAnzahlKollisionen(idKurs) > 0;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
+	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 *
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
+	 */
+	public getOfKursAnzahlKollisionen(idKurs : number) : number {
+		return this.getOfKursSchuelermengeMitKollisionen(idKurs).size();
+	}
+
+	/**
+	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 *
+	 * @param  idKursID  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 */
+	public getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
+		const set : HashSet<number> = new HashSet();
+		for (const schiene of this.getOfKursSchienenmenge(idKursID))
+			for (const schuelerID of this.getKursE(idKursID).schueler)
+				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
+					set.add(schuelerID);
+		return set;
 	}
 
 	/**
@@ -1285,34 +1298,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
-	 *
-	 * @param  idKurs Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
-	 */
-	public getOfKursAnzahlKollisionen(idKurs : number) : number {
-		return this.getOfKursSchuelermengeMitKollisionen(idKurs).size();
-	}
-
-	/**
-	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
-	 *
-	 * @param  idKursID  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
-	 */
-	public getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
-		const set : HashSet<number> = new HashSet();
-		for (const schiene of this.getOfKursSchienenmenge(idKursID))
-			for (const schuelerID of this.getKursE(idKursID).schueler)
-				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
-					set.add(schuelerID);
-		return set;
-	}
-
-	/**
 	 * Liefert TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.
@@ -1325,49 +1310,52 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes
-	 * {@link GostBlockungsdatenManager}. <br>
-	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
+	 * Liefert das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.<br>
+	 * Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.<br>
+	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
 	 *
-	 * @param pSchienenID Die ID der Schiene
-	 * @return Das GostBlockungSchiene-Objekt.
-	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
-	public getSchieneG(pSchienenID : number) : GostBlockungSchiene {
-		return this._parent.getSchiene(pSchienenID);
+	public getSchieneG(idSchiene : number) : GostBlockungSchiene {
+		return this._parent.getSchiene(idSchiene);
 	}
 
 	/**
-	 * Liefert die Schiene zur übergebenen ID. <br>
+	 * Liefert das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.<br>
 	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
 	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
-	 * @return Die Schiene zur übergebenen ID.
+	 * @return das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
 	public getSchieneE(idSchiene : number) : GostBlockungsergebnisSchiene {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schiene, idSchiene);
 	}
 
 	/**
-	 * Liefert die Schiene mit der übergebenen Nummer. <br>
-	 * Wirft eine {@link DeveloperNotificationException} wenn eine solche Schiene nicht existiert.
+	 * Liefert das zur Nummer zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.<br>
+	 * Wirft eine {@link DeveloperNotificationException} falls eine solche Schiene nicht existiert.
 	 *
 	 * @param nrSchiene Die Nummer der Schiene.
 	 *
-	 * @return Die Schiene mit der übergebenen Schienen-NR.
+	 * @return das zur Nummer zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
+	 * @throws DeveloperNotificationException falls eine solche Schiene nicht existiert.
 	 */
 	public getSchieneEmitNr(nrSchiene : number) : GostBlockungsergebnisSchiene {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenNr_schiene, nrSchiene);
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück. <br>
-	 * Falls ein Schüler mehrfach in der Schiene ist, wird er mehrfach gezählt!
+	 * Liefert die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück.<br>
+	 * Hinweis: Falls ein Schüler mehrfach in der Schiene ist, also mit Kollisionen, wird er mehrfach gezählt!
 	 *
 	 * @param idSchiene Die Datenbank-ID der Schiene.
 	 *
-	 * @return Die Anzahl an Schülern in der Schiene.
+	 * @return die Anzahl an Schülern in der Schiene mit der übergebenen ID zurück.
 	 */
 	public getOfSchieneAnzahlSchueler(idSchiene : number) : number {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schuelerAnzahl, idSchiene)!;
@@ -1383,9 +1371,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
+	 * Liefert TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return TRUE, falls die Schiene mindestens eine Schüler-Kollision hat.
 	 */
@@ -1394,12 +1382,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene zurück. <br>
-	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
+	 * Liefert die Anzahl an Schüler-Kollisionen der Schiene.<br>
+	 * Hinweis Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
 	 * @param idSchiene Die Datenbank-ID der Schiene.
 	 *
-	 * @return Die Anzahl an Schüler-Kollisionen in der Schiene.
+	 * @return die Anzahl an Schüler-Kollisionen der Schiene.
 	 */
 	public getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene : number) : number {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_kollisionen, idSchiene)!;
@@ -1630,14 +1618,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idSchiene                 Die Datenbank-ID der Schiene.
 	 * @param  hinzufuegenOderEntfernen  TRUE=Hinzufügen, FALSE=Entfernen
 	 *
-	 * @return  TRUE, falls die jeweilige Operation erfolgreich war.
-	 *
-	 * @throws DeveloperNotificationException  falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
+	 * @throws DeveloperNotificationException falls ein Fehler passiert, z. B. wenn es die Zuordnung bereits gab.
 	 */
-	public setKursSchiene(idKurs : number, idSchiene : number, hinzufuegenOderEntfernen : boolean) : boolean {
+	public setKursSchiene(idKurs : number, idSchiene : number, hinzufuegenOderEntfernen : boolean) : void {
 		if (hinzufuegenOderEntfernen)
-			return this.stateKursSchieneHinzufuegen(idKurs, idSchiene);
-		return this.stateKursSchieneEntfernen(idKurs, idSchiene);
+			this.stateKursSchieneHinzufuegen(idKurs, idSchiene);
+		else
+			this.stateKursSchieneEntfernen(idKurs, idSchiene);
 	}
 
 	/**

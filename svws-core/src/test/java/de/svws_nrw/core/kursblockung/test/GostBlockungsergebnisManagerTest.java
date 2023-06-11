@@ -158,11 +158,18 @@ class GostBlockungsergebnisManagerTest {
 				final long kursID = getRandom(mapKuSchiene.keySet(), lRandom);
 				final HashSet<Long> kuSchienen = mapKuSchiene.get(kursID);
 				if ((kuSchienen.size() < 1) || ((kuSchienen.size() == 1) && (lRandom.nextBoolean()))) {
-					// Hinzufügen
+					// Hinzufügen?
 					final List<GostBlockungsergebnisSchiene> schienenAlle = out.getMengeAllerSchienen();
-					final GostBlockungsergebnisSchiene schieneNeu = getRandom(schienenAlle, lRandom);
-					out.setKursSchiene(kursID, schieneNeu.id, true);
-					kuSchienen.add(schieneNeu.id);
+					final GostBlockungsergebnisSchiene schieneRnd = getRandom(schienenAlle, lRandom);
+					if (kuSchienen.contains(schieneRnd.id)) {
+						// Entfernen
+						out.setKursSchiene(kursID, schieneRnd.id, false);
+						kuSchienen.remove(schieneRnd.id);
+					} else {
+						// Hinzufügen
+						out.setKursSchiene(kursID, schieneRnd.id, true);
+						kuSchienen.add(schieneRnd.id);
+					}
 				} else {
 					// Entfernen
 					final long schieneAlt = getRandom(kuSchienen, lRandom);
