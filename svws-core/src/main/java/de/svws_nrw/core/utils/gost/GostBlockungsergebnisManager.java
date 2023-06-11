@@ -345,15 +345,19 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void stateRegelvalidierung7_kurs_verbieten_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		for (final @NotNull GostBlockungsergebnisSchiene schiene1 : getOfKursSchienenmenge(r.parameter.get(0)))
-			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : getOfKursSchienenmenge(r.parameter.get(1)))
+		final long idKurs1 = r.parameter.get(0);
+		final long idKurs2 = r.parameter.get(1);
+		for (final @NotNull GostBlockungsergebnisSchiene schiene1 : getOfKursSchienenmenge(idKurs1))
+			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : getOfKursSchienenmenge(idKurs2))
 				if (schiene1 == schiene2)
 					regelVerletzungen.add(r.id);
 	}
 
 	private void stateRegelvalidierung8_kurs_zusammen_mit_kurs(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(r.parameter.get(0));
-		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(r.parameter.get(1));
+		final long idKurs1 = r.parameter.get(0);
+		final long idKurs2 = r.parameter.get(1);
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
 		if (set1.size() < set2.size()) {
 			// "set1" muss in "set2" enthalten sein.
 			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
@@ -1143,18 +1147,19 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pKursID      Die Datenbank-ID des Kurses.
-	 * @return             TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 */
-	public boolean getOfSchuelerOfKursIstFixiert(final long pSchuelerID, final long pKursID) {
+	public boolean getOfSchuelerOfKursIstFixiert(final long idSchueler, final long idKurs) {
 		for (final @NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
 
 			if (typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS) {
 				final long schuelerID = r.parameter.get(0);
 				final long kursID = r.parameter.get(1);
-				if ((schuelerID == pSchuelerID) && (kursID == pKursID))
+				if ((schuelerID == idSchueler) && (kursID == idKurs))
 					return true;
 			}
 		}
@@ -1164,18 +1169,19 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pKursID      Die Datenbank-ID des Kurses.
-	 * @return             TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 */
-	public boolean getOfSchuelerOfKursIstGesperrt(final long pSchuelerID, final long pKursID) {
+	public boolean getOfSchuelerOfKursIstGesperrt(final long idSchueler, final long idKurs) {
 		for (final @NotNull GostBlockungRegel r : _parent.getMengeOfRegeln()) {
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(r.typ);
 
 			if (typ == GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS) {
 				final long schuelerID = r.parameter.get(0);
 				final long kursID = r.parameter.get(1);
-				if ((schuelerID == pSchuelerID) && (kursID == pKursID))
+				if ((schuelerID == idSchueler) && (kursID == idKurs))
 					return true;
 			}
 		}
@@ -1183,99 +1189,95 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt (Groß- und Kleinschreibung wird dabei ignoriert).
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pSubString   Der zu suchende Sub-String.
-	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param subString   Der zu suchende Sub-String.
+	 *
+	 * @return TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt (Groß- und Kleinschreibung wird dabei ignoriert).
 	 */
-	public boolean getOfSchuelerHatImNamenSubstring(final long pSchuelerID, final @NotNull String pSubString) {
-		final @NotNull Schueler schueler = getSchuelerG(pSchuelerID);
-		final @NotNull String text = pSubString.toLowerCase();
-		if (schueler.nachname.toLowerCase().contains(text))
-			return true;
-		return (schueler.vorname.toLowerCase().contains(text));
+	public boolean getOfSchuelerHatImNamenSubstring(final long idSchueler, final @NotNull String subString) {
+		final @NotNull Schueler schueler = getSchuelerG(idSchueler);
+		final @NotNull String text = subString.toLowerCase();
+		return schueler.nachname.toLowerCase().contains(text) || schueler.vorname.toLowerCase().contains(text);
 	}
 
 	/**
-	 * Ermittelt den Kurs für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
-	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
+	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
+	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
+	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
 	 *
-	 * @param  pKursID Die ID des Kurses.
-	 * @return Das GostBlockungKurs-Objekt.
-	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return den {@link GostBlockungKurs} zur übergebenen ID.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
-	public @NotNull GostBlockungKurs getKursG(final long pKursID) throws DeveloperNotificationException {
-		return _parent.getKurs(pKursID);
+	public @NotNull GostBlockungKurs getKursG(final long idKurs) throws DeveloperNotificationException {
+		return _parent.getKurs(idKurs);
 	}
 
 	/**
-	 * Liefert den Kurs (des Blockungsergebnisses) zur übergebenen ID. <br>
-	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
+	 * Liefert den {@link GostBlockungsergebnisKurs} zur übergebenen ID.<br>
+	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
 	 *
-	 * @return         Den Kurs (des Blockungsergebnisses) zur übergebenen ID.
+	 * @return den {@link GostBlockungsergebnisKurs} zur übergebenen ID.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
-	public @NotNull GostBlockungsergebnisKurs getKursE(final long pKursID) {
-		final GostBlockungsergebnisKurs kurs = _map_kursID_kurs.get(pKursID);
-		if (kurs == null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!");
-		return kurs;
+	public @NotNull GostBlockungsergebnisKurs getKursE(final long idKurs) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_kurs, idKurs);
 	}
 
 	/**
-	 * Liefert den Namen des Kurses. Der Name wird automatisch erzeugt aus dem Fach, der Kursart und der Nummer,
-	 * beispielsweise D-GK1.
+	 * Liefert den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return         Die Datenbank-ID des Kurses.
+	 * @return den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 */
-	public @NotNull String getOfKursName(final long pKursID) {
-		return _parent.getNameOfKurs(pKursID);
+	public @NotNull String getOfKursName(final long idKurs) {
+		return _parent.getNameOfKurs(idKurs);
 	}
 
 	/**
 	 * Liefert TRUE, falls der Kurs der Schiene zugeordnet ist.
 	 *
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 *
-	 * @return             TRUE, falls der Kurs der Schiene zugeordnet ist.
+	 * @return TRUE, falls der Kurs der Schiene zugeordnet ist.
 	 */
-	public boolean getOfKursOfSchieneIstZugeordnet(final long pKursID, final long pSchienenID) {
-		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(pSchienenID);
-		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(pKursID);
+	public boolean getOfKursOfSchieneIstZugeordnet(final long idKurs, final long idSchiene) {
+		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
+		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = getOfKursSchienenmenge(idKurs);
 		return schienenOfKurs.contains(schiene);
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind. <br>
-	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
+	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
+	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return zur Kurs-ID die zugehörige Menge aller Schüler-IDs.
+	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
 	 */
-	public @NotNull Set<@NotNull Long> getOfKursSchuelerIDmenge(final long pKursID) {
-		final Set<@NotNull Long> schuelerIDs = _map_kursID_schuelerIDs.get(pKursID);
-		if (schuelerIDs == null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!");
-		return schuelerIDs;
+	public @NotNull Set<@NotNull Long> getOfKursSchuelerIDmenge(final long idKurs) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schuelerIDs, idKurs);
 	}
 
 	/**
-	 * Liefert die Schienenmenge des Kurses.
+	 * Liefert die Schienenmenge des Kurses.<br>
+	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Schienenmenge des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Schienenmenge des Kurses.
+	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
 	 */
-	public @NotNull Set<@NotNull GostBlockungsergebnisSchiene> getOfKursSchienenmenge(final long pKursID) {
-		final Set<@NotNull GostBlockungsergebnisSchiene> schienenOfKurs = _map_kursID_schienen.get(pKursID);
-		if (schienenOfKurs == null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!");
-		return schienenOfKurs;
+	public @NotNull Set<@NotNull GostBlockungsergebnisSchiene> getOfKursSchienenmenge(final long idKurs) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schienen, idKurs);
 	}
 
 	/**
@@ -1297,34 +1299,42 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert TRUE, falls der Kurs mindestens eine Kollision hat. <br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Definition: Ein Schüler muss in einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
 	 * @return TRUE, falls der Kurs mindestens eine Kollision hat.
 	 */
-	public boolean getOfKursHatKollision(final long pKursID) {
-		for (final @NotNull GostBlockungsergebnisSchiene schiene :  getOfKursSchienenmenge(pKursID))
-			for (final @NotNull Long schuelerID : getKursE(pKursID).schueler)
-				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
+	public boolean getOfKursHatKollision(final long idKurs) {
+		for (final @NotNull GostBlockungsergebnisSchiene schiene :  getOfKursSchienenmenge(idKurs))
+			for (final @NotNull Long idSchueler : getKursE(idKurs).schueler)
+				if (getOfSchuelerOfSchieneKursmenge(idSchueler, schiene.id).size() > 1)
 					return true;
 		return false;
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen. <br>
+	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
 	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schülern des Kurses mit Kollisionen.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
 	 */
-	public int getOfKursAnzahlKollisionen(final long pKursID) {
+	public int getOfKursAnzahlKollisionen(final long idKurs) {
 		int summe = 0;
-		for (final @NotNull GostBlockungsergebnisSchiene schiene :  getOfKursSchienenmenge(pKursID))
-			for (final @NotNull Long schuelerID : getKursE(pKursID).schueler)
+		for (final @NotNull Long schuelerID : getKursE(idKurs).schueler) {
+			boolean hatKollision = false;
+			for (final @NotNull GostBlockungsergebnisSchiene schiene :  getOfKursSchienenmenge(idKurs))
 				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
-					summe++;
+					hatKollision = true;
+			if (hatKollision)
+				summe++;
+		}
 		return summe;
 	}
+
+	// TODO BAR refactored until here
 
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet.

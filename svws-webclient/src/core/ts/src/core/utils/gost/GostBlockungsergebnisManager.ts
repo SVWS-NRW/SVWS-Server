@@ -349,15 +349,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private stateRegelvalidierung7_kurs_verbieten_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		for (const schiene1 of this.getOfKursSchienenmenge(r.parameter.get(0)!))
-			for (const schiene2 of this.getOfKursSchienenmenge(r.parameter.get(1)!))
+		const idKurs1 : number = r.parameter.get(0).valueOf();
+		const idKurs2 : number = r.parameter.get(1).valueOf();
+		for (const schiene1 of this.getOfKursSchienenmenge(idKurs1))
+			for (const schiene2 of this.getOfKursSchienenmenge(idKurs2))
 				if (schiene1 as unknown === schiene2 as unknown)
 					regelVerletzungen.add(r.id);
 	}
 
 	private stateRegelvalidierung8_kurs_zusammen_mit_kurs(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(0)!);
-		const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(r.parameter.get(1)!);
+		const idKurs1 : number = r.parameter.get(0).valueOf();
+		const idKurs2 : number = r.parameter.get(1).valueOf();
+		const set1 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs1);
+		const set2 : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs2);
 		if (set1.size() < set2.size()) {
 			for (const schiene1 of set1)
 				if (!set2.contains(schiene1))
@@ -1062,17 +1066,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pKursID      Die Datenbank-ID des Kurses.
-	 * @return             TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 */
-	public getOfSchuelerOfKursIstFixiert(pSchuelerID : number, pKursID : number) : boolean {
+	public getOfSchuelerOfKursIstFixiert(idSchueler : number, idKurs : number) : boolean {
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 			if (typ as unknown === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS as unknown) {
 				const schuelerID : number = r.parameter.get(0).valueOf();
 				const kursID : number = r.parameter.get(1).valueOf();
-				if ((schuelerID === pSchuelerID) && (kursID === pKursID))
+				if ((schuelerID === idSchueler) && (kursID === idKurs))
 					return true;
 			}
 		}
@@ -1082,17 +1087,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pKursID      Die Datenbank-ID des Kurses.
-	 * @return             TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 */
-	public getOfSchuelerOfKursIstGesperrt(pSchuelerID : number, pKursID : number) : boolean {
+	public getOfSchuelerOfKursIstGesperrt(idSchueler : number, idKurs : number) : boolean {
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 			if (typ as unknown === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS as unknown) {
 				const schuelerID : number = r.parameter.get(0).valueOf();
 				const kursID : number = r.parameter.get(1).valueOf();
-				if ((schuelerID === pSchuelerID) && (kursID === pKursID))
+				if ((schuelerID === idSchueler) && (kursID === idKurs))
 					return true;
 			}
 		}
@@ -1100,99 +1106,95 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
-	 * Groß- und Kleinschreibung wird dabei ignoriert.
+	 * Liefert TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt (Groß- und Kleinschreibung wird dabei ignoriert).
 	 *
-	 * @param pSchuelerID  Die Datenbank-ID des Schülers.
-	 * @param pSubString   Der zu suchende Sub-String.
-	 * @return             TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param subString   Der zu suchende Sub-String.
+	 *
+	 * @return TRUE, falls der Sub-String im Nachnamen oder im Vornamen des Schülers vorkommt (Groß- und Kleinschreibung wird dabei ignoriert).
 	 */
-	public getOfSchuelerHatImNamenSubstring(pSchuelerID : number, pSubString : string) : boolean {
-		const schueler : Schueler = this.getSchuelerG(pSchuelerID);
-		const text : string = pSubString.toLowerCase();
-		if (JavaString.contains(schueler.nachname.toLowerCase(), text))
-			return true;
-		return (JavaString.contains(schueler.vorname.toLowerCase(), text));
+	public getOfSchuelerHatImNamenSubstring(idSchueler : number, subString : string) : boolean {
+		const schueler : Schueler = this.getSchuelerG(idSchueler);
+		const text : string = subString.toLowerCase();
+		return JavaString.contains(schueler.nachname.toLowerCase(), text) || JavaString.contains(schueler.vorname.toLowerCase(), text);
 	}
 
 	/**
-	 * Ermittelt den Kurs für die angegebene ID. Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
-	 * Erzeugt eine DeveloperNotificationException im Fehlerfall, dass die ID nicht bekannt ist.
+	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
+	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
+	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
 	 *
-	 * @param  pKursID Die ID des Kurses.
-	 * @return Das GostBlockungKurs-Objekt.
-	 * @throws DeveloperNotificationException im Falle, dass die ID nicht bekannt ist.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return den {@link GostBlockungKurs} zur übergebenen ID.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
-	public getKursG(pKursID : number) : GostBlockungKurs {
-		return this._parent.getKurs(pKursID);
+	public getKursG(idKurs : number) : GostBlockungKurs {
+		return this._parent.getKurs(idKurs);
 	}
 
 	/**
-	 * Liefert den Kurs (des Blockungsergebnisses) zur übergebenen ID. <br>
-	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
+	 * Liefert den {@link GostBlockungsergebnisKurs} zur übergebenen ID.<br>
+	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
 	 *
-	 * @return         Den Kurs (des Blockungsergebnisses) zur übergebenen ID.
+	 * @return den {@link GostBlockungsergebnisKurs} zur übergebenen ID.
+	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
-	public getKursE(pKursID : number) : GostBlockungsergebnisKurs {
-		const kurs : GostBlockungsergebnisKurs | null = this._map_kursID_kurs.get(pKursID);
-		if (kurs === null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!")
-		return kurs;
+	public getKursE(idKurs : number) : GostBlockungsergebnisKurs {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_kurs, idKurs);
 	}
 
 	/**
-	 * Liefert den Namen des Kurses. Der Name wird automatisch erzeugt aus dem Fach, der Kursart und der Nummer,
-	 * beispielsweise D-GK1.
+	 * Liefert den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return         Die Datenbank-ID des Kurses.
+	 * @return den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 */
-	public getOfKursName(pKursID : number) : string {
-		return this._parent.getNameOfKurs(pKursID);
+	public getOfKursName(idKurs : number) : string {
+		return this._parent.getNameOfKurs(idKurs);
 	}
 
 	/**
 	 * Liefert TRUE, falls der Kurs der Schiene zugeordnet ist.
 	 *
-	 * @param  pKursID     Die Datenbank-ID des Kurses.
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
 	 *
-	 * @return             TRUE, falls der Kurs der Schiene zugeordnet ist.
+	 * @return TRUE, falls der Kurs der Schiene zugeordnet ist.
 	 */
-	public getOfKursOfSchieneIstZugeordnet(pKursID : number, pSchienenID : number) : boolean {
-		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(pSchienenID);
-		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(pKursID);
+	public getOfKursOfSchieneIstZugeordnet(idKurs : number, idSchiene : number) : boolean {
+		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
+		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
 		return schienenOfKurs.contains(schiene);
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind. <br>
-	 * Wirft eine Exception, wenn der ID kein Kurs zugeordnet ist.
+	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
+	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Menge aller Schüler-IDs, die dem Kurs zugeordnet sind.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return zur Kurs-ID die zugehörige Menge aller Schüler-IDs.
+	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
 	 */
-	public getOfKursSchuelerIDmenge(pKursID : number) : JavaSet<number> {
-		const schuelerIDs : JavaSet<number> | null = this._map_kursID_schuelerIDs.get(pKursID);
-		if (schuelerIDs === null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!")
-		return schuelerIDs;
+	public getOfKursSchuelerIDmenge(idKurs : number) : JavaSet<number> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schuelerIDs, idKurs);
 	}
 
 	/**
-	 * Liefert die Schienenmenge des Kurses.
+	 * Liefert die Schienenmenge des Kurses.<br>
+	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Schienenmenge des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Schienenmenge des Kurses.
+	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
 	 */
-	public getOfKursSchienenmenge(pKursID : number) : JavaSet<GostBlockungsergebnisSchiene> {
-		const schienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> | null = this._map_kursID_schienen.get(pKursID);
-		if (schienenOfKurs === null)
-			throw new DeveloperNotificationException("Kurs-ID " + pKursID + " unbekannt!")
-		return schienenOfKurs;
+	public getOfKursSchienenmenge(idKurs : number) : JavaSet<GostBlockungsergebnisSchiene> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schienen, idKurs);
 	}
 
 	/**
@@ -1214,32 +1216,38 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls der Kurs mindestens eine Kollision hat. <br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Definition: Ein Schüler muss in einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
 	 * @return TRUE, falls der Kurs mindestens eine Kollision hat.
 	 */
-	public getOfKursHatKollision(pKursID : number) : boolean {
-		for (const schiene of this.getOfKursSchienenmenge(pKursID))
-			for (const schuelerID of this.getKursE(pKursID).schueler)
-				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
+	public getOfKursHatKollision(idKurs : number) : boolean {
+		for (const schiene of this.getOfKursSchienenmenge(idKurs))
+			for (const idSchueler of this.getKursE(idKurs).schueler)
+				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
 					return true;
 		return false;
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen. <br>
+	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
 	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schülern des Kurses mit Kollisionen.
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
 	 */
-	public getOfKursAnzahlKollisionen(pKursID : number) : number {
+	public getOfKursAnzahlKollisionen(idKurs : number) : number {
 		let summe : number = 0;
-		for (const schiene of this.getOfKursSchienenmenge(pKursID))
-			for (const schuelerID of this.getKursE(pKursID).schueler)
+		for (const schuelerID of this.getKursE(idKurs).schueler) {
+			let hatKollision : boolean = false;
+			for (const schiene of this.getOfKursSchienenmenge(idKurs))
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
-					summe++;
+					hatKollision = true;
+			if (hatKollision)
+				summe++;
+		}
 		return summe;
 	}
 
