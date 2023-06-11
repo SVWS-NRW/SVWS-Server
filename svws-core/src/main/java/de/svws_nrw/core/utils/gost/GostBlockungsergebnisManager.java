@@ -1410,8 +1410,8 @@ public class GostBlockungsergebnisManager {
 	public boolean getOfKursRemoveAllowed(final long idKurs) throws DeveloperNotificationException {
 		return getOfKursAnzahlSchueler(idKurs) == 0;
 	}
-	// TODO BAR refactored until here
 
+	// TODO BAR refactored until here
 	/**
 	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes
 	 * {@link GostBlockungsdatenManager}. <br>
