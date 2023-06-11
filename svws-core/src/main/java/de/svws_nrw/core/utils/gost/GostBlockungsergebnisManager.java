@@ -1314,52 +1314,34 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind.
 	 *
-	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind.
 	 */
-	public int getOfKursAnzahlKollisionen(final long idKurs) {
-		int summe = 0;
-		for (final @NotNull Long schuelerID : getKursE(idKurs).schueler) {
-			boolean hatKollision = false;
-			for (final @NotNull GostBlockungsergebnisSchiene schiene :  getOfKursSchienenmenge(idKurs))
-				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
-					hatKollision = true;
-			if (hatKollision)
-				summe++;
-		}
-		return summe;
-	}
-
-	// TODO BAR refactored until here
-
-	/**
-	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet.
-	 *
-	 * @param  pKursID  Die Datenbank-ID des Kurses.
-	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet.
-	 */
-	public int getOfKursAnzahlSchueler(final long pKursID) {
-		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(pKursID);
+	public int getOfKursAnzahlSchueler(final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
 		return kursE.schueler.size();
 	}
 
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
 	 *
-	 * @param  pKursID  Die Datenbank-ID des Kurses.
-	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
 	 */
-	public int getOfKursAnzahlSchuelerSchriftlich(final long pKursID) {
-		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(pKursID);
-		final long fachID = kursE.fachID;
+	public int getOfKursAnzahlSchuelerSchriftlich(final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
+		final long idFach = kursE.fachID;
 
 		int summe = 0;
-		for (final @NotNull Long schuelerID : kursE.schueler) {
-			final @NotNull GostFachwahl fachwahl = _parent.getOfSchuelerOfFachFachwahl(schuelerID, fachID);
+		for (final @NotNull Long idSchueler : kursE.schueler) {
+			final @NotNull GostFachwahl fachwahl = _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+			DeveloperNotificationException.ifTrue("fachwahl.schuelerID != idSchueler", fachwahl.schuelerID != idSchueler);
+			DeveloperNotificationException.ifTrue("fachwahl.kursartID != kursE.kursart", fachwahl.kursartID != kursE.kursart);
+			DeveloperNotificationException.ifTrue("fachwahl.fachID != idFach", fachwahl.fachID != idFach);
 			if (fachwahl.istSchriftlich)
 				summe++;
 		}
@@ -1370,49 +1352,65 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert die Anzahl an Schienen in denen der Kurs gerade ist.
 	 *
-	 * @param kursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schienen in denen der Kurs gerade ist.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schienen in denen der Kurs gerade ist.
 	 */
-	public int getOfKursAnzahlSchienenIst(final long kursID) {
-		return getOfKursSchienenmenge(kursID).size();
+	public int getOfKursAnzahlSchienenIst(final long idKurs) {
+		return getOfKursSchienenmenge(idKurs).size();
 	}
 
 	/**
 	 * Liefert die Anzahl an Schienen, die der Kurs haben sollte.
 	 *
-	 * @param kursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schienen, die der Kurs haben sollte.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schienen, die der Kurs haben sollte.
 	 */
-	public int getOfKursAnzahlSchienenSoll(final long kursID) {
-		return getKursE(kursID).anzahlSchienen;
+	public int getOfKursAnzahlSchienenSoll(final long idKurs) {
+		return getKursE(idKurs).anzahlSchienen;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
+	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 *
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
+	 */
+	public int getOfKursAnzahlKollisionen(final long idKurs) {
+		return getOfKursSchuelermengeMitKollisionen(idKurs).size();
 	}
 
 	/**
 	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * @param  idKursID  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 */
-	public @NotNull Set<@NotNull Long> getOfKursSchuelermengeMitKollisionen(final long pKursID) {
+	public @NotNull Set<@NotNull Long> getOfKursSchuelermengeMitKollisionen(final long idKursID) {
 		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
-		for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(pKursID))
-			for (final @NotNull Long schuelerID : getKursE(pKursID).schueler)
+		for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKursID))
+			for (final @NotNull Long schuelerID : getKursE(idKursID).schueler)
 				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
-					set.add(schuelerID);
+					set.add(schuelerID); // Set ist wichtig, da bei Multikursen ein Schüler mehrfach kollidieren kann.
 		return set;
 	}
 
 	/**
-	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
-	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
+	 * Liefert TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
-	 * @throws DeveloperNotificationException  Falls der Kurs nicht existiert.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
+	 * @throws DeveloperNotificationException falls der Kurs nicht existiert.
 	 */
-	public boolean getOfKursRemoveAllowed(final long pKursID) throws DeveloperNotificationException {
-		return getKursE(pKursID).schueler.isEmpty();
+	public boolean getOfKursRemoveAllowed(final long idKurs) throws DeveloperNotificationException {
+		return getOfKursAnzahlSchueler(idKurs) == 0;
 	}
+	// TODO BAR refactored until here
 
 	/**
 	 * Ermittelt die Schiene für die angegebene ID. Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes

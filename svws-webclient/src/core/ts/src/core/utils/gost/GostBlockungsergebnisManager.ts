@@ -1231,49 +1231,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind.
 	 *
-	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind.
 	 */
-	public getOfKursAnzahlKollisionen(idKurs : number) : number {
-		let summe : number = 0;
-		for (const schuelerID of this.getKursE(idKurs).schueler) {
-			let hatKollision : boolean = false;
-			for (const schiene of this.getOfKursSchienenmenge(idKurs))
-				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
-					hatKollision = true;
-			if (hatKollision)
-				summe++;
-		}
-		return summe;
-	}
-
-	/**
-	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet.
-	 *
-	 * @param  pKursID  Die Datenbank-ID des Kurses.
-	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet.
-	 */
-	public getOfKursAnzahlSchueler(pKursID : number) : number {
-		const kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
+	public getOfKursAnzahlSchueler(idKurs : number) : number {
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		return kursE.schueler.size();
 	}
 
 	/**
 	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
 	 *
-	 * @param  pKursID  Die Datenbank-ID des Kurses.
-	 * @return          Die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn schriftlich belegt haben.
 	 */
-	public getOfKursAnzahlSchuelerSchriftlich(pKursID : number) : number {
-		const kursE : GostBlockungsergebnisKurs = this.getKursE(pKursID);
-		const fachID : number = kursE.fachID;
+	public getOfKursAnzahlSchuelerSchriftlich(idKurs : number) : number {
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		const idFach : number = kursE.fachID;
 		let summe : number = 0;
-		for (const schuelerID of kursE.schueler) {
-			const fachwahl : GostFachwahl = this._parent.getOfSchuelerOfFachFachwahl(schuelerID!, fachID);
+		for (const idSchueler of kursE.schueler) {
+			const fachwahl : GostFachwahl = this._parent.getOfSchuelerOfFachFachwahl(idSchueler!, idFach);
+			DeveloperNotificationException.ifTrue("fachwahl.schuelerID != idSchueler", fachwahl.schuelerID !== idSchueler);
+			DeveloperNotificationException.ifTrue("fachwahl.kursartID != kursE.kursart", fachwahl.kursartID !== kursE.kursart);
+			DeveloperNotificationException.ifTrue("fachwahl.fachID != idFach", fachwahl.fachID !== idFach);
 			if (fachwahl.istSchriftlich)
 				summe++;
 		}
@@ -1283,48 +1267,63 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Anzahl an Schienen in denen der Kurs gerade ist.
 	 *
-	 * @param kursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schienen in denen der Kurs gerade ist.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schienen in denen der Kurs gerade ist.
 	 */
-	public getOfKursAnzahlSchienenIst(kursID : number) : number {
-		return this.getOfKursSchienenmenge(kursID).size();
+	public getOfKursAnzahlSchienenIst(idKurs : number) : number {
+		return this.getOfKursSchienenmenge(idKurs).size();
 	}
 
 	/**
 	 * Liefert die Anzahl an Schienen, die der Kurs haben sollte.
 	 *
-	 * @param kursID Die Datenbank-ID des Kurses.
-	 * @return Die Anzahl an Schienen, die der Kurs haben sollte.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schienen, die der Kurs haben sollte.
 	 */
-	public getOfKursAnzahlSchienenSoll(kursID : number) : number {
-		return this.getKursE(kursID).anzahlSchienen;
+	public getOfKursAnzahlSchienenSoll(idKurs : number) : number {
+		return this.getKursE(idKurs).anzahlSchienen;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
+	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 *
+	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
+	 */
+	public getOfKursAnzahlKollisionen(idKurs : number) : number {
+		return this.getOfKursSchuelermengeMitKollisionen(idKurs).size();
 	}
 
 	/**
 	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 *
-	 * @param  pKursID Die Datenbank-ID des Kurses.
-	 * @return Die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * @param  idKursID  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
 	 */
-	public getOfKursSchuelermengeMitKollisionen(pKursID : number) : JavaSet<number> {
+	public getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
-		for (const schiene of this.getOfKursSchienenmenge(pKursID))
-			for (const schuelerID of this.getKursE(pKursID).schueler)
+		for (const schiene of this.getOfKursSchienenmenge(idKursID))
+			for (const schuelerID of this.getKursE(idKursID).schueler)
 				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
 					set.add(schuelerID);
 		return set;
 	}
 
 	/**
-	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
-	 * Kriterium: Es dürfen keine Schüler dem Kurs zugeordnet sein.
+	 * Liefert TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
 	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
-	 * @throws DeveloperNotificationException  Falls der Kurs nicht existiert.
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
+	 * @throws DeveloperNotificationException falls der Kurs nicht existiert.
 	 */
-	public getOfKursRemoveAllowed(pKursID : number) : boolean {
-		return this.getKursE(pKursID).schueler.isEmpty();
+	public getOfKursRemoveAllowed(idKurs : number) : boolean {
+		return this.getOfKursAnzahlSchueler(idKurs) === 0;
 	}
 
 	/**
