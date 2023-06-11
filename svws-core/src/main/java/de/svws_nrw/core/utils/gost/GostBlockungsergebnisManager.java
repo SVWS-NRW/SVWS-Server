@@ -192,13 +192,11 @@ public class GostBlockungsergebnisManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schuelerIDs, eKurs.id, new HashSet<@NotNull Long>());
 
 			// Map: fachID --> Kursliste
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> fachKursliste = MapUtils.getOrCreateArrayList(_map_fachID_kurse, eKurs.fachID);
-			fachKursliste.add(eKurs);
+			MapUtils.getOrCreateArrayList(_map_fachID_kurse, eKurs.fachID).add(eKurs);
 
 			// Map: fachartID --> Kursliste
 			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			final @NotNull List<@NotNull GostBlockungsergebnisKurs> facharKursliste = MapUtils.getOrCreateArrayList(_map_fachartID_kurse, fachartID);
-			facharKursliste.add(eKurs);
+			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, fachartID).add(eKurs);
 
 			// Map: fachartID --> Kursdifferenz
 			if (!_map_fachartID_kursdifferenz.containsKey(fachartID)) {

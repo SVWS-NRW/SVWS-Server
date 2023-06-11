@@ -150,6 +150,8 @@ public abstract class ExpressionType implements Tree {
 			return new ExpressionPrimitiveType(type.getKind());
 		if (type.getKind() == TypeKind.TYPEVAR)
 			return ExpressionTypeVar.getExpressionTypeVariable(transpiler, type);
+		if (type.getKind() == TypeKind.VOID)
+			return new ExpressionTypeNone(type.getKind());
 		return ExpressionClassType.getExpressionClassType(transpiler, type);
 	}
 

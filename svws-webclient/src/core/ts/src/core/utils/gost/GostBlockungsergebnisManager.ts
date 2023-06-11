@@ -211,11 +211,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_kurs, eKurs.id, eKurs);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schienen, eKurs.id, new HashSet<GostBlockungsergebnisSchiene>());
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schuelerIDs, eKurs.id, new HashSet<number>());
-			const fachKursliste : List<GostBlockungsergebnisKurs> = MapUtils.getOrCreateArrayList(this._map_fachID_kurse, eKurs.fachID);
-			fachKursliste.add(eKurs);
+			MapUtils.getOrCreateArrayList(this._map_fachID_kurse, eKurs.fachID).add(eKurs);
 			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
-			const facharKursliste : List<GostBlockungsergebnisKurs> = MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, fachartID);
-			facharKursliste.add(eKurs);
+			MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, fachartID).add(eKurs);
 			if (!this._map_fachartID_kursdifferenz.containsKey(fachartID)) {
 				this._map_fachartID_kursdifferenz.put(fachartID, 0);
 				this._ergebnis.bewertung.kursdifferenzHistogramm[0]++;
@@ -800,7 +798,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(idFachart : number) : number {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, idFachart);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, idFachart)!;
 	}
 
 	/**
@@ -905,7 +903,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl an Kollisionen des Schülers.
 	 */
 	public getOfSchuelerAnzahlKollisionen(idSchueler : number) : number {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kollisionen, idSchueler);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kollisionen, idSchueler)!;
 	}
 
 	/**
@@ -1372,7 +1370,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Anzahl an Schülern in der Schiene.
 	 */
 	public getOfSchieneAnzahlSchueler(idSchiene : number) : number {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schuelerAnzahl, idSchiene);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_schuelerAnzahl, idSchiene)!;
 	}
 
 	/**
@@ -1404,7 +1402,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die Anzahl an Schüler-Kollisionen in der Schiene.
 	 */
 	public getOfSchieneAnzahlSchuelerMitKollisionen(idSchiene : number) : number {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_kollisionen, idSchiene);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_kollisionen, idSchiene)!;
 	}
 
 	/**

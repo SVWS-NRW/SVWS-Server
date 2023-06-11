@@ -775,6 +775,16 @@ public final class TranspilerUnit {
 		}
 
 		// check method invocation
+		final TypeMirror miTreeTypeMirror = transpiler.getTypeMirror(miTree);
+		if (miTreeTypeMirror != null) {
+			final Element e = transpiler.getElement(miTree);
+			if (e instanceof final ExecutableElement ee) {
+				allInvokedMethods.put(node, ee);
+			} else {
+				throw new TranspilerException("Transpiler Error: Expected method but got element of type " + e.getKind());
+			}
+			return ExpressionType.getExpressionType(transpiler, miTreeTypeMirror);
+		}
 		final ArrayList<ExpressionType> paramTypes = new ArrayList<>();
 		for (final ExpressionTree param : miTree.getArguments()) {
 			final ExpressionType paramType = allExpressionTypes.get(param);
