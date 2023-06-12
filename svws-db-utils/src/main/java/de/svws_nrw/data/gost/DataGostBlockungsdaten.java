@@ -851,9 +851,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				if (kursart == null)
 					continue;
 				mapKurse.put(kurs.ID, kurs);
-				if (kurs.Schienen == null)
-					continue;
-				for (final String strSchiene : kurs.Schienen.split(",")) {
+				String alleSchienen = kurs.Schienen;
+				if (alleSchienen == null)
+					alleSchienen = "1";
+				for (final String strSchiene : alleSchienen.split(",")) {
 					if ("".equals(strSchiene.trim()))
 						continue;
 					try {
