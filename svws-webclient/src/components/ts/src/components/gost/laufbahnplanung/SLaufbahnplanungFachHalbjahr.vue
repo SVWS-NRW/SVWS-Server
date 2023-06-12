@@ -31,8 +31,19 @@
 				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />
 			</div>
 			<span v-else>
-				<template v-if="wahl">
+				<template v-if="wahl && wahl !== '6'">
 					{{ wahl }}
+				</template>
+				<template v-else-if="wahl && wahl === '6'">
+					<svws-ui-tooltip color="danger" position="bottom">
+						<div class="inline-flex items-center">
+							<span>0</span>
+							<i-ri-error-warning-line class="text-error ml-0.5" />
+						</div>
+						<template #content>
+							Dieser Kurs gilt aufgrund von 0 Punkten als nicht belegt.
+						</template>
+					</svws-ui-tooltip>
 				</template>
 				<template v-else-if="bewertet || !moeglich">
 					<i-ri-prohibited-line />
@@ -53,9 +64,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import type { AbiturFachbelegung, AbiturFachbelegungHalbjahr, AbiturdatenManager, GostFach, GostFaecherManager,
-		GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@core";
-	import { GostSchriftlichkeit } from "@core";
+	import type { AbiturdatenManager, GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@core";
 	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
 
