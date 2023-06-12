@@ -871,9 +871,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<DTOSchuelerLeistungsdaten> listLeistungsdaten = conn.queryNamed(
 					"DTOSchuelerLeistungsdaten.kurs_id.multiple", mapKurse.keySet(), DTOSchuelerLeistungsdaten.class);
 			final List<Long> listLernabschnittIDs = listLeistungsdaten.stream().map(ld -> ld.Abschnitt_ID).toList();
-			final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = conn.queryNamed(
-					"DTOSchuelerLernabschnittsdaten.id.multiple", listLernabschnittIDs, DTOSchuelerLernabschnittsdaten.class)
-					.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
+			final Map<Long, DTOSchuelerLernabschnittsdaten> mapLernabschnitte = listLernabschnittIDs.isEmpty()
+					? new HashMap<>()
+					: conn.queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", listLernabschnittIDs, DTOSchuelerLernabschnittsdaten.class)
+						.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
 
 			// Bestimme die ID für die hochgeschriebene Blockung
 			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
@@ -908,6 +909,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final HashMap<Long, DTOGostBlockungKurs> mapKurseErstellt = new HashMap<>();
 			for (final DTOKurs kurs : listKurse) {
 				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
+				if (kursart == null)
+					continue;
 				mapKursIDs.put(kurs.ID, idKurs);
 				final String[] strKursnummer = kurs.KurzBez.split("\\D+");
 				int kursNummer = 1;
@@ -923,7 +926,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						if ("".equals(strSchiene.trim()))
 							continue;
 						try {
-							final long schienenID = mapSchienen.get(Integer.parseInt(strSchiene.trim()));
+							final Long schienenID = mapSchienen.get(Integer.parseInt(strSchiene.trim()));
+							if (schienenID == null)
+								throw new NullPointerException(); // Dies sollte nicht passieren, da zuvor die Schienen für die Kurse angelegt wurden.
 							schienen.add(schienenID);
 						} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 							// ignore exception
