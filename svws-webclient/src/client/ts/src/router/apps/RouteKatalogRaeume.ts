@@ -132,10 +132,6 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 		super.defaultChild = routeKatalogRaumDaten;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
-		return true;
-	}
-
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		await this.data.ladeListe();
 	}

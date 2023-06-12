@@ -61,6 +61,11 @@ export class RouteManager {
 		return RouteManager._instance;
 	}
 
+	/**
+	 * Gibt zurück, ob das Routing derzeit aktiv ist.
+	 *
+	 * @returns true, falls das Routing aktiv ist und ansonsten false
+	 */
 	public static isActive() : boolean {
 		const manager = RouteManager._instance;
 		if (manager === undefined)
@@ -68,16 +73,27 @@ export class RouteManager {
 		return manager.active;
 	}
 
+	/**
+	 * Der beforeEach-Handler ist Navigation-Guard, welcher prüft, ob eine Route angesteuert werden darf oder nicht.
+	 * Dabei wird das Routing so lange gesperrt, bis der afterEach-Handler ausgeführt wurde.
+	 * Schlägt der Navigation-Guard fehl, dann gibt es zwei mögliche Antworten:
+	 *   1. false, d.h. die Route ist ungültig
+	 *   2. ein neues Routing-Ziel, so dass es zu einem Redirect kommt, wodurch das Routing noch nicht abgeschlossen ist und
+	 * 	    der beforeEach-Handler über die neue Route erneut aufgerufen wird.
+	 * Der beforeEach-Handler erezugt zunächst das Ereignis beforeEach nur bei der Zielroute (vollständiger Pfad).
+	 * Dann erzeugt er die Ereignisse enter, update und leaveBefore. Diese werden entsprechend auf alle
+	 * Teile des Pfades getriggert und es werden auch Ereignisse bei den entsrpechenden Teilrouten/Parents getriggert.
+	 *
+	 * @param to die gewünschte/angesteuerte Zielroute
+	 * @param from die Route, von der ausgegangen wird
+	 *
+	 * @returns false im Fehlerfall, void/true bei Erfolg oder ein Redirect
+	 */
 	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
 		if ((this.active) && (to.redirectedFrom === undefined))
 			return false;
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
-		const result = await this.beforeEachHandler(to, from); // Prüfe, ob die Route in Ordnung ist und führe die berforeEach, enter, update und leave-Ereignisse auf der Route aus
-		return result;
-	}
-
-	protected async beforeEachHandler(to: RouteLocationNormalized, from: RouteLocationNormalized) {
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
 		if (!api.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
@@ -224,6 +240,15 @@ export class RouteManager {
 	}
 
 
+	/**
+	 * Der afterEach-Handler wird aufgerufen, wenn das Routing für eine Route abgeschlossen ist und kann
+	 * zum Aufräumen nach dem Routing genutzt werden - oder zur Fehlerbehandlung, wenn ein Fehler beim Routing aufgetreten
+	 * ist und die gwünschte Route nicht angesteuert wurde, wodurch das Routing in einem inkonsistenten Zustand sein könnte.
+	 *
+	 * @param to die gwünschte/angesteuerte Route
+	 * @param from die Route, welche zuvor gewählt wure
+	 * @param failure ggf. der Grund für einen Fehler
+	 */
 	protected async afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): Promise<any> {
 		// TODO Behandle die Leave-Ereignisse hier anstatt in Before-Each
 		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
