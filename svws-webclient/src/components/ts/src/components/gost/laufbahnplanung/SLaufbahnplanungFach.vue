@@ -1,10 +1,10 @@
 <template>
 	<div role="row" class="data-table__tr data-table__tbody__tr">
 		<div role="cell" class="data-table__td select-text" :style="{ 'background-color': bgColor }">
-			{{ fach.kuerzelAnzeige }}
+			<div class="whitespace-nowrap min-w-fit">{{ fach.kuerzelAnzeige }}</div>
 		</div>
 		<div role="cell" class="data-table__td select-all" :style="{ 'background-color': bgColor }">
-			{{ fach.bezeichnung }}
+			<div class="text-ellipsis overflow-hidden whitespace-nowrap ">{{ fach.bezeichnung }}</div>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ 'background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
@@ -13,16 +13,10 @@
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeNr === 0 ? "—" : sprachenfolgeNr }}
 			</template>
-			<template v-else>
-				<i-ri-prohibited-line class="text-black" />
-			</template>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :style="{ 'background-color': bgColorIfLanguage }" :class="{'data-table__td__disabled': !istFremdsprache}">
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeJahrgang }}
-			</template>
-			<template v-else>
-				<i-ri-prohibited-line />
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">

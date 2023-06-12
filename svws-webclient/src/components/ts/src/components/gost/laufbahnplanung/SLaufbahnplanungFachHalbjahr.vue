@@ -7,7 +7,7 @@
 			'data-table__th__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
 		}
 	"
-		:style=" { 'background-color': bgColor }"
+		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
 		@click.stop="stepper"
 		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
 		<template v-if="halbjahr !== undefined">
@@ -45,17 +45,11 @@
 						</template>
 					</svws-ui-tooltip>
 				</template>
-				<template v-else-if="bewertet || !moeglich">
-					<i-ri-prohibited-line />
-				</template>
 			</span>
 		</template>
 		<template v-else>
 			<template v-if="wahl">
 				{{ wahl }}
-			</template>
-			<template v-else-if="bewertet || !moeglich">
-				<i-ri-prohibited-line />
 			</template>
 		</template>
 	</div>
@@ -145,8 +139,8 @@
 			!props.moeglich || props.bewertet || istFachkombiVerboten.value
 	);
 
-	/*const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(255,255,255)`);*/
-	const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
+	// const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
 	const bgColor: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
@@ -156,11 +150,11 @@
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
 	});
 
-	/*const bgColorTransparent: ComputedRef<string> = computed(() => {
+	const bgColorTransparent: ComputedRef<string> = computed(() => {
 		if (!props.moeglich)
 			return bgColorDisabled.value;
-		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(0,0,0)`;
-	});*/
+		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`;
+	});
 
 
 	const ist_VTF: ComputedRef<boolean> = computed(() =>
