@@ -2,8 +2,7 @@
 	<div role="cell" class="data-table__td data-table__td__align-center select-none font-medium" :class="
 		{
 			'cursor-pointer': moeglich && !bewertet, '': moeglich,
-			'text-black/50 data-table__td__disabled': bewertet,
-			'data-table__td__disabled cursor-not-allowed': cursorNotAllowed,
+			'cursor-not-allowed': cursorNotAllowed,
 			'data-table__th__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
 		}
 	"

@@ -9,12 +9,12 @@
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ 'background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :style="{ 'background-color': bgColorIfLanguage }" :class="{'data-table__td__disabled': !istFremdsprache, 'text-black/25': sprachenfolgeNr === 0}">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :style="{ 'background-color': bgColorIfLanguage }" :class="{ 'text-black/50': sprachenfolgeNr === 0 }">
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeNr === 0 ? "—" : sprachenfolgeNr }}
 			</template>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :style="{ 'background-color': bgColorIfLanguage }" :class="{'data-table__td__disabled': !istFremdsprache}">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :style="{ 'background-color': bgColorIfLanguage }">
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeJahrgang }}
 			</template>
@@ -55,9 +55,9 @@
 	const istFremdsprache: ComputedRef<boolean> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
-	const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	// const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
-	/*const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(255,255,255)`);*/
+	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
 
 	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : bgColorDisabled.value);
 
