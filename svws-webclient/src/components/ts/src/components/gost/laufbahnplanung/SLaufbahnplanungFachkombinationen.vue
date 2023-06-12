@@ -7,6 +7,7 @@
 			<svws-ui-badge v-if="fehler.size" type="error">
 				{{ fehler.size }}
 			</svws-ui-badge>
+			<i-ri-checkbox-circle-line v-else class="flex-shrink-0" style="color: rgb(var(--color-success))" />
 		</h4>
 		<ul class="mt-1 flex flex-col gap-1.5" v-show="show">
 			<li v-for="regel in fachkombi_erforderlich" :key="regel.id" class="flex gap-1 leading-tight">

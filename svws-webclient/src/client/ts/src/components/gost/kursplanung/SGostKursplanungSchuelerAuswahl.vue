@@ -2,7 +2,7 @@
 	<svws-ui-content-card overflow-scroll class="-mt-0.5">
 		<svws-ui-data-table :model-value="filtered" v-model:clicked="selected" clickable :items="undefined"
 			:filter="true" :filter-reverse="false"
-			:no-data="schuelerFilter.filtered.value.size <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
+			:no-data="schuelerFilter.filtered.value.length <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
 			<template #search>
 				<div class="mb-1 3xl:mb-0.5">
 					<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
@@ -65,10 +65,10 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
-	import { GostKursart } from "@core";
-	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
+	import type { WritableComputedRef } from "vue";
+	import { GostKursart } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 		console.log(props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse())
