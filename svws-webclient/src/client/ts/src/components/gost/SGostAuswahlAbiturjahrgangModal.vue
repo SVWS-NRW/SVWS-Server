@@ -4,13 +4,14 @@
 		<template #modalTitle>Abiturjahr hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-button type="transparent" v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" @click="clickAddAbiturjahrgang(jahrgang.id)" :title="`Stufe ${jahrgang.kuerzel} hinzufügen`">
+				<svws-ui-checkbox v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" :model-value="jahrgaenge.get(jahrgang.id)" @update:model-value="updateMap(jahrgang.id, $event)" :value="jahrgang.id">
 					Abitur {{ props.getAbiturjahrFuerJahrgang(jahrgang.id) }} (Jahrgang {{ jahrgang.kuerzel }})
-				</svws-ui-button>
+				</svws-ui-checkbox>
 			</div>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="clickAddAbiturjahrgang()" :disabled="![...jahrgaenge.values()].includes(true)"> Abiturjahrgänge anlegen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -26,9 +27,20 @@
 	}>();
 
 	const modal = ref();
+	const jahrgaenge = ref(new Map<number, boolean>());
 
-	const clickAddAbiturjahrgang = async (idJahrgang: number) => {
-		await props.addAbiturjahrgang(idJahrgang);
+	function updateMap(id: number, ok: any) {
+		if (typeof ok === 'boolean')
+			jahrgaenge.value.set(id, ok);
+	}
+
+	const clickAddAbiturjahrgang = async () => {
+		for (const [id, ok] of jahrgaenge.value.entries()) {
+			if (ok === true) {
+				await props.addAbiturjahrgang(id);
+				console.log(id, ok)
+			}
+		}
 		modal.value.closeModal();
 	}
 
