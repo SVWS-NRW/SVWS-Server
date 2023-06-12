@@ -33,10 +33,6 @@ public class StundenplanUnterrichtsverteilung {
 	@Schema(description = "die Liste der Fächer, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<@NotNull StundenplanFach> faecher = new ArrayList<>();
 
-	/** Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen. */
-	@Schema(description = "die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen")
-	public @NotNull List<@NotNull StundenplanJahrgang> jahrgaenge = new ArrayList<>();
-
 	/** Die Liste der Klassen, die für den Stundenplan zur Verfügung stehen. */
 	@Schema(description = "die Liste der Klassen, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<@NotNull StundenplanKlasse> klassen = new ArrayList<>();

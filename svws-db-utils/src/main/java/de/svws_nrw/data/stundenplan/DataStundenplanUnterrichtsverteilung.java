@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
-import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
@@ -53,7 +52,6 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, id);
 		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, id);
 		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, id);
-		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
 		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, id);
 		final List<StundenplanKurs> kurse = DataStundenplanKurse.getKurse(conn, id);
 		// Erstelle das Core-DTO-Objekt für die Response
@@ -62,7 +60,6 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		daten.lehrer.addAll(lehrer);
 		daten.schueler.addAll(schueler);
 		daten.faecher.addAll(faecher);
-		daten.jahrgaenge.addAll(jahrgaenge);
 		daten.klassen.addAll(klassen);
 		daten.kurse.addAll(kurse);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

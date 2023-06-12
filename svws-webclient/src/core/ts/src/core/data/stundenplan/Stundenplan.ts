@@ -5,6 +5,7 @@ import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSc
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
+import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 
@@ -70,6 +71,11 @@ export class Stundenplan extends JavaObject {
 	 */
 	public kalenderwochenZuordnung : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
 
+	/**
+	 * Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen.
+	 */
+	public jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -128,6 +134,11 @@ export class Stundenplan extends JavaObject {
 		if ((obj.kalenderwochenZuordnung !== undefined) && (obj.kalenderwochenZuordnung !== null)) {
 			for (const elem of obj.kalenderwochenZuordnung) {
 				result.kalenderwochenZuordnung?.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+			for (const elem of obj.jahrgaenge) {
+				result.jahrgaenge?.add(StundenplanJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -209,6 +220,18 @@ export class Stundenplan extends JavaObject {
 				const elem = obj.kalenderwochenZuordnung.get(i);
 				result += StundenplanKalenderwochenzuordnung.transpilerToJSON(elem);
 				if (i < obj.kalenderwochenZuordnung.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.jahrgaenge) {
+			result += '"jahrgaenge" : []';
+		} else {
+			result += '"jahrgaenge" : [ ';
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
+				result += StundenplanJahrgang.transpilerToJSON(elem);
+				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -317,6 +340,20 @@ export class Stundenplan extends JavaObject {
 					const elem = obj.kalenderwochenZuordnung.get(i);
 					result += StundenplanKalenderwochenzuordnung.transpilerToJSON(elem);
 					if (i < obj.kalenderwochenZuordnung.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.jahrgaenge !== "undefined") {
+			if (!obj.jahrgaenge) {
+				result += '"jahrgaenge" : []';
+			} else {
+				result += '"jahrgaenge" : [ ';
+				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+					const elem = obj.jahrgaenge.get(i);
+					result += StundenplanJahrgang.transpilerToJSON(elem);
+					if (i < obj.jahrgaenge.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

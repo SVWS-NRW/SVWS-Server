@@ -6,7 +6,6 @@ import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach'
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
-import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
 
 export class StundenplanUnterrichtsverteilung extends JavaObject {
 
@@ -29,11 +28,6 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 	 * Die Liste der Fächer, die für den Stundenplan zur Verfügung stehen.
 	 */
 	public faecher : List<StundenplanFach> = new ArrayList();
-
-	/**
-	 * Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen.
-	 */
-	public jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
 
 	/**
 	 * Die Liste der Klassen, die für den Stundenplan zur Verfügung stehen.
@@ -73,11 +67,6 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
 			for (const elem of obj.faecher) {
 				result.faecher?.add(StundenplanFach.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
-			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(StundenplanJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
@@ -128,18 +117,6 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 				const elem = obj.faecher.get(i);
 				result += StundenplanFach.transpilerToJSON(elem);
 				if (i < obj.faecher.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
-			result += '"jahrgaenge" : [ ';
-			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-				const elem = obj.jahrgaenge.get(i);
-				result += StundenplanJahrgang.transpilerToJSON(elem);
-				if (i < obj.jahrgaenge.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -215,20 +192,6 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 					const elem = obj.faecher.get(i);
 					result += StundenplanFach.transpilerToJSON(elem);
 					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (typeof obj.jahrgaenge !== "undefined") {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += StundenplanJahrgang.transpilerToJSON(elem);
-					if (i < obj.jahrgaenge.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

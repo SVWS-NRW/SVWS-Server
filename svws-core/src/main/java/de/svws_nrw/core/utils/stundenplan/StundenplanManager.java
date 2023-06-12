@@ -200,7 +200,7 @@ public class StundenplanManager {
 	private void initMapJahrgang() {
 		_map_jahrgangID_zu_jahrgang.clear();
 		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanJahrgang jahrgang : _datenUV.jahrgaenge) {
+		for (final @NotNull StundenplanJahrgang jahrgang : _daten.jahrgaenge) {
 			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);

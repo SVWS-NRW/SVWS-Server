@@ -65,4 +65,8 @@ public class Stundenplan {
 	@Schema(description = "die Liste der Kalenderwochen-Zuordnungen, sofern unterschiedliche Wochentypen in einer Woche genutzt werden")
 	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenZuordnung = new ArrayList<>();
 
+	/** Die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen. */
+	@Schema(description = "die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen")
+	public @NotNull List<@NotNull StundenplanJahrgang> jahrgaenge = new ArrayList<>();
+
 }

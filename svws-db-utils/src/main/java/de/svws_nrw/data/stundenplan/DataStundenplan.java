@@ -6,6 +6,7 @@ import java.util.Map;
 
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
+import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -56,6 +57,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, id);
+		final List<StundenplanJahrgang> jahrgaenge = DataStundenplanJahrgaenge.getJahrgaenge(conn, id);
 		final List<StundenplanPausenzeit> pausenzeiten = DataStundenplanPausenzeiten.getPausenzeiten(conn, id);
 		final List<StundenplanAufsichtsbereich> aufsichtsbereiche = DataStundenplanAufsichtsbereiche.getAufsichtsbereiche(conn, id);
 		final List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnung = DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, id);
@@ -70,6 +72,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		daten.zeitraster.addAll(zeitraster);
 		daten.raeume.addAll(raeume);
 		daten.schienen.addAll(schienen);
+		daten.jahrgaenge.addAll(jahrgaenge);
 		daten.pausenzeiten.addAll(pausenzeiten);
 		daten.aufsichtsbereiche.addAll(aufsichtsbereiche);
 		daten.kalenderwochenZuordnung.addAll(kalenderwochenzuordnung);

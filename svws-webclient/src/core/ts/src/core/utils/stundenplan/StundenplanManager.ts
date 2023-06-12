@@ -218,7 +218,7 @@ export class StundenplanManager extends JavaObject {
 	private initMapJahrgang() : void {
 		this._map_jahrgangID_zu_jahrgang.clear();
 		const setJahrgangKuerzel : HashSet<string> = new HashSet();
-		for (const jahrgang of this._datenUV.jahrgaenge) {
+		for (const jahrgang of this._daten.jahrgaenge) {
 			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
 			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
