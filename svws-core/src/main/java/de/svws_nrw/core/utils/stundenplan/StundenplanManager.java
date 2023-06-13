@@ -717,6 +717,40 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public int getZeitrasterMinutenMin() {
+		for (final @NotNull StundenplanZeitraster z :_daten.zeitraster)
+			if (z.stundenbeginn != null) {
+				int min = z.stundenbeginn;
+				for (final @NotNull StundenplanZeitraster z2 :_daten.zeitraster)
+					if ((z2.stundenbeginn != null) && (z2.stundenbeginn < min))
+						min = z2.stundenbeginn;
+				return min;
+			}
+		return 480;
+	}
+
+	/**
+	 * Liefert den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public int getZeitrasterMinutenMax() {
+		for (final @NotNull StundenplanZeitraster z :_daten.zeitraster)
+			if (z.stundenende != null) {
+				int min = z.stundenende;
+				for (final @NotNull StundenplanZeitraster z2 :_daten.zeitraster)
+					if ((z2.stundenende != null) && (z2.stundenende < min))
+						min = z2.stundenende;
+				return min;
+			}
+		return 480;
+	}
+
+	/**
 	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 *
 	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.

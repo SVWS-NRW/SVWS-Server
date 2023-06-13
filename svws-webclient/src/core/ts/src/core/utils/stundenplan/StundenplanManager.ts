@@ -714,6 +714,40 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public getZeitrasterMinutenMin() : number {
+		for (const z of this._daten.zeitraster)
+			if (z.stundenbeginn !== null) {
+				let min : number = z.stundenbeginn.valueOf();
+				for (const z2 of this._daten.zeitraster)
+					if ((z2.stundenbeginn !== null) && (z2.stundenbeginn < min))
+						min = z2.stundenbeginn.valueOf();
+				return min;
+			}
+		return 480;
+	}
+
+	/**
+	 * Liefert den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public getZeitrasterMinutenMax() : number {
+		for (const z of this._daten.zeitraster)
+			if (z.stundenende !== null) {
+				let min : number = z.stundenende.valueOf();
+				for (const z2 of this._daten.zeitraster)
+					if ((z2.stundenende !== null) && (z2.stundenende < min))
+						min = z2.stundenende.valueOf();
+				return min;
+			}
+		return 480;
+	}
+
+	/**
 	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 *
 	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
