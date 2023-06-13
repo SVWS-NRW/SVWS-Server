@@ -73,10 +73,8 @@ public class StundenplanManager {
 		if (a.wochentag < b.wochentag) return -1;
 		if (a.wochentag > b.wochentag) return +1;
 
-		final int beginnA = a.stundenbeginn == null ? -1 : a.stundenbeginn;
-		final int beginnB = b.stundenbeginn == null ? -1 : b.stundenbeginn;
-		if (beginnA < beginnB) return -1;
-		if (beginnA > beginnB) return +1;
+		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
+		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
 
 		return Long.compare(a.id, b.id);
 	};
@@ -719,15 +717,59 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 *
-	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
-	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
-	 *
-	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 */
-	public @NotNull StundenplanZeitraster getZeitrasterByWochentagStunde(final @NotNull Wochentag wochentag, final int stunde) {
-		return _map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
+	public int getZeitrasterStundeMin() {
+		if (_daten.zeitraster.isEmpty())
+			return 1;
+		int min = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", _daten.zeitraster).unterrichtstunde;
+		for (@NotNull final StundenplanZeitraster z :_daten.zeitraster)
+			min = Math.min(min, z.unterrichtstunde);
+		return min;
+	}
+
+	/**
+	 * Liefert die größte Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
+	 *
+	 * @return die größte Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
+	 */
+	public int getZeitrasterStundeMax() {
+		if (_daten.zeitraster.isEmpty())
+			return 1;
+		int max = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", _daten.zeitraster).unterrichtstunde;
+		for (@NotNull final StundenplanZeitraster z :_daten.zeitraster)
+			max = Math.max(max, z.unterrichtstunde);
+		return max;
+	}
+
+	/**
+	 * Liefert den kleinsten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 *
+	 * @return den kleinsten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 */
+	public @NotNull Wochentag getZeitrasterWochentagMin() {
+		if (_daten.zeitraster.isEmpty())
+			return Wochentag.MONTAG;
+		int min = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", _daten.zeitraster).wochentag;
+		for (@NotNull final StundenplanZeitraster z :_daten.zeitraster)
+			min = Math.min(min, z.wochentag);
+		return Wochentag.fromIDorException(min);
+	}
+
+	/**
+	 * Liefert den größten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 *
+	 * @return den größten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 */
+	public @NotNull Wochentag getZeitrasterWochentagMax() {
+		if (_daten.zeitraster.isEmpty())
+			return Wochentag.MONTAG;
+		int max = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", _daten.zeitraster).wochentag;
+		for (@NotNull final StundenplanZeitraster z :_daten.zeitraster)
+			max = Math.max(max, z.wochentag);
+		return Wochentag.fromIDorException(max);
 	}
 
 	/**
@@ -740,6 +782,18 @@ public class StundenplanManager {
 	 */
 	public boolean testZeitrasterByWochentagStunde(final @NotNull Wochentag wochentag, final int stunde) {
 		return _map_wochentag_stunde_zu_zeitraster.contains(wochentag.id, stunde);
+	}
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public @NotNull StundenplanZeitraster getZeitrasterByWochentagStunde(final @NotNull Wochentag wochentag, final int stunde) {
+		return _map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
 	}
 
 	/**
@@ -862,6 +916,7 @@ public class StundenplanManager {
 	 */
 	public void addZeitraster(final @NotNull StundenplanZeitraster zeitraster) {
 		DeveloperNotificationException.ifMapPutOverwrites(_map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
 		_daten.zeitraster.add(zeitraster);
 		_daten.zeitraster.sort(_compZeitraster);
 	}
@@ -928,6 +983,7 @@ public class StundenplanManager {
 	 */
 	public void removeZeitraster(final long idZeitraster) {
 		final @NotNull StundenplanZeitraster zr = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", _map_zeitrasterID_zu_zeitraster.get(idZeitraster));
+		_map_wochentag_stunde_zu_zeitraster.removeOrException(zr.wochentag, zr.unterrichtstunde);
 		_map_zeitrasterID_zu_zeitraster.remove(idZeitraster);
 		_daten.zeitraster.remove(zr);  // Neusortierung nicht nötig.
 	}

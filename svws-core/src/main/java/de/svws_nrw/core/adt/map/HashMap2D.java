@@ -129,4 +129,19 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		_map.clear();
 	}
 
+	/**
+	 * Entfernt das Mapping (key1, key2) falls es existiert, andernfalls wird eine {@link DeveloperNotificationException} geworfen.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 */
+	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final @NotNull Map<@NotNull K2, V> map2 = getSubMapOrException(key1);
+		if (!map2.containsKey(key2))
+			throw new DeveloperNotificationException("Mapping " + key1 + ", " + key2 + " existiert nicht");
+		map2.remove(key2);
+
+		if (map2.isEmpty())
+			_map.remove(key1);
+	}
 }

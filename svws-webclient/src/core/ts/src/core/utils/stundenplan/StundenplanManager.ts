@@ -80,11 +80,9 @@ export class StundenplanManager extends JavaObject {
 			return -1;
 		if (a.wochentag > b.wochentag)
 			return +1;
-		const beginnA : number = a.stundenbeginn === null ? -1 : a.stundenbeginn;
-		const beginnB : number = b.stundenbeginn === null ? -1 : b.stundenbeginn;
-		if (beginnA < beginnB)
+		if (a.unterrichtstunde < b.unterrichtstunde)
 			return -1;
-		if (beginnA > beginnB)
+		if (a.unterrichtstunde > b.unterrichtstunde)
 			return +1;
 		return JavaLong.compare(a.id, b.id);
 	} };
@@ -716,15 +714,59 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 *
-	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
-	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
-	 *
-	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
 	 */
-	public getZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : StundenplanZeitraster {
-		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
+	public getZeitrasterStundeMin() : number {
+		if (this._daten.zeitraster.isEmpty())
+			return 1;
+		let min : number = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", this._daten.zeitraster).unterrichtstunde;
+		for (const z of this._daten.zeitraster)
+			min = Math.min(min, z.unterrichtstunde);
+		return min;
+	}
+
+	/**
+	 * Liefert die größte Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
+	 *
+	 * @return die größte Stunde aller Zeitraster, oder 1 falls es kein Zeitraster gibt.
+	 */
+	public getZeitrasterStundeMax() : number {
+		if (this._daten.zeitraster.isEmpty())
+			return 1;
+		let max : number = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", this._daten.zeitraster).unterrichtstunde;
+		for (const z of this._daten.zeitraster)
+			max = Math.max(max, z.unterrichtstunde);
+		return max;
+	}
+
+	/**
+	 * Liefert den kleinsten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 *
+	 * @return den kleinsten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 */
+	public getZeitrasterWochentagMin() : Wochentag {
+		if (this._daten.zeitraster.isEmpty())
+			return Wochentag.MONTAG;
+		let min : number = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", this._daten.zeitraster).wochentag;
+		for (const z of this._daten.zeitraster)
+			min = Math.min(min, z.wochentag);
+		return Wochentag.fromIDorException(min);
+	}
+
+	/**
+	 * Liefert den größten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 *
+	 * @return den größten Wochentag, oder den Montag falls es kein Zeitraster gibt.
+	 */
+	public getZeitrasterWochentagMax() : Wochentag {
+		if (this._daten.zeitraster.isEmpty())
+			return Wochentag.MONTAG;
+		let max : number = DeveloperNotificationException.ifListGetFirstFailes("_daten.zeitraster", this._daten.zeitraster).wochentag;
+		for (const z of this._daten.zeitraster)
+			max = Math.max(max, z.wochentag);
+		return Wochentag.fromIDorException(max);
 	}
 
 	/**
@@ -737,6 +779,18 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public testZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : boolean {
 		return this._map_wochentag_stunde_zu_zeitraster.contains(wochentag.id, stunde);
+	}
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public getZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : StundenplanZeitraster {
+		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
 	}
 
 	/**
@@ -859,6 +913,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public addZeitraster(zeitraster : StundenplanZeitraster) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
 		this._daten.zeitraster.add(zeitraster);
 		this._daten.zeitraster.sort(StundenplanManager._compZeitraster);
 	}
@@ -925,6 +980,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public removeZeitraster(idZeitraster : number) : void {
 		const zr : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", this._map_zeitrasterID_zu_zeitraster.get(idZeitraster));
+		this._map_wochentag_stunde_zu_zeitraster.removeOrException(zr.wochentag, zr.unterrichtstunde);
 		this._map_zeitrasterID_zu_zeitraster.remove(idZeitraster);
 		this._daten.zeitraster.remove(zr);
 	}
