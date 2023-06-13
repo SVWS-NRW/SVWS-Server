@@ -1,6 +1,5 @@
 import { GostJahrgangFachkombination } from '../../../../core/data/gost/GostJahrgangFachkombination';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
-import { Note } from '../../../../core/types/Note';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
@@ -31,7 +30,7 @@ export class Fachkombinationen extends GostBelegpruefung {
 		if (belegung2 === null)
 			return false;
 		const belegung2Halbjahr : AbiturFachbelegungHalbjahr | null = belegung2.belegungen[halbjahr.id];
-		return ((belegung2Halbjahr !== null) && (Note.fromKuerzel(belegung2Halbjahr.notenkuerzel) as unknown !== Note.UNGENUEGEND as unknown) && ((kombi.kursart2 === null) || GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart2) as unknown));
+		return ((belegung2Halbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung2Halbjahr)) && ((kombi.kursart2 === null) || GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart2) as unknown));
 	}
 
 	private pruefeHatFachkombination(kombi : GostJahrgangFachkombination, ...halbjahre : Array<GostHalbjahr>) : void {
@@ -41,7 +40,7 @@ export class Fachkombinationen extends GostBelegpruefung {
 		const belegung2 : AbiturFachbelegung | null = this.manager.getFachbelegungByID(kombi.fachID2);
 		for (const halbjahr of halbjahre) {
 			const belegung1Halbjahr : AbiturFachbelegungHalbjahr | null = belegung1.belegungen[halbjahr.id];
-			if ((belegung1Halbjahr === null) || (Note.fromKuerzel(belegung1Halbjahr.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown))
+			if ((belegung1Halbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr)))
 				continue;
 			if ((kombi.kursart1 === null) || GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart1) as unknown) {
 				if ((kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && Fachkombinationen.pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {

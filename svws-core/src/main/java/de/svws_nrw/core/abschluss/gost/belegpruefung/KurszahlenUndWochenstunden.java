@@ -119,12 +119,12 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					continue;
 
 				// Prüfe, ob die Note ungenügend ist. Dann ist gilt der Kurs als nicht belegt
-				final Note note = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
-				if (Note.UNGENUEGEND.equals(note))
+				if (AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr))
 					continue;
 
 				// Überspringe Sport-Kurse, die in diesem Halbjahr die Note "AT" beinhalten, bei der Zählung der Kursstunden
 				// und der Wochenstunden. Der Schüler ist in diesem Halbjahr aufgrund eines Attestes von Sport befreit.
+				final Note note = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
 				if (GostFachbereich.SPORT.hat(fach) && Note.ATTEST.equals(note))
 					continue;
 

@@ -92,9 +92,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			for (const fachbelegungHalbjahr of fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr === null)
 					continue;
-				const note : Note | null = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
-				if (JavaObject.equalsTranspiler(Note.UNGENUEGEND, (note)))
+				if (AbiturdatenManager.istNullPunkteBelegungInQPhase(fachbelegungHalbjahr))
 					continue;
+				const note : Note | null = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
 				if (GostFachbereich.SPORT.hat(fach) && JavaObject.equalsTranspiler(Note.ATTEST, (note)))
 					continue;
 				const halbjahr : GostHalbjahr | null = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);

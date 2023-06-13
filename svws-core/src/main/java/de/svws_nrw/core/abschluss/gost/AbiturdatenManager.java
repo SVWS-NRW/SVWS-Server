@@ -220,6 +220,22 @@ public class AbiturdatenManager {
 	}
 
 
+	/**
+	 * Gibt zurück, ob es sich bei der Halbjahresbelegung um eine Belegung handelt, welche mit
+	 * null Punkten abgeschlossen wurde und welche daher als nicht belegter Kurs zu werten ist.
+	 *
+	 * @param halbjahresbelegung   die Halbjahresbelegung eines Kurses
+	 *
+	 * @return true, fall es sich um einen Null-Punkte-Kurs in der Qualifikationsphase handelt.
+	 */
+	public static boolean istNullPunkteBelegungInQPhase(@NotNull final AbiturFachbelegungHalbjahr halbjahresbelegung) {
+		final GostHalbjahr hj = GostHalbjahr.fromKuerzel(halbjahresbelegung.halbjahrKuerzel);
+		if ((hj == null) || (hj.istEinfuehrungsphase()))
+			return false;
+		return Note.fromKuerzel(halbjahresbelegung.notenkuerzel) == Note.UNGENUEGEND;
+	}
+
+
 	private static String getSchuelerFachwahlFromBelegung(final @NotNull AbiturFachbelegung belegung, final @NotNull GostHalbjahr halbjahr) {
 		AbiturFachbelegungHalbjahr halbjahresbelegung = belegung.belegungen[halbjahr.id];
 		if (halbjahresbelegung == null) {
@@ -230,8 +246,7 @@ public class AbiturdatenManager {
 		final GostKursart kursart = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
 		if (kursart == null)
 			return ("".equals(halbjahresbelegung.kursartKuerzel) ? null : halbjahresbelegung.kursartKuerzel);
-		final Note note = Note.fromKuerzel(halbjahresbelegung.notenkuerzel);
-		if ((note != Note.KEINE) && (note == Note.UNGENUEGEND))
+		if (istNullPunkteBelegungInQPhase(halbjahresbelegung))
 			return null;
 		if ((kursart == GostKursart.ZK) || (kursart == GostKursart.LK))
 			return kursart.kuerzel;
@@ -309,8 +324,7 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || (belegungHalbjahr.kursartKuerzel == null))
 				return false;
-			final Note note = Note.fromKuerzel(belegungHalbjahr.notenkuerzel);
-			if ((note != Note.KEINE) && (note == Note.UNGENUEGEND))
+			if (istNullPunkteBelegungInQPhase(belegungHalbjahr))
 				return false;
 		}
 		return true;
@@ -331,7 +345,7 @@ public class AbiturdatenManager {
 		int anzahl = 0;
 		for (int i = 0; i < GostHalbjahr.maxHalbjahre; i++) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[i];
-			if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND))
+			if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				anzahl++;
 		}
 		return anzahl;
@@ -357,7 +371,7 @@ public class AbiturdatenManager {
 		for (final @NotNull AbiturFachbelegung fachbelegung : fachbelegungen) {
 			for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
 				final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND))
+				if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 					anzahl++;
 			}
 		}
@@ -384,7 +398,7 @@ public class AbiturdatenManager {
 		for (final GostHalbjahr halbjahr : halbjahre) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
 			if ((belegungHalbjahr == null) || (kursart != GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel))
-					|| (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+					|| (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				return false;
 		}
 		return true;
@@ -438,7 +452,7 @@ public class AbiturdatenManager {
 			if (belegungHalbjahr == null)
 				continue;
 			if ((kursart == GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel))
-					&& (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND))
+					&& (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				return true;
 		}
 		return false;
@@ -460,7 +474,7 @@ public class AbiturdatenManager {
 		if (fachbelegung == null)
 			return false;
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+		if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 			return false;
 		switch (schriftlichkeit) {
 			case BELIEBIG: return true;
@@ -512,7 +526,7 @@ public class AbiturdatenManager {
 			return true;
 		for (final GostHalbjahr halbjahr : halbjahre) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND)
+			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr))
 					|| ((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
 					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
 							|| ((schriftlichkeit == GostSchriftlichkeit.MUENDLICH) && (belegungHalbjahr.schriftlich)))))
@@ -541,7 +555,7 @@ public class AbiturdatenManager {
 			return true;
 		for (final GostHalbjahr halbjahr : halbjahre) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
 			if (((schriftlichkeit != GostSchriftlichkeit.BELIEBIG)
 					&& (((schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH) && (!belegungHalbjahr.schriftlich))
@@ -571,7 +585,7 @@ public class AbiturdatenManager {
 			return false;
 		for (final GostHalbjahr halbjahr : halbjahre) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
 			if ((schriftlichkeit.istSchriftlich == null) || (schriftlichkeit.istSchriftlich.equals(belegungHalbjahr.schriftlich)))
 				return true;
@@ -640,8 +654,7 @@ public class AbiturdatenManager {
 				boolean hatHalbjahresBelegung = false;
 				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
-					if ((belegungHalbjahr != null)
-							&& (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)) {
+					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						hatHalbjahresBelegung = true;
 						break;
 					}
@@ -683,7 +696,7 @@ public class AbiturdatenManager {
 				continue;
 			for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 				final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND))
+				if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 					return true;
 			}
 		}
@@ -719,7 +732,7 @@ public class AbiturdatenManager {
 				boolean hatHalbjahresBelegung = false;
 				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
-					if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)
+					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))
 						&& (((halbjahr != GostHalbjahr.Q11) && (halbjahr != GostHalbjahr.Q12) && (halbjahr != GostHalbjahr.Q21)) || (belegungHalbjahr.schriftlich))) {
 							hatHalbjahresBelegung = true;
 						// "break;" wird hier nicht verwendet, da bei der fehlerhaften Belegung von inhaltsgleichen Fächern (gleiches Statistik-Kürzel) im selben Halbjahr diese Prüfung dennoch korrekt ablaufen sollte
@@ -935,7 +948,7 @@ public class AbiturdatenManager {
 		if (fachbelegung == null)
 			return false;
 		for (final AbiturFachbelegungHalbjahr belegunghalbjahr : fachbelegung.belegungen) {
-			if ((belegunghalbjahr != null) && (Note.fromKuerzel(belegunghalbjahr.notenkuerzel) != Note.UNGENUEGEND)
+			if ((belegunghalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegunghalbjahr))
 					&& GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) == kursart)
 				return true;
 		}
@@ -1012,7 +1025,7 @@ public class AbiturdatenManager {
 				boolean hatHalbjahresBelegung = false;
 				for (final AbiturFachbelegung aktFachbelegung : alleBelegungen) {
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = aktFachbelegung.belegungen[halbjahr.id];
-					if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)) {
+					if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						hatHalbjahresBelegung = true;
 						break;
 					}
@@ -1089,7 +1102,7 @@ public class AbiturdatenManager {
 			if (fach == null)
 				continue;
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
-			if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
 			String kuerzel = GostFachManager.getFremdsprache(fach);
 			if (kuerzel == null)
@@ -1341,7 +1354,7 @@ public class AbiturdatenManager {
 						continue;
 					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
-					if ((zulFach == fbZulFach) && (belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)) {
+					if ((zulFach == fbZulFach) && (belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						belegung_vorhanden = true;
 						break;
 					}
@@ -1386,7 +1399,7 @@ public class AbiturdatenManager {
 					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
 					if (zulFach == fbZulFach) {
 						final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
-						if ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)) {
+						if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 							boolean istSchriftlichkeitOK = true;
 							if (((halbjahr == GostHalbjahr.Q11) || (halbjahr == GostHalbjahr.Q12) || (halbjahr == GostHalbjahr.Q21)) && (!belegungHalbjahr.schriftlich))
 								istSchriftlichkeitOK = false;
@@ -1481,7 +1494,7 @@ public class AbiturdatenManager {
 	 */
 	public AbiturFachbelegungHalbjahr getBelegungHalbjahr(final @NotNull AbiturFachbelegung fachbelegung, final @NotNull GostHalbjahr halbjahr, final @NotNull GostSchriftlichkeit schriftlich) {
 		final AbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		return ((belegungHalbjahr != null) && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) != Note.UNGENUEGEND)
+		return ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))
 				&& ((schriftlich == GostSchriftlichkeit.BELIEBIG)
 				|| ((schriftlich == GostSchriftlichkeit.SCHRIFTLICH) && (belegungHalbjahr.schriftlich))
 				|| ((schriftlich == GostSchriftlichkeit.MUENDLICH) && (!belegungHalbjahr.schriftlich))))
@@ -1559,7 +1572,7 @@ public class AbiturdatenManager {
 		final @NotNull ArrayList<@NotNull GostHalbjahr> halbjahre = new ArrayList<>();
 		if (fachbelegung != null) {
 			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
-				if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+				if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 					continue;
 				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 				if (halbjahr == null)
@@ -1666,7 +1679,7 @@ public class AbiturdatenManager {
 		if ("PL".equals(fach.kuerzel))
 			return true;
 		for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
-			if ((belegungHalbjahr == null) || (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) == Note.UNGENUEGEND))
+			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
 			final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 			final GostKursart kursart = GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel);
@@ -1679,7 +1692,7 @@ public class AbiturdatenManager {
 			if (prevHalbjahr == null)
 				continue;
 			final AbiturFachbelegungHalbjahr belegungHalbjahrVorher = fachbelegung.belegungen[prevHalbjahr.id];
-			if ((belegungHalbjahrVorher == null) || (Note.fromKuerzel(belegungHalbjahrVorher.notenkuerzel) == Note.UNGENUEGEND)) {
+			if ((belegungHalbjahrVorher == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahrVorher))) {
 				// Prüfe, ob eine Belegung des gleichen Statistik-Faches im Halbjahr zuvor existiert - dies kann bei bilingualen Fächern auftreten
 				final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 				if ((alleBelegungen == null) || (alleBelegungen.size() <= 1))

@@ -32,7 +32,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import type { AbiturdatenManager, AbiturFachbelegung, GostFach, GostFaecherManager,
+	import { AbiturdatenManager, AbiturFachbelegung, GostFach, GostFaecherManager,
 		GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, Sprachbelegung} from "@core";
 	import { computed } from "vue";
@@ -209,8 +209,7 @@
 			b = b ? b : new AbiturFachbelegungHalbjahr();
 			if (b.halbjahrKuerzel === undefined)
 				return "";
-			const note : Note = Note.fromKuerzel(b.notenkuerzel);
-			if (note === Note.UNGENUEGEND)
+			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b))
 				return "6";
 			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
 			if (!kursart)
