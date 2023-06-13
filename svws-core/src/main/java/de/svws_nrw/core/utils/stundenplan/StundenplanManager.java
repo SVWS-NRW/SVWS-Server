@@ -741,11 +741,11 @@ public class StundenplanManager {
 	public int getZeitrasterMinutenMax() {
 		for (final @NotNull StundenplanZeitraster z :_daten.zeitraster)
 			if (z.stundenende != null) {
-				int min = z.stundenende;
+				int max = z.stundenende;
 				for (final @NotNull StundenplanZeitraster z2 :_daten.zeitraster)
-					if ((z2.stundenende != null) && (z2.stundenende < min))
-						min = z2.stundenende;
-				return min;
+					if ((z2.stundenende != null) && (z2.stundenende > max))
+						max = z2.stundenende;
+				return max;
 			}
 		return 480;
 	}

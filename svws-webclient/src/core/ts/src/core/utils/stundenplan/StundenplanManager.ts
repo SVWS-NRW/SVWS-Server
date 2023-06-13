@@ -738,11 +738,11 @@ export class StundenplanManager extends JavaObject {
 	public getZeitrasterMinutenMax() : number {
 		for (const z of this._daten.zeitraster)
 			if (z.stundenende !== null) {
-				let min : number = z.stundenende.valueOf();
+				let max : number = z.stundenende.valueOf();
 				for (const z2 of this._daten.zeitraster)
-					if ((z2.stundenende !== null) && (z2.stundenende < min))
-						min = z2.stundenende.valueOf();
-				return min;
+					if ((z2.stundenende !== null) && (z2.stundenende > max))
+						max = z2.stundenende.valueOf();
+				return max;
 			}
 		return 480;
 	}
