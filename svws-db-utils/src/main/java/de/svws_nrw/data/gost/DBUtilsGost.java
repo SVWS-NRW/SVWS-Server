@@ -159,10 +159,13 @@ public final class DBUtilsGost {
 				continue;
 
 			final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
-			if ((halbjahr != null) && (lernabschnitt.SemesterWertung))
+			if (halbjahr == null)
+				continue;
+			if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
 				daten.bewertetesHalbjahr[halbjahr.id] = true;
-
 			final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+			if (leistungen.isEmpty())
+				daten.bewertetesHalbjahr[halbjahr.id] = false;
 			for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 				// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
 				final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
@@ -289,10 +292,14 @@ public final class DBUtilsGost {
 				if (!("EF".equals(lernabschnitt.ASDJahrgang) || "Q1".equals(lernabschnitt.ASDJahrgang) || "Q2".equals(lernabschnitt.ASDJahrgang)))
 					continue;
 				final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(lernabschnitt.ASDJahrgang, abschnittLeistungsdaten.Abschnitt);
-				if (lernabschnitt.SemesterWertung)
+				if (halbjahr == null)
+					continue;
+				if (Boolean.TRUE.equals(lernabschnitt.SemesterWertung))
 					daten.bewertetesHalbjahr[halbjahr.id] = true;
 
 				final List<DTOSchuelerLeistungsdaten> leistungen = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id", lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
+				if (leistungen.isEmpty())
+					daten.bewertetesHalbjahr[halbjahr.id] = false;
 				for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 					// Prüfe, ob die Kursart eine Kursart der Oberstufe ist.
 					final GostKursart kursart = GostKursart.fromKuerzel(leistung.KursartAllg);
@@ -318,7 +325,7 @@ public final class DBUtilsGost {
 					final GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
 					belegung.id = leistung.ID;
 					belegung.schuljahr = abschnittLeistungsdaten.Jahr;
-					belegung.halbjahrKuerzel = (halbjahr == null) ? null : halbjahr.kuerzel;
+					belegung.halbjahrKuerzel = halbjahr.kuerzel;
 					belegung.abschnitt = abschnittLeistungsdaten.Abschnitt;
 					belegung.abschnittGewertet = lernabschnitt.SemesterWertung;
 					belegung.jahrgang = lernabschnitt.ASDJahrgang;

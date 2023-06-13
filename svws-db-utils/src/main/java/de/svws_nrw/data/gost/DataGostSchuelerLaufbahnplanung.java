@@ -166,6 +166,15 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 							"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2",
 							DTOSchuelerLeistungsdaten.class,
 							lernabschnitt.ID, fach.ID);
+					if (leistungen.isEmpty()) {
+						final boolean valid = (fw == null)
+								|| (fw.equals("M")) || (fw.equals("S"))
+								|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
+								|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
+						if (!valid)
+							throw OperationError.CONFLICT.exception();
+						return fw;
+					}
 					for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
 						final ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(leistung.Kursart);
 						final GostKursart kursart = GostKursart.fromKursart(zulkursart);
