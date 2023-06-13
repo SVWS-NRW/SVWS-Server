@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Benutzergruppen">
+	<svws-ui-content-card title="Zugewiesene Benutzergruppen">
 		<svws-ui-data-table selectable :items="listBenutzergruppen" :disable-footer="true">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
@@ -76,6 +76,6 @@
 
 <style scoped lang="postcss">
 	.data-table__tr {
-		grid-template-columns: var(--checkbox-width) minmax(4rem, 10fr) minmax(4rem, 1fr) var(--checkbox-width) !important;
+		grid-template-columns: var(--checkbox-width) minmax(4rem, 10fr) minmax(4rem, 0.25fr) var(--checkbox-width) !important;
 	}
 </style>

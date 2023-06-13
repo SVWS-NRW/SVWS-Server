@@ -5,10 +5,12 @@
 		modelValue?: boolean;
 		statistics?: boolean;
 		headless?: boolean;
+		disabled?: boolean;
 	}>(), {
 		modelValue: false,
 		statistics: false,
 		headless: false,
+		disabled: false
 	});
 
 	const emit = defineEmits<{
@@ -28,7 +30,8 @@
 <template>
 	<label class="toggle" :class="{
 		'toggle--statistics': statistics,
-		'toggle--headless': headless
+		'toggle--headless': headless,
+		'toggle--disabled': disabled
 	}">
 		<input v-model="value" class="toggle--control" type="checkbox">
 		<span class="toggle--indicator" />
@@ -50,8 +53,9 @@
 		@apply my-auto;
 	}
 
-	.data-table__filter__fields & {
-
+	&--disabled {
+		@apply opacity-50;
+		@apply cursor-not-allowed pointer-events-none;
 	}
 }
 
@@ -147,6 +151,14 @@
 			@apply bg-transparent left-auto right-auto;
 			content: "✔";
 		}
+	}
+}
+
+.toggle.toggle--disabled input:checked+.toggle--indicator {
+	@apply bg-black ring-black border-black text-black;
+
+	&:before {
+		@apply border-black;
 	}
 }
 </style>

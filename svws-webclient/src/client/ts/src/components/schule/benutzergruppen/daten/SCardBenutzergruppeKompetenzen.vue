@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Kompetenzen">
+	<svws-ui-content-card title="Einstellungen">
 		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
@@ -30,7 +30,7 @@
 					:key="index">
 					<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin"
 						:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
-						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" 
+						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe"
 						:benutzer-kompetenzen="benutzerKompetenzen" />
 				</template>
 			</template>
@@ -61,6 +61,6 @@
 
 <style scoped lang="postcss">
 .data-table__tr {
-	grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 0.5fr);
+	grid-template-columns: minmax(4rem, 3fr) minmax(4rem, 0.25fr);
 }
 </style>

@@ -536,7 +536,7 @@
 					<template #header />
 					<template #body>
 						<svws-ui-table-row>
-							<svws-ui-table-cell span="full">
+							<svws-ui-table-cell>
 								<div class="flex items-center gap-1">
 									<svws-ui-button type="icon" size="small" @click="collapsed[0] = !collapsed[0]">
 										<i-ri-arrow-right-s-line v-if="collapsed[0]" />
@@ -544,6 +544,9 @@
 									</svws-ui-button>
 									Collapsible Row
 								</div>
+							</svws-ui-table-cell>
+							<svws-ui-table-cell>
+								Content
 							</svws-ui-table-cell>
 						</svws-ui-table-row>
 						<svws-ui-table-row :depth="1" :collapsed="collapsed[0]" :expanded="!collapsed[0]">
@@ -553,16 +556,20 @@
 										<i-ri-arrow-right-s-line v-if="collapsed[1]" />
 										<i-ri-arrow-down-s-line v-else />
 									</svws-ui-button>
+									<svws-ui-checkbox />
 									Collapsible Row (Depth 1)
 								</div>
 							</svws-ui-table-cell>
-							<svws-ui-table-cell disabled>
+							<svws-ui-table-cell>
 								Content
 							</svws-ui-table-cell>
 						</svws-ui-table-row>
 						<svws-ui-table-row :depth="2" :collapsed="collapsed[0] || collapsed[1]" :expanded="!collapsed[1]">
 							<svws-ui-table-cell span="full">
-								Normal Row
+								<div class="flex items-center gap-1">
+									<svws-ui-checkbox />
+									Normal Row
+								</div>
 							</svws-ui-table-cell>
 						</svws-ui-table-row>
 						<svws-ui-table-row :depth="2" :collapsed="collapsed[0] || collapsed[1]" :expanded="!collapsed[1]">

@@ -152,17 +152,22 @@
 	}
 }
 
-.checkbox--disabled {
-	@apply opacity-50;
-	@apply cursor-not-allowed;
-}
-
 .checkbox--checked,
 .checkbox--indeterminate {
 	@apply font-medium;
 
 	&:not(.checkbox--bw) .icon {
 		@apply text-svws;
+	}
+}
+
+
+.checkbox--disabled {
+	@apply opacity-50;
+	@apply cursor-not-allowed;
+
+	&:not(.checkbox--bw) .icon {
+		@apply text-black;
 	}
 }
 

@@ -39,6 +39,8 @@
 	}
 
 	&--center {
+		@apply justify-items-center;
+
 		.button {
 			@apply mx-auto;
 		}

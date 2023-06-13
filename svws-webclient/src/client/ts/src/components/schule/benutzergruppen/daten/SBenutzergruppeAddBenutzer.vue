@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Benutzerzuordnung">
-		<div class="flex w-full gap-6 lg:gap-8">
-			<s-benutzer-checkbox-list :list-benutzer="listBenutzerAlle" title="Einfügen" :spalte-links="true"
+		<div class="flex w-full">
+			<s-benutzer-checkbox-list :list-benutzer="listBenutzerAlle" :list-benutzer-in-gruppe="listBenutzergruppenBenutzer" title="Einfügen" :spalte-links="true"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />
@@ -18,7 +18,8 @@
 
 	import type { BenutzerListeEintrag, List} from "@core";
 	import { BenutzergruppeDaten, ArrayList } from "@core";
-	import { computed, ComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		listBenutzerAlle: () => List<BenutzerListeEintrag> ;

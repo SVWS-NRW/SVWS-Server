@@ -7,10 +7,10 @@
 	</div>
 	<div role="cell" class="data-table__td">
 		<div class="flex items-center gap-1">
-			{{ row.bezeichnung }}
 			<svws-ui-button type="icon" size="small" @click="gotoBenutzergruppe(row.id)">
 				<i-ri-link />
 			</svws-ui-button>
+			{{ row.bezeichnung }}
 		</div>
 	</div>
 	<div role="cell" class="data-table__td font-mono">

@@ -1,46 +1,23 @@
 <template>
-	<svws-ui-content-card title="Kompetenzen" class="col-span-full">
+	<svws-ui-content-card title="Einstellungen" class="col-span-full">
 		<template #actions>
-			<svws-ui-checkbox class="mb-4 " v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
-				<span class="inline-flex items-center">
-					Admin-Rechte
-				</span>
-			</svws-ui-checkbox>
+			<svws-ui-toggle class="mb-4" v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
+				Admin-Rechte
+			</svws-ui-toggle>
 		</template>
 		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title">
-								<span class="inline-flex items-center gap-1">
-									<span>Kompetenz</span>
-								</span>
-							</span>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title font-mono">
-								<span class="inline-flex items-center gap-1">
-									<span>ID</span>
-								</span>
-							</span>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title">
-								<span class="inline-flex items-center gap-1">
-									<span>Benutzergruppe</span>
-								</span>
-							</span>
-						</div>
-					</div>
-				</div>
+				<svws-ui-table-row>
+					<svws-ui-table-cell thead>
+						Kompetenz
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead>
+						Übernommen aus der Gruppe
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead class="font-mono">
+						ID
+					</svws-ui-table-cell>
+				</svws-ui-table-row>
 			</template>
 			<template #body>
 				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen"
@@ -87,26 +64,6 @@
 
 <style scoped lang="postcss">
 	.data-table__tr {
-		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 0.5fr) minmax(4rem, 1fr);
-	}
-
-	.tooltip {
-	position: relative;
-	display: inline-block;
-	border-bottom: 1px dotted black;
-	}
-
-	.tooltip .tooltiptext {
-	visibility: hidden;
-	width: 120px;
-	background-color: rgb(175, 215, 231);
-	color: #fff;
-	text-align: center;
-	border-radius: 6px;
-	padding: 5px 0;
-
-	/* Position the tooltip */
-	position: absolute;
-	z-index: 1;
+		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr) minmax(4rem, 0.25fr);
 	}
 </style>

@@ -1,23 +1,22 @@
 <template>
-	<div role="cell" class="data-table__td" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
 		<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
-	</div>
-	<div role="cell" class="data-table__td font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
-		{{ kompetenz.daten.id }}
-	</div>
-	<div role="cell" class="data-table__td" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+	</svws-ui-table-cell>
+	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
 		<!-- TODO Die Methode in Manager auslagern. -->
-		<div class="data-table__td-content">
-			<template v-if="getBenutzerManager().istAdmin()">
-				<i-ri-shield-star-line />
-			</template>
-			<template v-else>
-				{{ props.getGruppen4Kompetenz(kompetenz) }}
-			</template>
-		</div>
-	</div>
+		<span class="inline-flex gap-1 text-black/50" v-if="getBenutzerManager().istAdmin()">
+			<i-ri-shield-star-line class="opacity-50 -mt-0.5" />
+			<span>Admin</span>
+		</span>
+		<template v-else>
+			{{ props.getGruppen4Kompetenz(kompetenz) }}
+		</template>
+	</svws-ui-table-cell>
+	<svws-ui-table-cell class="font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+		{{ kompetenz.daten.id }}
+	</svws-ui-table-cell>
 </template>
 
 <script setup lang="ts">
@@ -50,14 +49,6 @@
 </script>
 
 <style scoped lang="postcss">
-	.vorhanden {
-		@apply bg-primary/5 text-primary;
-	}
-
-	.nichtvorhanden {
-		@apply bg-white;
-	}
-
 	.deaktiviert {
 		@apply text-black/50;
 	}

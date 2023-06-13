@@ -2,15 +2,17 @@
 	<!-- //TODO length klappt nicht.
 	<div v-show="benutzerListe.length" class="w-full "></div> -->
 	<div class="w-full">
-		<div class="flex justify-between items-center font-bold text-button mb-2">
+		<div class="flex justify-between items-center font-bold text-button border border-black/25 py-[0.1rem] px-2 h-11" :class="{'border-l-0': !spalteLinks}">
 			<template v-if="spalteLinks">
 				<span>Verfügbare Benutzer</span>
+				<span>ID</span>
 			</template>
 			<template v-else>
 				<span>Aktiv in dieser Gruppe</span>
+				<span>ID</span>
 			</template>
 		</div>
-		<ul class="flex flex-col gap-0.5">
+		<ul class="flex flex-col">
 			<template v-for="benutzer in listBenutzer()" :key="benutzer.id">
 				<s-benutzer-checkbox :benutzer="benutzer"
 					v-model="aktiv" :spalte-links="spalteLinks"
@@ -35,6 +37,7 @@
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		goToBenutzer: (b_id: number) => Promise<void>;
+		listBenutzerInGruppe: () => List<BenutzerListeEintrag>;
 	}>();
 
 	const aktiv: WritableComputedRef<boolean> = computed({
