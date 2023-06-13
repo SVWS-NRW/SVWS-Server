@@ -1,12 +1,13 @@
 package de.svws_nrw.core.utils.klausurplan;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -48,6 +49,9 @@ public class GostKursklausurManager {
 
 	/** Eine Map idTermin -> GostKlausurtermin */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostKlausurtermin> _mapIdKlausurtermin = new HashMap<>();
+
+	/** Eine Map date -> GostKlausurtermin */
+	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _mapDateKlausurtermin = new HashMap<>();
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -161,6 +165,17 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
+	 * Termins geändert hat.
+	 *
+	 * @param termin das GostKlausurtermin-Objekt
+	 */
+	public void updateKlausurtermin(final @NotNull GostKlausurtermin termin) {
+		removeTermin(termin.id);
+		addTermin(termin);
+	}
+
+	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
 	 *
@@ -175,8 +190,7 @@ public class GostKursklausurManager {
 
 			// aus _mapTerminKursklausuren löschen
 			for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> e : _mapTerminKursklausuren.entrySet()) {
-				@NotNull
-				final ArrayList<@NotNull GostKursklausur> list = e.getValue();
+				@NotNull final ArrayList<@NotNull GostKursklausur> list = e.getValue();
 				if (list.contains(klausur)) {
 					oldTerminId = e.getKey();
 					list.remove(klausur);
@@ -184,26 +198,18 @@ public class GostKursklausurManager {
 			}
 
 			// aus _mapQuartalTerminKursklausuren löschen
-			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> quartalMap = _mapQuartalTerminKursklausuren.get(klausur.quartal);
-			if (quartalMap != null) {
-				final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = quartalMap.get(oldTerminId);
-				if (listOldQuartalTerminKursklausuren != null)
-					listOldQuartalTerminKursklausuren.remove(klausur);
-			}
-			// TODO else ... Fehler, denn kann eigentlich nicht sein.
+			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> quartalMap = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalTerminKursklausuren, klausur.quartal);
+			final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = quartalMap.get(oldTerminId);
+			if (listOldQuartalTerminKursklausuren != null)
+				listOldQuartalTerminKursklausuren.remove(klausur);
 
-			// aus _mapQuartalTerminKursklausuren löschen
-			final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> quartalKursartMap = _mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
-			if (quartalKursartMap != null) {
-				final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> kursartMap = quartalKursartMap.get(klausur.kursart);
-				if (kursartMap != null) {
-					final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = kursartMap.get(oldTerminId);
-					if (listOldQuartalTerminKursklausuren != null)
-						listOldQuartalTerminKursklausuren.remove(klausur);
-				}
-				// TODO else ... Fehler, denn kann eigentlich nicht sein.
-			}
-			// TODO else ... Fehler, denn kann eigentlich nicht sein.
+			// aus _mapQuartalKursartTerminKursklausuren löschen
+			final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> quartalKursartMap = DeveloperNotificationException
+					.ifMapGetIsNull(_mapQuartalKursartTerminKursklausuren, klausur.quartal);
+			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> kursartMap = DeveloperNotificationException.ifMapGetIsNull(quartalKursartMap, klausur.kursart);
+			final List<@NotNull GostKursklausur> listOldQuartalKursartTerminKursklausuren = kursartMap.get(oldTerminId);
+			if (listOldQuartalKursartTerminKursklausuren != null)
+				listOldQuartalKursartTerminKursklausuren.remove(klausur);
 
 			// _mapQuartalKursKlausuren muss nicht geändert werden
 
@@ -246,6 +252,16 @@ public class GostKursklausurManager {
 			_mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
 		listKlausurtermineMapQuartalKlausurtermine.add(termin);
+
+		// Füllen von _mapDateKlausurtermin
+		if (termin.datum != null) {
+			List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin == null) {
+				listDateKlausurtermin = new ArrayList<>();
+				_mapDateKlausurtermin.put(termin.datum, listDateKlausurtermin);
+			}
+			listDateKlausurtermin.add(termin);
+		}
 	}
 
 	/**
@@ -273,14 +289,11 @@ public class GostKursklausurManager {
 	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
 	 *
-	 * @param termin das GostKlausurtermin-Objekt
+	 * @param tId das GostKlausurtermin-Objekt
 	 */
-	public void removeTermin(final @NotNull GostKlausurtermin termin) {
-		final ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(termin.quartal);
-		if (listKlausurtermineMapQuartalKlausurtermine == null) {
-			// TODO Fehlerbehandlung
-			return;
-		}
+	public void removeTermin(final @NotNull Long tId) {
+		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, tId);
+		final ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurtermine, termin.quartal);
 		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
 
 		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausurenByTermin(termin.id);
@@ -291,6 +304,13 @@ public class GostKursklausurManager {
 				updateKursklausur(k);
 			}
 		}
+
+		if (termin.datum != null) {
+			List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin != null)
+				listDateKlausurtermin.remove(termin);
+		}
+
 		_termine.remove(termin);
 		_mapIdKlausurtermin.remove(termin.id);
 
@@ -300,7 +320,7 @@ public class GostKursklausurManager {
 	 * Liefert das GostKursklausur-Objekt zum übergebenen Termin und Kurs
 	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * @param idKurs die ID des Kurses
+	 * @param idKurs   die ID des Kurses
 	 *
 	 * @return das GostKursklausur-Objekt
 	 */
@@ -366,7 +386,6 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTerminByQuartal(final int quartal) {
 		final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
 		if (mapTerminKursklausuren == null) {
-			// TODO Fehlerbehandlung?
 			return new ArrayList<>();
 		}
 		final List<@NotNull GostKursklausur> klausuren = mapTerminKursklausuren.get(-1L);
@@ -525,13 +544,8 @@ public class GostKursklausurManager {
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktTerminKursklausurIds(final long idTermin, final long idKursklausur) {
-		final GostKursklausur klausur = _mapIdKursklausur.get(idKursklausur);
-		final GostKlausurtermin termin = _mapIdKlausurtermin.get(idTermin);
-
-		if (klausur == null || termin == null) {
-			// TODO Errorhandling
-			return new ArrayList<>();
-		}
+		final GostKursklausur klausur = DeveloperNotificationException.ifMapGetIsNull(_mapIdKursklausur, idKursklausur);
+		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, idTermin);
 
 		return gibKonfliktTerminKursklausur(termin, klausur);
 	}
@@ -569,12 +583,8 @@ public class GostKursklausurManager {
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public @NotNull List<@NotNull Long> gibKonfliktKursklausurKursklausurIds(final long idKursklausur1, final long idKursklausur2) {
-		final GostKursklausur klausur1 = _mapIdKursklausur.get(idKursklausur1);
-		final GostKursklausur klausur2 = _mapIdKursklausur.get(idKursklausur2);
-		if (klausur1 == null || klausur2 == null) {
-			// TODO Errorhandling
-			return new ArrayList<>();
-		}
+		final GostKursklausur klausur1 = DeveloperNotificationException.ifMapGetIsNull(_mapIdKursklausur, idKursklausur1);
+		final GostKursklausur klausur2 = DeveloperNotificationException.ifMapGetIsNull(_mapIdKursklausur, idKursklausur2);
 		return gibKonfliktKursklausurKursklausur(klausur1, klausur2);
 	}
 

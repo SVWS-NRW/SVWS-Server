@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
 
 export class GostKursklausurManager extends JavaObject {
@@ -57,6 +58,11 @@ export class GostKursklausurManager extends JavaObject {
 	 * Eine Map idTermin -> GostKlausurtermin
 	 */
 	private readonly _mapIdKlausurtermin : HashMap<number, GostKlausurtermin> = new HashMap();
+
+	/**
+	 * Eine Map date -> GostKlausurtermin
+	 */
+	private readonly _mapDateKlausurtermin : HashMap<string, List<GostKlausurtermin>> = new HashMap();
 
 
 	/**
@@ -157,6 +163,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
+	 * Termins geändert hat.
+	 *
+	 * @param termin das GostKlausurtermin-Objekt
+	 */
+	public updateKlausurtermin(termin : GostKlausurtermin) : void {
+		this.removeTermin(termin.id);
+		this.addTermin(termin);
+	}
+
+	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
 	 *
@@ -173,21 +190,15 @@ export class GostKursklausurManager extends JavaObject {
 					list.remove(klausur);
 				}
 			}
-			const quartalMap : HashMap<number, ArrayList<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.get(klausur.quartal);
-			if (quartalMap !== null) {
-				const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
-				if (listOldQuartalTerminKursklausuren !== null)
-					listOldQuartalTerminKursklausuren.remove(klausur);
-			}
-			const quartalKursartMap : HashMap<string, HashMap<number, ArrayList<GostKursklausur>>> | null = this._mapQuartalKursartTerminKursklausuren.get(klausur.quartal);
-			if (quartalKursartMap !== null) {
-				const kursartMap : HashMap<number, ArrayList<GostKursklausur>> | null = quartalKursartMap.get(klausur.kursart);
-				if (kursartMap !== null) {
-					const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
-					if (listOldQuartalTerminKursklausuren !== null)
-						listOldQuartalTerminKursklausuren.remove(klausur);
-				}
-			}
+			const quartalMap : HashMap<number, ArrayList<GostKursklausur>> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalTerminKursklausuren, klausur.quartal);
+			const listOldQuartalTerminKursklausuren : List<GostKursklausur> | null = quartalMap.get(oldTerminId);
+			if (listOldQuartalTerminKursklausuren !== null)
+				listOldQuartalTerminKursklausuren.remove(klausur);
+			const quartalKursartMap : HashMap<string, HashMap<number, ArrayList<GostKursklausur>>> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKursartTerminKursklausuren, klausur.quartal);
+			const kursartMap : HashMap<number, ArrayList<GostKursklausur>> | null = DeveloperNotificationException.ifMapGetIsNull(quartalKursartMap, klausur.kursart);
+			const listOldQuartalKursartTerminKursklausuren : List<GostKursklausur> | null = kursartMap.get(oldTerminId);
+			if (listOldQuartalKursartTerminKursklausuren !== null)
+				listOldQuartalKursartTerminKursklausuren.remove(klausur);
 			this.addKlausurToInternalMaps(klausur);
 			this.updateSchuelerIdsZuTermin(oldTerminId);
 			if (klausur.idTermin !== null)
@@ -220,6 +231,14 @@ export class GostKursklausurManager extends JavaObject {
 			this._mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
 		}
 		listKlausurtermineMapQuartalKlausurtermine.add(termin);
+		if (termin.datum !== null) {
+			let listDateKlausurtermin : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin === null) {
+				listDateKlausurtermin = new ArrayList();
+				this._mapDateKlausurtermin.put(termin.datum, listDateKlausurtermin);
+			}
+			listDateKlausurtermin.add(termin);
+		}
 	}
 
 	/**
@@ -247,13 +266,11 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Löscht einen Klausurtermin aus den internen Strukturen
 	 *
-	 * @param termin das GostKlausurtermin-Objekt
+	 * @param tId das GostKlausurtermin-Objekt
 	 */
-	public removeTermin(termin : GostKlausurtermin) : void {
-		const listKlausurtermineMapQuartalKlausurtermine : ArrayList<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(termin.quartal);
-		if (listKlausurtermineMapQuartalKlausurtermine === null) {
-			return;
-		}
+	public removeTermin(tId : number) : void {
+		const termin : GostKlausurtermin = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, tId);
+		const listKlausurtermineMapQuartalKlausurtermine : ArrayList<GostKlausurtermin> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKlausurtermine, termin.quartal);
 		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
 		let listKlausurenZuTermin : List<GostKursklausur> | null = this.getKursklausurenByTermin(termin.id);
 		if (listKlausurenZuTermin !== null) {
@@ -263,6 +280,11 @@ export class GostKursklausurManager extends JavaObject {
 				this.updateKursklausur(k);
 			}
 		}
+		if (termin.datum !== null) {
+			let listDateKlausurtermin : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin !== null)
+				listDateKlausurtermin.remove(termin);
+		}
 		this._termine.remove(termin);
 		this._mapIdKlausurtermin.remove(termin.id);
 	}
@@ -271,7 +293,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert das GostKursklausur-Objekt zum übergebenen Termin und Kurs
 	 *
 	 * @param idTermin die ID des Klausurtermins
-	 * @param idKurs die ID des Kurses
+	 * @param idKurs   die ID des Kurses
 	 *
 	 * @return das GostKursklausur-Objekt
 	 */
@@ -488,11 +510,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
 	 */
 	public gibKonfliktTerminKursklausurIds(idTermin : number, idKursklausur : number) : List<number> {
-		const klausur : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur);
-		const termin : GostKlausurtermin | null = this._mapIdKlausurtermin.get(idTermin);
-		if (klausur === null || termin === null) {
-			return new ArrayList();
-		}
+		const klausur : GostKursklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKursklausur, idKursklausur);
+		const termin : GostKlausurtermin | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, idTermin);
 		return this.gibKonfliktTerminKursklausur(termin, klausur);
 	}
 
@@ -529,11 +548,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
 	 */
 	public gibKonfliktKursklausurKursklausurIds(idKursklausur1 : number, idKursklausur2 : number) : List<number> {
-		const klausur1 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur1);
-		const klausur2 : GostKursklausur | null = this._mapIdKursklausur.get(idKursklausur2);
-		if (klausur1 === null || klausur2 === null) {
-			return new ArrayList();
-		}
+		const klausur1 : GostKursklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKursklausur, idKursklausur1);
+		const klausur2 : GostKursklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKursklausur, idKursklausur2);
 		return this.gibKonfliktKursklausurKursklausur(klausur1, klausur2);
 	}
 

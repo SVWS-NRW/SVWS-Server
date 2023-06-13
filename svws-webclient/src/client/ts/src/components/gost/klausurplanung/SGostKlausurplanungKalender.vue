@@ -13,14 +13,14 @@
 				</ul>
 			</svws-ui-drop-data>
 			<div class="flex flex-row flex-wrap gap-4 w-full">
-				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 3" :starting-day-of-week="1" :enable-drag-drop="false" :items="termineMit"
-					:show-date="showDate" @drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell" :display-week-numbers="true">
+				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 3" :starting-day-of-week="1" :enable-drag-drop="false" :disabled_items="termineMit"
+					:show-date="showDate" disabled_drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell" :display-week-numbers="true">
 					<template #header="{ headerProps }">
 						<calendar-view-header :header-props="headerProps" @input="setShowDate" />
 					</template>
-					<template #item="{value, top, itemTop}">
+					<template #item="{value}">
 						<svws-ui-drag-data :class="dropOverCssClasses()" tag="div" :data="value" @drag-start="dragStatus(value.originalItem)" @drag-end="dragStatus(null)">
-							<s-gost-klausurplanung-kalender-termin-short :item-top="itemTop" :style="top" class="cv-item" :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
+							<s-gost-klausurplanung-kalender-termin-short :class="value.classes" :kursklausurmanager="kursklausurmanager" :termin="value.originalItem" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
 						</svws-ui-drag-data>
 					</template>
 					<template #dayContent="{day}">

@@ -246,7 +246,7 @@ export class RouteDataGostKlausurplanung {
 	loescheKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
 		api.status.start();
 		const result = await api.server.deleteGostKlausurenKlausurtermin(api.schema, termin.id);
-		this.kursklausurmanager.removeTermin(termin);
+		this.kursklausurmanager.removeTermin(termin.id);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -305,8 +305,11 @@ export class RouteDataGostKlausurplanung {
 	patchKlausurtermin = async (termin: Partial<GostKlausurtermin>, id: number): Promise<boolean> => {
 		api.status.start();
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
-		Object.assign(this.kursklausurmanager.gibKlausurtermin(id), termin);
-		// this.klausurvorgabenmanager.updateKlausurtermin(termin);
+		const terminOrig = this.kursklausurmanager.gibKlausurtermin(id);
+		if (terminOrig !== null) {
+			Object.assign(terminOrig, termin);
+			this.kursklausurmanager.updateKlausurtermin(terminOrig);
+		}
 		this.commit();
 		api.status.stop();
 		return true;
