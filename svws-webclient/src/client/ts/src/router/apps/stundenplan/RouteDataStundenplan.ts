@@ -204,7 +204,6 @@ export class RouteDataStundenplan {
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
 		else {
 			const daten = await api.server.getStundenplan(api.schema, auswahl.id);
-		console.log(auswahl, daten)
 			const stundenplanManager = new StundenplanManager(daten, new ArrayList(), new ArrayList(), null);
 			this.setPatchedState({ auswahl, daten, stundenplanManager });
 		}
