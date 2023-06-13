@@ -119,14 +119,15 @@
 					return false;
 				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1.kuerzel)
 				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
-				const bel1 = f1?.belegungen[props.halbjahr.id];
-				const bel2 = f2?.belegungen[props.halbjahr.id];
-				if ((bel1 === null) || (bel2 === null))
-					return false;
-				if (((kombi.kursart1 === null) || (kombi.kursart1 === bel1?.kursartKuerzel))
-					&& ((kombi.kursart2 === null) || (kombi.kursart2 === bel2?.kursartKuerzel)))
-					return true;
-				return false;
+				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
+				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
+				const bel1 = kursart1
+					? props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
+					: props.abiturdatenManager.pruefeBelegung(f1, props.halbjahr);
+				const bel2 = kursart2
+					? props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
+					: props.abiturdatenManager.pruefeBelegung(f2, props.halbjahr);
+				return bel1 && bel2;
 			}
 		}
 		return false;
