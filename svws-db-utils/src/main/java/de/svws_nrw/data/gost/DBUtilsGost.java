@@ -194,7 +194,7 @@ public final class DBUtilsGost {
 				final GostLeistungenFachbelegung belegung = new GostLeistungenFachbelegung();
 				belegung.id = leistung.ID;
 				belegung.schuljahr = abschnittLeistungsdaten.Jahr;
-				belegung.halbjahrKuerzel = (halbjahr == null) ? null : halbjahr.kuerzel;
+				belegung.halbjahrKuerzel = halbjahr.kuerzel;
 				belegung.abschnitt = abschnittLeistungsdaten.Abschnitt;
 				belegung.abschnittGewertet = lernabschnitt.SemesterWertung;
 				belegung.jahrgang = lernabschnitt.ASDJahrgang;
@@ -206,7 +206,9 @@ public final class DBUtilsGost {
 								|| ("AB3".equals(leistung.Kursart))
 								|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 				belegung.bilingualeSprache = gostFach.biliSprache;
-				belegung.wochenstunden = leistung.Wochenstunden;
+				belegung.wochenstunden = leistung.Wochenstunden == null
+						? kursart.getWochenstunden(fach.istFSNeu)
+						: leistung.Wochenstunden;
 				belegung.fehlstundenGesamt = leistung.FehlStd == null ? 0 : leistung.FehlStd;
 				belegung.fehlstundenUnentschuldigt = leistung.uFehlStd == null ? 0 : leistung.uFehlStd;
 				fach.belegungen.add(belegung);
@@ -337,7 +339,9 @@ public final class DBUtilsGost {
 									|| ("AB3".equals(leistung.Kursart))
 									|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
 					belegung.bilingualeSprache = gostFach.biliSprache;
-					belegung.wochenstunden = leistung.Wochenstunden;
+					belegung.wochenstunden = leistung.Wochenstunden == null
+							? kursart.getWochenstunden(fach.istFSNeu)
+							: leistung.Wochenstunden;
 					belegung.fehlstundenGesamt = leistung.FehlStd;
 					belegung.fehlstundenUnentschuldigt = leistung.uFehlStd;
 					fach.belegungen.add(belegung);

@@ -104,6 +104,25 @@ public enum GostKursart {
 
 
 	/**
+	 * Gibt den Default-Wert für die Anzahl der Wochenstunden bei der Kursart zurück.
+	 *
+	 * @param istFSNeu   gibt an, ob es sich um eine neu einsetzende Fremdsprache handelt oder nicht.
+	 *
+	 * @return die Anzahl der Wochenstunden
+	 */
+	public int getWochenstunden(final boolean istFSNeu) {
+		switch (kuerzel) {
+			case "GK":  return istFSNeu ? 4 : 3;
+			case "LK":  return 5;
+			case "PJK": return 2;    // hier nur default, kann auch 3 sein
+			case "VTF": return 2;
+			case "ZK":  return 3;
+			default:    return 3;
+		}
+	}
+
+
+	/**
 	 * Gibt eine Map von den Kürzeln auf die Gost-Kursart zurück.
 	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
 	 *
