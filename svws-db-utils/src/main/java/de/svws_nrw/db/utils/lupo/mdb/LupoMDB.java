@@ -216,8 +216,11 @@ public class LupoMDB {
 			}
 			logger.logLn("Lese Daten für den Jahrgang " + jahrgang + " aus der SVWS-Datenbank...");
 			logger.modifyIndent(2);
-			final List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream()
-					.sorted((f1, f2) -> f1.SortierungSekII == null ? -1 : f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII).toList();
+			final List<DTOFach> dtofaecher = conn.queryAll(DTOFach.class).stream().sorted((f1, f2) -> {
+				if (f1.SortierungSekII == null)
+					return -1;
+				return f2.SortierungSekII == null ? 1 : f2.SortierungSekII - f1.SortierungSekII;
+			}).toList();
 			final Map<Long, DTOFach> dtoFaecherMap = dtofaecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOFaecherNichtMoeglicheKombination> dtoFaecherNichtMoeglicheKombination = conn.queryAll(DTOFaecherNichtMoeglicheKombination.class);
 			final TypedQuery<DTOSchueler> queryDtoSchueler = conn.query(
@@ -254,7 +257,6 @@ public class LupoMDB {
 			schuelerFaecherBasisSicherungen = ABPSchuelerFaecherBasisSicherung.getDefault();
 			schuelerFaecherSicherungen = ABPSchuelerFaecherSicherung.getDefault();
 			fehlermeldungen = ABPSchuelerFehlermeldungen.getDefault();
-			// TODO folgende Tabelle noch genutzt?
 			schuelerSprachenfolge = ABPSchuelerSprachenfolge.getDefault();
 			logger.logLn("Fertig!");
 			logger.modifyIndent(-2);
@@ -356,9 +358,17 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER - Fach 1 der Kombination in der DB nicht definiert!");
 					continue;
 				}
+				if (Boolean.FALSE.equals(dtoFach1.IstOberstufenFach)) {
+					logger.logLn(0, "FEHLER - Fach 1 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
+					continue;
+				}
 				final DTOFach dtoFach2 = dtoFaecher.get(nmk.Fach2_Krz);
 				if (dtoFach2 == null) {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination in der DB nicht definiert!");
+					continue;
+				}
+				if (Boolean.FALSE.equals(dtoFach2.IstOberstufenFach)) {
+					logger.logLn(0, "FEHLER - Fach 2 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
 					continue;
 				}
 				final GostLaufbahnplanungFachkombinationTyp typ = nmk.Typ == null ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN);
@@ -489,7 +499,6 @@ public class LupoMDB {
 				}
 
 				logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
-				// TODO Alle Attribute prüfen, ob relevant in SVWS-DB
 				final DTOGostSchueler lupoSchueler = new DTOGostSchueler(dtoSchueler.ID,
 						(abpSchueler.Sportattest != null) || ("J".equals(abpSchueler.Sportattest)));
 				lupoSchueler.DatumBeratung = abpSchueler.DatumBeratung == null ? null : abpSchueler.DatumBeratung.toLocalDate().toString();
@@ -588,7 +597,10 @@ public class LupoMDB {
 			gostFach.istMoeglichQ21 = lupoFach.Q3;
 			gostFach.istMoeglichQ22 = lupoFach.Q4;
 
-			gostFach.wochenstundenQualifikationsphase = lupoFach.Q_WStd != null ? lupoFach.Q_WStd : ("VX".equals(lupoFach.StatistikKrz) ? 2 : 3);
+			if (lupoFach.Q_WStd != null)
+				gostFach.wochenstundenQualifikationsphase = lupoFach.Q_WStd;
+			else
+				gostFach.wochenstundenQualifikationsphase = ("VX".equals(lupoFach.StatistikKrz) ? 2 : 3);
 
 			final ABPFaecher leitfach1 = faecher.get(lupoFach.Leitfach);
 			final ABPFaecher leitfach2 = faecher.get(lupoFach.Leitfach2);
@@ -662,8 +674,11 @@ public class LupoMDB {
 			fachbelegung.fachID = lupoSchuelerFach.Fach_ID;
 			fachbelegung.abiturFach = lupoSchuelerFach.AbiturFach;
 			fachbelegung.istFSNeu = lupoFach.AlsNeueFSInSII;
-			final GostKursart fachKursart = "PX".equals(lupoFach.StatistikKrz) ? GostKursart.PJK
-					: "VX".equals(lupoFach.StatistikKrz) ? GostKursart.VTF : GostKursart.GK;
+			GostKursart fachKursart = GostKursart.GK;
+			if ("PX".equals(lupoFach.StatistikKrz))
+				fachKursart = GostKursart.PJK;
+			if ("VX".equals(lupoFach.StatistikKrz))
+				fachKursart = GostKursart.VTF;
 			if (lupoSchuelerFach.Kursart_E1 != null) {
 				fachbelegung.belegungen[0] = new AbiturFachbelegungHalbjahr();
 				fachbelegung.belegungen[0].halbjahrKuerzel = GostHalbjahr.EF1.kuerzel;
@@ -731,7 +746,6 @@ public class LupoMDB {
                     sprachbelegung.belegungVonJahrgang = "EF";
 				sprachbelegung.belegungVonAbschnitt = 1;
 				abidaten.sprachendaten.belegungen.add(sprachbelegung);
-				// TODO LUPO-Import Sprachprüfungen einlesen
 			}
 			if ((lupoSchuelerFach.Kursart_E1 != null) || (lupoSchuelerFach.Kursart_E2 != null)
 					|| (lupoSchuelerFach.Kursart_Q1 != null) || (lupoSchuelerFach.Kursart_Q2 != null)
@@ -767,14 +781,12 @@ public class LupoMDB {
                     sprachbelegung.belegungVonJahrgang = "EF";
 				sprachbelegung.belegungVonAbschnitt = lupoSchuelerSprachenfolge.AbschnittVon == null ? 1 : ((int) lupoSchuelerSprachenfolge.AbschnittVon);
 				abidaten.sprachendaten.belegungen.add(sprachbelegung);
-				// TODO LUPO-Import Sprachprüfungen einlesen
 			}
 		}
 		return result;
 	}
 
 
-	// TODO Dokumentation
 	private static String getNotenkuerzelFromLupoNotenpunkte(final String lupoNotenpunkte) {
 		if (lupoNotenpunkte == null)
 			return null;
@@ -803,17 +815,23 @@ public class LupoMDB {
 	}
 
 
-	// TODO Dokumentation
     private static void setFachbelegung(final AbiturFachbelegungHalbjahr belegung, final String belegungPlanungKursart,
     		final GostKursart fachKursart, final Integer wochenstunden, final boolean istInAbiwertung) {
-		belegung.kursartKuerzel = "AT".equals(belegungPlanungKursart) ? "AT"
-				: "LK".equals(belegungPlanungKursart) ? "LK"
-				: "ZK".equals(belegungPlanungKursart) ? "ZK"
-				: fachKursart.toString();
+		belegung.kursartKuerzel = fachKursart.toString();
+		if ("AT".equals(belegungPlanungKursart))
+			belegung.kursartKuerzel = "AT";
+		else if ("LK".equals(belegungPlanungKursart))
+			belegung.kursartKuerzel = "LK";
+		else if ("ZK".equals(belegungPlanungKursart))
+			belegung.kursartKuerzel = "ZK";
 		belegung.schriftlich = belegungPlanungKursart == null ? null
 				: "LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart);
-		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5
-				: wochenstunden != null ? wochenstunden : (fachKursart == GostKursart.VTF ? 2 : 3);
+		if ("LK".equals(belegungPlanungKursart))
+			belegung.wochenstunden = 5;
+		else if (wochenstunden == null)
+			belegung.wochenstunden = (fachKursart == GostKursart.VTF ? 2 : 3);
+		else
+			belegung.wochenstunden = wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
     }
 
