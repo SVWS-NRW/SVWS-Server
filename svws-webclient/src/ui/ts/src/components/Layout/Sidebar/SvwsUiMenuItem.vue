@@ -57,10 +57,10 @@
 }
 
 .sidebar--menu-item--active {
-	@apply bg-svws/10 text-svws;
+	@apply bg-svws/10 text-svws dark:bg-svws/20;
 
 	&.sidebar--menu-item--statistik {
-		@apply bg-violet-500/10 text-violet-500;
+		@apply bg-violet-500/20 text-violet-500;
 	}
 }
 
@@ -71,7 +71,7 @@
 .sidebar--menu--footer .sidebar--menu-item:hover,
 .sidebar--menu--footer .sidebar--menu-item:focus {
 	&:not(.sidebar--menu-item--active) {
-		@apply bg-black/10;
+		@apply bg-black/10 dark:bg-white/10;
 	}
 }
 
@@ -92,11 +92,11 @@
 }
 
 .secondary-menu--content .sidebar--menu-item {
-	@apply text-black px-3 inline-block my-1;
+	@apply text-black dark:text-white px-3 inline-block my-1;
 
 	&:hover,
 	&:focus {
-		@apply bg-light;
+		@apply bg-light dark:bg-white/5;
 	}
 
 	&.sidebar--menu-item--active {

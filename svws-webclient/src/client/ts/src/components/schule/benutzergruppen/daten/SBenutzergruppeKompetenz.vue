@@ -42,7 +42,7 @@
 
 <style scoped lang="postcss">
 .deaktiviert {
-	@apply text-black/50;
+	@apply text-black/50 dark:text-white/50;
 }
 
 .data-table__td-content {

@@ -81,9 +81,9 @@
 }
 
 .badge--light {
-	@apply bg-light;
-	@apply border-light;
-	@apply text-dark;
+	@apply bg-light dark:bg-white/10;
+	@apply border-light dark:border-white/20;
+	@apply text-dark dark:text-white;
 }
 
 .badge--success {

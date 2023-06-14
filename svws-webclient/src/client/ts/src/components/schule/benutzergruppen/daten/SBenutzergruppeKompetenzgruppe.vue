@@ -13,7 +13,7 @@
 				</svws-ui-checkbox>
 			</div>
 		</svws-ui-table-cell>
-		<svws-ui-table-cell class="font-mono" :class="{'text-black/50': istAdmin}">
+		<svws-ui-table-cell class="font-mono" :class="{'text-black/50 dark:text-white/50': istAdmin}">
 			{{ kompetenzgruppe.daten.id }}
 		</svws-ui-table-cell>
 	</svws-ui-table-row>

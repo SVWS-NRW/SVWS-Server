@@ -45,7 +45,7 @@
 
 		&--headline {
 			@apply text-headline-md;
-			@apply text-black;
+			@apply text-black dark:text-white;
 			@apply flex-shrink-0 line-clamp-1 max-w-full;
 
 			&--large {
@@ -67,7 +67,7 @@
 	}
 
 	.content-card--wrapper--light-bg .content-card--header {
-		@apply bg-white;
+		@apply bg-white dark:bg-black;
 	}
 
 	.page--wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .router-tab-bar--panel {

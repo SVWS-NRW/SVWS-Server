@@ -153,10 +153,10 @@
 		@apply overflow-hidden whitespace-nowrap;
 
 		input::placeholder {
-			@apply text-black/25;
+			@apply text-black/25 dark:text-white/25;
 
 			.placeholder--visible & {
-				@apply text-black;
+				@apply text-black dark:text-white;
 			}
 		}
 	}
@@ -186,15 +186,15 @@
 	}
 
 	.text-input--control {
-		@apply bg-white;
-		@apply rounded-md border border-black/5;
+		@apply bg-white dark:bg-black;
+		@apply rounded-md border border-black/5 dark:border-white/5;
 		@apply h-9 w-full;
 		@apply text-base;
 		@apply whitespace-nowrap;
 		padding: 0.5em 0.7em;
 
 		&:hover {
-			@apply border-black/25;
+			@apply border-black/25 dark:border-white/25;
 		}
 	}
 
@@ -217,16 +217,16 @@
 
 	.text-input-component:focus-within .text-input--control,
 	.text-input--filled .text-input--control {
-		@apply border-black;
+		@apply border-black dark:border-white;
 		@apply outline-none;
 	}
 
 	.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
-		@apply border-black/25;
+		@apply border-black/25 dark:border-white/25;
 	}
 
 	.text-input--filled:not(:focus-within):hover .text-input--control {
-		@apply border-black/50;
+		@apply border-black/50 dark:border-white/50;
 	}
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
@@ -270,12 +270,12 @@
 
 	.text-input--control[type="date"] {
 		color: transparent;
-		@apply bg-transparent;
+		@apply bg-transparent dark:bg-transparent;
 	}
 
 	.text-input-component:focus-within .text-input--control[type="date"],
 	.text-input--filled .text-input--control[type="date"] {
-		@apply text-black;
+		@apply text-black dark:text-white;
 		@apply pr-1;
 	}
 
@@ -322,7 +322,7 @@
 	.text-input-component:focus-within .text-input--placeholder,
 	.text-input--filled .text-input--placeholder {
 		@apply -translate-y-1/2;
-		@apply bg-white opacity-100;
+		@apply bg-white dark:bg-black opacity-100;
 		@apply rounded;
 		@apply px-1;
 
@@ -356,12 +356,12 @@
 		@apply cursor-not-allowed;
 
 		.text-input--placeholder {
-			@apply text-black/25;
+			@apply text-black/25 dark:text-white/25;
 		}
 	}
 
 	.text-input--control:disabled {
-		@apply bg-black/10 border-black/25 text-black;
+		@apply bg-black/10 dark:bg-white/10 border-black/25 dark:border-white/25 text-black;
 		@apply opacity-20;
 		@apply pointer-events-none;
 	}

@@ -6,7 +6,7 @@
 	</svws-ui-table-cell>
 	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
 		<!-- TODO Die Methode in Manager auslagern. -->
-		<span class="inline-flex gap-1 text-black/50" v-if="getBenutzerManager().istAdmin()">
+		<span class="inline-flex gap-1 text-black/50 dark:text-white/50" v-if="getBenutzerManager().istAdmin()">
 			<i-ri-shield-star-line class="opacity-50 -mt-0.5" />
 			<span>Admin</span>
 		</span>
@@ -50,7 +50,7 @@
 
 <style scoped lang="postcss">
 	.deaktiviert {
-		@apply text-black/50;
+		@apply text-black/50 dark:text-white/50;
 	}
 
 	.data-table__td-content {

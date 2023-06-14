@@ -46,20 +46,20 @@
         @apply py-2 px-3;
         @apply rounded-md;
         @apply select-none;
-        @apply text-sm font-bold text-black;
+        @apply text-sm font-bold text-black dark:text-white;
         @apply whitespace-nowrap;
     }
 
     .router-tab-bar-button:hover {
-        @apply bg-light;
+        @apply bg-light hover:bg-white/5;
     }
 
     .router-tab-bar-button:focus {
-				@apply text-primary;
-				@apply bg-svws/5;
+				@apply text-svws;
+				@apply bg-svws/5 dark:bg-svws/10;
 
 				.page--statistik & {
-					@apply bg-violet-500/5;
+					@apply bg-violet-500/5 dark:bg-violet-500/10;
 				}
 			}
 
@@ -67,7 +67,7 @@
 				@apply ring-svws/50;
 
 				.page--statistik & {
-
+					@apply ring-violet-500/50;
 				}
 		}
 
@@ -78,12 +78,16 @@
 
     .router-tab-bar-button--active {
 		@apply relative;
-        @apply text-primary;
+        @apply text-svws;
+
+		.page--statistik & {
+			@apply text-violet-500;
+		}
 
 		&:after {
 			@apply absolute w-full;
 			@apply -bottom-2 inset-x-0;
-			@apply border-b-2 border-primary z-10;
+			@apply border-b-2 border-svws z-10;
 			content: '';
 			/*@apply left-3;
 			width: calc(100% - 1.5rem);*/
@@ -91,7 +95,7 @@
     }
 
     .router-tab-bar-button:disabled {
-		@apply bg-black bg-opacity-25 border-black border-opacity-50 text-black;
+		@apply bg-black/25 dark:bg-white/25 border-black/50 dark:border-white/50 text-black dark:text-white;
 		@apply opacity-20;
 		@apply cursor-not-allowed pointer-events-none;
     }

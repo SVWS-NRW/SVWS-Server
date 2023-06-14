@@ -139,7 +139,7 @@
 
 		&:after {
 			@apply absolute inset-x-0 bottom-0;
-			@apply border-b-2 border-light;
+			@apply border-b-2 border-light dark:border-white/10;
 			@apply pointer-events-none;
 			content: "";
 		}

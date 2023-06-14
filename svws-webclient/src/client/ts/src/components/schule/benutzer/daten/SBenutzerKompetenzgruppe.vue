@@ -13,13 +13,13 @@
 				</svws-ui-checkbox>
 			</div>
 		</svws-ui-table-cell>
-		<svws-ui-table-cell class="text-black/50">
+		<svws-ui-table-cell class="text-black/50 dark:text-white/50">
 			<span class="inline-flex gap-1" v-if="getBenutzerManager().istAdmin()">
 				<i-ri-shield-star-line class="opacity-50 -mt-0.5" />
 				<span>Admin</span>
 			</span>
 		</svws-ui-table-cell>
-		<svws-ui-table-cell class="font-mono" :class="{'text-black/50': getBenutzerManager().istAdmin()}">
+		<svws-ui-table-cell class="font-mono" :class="{'text-black/50 dark:text-white/50': getBenutzerManager().istAdmin()}">
 			{{ kompetenzgruppe.daten.id }}
 		</svws-ui-table-cell>
 	</svws-ui-table-row>

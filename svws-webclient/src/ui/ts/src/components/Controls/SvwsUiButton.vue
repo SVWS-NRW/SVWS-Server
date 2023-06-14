@@ -103,10 +103,10 @@
 }
 
 .button--secondary {
-	@apply bg-transparent text-black border-dark;
+	@apply bg-transparent dark:bg-transparent text-black dark:text-white border-black/90 dark:border-white/90;
 
 	.notification--error & {
-		@apply text-white border-white/25;
+		@apply text-white dark:text-black border-white/25 dark:border-black/25;
 	}
 
 	&:hover {
@@ -117,7 +117,7 @@
 		}
 
 		.notification--error & {
-			@apply border-white text-white brightness-100;
+			@apply border-white dark:border-black text-white dark:text-black brightness-100;
 		}
 	}
 
@@ -129,7 +129,7 @@
 		}
 
 		.notification--error & {
-			@apply ring-white/25 border-white;
+			@apply ring-white/25 dark:ring-black/25 border-white dark:border-black;
 		}
 	}
 
@@ -137,26 +137,26 @@
 		@apply bg-svws/5 brightness-100;
 
 		.notification--error & {
-			@apply bg-white/10;
+			@apply bg-white/10 dark:bg-black/10;
 		}
 	}
 }
 
 .button--transparent,
 .cv-wrapper .cv-header button {
-	@apply bg-transparent border-transparent;
+	@apply bg-transparent border-transparent dark:bg-transparent dark:border-transparent;
 
 	&:hover {
-		@apply bg-light brightness-95;
+		@apply bg-light dark:bg-white/5 brightness-95;
 	}
 
 	&:focus-visible {
-		@apply bg-light ring-black/25;
+		@apply bg-light dark:bg-white/5 ring-black/25 dark:ring-white/25;
 	}
 }
 
 .button--danger {
-	@apply bg-transparent text-error border-error;
+	@apply bg-transparent dark:bg-transparent text-error border-error;
 
 	&:hover,
 	&:focus {
@@ -236,11 +236,11 @@
 	}
 
 	&:hover, &:focus {
-		@apply bg-black/10 rounded;
+		@apply bg-black/10 dark:bg-white/5 rounded;
 	}
 
 	&:focus-visible {
-		@apply ring-black/25;
+		@apply ring-black/25 dark:ring-white/25;
 	}
 }
 
@@ -250,7 +250,7 @@
 	&:hover,
 	&:focus,
 	&:focus-visible {
-		@apply bg-black/25 border-black/50 text-black;
+		@apply bg-black/25 border-black/50 text-black dark:bg-white/25 dark:border-white/50 dark:text-white;
 		@apply opacity-25;
 		@apply cursor-not-allowed pointer-events-none;
 	}

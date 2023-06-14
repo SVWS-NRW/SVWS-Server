@@ -11,6 +11,7 @@ function withOpacity(cssVariale) {
 module.exports = {
 	layers: ["components", "utilities"],
 	safelist: ["theme-dark"],
+	darkMode: 'class',
 	theme: {
 		fontSize: {
 			'base': ['1rem', {

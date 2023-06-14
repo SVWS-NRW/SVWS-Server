@@ -44,11 +44,31 @@
 	html {
 		font-size: 10px;
 		@apply bg-light;
+
+		&.dark {
+			@apply bg-[#000] text-white;
+		}
+
+		&.font-size-small {
+			font-size: 9px;
+		}
+
+		&.font-size-large {
+			font-size: 11px;
+		}
 	}
 
 	@media (min-width: 1280px) {
 		html {
 			font-size: 12px;
+
+			&.font-size-small {
+				font-size: 11px;
+			}
+
+			&.font-size-large {
+				font-size: 13px;
+			}
 		}
 	}
 
@@ -79,10 +99,10 @@
 
 	.app--sidebar-container,
 	.app--content-container {
-		@apply bg-white rounded-2xl;
+		@apply bg-white dark:bg-black rounded-2xl;
 		@apply h-full w-full;
 		@apply flex flex-col;
-		@apply border border-black/25;
+		@apply border border-black/25 dark:border-white/10;
 		@apply overflow-y-auto;
 	}
 
@@ -104,7 +124,7 @@
 
 	.app-layout--aside {
 		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
-		@apply shadow-2xl shadow-black/25 bg-white border-l border-black/25;
+		@apply shadow-2xl shadow-black/25 dark:shadow-white/25 bg-white dark:bg-black border-l border-black/25 dark:border-white/25;
 	}
 
 	.app--sidebar-container {
@@ -166,7 +186,7 @@
 		@apply w-full h-full flex justify-center items-center;
 
 		svg {
-			@apply w-full h-1/5 text-light;
+			@apply w-full h-1/5 text-light dark:text-white/5;
 			max-width: 20vw;
 		}
 	}

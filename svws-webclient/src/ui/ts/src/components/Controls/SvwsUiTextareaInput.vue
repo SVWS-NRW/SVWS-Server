@@ -142,8 +142,8 @@
 	}
 
 	.textarea-input--control {
-		@apply bg-white;
-		@apply rounded-md border border-black/5;
+		@apply bg-white dark:bg-black;
+		@apply rounded-md border border-black/5 dark:border-white/5;
 		@apply w-full;
 		@apply text-base;
 		@apply cursor-text;
@@ -151,7 +151,7 @@
 		min-height: theme("spacing.9");
 
 		&:hover {
-			@apply border-black/25;
+			@apply border-black/25 dark:border-white/25;
 		}
 	}
 
@@ -162,16 +162,16 @@
 
 	.textarea-input--focus .textarea-input--control,
 	.textarea-input--filled .textarea-input--control {
-		@apply border-black;
+		@apply border-black dark:border-white;
 		@apply outline-none;
 	}
 
 	.textarea-input--filled:not(:focus-within):not(:hover) .textarea-input--control {
-		@apply border-black/25;
+		@apply border-black/25 dark:border-white/25;
 	}
 
 	.textarea-input--filled:not(:focus-within):hover .textarea-input--control {
-		@apply border-black/50;
+		@apply border-black/50 dark:border-white/50;
 	}
 
 	.textarea-input--disabled .textarea-input--control {
@@ -243,7 +243,7 @@
 	.textarea-input--focus .textarea-input--placeholder,
 	.textarea-input--filled .textarea-input--placeholder {
 		@apply -translate-y-1/2;
-		@apply bg-white opacity-100;
+		@apply bg-white dark:bg-black opacity-100;
 		@apply rounded;
 		@apply px-1;
 
@@ -265,11 +265,11 @@
 		@apply cursor-not-allowed;
 
 		.textarea-input--placeholder {
-			@apply text-black/25;
+			@apply text-black/25 dark:text-white;
 		}
 
 		.textarea-input--control {
-			@apply bg-black/10 border-black/25 text-black;
+			@apply bg-black/10 dark:bg-white/10 border-black/25 dark:border-white/25 text-black dark:text-white;
 			@apply opacity-20;
 			@apply cursor-not-allowed pointer-events-none;
 		}

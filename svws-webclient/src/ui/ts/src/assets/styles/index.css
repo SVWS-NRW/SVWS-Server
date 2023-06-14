@@ -8,22 +8,27 @@
 		--color-black: 44, 44, 44; /* #2C2C2C */
 		--color-gray: 102, 102, 102; /* #666666 */
 		--color-primary: 34, 133, 213; /* #2285d5 */
-		--color-light: 237, 236, 235; /* #edeceb CONTRAST better */
-		--color-light: 245, 244, 242; /* ##f5f4f2 CONTRAST good */
 		--color-light: 242, 244, 245; /* ##f5f4f2 CONTRAST good, flipped to blue */
 		--color-dark-20: 195, 195, 195; /* #c8d0d6 */
 		--color-dark: 43, 68, 82; /* #2b4452 */
-		--color-error: 235, 97, 97; /* #eb6161 */
-		--color-error: 219, 39, 119; /* #db2777 */
-		--color-error: 244, 63, 94; /* #f43f5e // color-rose-500 */
 		--color-error: 225, 29, 72; /* #e11d48 // color-rose-600 */
 		--color-success: 182, 230, 92; /* #b6e65c */
 		--color-highlight: 255, 246, 147; /* #fff693 */
 	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--color-black: 28, 28, 28; /* #2C2C2C */
+		}
+	}
 }
 
 html {
-	@apply antialiased text-black;
+	@apply antialiased text-black dark:text-white;
+}
+
+html.dark {
+	--color-black: 28, 28, 28; /* #2C2C2C */
 }
 
 .text-sm-bold {

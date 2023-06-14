@@ -404,7 +404,7 @@
 
 .data-table {
 	@apply flex flex-col;
-	@apply w-full border border-black/25 bg-white border-b-0;
+	@apply w-full border border-black/25 dark:border-white/25 bg-white dark:bg-black border-b-0;
 	@apply tabular-nums;
 	@apply max-h-full overflow-auto;
 
@@ -418,29 +418,29 @@
 
 	&__th,
 	&__td {
-		@apply flex h-full items-center border-r border-b border-black/25 leading-none;
+		@apply flex h-full items-center border-r border-b border-black/25 dark:border-white/25 leading-none;
 		padding: 0.1rem 0.5rem 0.1rem;
 		line-height: 1;
 
 		.data-table__contrast-border & {
-			@apply border-black;
+			@apply border-black dark:border-white;
 		}
 
 		&__disabled,
 		.data-table__tr__disabled & {
-			@apply cursor-not-allowed relative text-black/50;
+			@apply cursor-not-allowed relative text-black/50 dark:text-white/50;
+
+			.table--with-background & {
+				@apply dark:text-black/50;
+			}
 
 			&:before {
-				@apply absolute inset-0 bg-black/20 border border-black/5;
+				@apply absolute inset-0 bg-black/5 dark:bg-white/10 pointer-events-none;
 				content: '';
-			}
 
-			svg {
-				@apply opacity-10;
-			}
-
-			.button svg {
-				@apply opacity-100;
+				.table--with-background & {
+					@apply bg-black/40;
+				}
 			}
 		}
 
@@ -535,10 +535,10 @@
 		}
 
 		&--clicked {
-			@apply bg-svws/5 font-bold text-svws;
+			@apply bg-svws/5 dark:bg-svws/5 font-bold text-svws;
 
 			.page--statistik & {
-				@apply bg-violet-500/5 text-violet-500;
+				@apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
 			}
 		}
 	}
@@ -562,7 +562,7 @@
 	}
 
 	&__cell-select {
-		@apply flex items-center justify-center p-0 bg-white;
+		@apply flex items-center justify-center p-0 bg-white dark:bg-black;
 		@apply sticky left-0 z-10;
 
 		.data-table__tfoot & {
@@ -589,22 +589,22 @@
 			@apply cursor-pointer select-none;
 
 			&:hover {
-				@apply bg-dark-20/25 rounded;
+				@apply bg-light dark:bg-white/10 rounded;
 			}
 
 			&-column,
 			&-column:hover {
-				@apply bg-svws/5;
+				@apply bg-svws/5 dark:bg-svws/10;
 
 				.page--statistik & {
-					@apply bg-violet-500/5;
+					@apply bg-violet-500/5 dark:bg-violet-500/10;
 				}
 
 				.data-table__th-title {
 					@apply text-svws;
 
 					.page--statistik & {
-						@apply text-violet-500;
+						@apply text-violet-500 dark:text-violet-400;
 					}
 				}
 			}
@@ -616,13 +616,13 @@
 	}
 
 	&__thead {
-		@apply w-min min-w-full bg-white;
+		@apply w-min min-w-full bg-white dark:bg-black dark:text-white;
 		@apply font-bold text-button;
-		@apply border-b border-black/25;
+		@apply border-b border-black/25 dark:border-white/25;
 		@apply sticky top-0 z-20;
 
 		.data-table__contrast-border & {
-			@apply border border-black;
+			@apply border border-black dark:border-white;
 		}
 
 		.data-table__tr:last-child {
@@ -635,7 +635,7 @@
 		.data-table__th,
 		.data-table__td {
 			.data-table__contrast-border & {
-				@apply border-black;
+				@apply border-black dark:border-white;
 			}
 		}
 
@@ -671,7 +671,7 @@
 
 		.data-table__thead__tr__compact {
 			&:last-child {
-				@apply border-b border-black/25;
+				@apply border-b border-black/25 dark:border-white/25;
 
 				.data-table__contrast-border & {
 					@apply border-b-0;
@@ -684,7 +684,7 @@
 		@apply h-auto flex flex-col;
 
 		.data-table__contrast-border & {
-			@apply border-black border-x;
+			@apply border-black dark:border-white border-x;
 		}
 
 		&__tr {
@@ -699,10 +699,10 @@
 			}
 
 			&.data-table__tr__expanded {
-				@apply border-b border-black/25 bg-light;
+				@apply border-b border-black/25 dark:border-white/25 bg-light dark:bg-white/10;
 
 				.data-table__td {
-					@apply border-b-0 bg-white;
+					@apply border-b-0 bg-white dark:bg-black;
 
 					.checkbox {
 						@apply ml-5;
@@ -802,12 +802,12 @@
 	}*/
 
 	&__tfoot {
-		@apply w-max min-w-full bg-white;
+		@apply w-max min-w-full bg-white dark:bg-black dark:text-white;
 		@apply sticky bottom-0 z-20;
-		@apply border-y border-black/25 -mt-px;
+		@apply border-y border-black/25 dark:border-white/25 -mt-px;
 
 		.data-table__contrast-border & {
-			@apply border-black border-x;
+			@apply border-black dark:border-white border-x;
 		}
 
 		&__tr {
@@ -828,7 +828,7 @@
 
 		&__th,
 		&__td {
-			@apply border-transparent;
+			@apply border-transparent dark:border-transparent;
 		}
 
 		.data-table__cell-select {
@@ -851,7 +851,7 @@
 			@apply border-0 m-0 !important;
 
 			.popper {
-				@apply text-sm flex flex-col gap-4 px-1 py-3 shadow ring-1 ring-black/10;
+				@apply text-sm flex flex-col gap-4 px-1 py-3 shadow dark:shadow-white ring-1 ring-black/10 dark:ring-white/10;
 				margin-right: -0.5rem !important;
 
 				.button {
@@ -878,7 +878,7 @@
 				}
 
 				&:not(.data-table__tr--clicked):hover {
-					@apply bg-light;
+					@apply bg-light dark:bg-white/5;
 				}
 			}
 		}
@@ -1087,5 +1087,9 @@
 			@apply bg-transparent border-0 font-bold;
 		}
 	}
+}
+
+.table--with-background {
+	@apply text-black;
 }
 </style>

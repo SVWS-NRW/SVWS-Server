@@ -54,11 +54,11 @@ input[type="file"]::file-selector-button {
 }
 
 input[type="file"] {
-	@apply text-black/50 cursor-pointer;
+	@apply text-black/50 dark:text-white/50 cursor-pointer;
 }
 
 input[type="file"]:hover {
-	@apply text-black/75;
+	@apply text-black/75 dark:text-white/75;
 }
 
 input[type="file"]:hover::file-selector-button {

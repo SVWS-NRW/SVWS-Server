@@ -95,7 +95,7 @@
 	@apply h-screen;
 	@apply overflow-hidden;
 	@apply relative;
-	@apply bg-white;
+	@apply bg-white dark:bg-black;
 }
 
  .page--wrapper {

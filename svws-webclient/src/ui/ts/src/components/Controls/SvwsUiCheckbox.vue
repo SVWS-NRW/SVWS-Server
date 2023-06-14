@@ -101,7 +101,7 @@
 		&:hover,
 		&:focus {
 			.icon {
-				@apply text-black;
+				@apply text-black dark:text-white;
 			}
 		}
 	}
@@ -129,7 +129,7 @@
 		&:hover,
 		&:focus {
 			.icon {
-				@apply text-black;
+				@apply text-black dark:text-white;
 			}
 		}
 	}
@@ -167,7 +167,7 @@
 	@apply cursor-not-allowed;
 
 	&:not(.checkbox--bw) .icon {
-		@apply text-black;
+		@apply text-black dark:text-white;
 	}
 }
 
@@ -176,7 +176,7 @@
 }
 
 .checkbox--disabled .checkbox--label {
-	@apply text-gray;
+	@apply text-black/50 dark:text-white/50;
 }
 .checkbox--statistics {
 	@apply text-violet-500;

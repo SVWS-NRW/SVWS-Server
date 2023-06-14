@@ -389,7 +389,7 @@
 	&.with-value,
 	&:focus-within {
 		.tag-list-wrapper {
-			@apply border-black;
+			@apply border-black dark:border-white;
 			@apply outline-none;
 		}
 	}
@@ -402,11 +402,11 @@
 	}
 
 	&.with-value:not(:focus-within):not(:hover) .tag-list-wrapper {
-		@apply border-black/25;
+		@apply border-black/25 dark:border-white/25;
 	}
 
 	&.with-value:not(:focus-within):hover .tag-list-wrapper {
-		@apply border-black/50;
+		@apply border-black/50 dark:border-white/50;
 	}
 
 	.multiselect-tags--placeholder {
@@ -433,7 +433,7 @@
 	&:focus-within {
 		.multiselect-tags--placeholder {
 			@apply -translate-y-1/2;
-			@apply bg-white opacity-100;
+			@apply bg-white dark:bg-black opacity-100;
 			@apply rounded;
 			@apply px-1;
 
@@ -486,7 +486,7 @@
 	}
 
 	&:hover .icon {
-		@apply bg-black text-white;
+		@apply bg-black text-white dark:bg-white dark:text-black;
 	}
 
 	.multiselect-input-component--disabled & {
@@ -510,8 +510,8 @@
 
 .multiselect--items-wrapper {
 	@apply absolute z-50 w-full min-w-[11rem];
-	@apply rounded-md border border-black/25 bg-white;
-	@apply shadow-2xl shadow-black/25;
+	@apply rounded-md border border-black/25 dark:border-white/25 bg-white dark:bg-black;
+	@apply shadow-2xl shadow-black/25 dark:shadow-white/5;
 	@apply overflow-hidden;
 }
 
@@ -521,7 +521,7 @@
 	max-height: 40ex;
 
 	.multiselect--item {
-		@apply text-black bg-white rounded border border-transparent;
+		@apply text-black dark:text-white bg-white dark:bg-black rounded border border-transparent;
 		@apply text-base;
 		@apply py-1 my-1 px-2;
 
@@ -554,12 +554,12 @@
 	&--tags {
 		.multiselect--item.selected {
 			&.active {
-				@apply ring-black/25;
+				@apply ring-black/25 dark:ring-white/10;
 			}
 
 			&:hover,
 			&.active {
-				@apply border-black text-black bg-transparent;
+				@apply border-black dark:border-white text-black dark:text-white bg-transparent dark:bg-transparent;
 
 				svg {
 					@apply hidden;
@@ -576,7 +576,7 @@
 
 .tag-list-wrapper {
 	@apply flex w-full items-center justify-between overflow-x-auto;
-	@apply bg-white;
+	@apply bg-white dark:bg-black;
 	@apply rounded-md border;
 	@apply w-full;
 	@apply text-base;
@@ -628,7 +628,7 @@
 }
 
 .tag-remove .icon:hover {
-	@apply bg-black text-white rounded;
+	@apply bg-black dark:bg-white text-white dark:text-black rounded;
 }
 
 .remove-icon {

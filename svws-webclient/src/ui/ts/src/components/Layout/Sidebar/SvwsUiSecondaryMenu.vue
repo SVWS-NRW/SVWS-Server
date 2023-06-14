@@ -113,7 +113,7 @@
 		}
 
 		&:after {
-			@apply inline-block mx-1 text-black;
+			@apply inline-block mx-1 text-black dark:text-white;
 			content: '/';
 		}
 	}

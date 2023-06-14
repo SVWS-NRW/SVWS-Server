@@ -72,14 +72,14 @@
 }
 
 .toggle--indicator {
-	@apply bg-white;
-	@apply rounded-full ring-1 ring-black;
+	@apply bg-white dark:bg-black;
+	@apply rounded-full ring-1 ring-black dark:ring-white;
 	@apply relative;
 	@apply h-4 w-8;
 
 	&:before {
 		@apply absolute;
-		@apply bg-black border border-white;
+		@apply bg-black dark:bg-white border border-white dark:border-black;
 		@apply block;
 		@apply rounded-full;
 		@apply h-4 w-4;
@@ -109,7 +109,7 @@
 }
 
 .toggle input:checked+.toggle--indicator {
-	@apply bg-svws ring-svws;
+	@apply bg-svws dark:bg-svws ring-svws;
 
 	&:before {
 		@apply bg-white translate-x-full border-svws;
@@ -155,7 +155,7 @@
 }
 
 .toggle.toggle--disabled input:checked+.toggle--indicator {
-	@apply bg-black ring-black border-black text-black;
+	@apply bg-black ring-black border-black text-black dark:bg-white dark:ring-white dark:border-white dark:text-white;
 
 	&:before {
 		@apply border-black;
