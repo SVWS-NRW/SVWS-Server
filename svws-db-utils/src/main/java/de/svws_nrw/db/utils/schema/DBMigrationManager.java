@@ -3,6 +3,7 @@ package de.svws_nrw.db.utils.schema;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
@@ -1892,8 +1894,20 @@ public final class DBMigrationManager {
 			} else if (faecherIDs.contains(daten.ID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Doppelte Fächer-IDs sind unzulässig.");
 				entities.remove(i);
+			} else if (daten.StatistikFach == null) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Fach muss ein gültiges Statistik-Kürzel haben. Dieses darf nicht null sein.");
+				entities.remove(i);
 			} else {
-				faecherIDs.add(daten.ID);
+				if (Collator.getInstance().compare("E5", daten.StatistikFach) == 0) {
+					logger.logLn(LogLevel.ERROR, "Korrigiere fehlerhaften Datensatz: Ändere Das Statistik-Kürzel des Faches von E5 auf E.");
+					daten.StatistikFach = "E";
+				}
+				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(daten.StatistikFach);
+				if (zulFach == null) {
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt.".formatted(daten.StatistikFach));
+					entities.remove(i);
+				} else
+					faecherIDs.add(daten.ID);
 			}
 		}
 		for (int i = entities.size() - 1; i >= 0; i--) {
