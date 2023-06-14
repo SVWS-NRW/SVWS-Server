@@ -317,6 +317,13 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				logger.modifyIndent(-2);
 				return false;
 			}
+			// Außerdem müssen die Restabschnitte in der Jahrgangstabelle angepasst werden
+			logger.logLn("- Passe die Anzahl der Restabschnitte und bei der Tabelle EigeneSchule_Jahrgaenge an...");
+			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule_Jahrgaenge SET Restabschnitte = Restabschnitte / 2 WHERE Restabschnitte IS NOT NULL")) {
+				logger.logLn("Fehler beim Anpassen der Restabschnitte");
+				logger.modifyIndent(-2);
+				return false;
+			}
 			// Und zum Abschluss werden die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule umgestellt
 			logger.logLn("- Stelle die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule um...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule SET EigeneSchule.AnzahlAbschnitte = 2, EigeneSchule.AbschnittBez = 'Halbjahr', EigeneSchule.BezAbschnitt1 = '1. Hj.', EigeneSchule.BezAbschnitt2 = '2. Hj.', EigeneSchule.BezAbschnitt3 = NULL, EigeneSchule.BezAbschnitt4 = NULL")) {
