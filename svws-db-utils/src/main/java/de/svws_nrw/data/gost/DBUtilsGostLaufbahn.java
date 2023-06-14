@@ -181,6 +181,8 @@ public final class DBUtilsGostLaufbahn {
 			}
 
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
+			if (gostFach == null)
+			    continue;
 			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(gostFach.kuerzel);
 			if (zulFach != null)
 				fach.istFSNeu = zulFach.daten.istFremdsprache && zulFach.daten.nurSII;
