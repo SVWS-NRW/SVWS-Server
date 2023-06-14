@@ -42,6 +42,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		passeLehrerTabelleAn();
 		pruefeWeitereDaten2();
 		passeBenutzerTabellenAn();
+		korrigiereFachkombinationen();
 	}
 
 
@@ -2737,6 +2738,19 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			)
 			""",
 			Schema.tab_BenutzergruppenKompetenzen, Schema.tab_Kompetenzen
+		);
+	}
+
+
+	private void korrigiereFachkombinationen() {
+		add("NichtMoeglAbiFachKombi: Entferne alle Einträge, bei denen das angegebene Fach nicht als Fach der gymnasialen Oberstufe gekennzeichnet ist",
+			"""
+			DELETE NichtMoeglAbiFachKombi FROM NichtMoeglAbiFachKombi
+			JOIN EigeneSchule_Faecher f1 ON NichtMoeglAbiFachKombi.Fach1_ID = f1.ID
+			JOIN EigeneSchule_Faecher f2 ON NichtMoeglAbiFachKombi.Fach2_ID = f2.ID
+			WHERE f1.BasisFach IS NULL OR f1.BasisFach = '-' OR f2.BasisFach IS NULL OR f2.BasisFach = '-'
+			""",
+			Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
 		);
 	}
 
