@@ -46,6 +46,8 @@ export SVWS_TLS_KEY_ALIAS=
 export TMP_DIR=/tmp/svws
 export MDBFILE=${MDBFILE:-$TMP_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
 
+export INIT_EMPTY_DB=N
+
 if [ -f .env ]; then
  export $(grep -v '^#' .env | xargs)
 else
@@ -131,6 +133,10 @@ else
     		export TMP_DIR=/tmp/svws
     		MDBFILE_USER=${MDBFILE_USER:-/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
     		MDBFILE="${TMP_DIR}${MDBFILE_USER}"
+    	else
+    		if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
+    			export INIT_EMPTY_DB=J
+    		fi
     	fi
 
     	echo ""
@@ -191,6 +197,7 @@ else
     echo "TMP_DIR=$TMP_DIR" >> .env
     echo "MDBFILE=$MDBFILE" >> .env
     echo "DOWNLOAD_PFAD=$DOWNLOAD_PFAD" >> .env
+    echo "INIT_EMPTY_DB=$INIT_EMPTY_DB" >> .env
 fi
 
 # Laden von Abhängigkeiten
@@ -325,8 +332,24 @@ if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
        -tr ${MYSQL_ROOT_PASSWORD}
 fi
 
-cd $script_dir
+# Überprüfe, ob eine leere Datenbank erstellt werden sollen
+if [ "$INIT_EMPTY_DB" = "j" ] || [ "$INIT_EMPTY_DB" = "J" ]; then
+	
+	# Wechsle in das Verzeichnis der Anwendung
+	cd $APP_PATH
 
+	# Erstelle leere Datenbank ...
+    echo "Erstelle leere Datenbank ..."
+    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.CreateSchema -j -d -r -1 \
+       -td "MARIA_DB" \
+       -tl ${MYSQL_HOST} \
+       -ts ${MYSQL_DATABASE} \
+       -tu ${MYSQL_USER} \
+       -tp ${MYSQL_PASSWORD} \
+       -tr ${MYSQL_ROOT_PASSWORD}
+fi
+
+cd $script_dir
 
 # Lösche das Verzeichnis 'svws' im Home-Verzeichnis
 echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis..."
