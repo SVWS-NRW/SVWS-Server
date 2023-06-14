@@ -28,7 +28,6 @@ export { default as SvwsUiMenuItem } from "./Layout/Sidebar/SvwsUiMenuItem.vue";
 export { default as SvwsUiSecondaryMenu } from "./Layout/Sidebar/SvwsUiSecondaryMenu.vue";
 export { default as SvwsUiBadge } from "./Typography/SvwsUiBadge.vue";
 export { default as SvwsUiTooltip } from "./SvwsUiTooltip.vue";
-export { default as SvwsUiPopover } from "./SvwsUiPopover.vue";
 export { default as SvwsUiRouterTabBar } from "./Controls/SvwsUiRouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./Controls/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./Controls/SvwsUiRouterVerticalTabBar.vue";

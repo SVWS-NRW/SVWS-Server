@@ -876,7 +876,7 @@
 					<svws-ui-text-input v-else v-model="rowData.name.age" />
 				</template>
 				<template #cell(actions)="{ rowData }">
-					<svws-ui-popover :hover="false"
+					<!-- <svws-ui-popover :hover="false"
 						placement="left-end"
 						:disable-click-away="false">
 						<template #trigger>
@@ -898,7 +898,7 @@
 								</div>
 							</div>
 						</template>
-					</svws-ui-popover>
+					</svws-ui-popover> -->
 				</template>
 			</svws-ui-data-table>
 		</Variant>
@@ -917,7 +917,7 @@
 					<svws-ui-text-input v-else v-model="rowData.age" headless />
 				</template>
 				<template #cell(actions)="{ rowData }">
-					<svws-ui-popover :hover="false"
+					<!-- <svws-ui-popover :hover="false"
 						placement="left-end"
 						:disable-click-away="false">
 						<template #trigger>
@@ -939,7 +939,7 @@
 								</div>
 							</div>
 						</template>
-					</svws-ui-popover>
+					</svws-ui-popover> -->
 				</template>
 			</svws-ui-data-table>
 		</Variant>

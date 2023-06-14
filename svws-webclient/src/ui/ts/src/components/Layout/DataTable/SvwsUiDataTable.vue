@@ -141,7 +141,7 @@
 						</slot>
 					</div>
 					<div v-if="rowActions" class="data-table__row-actions data-table__td">
-						<svws-ui-popover :hover="false"
+						<!-- <svws-ui-popover :hover="false"
 							:disable-click-away="false"
 							:show-delay="0"
 							placement="auto-start"
@@ -167,7 +167,7 @@
 									</svws-ui-button>
 								</div>
 							</template>
-						</svws-ui-popover>
+						</svws-ui-popover> -->
 					</div>
 				</div>
 			</slot>

@@ -32,7 +32,6 @@ export {
 	SvwsUiSecondaryMenu,
 	SvwsUiBadge,
 	SvwsUiTooltip,
-	SvwsUiPopover,
 	SvwsUiRouterTabBar,
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
