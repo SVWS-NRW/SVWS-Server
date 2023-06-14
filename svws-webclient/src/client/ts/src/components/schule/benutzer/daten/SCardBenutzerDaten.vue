@@ -7,7 +7,7 @@
 			<svws-ui-text-input v-model="kennwort1" type="password" placeholder="Neues Passwort" />
 			<svws-ui-text-input v-model="kennwort2" type="password" placeholder="Neues Passwort wiederholen" />
 			<div>
-				<svws-ui-button :disabled="!kennwort1 || !kennwort2" @click="setPassword()"> Passwort speichern </svws-ui-button>
+				<svws-ui-button :disabled="!kennwort1 || !kennwort2" @click="setPwd()"> Passwort speichern </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -46,7 +46,7 @@
 	const kennwort1 = ref();
 	const kennwort2 = ref();
 
-	function setPassword(){
+	function setPwd(){
 		if (kennwort1.value === kennwort2.value)
 			void props.setPassword(kennwort1.value)
 		else

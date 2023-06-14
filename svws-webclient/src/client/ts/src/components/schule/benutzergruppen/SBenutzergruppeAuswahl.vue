@@ -55,7 +55,7 @@
 	async function deleteMultipleGroup() {
 		const items = selectedItems.value;
 		selectedItems.value = [];
-		await props.deleteBenutzergruppe_n(items);
+		await props.deleteBenutzergruppen(items);
 	}
 
 </script>

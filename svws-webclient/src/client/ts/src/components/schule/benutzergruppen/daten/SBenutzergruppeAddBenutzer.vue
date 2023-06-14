@@ -6,7 +6,7 @@
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />
 			<s-benutzer-checkbox-list :list-benutzer="listBenutzergruppenBenutzer"
-				title="Entfernen" :spalte-links="false"
+				title="Entfernen" :spalte-links="false" :list-benutzer-in-gruppe="listBenutzergruppenBenutzer"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
 				:go-to-benutzer="goToBenutzer" />

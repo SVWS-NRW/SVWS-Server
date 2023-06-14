@@ -1,5 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import type { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
+import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten, cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import type { List } from '../../../java/util/List';

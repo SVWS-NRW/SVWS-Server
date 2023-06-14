@@ -279,7 +279,7 @@ export class RouteDataSchuleBenutzer {
 			const benutzer_id = new ArrayList<number>();
 			benutzer_id.add(this.benutzerManager?.getID() ?? null);
 			for(const bg of this.listBenutzergruppen){
-				if (!this.benutzerManager?.IstInGruppe(bg.id)) {
+				if (!this.benutzerManager?.istInGruppe(bg.id)) {
 					const result = await api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema, bg.id);
 					this.benutzerManager?.addToGruppe(result);
 				}
@@ -309,7 +309,7 @@ export class RouteDataSchuleBenutzer {
 			this.benutzerManager.removeFromGruppe(result);
 		} else {
 			for (const eintrag of this.listBenutzergruppen) {
-				if (this.benutzerManager?.IstInGruppe(eintrag.id)) {
+				if (this.benutzerManager?.istInGruppe(eintrag.id)) {
 					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,eintrag.id);
 					this.benutzerManager?.removeFromGruppe(result);
 				}
