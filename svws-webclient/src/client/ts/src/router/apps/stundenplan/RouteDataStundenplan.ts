@@ -7,6 +7,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "../RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
+import { StundenplanZeitraster } from "@core";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
@@ -127,6 +128,27 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
+	patchZeitraster = async (data : Partial<StundenplanZeitraster>, multi?: boolean) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		const list = [];
+		if (multi === true) {
+			for (const z of this.stundenplanManager.getListZeitraster())
+				if (z.unterrichtstunde === data.unterrichtstunde && z.stundenbeginn === data.stundenbeginn && z.stundenende === data.stundenende)
+					list.push(z);
+		}	else
+			list.push(data)
+		for (const z of list) {
+			const id = z.id;
+			if (id) {
+				await api.server.patchStundenplanZeitrasterEintrag(z, api.schema, id);
+				const zeitraster = this.stundenplanManager.getZeitraster(id);
+				this.stundenplanManager.patchZeitraster(Object.assign(zeitraster, z));
+			}
+		}
+		this.commit();
+	}
+
 	addRaum = async (raum: Partial<StundenplanRaum>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
@@ -157,6 +179,18 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
+	addZeitraster = async (item: Partial<StundenplanZeitraster>, tage: number[]) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		for (const tag of tage) {
+			delete item.id;
+			const _item = await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id)
+			this.stundenplanManager.addZeitraster(_item);
+		}
+		this.commit();
+	}
+
 	removeRaeume = async (raeume: StundenplanRaum[]) => {
 		for (const raum of raeume) {
 			await api.server.deleteStundenplanRaum(api.schema, raum.id);
@@ -181,9 +215,30 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
+	removeZeitraster = async (data: StundenplanZeitraster, multi?: boolean) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		const list = [];
+		if (multi === true) {
+			for (const z of this.stundenplanManager.getListZeitraster())
+				if (z.unterrichtstunde === data.unterrichtstunde && z.stundenbeginn === data.stundenbeginn && z.stundenende === data.stundenende)
+					list.push(z);
+		}	else
+			list.push(data)
+		for (const z of list) {
+			const id = z.id;
+			if (id) {
+				await api.server.deleteStundenplanZeitrasterEintrag(api.schema, id);
+				this.stundenplanManager.removeZeitraster(id);
+			}
+		}
+		this.commit();
+	}
+
 	importRaeume = async (raeume: StundenplanRaum[]) => {}
 	importPausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {}
 	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
+	importZeitraster = async () => {}
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)

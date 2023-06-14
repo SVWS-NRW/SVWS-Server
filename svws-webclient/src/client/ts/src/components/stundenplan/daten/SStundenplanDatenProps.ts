@@ -1,4 +1,4 @@
-import type { List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
+import type { List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum, StundenplanZeitraster } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;
@@ -18,4 +18,8 @@ export interface StundenplanDatenProps {
 	removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 	importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
+	patchZeitraster: (daten: StundenplanZeitraster, multi?: boolean) => Promise<void>;
+	addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
+	removeZeitraster: (daten: StundenplanZeitraster, multi?: boolean) => Promise<void>;
+	importZeitraster: () => Promise<void>;
 }

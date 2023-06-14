@@ -41,6 +41,10 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 			removeAufsichtsbereiche: routeStundenplan.data.removeAufsichtsbereiche,
 			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
 			listAufsichtsbereiche: routeStundenplan.data.listAufsichtsbereiche,
+			patchZeitraster: routeStundenplan.data.patchZeitraster,
+			addZeitraster: routeStundenplan.data.addZeitraster,
+			removeZeitraster: routeStundenplan.data.removeZeitraster,
+			importZeitraster: routeStundenplan.data.importZeitraster,
 		};
 	}
 
