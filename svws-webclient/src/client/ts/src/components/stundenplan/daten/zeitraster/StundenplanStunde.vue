@@ -1,6 +1,7 @@
 <template>
 	<div class="flex flex-col gap-1 h-14">
 		<div class="font-bold text-headline-md">{{ stunde.unterrichtstunde }}</div>
+		<slot />
 	</div>
 </template>
 
