@@ -112,11 +112,6 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				const kursart : GostKursart | null = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
 				if (kursart === null)
 					continue;
-				let kurszahlenHalbjahr : ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
-				if (kurszahlenHalbjahr === null)
-					kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
-				const kurszahlAlt : number | null = kurszahlenHalbjahr.get(kursart);
-				kurszahlenHalbjahr.put(kursart, kurszahlAlt === null ? 1 : kurszahlAlt! + 1);
 				let istAnrechenbar : boolean = true;
 				const istMusik : boolean = (zulFach as unknown === ZulaessigesFach.MU as unknown);
 				const istErsatzfach : boolean = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
@@ -141,10 +136,18 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					}
 					if (istErsatzfach) {
 						blockIAnzahlErsatzfach++;
-						istAnrechenbar = (blockIAnzahlErsatzfach <= 2);
-						if (!istAnrechenbar && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown))
+						const istAnrechenbarErsatzfach : boolean = (blockIAnzahlErsatzfach <= 2);
+						if (!istAnrechenbarErsatzfach && (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown))
 							this.addFehler(GostBelegungsfehler.ANZ_20_INFO);
+						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
+				}
+				if (istAnrechenbar) {
+					let kurszahlenHalbjahr : ArrayMap<GostKursart, number> | null = this.kurszahlen.get(halbjahr);
+					if (kurszahlenHalbjahr === null)
+						kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
+					const kurszahlAlt : number | null = kurszahlenHalbjahr.get(kursart);
+					kurszahlenHalbjahr.put(kursart, kurszahlAlt === null ? 1 : kurszahlAlt! + 1);
 				}
 				if (istAnrechenbar && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					const kurszahlGK : number | null = this.kurszahlenGrundkurse.get(halbjahr);

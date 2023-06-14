@@ -148,13 +148,6 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				if (kursart == null)  // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
 					continue;
 
-				// Für das Halbjahr
-				ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
-				if (kurszahlenHalbjahr == null)
-					kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
-				final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
-				kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
-
 				boolean istAnrechenbar = true;
 
 				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.2.4 und APO Gost §28.7, §28.8 und VVs)
@@ -180,11 +173,22 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					}
 					if (istErsatzfach) {
 						blockIAnzahlErsatzfach++;
-						istAnrechenbar = (blockIAnzahlErsatzfach <= 2);
-						if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+						final boolean istAnrechenbarErsatzfach = (blockIAnzahlErsatzfach <= 2);
+						if (!istAnrechenbarErsatzfach && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
 							addFehler(GostBelegungsfehler.ANZ_20_INFO);
+						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
 				}
+
+				// Für das Halbjahr
+				if (istAnrechenbar) {
+					ArrayMap<@NotNull GostKursart, @NotNull Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
+					if (kurszahlenHalbjahr == null)
+						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
+					final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
+					kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
+				}
+
 				// Für die Grundkurse
 				if (istAnrechenbar && ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
 						|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
