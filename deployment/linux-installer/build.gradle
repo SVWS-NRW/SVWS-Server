@@ -1,12 +1,17 @@
 def linuxfileAppDir = "$projectDir/svws/app"
 
+task clearAppFolder(type: Delete) {
+	dependsOn downloadPublishedArtifacts
+	file("${linuxfileAppDir}").deleteDir()
+}
+
 /*
  Task lädt die SVWS-Artefakte einer angegebenen Version
  aus dem Package-Repository von GitHub und speichert diese
  für die Integration in der tar.gz des SVWSs.
  */
 task copyPublishedArtifacts(type: Copy) {
-	dependsOn downloadPublishedArtifacts
+	dependsOn clearAppFolder
 	def appArtifactsDir = project.ext.appArtifactsDir
 	copy {
 		from ("${appArtifactsDir}") {
@@ -17,8 +22,11 @@ task copyPublishedArtifacts(type: Copy) {
 	}
 	copy {
 		from ("${appArtifactsDir}") {
-			include "svws-*"+project.ext.svwsArtifactVersion+".jar"
-			include "svws-*"+project.ext.svwsArtifactVersion+".zip"
+
+			println appArtifactsDir + "/svws-**"+project.ext.svwsArtifactVersion+".jar to " +linuxfileAppDir
+
+			include "svws-**"+project.ext.svwsArtifactVersion+".jar"
+			include "svws-**"+project.ext.svwsArtifactVersion+".zip"
 		}
 		into "${linuxfileAppDir}"
 	}
