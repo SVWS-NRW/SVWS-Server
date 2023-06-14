@@ -4,6 +4,10 @@
     "code" : "NW_FS_10",
     "art" : "BELEGUNG",
     "beschreibung" : "Von EF.1 bis Q2.2 müssen entweder zwei Naturwissenschaften oder zwei Fremdsprachen durchgehend gewählt werden. Hierbei ist eine Naturwissenschaft oder sind zwei Fremdsprachen schriftlich zu belegen. Zu den Fremdsprachen zählen auch in einer weiteren Fremdsprache unterrichtete Sachfächer."
+  }, {
+    "code" : "ANZ_23_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar."
   } ],
   "log" : [ ]
 }

@@ -12,6 +12,10 @@
     "code" : "ANZ_11_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
-  } ],
+  }, {
+    "code" : "ANZ_20_INFO",
+    "art" : "HINWEIS",
+    "beschreibung" : "In der Qualifikationsphase können sind nur maximal zwei im literarisch-künstlerischen Fachbereich anrechenbar."
+  }],
   "log" : [ ]
 }

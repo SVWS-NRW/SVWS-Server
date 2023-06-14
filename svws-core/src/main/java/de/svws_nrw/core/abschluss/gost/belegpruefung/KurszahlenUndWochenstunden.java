@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -91,6 +92,14 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		wochenstundenQualifikationsphase = 0;
 		final @NotNull Projektkurse projektkurse = ((@NotNull Projektkurse) pruefungen_vorher[0]);
 
+		// ermittle, ob die Abiturbelegungsart von Musik und initialisiere die Zählung der Musikkurse bzw. der Ersatzfachkurse (siehe u.a. VV zu APO Gost §11.2.4)
+		final AbiturFachbelegung musik = manager.getFachbelegungByKuerzel(ZulaessigesFach.MU.daten.kuerzel);
+		final boolean blockIHatMusikLK = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.LK, GostHalbjahr.getQualifikationsphase());
+		final boolean blockIHatMusikGKAbitur = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.GK, GostHalbjahr.getQualifikationsphase())
+				&& (musik != null) && ((musik.abiturFach != null) && ((musik.abiturFach == 3) || (musik.abiturFach == 4)));
+		int blockIAnzahlMusik = 0;      // die Gesamtzahl der Kurse der Qualifikationsphase in Musik oder in einem vokal- oder instrumentalpraktischen Grundkurs
+		int blockIAnzahlErsatzfach = 0; // die Gesamtzahl der Kurse der Qualifikationsphase in einem Ersatzfach des literarisch künstlerischen Bereichs
+
 		// Erzeuge zunächst Einträge mit 0 für die Kurszahlen und Wochenstunden in allen HashMaps
 		final @NotNull GostKursart@NotNull[] kursarten = GostKursart.values();
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
@@ -113,6 +122,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		for (int i = 0; i < alleFachbelegungen.size(); i++) {
 			final AbiturFachbelegung fachbelegung = alleFachbelegungen.get(i);
 			final GostFach fach = manager.getFach(fachbelegung);
+			if (fach == null)
+				continue;
+			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			boolean istLKFach = false;
 			for (final AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr == null)
@@ -143,9 +155,39 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
 				kurszahlenHalbjahr.put(kursart, kurszahlAlt == null ? 1 : kurszahlAlt + 1);
 
+				boolean istAnrechenbar = true;
+
+				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.2.4 und APO Gost §28.7, §28.8 und VVs)
+				final boolean istMusik = (zulFach == ZulaessigesFach.MU);
+				final boolean istErsatzfach = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
+				final boolean istMusikErsatzfach = istErsatzfach && ((zulFach == ZulaessigesFach.IN) || (zulFach == ZulaessigesFach.VO));
+				if (halbjahr.istQualifikationsphase()) {
+					if (istMusik || istMusikErsatzfach) {
+						blockIAnzahlMusik++;
+						if (blockIHatMusikLK) {
+							istAnrechenbar = !istMusikErsatzfach;
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+								addFehler(GostBelegungsfehler.ANZ_21_INFO);
+						} else if (blockIHatMusikGKAbitur) {
+							istAnrechenbar = (blockIAnzahlMusik <= 6);
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+								addFehler(GostBelegungsfehler.ANZ_22_INFO);
+						} else {
+							istAnrechenbar = (blockIAnzahlMusik <= 5);
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+								addFehler(GostBelegungsfehler.ANZ_23_INFO);
+						}
+					}
+					if (istErsatzfach) {
+						blockIAnzahlErsatzfach++;
+						istAnrechenbar = (blockIAnzahlErsatzfach <= 2);
+						if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+							addFehler(GostBelegungsfehler.ANZ_20_INFO);
+					}
+				}
 				// Für die Grundkurse
-				if ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
-						|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr)))))) {
+				if (istAnrechenbar && ((kursart == GostKursart.GK) || (halbjahr.istQualifikationsphase() && ((kursart == GostKursart.ZK)
+						|| ((kursart == GostKursart.PJK) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
 					kurszahlenGrundkurse.put(halbjahr, kurszahlGK == null ? 1 : kurszahlGK + 1);
 					final Integer kurszahlAnrechenbar = kurszahlenAnrechenbar.get(halbjahr);
@@ -170,7 +212,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				// Zähle die Wochenstunden
 				int stunden = 0;
 				switch (kursart.kuerzel) {
-					case "GK": stunden = ((fach != null) && fach.istFremdSpracheNeuEinsetzend) ? 4 : 3; break;
+					case "GK": stunden = fach.istFremdSpracheNeuEinsetzend ? 4 : 3; break;
 					case "LK": stunden = 5; break;
 					case "PJK": stunden = (fachbelegungHalbjahr.wochenstunden == 3) ? 3 : 2; break;
 					case "VTF": stunden = 2; break;
@@ -182,12 +224,16 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
 				// Kurszahlen und Wochenstunden für die Einführungsphase und die Qualifikationsphase - hier werden ggf. auch unzulässige Belegungen gezählt
 				if (halbjahr.istEinfuehrungsphase()) {
-					final Integer kurszahlEF = kurszahlenEinfuehrungsphase.get(kursart);
-					kurszahlenEinfuehrungsphase.put(kursart, kurszahlEF == null ? 1 : kurszahlEF + 1);
+					if (istAnrechenbar) {
+						final Integer kurszahlEF = kurszahlenEinfuehrungsphase.get(kursart);
+						kurszahlenEinfuehrungsphase.put(kursart, kurszahlEF == null ? 1 : kurszahlEF + 1);
+					}
 					wochenstundenEinfuehrungsphase += stunden;
 				} else {
-					final Integer kurszahlQ = kurszahlenQualifikationsphase.get(kursart);
-					kurszahlenQualifikationsphase.put(kursart, kurszahlQ == null ? 1 : kurszahlQ + 1);
+					if (istAnrechenbar) {
+						final Integer kurszahlQ = kurszahlenQualifikationsphase.get(kursart);
+						kurszahlenQualifikationsphase.put(kursart, kurszahlQ == null ? 1 : kurszahlQ + 1);
+					}
 					wochenstundenQualifikationsphase += stunden;
 				}
 			}

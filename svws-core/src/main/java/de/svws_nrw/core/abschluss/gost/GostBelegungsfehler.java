@@ -95,6 +95,26 @@ public enum GostBelegungsfehler {
 			"In der Qualifikationsphase müssen mindestens 32 anrechenbare Kurse belegt werden.",
 			null),
 
+	/** BelegungsfehlerArt ANZ_20_INFO */
+	ANZ_20_INFO("ANZ_20_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"In der Qualifikationsphase können sind nur maximal zwei im literarisch-künstlerischen Fachbereich anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_21_INFO */
+	ANZ_21_INFO("ANZ_21_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Bei der Wahl eines Musik-Leistungskurse sind vokal- und instrumentalpraktische Kurse nicht in der Qualifikationsphase nicht anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_22_INFO */
+	ANZ_22_INFO("ANZ_22_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"Bei der Wahl eines Musik-Grundkurses als Abiturfach sind maximal 6 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) in der Qualifikationsphase anrechenbar.",
+			null),
+
+	/** BelegungsfehlerArt ANZ_23_INFO */
+	ANZ_23_INFO("ANZ_23_INFO", GostBelegungsfehlerArt.HINWEIS,
+			"In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar.",
+			null),
+
 	/** BelegungsfehlerArt BIL_4_INFO */
 	BIL_4_INFO("BIL_4_INFO", GostBelegungsfehlerArt.HINWEIS,
 			"Programmfehler: Dieser Hinweis ist für eine Gesamtbelegprüfung der Sek II nicht vorgesehen!",
