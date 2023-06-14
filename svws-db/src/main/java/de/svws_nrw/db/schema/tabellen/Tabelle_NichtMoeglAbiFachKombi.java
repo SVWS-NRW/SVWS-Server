@@ -41,7 +41,7 @@ public class Tabelle_NichtMoeglAbiFachKombi extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte PK */
 	public SchemaTabelleSpalte col_PK = add("PK", SchemaDatentypen.VARCHAR, true).setDatenlaenge(30)
 		.setNotNull()
-		.setJavaComment("Primärschlüssel aus FachIDs und  Minuszeichen");
+		.setJavaComment("Primärschlüssel aus FachIDs und Minuszeichen");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
