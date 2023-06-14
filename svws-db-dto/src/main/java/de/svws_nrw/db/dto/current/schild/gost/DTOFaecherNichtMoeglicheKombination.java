@@ -61,7 +61,7 @@ public final class DTOFaecherNichtMoeglicheKombination {
 	@JsonProperty
 	public String Kursart2;
 
-	/** Primärschlüssel aus FachIDs und  Minuszeichen */
+	/** Primärschlüssel aus FachIDs und Minuszeichen */
 	@Id
 	@Column(name = "PK")
 	@JsonProperty
