@@ -8,6 +8,7 @@ import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs'
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
+import { DateUtils } from '../../../core/utils/DateUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
@@ -551,18 +552,34 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Filtert aus der Liste der Kurs-IDs diejenigen heraus,
-	 * deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 *
 	 * @param idsKurs          Die Liste aller Kurs-IDs.
 	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
 	 * @param wochentag        Der gewünschte {@link Wochentag}.
 	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
 	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 */
 	public getKurseGefiltert(idsKurs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
 		return CollectionUtils.toFilteredArrayList(idsKurs, { test : (idKurs: number) => this.testKursHatUnterrichtAm(idKurs!, wochentyp, wochentag, unterrichtstunde) });
+	}
+
+	/**
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 *
+	 * @param idsKurs          Die Liste aller Kurs-IDs.
+	 * @param datumISO8601     Das Datum. Daraus ergibt sich (Wochentyp / Wochentag).
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 */
+	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
+		const jahr_monat_tag_wochentag_kalenderwoche : Array<number> | null = DateUtils.convert(datumISO8601);
+		const kalenderwoche : number = jahr_monat_tag_wochentag_kalenderwoche[4];
+		const wochentyp : number = this.getWochentypOrDefault(jahr_monat_tag_wochentag_kalenderwoche[0], kalenderwoche);
+		const wochentag : Wochentag = Wochentag.fromIDorException(jahr_monat_tag_wochentag_kalenderwoche[3]);
+		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 
 	/**

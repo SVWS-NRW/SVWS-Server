@@ -1,4 +1,5 @@
 import { HashMap2D } from '../../core/adt/map/HashMap2D';
+import { JavaInteger } from '../../java/lang/JavaInteger';
 import { RuntimeException } from '../../java/lang/RuntimeException';
 import type { JavaSet } from '../../java/util/JavaSet';
 import type { List } from '../../java/util/List';
@@ -315,6 +316,19 @@ export class DeveloperNotificationException extends RuntimeException {
 	public static ifSetNotContains<E>(setName : string, set : JavaSet<E>, value : E) : void {
 		if (!set.contains(value))
 			throw new DeveloperNotificationException(setName! + " muss " + value + " enthalten!")
+	}
+
+	/**
+	 * Liefert die Zahl des umgewandelten Strings.
+	 *
+	 * @param s Der String der in ein int umgewandelt werden soll.
+	 *
+	 * @return die Zahl des umgewandelten Strings.
+	 */
+	public static ifNotInt(s : string | null) : number {
+		if (s === null)
+			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden")
+		return JavaInteger.parseInt(s);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

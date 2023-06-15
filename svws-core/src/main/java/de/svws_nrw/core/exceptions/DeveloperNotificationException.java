@@ -325,5 +325,18 @@ public class DeveloperNotificationException extends RuntimeException {
 			throw new DeveloperNotificationException(setName + " muss " + value + " enthalten!");
 	}
 
+	/**
+	 * Liefert die Zahl des umgewandelten Strings.
+	 *
+	 * @param s Der String der in ein int umgewandelt werden soll.
+	 *
+	 * @return die Zahl des umgewandelten Strings.
+	 */
+	public static int ifNotInt(final String s) {
+		if (s == null)
+			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden");
+		return Integer.parseInt(s);
+	}
+
 
 }

@@ -15,7 +15,7 @@ import de.svws_nrw.core.types.Geschlecht;
 class TestCoreTypeGeschlecht {
 
     /**
-     * Führt grundlegende Tests zu der Defintion zu dem Core-Type-Geschlecht durch.
+     * Führt grundlegende Tests zu der Definition zu dem Core-Type-Geschlecht durch.
      */
     @Test
     @DisplayName("Teste den Typ Geschlecht")

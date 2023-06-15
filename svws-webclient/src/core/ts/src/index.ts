@@ -458,6 +458,7 @@ export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/Weiterb
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
 export { CollectionUtils } from './core/utils/CollectionUtils';
+export { DateUtils } from './core/utils/DateUtils';
 export { KursManager } from './core/utils/KursManager';
 export { ListUtils } from './core/utils/ListUtils';
 export { MapUtils } from './core/utils/MapUtils';

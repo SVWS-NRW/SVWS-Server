@@ -27,6 +27,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.utils.CollectionUtils;
+import de.svws_nrw.core.utils.DateUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -554,18 +555,36 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Filtert aus der Liste der Kurs-IDs diejenigen heraus,
-	 * deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 *
 	 * @param idsKurs          Die Liste aller Kurs-IDs.
 	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
 	 * @param wochentag        Der gewünschte {@link Wochentag}.
 	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
 	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 */
 	public @NotNull List<@NotNull Long> getKurseGefiltert(final @NotNull List<@NotNull Long> idsKurs, final int wochentyp, final @NotNull Wochentag wochentag, final int unterrichtstunde) {
 		return CollectionUtils.toFilteredArrayList(idsKurs, (final @NotNull Long idKurs) -> testKursHatUnterrichtAm(idKurs, wochentyp, wochentag, unterrichtstunde));
+	}
+
+	/**
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 *
+	 * @param idsKurs          Die Liste aller Kurs-IDs.
+	 * @param datumISO8601     Das Datum. Daraus ergibt sich (Wochentyp / Wochentag).
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 */
+	public @NotNull List<@NotNull Long> getKurseGefiltertByDatum(final @NotNull List<@NotNull Long> idsKurs, final @NotNull String datumISO8601, final int unterrichtstunde) {
+		final int[] jahr_monat_tag_wochentag_kalenderwoche = DateUtils.convert(datumISO8601);
+
+		final int kalenderwoche = jahr_monat_tag_wochentag_kalenderwoche[4];
+		final int wochentyp = getWochentypOrDefault(jahr_monat_tag_wochentag_kalenderwoche[0], kalenderwoche);
+
+		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(jahr_monat_tag_wochentag_kalenderwoche[3]);
+		return getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 
 	/**
