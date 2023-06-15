@@ -575,10 +575,11 @@ export class StundenplanManager extends JavaObject {
 	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
 	 */
 	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
-		const jahr_monat_tag_wochentag_kalenderwoche : Array<number> | null = DateUtils.convert(datumISO8601);
-		const kalenderwoche : number = jahr_monat_tag_wochentag_kalenderwoche[4];
-		const wochentyp : number = this.getWochentypOrDefault(jahr_monat_tag_wochentag_kalenderwoche[0], kalenderwoche);
-		const wochentag : Wochentag = Wochentag.fromIDorException(jahr_monat_tag_wochentag_kalenderwoche[3]);
+		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		const kalenderwochenjahr : number = e[6];
+		const kalenderwoche : number = e[5];
+		const wochentyp : number = this.getWochentypOrDefault(kalenderwochenjahr, kalenderwoche);
+		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 

@@ -578,12 +578,11 @@ public class StundenplanManager {
 	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
 	 */
 	public @NotNull List<@NotNull Long> getKurseGefiltertByDatum(final @NotNull List<@NotNull Long> idsKurs, final @NotNull String datumISO8601, final int unterrichtstunde) {
-		final int[] jahr_monat_tag_wochentag_kalenderwoche = DateUtils.convert(datumISO8601);
-
-		final int kalenderwoche = jahr_monat_tag_wochentag_kalenderwoche[4];
-		final int wochentyp = getWochentypOrDefault(jahr_monat_tag_wochentag_kalenderwoche[0], kalenderwoche);
-
-		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(jahr_monat_tag_wochentag_kalenderwoche[3]);
+		final int[] e = DateUtils.extractFromDateISO8601(datumISO8601);
+		final int kalenderwochenjahr = e[6];
+		final int kalenderwoche = e[5];
+		final int wochentyp = getWochentypOrDefault(kalenderwochenjahr, kalenderwoche);
+		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(e[3]);
 		return getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 
