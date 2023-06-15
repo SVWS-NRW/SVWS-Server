@@ -195,6 +195,7 @@
         <class>de.svws_nrw.db.dto.current.coretypes.DTONote</class>
         <class>de.svws_nrw.db.dto.current.coretypes.DTOPersonalTyp</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer</class>
+        <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher</class>
         <class>de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten</class>

@@ -6,6 +6,7 @@ import de.svws_nrw.db.dto.current.coretypes.DTOKursFortschreibungsart;
 import de.svws_nrw.db.dto.current.coretypes.DTONote;
 import de.svws_nrw.db.dto.current.coretypes.DTOPersonalTyp;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -247,6 +248,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTONote.class.getSimpleName(), DTONote.class);
              mapDTOName2DTOClass.put(DTOPersonalTyp.class.getSimpleName(), DTOPersonalTyp.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangBeratungslehrer.class.getSimpleName(), DTOGostJahrgangBeratungslehrer.class);
+             mapDTOName2DTOClass.put(DTOGostJahrgangFachbelegungen.class.getSimpleName(), DTOGostJahrgangFachbelegungen.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangFachkombinationen.class.getSimpleName(), DTOGostJahrgangFachkombinationen.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangFaecher.class.getSimpleName(), DTOGostJahrgangFaecher.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangsdaten.class.getSimpleName(), DTOGostJahrgangsdaten.class);
@@ -491,6 +493,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Noten", DTONote.class);
              mapTablename2DTOClass.put("PersonalTypen", DTOPersonalTyp.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Beratungslehrer", DTOGostJahrgangBeratungslehrer.class);
+             mapTablename2DTOClass.put("Gost_Jahrgang_Fachwahlen", DTOGostJahrgangFachbelegungen.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Fachkombinationen", DTOGostJahrgangFachkombinationen.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Faecher", DTOGostJahrgangFaecher.class);
              mapTablename2DTOClass.put("Gost_Jahrgangsdaten", DTOGostJahrgangsdaten.class);
