@@ -576,9 +576,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
 		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
-		const kalenderwochenjahr : number = e[6];
-		const kalenderwoche : number = e[5];
-		const wochentyp : number = this.getWochentypOrDefault(kalenderwochenjahr, kalenderwoche);
+		const wochentyp : number = this.getWochentypOrDefault(e[6], e[5]);
 		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}

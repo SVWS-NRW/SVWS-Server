@@ -579,10 +579,8 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull Long> getKurseGefiltertByDatum(final @NotNull List<@NotNull Long> idsKurs, final @NotNull String datumISO8601, final int unterrichtstunde) {
 		final int[] e = DateUtils.extractFromDateISO8601(datumISO8601);
-		final int kalenderwochenjahr = e[6];
-		final int kalenderwoche = e[5];
-		final int wochentyp = getWochentypOrDefault(kalenderwochenjahr, kalenderwoche);
-		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(e[3]);
+		final int wochentyp = getWochentypOrDefault(e[6], e[5]); // kalenderwochenjahr, kalenderwoche
+		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(e[3]); // tagInWoche
 		return getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 
