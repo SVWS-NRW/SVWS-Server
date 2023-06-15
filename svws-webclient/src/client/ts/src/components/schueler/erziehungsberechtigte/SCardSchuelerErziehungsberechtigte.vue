@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.zusatzNachname ? erzieher.zusatzNachname + ' ' : ''}${erzieher.nachname}` : '(Ohne Namen)'" class="col-span-full">
+	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.zusatzNachname ? erzieher.zusatzNachname + ' ' : ''}${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
 		<template #actions>
 			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined"
 				@update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
@@ -10,7 +10,7 @@
 				Person löschen
 			</svws-ui-button>
 		</template>
-		<svws-ui-input-wrapper :grid="4" class="input-wrapper--erziehungsberechtigte">
+		<svws-ui-input-wrapper :grid="4">
 			<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten"
 				:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
 			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname || undefined"
@@ -97,9 +97,3 @@
 	});
 
 </script>
-
-<style scoped lang="postcss">
-.content-card {
-	@apply border-t-2 border-light pt-4 first:pt-0 first:border-t-0;
-}
-</style>

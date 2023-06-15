@@ -1,6 +1,14 @@
 <template>
 	<svws-ui-content-card title="Beschäftigungen">
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" clickable>
+			<template #header(Anschreiben)>
+				<svws-ui-tooltip>
+					<i-ri-mail-send-line />
+					<template #content>
+						Erhält Anschreiben
+					</template>
+				</svws-ui-tooltip>
+			</template>
 			<template #body>
 				<svws-ui-table-row v-for="(betrieb, index) in listSchuelerbetriebe" :key="betrieb.id" @click="select(betrieb)" :clicked="clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0">
 					<s-card-schueler-beschaeftigung-tabelle :betrieb="betrieb" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
@@ -39,7 +47,7 @@
 		{ key: "Praktikum", label: "Praktikum", span: 0.25, tooltip: 'Praktikum', align: "center"},
 		{ key: "Betreuungslehrer", label: "Betreuungslehrer"},
 		{ key: "Ansprechpartner", label: "Ansprechpartner"},
-		{ key: "Anschreiben", label: "Anschreiben", tooltip: "Betrieb erhält Anschreiben", span: 0.25, align: "center"}
+		{ key: "Anschreiben", label: "Anschreiben", tooltip: "Betrieb erhält Anschreiben", fixedWidth: 3, align: "center"}
 	];
 
 	async function select(betrieb : SchuelerBetriebsdaten) {
