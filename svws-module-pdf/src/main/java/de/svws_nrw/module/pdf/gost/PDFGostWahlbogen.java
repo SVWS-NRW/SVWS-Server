@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -404,6 +405,8 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		PDFGostWahlbogen wahlboegen = null;
 		PDFGostWahlbogen aktuell = null;
 		for (final DTOViewGostSchuelerAbiturjahrgang s : liste) {
+			if ((s.Status != SchuelerStatus.AKTIV) && (s.Status != SchuelerStatus.EXTERN) && (s.Status != SchuelerStatus.NEUAUFNAHME))
+				continue;
 			final PDFGostWahlbogen wahlbogen = getWahlbogen(conn, s.ID);
 			if (aktuell == null) {
 				wahlboegen = wahlbogen;
