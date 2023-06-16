@@ -11,7 +11,10 @@
 			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			<svws-ui-toggle v-model="filterFehler">Nur Fehler</svws-ui-toggle>
 		</div>
-		<svws-ui-data-table :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
+		<div v-if="filtered.isEmpty()">
+			Keine Laufbahnfehler vorhanden.
+		</div>
+		<svws-ui-data-table v-else :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 			<template #cell(schueler)="{value: s}: {value: Schueler}">
 				<svws-ui-button type="icon" size="small" @click.stop="gotoLaufbahnplanung(s.id)">
 					<i-ri-link />
@@ -28,7 +31,7 @@
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
-	<svws-ui-content-card :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`" class="sticky top-8" large-title>
+	<svws-ui-content-card v-if="!filtered.isEmpty()" :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname}`" class="sticky top-8" large-title>
 		<template #actions>
 			<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(schueler.schueler.id)">
 				<i-ri-group-line />

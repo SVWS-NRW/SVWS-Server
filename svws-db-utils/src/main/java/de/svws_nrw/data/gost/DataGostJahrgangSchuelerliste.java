@@ -52,13 +52,14 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	List<DTOSchueler> getSchuelerDTOs() throws WebApplicationException {
 		if (abijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
-		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed(
-			"DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
+		final List<DTOViewGostSchuelerAbiturjahrgang> schuelerAbijahrgang = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abijahrgang, DTOViewGostSchuelerAbiturjahrgang.class);
 		if (schuelerAbijahrgang == null)
 			throw OperationError.NOT_FOUND.exception();
 		if (schuelerAbijahrgang.isEmpty())
 			return new ArrayList<>();
 		final List<Long> schuelerIDs = schuelerAbijahrgang.stream().map(s -> s.ID).toList();
+		if (schuelerIDs.isEmpty())
+			throw OperationError.NOT_FOUND.exception();
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
 		if ((schuelerListe == null) || (schuelerListe.isEmpty()))
 			throw OperationError.NOT_FOUND.exception();

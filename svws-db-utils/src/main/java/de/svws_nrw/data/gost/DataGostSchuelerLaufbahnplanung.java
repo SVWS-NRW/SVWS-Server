@@ -1,10 +1,12 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.text.Collator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,6 +33,7 @@ import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
@@ -745,6 +748,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 
 			// Führe für alle Schüler nacheinander die Belegprüfung durch
 			for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
+				if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN) && (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME))
+					continue;
+
 				// Bestimme die Laufbahndaten des Schülers
 				final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
 
@@ -757,14 +763,35 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 
 				// F+lle das zugehörige Schüler-DTO
 				ergebnisse.schueler.id = dtoSchueler.ID;
-				ergebnisse.schueler.vorname = dtoSchueler.Nachname;
-				ergebnisse.schueler.nachname = dtoSchueler.Vorname;
+				ergebnisse.schueler.vorname = dtoSchueler.Vorname;
+				ergebnisse.schueler.nachname = dtoSchueler.Nachname;
 				ergebnisse.schueler.status = dtoSchueler.Status.id;
 				ergebnisse.schueler.geschlecht = dtoSchueler.Geschlecht.id;
 
 				// Schreibe das Ergebnis in die Rückmeldung
 				daten.add(ergebnisse);
 			}
+
+			daten.sort((a, b) -> {
+				final Collator collator = Collator.getInstance(Locale.GERMAN);
+	    		if ((a.schueler.nachname == null) && (b.schueler.nachname != null))
+	    			return -1;
+	    		else if ((a.schueler.nachname != null) && (b.schueler.nachname == null))
+	    			return 1;
+	    		else if ((a.schueler.nachname == null) && (b.schueler.nachname == null))
+	    			return 0;
+	    		int result = collator.compare(a.schueler.nachname, b.schueler.nachname);
+				if (result == 0) {
+		    		if ((a.schueler.vorname == null) && (b.schueler.vorname != null))
+		    			return -1;
+		    		else if ((a.schueler.vorname != null) && (b.schueler.vorname == null))
+		    			return 1;
+		    		else if ((a.schueler.vorname == null) && (b.schueler.vorname == null))
+		    			return 0;
+		    		result = collator.compare(a.schueler.vorname, b.schueler.vorname);
+				}
+				return result;
+			});
 
 			// Erzeuge die Response mit den Belegprüfungsergebnissen
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
