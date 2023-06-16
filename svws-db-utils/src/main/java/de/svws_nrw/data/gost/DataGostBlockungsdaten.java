@@ -831,16 +831,16 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<DTOJahrgang> listJahrgaenge = conn
 					.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1",
 							DTOJahrgang.class, halbjahr.jahrgang);
-			if (listJahrgaenge.size() != 1)
+			if (listJahrgaenge.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
-			final DTOJahrgang jahrgang = listJahrgaenge.get(0);
+			final List<Long> jahrgangIDs = listJahrgaenge.stream().map(j -> j.ID).toList();
 
 			// TODO prüfe, ob bereits eine aktive Blockung vorhanden ist - wenn ja, dann restauriere die Blockung nicht, da es nicht zwei aktive Blockungen geben kann
 
 			// Lese die Kurse für den Schuljahresabschnitt und dem zugehörigen Jahrgang ein
 			final List<DTOKurs> listKurse = conn
-					.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID = ?2",
-							DTOKurs.class, schuljahresabschnitt.ID, jahrgang.ID);
+					.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
+							DTOKurs.class, schuljahresabschnitt.ID, jahrgangIDs);
 			if (listKurse.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
 			// Bestimme die Schienen aus der Kurstabelle
