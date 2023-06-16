@@ -79,7 +79,7 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     	// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
     	final List<Long> klassenIDs = abschnitte.stream().map(a -> a.Klassen_ID).toList();
-    	final List<DTOKlassen> klassen = conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
+    	final List<DTOKlassen> klassen = klassenIDs.isEmpty() ? new ArrayList<>() : conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
     	final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
     	// Bestimme die Schuljahres-Abschnitte
     	final List<Long> schuljahresabschnittIDs = abschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).toList();
