@@ -34,6 +34,7 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
@@ -44,6 +45,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -828,8 +830,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final DTOSchuljahresabschnitte schuljahresabschnitt = listSchuljahresabschnitte.get(0);
 
 			// Bestimme die ID des Jahrgangs
-			final List<DTOJahrgang> listJahrgaenge = conn
-					.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1",
+			final List<DTOJahrgang> listJahrgaenge = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1",
 							DTOJahrgang.class, halbjahr.jahrgang);
 			if (listJahrgaenge.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
@@ -838,18 +839,19 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// TODO prüfe, ob bereits eine aktive Blockung vorhanden ist - wenn ja, dann restauriere die Blockung nicht, da es nicht zwei aktive Blockungen geben kann
 
 			// Lese die Kurse für den Schuljahresabschnitt und dem zugehörigen Jahrgang ein
-			final List<DTOKurs> listKurse = conn
-					.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
+			final List<DTOKurs> listKurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
 							DTOKurs.class, schuljahresabschnitt.ID, jahrgangIDs);
 			if (listKurse.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
-			// Bestimme die Schienen aus der Kurstabelle
+			// Bestimme die Fächer und die Schienen aus der Kurstabelle
 			final HashMap<Long, DTOKurs> mapKurse = new HashMap<>();
 			final HashSet<Integer> setSchienen = new HashSet<>();
+			final Set<Long> setFachIDs = new HashSet<>();
 			for (final DTOKurs kurs : listKurse) {
 				final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
 				if (kursart == null)
 					continue;
+				setFachIDs.add(kurs.Fach_ID);
 				mapKurse.put(kurs.ID, kurs);
 				String alleSchienen = kurs.Schienen;
 				if (alleSchienen == null)
@@ -890,6 +892,24 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// Erstelle das Zwischenergebnis
 			final DTOGostBlockungZwischenergebnis ergebnis = new DTOGostBlockungZwischenergebnis(idErgebnis, idBlockung, false, true);
 			conn.transactionPersist(ergebnis);
+
+			// Fehlervermeidung: Prüfe, ob alle Fächer auch in der Liste der Fächer der Oberstufe für diesen Jahrgang vorhanden sind
+			if (!setFachIDs.isEmpty()) {
+				final List<DTOGostJahrgangFaecher> faecher = conn.queryList("SELECT e FROM DTOGostJahrgangFaecher e WHERE e.Abi_Jahrgang = ?1 AND e.Fach_ID IN ?2",
+						DTOGostJahrgangFaecher.class, abiturjahr, setFachIDs);
+				setFachIDs.removeAll(faecher.stream().map(f -> f.Fach_ID).toList());
+				if (!setFachIDs.isEmpty()) {
+					// wenn nicht, dann füge sie hinzu...
+					final List<DTOFach> faecherAdd = conn.queryNamed("DTOFach.id.multiple", setFachIDs, DTOFach.class);
+					for (final DTOFach dtoFach : faecherAdd) {
+						final DTOGostJahrgangFaecher dtoJgFach = new DTOGostJahrgangFaecher(abiturjahr, dtoFach.ID,
+								dtoFach.IstMoeglichEF1, dtoFach.IstMoeglichEF2, dtoFach.IstMoeglichQ11,
+								dtoFach.IstMoeglichQ12, dtoFach.IstMoeglichQ21, dtoFach.IstMoeglichQ22,
+								dtoFach.IstMoeglichAbiGK, dtoFach.IstMoeglichAbiLK);
+						conn.transactionPersist(dtoJgFach);
+					}
+				}
+			}
 
 			// Erstelle die Schienen
 			final DTODBAutoInkremente lastSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
