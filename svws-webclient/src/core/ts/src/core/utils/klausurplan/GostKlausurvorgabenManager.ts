@@ -3,13 +3,14 @@ import { GostKlausurvorgabe } from '../../../core/data/gost/klausuren/GostKlausu
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
 	/**
 	 * Die GostKlausurvorgaben, die im Manager vorhanden sind
 	 */
-	private readonly _vorgaben : List<GostKlausurvorgabe>;
+	private readonly _vorgaben : List<GostKlausurvorgabe> = new ArrayList();
 
 	/**
 	 * Eine Map quartal -> Liste von GostKlausurvorgaben
@@ -41,14 +42,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public constructor(vorgaben : List<GostKlausurvorgabe>) {
 		super();
-		this._vorgaben = vorgaben;
-		for (const v of this._vorgaben) {
+		for (const v of vorgaben) {
 			this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
 			this.addVorgabeToInternalMaps(v);
 		}
 	}
 
 	private addVorgabeToInternalMaps(v : GostKlausurvorgabe) : void {
+		this._vorgaben.add(v);
+		this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
 		let listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(v.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben === null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben = new ArrayList();
@@ -86,10 +88,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public updateKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
-		if (this._vorgaben.contains(vorgabe)) {
-			this.removeUpdateKlausurvorgabeCommons(vorgabe);
-			this.addVorgabeToInternalMaps(vorgabe);
-		}
+		const vorgabeOrig : GostKlausurvorgabe = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, vorgabe.idVorgabe);
+		this.removeUpdateKlausurvorgabeCommons(vorgabeOrig);
+		this.addVorgabeToInternalMaps(vorgabe);
 	}
 
 	/**
@@ -105,6 +106,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	}
 
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
+		this._vorgaben.remove(vorgabe);
+		this._mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
 		const listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
 		if (listKlausurvorgabenMapQuartalKlausurvorgaben !== null) {
 			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
@@ -130,11 +133,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Löscht eine Klausurvorgabe aus den internen Strukturen
 	 *
-	 * @param vorgabe das GostKlausurvorgabe-Objekt
+	 * @param vId das GostKlausurvorgabe-Objekt
 	 */
-	public removeVorgabe(vorgabe : GostKlausurvorgabe) : void {
-		this._vorgaben.remove(vorgabe);
-		this._mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
+	public removeVorgabe(vId : number) : void {
+		const vorgabe : GostKlausurvorgabe = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, vId);
 		this.removeUpdateKlausurvorgabeCommons(vorgabe);
 	}
 
