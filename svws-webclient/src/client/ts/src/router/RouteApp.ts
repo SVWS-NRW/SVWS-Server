@@ -11,6 +11,7 @@ import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenut
 import { routeSchuleDatenaustausch } from "./apps/schule/RouteSchuleDatenaustausch";
 import { routeKataloge } from "~/router/apps/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
+import { routeKatalogBetriebe } from "./apps/RouteKatalogBetriebe";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogFoerderschwerpunkte } from "./apps/RouteKatalogFoerderschwerpunkte";
@@ -31,6 +32,7 @@ import { api } from "./Api";
 import { ConfigElement } from "~/components/Config";
 import { RouteManager } from "./RouteManager";
 import SApp from "~/components/SApp.vue";
+
 
 interface RouteStateApp {
 	idSchuljahresabschnitt: number,
@@ -142,6 +144,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKataloge,
 			routeKatalogFaecher,
 			routeKatalogReligion,
+			routeKatalogBetriebe,
 			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,

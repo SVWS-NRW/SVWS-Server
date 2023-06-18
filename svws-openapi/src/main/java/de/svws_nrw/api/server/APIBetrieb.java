@@ -1,9 +1,12 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
@@ -165,6 +168,33 @@ public class APIBetrieb {
     }
 
     /**
+     * Die OpenAPI-Methode zum Löschen von einer oder mehreren Betriebsansprechpartner
+     *
+     * @param schema    das Datenbankschema
+     * @param bids      die IDs des Benutzer
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/remove")
+    @Operation(summary = "Löscht einen oder mehrere Betriebe.", description = "Löscht einen oder mehrere Betriebe."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Betriebe wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Betriebe zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Betrieb wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBetrieb(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Die IDs der Betriebe", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+            return (new DataBetriebsStammdaten(conn)).remove(bids);
+        }
+    }
+
+    /**
      * Die OpenAPI-Methode für das Erstellen eines neuen Schülerbetriebs.
      *
      * @param schema     		 	das Datenbankschema, in welchem der Schülerbetrieb erstellt wird
@@ -258,6 +288,36 @@ public class APIBetrieb {
 	    }
     }
 
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param betrieb_id   die ID des Betriebs
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste mit den einzelnen Betrieben
+     */
+    @GET
+    @Path("/{id : \\d+}betriebansprechpartnerliste")
+    @Operation(summary = "Gibt eine Übersicht von allen Betriebansprechpartnern zurück.",
+               description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , "
+                           + "des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung "
+                           + "sichtbar bzw. änderbar sein sollen. "
+                           + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern "
+                           + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Betriebansprechpartnern",
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
+    public Response getBetriebAnsprechpartner(@PathParam("schema") final String schema,  @PathParam("id") final long betrieb_id, @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+            return (new DataBetriebAnsprechpartner(conn).getBetriebansprechpartner(betrieb_id));
+        }
+    }
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
      *
@@ -278,7 +338,7 @@ public class APIBetrieb {
                  content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebAnsprechpartner.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
-    public Response getBetriebAnsprechpartner(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    public Response getBetriebeAnsprechpartner(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
         try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
             return (new DataBetriebAnsprechpartner(conn)).getList();
         }
@@ -371,6 +431,34 @@ public class APIBetrieb {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
     		return (new DataBetriebAnsprechpartner(conn)).create(betrieb_id, is);
     	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode zum Löschen von einer oder mehreren Betriebsansprechpartner
+     *
+     * @param schema    das Datenbankschema
+     * @param bids      die IDs des Benutzer
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @DELETE
+    @Path("/betriebansprechpartner/remove")
+    @Operation(summary = "Löscht einen oder mehrere Benutzer.", description = "Löscht einen oder mehrere Betriebsansprechpartner."
+            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Betriebsansprechpartner wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Betriebsansprechpartner zu löschen.")
+    @ApiResponse(responseCode = "404", description = "Benötigte Information zum Betriebsansprechpartner wurden nicht in der DB gefunden.")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeBetriebansprechpartner(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Die IDs der Betriebsansprechpartner", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
+            return (new DataBetriebAnsprechpartner(conn)).remove(bids);
+        }
     }
 
 

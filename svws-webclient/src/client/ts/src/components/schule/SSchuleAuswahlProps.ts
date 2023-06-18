@@ -1,5 +1,5 @@
 import type { AuswahlChildData } from "../AuswahlChildData";
-import type { SchuleStammdaten } from "@svws-nrw/svws-core";
+import type { SchuleStammdaten } from "@core";
 
 export interface SchuleAuswahlProps {
 	setChild: (value: AuswahlChildData) => Promise<void>;

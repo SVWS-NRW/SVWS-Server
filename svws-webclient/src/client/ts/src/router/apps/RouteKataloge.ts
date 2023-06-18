@@ -16,6 +16,7 @@ import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
 import { RouteNode } from "../RouteNode";
 import { routeKatalogZeitraster } from "./RouteKatalogZeitraster";
+import { routeKatalogBetriebe } from "./RouteKatalogBetriebe";
 
 interface RouteStateKataloge {
 	view: RouteNode<any, any>;
@@ -71,8 +72,8 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 			routeKatalogAufsichtsbereiche,
 			routeKatalogPausenzeiten,
 			routeKatalogZeitraster,
+			routeKatalogBetriebe,
 			// TODO { title: "Haltestellen", value: "haltestellen" },
-			// TODO { title: "Betriebe", value: "betriebe" }
 		];
 		super.defaultChild = undefined;
 	}

@@ -1265,6 +1265,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}betriebansprechpartnerliste
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Betriebansprechpartnern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BetriebAnsprechpartner>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.
+	 *   Code 404: Keine Betrieb-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Eine Liste von Betriebansprechpartnern
+	 */
+	public async getBetriebAnsprechpartner(schema : string, id : number) : Promise<List<BetriebAnsprechpartner>> {
+		const path = "/db/{schema}/betriebe/{id : \\d+}betriebansprechpartnerliste"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<BetriebAnsprechpartner>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsart
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhandenen Beschäftigungsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, undgibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -1404,7 +1433,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner
+	 * Implementierung der GET-Methode getBetriebeAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
 	 *
@@ -1419,7 +1448,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Betriebansprechpartnern
 	 */
-	public async getBetriebAnsprechpartner(schema : string) : Promise<List<BetriebAnsprechpartner>> {
+	public async getBetriebeAnsprechpartner(schema : string) : Promise<List<BetriebAnsprechpartner>> {
 		const path = "/db/{schema}/betriebe/betriebansprechpartner"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -1427,6 +1456,30 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<BetriebAnsprechpartner>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBetriebansprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner/remove
+	 *
+	 * Löscht einen oder mehrere Betriebsansprechpartner.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Betriebsansprechpartner wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Betriebsansprechpartner zu löschen.
+	 *   Code 404: Benötigte Information zum Betriebsansprechpartner wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async removeBetriebansprechpartner(data : List<number>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/betriebe/betriebansprechpartner/remove"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 
@@ -1538,6 +1591,30 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return BetriebStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode removeBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/remove
+	 *
+	 * Löscht einen oder mehrere Betriebe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Betriebe wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Betriebe zu löschen.
+	 *   Code 404: Benötigte Information zum Betrieb wurden nicht in der DB gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async removeBetrieb(data : List<number>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/betriebe/remove"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 

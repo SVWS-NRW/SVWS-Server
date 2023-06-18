@@ -65,6 +65,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 		daten.Sichtbar = betrieb.Sichtbar;
 		daten.Aenderbar = betrieb.Aenderbar;
 		daten.BelehrungISG = betrieb.BelehrungISG;
+		daten.Massnahmentraeger = betrieb.Massnahmentraeger;
 		daten.GU_ID = betrieb.GU_ID;
 		daten.ErwFuehrungszeugnis = betrieb.ErwFuehrungszeugnis;
 		daten.ExtID = betrieb.ExtID;
@@ -115,6 +116,33 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	    return persistDTO(is, betrieb, id);
      }
 
+	 /**
+     * Löscht die Betriebe mit den IDs
+     *
+     * @param bids die IDs der Betrieber
+     *
+     * @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response remove(final List<Long> bids) {
+        final String strErrorBetriebIDFehlt = "Der zu löschende Datensatz in DTOKatalogAllgemeineAdresse mit der ID %d existiert nicht.";
+        try {
+            conn.transactionBegin();
+            for (final Long id : bids) {
+                final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, id);
+                if (betrieb == null)
+                    throw OperationError.NOT_FOUND.exception(strErrorBetriebIDFehlt.formatted(id));
+                conn.transactionRemove(betrieb);
+             }
+          conn.transactionCommit();
+        } catch (final Exception e) {
+            if (e instanceof final WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
 
 	/**
 	 * Liefert eine Liste der Stammdaten aller Betriebe, die einem Schüler zugeordnet sind. Bei dem
@@ -191,6 +219,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
                             }
                             betrieb.ort_id = JSONMapper.convertToLong(value, true);
                         }
+                        case "ansprechpartner" ->  System.out.println("TODO");  // TODO Ansprechpartner
                         case "telefon1" -> betrieb.telefon1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon1.datenlaenge());
                         case "telefon2" -> betrieb.telefon2 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon2.datenlaenge());
                         case "fax" -> betrieb.fax = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrFax.datenlaenge());
@@ -231,4 +260,6 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 
 
 	}
+
+
 }

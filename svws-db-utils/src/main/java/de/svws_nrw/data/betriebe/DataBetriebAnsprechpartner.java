@@ -1,15 +1,11 @@
 package de.svws_nrw.data.betriebe;
 
 import java.io.InputStream;
-import java.util.function.Function;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -19,6 +15,10 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -65,8 +65,21 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 
 	@Override
 	public Response getList() {
-		// TODO Auto-generated method stub
-		return this.getAll();
+	    return this.getAll();
+	}
+
+	/**
+     * Liefert die Ansprechparnter des Betriebs mit der betrieb_id zurück
+     *
+     * @param  betrieb_id  ID des Betriebs
+     * @return Eine Response mit der Ansprechpartnerliste
+     */
+	public Response getBetriebansprechpartner(final Long betrieb_id) {
+	    final List<DTOAnsprechpartnerAllgemeineAdresse> liste = conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.adresse_id", betrieb_id, DTOAnsprechpartnerAllgemeineAdresse.class);
+	    if (liste == null)
+	        return OperationError.NOT_FOUND.getResponse();
+	    final List<BetriebAnsprechpartner> daten = liste.stream().map(dtoMapper).toList();
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
@@ -131,8 +144,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	}
 
 	/**
-	 * Erstellt eine neue Blockung auf Basis der aktuellen Fachwahlen, dem angegeben Namen der neuen Blockung und der
-	 * Anzahl der Schienen mit Vorgabe-Werten.
+	 * Erstellt einen neuen Ansprechpartner
 	 *
 	 * @param  betrieb_id  ID des Betriebs
 	 * @param  is					JSON-Objekt mit den Daten
@@ -193,5 +205,33 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 		final BetriebAnsprechpartner daten = dtoMapper.apply(ansprechpartner);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
+	 /**
+     * Löscht die Betriebansprechpartner mit den IDs
+     *
+     * @param bids die IDs der Benutzer
+     *
+     * @return bei Erfolg eine HTTP-Response 200
+     */
+    public Response remove(final List<Long> bids) {
+        final String strErrorAnsprechpartnerIDFehlt = "Der zu löschende Datensatz in DTOAnsprechpartnerAllgemeineAdresse mit der ID %d existiert nicht.";
+        try {
+            conn.transactionBegin();
+            for (final Long id : bids) {
+                final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
+                if (ansprechpartner == null)
+                    throw OperationError.NOT_FOUND.exception(strErrorAnsprechpartnerIDFehlt.formatted(id));
+                conn.transactionRemove(ansprechpartner);
+             }
+          conn.transactionCommit();
+        } catch (final Exception e) {
+            if (e instanceof final WebApplicationException webApplicationException)
+                return webApplicationException.getResponse();
+            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+        } finally {
+            conn.transactionRollback();
+        }
+        return Response.status(Status.OK).build();
+    }
 
 }
