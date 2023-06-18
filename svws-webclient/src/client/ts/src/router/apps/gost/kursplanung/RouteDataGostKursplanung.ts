@@ -317,7 +317,14 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		const result = await api.server.restauriereGostBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id)
 		this.mapBlockungen.set(result.id, result);
-		this.setPatchedState({mapBlockungen: this.mapBlockungen})
+		// Lade die Fächer des Abiturjahrgangs auch neu, da diese eventuell beim Wiederherstellen der Blockung angepasst wurden.
+		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.jahrgangsdaten.abiturjahr);
+		const faecherManager = new GostFaecherManager(listFaecher);
+		// Aktualisiere den State
+		this.setPatchedState({
+			faecherManager: faecherManager,
+			mapBlockungen: this.mapBlockungen
+		})
 		await this.gotoBlockung(result);
 		api.status.stop();
 	}
