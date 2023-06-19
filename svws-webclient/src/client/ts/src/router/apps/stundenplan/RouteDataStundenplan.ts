@@ -1,13 +1,12 @@
-import type { StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
+import type { StundenplanZeitraster, StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList, Wochentag } from "@core";
 import { useDebounceFn } from "@vueuse/core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeStundenplan } from "../RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { StundenplanZeitraster } from "@core";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
@@ -128,23 +127,12 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	patchZeitraster = async (data : Partial<StundenplanZeitraster>, multi?: boolean) => {
-		if (this.auswahl === undefined)
+	patchZeitraster = async (data : StundenplanZeitraster, multi: StundenplanZeitraster[]) => {
+		if (this.auswahl === undefined || data.id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		const list = [];
-		if (multi === true) {
-			for (const z of this.stundenplanManager.getListZeitraster())
-				if (z.unterrichtstunde === data.unterrichtstunde && z.stundenbeginn === data.stundenbeginn && z.stundenende === data.stundenende)
-					list.push(z);
-		}	else
-			list.push(data)
-		for (const z of list) {
-			const id = z.id;
-			if (id) {
-				await api.server.patchStundenplanZeitrasterEintrag(z, api.schema, id);
-				const zeitraster = this.stundenplanManager.getZeitraster(id);
-				this.stundenplanManager.patchZeitraster(Object.assign(zeitraster, z));
-			}
+		for (const zeitraster of multi) {
+			await api.server.patchStundenplanZeitrasterEintrag(Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende}), api.schema, zeitraster.id);
+			this.stundenplanManager.patchZeitraster(Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende}));
 		}
 		this.commit();
 	}

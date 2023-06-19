@@ -4,9 +4,13 @@
 		<template #modalTitle>Zeitraster bearbeiten</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
+				<template v-if="multi.length > 1">
+					<svws-ui-checkbox v-for="tag of tageRange" :key="tag" :model-value="listTage.get(tag)" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
+				</template>
+				<div v-else class="font-bold">{{ Wochentag.fromIDorException(item.wochentag) }}</div>
 				<svws-ui-text-input type="number" v-model="item.unterrichtstunde" required placeholder="Stunde" />
 				<svws-ui-text-input v-model="item.stundenbeginn" required placeholder="Stundenbeginn" />
-				<svws-ui-text-input v-model="item.stundenbeginn" placeholder="Stundenende" />
+				<svws-ui-text-input v-model="item.stundenende" placeholder="Stundenende" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -17,27 +21,50 @@
 </template>
 
 <script setup lang="ts">
-	import { StundenplanZeitraster } from "@core";
-	import { ref } from "vue";
+	import type { StundenplanManager} from "@core";
+	import { StundenplanZeitraster, Wochentag } from "@core";
+	import { computed, ref, shallowRef } from "vue";
 
 	const props = defineProps<{
-		zeitraster?: StundenplanZeitraster;
-		multi?: boolean;
-		patchZeitraster: (item: StundenplanZeitraster, multi?: boolean) => Promise<void>;
-		addZeitraster: (item: StundenplanZeitraster) => Promise<void>;
+		stundenplanManager: () => StundenplanManager;
+		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
+		addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
 	}>();
 
 	const modal = ref();
-	const item = ref<StundenplanZeitraster>(props.zeitraster || new StundenplanZeitraster());
+	const item = ref<StundenplanZeitraster>(new StundenplanZeitraster());
+	const multi = shallowRef<StundenplanZeitraster[]>([]);
 
-	const openModal = () => {
+
+	function updateMap(id: number, ok: any) {
+		if (typeof ok === 'boolean')
+			listTage.value.set(id, ok);
+	}
+
+	const range = (x: number,y: number) => Array.from((function*(){ while (x <= y) yield x++ })());
+	const tageRange = computed(() => range(props.stundenplanManager().getZeitrasterWochentagMin().id, props.stundenplanManager().getZeitrasterWochentagMax().id));
+
+	const listTage = ref(new Map<number, boolean>());
+	for (const tag of tageRange.value)
+		listTage.value.set(tag, true);
+
+	const openModal = (zeitraster?: StundenplanZeitraster, 	m?: boolean) => {
+		if (zeitraster)
+			item.value = zeitraster;
+		if (m === true && zeitraster) {
+			multi.value = [];
+			for (const z of props.stundenplanManager().getListZeitraster())
+				if (z.unterrichtstunde === zeitraster.unterrichtstunde && z.stundenbeginn === zeitraster.stundenbeginn && z.stundenende === zeitraster.stundenende)
+					multi.value.push(z);
+		} else
+			multi.value = [item.value];
 		modal.value.openModal();
 	}
 
 	async function importer() {
-		props.zeitraster
-			? await props.patchZeitraster(item.value, props.multi)
-			: await props.addZeitraster(item.value);
+		item.value
+			? await props.patchZeitraster(item.value, multi.value)
+			: await props.addZeitraster(item.value, [...listTage.value.keys()]);
 		modal.value.closeModal();
 	}
 </script>
