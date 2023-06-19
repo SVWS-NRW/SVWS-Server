@@ -58,7 +58,7 @@
 
 	import type { ComputedRef } from "vue";
 	import type { AbiturdatenManager, GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@core";
-	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach } from "@core";
+	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach, GostFachUtils } from "@core";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -682,10 +682,12 @@
 					wahl.abiturFach = 2;
 					break;
 				case 2:
-					// TODO Prüfe zuvor, ob das Fach überhaupt als erster LK wählbar ist
-					wahl.abiturFach = 1;
+					if (GostFachUtils.istWaehlbarLeistungskurs1(props.fach))
+						wahl.abiturFach = 1;
 					break;
 				default:
+					if (GostFachUtils.istWaehlbarLeistungskurs1(props.fach) && !props.abiturdatenManager.hatAbiFach(GostAbiturFach.LK1))
+						wahl.abiturFach = 1;
 					wahl.abiturFach = 2;
 					break;
 			}

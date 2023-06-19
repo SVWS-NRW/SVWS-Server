@@ -7,7 +7,6 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
-import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -16,6 +15,7 @@ import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -205,7 +205,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 		final GostFach fach = manager.getFach(fachbelegung);
 		if (fach == null)
 			throw new NullPointerException();
-		if (GostFachManager.istBilingual(fach))
+		if (GostFachUtils.istBilingual(fach))
 			addFehler(GostBelegungsfehler.ZK_13);
 
 		// Prüfe, ob der Zusatzkurs in dem Fach angeboten wird.

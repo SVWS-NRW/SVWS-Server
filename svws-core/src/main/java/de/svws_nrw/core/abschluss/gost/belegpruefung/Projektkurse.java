@@ -8,7 +8,6 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
-import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -17,6 +16,7 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -61,7 +61,7 @@ public final class Projektkurse extends GostBelegpruefung {
 				continue;
 
 			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach != null) && GostFachManager.istProjektkurs(fach)) {
+			if ((fach != null) && GostFachUtils.istProjektkurs(fach)) {
 				projektkursBelegung.add(fachbelegung);
 			}
 		}
@@ -204,7 +204,7 @@ public final class Projektkurse extends GostBelegpruefung {
 				//    und ob kein anrechenbares Projektfach existiert oder die Einzelbelegung vor den Halbjahren
 				//    des anrechenbaren Projektfaches liegt
 				final GostHalbjahr nextHalbjahr = halbjahr.next();
-				if ((nextHalbjahr != null) && (GostFachManager.istWaehlbar(manager.getFach(fachbelegung), nextHalbjahr))
+				if ((nextHalbjahr != null) && (GostFachUtils.istWaehlbar(manager.getFach(fachbelegung), nextHalbjahr))
 						&& ((projektkurs == null) || (projektkursHalbjahre == null) || (halbjahr.compareTo(projektkursHalbjahre.get(0)) < 0)))
 					continue;
 

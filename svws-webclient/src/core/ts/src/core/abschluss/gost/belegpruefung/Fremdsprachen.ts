@@ -2,11 +2,11 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostFachUtils } from '../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
@@ -221,7 +221,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehend.get(0));
 		if (fsDurchgehend === null)
 			return;
-		const fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
+		const fremdspracheDurchgehend : string | null = GostFachUtils.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null)
 			return;
 		const biliSachfaecherDurchgehendSchriftlich : List<AbiturFachbelegung | null> | null = this.manager.filterBelegungenMitSchriftlichkeit(this.manager.filterDurchgehendBelegbar(this._biliSachfaecher), GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1);
@@ -435,7 +435,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		const fsDurchgehend : GostFach | null = this.manager.getFach(fremdsprachenDurchgehendSchriftlich.get(0));
 		if (fsDurchgehend === null)
 			return;
-		const fremdspracheDurchgehend : string | null = GostFachManager.getFremdsprache(fsDurchgehend);
+		const fremdspracheDurchgehend : string | null = GostFachUtils.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend === null)
 			return;
 		const biliSachfaecherDurchgehend : List<AbiturFachbelegung> = this.manager.filterBelegungen(this._biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);

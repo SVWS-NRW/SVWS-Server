@@ -5,7 +5,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { JavaString } from '../../../java/lang/JavaString';
 
-export class GostFachManager extends JavaObject {
+export class GostFachUtils extends JavaObject {
 
 
 	private constructor() {
@@ -123,12 +123,27 @@ export class GostFachManager extends JavaObject {
 		return false;
 	}
 
+	/**
+	 * Prüft, ob das übergebene Fach als erster Leistungskurs wählbahr ist.
+	 * Dafür muss es laut APO Gost §12 (4) "eine aus der Sekundarstufe I
+	 * fortgeführte Fremdsprache oder Mathematik oder eine Naturwissenschaft
+	 * oder Deutsch sein".
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
+	 * @return true, falls das Fach an sich als erster Leistungskurs belegbar
+	 *         ist und ansonsten false.
+	 */
+	public static istWaehlbarLeistungskurs1(fach : GostFach | null) : boolean {
+		return ((fach !== null) && (fach.istMoeglichAbiLK) && (fach.istMoeglichQ11) && (fach.istMoeglichQ12) && (fach.istMoeglichQ21) && (fach.istMoeglichQ22)) && ((GostFachbereich.FREMDSPRACHE.hat(fach) && !fach.istFremdSpracheNeuEinsetzend) || (GostFachbereich.MATHEMATIK.hat(fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH.hat(fach)) || (GostFachbereich.DEUTSCH.hat(fach)));
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostFachManager'].includes(name);
+		return ['de.svws_nrw.core.utils.gost.GostFachUtils'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_abschluss_gost_GostFachManager(obj : unknown) : GostFachManager {
-	return obj as GostFachManager;
+export function cast_de_svws_nrw_core_utils_gost_GostFachUtils(obj : unknown) : GostFachUtils {
+	return obj as GostFachUtils;
 }

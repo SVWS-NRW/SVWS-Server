@@ -1,12 +1,12 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostFachUtils } from '../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
@@ -45,7 +45,7 @@ export class Projektkurse extends GostBelegpruefung {
 			if (this.manager.zaehleBelegung(fachbelegung) <= 0)
 				continue;
 			const fach : GostFach | null = this.manager.getFach(fachbelegung);
-			if ((fach !== null) && GostFachManager.istProjektkurs(fach)) {
+			if ((fach !== null) && GostFachUtils.istProjektkurs(fach)) {
 				this.projektkursBelegung.add(fachbelegung);
 			}
 		}
@@ -146,7 +146,7 @@ export class Projektkurse extends GostBelegpruefung {
 				if ((this.projektkurs !== null) && JavaObject.equalsTranspiler(this.projektkurs, (fachbelegung)) && (this.projektkursHalbjahre !== null) && this.projektkursHalbjahre.contains(halbjahr))
 					continue;
 				const nextHalbjahr : GostHalbjahr | null = halbjahr.next();
-				if ((nextHalbjahr !== null) && (GostFachManager.istWaehlbar(this.manager.getFach(fachbelegung), nextHalbjahr)) && ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (halbjahr.compareTo(this.projektkursHalbjahre.get(0)) < 0)))
+				if ((nextHalbjahr !== null) && (GostFachUtils.istWaehlbar(this.manager.getFach(fachbelegung), nextHalbjahr)) && ((this.projektkurs === null) || (this.projektkursHalbjahre === null) || (halbjahr.compareTo(this.projektkursHalbjahre.get(0)) < 0)))
 					continue;
 				this.addFehler(GostBelegungsfehler.PF_14);
 			}

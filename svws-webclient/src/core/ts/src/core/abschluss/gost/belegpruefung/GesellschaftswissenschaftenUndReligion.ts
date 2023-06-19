@@ -1,10 +1,10 @@
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
+import { GostFachUtils } from '../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
-import { GostFachManager } from '../../../../core/abschluss/gost/GostFachManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { NullPointerException } from '../../../../java/lang/NullPointerException';
@@ -151,7 +151,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		const fach : GostFach | null = this.manager.getFach(fachbelegung);
 		if (fach === null)
 			throw new NullPointerException()
-		if (GostFachManager.istBilingual(fach))
+		if (GostFachUtils.istBilingual(fach))
 			this.addFehler(GostBelegungsfehler.ZK_13);
 		const zFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		if ((zFach as unknown === ZulaessigesFach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE()))

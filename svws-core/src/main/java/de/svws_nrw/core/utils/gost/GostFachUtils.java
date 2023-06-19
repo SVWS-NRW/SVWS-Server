@@ -1,4 +1,4 @@
-package de.svws_nrw.core.abschluss.gost;
+package de.svws_nrw.core.utils.gost;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
@@ -9,9 +9,9 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klassen stellt Methoden zum Zugriff auf DTO-Objekte der Klasse
  * {@link GostFach} zur Verfügung.
  */
-public final class GostFachManager {
+public final class GostFachUtils {
 
-	private GostFachManager() {
+	private GostFachUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
 
@@ -130,6 +130,26 @@ public final class GostFachManager {
 		if (halbjahr == GostHalbjahr.Q22)
 			return fach.istMoeglichQ22;
 		return false;
+	}
+
+
+	/**
+	 * Prüft, ob das übergebene Fach als erster Leistungskurs wählbahr ist.
+	 * Dafür muss es laut APO Gost §12 (4) "eine aus der Sekundarstufe I
+	 * fortgeführte Fremdsprache oder Mathematik oder eine Naturwissenschaft
+	 * oder Deutsch sein".
+	 *
+	 * @param fach   das Fach der gymnasialen Oberstufe
+	 *
+	 * @return true, falls das Fach an sich als erster Leistungskurs belegbar
+	 *         ist und ansonsten false.
+	 */
+	public static boolean istWaehlbarLeistungskurs1(final GostFach fach) {
+		return ((fach != null) && (fach.istMoeglichAbiLK) && (fach.istMoeglichQ11) && (fach.istMoeglichQ12)
+				&& (fach.istMoeglichQ21) && (fach.istMoeglichQ22))
+				&& ((GostFachbereich.FREMDSPRACHE.hat(fach) && !fach.istFremdSpracheNeuEinsetzend)
+				|| (GostFachbereich.MATHEMATIK.hat(fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH.hat(fach))
+				|| (GostFachbereich.DEUTSCH.hat(fach)));
 	}
 
 }

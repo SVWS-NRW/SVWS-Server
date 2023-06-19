@@ -7,7 +7,6 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
-import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
@@ -15,6 +14,7 @@ import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -315,7 +315,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		final GostFach fsDurchgehend = manager.getFach(fremdsprachenDurchgehend.get(0));
 		if (fsDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
 			return;
-		final String fremdspracheDurchgehend = GostFachManager.getFremdsprache(fsDurchgehend);
+		final String fremdspracheDurchgehend = GostFachUtils.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
 			return;
 
@@ -667,7 +667,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		final GostFach fsDurchgehend = manager.getFach(fremdsprachenDurchgehendSchriftlich.get(0));
 		if (fsDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
 			return;
-		final String fremdspracheDurchgehend = GostFachManager.getFremdsprache(fsDurchgehend);
+		final String fremdspracheDurchgehend = GostFachUtils.getFremdsprache(fsDurchgehend);
 		if (fremdspracheDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
 			return;
 

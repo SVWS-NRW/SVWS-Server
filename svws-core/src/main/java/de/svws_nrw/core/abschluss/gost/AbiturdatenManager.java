@@ -41,6 +41,7 @@ import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -878,7 +879,7 @@ public class AbiturdatenManager {
 	public boolean pruefeBelegungDurchgehendBelegbar(final AbiturFachbelegung fachbelegung, final @NotNull GostSchriftlichkeit schriftlichkeit, final GostHalbjahr... halbjahre) {
 		if (fachbelegung == null)
 			return false;
-		if (!GostFachManager.istDurchgehendBelegbarBisQ22(getFach(fachbelegung)))
+		if (!GostFachUtils.istDurchgehendBelegbarBisQ22(getFach(fachbelegung)))
 			return false;
 		return pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, halbjahre);
 	}
@@ -1084,6 +1085,22 @@ public class AbiturdatenManager {
 	}
 
 
+	/**
+	 * Prüft, ob ein Abiturfach der übergebenen Art (1-4) existiert oder nicht.
+	 *
+	 * @param art   die Art des Abiturfaches (siehe {@link GostAbiturFach}
+	 *
+	 * @return true, falls die Art des Abiturfaches belegt wurde und ansonsten false
+	 */
+	public boolean hatAbiFach(final @NotNull GostAbiturFach art) {
+		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen) {
+			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			if (abiturFach == art)
+				return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * Prüft anhand des Statistik-Kürzels, ob in dem angegebenen Halbjahr eine doppelte Fachbelegung
@@ -1104,7 +1121,7 @@ public class AbiturdatenManager {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
 			if ((belegungHalbjahr == null) || (istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
-			String kuerzel = GostFachManager.getFremdsprache(fach);
+			String kuerzel = GostFachUtils.getFremdsprache(fach);
 			if (kuerzel == null)
 				kuerzel = fach.kuerzel == null ? "" : fach.kuerzel;
 			if (!set.add(kuerzel) && (!"VX".equals(kuerzel)))
@@ -1278,7 +1295,7 @@ public class AbiturdatenManager {
 			return result;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
-			if (GostFachManager.istDurchgehendBelegbarBisQ22(fach))
+			if (GostFachUtils.istDurchgehendBelegbarBisQ22(fach))
 				result.add(fb);
 		}
 		return result;
@@ -1515,9 +1532,9 @@ public class AbiturdatenManager {
 		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = getFach(fb);
-			if ((fach == null) || (!GostFachManager.istFremdsprachenfach(fach, sprache)))
+			if ((fach == null) || (!GostFachUtils.istFremdsprachenfach(fach, sprache)))
 				continue;
-			if (sprache.equals(GostFachManager.getFremdsprache(fach)))
+			if (sprache.equals(GostFachUtils.getFremdsprache(fach)))
 				return fb;
 		}
 		return null;
@@ -1623,7 +1640,7 @@ public class AbiturdatenManager {
 			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
-			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
 		}
@@ -1650,7 +1667,7 @@ public class AbiturdatenManager {
 			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
-			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
 		}

@@ -23,7 +23,6 @@ export { GostBelegpruefungErgebnisFehler } from './core/abschluss/gost/GostBeleg
 export { GostBelegpruefungsArt } from './core/abschluss/gost/GostBelegpruefungsArt';
 export { GostBelegungsfehler } from './core/abschluss/gost/GostBelegungsfehler';
 export { GostBelegungsfehlerArt } from './core/abschluss/gost/GostBelegungsfehlerArt';
-export { GostFachManager } from './core/abschluss/gost/GostFachManager';
 export { AbiturBlockIMarkierAlgorithmus } from './core/abschluss/gost/abitur/services/AbiturBlockIMarkierAlgorithmus';
 export { AbiturBlockIMarkierPruefung } from './core/abschluss/gost/abitur/services/AbiturBlockIMarkierPruefung';
 export { AbiFaecher } from './core/abschluss/gost/belegpruefung/AbiFaecher';
@@ -469,6 +468,7 @@ export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisComparator } from './core/utils/gost/GostBlockungsergebnisComparator';
 export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungsergebnisManager';
+export { GostFachUtils } from './core/utils/gost/GostFachUtils';
 export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';

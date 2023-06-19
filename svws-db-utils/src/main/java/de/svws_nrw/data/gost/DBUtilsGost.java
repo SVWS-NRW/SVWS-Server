@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.abschluss.gost.GostFachManager;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
@@ -16,6 +15,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
+import de.svws_nrw.core.utils.gost.GostFachUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -183,7 +183,7 @@ public final class DBUtilsGost {
 					faecher.put(gostFach.kuerzelAnzeige, fach);
 				}
 				// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
-				final String fremdsprache = GostFachManager.getFremdsprache(gostFach);
+				final String fremdsprache = GostFachUtils.getFremdsprache(gostFach);
 				if (fremdsprache != null)
 					fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
 
@@ -316,7 +316,7 @@ public final class DBUtilsGost {
 						faecher.put(gostFach.kuerzelAnzeige, fach);
 					}
 					// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
-					final String fremdsprache = GostFachManager.getFremdsprache(gostFach);
+					final String fremdsprache = GostFachUtils.getFremdsprache(gostFach);
 					if (fremdsprache != null)
 						fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
 

@@ -3,6 +3,7 @@ import { Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/
 import { Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
+import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -33,7 +34,6 @@ import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../core/abschluss/gost/GostBelegpruefung';
-import { GostFachManager } from '../../../core/abschluss/gost/GostFachManager';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
@@ -846,7 +846,7 @@ export class AbiturdatenManager extends JavaObject {
 	public pruefeBelegungDurchgehendBelegbar(fachbelegung : AbiturFachbelegung | null, schriftlichkeit : GostSchriftlichkeit, ...halbjahre : Array<GostHalbjahr>) : boolean {
 		if (fachbelegung === null)
 			return false;
-		if (!GostFachManager.istDurchgehendBelegbarBisQ22(this.getFach(fachbelegung)))
+		if (!GostFachUtils.istDurchgehendBelegbarBisQ22(this.getFach(fachbelegung)))
 			return false;
 		return this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre);
 	}
@@ -1038,6 +1038,22 @@ export class AbiturdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob ein Abiturfach der übergebenen Art (1-4) existiert oder nicht.
+	 *
+	 * @param art   die Art des Abiturfaches (siehe {@link GostAbiturFach}
+	 *
+	 * @return true, falls die Art des Abiturfaches belegt wurde und ansonsten false
+	 */
+	public hatAbiFach(art : GostAbiturFach) : boolean {
+		for (const fachbelegung of this.abidaten.fachbelegungen) {
+			const abiturFach : GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
+			if (abiturFach as unknown === art as unknown)
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Prüft anhand des Statistik-Kürzels, ob in dem angegebenen Halbjahr eine doppelte Fachbelegung
 	 * vorliegt oder nicht. Bei den Fremdsprachen werden nur unterschiedliche Fremdsprachen in einem Halbjahr
 	 * akzeptiert und es dürfen mehrere Vertiefungsfächer (VX) in einem Halbjahr vorkommen.
@@ -1056,7 +1072,7 @@ export class AbiturdatenManager extends JavaObject {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = this.getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
 			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
 				continue;
-			let kuerzel : string | null = GostFachManager.getFremdsprache(fach);
+			let kuerzel : string | null = GostFachUtils.getFremdsprache(fach);
 			if (kuerzel === null)
 				kuerzel = fach.kuerzel === null ? "" : fach.kuerzel;
 			if (!set.add(kuerzel) && (!JavaObject.equalsTranspiler("VX", (kuerzel))))
@@ -1218,7 +1234,7 @@ export class AbiturdatenManager extends JavaObject {
 			return result;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
-			if (GostFachManager.istDurchgehendBelegbarBisQ22(fach))
+			if (GostFachUtils.istDurchgehendBelegbarBisQ22(fach))
 				result.add(fb);
 		}
 		return result;
@@ -1437,9 +1453,9 @@ export class AbiturdatenManager extends JavaObject {
 		const fachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.getFach(fb);
-			if ((fach === null) || (!GostFachManager.istFremdsprachenfach(fach, sprache)))
+			if ((fach === null) || (!GostFachUtils.istFremdsprachenfach(fach, sprache)))
 				continue;
-			if (JavaObject.equalsTranspiler(sprache, (GostFachManager.getFremdsprache(fach))))
+			if (JavaObject.equalsTranspiler(sprache, (GostFachUtils.getFremdsprache(fach))))
 				return fb;
 		}
 		return null;
@@ -1532,7 +1548,7 @@ export class AbiturdatenManager extends JavaObject {
 			const fach : GostFach | null = this.getFach(fs);
 			if ((fach === null) || (!fach.istFremdsprache))
 				continue;
-			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
 		}
@@ -1558,7 +1574,7 @@ export class AbiturdatenManager extends JavaObject {
 			const fach : GostFach | null = this.getFach(fs);
 			if ((fach === null) || (!fach.istFremdsprache))
 				continue;
-			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachManager.getFremdsprache(fach))) {
+			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
 		}
