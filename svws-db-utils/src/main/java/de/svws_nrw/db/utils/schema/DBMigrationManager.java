@@ -117,6 +117,9 @@ public final class DBMigrationManager {
 	// Die Schulnummer der Quelldatenbank, sofern sie schon eingelesen wurde
 	private Integer schulNummer = null;
 
+	// Die Anzahl der Abschnitte, welche bei der Schule existieren
+	private Integer schuleAnzahlAbschnitte = null;
+
 	// Die Schulform der Quelldatenbank, sofern sie schon eingelesen wurde
 	private Schulform schulform = null;
 
@@ -708,6 +711,7 @@ public final class DBMigrationManager {
 		if (daten.Schulform != null) {
 			schulform = Schulform.getByKuerzel(daten.Schulform);
 		}
+		schuleAnzahlAbschnitte = daten.AnzahlAbschnitte;
 		return true;
 	}
 
@@ -1029,6 +1033,11 @@ public final class DBMigrationManager {
 				entities.remove(i);
 				continue;
 			}
+			if (daten.Abschnitt > schuleAnzahlAbschnitte) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lernabschnittsdaten müssen einen gültigen Lernabschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitt (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
+				entities.remove(i);
+				continue;
+			}
 			// Prüfe die Fachklasse im Lernabschnitt und setze diese ggf. auf NULL
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
 				logger.logLn(LogLevel.ERROR, "Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben eine ungültige Fachklassen-ID. Diese wird auf null gesetzt.".formatted(daten.ID));
@@ -1289,6 +1298,9 @@ public final class DBMigrationManager {
 				entities.remove(i);
 			} else if ((daten.Jahr == null) || (daten.Abschnitt == null)) {
 				logger.logLn(LogLevel.ERROR, strFehlerLernabschnittUngueltigNull);
+				entities.remove(i);
+			} else if ((daten.Abschnitt < 1) || (daten.Abschnitt > schuleAnzahlAbschnitte)) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Lehrer-Abschnittsdaten müssen einen gültigen Abschnitt haben - Die Abschnitte müssen zwischen 1 und der maximalen Anzahl der Abschnitte (%d) liegen.".formatted(daten.ID, schuleAnzahlAbschnitte));
 				entities.remove(i);
 			} else {
 				lehrerAbschnittsIDs.add(daten.ID);
