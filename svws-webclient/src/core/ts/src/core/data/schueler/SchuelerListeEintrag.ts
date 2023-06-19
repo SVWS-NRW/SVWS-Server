@@ -7,7 +7,7 @@ export class SchuelerListeEintrag extends JavaObject {
 	/**
 	 * Die ID des Schülers.
 	 */
-	public id : number = 0;
+	public id : number = -1;
 
 	/**
 	 * Der Nachname des Schülers.
@@ -18,6 +18,11 @@ export class SchuelerListeEintrag extends JavaObject {
 	 * Der Vorname des Schülers.
 	 */
 	public vorname : string = "";
+
+	/**
+	 * Das Geschlecht des Schülers (m, w, d, x - siehe {@link Geschlecht}).
+	 */
+	public geschlecht : string = "";
 
 	/**
 	 * Die ID der aktuellen Klasse des Schülers.
@@ -75,6 +80,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
+		if (typeof obj.geschlecht === "undefined")
+			 throw new Error('invalid json format, missing attribute geschlecht');
+		result.geschlecht = obj.geschlecht;
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
@@ -104,6 +112,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
 		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"geschlecht" : ' + '"' + obj.geschlecht! + '"' + ',';
 		result += '"idKlasse" : ' + obj.idKlasse! + ',';
 		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
 		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
@@ -137,6 +146,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+		}
+		if (typeof obj.geschlecht !== "undefined") {
+			result += '"geschlecht" : ' + '"' + obj.geschlecht + '"' + ',';
 		}
 		if (typeof obj.idKlasse !== "undefined") {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';

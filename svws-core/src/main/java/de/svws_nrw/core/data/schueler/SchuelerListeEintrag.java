@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
+import de.svws_nrw.core.types.Geschlecht;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,7 @@ public class SchuelerListeEintrag {
 
 	/** Die ID des Schülers. */
 	@Schema(description = "die ID des Schülers", example = "4711")
-	public long id;
+	public long id = -1L;
 
 	/** Der Nachname des Schülers. */
 	@Schema(description = "der Nachname des Schülers", example = "Mustermann")
@@ -29,6 +30,10 @@ public class SchuelerListeEintrag {
 	/** Der Vorname des Schülers. */
 	@Schema(description = "der Vorname des Schülers", example = "Max")
 	public @NotNull String vorname = "";
+
+	/** Das Geschlecht des Schülers (m, w, d, x - siehe {@link Geschlecht}). */
+	@Schema(description = "das Geschlecht des Schülers", example = "4711")
+	public @NotNull String geschlecht = "";
 
 	/** Die ID der aktuellen Klasse des Schülers.*/
 	@Schema(description = "die ID der aktuellen Klasse des Schülers", example = "47")

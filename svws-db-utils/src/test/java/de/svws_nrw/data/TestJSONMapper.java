@@ -24,6 +24,7 @@ public class TestJSONMapper {
 			original.id = 42;
 			original.vorname = "Max";
 			original.nachname = "Mustermann";
+			original.geschlecht = "m";
 			original.status = 2;
 			original.idSchuljahresabschnitt = 4L;
 			original.idKlasse = 43L;
@@ -36,6 +37,7 @@ public class TestJSONMapper {
 			assertEquals(original.id, decoded.id);
 			assertEquals(original.vorname, decoded.vorname);
 			assertEquals(original.nachname, decoded.nachname);
+			assertEquals(original.geschlecht, decoded.geschlecht);
 			assertEquals(original.status, decoded.status);
 			assertEquals(original.idSchuljahresabschnitt, decoded.idSchuljahresabschnitt);
 			assertEquals(original.idKlasse, decoded.idKlasse);

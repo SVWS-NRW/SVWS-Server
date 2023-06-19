@@ -2,7 +2,7 @@
 	<div role="cell" class="data-table__td">
 		<div class="flex items-center justify-between gap-1 w-full">
 			<span>
-				{{ `${schueler.nachname}, ${schueler.vorname}` }}
+				{{ `${schueler.nachname}, ${schueler.vorname} (${schueler.geschlecht})` }}
 			</span>
 			<div class="flex items-center gap-1 cursor-pointer">
 				<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" :short="true">
