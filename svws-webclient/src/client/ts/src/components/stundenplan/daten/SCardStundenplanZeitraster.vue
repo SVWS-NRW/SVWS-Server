@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Zeitraster">
-		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
+		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
 			<StundenplanWoche :map-tage="mapTage">
 				<template #zeiten>
 					<div class="flex flex-col border w-full" v-if="gleicheZeiten !== undefined">
@@ -17,6 +17,9 @@
 				</StundenplanTag>
 			</StundenplanWoche>
 		</SCardStundenplanZeitrasterModal>
+		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
+			<svws-ui-button type="transparent" size="small" @click="openModal()">Zeitraster hinzufügen</svws-ui-button>
+		</SCardStundenplanZeitrasterModal>
 	</svws-ui-content-card>
 </template>
 
@@ -29,6 +32,7 @@
 		stundenplanManager: () => StundenplanManager;
 		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
 		addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
+		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	}>();
 
 	const selected = ref();

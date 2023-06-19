@@ -20,6 +20,6 @@ export interface StundenplanDatenProps {
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
 	addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
-	removeZeitraster: (daten: StundenplanZeitraster, multi?: boolean) => Promise<void>;
+	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	importZeitraster: () => Promise<void>;
 }

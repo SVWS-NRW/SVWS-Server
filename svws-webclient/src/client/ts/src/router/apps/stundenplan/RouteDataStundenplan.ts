@@ -173,6 +173,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const tag of tage) {
 			delete item.id;
+			item.wochentag = tag;
 			const _item = await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id)
 			this.stundenplanManager.addZeitraster(_item);
 		}
@@ -203,22 +204,12 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	removeZeitraster = async (data: StundenplanZeitraster, multi?: boolean) => {
+	removeZeitraster = async (multi: StundenplanZeitraster[]) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		const list = [];
-		if (multi === true) {
-			for (const z of this.stundenplanManager.getListZeitraster())
-				if (z.unterrichtstunde === data.unterrichtstunde && z.stundenbeginn === data.stundenbeginn && z.stundenende === data.stundenende)
-					list.push(z);
-		}	else
-			list.push(data)
-		for (const z of list) {
-			const id = z.id;
-			if (id) {
-				await api.server.deleteStundenplanZeitrasterEintrag(api.schema, id);
-				this.stundenplanManager.removeZeitraster(id);
-			}
+		for (const zeitraster of multi) {
+			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
+			this.stundenplanManager.removeZeitraster(zeitraster.id);
 		}
 		this.commit();
 	}
