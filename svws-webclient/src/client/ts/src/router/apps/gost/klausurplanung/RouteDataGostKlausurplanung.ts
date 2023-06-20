@@ -308,7 +308,7 @@ export class RouteDataGostKlausurplanung {
 		const terminOrig = this.kursklausurmanager.gibKlausurtermin(id);
 		if (terminOrig !== null) {
 			Object.assign(terminOrig, termin);
-			this.kursklausurmanager.updateKlausurtermin(terminOrig);
+			this.kursklausurmanager.patchKlausurtermin(terminOrig);
 		}
 		this.commit();
 		api.status.stop();

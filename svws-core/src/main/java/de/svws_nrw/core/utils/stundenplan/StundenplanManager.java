@@ -667,6 +667,22 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
+	 *
+	 * @param tag der Wochentag der gewünschten Zeitraster-Objekte
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
+	 */
+	public @NotNull List<@NotNull StundenplanZeitraster> getListZeitrasterZuWochentag(final @NotNull Wochentag tag) {
+		final List<@NotNull StundenplanZeitraster> list = new ArrayList<>();
+		for (@NotNull final StundenplanZeitraster zr : _daten.zeitraster) {
+			if (zr.wochentag == tag.id)
+				list.add(zr);
+		}
+		return list;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des angefragten-Objektes.

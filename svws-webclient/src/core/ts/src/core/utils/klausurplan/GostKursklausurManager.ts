@@ -2,9 +2,12 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Wochentag } from '../../../core/types/Wochentag';
 import { GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
 
 export class GostKursklausurManager extends JavaObject {
@@ -166,10 +169,19 @@ export class GostKursklausurManager extends JavaObject {
 	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
 	 * Termins geändert hat.
 	 *
-	 * @param termin das GostKlausurtermin-Objekt
+	 * @param pTermin das GostKlausurtermin-Objekt
 	 */
-	public updateKlausurtermin(termin : GostKlausurtermin) : void {
-		this.removeTermin(termin.id);
+	public patchKlausurtermin(pTermin : GostKlausurtermin) : void {
+		const termin : GostKlausurtermin = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, pTermin.id);
+		const listKlausurtermineMapQuartalKlausurtermine : ArrayList<GostKlausurtermin> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKlausurtermine, termin.quartal);
+		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
+		if (termin.datum !== null) {
+			const listDateKlausurtermin : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin !== null)
+				listDateKlausurtermin.remove(termin);
+		}
+		this._termine.remove(termin);
+		this._mapIdKlausurtermin.remove(termin.id);
 		this.addTermin(termin);
 	}
 
@@ -281,7 +293,7 @@ export class GostKursklausurManager extends JavaObject {
 			}
 		}
 		if (termin.datum !== null) {
-			let listDateKlausurtermin : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(termin.datum);
+			const listDateKlausurtermin : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(termin.datum);
 			if (listDateKlausurtermin !== null)
 				listDateKlausurtermin.remove(termin);
 		}
@@ -302,6 +314,37 @@ export class GostKursklausurManager extends JavaObject {
 		for (const klaus of klausuren) {
 			if (klaus.idKurs === idKurs)
 				return klaus;
+		}
+		return null;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public getKlausurtermineByDatum(datum : string | null) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = this._mapDateKlausurtermin.get(datum);
+		return termine !== null ? termine : new ArrayList();
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine
+	 * @param zr Zeitraster
+	 * @param manager Manager
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public getKlausurtermineByDatumUhrzeit(datum : string | null, zr : StundenplanZeitraster, manager : StundenplanManager) : GostKlausurtermin | null {
+		const termine : List<GostKlausurtermin> | null = this.getKlausurtermineByDatum(datum);
+		for (const termin of termine) {
+			const zrTermin : StundenplanZeitraster | null = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit)!, 1).get(0);
+			if (zrTermin !== null && zrTermin.id === zr.id)
+				return termin;
 		}
 		return null;
 	}

@@ -664,6 +664,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
+	 *
+	 * @param tag der Wochentag der gewünschten Zeitraster-Objekte
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
+	 */
+	public getListZeitrasterZuWochentag(tag : Wochentag) : List<StundenplanZeitraster> {
+		const list : List<StundenplanZeitraster> | null = new ArrayList();
+		for (const zr of this._daten.zeitraster) {
+			if (zr.wochentag === tag.id)
+				list.add(zr);
+		}
+		return list;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des angefragten-Objektes.

@@ -7,7 +7,10 @@ import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -168,10 +171,23 @@ public class GostKursklausurManager {
 	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
 	 * Termins geändert hat.
 	 *
-	 * @param termin das GostKlausurtermin-Objekt
+	 * @param pTermin das GostKlausurtermin-Objekt
 	 */
-	public void updateKlausurtermin(final @NotNull GostKlausurtermin termin) {
-		removeTermin(termin.id);
+	public void patchKlausurtermin(final @NotNull GostKlausurtermin pTermin) {
+
+		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, pTermin.id);
+		final ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurtermine, termin.quartal);
+		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
+
+		if (termin.datum != null) {
+			final List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
+			if (listDateKlausurtermin != null)
+				listDateKlausurtermin.remove(termin);
+		}
+
+		_termine.remove(termin);
+		_mapIdKlausurtermin.remove(termin.id);
+
 		addTermin(termin);
 	}
 
@@ -262,6 +278,7 @@ public class GostKursklausurManager {
 			}
 			listDateKlausurtermin.add(termin);
 		}
+
 	}
 
 	/**
@@ -306,7 +323,7 @@ public class GostKursklausurManager {
 		}
 
 		if (termin.datum != null) {
-			List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
+			final List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
 			if (listDateKlausurtermin != null)
 				listDateKlausurtermin.remove(termin);
 		}
@@ -331,6 +348,38 @@ public class GostKursklausurManager {
 				return klaus;
 		}
 		return null;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByDatum(final String datum) {
+		final List<@NotNull GostKlausurtermin> termine = _mapDateKlausurtermin.get(datum);
+		return termine != null ? termine : new ArrayList<>();
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
+	 *
+	 * @param datum das Datum der Klausurtermine
+	 * @param zr Zeitraster
+	 * @param manager Manager
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public GostKlausurtermin getKlausurtermineByDatumUhrzeit(final String datum, final @NotNull StundenplanZeitraster zr, final @NotNull StundenplanManager manager) {
+		final List<@NotNull GostKlausurtermin> termine = getKlausurtermineByDatum(datum);
+		for (final @NotNull GostKlausurtermin termin : termine) {
+			final StundenplanZeitraster zrTermin = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), 1).get(0);
+			if (zrTermin != null && zrTermin.id == zr.id)
+				return termin;
+		}
+		return null;
+		//return termine != null ? termine : new ArrayList<>();
 	}
 
 	/**

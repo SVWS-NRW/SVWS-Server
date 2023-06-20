@@ -13,7 +13,7 @@
 				</ul>
 			</svws-ui-drop-data>
 			<div class="flex flex-row flex-wrap gap-4 w-full">
-				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 3" :starting-day-of-week="1" :enable-drag-drop="false" :disabled_items="termineMit"
+				<calendar-view :display-period-uom="displayPeriodUom" :display-period-count="displayPeriodUom === 'month' ? 1 : 2" :starting-day-of-week="1" :enable-drag-drop="false" :disabled_items="termineMit"
 					:show-date="showDate" disabled_drop-on-date="onDrop" class="theme-default" current-period-label="Aktuell" :display-week-numbers="true">
 					<template #header="{ headerProps }">
 						<calendar-view-header :header-props="headerProps" @input="setShowDate" />
@@ -24,14 +24,27 @@
 						</svws-ui-drag-data>
 					</template>
 					<template #dayContent="{day}">
-						<table class="w-full">
+						<StundenplanTag :tag="day.getDay()" v-if="day.getDay() < 6 && day.getDay() > 0">
+							<StundenplanEntry v-for="stunde of stundenplanmanager.getListZeitrasterZuWochentag(Wochentag.fromIDorException(day.getDay()))" :key="stunde.id" :entry="stunde" class="hover:bg-slate-400 select-none cursor-pointer">
+								<StundenplanStunde :stunde="stunde">
+									<svws-ui-drop-data @drop="onDrop($event, day, stunde.unterrichtstunde)" class="w-full" tag="td">
+										<span v-if="dragTermin !== null && sumSchreiber(day, stunde.unterrichtstunde) > 0">{{ sumSchreiber(day, stunde.unterrichtstunde) }}</span> <span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
+										<!--<svws-ui-drag-data tag="div" :data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(displayPeriodUom, stunde, stundenplanmanager)" @drag-start="dragStatus(value.originalItem)" @drag-end="dragStatus(null)">-->
+										<s-gost-klausurplanung-kalender-termin-short v-if="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager) !== null" :kursklausurmanager="kursklausurmanager" :termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
+										<!--</svws-ui-drag-data>-->
+									</svws-ui-drop-data>
+								</StundenplanStunde>
+							</StundenplanEntry>
+						</StundenplanTag>
+
+						<!--<table class="w-full">
 							<tr class="border-b last:border-0" v-for="stunde in 6" :key="stunde">
 								<td class="border-r">{{ stunde }}</td>
 								<svws-ui-drop-data @drop="onDrop($event, day, stunde)" class="w-full" tag="td">
 									<span v-if="dragTermin !== null && sumSchreiber(day, stunde) > 0">{{ sumSchreiber(day, stunde) }}</span> <span v-for="kurs in kurseGefiltert(day, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
 								</svws-ui-drop-data>
 							</tr>
-						</table>
+						</table>-->
 					</template>
 					<template #weekNumber="{numberInYear}">
 						{{ currentWeekNumber = numberInYear }}
@@ -47,7 +60,7 @@
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
 	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager} from "@core";
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, StundenplanZeitraster} from "@core";
 	import { ArrayList} from "@core";
 	import { Wochentag } from "@core";
 
@@ -72,6 +85,20 @@
 		showDate.value = d;
 	}
 
+	function formatDate(date: Date) {
+		var d = new Date(date),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+
+		if (month.length < 2)
+			month = '0' + month;
+		if (day.length < 2)
+			day = '0' + day;
+
+		return [year, month, day].join('-');
+	}
+
 	const dropOverCssClasses = () => ({
 		"bg-green-100": dragTermin.value !== null && dragTermin.value.datum !== null,
 	});
@@ -88,7 +115,7 @@
 				kursIds.add(klausur.idKurs);
 			}
 		}
-		return props.stundenplanmanager.getKurseGefiltert( kursIds, 1, Wochentag.fromIDorException(day.getDay() + 1), stunde);
+		return props.stundenplanmanager.getKurseGefiltert( kursIds, 1, Wochentag.fromIDorException(day.getDay()), stunde);
 	}
 
 	function sumSchreiber(day: any, stunde: number) {
@@ -114,11 +141,14 @@
 	});
 
 	const onDrop = async (item: GostKlausurtermin, date: Date | null, stunde: number) => {
+		console.log("Drop");
 		const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
+		console.log(termin);
+		console.log(date);
 		if (termin !== null) {
 			if (date !== null) {
-				date.setDate(date.getDate() + 1);
-				termin.datum = date.toISOString().split('T')[0];
+//				date.setDate(date.getDate() + 1);
+				termin.datum = formatDate(date);
 				props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde);
 				termin.startzeit = props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde).stundenbeginn;
 			} else {
