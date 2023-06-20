@@ -202,7 +202,7 @@ public class DBCoreTypeUpdater {
 			if (revision < 0)
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
 			// Aktualisiere ggf. die Daten der einzelnen Core-Types
-			final long status_revision = _status.version.getRevisionOrDefault(0);
+			final long status_revision = _status.version == null ? 0 : _status.version.getRevisionOrDefault(0);
 			for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
 				if (!tab.hasCoreType())
 					continue;
