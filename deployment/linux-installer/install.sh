@@ -24,14 +24,14 @@ CHARS="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 password2=$(head /dev/urandom | tr -dc $CHARS | fold -w $LENGTH | head -n 1)
 password1=$(head /dev/urandom | tr -dc $CHARS | fold -w $LENGTH | head -n 1)
 
-export CREATE_MYSQL=J
+export CREATE_MariaDB=J
 export CREATE_KEYSTORE=J
 export CREATE_TESTDATA=J
-export MYSQL_ROOT_PASSWORD=${password1}
-export MYSQL_DATABASE=svwsdb
-export MYSQL_HOST=localhost
-export MYSQL_USER=svwsadmin
-export MYSQL_PASSWORD=${password2}
+export MariaDB_ROOT_PASSWORD=${password1}
+export MariaDB_DATABASE=svwsdb
+export MariaDB_HOST=localhost
+export MariaDB_USER=svwsadmin
+export MariaDB_PASSWORD=${password2}
 
 export APP_PATH=/opt/app/svws
 export CONF_PATH=/etc/app/svws/conf
@@ -66,30 +66,30 @@ else
     	#Konfuguration
     	echo "MariaDB-Konfiguration:"
 
-    	read -p "Möchten Sie die MySQL-Datenbank erstellen? (j/N): " CREATE_MYSQL
+    	read -p "Möchten Sie die MySQL-Datenbank erstellen? (j/N): " CREATE_MariaDB
 
-    	if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
-    		read -p "MYSQL_ROOT_PASSWORD (default: '${password1}'): " MYSQL_ROOT_PASSWORD
-    		export MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-${password1}}
-    		read -p "MYSQL_DATABASE (default: 'svwsdb'): " MYSQL_DATABASE
-    		export MYSQL_DATABASE=${MYSQL_DATABASE:-svwsdb}
-    		read -p "MYSQL_HOST (default: 'localhost'): " MYSQL_HOST
-    		export MYSQL_HOST=${MYSQL_HOST:-localhost}
-    		read -p "MYSQL_USER (default: 'svwsadmin'): " MYSQL_USER
-    		export MYSQL_USER=${MYSQL_USER:-svwsadmin}
-    		read -p "MYSQL_PASSWORD (default: '${password2}'): " MYSQL_PASSWORD
-    		export MYSQL_PASSWORD=${MYSQL_PASSWORD:-${password2}}
+    	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
+    		read -p "MariaDB_ROOT_PASSWORD (default: '${password1}'): " MariaDB_ROOT_PASSWORD
+    		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD:-${password1}}
+    		read -p "MariaDB_DATABASE (default: 'svwsdb'): " MariaDB_DATABASE
+    		export MariaDB_DATABASE=${MariaDB_DATABASE:-svwsdb}
+    		read -p "MariaDB_HOST (default: 'localhost'): " MariaDB_HOST
+    		export MariaDB_HOST=${MariaDB_HOST:-localhost}
+    		read -p "MariaDB_USER (default: 'svwsadmin'): " MariaDB_USER
+    		export MariaDB_USER=${MariaDB_USER:-svwsadmin}
+    		read -p "MariaDB_PASSWORD (default: '${password2}'): " MariaDB_PASSWORD
+    		export MariaDB_PASSWORD=${MariaDB_PASSWORD:-${password2}}
     	else
-    		read -p "MYSQL_ROOT_PASSWORD: " MYSQL_ROOT_PASSWORD
-    		export MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    		read -p "MYSQL_DATABASE: " MYSQL_DATABASE
-    		export MYSQL_DATABASE=${MYSQL_DATABASE}
-    		read -p "MYSQL_HOST: " MYSQL_HOST
-    		export MYSQL_HOST=${MYSQL_HOST}
-    		read -p "MYSQL_USER: " MYSQL_USER
-    		export MYSQL_USER=${MYSQL_USER}
-    		read -p "MYSQL_PASSWORD: " MYSQL_PASSWORD
-    		export MYSQL_PASSWORD=${MYSMYSQL_PASSWORD}
+    		read -p "MariaDB_ROOT_PASSWORD: " MariaDB_ROOT_PASSWORD
+    		export MariaDB_ROOT_PASSWORD=${MariaDB_ROOT_PASSWORD}
+    		read -p "MariaDB_DATABASE: " MariaDB_DATABASE
+    		export MariaDB_DATABASE=${MariaDB_DATABASE}
+    		read -p "MariaDB_HOST: " MariaDB_HOST
+    		export MariaDB_HOST=${MariaDB_HOST}
+    		read -p "MariaDB_USER: " MariaDB_USER
+    		export MariaDB_USER=${MariaDB_USER}
+    		read -p "MariaDB_PASSWORD: " MariaDB_PASSWORD
+    		export MariaDB_PASSWORD=${MYSMariaDB_PASSWORD}
     	fi
 
     	echo "Installationspfade:"
@@ -134,7 +134,7 @@ else
     		MDBFILE_USER=${MDBFILE_USER:-/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.mdb}
     		MDBFILE="${TMP_DIR}${MDBFILE_USER}"
     	else
-    		if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
+    		if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
     			export INIT_EMPTY_DB=J
     		fi
     	fi
@@ -144,11 +144,11 @@ else
         echo "Host: $(hostname) - $(hostname -I | cut -d' ' -f1)"
     	echo ""
     	echo "MariaDB-Konfiguration:"
-    	echo "  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD"
-    	echo "  MYSQL_DATABASE: $MYSQL_DATABASE"
-    	echo "  MYSQL_HOST: $MYSQL_HOST"
-    	echo "  MYSQL_USER: $MYSQL_USER"
-    	echo "  MYSQL_PASSWORD: $MYSQL_PASSWORD"
+    	echo "  MariaDB_ROOT_PASSWORD: $MariaDB_ROOT_PASSWORD"
+    	echo "  MariaDB_DATABASE: $MariaDB_DATABASE"
+    	echo "  MariaDB_HOST: $MariaDB_HOST"
+    	echo "  MariaDB_USER: $MariaDB_USER"
+    	echo "  MariaDB_PASSWORD: $MariaDB_PASSWORD"
 
     	echo ""
     	echo "Installationspfade:"
@@ -179,14 +179,14 @@ else
     # Erstelle .env-Datei und schreibe Konfiguration hinein
     echo "Erstelle .env-Datei und schreibe Konfiguration hinein"
     touch .env
-    echo "CREATE_MYSQL=$CREATE_MYSQL" >> .env
+    echo "CREATE_MariaDB=$CREATE_MariaDB" >> .env
     echo "CREATE_KEYSTORE=$CREATE_KEYSTORE" >> .env
     echo "CREATE_TESTDATA=$CREATE_TESTDATA" >> .env
-    echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> .env
-    echo "MYSQL_DATABASE=$MYSQL_DATABASE" >> .env
-    echo "MYSQL_HOST=$MYSQL_HOST" >> .env
-    echo "MYSQL_USER=$MYSQL_USER" >> .env
-    echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+    echo "MariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD" >> .env
+    echo "MariaDB_DATABASE=$MariaDB_DATABASE" >> .env
+    echo "MariaDB_HOST=$MariaDB_HOST" >> .env
+    echo "MariaDB_USER=$MariaDB_USER" >> .env
+    echo "MariaDB_PASSWORD=$MariaDB_PASSWORD" >> .env
     echo "APP_PATH=$APP_PATH" >> .env
     echo "CONF_PATH=$CONF_PATH" >> .env
     echo "APP_PORT=$APP_PORT" >> .env
@@ -210,17 +210,17 @@ apt-get -y -qq install gettext zip wget openjdk-17-jre curl software-properties-
 # Installation der Datenbank
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
-if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
-    echo "Lade MariaDB 10.7 ..."
+if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
+    echo "Lade MariaDB 10.9 ..."
 
     # Herunterladen des Skripts zum Einrichten des MariaDB-Repositorys und Ausführen des Skripts
-    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=10.7 --skip-maxscale --skip-tools
+    curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=10.9 --skip-maxscale --skip-tools
 
     # Installieren der MariaDB-Datenbank
     apt-get -y -qq install mariadb-server > /dev/null
 
     # Ausgabe der Erfolgsmeldung
-    echo "MariaDB 10.7 erfolgreich installiert."
+    echo "MariaDB 10.9 erfolgreich installiert."
 fi
 
 # SVWS laden und auspacken
@@ -272,7 +272,7 @@ echo "Erstelle Konfiguration ..."
 if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
 	envsubst < $CONF_PATH/svwsconfig-template.json > $CONF_PATH/svwsconfig.json
 else
-	if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
+	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
     	envsubst < $CONF_PATH/svwsconfig-template-nodb.json > $CONF_PATH/svwsconfig.json
     else
     	envsubst < $CONF_PATH/svwsconfig-template.json > $CONF_PATH/svwsconfig.json
@@ -287,7 +287,7 @@ ln $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
 
 # Prüfen, ob die Installation der MariaDB-Datenbank gewünscht ist
-if [ "$CREATE_MYSQL" = "j" ] || [ "$CREATE_MYSQL" = "J" ]; then
+if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
 	    envsubst < ./init-scripts/init-template.sql > ./init-scripts/init.sql
         # Importiere die Daten in die MariaDB
         mysql < ./init-scripts/init.sql
@@ -325,16 +325,16 @@ if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
     java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
        -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
        -td "MARIA_DB" \
-       -tl ${MYSQL_HOST} \
-       -ts ${MYSQL_DATABASE} \
-       -tu ${MYSQL_USER} \
-       -tp ${MYSQL_PASSWORD} \
-       -tr ${MYSQL_ROOT_PASSWORD}
+       -tl ${MariaDB_HOST} \
+       -ts ${MariaDB_DATABASE} \
+       -tu ${MariaDB_USER} \
+       -tp ${MariaDB_PASSWORD} \
+       -tr ${MariaDB_ROOT_PASSWORD}
 fi
 
 # Überprüfe, ob eine leere Datenbank erstellt werden sollen
 if [ "$INIT_EMPTY_DB" = "j" ] || [ "$INIT_EMPTY_DB" = "J" ]; then
-	
+
 	# Wechsle in das Verzeichnis der Anwendung
 	cd $APP_PATH
 
@@ -342,11 +342,11 @@ if [ "$INIT_EMPTY_DB" = "j" ] || [ "$INIT_EMPTY_DB" = "J" ]; then
     echo "Erstelle leere Datenbank ..."
     java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.CreateSchema -j -d -r -1 \
        -td "MARIA_DB" \
-       -tl ${MYSQL_HOST} \
-       -ts ${MYSQL_DATABASE} \
-       -tu ${MYSQL_USER} \
-       -tp ${MYSQL_PASSWORD} \
-       -tr ${MYSQL_ROOT_PASSWORD}
+       -tl ${MariaDB_HOST} \
+       -ts ${MariaDB_DATABASE} \
+       -tu ${MariaDB_USER} \
+       -tp ${MariaDB_PASSWORD} \
+       -tr ${MariaDB_ROOT_PASSWORD}
 fi
 
 cd $script_dir

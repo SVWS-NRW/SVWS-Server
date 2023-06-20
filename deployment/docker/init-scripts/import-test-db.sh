@@ -18,8 +18,8 @@ echo "Importiere Datenbank: ${MDBFILE} ..."
 java -cp "svws-server-app-*.jar:./*:./lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
    -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
    -td "MARIA_DB" \
-   -tl ${MYSQL_HOST} \
-   -ts ${MYSQL_DATABASE} \
-   -tu ${MYSQL_USER} \
-   -tp ${MYSQL_PASSWORD} \
-   -tr ${MYSQL_ROOT_PASSWORD}
+   -tl ${MariaDB_HOST} \
+   -ts ${MariaDB_DATABASE} \
+   -tu ${MariaDB_USER} \
+   -tp ${MariaDB_PASSWORD} \
+   -tr ${MariaDB_ROOT_PASSWORD}

@@ -14,7 +14,7 @@
   "LoggingPath" : "logs",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
-    "location" : "${MYSQL_HOST}",
+    "location" : "${MariaDB_HOST}",
     "defaultschema" : "",
     "SchemaKonfiguration" : []
   }

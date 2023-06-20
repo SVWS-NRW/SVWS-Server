@@ -14,13 +14,13 @@
   "LoggingPath" : "logs",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
-    "location" : "${MYSQL_HOST}",
-    "defaultschema" : "${MYSQL_DATABASE}",
+    "location" : "${MariaDB_HOST}",
+    "defaultschema" : "${MariaDB_DATABASE}",
     "SchemaKonfiguration" : [ {
-      "name" : "${MYSQL_DATABASE}",
+      "name" : "${MariaDB_DATABASE}",
       "svwslogin" : false,
-      "username" : "${MYSQL_USER}",
-      "password" : "${MYSQL_PASSWORD}"
+      "username" : "${MariaDB_USER}",
+      "password" : "${MariaDB_PASSWORD}"
     } ]
   }
 }
