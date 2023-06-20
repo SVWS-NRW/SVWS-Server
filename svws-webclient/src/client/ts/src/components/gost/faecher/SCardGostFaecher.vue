@@ -87,18 +87,18 @@
 	const cols: Array<DataTableColumn> = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
 		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
-		{ key: "Neu", label: "Neu", align: 'center', span: 0.2, minWidth: 2.5 },
-		{ key: "WStd.", label: "WS", tooltip: "Wochenstunden", align: 'center', span: 0.2, minWidth: 2.5 },
-		{ key: "1.", label: "1.", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "2.", label: "2.", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "GK", label: "GK", align: 'center', span: 0.25, minWidth: 2.5 },
-		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 2.5 }
+		{ key: "Neu", label: "Neu", align: 'center', span: 0.2, minWidth: 3 },
+		{ key: "WStd.", label: "WS", tooltip: "Wochenstunden", align: 'center', span: 0.25, minWidth: 3.5 },
+		{ key: "1.", label: "1.", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "2.", label: "2.", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "GK", label: "GK", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "LK", label: "LK", align: 'center', span: 0.25, minWidth: 3 }
 	];
 
 </script>
