@@ -673,7 +673,8 @@
 			&:last-child {
 				@apply border-b border-black/25 dark:border-white/25;
 
-				.data-table__contrast-border & {
+				.data-table__contrast-border &,
+				.table--with-background & {
 					@apply border-b-0;
 				}
 			}

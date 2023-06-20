@@ -3,6 +3,7 @@
 		'data-table__th data-table__thead__th': thead,
 		'data-table__td data-table__tbody__td': !thead,
 		'data-table__td__no-padding': noPadding,
+		'data-table__td__padding-sm': paddingSm,
 		'data-table__td__align-right': align === 'right',
 		'data-table__td__align-center': align === 'center',
 		'data-table__td__align-left': align === 'left',
@@ -35,6 +36,7 @@
 			thead?: boolean;
 			tooltip?: string;
 			noPadding?: boolean;
+			paddingSm?: boolean;
 			align?: 'left' | 'center' | 'right';
 			disabled?: boolean;
 			span?: 'full';
@@ -43,6 +45,7 @@
 			thead: false,
 			tooltip: '',
 			noPadding: false,
+			paddingSm: false,
 			align: 'left',
 			disabled: false,
 		}

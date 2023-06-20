@@ -13,6 +13,7 @@
 		'data-table__tr__depth-6': depth === 6,
 		'data-table__tr__collapsed': collapsed,
 		'data-table__tr__expanded': expanded,
+		'data-table__thead__tr__compact': compact,
 	}">
 		<slot />
 	</div>
@@ -28,6 +29,7 @@
 			collapsed?: boolean;
 			expanded?: boolean;
 			depth?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+			compact?: boolean;
 		}>(),
 		{
 			thead: false,
@@ -37,6 +39,7 @@
 			collapsed: false,
 			expanded: false,
 			depth: 0,
+			compact: false,
 		}
 	);
 </script>

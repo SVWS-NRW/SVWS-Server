@@ -29,7 +29,7 @@
 		@apply grid grid-cols-1 gap-16;
 
 		@media (min-width: theme("screens.2xl")) {
-			grid-template-columns: 1.5fr 1fr;
+			grid-template-columns: 1fr 1fr;
 		}
 	}
 </style>
