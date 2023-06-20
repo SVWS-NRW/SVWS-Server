@@ -1,18 +1,18 @@
 <template>
 	<template v-if="mapFachkombinationen.size">
-		<h4 class="gap-1 flex items-start font-bold mt-5 cursor-pointer" @click="show=!show">
-			<span>
+		<h4 class="gap-1 flex items-center font-bold mt-5 cursor-pointer" @click="show=!show">
+			<span class="inline-flex gap-1 items-center">
 				<template v-if="fehler.size">
 					Fehler bei
+				</template>
+				<template v-else>
+					<i-ri-checkbox-circle-fill class="flex-shrink-0 text-success" />
 				</template>
 				Fachkombinationsregeln
 			</span>
 			<svws-ui-badge v-if="fehler.size" type="error" size="big">
 				{{ fehler.size }}
 			</svws-ui-badge>
-			<template v-else>
-				<i-ri-checkbox-circle-fill class="flex-shrink-0 text-success" />
-			</template>
 			<svws-ui-button type="transparent" size="small" class="ml-3 -mt-0.5">
 				<template v-if="show">
 					Details

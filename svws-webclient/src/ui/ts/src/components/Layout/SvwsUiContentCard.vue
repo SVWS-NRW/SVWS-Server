@@ -46,7 +46,7 @@
 		&--headline {
 			@apply text-headline-md;
 			@apply text-black dark:text-white;
-			@apply flex-shrink-0 line-clamp-1 max-w-full;
+			@apply flex-shrink-0 max-w-full leading-none;
 
 			&--large {
 				@apply text-headline;
@@ -57,12 +57,16 @@
 			@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
 
 			&--has-actions {
-				@apply flex flex-wrap gap-x-4 gap-y-1 w-full items-start;
+				@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap;
+
+				.content-card--headline {
+					@apply hyphens-auto sm:flex-grow;
+				}
 			}
 		}
 
 		&--actions {
-			@apply flex items-center space-x-2;
+			@apply flex items-center gap-x-2 max-sm:w-full mb-3;
 		}
 	}
 
