@@ -895,7 +895,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
 		const ende : number = beginn + minutenVerstrichen;
-		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
+		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) && this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
 	}
 
 	/**
@@ -912,8 +912,8 @@ export class StundenplanManager extends JavaObject {
 		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2).valueOf();
 		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
-		DeveloperNotificationException.ifTrue("beginn1 >= ende1", beginn1 >= ende1);
-		DeveloperNotificationException.ifTrue("beginn2 >= ende2", beginn2 >= ende2);
+		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
+		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
 		return !((ende1 < beginn2) || (ende2 < beginn1));
 	}
 

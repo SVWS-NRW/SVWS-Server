@@ -898,7 +898,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanZeitraster> getZeitrasterByWochentagStartVerstrichen(final @NotNull Wochentag wochentag, final int beginn, final int minutenVerstrichen) {
 		final int ende = beginn + minutenVerstrichen;
-		return CollectionUtils.toFilteredArrayList(_daten.zeitraster, (final @NotNull StundenplanZeitraster z) -> testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende));
+		return CollectionUtils.toFilteredArrayList(_daten.zeitraster, (final @NotNull StundenplanZeitraster z) -> (wochentag.id == z.wochentag) &&  testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende));
 	}
 
 	/**
@@ -915,8 +915,8 @@ public class StundenplanManager {
 		final int ende2 = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2);
 		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
 		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
-		DeveloperNotificationException.ifTrue("beginn1 >= ende1", beginn1 >= ende1);
-		DeveloperNotificationException.ifTrue("beginn2 >= ende2", beginn2 >= ende2);
+		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
+		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
 		return !((ende1 < beginn2) || (ende2 < beginn1));
 	}
 
