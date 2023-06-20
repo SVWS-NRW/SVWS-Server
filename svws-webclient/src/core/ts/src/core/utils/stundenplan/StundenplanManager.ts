@@ -666,17 +666,40 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
 	 *
-	 * @param tag der Wochentag der gewünschten Zeitraster-Objekte
+	 * @param wochentag der Wochentag der gewünschten Zeitraster-Objekte
 	 *
 	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
 	 */
-	public getListZeitrasterZuWochentag(tag : Wochentag) : List<StundenplanZeitraster> {
-		const list : List<StundenplanZeitraster> | null = new ArrayList();
-		for (const zr of this._daten.zeitraster) {
-			if (zr.wochentag === tag.id)
-				list.add(zr);
-		}
-		return list;
+	public getListZeitrasterZuWochentag(wochentag : Wochentag) : List<StundenplanZeitraster> {
+		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) });
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berühren.
+	 *
+	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
+	 * @param minutenVerstrichen Die verstrichene Zeit (in Minuten) seit der "startzeit" .
+	 *
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 */
+	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
+		const wochentag : Wochentag | null = Wochentag.fromIDorException(zeitrasterStart.wochentag);
+		const startzeit : number = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn).valueOf();
+		return this.getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren.<br>
+	 *
+	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
+	 * @param beginn             Der Beginn des Zeit-Intervalls.
+	 * @param minutenVerstrichen Daraus ergibt sich das Ende des Zeit-Intervalls.
+	 *
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 */
+	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
+		const ende : number = beginn + minutenVerstrichen;
+		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) && this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
 	}
 
 	/**
@@ -868,34 +891,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getZeitrasterNext(zeitraster : StundenplanZeitraster) : StundenplanZeitraster {
 		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
-	}
-
-	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berühren.
-	 *
-	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
-	 * @param minutenVerstrichen Die verstrichene Zeit (in Minuten) seit der "startzeit" .
-	 *
-	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
-	 */
-	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const wochentag : Wochentag | null = Wochentag.fromIDorException(zeitrasterStart.wochentag);
-		const startzeit : number = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn).valueOf();
-		return this.getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
-	}
-
-	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren.<br>
-	 *
-	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
-	 * @param beginn             Der Beginn des Zeit-Intervalls.
-	 * @param minutenVerstrichen Daraus ergibt sich das Ende des Zeit-Intervalls.
-	 *
-	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
-	 */
-	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const ende : number = beginn + minutenVerstrichen;
-		return CollectionUtils.toFilteredArrayList(this._daten.zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) && this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
 	}
 
 	/**
