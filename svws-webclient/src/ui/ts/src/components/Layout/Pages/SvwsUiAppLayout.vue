@@ -97,6 +97,27 @@
 		@apply flex flex-row md:flex-row;
 	}
 
+	@media (orientation: portrait) {
+		.app--layout {
+			@apply flex-wrap gap-y-0;
+		}
+
+		.app--menu {
+			@apply w-auto min-w-full h-16 max-w-none overflow-x-auto overflow-y-hidden pt-0 pb-2 my-0 -mx-2 pl-2 pr-0;
+
+			.sidebar--menu--header {
+				@apply min-h-[unset] h-full pl-3;
+			}
+		}
+
+		.app--sidebar,
+		.app--content {
+			.app--layout:not(.app--layout--login) & {
+				height: calc(100% - 4rem);
+			}
+		}
+	}
+
 	.app--sidebar-container,
 	.app--content-container {
 		@apply bg-white dark:bg-black rounded-2xl;

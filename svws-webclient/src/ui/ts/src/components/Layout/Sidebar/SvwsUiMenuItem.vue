@@ -50,6 +50,10 @@
 	@apply p-2 rounded my-1;
 	@apply cursor-pointer;
 	padding: 0.25rem 0.1rem;
+
+	@media (orientation: portrait) {
+		@apply my-0 px-1 min-w-[4.5rem] justify-center;
+	}
 }
 
 .sidebar--menu-item:last-child {
@@ -128,6 +132,10 @@
 
 .sidebar--menu-item--subline {
 	@apply text-sm font-normal;
+
+	@media (orientation: portrait) {
+		@apply text-base;
+	}
 }
 
 .sidebar--menu-item--disabled {
