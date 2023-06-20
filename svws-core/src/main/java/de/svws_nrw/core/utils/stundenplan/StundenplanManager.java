@@ -888,7 +888,7 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren. <br>
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren.<br>
 	 *
 	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
 	 * @param beginn             Der Beginn des Zeit-Intervalls.
