@@ -2,9 +2,9 @@
 	<div class="router-tab-bar--area" :class="{'router-tab-bar--area--single-route': props.routes.length === 1}">
 		<div class="router-tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-left">
-				<button class="router-tab-bar--scroll-button" @click="scroll('left')">
-					<svws-ui-icon> <i-ri-arrow-left-s-line /> </svws-ui-icon>
-				</button>
+				<svws-ui-button type="primary" @click="scroll('left')" class="router-tab-bar--scroll-button">
+					<i-ri-arrow-left-s-line />
+				</svws-ui-button>
 			</div>
 			<div ref="contentEl" class="router-tab-bar--content">
 				<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
@@ -12,9 +12,9 @@
 			</div>
 			<div v-if="!state.scrolledMax"
 				class="router-tab-bar--scroll-button-background router-tab-bar--scroll-button-background-right">
-				<button class="router-tab-bar--scroll-button" @click="scroll('right')">
-					<svws-ui-icon> <i-ri-arrow-right-s-line /> </svws-ui-icon>
-				</button>
+				<svws-ui-button type="primary" @click="scroll('right')" class="router-tab-bar--scroll-button">
+					<i-ri-arrow-right-s-line />
+				</svws-ui-button>
 			</div>
 		</div>
 		<div class="router-tab-bar--subnav-target" />
@@ -45,6 +45,7 @@
 		scrolledMax: boolean;
 		scrollFactor: number;
 		maxScrollLeft: number;
+		scrollOffset: number;
 	}
 
 	const contentEl = ref();
@@ -64,6 +65,7 @@
 		scrolledMax: false,
 		scrollFactor: 4,
 		maxScrollLeft: 0,
+		scrollOffset: 12
 	});
 
 	onMounted(() => {
@@ -86,10 +88,10 @@
 
 
 	function handleScroll() {
-		state.value.scrolled = (contentEl.value?.scrollLeft ?? 0) > 0;
+		state.value.scrolled = (contentEl.value?.scrollLeft ?? 0) > state.value.scrollOffset;
 		state.value.maxScrollLeft =
 			(contentEl.value?.scrollWidth ?? 0) - (contentEl.value?.clientWidth ?? 0);
-		state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
+		state.value.scrolledMax = (contentEl.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft - state.value.scrollOffset;
 	}
 
 	function scroll(direction: 'left' | 'right') {
@@ -174,6 +176,10 @@
 		/* Remove Scrollbar in IE and Edge */
 		scrollbar-width: none;
 		/* Remove Scrollbar in Firefox */
+
+		&:focus-visible {
+			@apply outline-none bg-svws/5;
+		}
     }
 
     .router-tab-bar--content::-webkit-scrollbar {
@@ -185,31 +191,27 @@
 		@apply absolute z-20;
 		@apply h-full;
 		@apply pointer-events-none;
-		@apply text-base px-4 pb-2;
-		@apply from-white/0 via-white/75 to-white/75;
+		@apply text-base px-6;
+		@apply from-white/0 to-white/90;
     }
 
     .router-tab-bar--scroll-button-background-right {
 		@apply bg-gradient-to-r;
-		@apply right-0;
+		@apply right-0 top-0.5;
     }
 
     .router-tab-bar--scroll-button-background-left {
 		@apply bg-gradient-to-l;
-		@apply left-0;
+		@apply left-0 top-0.5;
     }
 
     .router-tab-bar--scroll-button {
-		@apply h-full;
-		@apply inline-flex items-center justify-center;
 		@apply pointer-events-auto;
-		@apply px-2;
-		@apply text-black;
-		@apply rounded-md;
-    }
+		@apply w-7 h-7 p-0.5;
 
-    .router-tab-bar--scroll-button:focus {
-		@apply outline-none ring ring-primary ring-opacity-50 ring-inset;
+		svg {
+			@apply w-5 h-5;
+		}
     }
 
 	.router-tab-bar--subnav-target {
