@@ -20,6 +20,9 @@
 		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
 			<svws-ui-button type="transparent" size="small" @click="openModal()">Zeitraster hinzufügen</svws-ui-button>
 		</SCardStundenplanZeitrasterModal>
+		<SCardStundenplanZeitrasterImportModal :stundenplan-manager="stundenplanManager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+			<svws-ui-button type="transparent" size="small" @click="openModal()">Zeitraster importieren</svws-ui-button>
+		</SCardStundenplanZeitrasterImportModal>
 	</svws-ui-content-card>
 </template>
 
@@ -33,6 +36,7 @@
 		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
 		addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
 		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+		importZeitraster: () => Promise<void>;
 	}>();
 
 	const selected = ref();

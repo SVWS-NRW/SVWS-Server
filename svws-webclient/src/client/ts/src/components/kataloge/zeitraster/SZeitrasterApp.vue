@@ -2,11 +2,7 @@
 	<template v-if="visible">
 		<svws-ui-header>
 			<div class="flex items-center">
-				<span class="inline-block mr-3">{{ auswahl?.wochentag }} – {{ auswahl?.unterrichtstunde }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono">
-					ID:
-					{{ auswahl?.id }}
-				</svws-ui-badge>
+				<span class="inline-block mr-3">Zeitraster</span>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
@@ -26,6 +22,6 @@
 
 	const props = defineProps<ZeitrasterAppProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
+	const visible: ComputedRef<boolean> = computed(() => true);
 
 </script>
