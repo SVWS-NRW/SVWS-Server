@@ -66,7 +66,7 @@
 		}
 
 		&--actions {
-			@apply flex items-center gap-x-2 max-sm:w-full mb-3;
+			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3;
 		}
 	}
 

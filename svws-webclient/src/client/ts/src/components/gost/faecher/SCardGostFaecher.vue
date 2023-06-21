@@ -69,7 +69,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
+	import {computed, onUpdated, ref} from "vue";
 
 	import type { GostFach, GostFaecherManager, LinkedCollection} from "@core";
 	import type {DataTableColumn} from "@ui";
@@ -87,10 +87,10 @@
 	const cols: Array<DataTableColumn> = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
 		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
-		{ key: "Neu", label: "Neu", align: 'center', span: 0.2, minWidth: 3 },
+		{ key: "Neu", label: "Neu", align: 'center', span: 0.1, minWidth: 2.5 },
 		{ key: "WStd.", label: "WS", tooltip: "Wochenstunden", align: 'center', span: 0.25, minWidth: 3.5 },
-		{ key: "1.", label: "1.", align: 'center', span: 0.25, minWidth: 3 },
-		{ key: "2.", label: "2.", align: 'center', span: 0.25, minWidth: 3 },
+		{ key: "1.", label: "1.", align: 'center', span: 0.25, minWidth: 6 },
+		{ key: "2.", label: "2.", align: 'center', span: 0.25, minWidth: 6 },
 		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.25, minWidth: 3 },
 		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.25, minWidth: 3 },
 		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.25, minWidth: 3 },

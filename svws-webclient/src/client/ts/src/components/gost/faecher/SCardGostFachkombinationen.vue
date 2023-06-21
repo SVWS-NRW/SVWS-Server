@@ -5,126 +5,58 @@
 		</template>
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-4">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								{{ title }}
-							</div>
-						</div>
-					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate col-span-6">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Gültig in
-							</div>
-						</div>
-					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								<!--Hinweis-->
-							</div>
-						</div>
-					</div>
-				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Fach
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Kursart
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Fach
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Kursart
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								EF.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								EF.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q1.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q1.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q2.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q2.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Text
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__padding-sm" />
-				</div>
+				<svws-ui-table-row thead compact>
+					<svws-ui-table-cell thead align="center" separate class="col-span-4">
+						{{ title }}
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead align="center" separate class="col-span-6">
+						Gültig in
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead align="center" class="col-span-2">
+						<!--Hinweis-->
+					</svws-ui-table-cell>
+				</svws-ui-table-row>
+				<svws-ui-table-row thead compact>
+					<svws-ui-table-cell thead>
+						Fach
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead separate>
+						Kursart
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead>
+						Fach
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead separate>
+						Kursart
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center">
+						EF.1
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center" separate>
+						EF.2
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center">
+						Q1.1
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center" separate>
+						Q1.2
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center">
+						Q2.1
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center" separate>
+						Q2.2
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center">
+						Text
+					</svws-ui-table-cell>
+					<svws-ui-table-cell thead padding-sm align="center" />
+				</svws-ui-table-row>
 			</template>
 			<template #body>
-				<div role="row" class="data-table__tr" v-for="row in rows" :key="row.hashCode()">
+				<svws-ui-table-row v-for="row in rows" :key="row.hashCode()">
 					<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
-				</div>
+				</svws-ui-table-row>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>

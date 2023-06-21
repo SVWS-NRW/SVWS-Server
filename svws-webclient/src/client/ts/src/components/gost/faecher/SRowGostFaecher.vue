@@ -21,17 +21,17 @@
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding">
 			<div class="flex p-0 flex-grow" v-if="istJahrgangAllgemein && hatLeitfach1">
-				<svws-ui-multi-select headless v-model="leitfach1" :disabled="!leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-multi-select headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 				<svws-ui-button type="trash" @click="leitfach1=undefined" :disabled="!leitfach1" />
 			</div>
-			<span v-else class="px-2" :class="{'opacity-20 w-full text-center': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
+			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding data-table__td__separate">
 			<div class="flex p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-				<svws-ui-multi-select headless v-model="leitfach2" :disabled="!leitfach1" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
+				<svws-ui-multi-select headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
 				<svws-ui-button type="trash" @click="leitfach2=undefined" :disabled="!leitfach2" />
 			</div>
-			<span v-else class="px-2" :class="{'opacity-20 w-full text-center': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
+			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center"
 			:class="{'data-table__td__disabled': !ef_moeglich}"
