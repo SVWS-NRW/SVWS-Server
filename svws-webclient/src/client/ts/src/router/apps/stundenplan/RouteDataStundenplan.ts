@@ -1,4 +1,4 @@
-import type { StundenplanZeitraster, StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
+import { StundenplanZeitraster, StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { StundenplanManager, DeveloperNotificationException, ArrayList, Wochentag } from "@core";
 import { useDebounceFn } from "@vueuse/core";
@@ -217,7 +217,17 @@ export class RouteDataStundenplan {
 	importRaeume = async (raeume: StundenplanRaum[]) => {}
 	importPausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {}
 	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
-	importZeitraster = async () => {}
+	importZeitraster = async () => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		const listKatalogeintraege: List<Partial<StundenplanZeitraster>> = await api.server.getZeitraster(api.schema);
+		for (const item of listKatalogeintraege) {
+			delete item.id;
+			await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id);
+		}
+		await this.setEintrag(this.auswahl);
+	}
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
