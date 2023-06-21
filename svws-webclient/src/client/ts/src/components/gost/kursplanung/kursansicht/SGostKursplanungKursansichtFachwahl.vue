@@ -1,6 +1,6 @@
 <template>
 	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
-		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled" :style="{ 'background-color': bgColor }" :key="kursart.id">
+		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled-light" :style="{ 'background-color': bgColor }" :key="kursart.id">
 			<div role="cell" class="data-table__td" />
 			<div role="cell" class="data-table__td text-black/50">
 				<span title="Fach">{{ fach.kuerzel }}</span><span class="opacity-50">-</span><span title="Kursart">{{ kursart.kuerzel }}</span>
@@ -11,17 +11,17 @@
 			<div role="cell" class="data-table__td data-table__td__align-center">
 				<span class="opacity-25">—</span>
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative text-black/50" @click="toggle_active_fachwahl">
+			<svws-ui-table-cell align="center" class="cursor-pointer group relative text-black/50" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
-			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center">
+			</svws-ui-table-cell>
+			<svws-ui-table-cell align="center">
 				<span class="opacity-25">—</span>
-			</div>
-			<div role="cell" class="data-table__td data-table__td__align-right" :style="{'gridColumn': 'span ' + schienen.size()}">
-				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="bg-white/50 hover:bg-white -mr-1.5">
+			</svws-ui-table-cell>
+			<svws-ui-table-cell align="center" :style="{'gridColumn': 'span ' + schienen.size()}">
+				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="text-black">
 					Kurs anlegen <i-ri-add-circle-line class="-mr-0.5" />
 				</svws-ui-button>
-			</div>
+			</svws-ui-table-cell>
 		</div>
 	</template>
 	<template v-else>

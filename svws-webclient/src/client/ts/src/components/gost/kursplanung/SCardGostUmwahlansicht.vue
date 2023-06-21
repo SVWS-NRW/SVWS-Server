@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="schueler" title="Kurszuordnungen">
+	<svws-ui-content-card v-if="schueler" title="Kurszuordnungen" class="min-w-[30rem]">
 		<template #actions>
 			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler?.vorname + ' ' + schueler?.nachname}`">
 				<i-ri-group-line />

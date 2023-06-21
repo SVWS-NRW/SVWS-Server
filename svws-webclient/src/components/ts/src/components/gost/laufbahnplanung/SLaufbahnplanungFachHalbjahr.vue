@@ -3,31 +3,51 @@
 		{
 			'cursor-pointer': moeglich && !bewertet, '': moeglich,
 			'cursor-not-allowed': cursorNotAllowed,
-			'data-table__th__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
+			'data-table__td__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
+			'data-table__td__disabled': !moeglich,
+			'data-table__td__disabled-light': bewertet && moeglich,
 		}
 	"
-		:style=" { 'background-color': bewertet ? bgColorTransparent : bgColor }"
+		:style=" { 'background-color': bgColor }"
 		@click.stop="stepper"
-		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : ''">
+		:title="bewertet ? 'Bewertet, keine Änderungen mehr möglich' : (!moeglich ? 'Wahl nicht möglich' : '')">
 		<template v-if="halbjahr !== undefined">
-			<svws-ui-tooltip color="danger" v-if="istFachkombiErforderlich || istFachkombiVerboten || !zkMoeglich" position="bottom">
-				<div class="inline-flex items-center">
-					<span>{{ wahl }}&#8203;</span>
-					<i-ri-error-warning-line class="text-error" :class="{'ml-0.5': wahl}" />
+			<template v-if="istFachkombiErforderlich || istFachkombiVerboten || !zkMoeglich">
+				<div class="inline-flex items-center relative w-full">
+					<span class="w-full text-center">{{ wahl }}&#8203;</span>
+					<span class="absolute -right-1.5">
+						<svws-ui-tooltip :color="bewertet ? 'light' : 'danger'" position="bottom">
+							<i-ri-error-warning-line :class="bewertet ? 'text-black/50' : 'text-error'" />
+							<template #content v-if="istFachkombiErforderlich">
+								Fachkombination erforderlich
+							</template>
+							<template #content v-else-if="istFachkombiVerboten">
+								Fachkombination ist nicht zulässig
+							</template>
+							<template #content v-else>
+								Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
+							</template>
+						</svws-ui-tooltip>
+					</span>
 				</div>
-				<template #content v-if="istFachkombiErforderlich">
-					Fachkombination erforderlich
-				</template>
-				<template #content v-else-if="istFachkombiVerboten">
-					Fachkombination ist nicht zulässig
-				</template>
-				<template #content v-else>
-					Ein Zusatzkurs {{ fach.kuerzel }} wird in diesem Halbjahr nicht angeboten
-				</template>
-			</svws-ui-tooltip>
-			<div class="inline-flex items-center" v-else-if="!moeglich && wahl">
-				<span>{{ wahl }}</span>
-				<i-ri-close-line class="text-error ml-0.5 cursor-pointer" @click="deleteFachwahl" />
+			</template>
+			<div class="inline-flex items-center gap-1 relative w-full" v-else-if="!moeglich && wahl">
+				<span class="text-center w-full">{{ wahl }}</span>
+				<span class="absolute -right-1">
+					<svws-ui-tooltip :color="bewertet ? 'light' : 'danger'">
+						<svws-ui-button type="icon" size="small" :disabled="bewertet">
+							<i-ri-close-line @click="deleteFachwahl" />
+						</svws-ui-button>
+						<template #content>
+							<template v-if="bewertet">
+								Kurs nicht wählbar
+							</template>
+							<template v-else>
+								Löschen (Kurs nicht wählbar)
+							</template>
+						</template>
+					</svws-ui-tooltip>
+				</span>
 			</div>
 			<span v-else>
 				<template v-if="wahl && wahl !== '6'">
@@ -143,8 +163,8 @@
 	// const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
 
 	const bgColor: ComputedRef<string> = computed(() => {
-		if (!props.moeglich)
-			return bgColorDisabled.value;
+		/*if (!props.moeglich)
+			return bgColorDisabled.value;*/
 		return ((props.halbjahr === undefined) && (!props.moeglich)) || ((props.halbjahr !== undefined) && (!props.moeglich) && (!istFachkombiVerboten.value))
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();

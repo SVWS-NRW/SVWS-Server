@@ -1,22 +1,37 @@
 <template>
 	<template v-if="mapFachkombinationen.size">
-		<h4 class="gap-1 flex items-center font-bold mt-5 cursor-pointer" @click="show=!show">
-			<i-ri-arrow-down-s-line v-if="show" />
-			<i-ri-arrow-right-s-line v-else />
-			<span>Informationen zu Fachkombinationsregeln</span>
-			<svws-ui-badge v-if="fehler.size" type="error">
+		<h4 class="gap-1 flex items-start font-bold mt-5 cursor-pointer" @click="show=!show">
+			<span>
+				<template v-if="fehler.size">
+					Fehler bei
+				</template>
+				Fachkombinationsregeln
+			</span>
+			<svws-ui-badge v-if="fehler.size" type="error" size="big">
 				{{ fehler.size }}
 			</svws-ui-badge>
-			<i-ri-checkbox-circle-line v-else class="flex-shrink-0" style="color: rgb(var(--color-success))" />
+			<template v-else>
+				<i-ri-checkbox-circle-fill class="flex-shrink-0 text-success" />
+			</template>
+			<svws-ui-button type="transparent" size="small" class="ml-3 -mt-0.5">
+				<template v-if="show">
+					Details
+					<i-ri-arrow-down-s-line />
+				</template>
+				<template v-else>
+					Details
+					<i-ri-arrow-right-s-line />
+				</template>
+			</svws-ui-button>
 		</h4>
 		<ul class="mt-1 flex flex-col gap-1.5" v-show="show">
 			<li v-for="regel in fachkombi_erforderlich" :key="regel.id" class="flex gap-1 leading-tight">
-				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
+				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span>{{ regel.hinweistext }}</span>
 			</li>
 			<li v-for="regel in fachkombi_verboten" :key="regel.id" class="flex gap-1 leading-tight">
-				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
+				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span>{{ regel.hinweistext }}</span>
 			</li>

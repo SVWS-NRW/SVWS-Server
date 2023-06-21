@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<h4 class="gap-1 flex items-center" :class="{'font-bold mt-5': belegungsfehler.size()}">
-			<i-ri-checkbox-circle-line v-if="!belegungsfehler.size()" class="flex-shrink-0" style="color: rgb(var(--color-success))" />
+			<i-ri-checkbox-circle-fill v-if="!belegungsfehler.size()" class="flex-shrink-0 text-success" />
 			<span v-if="!belegungsfehler.size()">Keine</span>
 			<span>Laufbahnfehler</span>
 			<span v-if="belegungsfehler.size()">{{ belegpruefungsArt === 'ef1' ? 'EF1' : 'Gesamt' }}</span>
-			<svws-ui-badge v-if="belegungsfehler.size()" type="error">
+			<svws-ui-badge v-if="belegungsfehler.size()" type="error" size="big">
 				{{ belegungsfehler.size() }}
 			</svws-ui-badge>
 		</h4>

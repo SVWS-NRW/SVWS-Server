@@ -1,10 +1,25 @@
 <template>
 	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
-		<div class="pr-2 pl-6 py-4 flex gap-12 items-center">
+		<div class="pr-3 pl-6 pt-2 pb-6 flex gap-10 items-center">
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			<div class="flex items-center gap-1">
-				<div class="mr-1">Schienen:</div>
+				<svws-ui-button type="secondary" @click="del_kurs" title="Kurs entfernen">
+					Kurs <i-ri-subtract-line />
+				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">
+					Kurs <i-ri-add-line />
+				</svws-ui-button>
+			</div>
+			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
+			<div>
+				<svws-ui-multi-select v-if="kurseMitKursart.size()"
+					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
+					title="Zusammenlegen mit…" class="placeholder--visible text-sm" headless
+					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
+			</div>
+			<div class="flex items-center gap-1 ml-auto">
+				<div class="mr-1 text-sm font-bold">Schienen:</div>
 				<svws-ui-button type="icon" @click="del_schiene" size="small">
 					<i-ri-subtract-line />
 				</svws-ui-button>
@@ -13,21 +28,6 @@
 					<i-ri-add-line />
 				</svws-ui-button>
 			</div>
-			<div class="flex items-center gap-2">
-				<svws-ui-button type="secondary" @click="del_kurs" title="Kurs entfernen">
-					Kurs <i-ri-subtract-line />
-				</svws-ui-button>
-				<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">
-					Kurs <i-ri-add-line />
-				</svws-ui-button>
-			</div>
-			<div>
-				<svws-ui-multi-select v-if="kurseMitKursart.size()"
-					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
-					title="Zusammenlegen mit…" class="placeholder--visible" headless
-					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
-			</div>
-			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 		</div>
 	</div>
 </template>
@@ -89,7 +89,7 @@
 <style lang="postcss">
 
 	.table--row-kursdetail {
-		@apply relative z-10 border-b-2 border-black/25;
+		@apply relative z-10 border-b border-black/25;
 		box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);
 
 		.data-table__contrast-border & {

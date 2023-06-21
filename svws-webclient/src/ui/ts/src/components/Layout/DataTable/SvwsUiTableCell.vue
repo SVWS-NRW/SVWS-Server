@@ -9,6 +9,8 @@
 		'data-table__td__align-left': align === 'left',
 		'data-table__td__disabled': disabled,
 		'col-span-full': span === 'full',
+		'data-table__th__separate': separate && thead,
+		'data-table__td__separate': separate && !thead,
 	}">
 		<div class="data-table__th-wrapper" v-if="thead">
 			<span class="data-table__th-title">
@@ -40,6 +42,7 @@
 			align?: 'left' | 'center' | 'right';
 			disabled?: boolean;
 			span?: 'full';
+			separate?: boolean;
 		}>(),
 		{
 			thead: false,
@@ -48,6 +51,7 @@
 			paddingSm: false,
 			align: 'left',
 			disabled: false,
+			separate: false,
 		}
 	);
 </script>

@@ -373,6 +373,7 @@
 		{
 			key: "email",
 			label: "Digitale Postadresse",
+			disabled: true,
 		},
 		{
 			key: "age",

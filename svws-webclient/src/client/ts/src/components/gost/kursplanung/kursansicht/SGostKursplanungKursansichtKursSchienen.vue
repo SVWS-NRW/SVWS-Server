@@ -15,7 +15,7 @@
 			:key="kurs.id"
 			tag="div"
 			:data="{kurs, schiene}"
-			class="select-none w-full h-full rounded flex items-center justify-center relative group"
+			class="select-none w-full h-full rounded flex items-center justify-center relative group text-black"
 			:draggable="true"
 			:class="{
 				'bg-light text-primary font-bold': selected_kurs,
@@ -27,7 +27,7 @@
 			@drag-end="drag_ended"
 			@click="toggle_active_kurs">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
-			<span class="group-hover:bg-white rounded w-3 absolute top-0 left-0">
+			<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 				<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 			</span>
 			<svws-ui-icon class="cursor-pointer group absolute right-0.5 text-sm" @click.stop="fixieren_regel_toggle">

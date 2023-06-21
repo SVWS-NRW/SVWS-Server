@@ -23,6 +23,7 @@ export const buildTableColumn = (source: DataTableColumnSource, initialIndex: nu
 		minWidth: input.minWidth || 0,
 		align: input.align || 'left',
 		tooltip: input.tooltip || '',
+		disabled: input.disabled || false,
 	}
 }
 

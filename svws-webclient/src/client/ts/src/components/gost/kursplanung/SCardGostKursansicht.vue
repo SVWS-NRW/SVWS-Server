@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="h-full" overflow-scroll>
+	<svws-ui-content-card class="h-full table--with-background" overflow-scroll style="  width: calc(100% + 2rem); padding-right: 2rem; }">
 		<div class="flex flex-wrap justify-between mb-4">
 			<h3 class="text-headline cursor-auto">
 				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
@@ -98,9 +98,9 @@
 						</div>
 					</div>
 					<div role="columnheader" class="data-table__th data-table__thead__th">Lehrer</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">Koop</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">FW</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">Diff</div>
+					<svws-ui-table-cell thead align="center" tooltip="Kooperation">Koop</svws-ui-table-cell>
+					<svws-ui-table-cell thead align="center" tooltip="Fachwahlen">FW</svws-ui-table-cell>
+					<svws-ui-table-cell thead align="center" tooltip="Differenz">Diff</svws-ui-table-cell>
 					<!--Schienen-->
 					<template v-if="allow_regeln">
 						<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" :drag-and-drop-data="dragAndDropData" @dnd="dragAndDropData=$event" />

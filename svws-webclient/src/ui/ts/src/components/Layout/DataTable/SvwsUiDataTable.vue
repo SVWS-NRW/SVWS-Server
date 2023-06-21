@@ -41,6 +41,8 @@
 			'data-table--tab-bar': tabBarDesign,
 			'data-table--no-footer-scroll-bottom': !(!disableFooter && (selectable || $slots.footer || $slots.footerActions || count)),
 			'data-table__contrast-border': contrastBorder,
+			'data-table__panel-height': panelHeight,
+			'overflow-x-hidden': overflowXHidden,
 		}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="{'shadow-lg-up': false}">
@@ -59,7 +61,7 @@
 						v-for="column in columnsComputed"
 						:key="column.key"
 						class="data-table__th data-table__thead__th"
-						:class="`data-table__th__${column.key} data-table__th__align-${column.align}`"
+						:class="`data-table__th__${column.key} data-table__th__align-${column.align}${column.disabled ? ' data-table__th__disabled' : ''}`"
 						@click.exact="column.sortable && toggleSorting(column)">
 						<div class="data-table__th-wrapper"
 							:class="{'data-table__th-wrapper__sortable': column.sortable, 'data-table__th-wrapper__sortable-column': sortBy === column.name && sortingOrder}"
@@ -125,7 +127,7 @@
 					<div role="cell" v-for="cell in row.cells"
 						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
 						class="data-table__td"
-						:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}`">
+						:class="`data-table__td__${cell.column.key} data-table__td__align-${cell.column.align}${cell.column.disabled ? ' data-table__td__disabled' : ''}`">
 						<slot v-if="`cell(${cell.column.key})` in $slots"
 							:name="`cell(${cell.column.key})`"
 							v-bind="cell" />
@@ -257,6 +259,8 @@
 			scrollIntoView?: boolean;
 			tabBarDesign?: boolean;
 			contrastBorder?: boolean;
+			panelHeight?: boolean;
+			overflowXHidden?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -286,6 +290,8 @@
 			scrollIntoView: undefined,
 			tabBarDesign: undefined,
 			contrastBorder: false,
+			panelHeight: false,
+			overflowXHidden: false,
 		}
 	);
 
@@ -416,6 +422,10 @@
 		@apply border-x-0;
 	}
 
+	&__panel-height {
+		max-height: calc(var(--panel-height) - 4rem);
+	}
+
 	&__th,
 	&__td {
 		@apply flex h-full items-center border-r border-b border-black/25 dark:border-white/25 leading-none;
@@ -431,7 +441,7 @@
 			@apply cursor-not-allowed relative text-black/50 dark:text-white/50;
 
 			.table--with-background & {
-				@apply dark:text-black/50;
+				@apply text-black dark:text-black;
 			}
 
 			&:before {
@@ -440,6 +450,25 @@
 
 				.table--with-background & {
 					@apply bg-black/40;
+				}
+			}
+		}
+
+		&__disabled-light,
+		.data-table__tr__disabled-light & {
+			@apply relative text-black font-normal;
+
+			.table--with-background & {
+				@apply text-black dark:text-black;
+			}
+
+			&:before {
+				@apply absolute inset-0 bg-black/5 pointer-events-none;
+				content: '';
+
+				.table--with-background & {
+					@apply bg-black/20;
+					box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
 				}
 			}
 		}
@@ -803,7 +832,7 @@
 	}*/
 
 	&__tfoot {
-		@apply w-max min-w-full bg-white dark:bg-black dark:text-white;
+		@apply w-max min-w-full max-w-fit bg-white dark:bg-black dark:text-white;
 		@apply sticky bottom-0 z-20;
 		@apply border-y border-black/25 dark:border-white/25 -mt-px;
 

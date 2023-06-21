@@ -9,13 +9,14 @@
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ 'background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :style="{ 'background-color': bgColorIfLanguage }" :class="{ 'text-black/50': sprachenfolgeNr === 0 }">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :style="{ 'background-color': bgColor }" :class="{ 'data-table__td__disabled': !istFremdsprache, 'text-black/25': sprachenfolgeNr === 0 }">
 			<template v-if="istFremdsprache">
 				{{ sprachenfolgeNr === 0 ? "—" : sprachenfolgeNr }}
 			</template>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :style="{ 'background-color': bgColorIfLanguage }">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :class="{'data-table__td__disabled': !istFremdsprache}" :style="{ 'background-color': bgColor }">
 			<template v-if="istFremdsprache">
+				<span v-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25">—</span>
 				{{ sprachenfolgeJahrgang }}
 			</template>
 		</div>
@@ -32,9 +33,10 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import { AbiturdatenManager, AbiturFachbelegung, GostFach, GostFaecherManager,
+	import type { AbiturFachbelegung, GostFach, GostFaecherManager,
 		GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, Sprachbelegung} from "@core";
+	import { AbiturdatenManager} from "@core";
 	import { computed } from "vue";
 	import { Note, AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp, Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
 

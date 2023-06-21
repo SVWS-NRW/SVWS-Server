@@ -12,6 +12,7 @@ export type DataTableColumn = {
   minWidth?: string | number
   align?: 'left' | 'center' | 'right'
   tooltip?: string
+	disabled?: boolean
 }
 
 export type DataTableColumnSource = DataTableColumn | string
@@ -29,6 +30,7 @@ export interface DataTableColumnInternal {
   minWidth: string | number
   align: 'left' | 'center' | 'right'
   tooltip: string
+	disabled: boolean
 }
 
 export type DataTableItem = Record<string, any>

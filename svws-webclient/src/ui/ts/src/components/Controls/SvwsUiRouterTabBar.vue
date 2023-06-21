@@ -105,6 +105,24 @@
 		selected.value = route;
 	}
 
+	// get initial height of .router-tab-bar--panel, update on resize
+	const panelHeight = ref(0);
+
+	function getPanelHeight() {
+		panelHeight.value = document.querySelector('.router-tab-bar--panel')?.clientHeight ?? 0;
+		document.documentElement.style.setProperty('--panel-height', panelHeight.value > 0 ? `${panelHeight.value}px` : '100%');
+		return panelHeight.value;
+	}
+
+	onMounted(() => {
+		getPanelHeight();
+		window.addEventListener('resize', getPanelHeight);
+	});
+
+	onUnmounted(() => {
+		window.removeEventListener('resize', getPanelHeight);
+	});
+
 </script>
 
 

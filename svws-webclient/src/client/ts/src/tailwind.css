@@ -12,7 +12,7 @@
 
 .page--content {
 	@apply grid grid-cols-1 lg:grid-cols-2 w-full;
-	@apply gap-x-6 gap-y-16 lg:gap-y-20 lg:gap-x-16;
+	@apply gap-x-8 gap-y-16 lg:gap-y-20 lg:gap-x-16;
 	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
 	grid-auto-rows: min-content;
 	max-width: 140rem;

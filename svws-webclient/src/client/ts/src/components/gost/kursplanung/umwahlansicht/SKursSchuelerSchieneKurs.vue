@@ -3,7 +3,7 @@
 		class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative data-table__td__no-padding p-0.5" :class="{ 'is-drop-zone': is_drop_zone, 'cursor-grab': is_draggable }"
 		:draggable="is_draggable" @drag-start="drag_started" @drag-end="drag_ended">
 		<svws-ui-drop-data @drop="drop_aendere_kurszuordnung($event, kurs.id)" :drop-allowed="is_drop_zone" class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor }">
-			<span class="group-hover:bg-white rounded w-3 absolute top-0.5 left-0.5" v-if="is_draggable">
+			<span class="group-hover:bg-white rounded w-3 absolute top-1 left-1" v-if="is_draggable">
 				<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 			</span>
 			<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
