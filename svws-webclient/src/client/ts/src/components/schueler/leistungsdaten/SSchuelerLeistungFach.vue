@@ -1,6 +1,7 @@
 <template>
-	<span class="w-4 h-4 rounded-full inline-block mr-1 border border-black/25" :style="{ 'background-color': bgColor }" />
-	<span>
+	<!--<span class="cell&#45;&#45;background-color" :style="{ 'background-color': bgColor }" />-->
+	<!--<span class="w-4 h-4 rounded-full inline-block mr-1 border border-black/25" :style="{ 'background-color': bgColor }" />-->
+	<span class="relative z-10 py-0.5 px-1 rounded font-medium" :style="{ 'background-color': bgColor }">
 		{{ fach_bezeichnung }}
 	</span>
 </template>
@@ -33,3 +34,13 @@
 	});
 
 </script>
+
+<style lang="postcss">
+.cell--background-color {
+	@apply absolute inset-0 opacity-50 pointer-events-none;
+
+	@supports (mix-blend-mode: multiply) {
+		@apply opacity-100 mix-blend-multiply;
+	}
+}
+</style>

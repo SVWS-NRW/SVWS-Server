@@ -1,5 +1,5 @@
 <template>
-	<template v-if="visible">
+	<svws-ui-content-card v-if="visible">
 		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
@@ -11,7 +11,7 @@
 				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-data-table>
-	</template>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
@@ -25,9 +25,9 @@
 	const props = defineProps<SchuelerLeistungenDatenProps>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "fachID", label: "Fach", span: 1, sortable: true },
-		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true },
-		{ key: "note", label: "Note", span: 0.5, sortable: true },
+		{ key: "fachID", label: "Fach", span: 0.75, sortable: true, minWidth: 14 },
+		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true, minWidth: 20 },
+		{ key: "note", label: "Note", span: 0.25, sortable: true },
 	];
 
 	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);

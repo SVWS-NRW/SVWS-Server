@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-data-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="cols"
-		:items="lernabschnitte" :footer="false" clickable>
+		:items="lernabschnitte" :footer="false" clickable table-style="navigation">
 		<template #cell="{rowData: row}">
 			<span>
 				{{ row.schuljahr + "." + row.abschnitt }}

@@ -43,6 +43,7 @@
 			'data-table__contrast-border': contrastBorder,
 			'data-table__panel-height': panelHeight,
 			'overflow-x-hidden': overflowXHidden,
+			'data-table__style-navigation': tableStyle === 'navigation',
 		}"
 		v-bind="computedTableAttributes">
 		<div role="rowgroup" aria-label="Tabellenkopf" class="data-table__thead" v-if="!disableHeader" :class="{'shadow-lg-up': false}">
@@ -261,6 +262,7 @@
 			contrastBorder?: boolean;
 			panelHeight?: boolean;
 			overflowXHidden?: boolean;
+			tableStyle?: 'default' | 'navigation';
 		}>(),
 		{
 			columns: () => [],
@@ -292,6 +294,7 @@
 			contrastBorder: false,
 			panelHeight: false,
 			overflowXHidden: false,
+			tableStyle: 'default',
 		}
 	);
 
@@ -1115,6 +1118,23 @@
 		.data-table__th,
 		.data-table__thead {
 			@apply bg-transparent border-0 font-bold;
+		}
+	}
+
+	&__style-navigation {
+		&,
+		.data-table__thead,
+		.data-table__td,
+		.data-table__th {
+			@apply border-none;
+		}
+
+		.data-table__tbody {
+			@apply flex flex-col gap-0.5;
+
+			.data-table__tr {
+				@apply rounded w-fit;
+			}
 		}
 	}
 }

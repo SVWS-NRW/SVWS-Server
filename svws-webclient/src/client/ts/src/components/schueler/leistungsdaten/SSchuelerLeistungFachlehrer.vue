@@ -18,8 +18,8 @@
 
 	function getLehrerText(lehrer: LehrerListeEintrag | undefined): string {
 		if (lehrer === undefined)
-			return "---";
-		return lehrer.nachname + ", " + lehrer.vorname + " (" + lehrer.kuerzel + ")";
+			return "—";
+		return lehrer.kuerzel + " (" + lehrer.nachname + ", " + lehrer.vorname + ")";
 	}
 
 </script>
