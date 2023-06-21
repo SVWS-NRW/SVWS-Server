@@ -8,7 +8,7 @@
 					{{ stundenplanManager().getZeitrasterWochentagMin().beschreibung }}	bis {{ stundenplanManager().getZeitrasterWochentagMax().beschreibung }}
 				</template>
 				<template v-if="item.id < 1">
-					<svws-ui-checkbox v-for="tag of tageRange" :key="tag" :model-value="listTage.get(tag)" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
+					<svws-ui-checkbox v-for="tag of [1,2,3,4,5,6,7]" :key="tag" :model-value="listTage.get(tag) || false" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
 				</template>
 				<div v-if="multi.length === 1 && item.id > 0" class="font-bold">{{ Wochentag.fromIDorException(item.wochentag) }}</div>
 				<svws-ui-text-input type="number" v-model="item.unterrichtstunde" required placeholder="Stunde" />
@@ -47,22 +47,39 @@
 	}
 
 	const range = (x: number,y: number) => Array.from((function*(){ while (x <= y) yield x++ })());
-	const tageRange = computed(() => range(props.stundenplanManager().getZeitrasterWochentagMin().id, props.stundenplanManager().getZeitrasterWochentagMax().id));
+	const tageRange = computed(() => {
+		let min = 0;
+		let max = 0;
+		for (const e of props.stundenplanManager().getListZeitraster()) {
+			if (e.wochentag < min || min === 0)
+				min = e.wochentag;
+			if (e.wochentag > max)
+				max = e.wochentag;
+		}
+		return min > 0 && max > 0 ? range(min, max) : [1,2,3,4,5];
+	});
 
-	const listTage = ref(new Map<number, boolean>());
-	for (const tag of tageRange.value)
-		listTage.value.set(tag, true);
-
+	const map = ref(new Map<number, boolean>());
+	const listTage = computed({
+		get: () => {
+			for (const tag of tageRange.value)
+				map.value.set(tag, true);
+			return map.value;
+		},
+		set: (val) => {
+			map.value = val;
+		}
+	})
 	const openModal = (zeitraster?: StundenplanZeitraster, 	m?: boolean) => {
-		if (zeitraster)
-			item.value = zeitraster;
+		item.value = zeitraster || new StundenplanZeitraster();
+		const a = [];
 		if (m === true && zeitraster) {
-			multi.value = [];
 			for (const z of props.stundenplanManager().getListZeitraster())
 				if (z.unterrichtstunde === zeitraster.unterrichtstunde && z.stundenbeginn === zeitraster.stundenbeginn && z.stundenende === zeitraster.stundenende)
-					multi.value.push(z);
+					a.push(z);
 		} else
-			multi.value = [item.value];
+			a.push(item.value);
+		multi.value = a;
 		modal.value.openModal();
 	}
 

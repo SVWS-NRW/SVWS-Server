@@ -131,8 +131,9 @@ export class RouteDataStundenplan {
 		if (this.auswahl === undefined || data.id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const zeitraster of multi) {
-			await api.server.patchStundenplanZeitrasterEintrag(Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende}), api.schema, zeitraster.id);
-			this.stundenplanManager.patchZeitraster(Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende}));
+			Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende})
+			await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
+			this.stundenplanManager.patchZeitraster(zeitraster);
 		}
 		this.commit();
 	}
