@@ -8,6 +8,9 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 
+import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
+import {api} from "~/router/Api";
+
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")
 
@@ -32,9 +35,10 @@ export class RouteStatistik extends RouteNode<unknown, RouteApp> {
 		return { name: this.name };
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
-		// TODO
-		return { };
+	public getProps(to: RouteLocationNormalized): StatistikAppProps {
+		return {
+			schule: api.schuleStammdaten,
+		};
 	}
 
 }

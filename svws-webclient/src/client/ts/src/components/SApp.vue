@@ -34,7 +34,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu>
+		<template #secondaryMenu v-if="app.name !== 'statistik'">
 			<router-view :key="app.name" name="liste" />
 		</template>
 		<template #main>

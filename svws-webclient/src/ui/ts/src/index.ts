@@ -44,6 +44,7 @@ export {
 	SvwsUiSubNav,
 	SvwsUiInputWrapper,
 	SvwsUiSpacing,
+	SvwsUiDashboardTile,
 } from './components'
 
 export type { DataTableColumn, DataTableItem } from './components/Layout/DataTable/types'

@@ -147,7 +147,7 @@
 	@apply bg-transparent border-transparent dark:bg-transparent dark:border-transparent;
 
 	&:hover {
-		@apply bg-light dark:bg-white/5 brightness-95;
+		@apply bg-black/10 dark:bg-white/5 brightness-95;
 	}
 
 	&:focus-visible {

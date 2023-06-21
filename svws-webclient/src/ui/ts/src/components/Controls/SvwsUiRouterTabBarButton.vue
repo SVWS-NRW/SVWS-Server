@@ -59,7 +59,7 @@
 				@apply bg-svws/5 dark:bg-svws/10;
 
 				.page--statistik & {
-					@apply bg-violet-500/5 dark:bg-violet-500/10;
+					@apply text-violet-500 bg-violet-500/5 dark:bg-violet-500/10;
 				}
 			}
 
@@ -91,6 +91,10 @@
 			content: '';
 			/*@apply left-3;
 			width: calc(100% - 1.5rem);*/
+
+			.page--statistik & {
+				@apply border-violet-500;
+			}
 		}
     }
 

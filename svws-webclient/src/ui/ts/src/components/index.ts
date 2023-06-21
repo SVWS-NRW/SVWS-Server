@@ -40,3 +40,4 @@ export { default as SvwsUiSpinner } from "./SvwsUiSpinner.vue";
 export { default as SvwsUiSubNav } from "./Controls/SvwsUiSubNav.vue";
 export { default as SvwsUiInputWrapper } from "./Layout/SvwsUiInputWrapper.vue";
 export { default as SvwsUiSpacing } from "./Layout/SvwsUiSpacing.vue";
+export { default as SvwsUiDashboardTile } from "./Layout/SvwsUiDashboardTile.vue";

@@ -108,6 +108,10 @@
 			.sidebar--menu--header {
 				@apply min-h-[unset] h-full pl-3;
 			}
+
+			+ .app--content {
+				@apply min-w-full;
+			}
 		}
 
 		.app--sidebar,
