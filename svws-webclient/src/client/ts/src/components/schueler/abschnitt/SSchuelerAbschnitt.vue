@@ -1,15 +1,19 @@
 <template>
-	<div class="page--content page--content--single">
-		<div class="leistungsdaten flex items-start gap-16">
-			<div class="w-32 flex-shrink-0">
-				<!--TODO: Vertical Router Tab Bar Style für Abschnittsauswahl-->
-				<router-view :key="$route.hash" name="lernabschnittauswahl" />
-			</div>
-			<router-view :key="$route.hash" />
-		</div>
+	<div class="page--content page--content--abschnitt">
+		<router-view :key="$route.hash" name="lernabschnittauswahl" />
+		<router-view :key="$route.hash" />
 	</div>
 </template>
 
-<script setup lang="ts">
+<style lang="postcss" scoped>
+.page--content--abschnitt {
+	grid-template-columns: 8.5rem 1fr;
 
+	@media (min-width: 1440px) {
+		grid-template-columns: 8.5rem 1fr;
+	}
+}
+</style>
+
+<script setup>
 </script>
