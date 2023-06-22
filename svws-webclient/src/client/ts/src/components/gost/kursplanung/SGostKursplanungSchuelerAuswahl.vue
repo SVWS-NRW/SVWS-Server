@@ -45,7 +45,7 @@
 						class="data-table__th data-table__thead__th">
 						<div class="data-table__th-wrapper">
 							<span class="data-table__th-title">
-								Schülerauswahl
+								Schülerauswahl ({{ schuelerFilter.filtered.value.length }})
 							</span>
 						</div>
 					</div>
@@ -71,7 +71,6 @@
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
-		console.log(props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse())
 
 	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();
 	const fach_filter_toggle = props.schuelerFilter.fach_filter_toggle();
