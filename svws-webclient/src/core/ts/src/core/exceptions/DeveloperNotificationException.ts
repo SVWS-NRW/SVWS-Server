@@ -6,6 +6,7 @@ import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
 import { JavaString } from '../../java/lang/JavaString';
 import type { JavaMap } from '../../java/util/JavaMap';
+import { HashMap3D } from '../../core/adt/map/HashMap3D';
 
 export class DeveloperNotificationException extends RuntimeException {
 
@@ -226,6 +227,28 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (!map.contains(key1, key2))
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
 		return map.getNonNullOrException(key1, key2);
+	}
+
+	/**
+	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel (K1, K2, K3) nichts oder NULL zugeordnet ist.
+	 *
+	 * @param <K1>  Der Typ des 1. Schlüssels.
+	 * @param <K2>  Der Typ des 2. Schlüssels.
+	 * @param <K3>  Der Typ des 3. Schlüssels.
+	 * @param <V>   Der Typ des zugeordneten Wertes.
+	 * @param map   Die Map.
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 *
+	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * @throws DeveloperNotificationException falls dem Schlüssel (K1, K2, K3) nichts oder NULL zugeordnet ist.
+	 */
+	public static ifMap3DGetIsNull<K1, K2, K3, V>(map : HashMap3D<K1, K2, K3, V>, key1 : K1, key2 : K2, key3 : K3) : V {
+		if (!map.contains(key1, key2, key3))
+			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ", " + key3 + ") fehlgeschlagen, da kein Mapping existiert!")
+		return map.getNonNullOrException(key1, key2, key3);
 	}
 
 	/**

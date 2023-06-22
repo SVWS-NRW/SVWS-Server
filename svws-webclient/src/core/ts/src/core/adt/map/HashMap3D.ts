@@ -65,6 +65,51 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key2  Der 2. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
+	 *
+	 * @return den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
+	 */
+	public getOrNull(key1 : K1, key2 : K2, key3 : K3) : V | null {
+		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return null;
+		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		if (map3 === null)
+			return null;
+		return map3.get(key3);
+	}
+
+	/**
+	 * Liefert die Map zum Mapping (key1) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 *
+	 * @return die Map zum Mapping key1 oder NULL. <br>
+	 */
+	public getMap2OrNull(key1 : K1) : JavaMap<K2, JavaMap<K3, V | null>> | null {
+		return this._map1.get(key1);
+	}
+
+	/**
+	 * Liefert die Map zum Mapping (key1, key2) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
+	 */
+	public getMap3OrNull(key1 : K1, key2 : K2) : JavaMap<K3, V | null> | null {
+		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return null;
+		return map2.get(key2);
+	}
+
+	/**
 	 * Liefert den Nicht-Null-Wert zum Mapping (key1, key2, key3).<br>
 	 * Wirft eine Exception, falls der Pfad (key1, key2, key3) nicht existiert, oder NULL zugeordnet ist.
 	 *
@@ -125,6 +170,31 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
 		if (!map3.containsKey(key3))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!")
+		map3.remove(key3);
+		if (map3.isEmpty()) {
+			map2.remove(key2);
+			if (map2.isEmpty()) {
+				this._map1.remove(key1);
+			}
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key2  Der 2. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
+	 */
+	public remove(key1 : K1, key2 : K2, key3 : K3) : void {
+		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return;
+		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		if (map3 === null)
+			return;
+		if (!map3.containsKey(key3))
+			return;
 		map3.remove(key3);
 		if (map3.isEmpty()) {
 			map2.remove(key2);

@@ -82,6 +82,54 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	}
 
 	/**
+	 * Liefert den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key2  Der 2. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
+	 *
+	 * @return den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
+	 */
+	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return null;
+
+		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		if (map3 == null)
+			return null;
+
+		return map3.get(key3);
+	}
+
+	/**
+	 * Liefert die Map zum Mapping (key1) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 *
+	 * @return die Map zum Mapping key1 oder NULL. <br>
+	 */
+	public Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> getMap2OrNull(final @NotNull K1 key1) {
+		return _map1.get(key1);
+	}
+
+	/**
+	 * Liefert die Map zum Mapping (key1, key2) oder NULL. <br>
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
+	 */
+	public Map<@NotNull K3, V> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return null;
+
+		return map2.get(key2);
+	}
+
+	/**
 	 * Liefert den Nicht-Null-Wert zum Mapping (key1, key2, key3).<br>
 	 * Wirft eine Exception, falls der Pfad (key1, key2, key3) nicht existiert, oder NULL zugeordnet ist.
 	 *
@@ -149,6 +197,37 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 
 		if (!map3.containsKey(key3))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
+
+		// Mapping-Baum abschneiden.
+		map3.remove(key3);
+		if (map3.isEmpty()) {
+			map2.remove(key2);
+			if (map2.isEmpty()) {
+				_map1.remove(key1);
+			}
+		}
+
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1  Der 1. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key2  Der 2. Schlüssel des Tripels(key1, key2, key3).
+	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
+	 *
+	 */
+	public void remove(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return;
+
+		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		if (map3 == null)
+			return;
+
+		if (!map3.containsKey(key3))
+			return;
 
 		// Mapping-Baum abschneiden.
 		map3.remove(key3);
