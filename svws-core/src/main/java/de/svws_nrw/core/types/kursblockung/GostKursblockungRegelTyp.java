@@ -122,10 +122,12 @@ public enum GostKursblockungRegelTyp {
 	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList()),
 
 	/**
-	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
-	 * - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
+	 * Der Regel-Typ zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
+	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
+	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
 	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Fülle Kurs auf mit Dummy SuS.", Arrays.asList(
+			GostKursblockungRegelParameterTyp.KURS_ID,
 			GostKursblockungRegelParameterTyp.GANZZAHL
 			));
 
@@ -246,11 +248,10 @@ public enum GostKursblockungRegelTyp {
 				return new long[] {};
 
 			// Keine Veränderung bei 1 Parameter.
-			case KURS_MIT_DUMMY_SUS_AUFFUELLEN: // 9
-				return new long[] { param.get(0) };
+			// leer
 
 			// Keine Veränderung bei 2 Parametern.
-			case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS: // 4, 5, 7, 8
+			case SCHUELER_FIXIEREN_IN_KURS, SCHUELER_VERBIETEN_IN_KURS, KURS_VERBIETEN_MIT_KURS, KURS_ZUSAMMEN_MIT_KURS, KURS_MIT_DUMMY_SUS_AUFFUELLEN: // 4, 5, 7, 8, 9
 				return new long[] { param.get(0), param.get(1) };
 
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3

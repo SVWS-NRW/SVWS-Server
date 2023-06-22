@@ -242,7 +242,7 @@ export class KursblockungDynDaten extends JavaObject {
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
-					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp9(daten);
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp9(daten, setKurse);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
@@ -332,9 +332,14 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 === kursID2);
 	}
 
-	private static schritt01FehlerBeiReferenzen_Regeltyp9(daten : Array<number>) : void {
+	private static schritt01FehlerBeiReferenzen_Regeltyp9(daten : Array<number>, setKurse : HashSet<number>) : void {
 		const length : number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length !== 1);
+		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 2!", length !== 2);
+		const kursID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		const dummySuS : number = daten[1]!;
+		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
+		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 100);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp10(daten : Array<number>) : void {
@@ -588,7 +593,11 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt13FehlerBeiRegel_9() : void {
 		for (const regel9 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
-			DeveloperNotificationException.ifNull("regel9", regel9);
+			const kursID : number = regel9.parameter.get(0).valueOf();
+			const susAnzahl : number = regel9.parameter.get(1)!;
+			const kurs : KursblockungDynKurs = this.gibKurs(kursID);
+			for (let i : number = 0; i < susAnzahl; i++)
+				kurs.aktionSchuelerHinzufuegen();
 		}
 	}
 

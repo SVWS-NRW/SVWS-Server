@@ -50,7 +50,7 @@ public final class DateUtils {
 		final @NotNull String[] split = datumISO8601.split("-");
 		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601 + " ist nicht ISO8601 konform!", split.length != 3);
 		final int jahr = DeveloperNotificationException.ifNotInt(split[0]);
-		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601 + " ist ungültig!", (jahr < 1900) || (jahr > 2900));
+		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601 + " ist ungültig!", gibIstJahrUngueltig(jahr));
 		final int monat = DeveloperNotificationException.ifNotInt(split[1]);
 		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601 + " ist ungültig!", (monat < 1) || (monat > 12));
 		final int tagImMonat = DeveloperNotificationException.ifNotInt(split[2]);
@@ -111,6 +111,17 @@ public final class DateUtils {
 		final int schalttage2 = (jahr / 4) - (jahr / 100) + (jahr / 400);
 		final int schaltjahr = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
+	}
+
+	/**
+	 * Liefert TRUE, falls das Jahr ungültig ist.
+	 *
+	 * @param jahr  Das Jahr.
+	 *
+	 * @return TRUE, falls das Jahr ungültig ist.
+	 */
+	public static boolean gibIstJahrUngueltig(final int jahr) {
+		return (jahr < 1900) || (jahr > 2900);
 	}
 
 }

@@ -270,7 +270,7 @@ public class KursblockungDynDaten {
 					schritt01FehlerBeiReferenzen_Regeltyp8(daten, setKurse);
 					break;
 				case KURS_MIT_DUMMY_SUS_AUFFUELLEN:
-					schritt01FehlerBeiReferenzen_Regeltyp9(daten);
+					schritt01FehlerBeiReferenzen_Regeltyp9(daten, setKurse);
 					break;
 				case LEHRKRAEFTE_BEACHTEN:
 					schritt01FehlerBeiReferenzen_Regeltyp10(daten);
@@ -377,11 +377,16 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifTrue("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 == kursID2);
 	}
 
-	private static void schritt01FehlerBeiReferenzen_Regeltyp9(final @NotNull Long @NotNull [] daten) {
+	private static void schritt01FehlerBeiReferenzen_Regeltyp9(final @NotNull Long @NotNull [] daten, final @NotNull HashSet<@NotNull Long> setKurse) {
 		final int length = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length != 1);
+		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 2!", length != 2);
 
-		// BAR TODO schritt01FehlerBeiReferenzen_Regeltyp9
+		final long kursID = daten[0];
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+
+		final int dummySuS = daten[1].intValue();
+		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
+		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 100);
 	}
 
 	private static void schritt01FehlerBeiReferenzen_Regeltyp10(@NotNull final Long @NotNull [] daten) {
@@ -712,8 +717,11 @@ public class KursblockungDynDaten {
 	private void schritt13FehlerBeiRegel_9() {
 		// Regel 9 - KURS_MIT_DUMMY_SUS_AUFFUELLEN
 		for (final @NotNull GostBlockungRegel regel9 : MapUtils.getOrCreateArrayList(_regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
-			DeveloperNotificationException.ifNull("regel9", regel9);
-			// TODO BAR  KURS_MIT_DUMMY_SUS_AUFFUELLEN
+			final long kursID = regel9.parameter.get(0);
+			final int susAnzahl = regel9.parameter.get(1).intValue();
+			final @NotNull KursblockungDynKurs kurs = gibKurs(kursID);
+			for (int i = 0; i < susAnzahl; i++)
+				kurs.aktionSchuelerHinzufuegen();
 		}
 	}
 

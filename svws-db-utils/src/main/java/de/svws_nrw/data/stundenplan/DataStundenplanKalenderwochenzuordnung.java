@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -96,7 +97,11 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("jahr", (dto, value, map) -> dto.Jahr = JSONMapper.convertToInteger(value, false)),
+		Map.entry("jahr", (dto, value, map) -> {
+			dto.Jahr = JSONMapper.convertToInteger(value, false);
+			if (DateUtils.gibIstJahrUngueltig(dto.Jahr))
+				throw OperationError.BAD_REQUEST.exception();
+			}),
 		Map.entry("kw", (dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
 		Map.entry("wochentyp", (dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
 	);

@@ -105,10 +105,11 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 9, 10, "Lehrkräfte beachten", Arrays.asList());
 
 	/**
-	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
-	 *  - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
+	 *  Der Regel-Typ zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
+	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
+	 *  - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
-	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs auf mit Dummy SuS.", Arrays.asList(GostKursblockungRegelParameterTyp.GANZZAHL));
+	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs auf mit Dummy SuS.", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
 	 * Die ID des Regel-Typs
@@ -235,13 +236,11 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 				return [];
 			}
-			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
-				return [param.get(0)];
-			}
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:
 			case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS:
 			case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS:
-			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+			case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS:
+			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
 				return [param.get(0), param.get(1)];
 			}
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:

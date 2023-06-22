@@ -42,7 +42,7 @@ export class DateUtils extends JavaObject {
 		const split : Array<string | null> = datumISO8601.split("-");
 		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601! + " ist nicht ISO8601 konform!", split.length !== 3);
 		const jahr : number = DeveloperNotificationException.ifNotInt(split[0]);
-		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601! + " ist ungültig!", (jahr < 1900) || (jahr > 2900));
+		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601! + " ist ungültig!", DateUtils.gibIstJahrUngueltig(jahr));
 		const monat : number = DeveloperNotificationException.ifNotInt(split[1]);
 		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601! + " ist ungültig!", (monat < 1) || (monat > 12));
 		const tagImMonat : number = DeveloperNotificationException.ifNotInt(split[2]);
@@ -96,6 +96,17 @@ export class DateUtils extends JavaObject {
 		const schalttage2 : number = (Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100)) + (Math.trunc(jahr / 400));
 		const schaltjahr : number = schalttage2 - schalttage1;
 		return 365 + schaltjahr;
+	}
+
+	/**
+	 * Liefert TRUE, falls das Jahr ungültig ist.
+	 *
+	 * @param jahr  Das Jahr.
+	 *
+	 * @return TRUE, falls das Jahr ungültig ist.
+	 */
+	public static gibIstJahrUngueltig(jahr : number) : boolean {
+		return (jahr < 1900) || (jahr > 2900);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
