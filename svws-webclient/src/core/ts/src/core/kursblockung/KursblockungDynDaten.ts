@@ -21,7 +21,8 @@ import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsda
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { ArrayMap } from '../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
-import { GostBlockungSchiene } from '../../core/data/gost/GostBlockungSchiene';
+import { MapUtils } from '../../core/utils/MapUtils';
+import { Schueler } from '../../core/data/schueler/Schueler';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
@@ -41,7 +42,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Alle Regeln nach ihrer ID gruppiert und in einer Liste der Reihenfolge nach gespeichert.
 	 */
-	private readonly _regelMap : JavaMap<GostKursblockungRegelTyp, LinkedCollection<GostBlockungRegel>>;
+	private readonly _regelMap : JavaMap<GostKursblockungRegelTyp, List<GostBlockungRegel>>;
 
 	/**
 	 * Die maximale Blockungszeit in Millisekunden.
@@ -95,19 +96,18 @@ export class KursblockungDynDaten extends JavaObject {
 
 
 	/**
-	 * Der Konstruktor der Klasse liest alle Daten von {@link GostBlockungsdatenManager} ein und baut die relevanten
-	 * Datenstrukturen auf.
+	 * Der Konstruktor der Klasse liest alle Daten von {@link GostBlockungsdatenManager} ein und baut die relevanten Datenstrukturen auf.
 	 *
-	 * @param pRandom Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 * @param pLogger Logger für Benutzerhinweise, Warnungen und Fehler.
-	 * @param pInput  Die Eingabedaten (Schnittstelle zur GUI).
+	 * @param random  Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
+	 * @param logger  Ein {@link Logger}-Objekt für Benutzerhinweise, Warnungen und Fehler.
+	 * @param input   Die Eingabedaten (Schnittstelle zur GUI).
 	 */
-	public constructor(pRandom : Random, pLogger : Logger, pInput : GostBlockungsdatenManager) {
+	public constructor(random : Random, logger : Logger, input : GostBlockungsdatenManager) {
 		super();
-		this._random = pRandom;
-		this._logger = pLogger;
+		this._random = random;
+		this._logger = logger;
 		this._regelMap = new ArrayMap(GostKursblockungRegelTyp.values());
-		this._maxTimeMillis = pInput.getMaxTimeMillis();
+		this._maxTimeMillis = input.getMaxTimeMillis();
 		this._schienenArr = Array(0).fill(null);
 		this._kursArr = Array(0).fill(null);
 		this._kursArrFrei = Array(0).fill(null);
@@ -117,20 +117,20 @@ export class KursblockungDynDaten extends JavaObject {
 		this._schuelerArr = Array(0).fill(null);
 		this._schuelerMap = new HashMap();
 		this._statistik = new KursblockungDynStatistik(this._logger);
-		this.schritt01FehlerBeiReferenzen(pInput);
-		this.schritt02FehlerBeiRegelGruppierung(pInput.daten().regeln);
-		this.schritt03FehlerBeiFachartenErstellung(pInput);
-		this.schritt04FehlerBeiSchuelerErstellung(pInput);
-		this.schritt05FehlerBeiSchuelerFachwahlenErstellung(pInput, this._schuelerArr);
-		this.schritt06FehlerBeiStatistikErstellung(this._fachartArr, this._schuelerArr, pInput);
-		this.schritt07FehlerBeiSchienenErzeugung(pInput.getSchienenAnzahl());
-		this.schritt08FehlerBeiKursErstellung(pInput);
+		this.schritt01FehlerBeiReferenzen(input);
+		this.schritt02FehlerBeiRegelGruppierung(input.daten().regeln);
+		this.schritt03FehlerBeiFachartenErstellung(input);
+		this.schritt04FehlerBeiSchuelerErstellung(input);
+		this.schritt05FehlerBeiSchuelerFachwahlenErstellung(input, this._schuelerArr);
+		this.schritt06FehlerBeiStatistikErstellung(this._fachartArr, this._schuelerArr, input);
+		this.schritt07FehlerBeiSchienenErzeugung(input.getSchienenAnzahl());
+		this.schritt08FehlerBeiKursErstellung(input);
 		this.schritt09FehlerBeiKursFreiErstellung();
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.schritt12FehlerBeiRegel_7_oder_8();
-		this.schritt13FehlerBeiRegel_9(pInput);
-		this.schritt13FehlerBeiRegel_10(pInput);
+		this.schritt13FehlerBeiRegel_9(input);
+		this.schritt14FehlerBeiRegel_10(input);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -142,227 +142,212 @@ export class KursblockungDynDaten extends JavaObject {
 	 * @param pInput Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
 	private schritt01FehlerBeiReferenzen(pInput : GostBlockungsdatenManager) : void {
-		if (pInput === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager == null")
-		if (pInput.daten() === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten() == null")
-		if (pInput.daten().fachwahlen === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen == null")
-		if (pInput.faecherManager() === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager() == null")
-		if (pInput.faecherManager().faecher() === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher() == null")
-		if (GostKursart.values() === null)
-			throw new DeveloperNotificationException("GostKursart.values() == null")
-		if (pInput.daten().kurse === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse == null")
-		if (pInput.daten().regeln === null)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().regeln == null")
-		if (pInput.getID() < 0)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.getID() < 0")
-		if (pInput.daten().fachwahlen.isEmpty())
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().fachwahlen.isEmpty()")
-		if (pInput.faecherManager().faecher().isEmpty())
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.faecherManager().faecher().isEmpty()")
-		if (GostKursart.values().length <= 0)
-			throw new DeveloperNotificationException("GostKursart.values().length <= 0")
-		if (pInput.daten().kurse.isEmpty())
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.daten().kurse.isEmpty()")
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput.daten()", pInput.daten());
+		DeveloperNotificationException.ifNull("pInput.daten().fachwahlen", pInput.daten().fachwahlen);
+		DeveloperNotificationException.ifNull("pInput.faecherManager()", pInput.faecherManager());
+		DeveloperNotificationException.ifNull("pInput.faecherManager().faecher()", pInput.faecherManager().faecher());
+		DeveloperNotificationException.ifNull("GostKursart.values()", GostKursart.values());
+		DeveloperNotificationException.ifNull("pInput.daten().kurse", pInput.daten().kurse);
+		DeveloperNotificationException.ifNull("pInput.daten().regeln", pInput.daten().regeln);
+		DeveloperNotificationException.ifInvalidID("pInput.getID()", pInput.getID());
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifArrayIsEmpty("GostKursart.values()", GostKursart.values());
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", pInput.daten().fachwahlen);
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", pInput.faecherManager().faecher());
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", pInput.daten().kurse);
 		const schienenAnzahl : number = pInput.getSchienenAnzahl();
-		if (schienenAnzahl <= 0)
-			throw new DeveloperNotificationException("GostBlockungsdatenManager.getSchienenAnzahl() <= 0")
+		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
 		const usedSchiene : HashSet<number | null> | null = new HashSet();
 		for (const gSchiene of pInput.daten().schienen) {
-			if (gSchiene.id < 0)
-				throw new DeveloperNotificationException("GostBlockungSchiene.id < 0")
-			if (gSchiene.nummer < 1)
-				throw new DeveloperNotificationException("GostBlockungSchiene.nummer < 1")
-			if (gSchiene.nummer > schienenAnzahl)
-				throw new DeveloperNotificationException("GostBlockungSchiene.nummer > schienenAnzahl")
-			if (!usedSchiene.add(gSchiene.nummer))
-				throw new DeveloperNotificationException("GostBlockungSchiene.nummer existiert doppelt!")
+			DeveloperNotificationException.ifInvalidID("gSchiene.id", gSchiene.id);
+			DeveloperNotificationException.ifSmaller("gSchiene.id", gSchiene.nummer, 1);
+			DeveloperNotificationException.ifGreater("gSchiene.id", gSchiene.nummer, schienenAnzahl);
+			DeveloperNotificationException.ifSetAddsDuplicate("usedSchiene", usedSchiene, gSchiene.nummer);
 		}
 		const setKursarten : HashSet<number> = new HashSet();
 		for (const iKursart of GostKursart.values()) {
-			if (iKursart === null)
-				throw new DeveloperNotificationException("GostKursart == null")
-			if (iKursart.id < 0)
-				throw new DeveloperNotificationException("GostKursart.id < 0 (" + iKursart.kuerzel + ")")
-			if (!setKursarten.add(iKursart.id))
-				throw new DeveloperNotificationException("GostKursart.id (" + iKursart.id + ") gibt es doppelt!")
+			DeveloperNotificationException.ifNull("iKursart", iKursart);
+			DeveloperNotificationException.ifInvalidID("iKursart.id", iKursart.id);
+			DeveloperNotificationException.ifSetAddsDuplicate("setKursarten", setKursarten, iKursart.id);
 		}
 		const setFaecher : HashSet<number> = new HashSet();
 		for (const iFach of pInput.faecherManager().faecher()) {
-			if (iFach === null)
-				throw new DeveloperNotificationException("GostFach == null")
-			if (iFach.id < 0)
-				throw new DeveloperNotificationException("GostFach.id < 0 (" + iFach.kuerzel + ")")
-			if (!setFaecher.add(iFach.id))
-				throw new DeveloperNotificationException("GostFach.id (" + iFach.id + ") gibt es doppelt!")
+			DeveloperNotificationException.ifNull("iFach", iFach);
+			DeveloperNotificationException.ifInvalidID("iFach.id", iFach.id);
+			DeveloperNotificationException.ifSetAddsDuplicate("setFaecher", setFaecher, iFach.id);
 		}
 		const setKurse : HashSet<number> = new HashSet();
 		for (const iKurs of pInput.daten().kurse) {
-			if (iKurs === null)
-				throw new DeveloperNotificationException("GostBlockungKurs == null")
-			if (iKurs.id < 0)
-				throw new DeveloperNotificationException("GostBlockungKurs.id < 0")
-			const fachID : number = iKurs.fach_id;
-			if (!setFaecher.contains(fachID))
-				throw new DeveloperNotificationException("GostBlockungKurs (id=" + iKurs.id + "): Unbekannte Fach-ID (" + fachID + ")!")
-			const kursartID : number = iKurs.kursart;
-			if (!setKursarten.contains(kursartID))
-				throw new DeveloperNotificationException("GostBlockungKurs (id=" + iKurs.id + "): Unbekannte Kursart-ID (" + kursartID + ")!")
-			setKurse.add(iKurs.id);
+			DeveloperNotificationException.ifNull("iKurs", iKurs);
+			DeveloperNotificationException.ifInvalidID("iKurs.id", iKurs.id);
+			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iKurs.fach_id);
+			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iKurs.kursart);
+			DeveloperNotificationException.ifSetAddsDuplicate("setKurse", setKurse, iKurs.id);
 		}
 		const setSchueler : HashSet<number> = new HashSet();
+		for (const gSchueler of pInput.daten().schueler)
+			DeveloperNotificationException.ifSetAddsDuplicate("setSchueler", setSchueler, gSchueler.id);
 		for (const iFachwahl of pInput.daten().fachwahlen) {
-			if (iFachwahl === null)
-				throw new DeveloperNotificationException("GostFachwahl == null")
-			const schuelerID : number = iFachwahl.schuelerID;
-			if (schuelerID < 0)
-				throw new DeveloperNotificationException("GostFachwahl.schuelerID < 0")
-			setSchueler.add(schuelerID);
-			const fachID : number = iFachwahl.fachID;
-			if (!setFaecher.contains(fachID))
-				throw new DeveloperNotificationException("GostFachwahl: Unbekannte Fach-ID (" + fachID + ")")
-			const kursartID : number = iFachwahl.kursartID;
-			if (!setKursarten.contains(kursartID))
-				throw new DeveloperNotificationException("GostFachwahl: Unbekannte Kursart-ID (" + kursartID + ")")
+			DeveloperNotificationException.ifNull("iFachwahl", iFachwahl);
+			DeveloperNotificationException.ifInvalidID("iFachwahl.schuelerID", iFachwahl.schuelerID);
+			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iFachwahl.fachID);
+			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iFachwahl.kursartID);
+			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, iFachwahl.schuelerID);
 		}
 		for (const iRegel of pInput.daten().regeln) {
-			if (iRegel === null)
-				throw new DeveloperNotificationException("GostBlockungRegel == null")
-			if (iRegel.parameter === null)
-				throw new DeveloperNotificationException("GostBlockungRegel.parameter == null")
-			for (let i : number = 0; i < iRegel.parameter.size(); i++)
-				if (iRegel.parameter.get(i) === null)
-					throw new DeveloperNotificationException("GostBlockungRegel.parameter.get(" + i + ") == null")
-			if (iRegel.id < 0)
-				throw new DeveloperNotificationException("GostBlockungRegel.id < 0")
+			DeveloperNotificationException.ifNull("iRegel", iRegel);
+			DeveloperNotificationException.ifNull("iRegel.parameter", iRegel.parameter);
+			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
 			const gostRegel : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
-			if (gostRegel as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown)
-				throw new DeveloperNotificationException("GostBlockungRegel.typ (" + iRegel.typ + ") unbekannt.")
 			const daten : Array<number> = iRegel.parameter.toArray(Array(0).fill(null));
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS as unknown) {
-				const length : number = daten.length;
-				if (length !== 3)
-					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!")
-				const kursartID : number = iRegel.parameter.get(0)!;
-				if (!setKursarten.contains(kursartID))
-					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS hat unbekannte Kursart-ID (" + kursartID + ")")
-				const von : number = daten[1]!;
-				const bis : number = daten[2]!;
-				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
-					throw new DeveloperNotificationException("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE daten.length=" + length + ", statt 2!")
-				const kursID : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID))
-					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE hat unbekannte Kurs-ID (" + kursID + ")")
-				const schiene : number = daten[1]!;
-				if (!((schiene >= 1) && (schiene <= schienenAnzahl)))
-					throw new DeveloperNotificationException("KURS_FIXIERE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE daten.length=" + length + ", statt 2!")
-				const kursID : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID))
-					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE hat unbekannte Kurs-ID (" + kursID + ")")
-				const schiene : number = daten[1]!;
-				if (!((schiene >= 1) && (schiene <= schienenAnzahl)))
-					throw new DeveloperNotificationException("KURS_SPERRE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS daten.length=" + length + ", statt 2!")
-				const schuelerID : number = daten[0].valueOf();
-				if (!setSchueler.contains(schuelerID))
-					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS hat unbekannte Schüler-ID (" + schuelerID + ")")
-				const kursID : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID))
-					throw new DeveloperNotificationException("SCHUELER_FIXIEREN_IN_KURS hat unbekannte Kurs-ID (" + kursID + ")")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!")
-				const schuelerID : number = daten[0].valueOf();
-				if (!setSchueler.contains(schuelerID))
-					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS hat unbekannte Schüler-ID (" + schuelerID + ")")
-				const kursID : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID))
-					throw new DeveloperNotificationException("SCHUELER_VERBIETEN_IN_KURS hat unbekannte Kurs-ID (" + kursID + ")")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS as unknown) {
-				const length : number = daten.length;
-				if (length !== 3)
-					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!")
-				const kursartID : number = daten[0]!;
-				if (!setKursarten.contains(kursartID))
-					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS hat unbekannte Kursart-ID (" + kursartID + ")")
-				const von : number = daten[1]!;
-				const bis : number = daten[2]!;
-				if (!((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)))
-					throw new DeveloperNotificationException("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!")
-				const kursID1 : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID1))
-					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
-				const kursID2 : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID2))
-					throw new DeveloperNotificationException("KURS_VERBIETEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
-				if (kursID1 === kursID2)
-					throw new UserNotificationException("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS as unknown) {
-				const length : number = daten.length;
-				if (length !== 2)
-					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!")
-				const kursID1 : number = daten[0].valueOf();
-				if (!setKurse.contains(kursID1))
-					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 1. Kurs-ID (" + kursID1 + ")!")
-				const kursID2 : number = daten[1].valueOf();
-				if (!setKurse.contains(kursID2))
-					throw new DeveloperNotificationException("KURS_ZUSAMMEN_MIT_KURS hat unbekannte 2. Kurs-ID (" + kursID2 + ")!")
-				if (kursID1 === kursID2)
-					throw new UserNotificationException("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN as unknown) {
-				const length : number = daten.length;
-				DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length !== 1);
-			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN as unknown) {
-				const length : number = daten.length;
-				if (length !== 0)
-					throw new DeveloperNotificationException("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!")
+			for (let i : number = 0; i < daten.length; i++)
+				DeveloperNotificationException.ifNull("daten[" + i + "]", daten[i]);
+			switch (gostRegel) {
+				case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp1(daten, setKursarten, schienenAnzahl);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp2(daten, setKurse, schienenAnzahl);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp3(daten, setKurse, schienenAnzahl);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp4(daten, setSchueler, setKurse);
+					break;
+				}
+				case GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp5(daten, setSchueler, setKurse);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp6(daten, setKursarten, schienenAnzahl);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp7(daten, setKurse);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp8(daten, setKurse);
+					break;
+				}
+				case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp9(daten);
+					break;
+				}
+				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
+					KursblockungDynDaten.schritt01FehlerBeiReferenzen_Regeltyp10(daten);
+					break;
+				}
+				default: {
+					throw new DeveloperNotificationException("Unbekannter Regeltyp!")
+				}
 			}
 		}
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp1(daten : Array<number>, setKursarten : HashSet<number>, schienenAnzahl : number) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length !== 3);
+		const kursartID : number = daten[0]!;
+		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
+		const von : number = daten[1]!;
+		const bis : number = daten[2]!;
+		DeveloperNotificationException.ifTrue("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!", !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp2(daten : Array<number>, setKurse : HashSet<number>, schienenAnzahl : number) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_FIXIERE_IN_SCHIENE daten.length=" + length + ", statt 2!", length !== 2);
+		const kursID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		const schiene : number = daten[1]!;
+		DeveloperNotificationException.ifTrue("KURS_FIXIERE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!", !((schiene >= 1) && (schiene <= schienenAnzahl)));
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp3(daten : Array<number>, setKurse : HashSet<number>, schienenAnzahl : number) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_SPERRE_IN_SCHIENE daten.length=" + length + ", statt 2!", length !== 2);
+		const kursID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		const schiene : number = daten[1]!;
+		DeveloperNotificationException.ifTrue("KURS_SPERRE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!", !((schiene >= 1) && (schiene <= schienenAnzahl)));
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp4(daten : Array<number>, setSchueler : HashSet<number>, setKurse : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_FIXIEREN_IN_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		const schuelerID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
+		const kursID : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp5(daten : Array<number>, setSchueler : HashSet<number>, setKurse : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		const schuelerID : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
+		const kursID : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp6(daten : Array<number>, setKursarten : HashSet<number>, schienenAnzahl : number) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length !== 3);
+		const kursartID : number = daten[0]!;
+		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
+		const von : number = daten[1]!;
+		const bis : number = daten[2]!;
+		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!", !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp7(daten : Array<number>, setKurse : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		const kursID1 : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
+		const kursID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
+		DeveloperNotificationException.ifTrue("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 === kursID2);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp8(daten : Array<number>, setKurse : HashSet<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		const kursID1 : number = daten[0].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
+		const kursID2 : number = daten[1].valueOf();
+		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
+		DeveloperNotificationException.ifTrue("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 === kursID2);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp9(daten : Array<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length !== 1);
+	}
+
+	private static schritt01FehlerBeiReferenzen_Regeltyp10(daten : Array<number>) : void {
+		const length : number = daten.length;
+		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length !== 0);
 	}
 
 	private schritt02FehlerBeiRegelGruppierung(pRegeln : List<GostBlockungRegel>) : void {
 		const regelDatabaseIDs : HashSet<number | null> | null = new HashSet();
 		for (const iRegel of pRegeln) {
-			if (iRegel.id < 0)
-				throw new DeveloperNotificationException("GostBlockungRegel.id < 0")
-			if (!regelDatabaseIDs.add(iRegel.id))
-				throw new DeveloperNotificationException("GostBlockungRegel.id (" + iRegel.id + ") gibt es doppelt!")
+			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
+			DeveloperNotificationException.ifSetAddsDuplicate("regelDatabaseIDs", regelDatabaseIDs, iRegel.id);
 			const regelTyp : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(iRegel.typ);
-			let list : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(regelTyp);
-			if (list === null) {
-				list = new LinkedCollection();
-				this._regelMap.put(regelTyp, list);
-			}
-			list.addLast(iRegel);
+			MapUtils.getOrCreateArrayList(this._regelMap, regelTyp).add(iRegel);
 		}
 	}
 
@@ -520,47 +505,39 @@ export class KursblockungDynDaten extends JavaObject {
 			const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, nSchienen);
 			for (let j : number = 0; j < nSchienen; j++)
 				schieneFrei.addLast(this._schienenArr[perm[j]]);
-			const regelnTyp1 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS);
-			if (regelnTyp1 !== null)
-				for (const regel1 of regelnTyp1)
-					if (kurs.kursart === regel1.parameter.get(0)) {
-						const von : number = regel1.parameter.get(1)!;
-						const bis : number = regel1.parameter.get(2)!;
-						for (let schiene : number = von; schiene <= bis; schiene++)
-							schieneFrei.remove(this._schienenArr[schiene - 1]);
-					}
-			const regelnTyp6 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS);
-			if (regelnTyp6 !== null)
-				for (const regel6 of regelnTyp6) {
-					const von : number = regel6.parameter.get(1)!;
-					const bis : number = regel6.parameter.get(2)!;
-					for (let schiene : number = 1; schiene <= this._schienenArr.length; schiene++) {
-						const innerhalb : boolean = (von <= schiene) && (schiene <= bis);
-						const gleicheArt : boolean = kurs.kursart === regel6.parameter.get(0);
-						if (innerhalb !== gleicheArt)
-							schieneFrei.remove(this._schienenArr[schiene - 1]);
-					}
-				}
-			const regelnTyp3 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE);
-			if (regelnTyp3 !== null)
-				for (const regel3 of regelnTyp3)
-					if (kurs.id === regel3.parameter.get(0)) {
-						const schiene : number = regel3.parameter.get(1)!;
+			for (const regel1 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+				if (kurs.kursart === regel1.parameter.get(0)) {
+					const von : number = regel1.parameter.get(1)!;
+					const bis : number = regel1.parameter.get(2)!;
+					for (let schiene : number = von; schiene <= bis; schiene++)
 						schieneFrei.remove(this._schienenArr[schiene - 1]);
-					}
-			const regelnTyp2 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
-			if (regelnTyp2 !== null)
-				for (const regel2 of regelnTyp2)
-					if (kurs.id === regel2.parameter.get(0)) {
-						const schiene : number = regel2.parameter.get(1)!;
-						const dynSchiene : KursblockungDynSchiene = this._schienenArr[schiene - 1];
-						if (schieneLage.contains(dynSchiene))
-							continue;
-						if (!schieneFrei.contains(dynSchiene))
-							throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
-						schieneFrei.remove(dynSchiene);
-						schieneLage.addLast(dynSchiene);
-					}
+				}
+			for (const regel6 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
+				const von : number = regel6.parameter.get(1)!;
+				const bis : number = regel6.parameter.get(2)!;
+				for (let schiene : number = 1; schiene <= this._schienenArr.length; schiene++) {
+					const innerhalb : boolean = (von <= schiene) && (schiene <= bis);
+					const gleicheArt : boolean = kurs.kursart === regel6.parameter.get(0);
+					if (innerhalb !== gleicheArt)
+						schieneFrei.remove(this._schienenArr[schiene - 1]);
+				}
+			}
+			for (const regel3 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+				if (kurs.id === regel3.parameter.get(0)) {
+					const schiene : number = regel3.parameter.get(1)!;
+					schieneFrei.remove(this._schienenArr[schiene - 1]);
+				}
+			for (const regel2 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+				if (kurs.id === regel2.parameter.get(0)) {
+					const schiene : number = regel2.parameter.get(1)!;
+					const dynSchiene : KursblockungDynSchiene = this._schienenArr[schiene - 1];
+					if (schieneLage.contains(dynSchiene))
+						continue;
+					if (!schieneFrei.contains(dynSchiene))
+						throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
+					schieneFrei.remove(dynSchiene);
+					schieneLage.addLast(dynSchiene);
+				}
 			const schienen : number = kurs.anzahlSchienen;
 			if (schienen <= 0)
 				throw new DeveloperNotificationException("Kurs (" + kurs.id + ") belegt nur " + schienen + " Schienen, das ist zu wenig.")
@@ -620,74 +597,66 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private schritt11FehlerBeiRegel_4_oder_5() : void {
-		const regelnTyp4 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
-		if (regelnTyp4 !== null)
-			for (const regel4 of regelnTyp4) {
-				const schuelerID : number = regel4.parameter.get(0).valueOf();
-				const kursID : number = regel4.parameter.get(1).valueOf();
-				const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
-				const fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
-				for (const kurs of fixierterKurs.gibFachart().gibKurse())
-					if (kurs as unknown !== fixierterKurs as unknown)
-						schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
-			}
-		const regelnTyp5 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS);
-		if (regelnTyp5 !== null)
-			for (const regel5 of regelnTyp5) {
-				const schuelerID : number = regel5.parameter.get(0).valueOf();
-				const kursID : number = regel5.parameter.get(1).valueOf();
-				const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
-				const verbotenerKurs : KursblockungDynKurs = this.gibKurs(kursID);
-				schueler.aktionSetzeKursSperrung(verbotenerKurs.gibInternalID());
-			}
+		for (const regel4 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
+			const schuelerID : number = regel4.parameter.get(0).valueOf();
+			const kursID : number = regel4.parameter.get(1).valueOf();
+			const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
+			const fixierterKurs : KursblockungDynKurs = this.gibKurs(kursID);
+			for (const kurs of fixierterKurs.gibFachart().gibKurse())
+				if (kurs as unknown !== fixierterKurs as unknown)
+					schueler.aktionSetzeKursSperrung(kurs.gibInternalID());
+		}
+		for (const regel5 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
+			const schuelerID : number = regel5.parameter.get(0).valueOf();
+			const kursID : number = regel5.parameter.get(1).valueOf();
+			const schueler : KursblockungDynSchueler = this.gibSchueler(schuelerID);
+			const verbotenerKurs : KursblockungDynKurs = this.gibKurs(kursID);
+			schueler.aktionSetzeKursSperrung(verbotenerKurs.gibInternalID());
+		}
 	}
 
 	private schritt12FehlerBeiRegel_7_oder_8() : void {
-		const regelnTyp7 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS);
-		if (regelnTyp7 !== null)
-			for (const regel7 of regelnTyp7) {
-				const kursID1 : number = regel7.parameter.get(0).valueOf();
-				const kursID2 : number = regel7.parameter.get(1).valueOf();
-				const kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
-				const kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
-				this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-			}
-		const regelnTyp8 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS);
-		if (regelnTyp8 !== null)
-			for (const regel8 of regelnTyp8) {
-				const kursID1 : number = regel8.parameter.get(0).valueOf();
-				const kursID2 : number = regel8.parameter.get(1).valueOf();
-				const kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
-				const kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
-				this._statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
-			}
+		for (const regel7 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) {
+			const kursID1 : number = regel7.parameter.get(0).valueOf();
+			const kursID2 : number = regel7.parameter.get(1).valueOf();
+			const kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
+			const kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
+			this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+		}
+		for (const regel8 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) {
+			const kursID1 : number = regel8.parameter.get(0).valueOf();
+			const kursID2 : number = regel8.parameter.get(1).valueOf();
+			const kurs1 : KursblockungDynKurs = this.gibKurs(kursID1);
+			const kurs2 : KursblockungDynKurs = this.gibKurs(kursID2);
+			this._statistik.regelHinzufuegenKursZusammenMitKurs(kurs1, kurs2);
+		}
 	}
 
 	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
-		const regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
-		if (regelnTyp9 === null)
-			return;
+		for (const regel9 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
+			DeveloperNotificationException.ifNull("regel9", regel9);
+		}
 	}
 
-	private schritt13FehlerBeiRegel_10(pInput : GostBlockungsdatenManager) : void {
-		const regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
-		if (regelnTyp10 === null)
+	private schritt14FehlerBeiRegel_10(pInput : GostBlockungsdatenManager) : void {
+		const regelnTyp10 : List<GostBlockungRegel> | null = MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		if (regelnTyp10.isEmpty())
 			return;
+		DeveloperNotificationException.ifGreater("Liste of regelnTyp10", regelnTyp10.size(), 1);
 		const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
 		for (const gKurs of pInput.daten().kurse)
 			if (!gKurs.lehrer.isEmpty())
 				vKurseMitLehrkraft.add(gKurs);
-		for (const regel10 of regelnTyp10)
-			for (const gKurs1 of vKurseMitLehrkraft)
-				for (const gKurs2 of vKurseMitLehrkraft)
-					if (gKurs1.id < gKurs2.id)
-						for (const gLehr1 of gKurs1.lehrer)
-							for (const gLehr2 of gKurs2.lehrer)
-								if (gLehr1.id === gLehr2.id) {
-									const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
-									const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
-									this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-								}
+		for (const gKurs1 of vKurseMitLehrkraft)
+			for (const gKurs2 of vKurseMitLehrkraft)
+				if (gKurs1.id < gKurs2.id)
+					for (const gLehr1 of gKurs1.lehrer)
+						for (const gLehr2 of gKurs2.lehrer)
+							if (gLehr1.id === gLehr2.id) {
+								const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
+								const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
+								this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+							}
 	}
 
 	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {

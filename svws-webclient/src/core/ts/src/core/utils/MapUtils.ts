@@ -35,7 +35,7 @@ export class MapUtils extends JavaObject {
 	 * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
 	 *
 	 * @param <K>  Der Typ der Schlüssel.
-	 * @param <V>  Der Typ des Objekte in der ArrayList.
+	 * @param <V>  Der Typ der Objekte in der ArrayList.
 	 * @param map  Die Map, welche K auf "ArrayList of V" abbildet.
 	 * @param key  Der Schlüssel.
 	 *

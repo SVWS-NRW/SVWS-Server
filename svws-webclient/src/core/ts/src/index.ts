@@ -460,6 +460,7 @@ export { CollectionUtils } from './core/utils/CollectionUtils';
 export { DateUtils } from './core/utils/DateUtils';
 export { KursManager } from './core/utils/KursManager';
 export { ListUtils } from './core/utils/ListUtils';
+export { Map2DUtils } from './core/utils/Map2DUtils';
 export { MapUtils } from './core/utils/MapUtils';
 export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';

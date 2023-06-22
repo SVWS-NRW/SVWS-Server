@@ -28,7 +28,7 @@ public final class MapUtils {
      *
      * @return das "Set of V" des Schlüssels. Erstellt ein leeres "Set of V", falls eine solche Zuordnung nicht existierte.
      */
-	public static <@NotNull K, @NotNull V>  @NotNull Set<@NotNull V> getOrCreateHashSet(@NotNull final Map<@NotNull K, @NotNull Set<@NotNull V>> map, final @NotNull K key) {
+	public static <@NotNull K, @NotNull V>  @NotNull Set<@NotNull V> getOrCreateHashSet(final @NotNull Map<@NotNull K, @NotNull Set<@NotNull V>> map, final @NotNull K key) {
 		final Set<@NotNull V> set = map.get(key);
 		if (set != null)
 			return set;
@@ -42,13 +42,13 @@ public final class MapUtils {
      * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
      *
      * @param <K>  Der Typ der Schlüssel.
-     * @param <V>  Der Typ des Objekte in der ArrayList.
+     * @param <V>  Der Typ der Objekte in der ArrayList.
      * @param map  Die Map, welche K auf "ArrayList of V" abbildet.
      * @param key  Der Schlüssel.
      *
      * @return die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
      */
-	public static <@NotNull K, @NotNull V>  @NotNull List<@NotNull V> getOrCreateArrayList(@NotNull final Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key) {
+	public static <@NotNull K, @NotNull V>  @NotNull List<@NotNull V> getOrCreateArrayList(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key) {
 		final List<@NotNull V> list = map.get(key);
 		if (list != null)
 			return list;
@@ -57,6 +57,5 @@ public final class MapUtils {
 		map.put(key, listNeu);
 		return listNeu;
 	}
-
 
 }

@@ -55,18 +55,13 @@ public class Kurs42Converter {
 
 		// Einlesen der Schüler-Objekte
 		for (final Kurs42DataSchueler k42schueler : CsvReader.fromResource(pPfad + "Schueler.txt", Kurs42DataSchueler.class)) {
-
-			// Doppelter Schülername?
 			final String sKey = getKeySchueler(k42schueler);
-			if (mapSchueler.containsKey(sKey))
-				throw new DeveloperNotificationException("Kurs42-Schueler-Inkonsistenz: Schüler (" + sKey + ") existiert doppelt.");
-
 			final Schueler gSchueler = new Schueler();
 			gSchueler.id = mapSchueler.size() + 1;
 			gSchueler.vorname = k42schueler.Vorname;
 			gSchueler.nachname = k42schueler.Name;
 			gSchueler.geschlecht = k42schueler.Geschlecht;
-			mapSchueler.put(sKey, gSchueler);
+			DeveloperNotificationException.ifMapPutOverwrites(mapSchueler, sKey, gSchueler);
 		}
 
 		// Einlesen der Kurs-Objekte & Fächer & Kursarten

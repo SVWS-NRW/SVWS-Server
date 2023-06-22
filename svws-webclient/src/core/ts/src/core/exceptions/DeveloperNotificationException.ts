@@ -2,6 +2,7 @@ import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { RuntimeException } from '../../java/lang/RuntimeException';
 import type { JavaSet } from '../../java/util/JavaSet';
+import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
 import { JavaString } from '../../java/lang/JavaString';
 import type { JavaMap } from '../../java/util/JavaMap';
@@ -259,6 +260,20 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Wirft eine Exception, falls die übergebene Liste leer ist.
+	 *
+	 * @param <E>         Der Typ der Elemente der Liste.
+	 * @param listName    Der Name der Liste.
+	 * @param collection  Die Liste.
+	 *
+	 * @throws DeveloperNotificationException falls das Array leer ist.
+	 */
+	public static ifCollectionIsEmpty<E>(listName : string, collection : Collection<E>) : void {
+		if (collection.isEmpty())
+			throw new DeveloperNotificationException("Die Liste '" + listName! + "' darf nicht leer sein!")
+	}
+
+	/**
 	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @param <E>      Der Typ der Elemente des Sets
@@ -329,6 +344,20 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (s === null)
 			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden")
 		return JavaInteger.parseInt(s);
+	}
+
+	/**
+	 * Wirft eine Exception, falls das übergebene Array leer ist.
+	 *
+	 * @param <E>        Der Typ der Elemente des Arrays.
+	 * @param arrayName  Der Name des Arrays.
+	 * @param values     Das Array.
+	 *
+	 * @throws DeveloperNotificationException falls das Array leer ist.
+	 */
+	public static ifArrayIsEmpty<E>(arrayName : string, values : Array<E | null>) : void {
+		if (values.length === 0)
+			throw new DeveloperNotificationException("Das Array '" + arrayName! + "' darf nicht leer sein!")
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

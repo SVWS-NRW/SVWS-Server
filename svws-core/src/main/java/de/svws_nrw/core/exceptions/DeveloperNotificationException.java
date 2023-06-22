@@ -1,5 +1,6 @@
 package de.svws_nrw.core.exceptions;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -266,6 +267,20 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Wirft eine Exception, falls die übergebene Liste leer ist.
+	 *
+	 * @param <E>         Der Typ der Elemente der Liste.
+	 * @param listName    Der Name der Liste.
+	 * @param collection  Die Liste.
+	 *
+	 * @throws DeveloperNotificationException falls das Array leer ist.
+	 */
+	public static <@NotNull E> void ifCollectionIsEmpty(final @NotNull String listName, final @NotNull Collection<@NotNull E> collection) throws DeveloperNotificationException {
+		if (collection.isEmpty())
+			throw new DeveloperNotificationException("Die Liste '" + listName + "' darf nicht leer sein!");
+	}
+
+	/**
 	 * Fügt ein Element dem Set hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @param <E>      Der Typ der Elemente des Sets
@@ -336,6 +351,20 @@ public class DeveloperNotificationException extends RuntimeException {
 		if (s == null)
 			throw new DeveloperNotificationException("NULL-String kann nicht in eine Zahl umgwandelt werden");
 		return Integer.parseInt(s);
+	}
+
+	/**
+	 * Wirft eine Exception, falls das übergebene Array leer ist.
+	 *
+	 * @param <E>        Der Typ der Elemente des Arrays.
+	 * @param arrayName  Der Name des Arrays.
+	 * @param values     Das Array.
+	 *
+	 * @throws DeveloperNotificationException falls das Array leer ist.
+	 */
+	public static <@NotNull E> void ifArrayIsEmpty(final @NotNull String arrayName, final @NotNull E[] values) throws DeveloperNotificationException {
+		if (values.length == 0)
+			throw new DeveloperNotificationException("Das Array '" + arrayName + "' darf nicht leer sein!");
 	}
 
 
