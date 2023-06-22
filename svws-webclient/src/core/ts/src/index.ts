@@ -63,6 +63,7 @@ export { ArrayMapEntrySetIterator } from './core/adt/map/ArrayMapEntrySetIterato
 export { ArrayMapKeySet } from './core/adt/map/ArrayMapKeySet';
 export { ArrayMapKeySetIterator } from './core/adt/map/ArrayMapKeySetIterator';
 export { HashMap2D } from './core/adt/map/HashMap2D';
+export { HashMap3D } from './core/adt/map/HashMap3D';
 export { SatInput } from './core/adt/sat/SatInput';
 export { SatOutput } from './core/adt/sat/SatOutput';
 export { SatSolver } from './core/adt/sat/SatSolver';
