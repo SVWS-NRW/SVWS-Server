@@ -670,11 +670,13 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 
-	private static String toAnsiSQLStringWitEscapeSequences(final String str) {
+	private String toSQLStringWitEscapeSequences(final String str) {
 		if (str == null)
 			return null;
-		return "'" + str.replace("\\", "\\\\").replace("\0", "\\0").replace("'", "\\'").replace("%", "\\%")
-				.replace("_", "\\_").replace("\t", "\\t") + "'";
+		if (config.getDBDriver() == DBDriver.SQLITE)
+			return "'" + str.replace("'", "''") + "'";
+		// else MariaDB / MYSQL ...
+		return "'" + str.replace("\\", "\\\\").replace("'", "\\'") + "'";
 	}
 
 
@@ -708,11 +710,11 @@ public final class DBEntityManager implements AutoCloseable {
 				if (data[j] == null)
 					sb.append("null");
 				else if (data[j] instanceof final Timestamp timestamp)
-					sb.append(toAnsiSQLStringWitEscapeSequences(datetimeFormatter.format(timestamp.toLocalDateTime())));
+					sb.append(toSQLStringWitEscapeSequences(datetimeFormatter.format(timestamp.toLocalDateTime())));
 				else if (data[j] instanceof final Date date)
-					sb.append(toAnsiSQLStringWitEscapeSequences(dateFormatter.format(date.toLocalDate())));
+					sb.append(toSQLStringWitEscapeSequences(dateFormatter.format(date.toLocalDate())));
 				else if (data[j] instanceof final String str)
-					sb.append(toAnsiSQLStringWitEscapeSequences(str));
+					sb.append(toSQLStringWitEscapeSequences(str));
 				else if (data[j] instanceof final Number number)
 					sb.append(number);
 				else
