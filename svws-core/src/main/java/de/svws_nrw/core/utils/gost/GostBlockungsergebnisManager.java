@@ -289,8 +289,8 @@ public class GostBlockungsergebnisManager {
 				case KURS_ZUSAMMEN_MIT_KURS: // 8
 					stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
 					break;
-				case LEHRKRAFT_BEACHTEN: // 9
-					stateRegelvalidierung9_lehrkraft_beachten(r, regelVerletzungen);
+				case KURS_MIT_DUMMY_SUS_AUFFUELLEN: // 9
+					stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r, regelVerletzungen);
 					break;
 				case LEHRKRAEFTE_BEACHTEN: // 10
 					stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
@@ -369,16 +369,11 @@ public class GostBlockungsergebnisManager {
 		}
 	}
 
-	private void stateRegelvalidierung9_lehrkraft_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
-		final boolean externBeachten = r.parameter.get(0) == 1L;
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _map_schienenID_schiene.values())
-			for (final @NotNull GostBlockungsergebnisKurs eKurs1 : eSchiene.kurse)
-				for (final @NotNull GostBlockungsergebnisKurs eKurs2 : eSchiene.kurse)
-					if (eKurs1.id < eKurs2.id)
-						for (final @NotNull GostBlockungKursLehrer gLehr1 : getKursG(eKurs1.id).lehrer)
-							for (final @NotNull GostBlockungKursLehrer gLehr2 : getKursG(eKurs2.id).lehrer)
-								if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
-									regelVerletzungen.add(r.id);
+	@SuppressWarnings("static-method")
+	private void stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
+		final long anzahl = r.parameter.get(0);
+		DeveloperNotificationException.ifTrue("Regel 9 Dummy SuS " + anzahl + " ungültig!", (anzahl < 0) || (anzahl > 1000));
+		// BAR TODO
 	}
 
 	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {

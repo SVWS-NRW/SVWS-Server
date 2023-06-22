@@ -139,6 +139,8 @@ public class KursblockungDynDaten {
 
 		schritt13FehlerBeiRegel_9(pInput);
 
+		schritt13FehlerBeiRegel_10(pInput);
+
 		// Zustände Speichern
 		aktionZustandSpeichernS();
 		aktionZustandSpeichernK();
@@ -456,16 +458,10 @@ public class KursblockungDynDaten {
 			}
 
 			// Regeltyp = 9
-			if (gostRegel == GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN) {
+			if (gostRegel == GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN) {
 				final int length = daten.length;
-				if (length != 1)
-					throw new DeveloperNotificationException(
-							"LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!");
+				DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length != 1);
 
-				final long auchExtern = daten[0];
-				if ((auchExtern < 0) || (auchExtern > 1))
-					throw new DeveloperNotificationException(
-							"LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!");
 			}
 
 			// Regeltyp = 10
@@ -915,54 +911,38 @@ public class KursblockungDynDaten {
 	}
 
 	private void schritt13FehlerBeiRegel_9(final @NotNull GostBlockungsdatenManager pInput) {
-		// Regel 9 - LEHRKRAFT_BEACHTEN
-		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = _regelMap
-				.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
-		if (regelnTyp9 != null) {
-			// Sammle zunächst alle potentiellen Kurse
-			final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
-			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
-				if (!gKurs.lehrer.isEmpty())
-					vKurseMitLehrkraft.add(gKurs);
+		// Regel 9 - KURS_MIT_DUMMY_SUS_AUFFUELLEN
+		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp9 = _regelMap.get(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
+		if (regelnTyp9 == null)
+			return;
 
-			// Finde Kurse mit der selben Lehrkraft
-			for (final @NotNull GostBlockungRegel regel9 : regelnTyp9) {
-				final boolean externBeachten = regel9.parameter.get(0) == 1L;
-				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
-					for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
-						if (gKurs1.id < gKurs2.id)
-							for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
-									if ((gLehr1.id == gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern))) {
-										final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
-										final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
-										_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-									}
-			}
-		}
+		// TODO BAR  KURS_MIT_DUMMY_SUS_AUFFUELLEN
+	}
 
+	private void schritt13FehlerBeiRegel_10(final @NotNull GostBlockungsdatenManager pInput) {
 		// Regel 10 - LEHRKRAEFTE_BEACHTEN
-		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp10 = _regelMap
-				.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
-		if (regelnTyp10 != null) {
-			// Sammle zunächst alle potentiellen Kurse
-			final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
-			for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
-				if (!gKurs.lehrer.isEmpty())
-					vKurseMitLehrkraft.add(gKurs);
-			// Finde Kurse mit der selben Lehrkraft
-			for (@SuppressWarnings("unused") final @NotNull GostBlockungRegel regel10 : regelnTyp10)
-				for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
-					for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
-						if (gKurs1.id < gKurs2.id)
-							for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
-								for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
-									if (gLehr1.id == gLehr2.id) {
-										final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
-										final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
-										_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-									}
-		}
+		final LinkedCollection<@NotNull GostBlockungRegel> regelnTyp10 = _regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
+		if (regelnTyp10 == null)
+			return;
+
+		// Sammle zunächst alle potentiellen Kurse.
+		final @NotNull ArrayList<@NotNull GostBlockungKurs> vKurseMitLehrkraft = new ArrayList<>();
+		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse)
+			if (!gKurs.lehrer.isEmpty())
+				vKurseMitLehrkraft.add(gKurs);
+
+		// Finde Kurse mit der selben Lehrkraft
+		for (@SuppressWarnings("unused") final @NotNull GostBlockungRegel regel10 : regelnTyp10)
+			for (final @NotNull GostBlockungKurs gKurs1 : vKurseMitLehrkraft)
+				for (final @NotNull GostBlockungKurs gKurs2 : vKurseMitLehrkraft)
+					if (gKurs1.id < gKurs2.id)
+						for (final @NotNull GostBlockungKursLehrer gLehr1 : gKurs1.lehrer)
+							for (final @NotNull GostBlockungKursLehrer gLehr2 : gKurs2.lehrer)
+								if (gLehr1.id == gLehr2.id) {
+									final @NotNull KursblockungDynKurs kurs1 = gibKurs(gKurs1.id);
+									final @NotNull KursblockungDynKurs kurs2 = gibKurs(gKurs2.id);
+									_statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+								}
 	}
 
 	private @NotNull KursblockungDynFachart gibFachart(final long pFachID, final int pKursart) {

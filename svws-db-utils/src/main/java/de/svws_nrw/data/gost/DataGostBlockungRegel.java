@@ -244,6 +244,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 							yield schueler.get(0).ID;
 						}
 						case BOOLEAN -> 0L;
+						case GANZZAHL -> 0L;
 		    		};
 	    		} else {
 					final Long tmp = regelParameter.get(i);
@@ -272,6 +273,10 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 						}
 						case BOOLEAN -> {
 							if ((paramValue < 0) || (paramValue > 1))
+								throw OperationError.NOT_FOUND.exception();
+						}
+						case GANZZAHL -> {
+							if ((paramValue < Integer.MIN_VALUE) || (paramValue > Integer.MAX_VALUE))
 								throw OperationError.NOT_FOUND.exception();
 						}
 		    		}

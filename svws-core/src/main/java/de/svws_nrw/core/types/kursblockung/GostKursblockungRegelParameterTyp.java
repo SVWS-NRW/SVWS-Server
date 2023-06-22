@@ -21,6 +21,9 @@ public enum GostKursblockungRegelParameterTyp {
 	SCHUELER_ID,
 
 	/** Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung. */
-	BOOLEAN;
+	BOOLEAN,
+
+	/** Der Parameter Typ für eine ganze Zahl. Gültig ist nur der INT-Bereich, obwohl es intern als LONG gespeichert wird.*/
+	GANZZAHL;
 
 }

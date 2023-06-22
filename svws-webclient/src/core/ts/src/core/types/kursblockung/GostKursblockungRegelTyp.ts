@@ -100,15 +100,15 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 	public static readonly KURS_ZUSAMMEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_ZUSAMMEN_MIT_KURS", 8, 8, "Kurs zusammen mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
+	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
+	 */
+	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 9, 10, "Lehrkräfte beachten", Arrays.asList());
+
+	/**
 	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen. <br>
 	 *  - Parameter A: Wert 0=externe Lehrkräfte nicht beachten oder 1=alle Lehrkräfte beachten.
 	 */
-	public static readonly LEHRKRAFT_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAFT_BEACHTEN", 9, 9, "Lehrkräfte beachten (auch Externe?)", Arrays.asList(GostKursblockungRegelParameterTyp.BOOLEAN));
-
-	/**
-	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
-	 */
-	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 10, 10, "Lehrkräfte beachten", Arrays.asList());
+	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs auf mit Dummy SuS.", Arrays.asList(GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
 	 * Die ID des Regel-Typs
@@ -235,7 +235,7 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 			case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
 				return [];
 			}
-			case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
+			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
 				return [param.get(0)];
 			}
 			case GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS:

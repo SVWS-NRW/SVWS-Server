@@ -130,6 +130,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.schritt12FehlerBeiRegel_7_oder_8();
 		this.schritt13FehlerBeiRegel_9(pInput);
+		this.schritt13FehlerBeiRegel_10(pInput);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
 		this.aktionZustandSpeichernG();
@@ -336,13 +337,9 @@ export class KursblockungDynDaten extends JavaObject {
 				if (kursID1 === kursID2)
 					throw new UserNotificationException("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!")
 			}
-			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN as unknown) {
+			if (gostRegel as unknown === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN as unknown) {
 				const length : number = daten.length;
-				if (length !== 1)
-					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN daten.length=" + length + ", statt 1!")
-				const auchExtern : number = daten[0].valueOf();
-				if ((auchExtern < 0) || (auchExtern > 1))
-					throw new DeveloperNotificationException("LEHRKRAFT_BEACHTEN AuchExterne-Wert ist nicht 0/1, sondern (" + auchExtern + ")!")
+				DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 1!", length !== 1);
 			}
 			if (gostRegel as unknown === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN as unknown) {
 				const length : number = daten.length;
@@ -667,44 +664,30 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
-		const regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN);
-		if (regelnTyp9 !== null) {
-			const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
-			for (const gKurs of pInput.daten().kurse)
-				if (!gKurs.lehrer.isEmpty())
-					vKurseMitLehrkraft.add(gKurs);
-			for (const regel9 of regelnTyp9) {
-				const externBeachten : boolean = regel9.parameter.get(0) === 1;
-				for (const gKurs1 of vKurseMitLehrkraft)
-					for (const gKurs2 of vKurseMitLehrkraft)
-						if (gKurs1.id < gKurs2.id)
-							for (const gLehr1 of gKurs1.lehrer)
-								for (const gLehr2 of gKurs2.lehrer)
-									if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern))) {
-										const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
-										const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
-										this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-									}
-			}
-		}
+		const regelnTyp9 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
+		if (regelnTyp9 === null)
+			return;
+	}
+
+	private schritt13FehlerBeiRegel_10(pInput : GostBlockungsdatenManager) : void {
 		const regelnTyp10 : LinkedCollection<GostBlockungRegel> | null = this._regelMap.get(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN);
-		if (regelnTyp10 !== null) {
-			const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
-			for (const gKurs of pInput.daten().kurse)
-				if (!gKurs.lehrer.isEmpty())
-					vKurseMitLehrkraft.add(gKurs);
-			for (const regel10 of regelnTyp10)
-				for (const gKurs1 of vKurseMitLehrkraft)
-					for (const gKurs2 of vKurseMitLehrkraft)
-						if (gKurs1.id < gKurs2.id)
-							for (const gLehr1 of gKurs1.lehrer)
-								for (const gLehr2 of gKurs2.lehrer)
-									if (gLehr1.id === gLehr2.id) {
-										const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
-										const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
-										this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
-									}
-		}
+		if (regelnTyp10 === null)
+			return;
+		const vKurseMitLehrkraft : ArrayList<GostBlockungKurs> = new ArrayList();
+		for (const gKurs of pInput.daten().kurse)
+			if (!gKurs.lehrer.isEmpty())
+				vKurseMitLehrkraft.add(gKurs);
+		for (const regel10 of regelnTyp10)
+			for (const gKurs1 of vKurseMitLehrkraft)
+				for (const gKurs2 of vKurseMitLehrkraft)
+					if (gKurs1.id < gKurs2.id)
+						for (const gLehr1 of gKurs1.lehrer)
+							for (const gLehr2 of gKurs2.lehrer)
+								if (gLehr1.id === gLehr2.id) {
+									const kurs1 : KursblockungDynKurs = this.gibKurs(gKurs1.id);
+									const kurs2 : KursblockungDynKurs = this.gibKurs(gKurs2.id);
+									this._statistik.regelHinzufuegenKursVerbieteMitKurs(kurs1, kurs2);
+								}
 	}
 
 	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {

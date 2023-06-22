@@ -40,6 +40,11 @@ export class GostKursblockungRegelParameterTyp extends JavaObject implements Jav
 	 */
 	public static readonly BOOLEAN : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4, );
 
+	/**
+	 * Der Parameter Typ für eine ganze Zahl. Gültig ist nur der INT-Bereich, obwohl es intern als LONG gespeichert wird.
+	 */
+	public static readonly GANZZAHL : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("GANZZAHL", 5, );
+
 	private constructor(name : string, ordinal : number) {
 		super();
 		this.__name = name;

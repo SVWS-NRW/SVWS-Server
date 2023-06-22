@@ -292,8 +292,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
 					break;
 				}
-				case GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN: {
-					this.stateRegelvalidierung9_lehrkraft_beachten(r, regelVerletzungen);
+				case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
+					this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r, regelVerletzungen);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
@@ -371,16 +371,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
-	private stateRegelvalidierung9_lehrkraft_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		const externBeachten : boolean = r.parameter.get(0) === 1;
-		for (const eSchiene of this._map_schienenID_schiene.values())
-			for (const eKurs1 of eSchiene.kurse)
-				for (const eKurs2 of eSchiene.kurse)
-					if (eKurs1.id < eKurs2.id)
-						for (const gLehr1 of this.getKursG(eKurs1.id).lehrer)
-							for (const gLehr2 of this.getKursG(eKurs2.id).lehrer)
-								if ((gLehr1.id === gLehr2.id) && ((externBeachten) || (!gLehr1.istExtern)))
-									regelVerletzungen.add(r.id);
+	private stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
+		const anzahl : number = r.parameter.get(0).valueOf();
+		DeveloperNotificationException.ifTrue("Regel 9 Dummy SuS " + anzahl + " ungültig!", (anzahl < 0) || (anzahl > 1000));
 	}
 
 	private stateRegelvalidierung10_lehrkraefte_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
