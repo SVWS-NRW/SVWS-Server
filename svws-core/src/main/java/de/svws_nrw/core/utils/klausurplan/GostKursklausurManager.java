@@ -184,6 +184,12 @@ public class GostKursklausurManager {
 			if (listDateKlausurtermin != null)
 				listDateKlausurtermin.remove(termin);
 		}
+/*		for (final @NotNull List<@NotNull GostKlausurtermin> listeTermine : _mapDateKlausurtermin.values()) {
+			for (final @NotNull GostKlausurtermin altTermin : listeTermine) {
+				if (altTermin.id == pTermin.id && !altTermin.datum.equals(pTermin.datum))
+					listeTermine.remove(altTermin);
+			}
+		}*/
 
 		_termine.remove(termin);
 		_mapIdKlausurtermin.remove(termin.id);
