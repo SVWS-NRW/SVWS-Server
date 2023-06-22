@@ -322,12 +322,13 @@ public class DBBackupManager {
 		logger.modifyIndent(2);
 		@SuppressWarnings("resource")
 		final DBEntityManager tgtConn = tgtManager.getUser().getEntityManager();
-		// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
+		// Versuche zunächst in Blöcken von maxRangeSize Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
 		int write_errors = 0;
 		final LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>();
-		for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
-			final int first = i * 10000;
-			int last = (i + 1) * 10000 - 1;
+		final int maxRangeSize = 100;
+		for (int i = 0; i <= ((entities.size() - 1) / maxRangeSize); i++) {
+			final int first = i * maxRangeSize;
+			int last = (i + 1) * maxRangeSize - 1;
 			if (last >= entities.size())
 				last = entities.size() - 1;
 			ranges.add(Map.entry(first, last));
