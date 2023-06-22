@@ -669,6 +669,65 @@ public final class DBEntityManager implements AutoCloseable {
 	}
 
 
+
+	private static String toAnsiSQLStringWitEscapeSequences(final String str) {
+		if (str == null)
+			return null;
+		return "'" + str.replace("\\", "\\\\").replace("\0", "\\0").replace("'", "\\'").replace("%", "\\%")
+				.replace("_", "\\_").replace("\t", "\\t") + "'";
+	}
+
+
+	/**
+	 * Diese Methode fügt die Entities aus dem angegebenen Bereich der übergebenen Liste in die angebene
+	 * Tabelle mit den übergebenen Spalten ein. Die entsprechende native SQL-INSERT-Anfrage wird aus den übergebenen
+	 * Daten generiert und im Rahmen einer Transaktion ausgeführt.
+	 *
+	 * @param tablename   der Name der Tabelle, in die eingefügt wird
+	 * @param colnames    die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen
+	 *                    der Entitäten passen muss
+	 * @param entities    die Liste mit den einzelnen Datensätzen in Form von Object-Arrays
+	 * @param indexFirst  der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param indexLast   der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 *
+	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
+	 */
+	public boolean insertRangeNativeUnprepared(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst, final int indexLast) {
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
+			return false;
+		final int first = (indexFirst < 0) ? 0 : indexFirst;
+		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
+		final StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO ").append(tablename).append("(")
+			.append(colnames.stream().collect(Collectors.joining(", ")))
+			.append(") VALUES ");
+		for (int i = first; i <= last; i++) {
+			sb.append("(");
+			final Object[] data = entities.get(i);
+			for (int j = 0; j < colnames.size(); j++) {
+				if (data[j] == null)
+					sb.append("null");
+				else if (data[j] instanceof final Timestamp timestamp)
+					sb.append(toAnsiSQLStringWitEscapeSequences(datetimeFormatter.format(timestamp.toLocalDateTime())));
+				else if (data[j] instanceof final Date date)
+					sb.append(toAnsiSQLStringWitEscapeSequences(dateFormatter.format(date.toLocalDate())));
+				else if (data[j] instanceof final String str)
+					sb.append(toAnsiSQLStringWitEscapeSequences(str));
+				else if (data[j] instanceof final Number number)
+					sb.append(number);
+				else
+					return false;
+				if (j < colnames.size() - 1)
+					sb.append(",");
+			}
+			sb.append(")");
+			if (i != last)
+				sb.append(",");
+		}
+		return executeNativeUpdate(sb.toString()) != Integer.MIN_VALUE;
+	}
+
+
 	/**
 	 * Erzeugt eine TypedQuery gemäß der Methode {@link EntityManager#createQuery(String, Class)}
 	 *

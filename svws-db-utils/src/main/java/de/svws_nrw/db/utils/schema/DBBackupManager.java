@@ -335,7 +335,7 @@ public class DBBackupManager {
 		}
 		while (!ranges.isEmpty()) {
 			final Map.Entry<Integer, Integer> range = ranges.removeFirst();
-			if (tgtConn.insertRangeNative(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).toList(), entities, range.getKey(), range.getValue())) {
+			if (tgtConn.insertRangeNativeUnprepared(tab.name(), tab.getSpalten(rev).stream().map(col -> col.name()).toList(), entities, range.getKey(), range.getValue())) {
 				if (range.getKey().equals(range.getValue()))
 					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) +  "G)");
 				else
