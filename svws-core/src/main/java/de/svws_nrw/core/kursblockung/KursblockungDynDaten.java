@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.adt.map.ArrayMap;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -62,7 +63,7 @@ public class KursblockungDynDaten {
 	private @NotNull KursblockungDynFachart @NotNull [] _fachartArr;
 
 	/** Map für schnellen Zugriff auf die Facharten über FachID und KursartID. */
-	private final @NotNull HashMap<@NotNull Long, @NotNull HashMap<@NotNull Integer, @NotNull KursblockungDynFachart>> _fachartMap;
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull KursblockungDynFachart> _fachartMap2D;
 
 	/** Alle SuS. */
 	private @NotNull KursblockungDynSchueler @NotNull [] _schuelerArr;
@@ -93,7 +94,7 @@ public class KursblockungDynDaten {
 		_kursMap = new HashMap<>();
 
 		_fachartArr = new KursblockungDynFachart[0];
-		_fachartMap = new HashMap<>();
+		_fachartMap2D = new HashMap2D<>();
 
 		_schuelerArr = new KursblockungDynSchueler[0];
 		_schuelerMap = new HashMap<>();
@@ -405,26 +406,13 @@ public class KursblockungDynDaten {
 		// Facharten aus Kursen extrahieren.
 		final int nKurse = pInput.daten().kurse.size();
 		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
-			final GostFach fach = pInput.faecherManager().get(gKurs.fach_id);
-			if (fach == null)
-				throw new DeveloperNotificationException(
-						"GostBlockungKurs (" + gKurs.id + ") die Fach-ID ist im Manager unbekannt!");
+			final @NotNull GostFach fach = pInput.faecherManager().getOrException(gKurs.fach_id);
+			final @NotNull GostKursart kursart = GostKursart.fromID(gKurs.kursart);
 
-			final GostKursart kursart = GostKursart.fromIDorNull(gKurs.kursart);
-			if (kursart == null)
-				throw new DeveloperNotificationException(
-						"GostBlockungKurs (" + gKurs.id + ") die Kursart-ID ist bei GostKursart unbekannt!");
-
-			HashMap<@NotNull Integer, @NotNull KursblockungDynFachart> kursartMap = _fachartMap.get(fach.id);
-			if (kursartMap == null) {
-				kursartMap = new HashMap<>();
-				_fachartMap.put(fach.id, kursartMap);
-			}
-
-			KursblockungDynFachart dynFachart = kursartMap.get(kursart.id);
+			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
 				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik);
-				kursartMap.put(kursart.id, dynFachart);
+				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
 
@@ -433,54 +421,31 @@ public class KursblockungDynDaten {
 
 		// Facharten aus SuS-Fachwahlen extrahieren.
 		for (final @NotNull GostFachwahl iFachwahl : pInput.daten().fachwahlen) {
-			final GostFach fach = pInput.faecherManager().get(iFachwahl.fachID);
-			if (fach == null)
-				throw new DeveloperNotificationException(
-						"GostFachwahl: Die Fach-ID (" + iFachwahl.fachID + ") ist im Manager unbekannt!");
+			final @NotNull GostFach fach = pInput.faecherManager().getOrException(iFachwahl.fachID);
+			final @NotNull GostKursart kursart = GostKursart.fromID(iFachwahl.kursartID);
 
-			final GostKursart kursart = GostKursart.fromIDorNull(iFachwahl.kursartID);
-			if (kursart == null)
-				throw new DeveloperNotificationException(
-						"GostFachwahl: Die Kursart-ID (" + iFachwahl.kursartID + ") ist bei GostKursart unbekannt!");
-
-			final long schuelerID = iFachwahl.schuelerID;
-			if (schuelerID < 0)
-				throw new DeveloperNotificationException("GostFachwahl.schuelerID < 0");
-
-			HashMap<@NotNull Integer, @NotNull KursblockungDynFachart> kursartMap = _fachartMap.get(fach.id);
-			if (kursartMap == null) {
-				kursartMap = new HashMap<>();
-				_fachartMap.put(fach.id, kursartMap);
-			}
-
-			KursblockungDynFachart dynFachart = kursartMap.get(kursart.id);
+			KursblockungDynFachart dynFachart = _fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart == null) {
 				dynFachart = new KursblockungDynFachart(_random, nFacharten, fach, kursart, _statistik);
-				kursartMap.put(kursart.id, dynFachart);
+				_fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
 
-			dynFachart.aktionMaxSchuelerErhoehen();
 		}
 
 		// Keine Facharten? --> Fehler
-		if (nFacharten <= 0)
-			throw new DeveloperNotificationException("Die Blockung hat keine Facharten/Fachwahlen (Fach + Kursart).");
+		DeveloperNotificationException.ifSmaller("nFacharten", nFacharten, 1);
 
 		// fachartMap --> fachartArr
 		_fachartArr = new KursblockungDynFachart[nFacharten];
-		for (final @NotNull HashMap<@NotNull Integer, @NotNull KursblockungDynFachart> kursartMap : _fachartMap
-				.values())
-			for (final @NotNull KursblockungDynFachart fachart : kursartMap.values())
-				_fachartArr[fachart.gibNr()] = fachart;
+		for (final @NotNull KursblockungDynFachart fachart : _fachartMap2D.getNonNullValuesAsList())
+			_fachartArr[fachart.gibNr()] = fachart;
 
 		// Verteile Kurse verschwunden? --> Fehler
 		int kursSumme = 0;
 		for (int i = 0; i < _fachartArr.length; i++)
 			kursSumme += _fachartArr[i].gibKurseMax();
-		if (kursSumme != nKurse)
-			throw new DeveloperNotificationException(
-					"Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.");
+		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme != nKurse);
 	}
 
 	private void schritt04FehlerBeiSchuelerErstellung(final @NotNull GostBlockungsdatenManager pInput) {
@@ -823,18 +788,8 @@ public class KursblockungDynDaten {
 								}
 	}
 
-	private @NotNull KursblockungDynFachart gibFachart(final long pFachID, final int pKursart) {
-		final HashMap<@NotNull Integer, @NotNull KursblockungDynFachart> kursartMap = _fachartMap.get(pFachID);
-		if (kursartMap == null)
-			throw new DeveloperNotificationException(
-					"gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Fach)!");
-
-		final KursblockungDynFachart dynFachart = kursartMap.get(pKursart);
-		if (dynFachart == null)
-			throw new DeveloperNotificationException(
-					"gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Kursart)!");
-
-		return dynFachart;
+	private @NotNull KursblockungDynFachart gibFachart(final long fachID, final int kursart) {
+		return _fachartMap2D.getNonNullOrException(fachID, kursart);
 	}
 
 	private @NotNull KursblockungDynSchueler gibSchueler(final long schuelerID) {

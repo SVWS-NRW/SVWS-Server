@@ -1,9 +1,12 @@
 package de.svws_nrw.core.adt.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.kursblockung.KursblockungDynFachart;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -144,4 +147,25 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		if (map2.isEmpty())
 			_map.remove(key1);
 	}
+
+	/**
+	 * Liefert eine Liste aller Values in dieser Map.
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
+		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+
+		for (final @NotNull Map<@NotNull K2, V> map2 : _map.values()) {
+			for (final V value : map2.values()) {
+				if (value == null)
+					throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!");
+				list.add(value);
+			}
+		}
+
+		return list;
+	}
+
+
 }

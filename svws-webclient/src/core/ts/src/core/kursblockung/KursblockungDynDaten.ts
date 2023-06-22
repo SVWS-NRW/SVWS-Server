@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisManager } from '../../core/utils/gost/GostBlockungsergebnisManager';
 import { KursblockungDynFachart } from '../../core/kursblockung/KursblockungDynFachart';
 import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
@@ -77,7 +78,7 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Map für schnellen Zugriff auf die Facharten über FachID und KursartID.
 	 */
-	private readonly _fachartMap : HashMap<number, HashMap<number, KursblockungDynFachart>>;
+	private readonly _fachartMap2D : HashMap2D<number, number, KursblockungDynFachart>;
 
 	/**
 	 * Alle SuS.
@@ -113,7 +114,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this._kursArrFrei = Array(0).fill(null);
 		this._kursMap = new HashMap();
 		this._fachartArr = Array(0).fill(null);
-		this._fachartMap = new HashMap();
+		this._fachartMap2D = new HashMap2D();
 		this._schuelerArr = Array(0).fill(null);
 		this._schuelerMap = new HashMap();
 		this._statistik = new KursblockungDynStatistik(this._logger);
@@ -355,59 +356,34 @@ export class KursblockungDynDaten extends JavaObject {
 		let nFacharten : number = 0;
 		const nKurse : number = pInput.daten().kurse.size();
 		for (const gKurs of pInput.daten().kurse) {
-			const fach : GostFach | null = pInput.faecherManager().get(gKurs.fach_id);
-			if (fach === null)
-				throw new DeveloperNotificationException("GostBlockungKurs (" + gKurs.id + ") die Fach-ID ist im Manager unbekannt!")
-			const kursart : GostKursart | null = GostKursart.fromIDorNull(gKurs.kursart);
-			if (kursart === null)
-				throw new DeveloperNotificationException("GostBlockungKurs (" + gKurs.id + ") die Kursart-ID ist bei GostKursart unbekannt!")
-			let kursartMap : HashMap<number, KursblockungDynFachart> | null = this._fachartMap.get(fach.id);
-			if (kursartMap === null) {
-				kursartMap = new HashMap();
-				this._fachartMap.put(fach.id, kursartMap);
-			}
-			let dynFachart : KursblockungDynFachart | null = kursartMap.get(kursart.id);
+			const fach : GostFach = pInput.faecherManager().getOrException(gKurs.fach_id);
+			const kursart : GostKursart = GostKursart.fromID(gKurs.kursart);
+			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
 				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik);
-				kursartMap.put(kursart.id, dynFachart);
+				this._fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
 			dynFachart.aktionMaxKurseErhoehen();
 		}
 		for (const iFachwahl of pInput.daten().fachwahlen) {
-			const fach : GostFach | null = pInput.faecherManager().get(iFachwahl.fachID);
-			if (fach === null)
-				throw new DeveloperNotificationException("GostFachwahl: Die Fach-ID (" + iFachwahl.fachID + ") ist im Manager unbekannt!")
-			const kursart : GostKursart | null = GostKursart.fromIDorNull(iFachwahl.kursartID);
-			if (kursart === null)
-				throw new DeveloperNotificationException("GostFachwahl: Die Kursart-ID (" + iFachwahl.kursartID + ") ist bei GostKursart unbekannt!")
-			const schuelerID : number = iFachwahl.schuelerID;
-			if (schuelerID < 0)
-				throw new DeveloperNotificationException("GostFachwahl.schuelerID < 0")
-			let kursartMap : HashMap<number, KursblockungDynFachart> | null = this._fachartMap.get(fach.id);
-			if (kursartMap === null) {
-				kursartMap = new HashMap();
-				this._fachartMap.put(fach.id, kursartMap);
-			}
-			let dynFachart : KursblockungDynFachart | null = kursartMap.get(kursart.id);
+			const fach : GostFach = pInput.faecherManager().getOrException(iFachwahl.fachID);
+			const kursart : GostKursart = GostKursart.fromID(iFachwahl.kursartID);
+			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
 				dynFachart = new KursblockungDynFachart(this._random, nFacharten, fach, kursart, this._statistik);
-				kursartMap.put(kursart.id, dynFachart);
+				this._fachartMap2D.put(fach.id, kursart.id, dynFachart);
 				nFacharten++;
 			}
-			dynFachart.aktionMaxSchuelerErhoehen();
 		}
-		if (nFacharten <= 0)
-			throw new DeveloperNotificationException("Die Blockung hat keine Facharten/Fachwahlen (Fach + Kursart).")
+		DeveloperNotificationException.ifSmaller("nFacharten", nFacharten, 1);
 		this._fachartArr = Array(nFacharten).fill(null);
-		for (const kursartMap of this._fachartMap.values())
-			for (const fachart of kursartMap.values())
-				this._fachartArr[fachart.gibNr()] = fachart;
+		for (const fachart of this._fachartMap2D.getNonNullValuesAsList())
+			this._fachartArr[fachart.gibNr()] = fachart;
 		let kursSumme : number = 0;
 		for (let i : number = 0; i < this._fachartArr.length; i++)
 			kursSumme += this._fachartArr[i].gibKurseMax();
-		if (kursSumme !== nKurse)
-			throw new DeveloperNotificationException("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.")
+		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme !== nKurse);
 	}
 
 	private schritt04FehlerBeiSchuelerErstellung(pInput : GostBlockungsdatenManager) : void {
@@ -659,14 +635,8 @@ export class KursblockungDynDaten extends JavaObject {
 							}
 	}
 
-	private gibFachart(pFachID : number, pKursart : number) : KursblockungDynFachart {
-		const kursartMap : HashMap<number, KursblockungDynFachart> | null = this._fachartMap.get(pFachID);
-		if (kursartMap === null)
-			throw new DeveloperNotificationException("gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Fach)!")
-		const dynFachart : KursblockungDynFachart | null = kursartMap.get(pKursart);
-		if (dynFachart === null)
-			throw new DeveloperNotificationException("gibFachart(" + pFachID + ", " + pKursart + ") schlug fehl (Kursart)!")
-		return dynFachart;
+	private gibFachart(fachID : number, kursart : number) : KursblockungDynFachart {
+		return this._fachartMap2D.getNonNullOrException(fachID, kursart);
 	}
 
 	private gibSchueler(schuelerID : number) : KursblockungDynSchueler {

@@ -1,6 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -132,6 +134,23 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		map2.remove(key2);
 		if (map2.isEmpty())
 			this._map.remove(key1);
+	}
+
+	/**
+	 * Liefert eine Liste aller Values in dieser Map.
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public getNonNullValuesAsList() : List<V> {
+		const list : ArrayList<V> = new ArrayList();
+		for (const map2 of this._map.values()) {
+			for (const value of map2.values()) {
+				if (value === null)
+					throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!")
+				list.add(value);
+			}
+		}
+		return list;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
