@@ -139,11 +139,13 @@ public class KursblockungDynKurs {
 		return schuelerAnz;
 	}
 
-	/** Liefert {@code true} falls die Schienenlage des Kurses noch veränderbar ist. Wenn der Kurs komplett fixiert ist,
+	/**
+	 * Liefert {@code true} falls die Schienenlage des Kurses noch veränderbar ist. Wenn der Kurs komplett fixiert ist,
 	 * oder so viele Schienen gesperrt sind, dass der Kurs keine Wahlmöglichkeit bezüglich seiner Schienen hat, dann ist
-	 * das Resultat {@code false}
+	 * das Resultat {@code false}.
 	 *
-	 * @return Liefert {@code true}, falls die Schienenlage des Kurses noch veränderbar ist. */
+	 * @return Liefert {@code true}, falls die Schienenlage des Kurses noch veränderbar ist.
+	 */
 	public boolean gibHatFreiheitsgrade() {
 		return (schienenLageFixiert < schienenLage.length) && (schienenFrei.length > 0);
 	}

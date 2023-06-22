@@ -4,8 +4,6 @@ import java.util.Random;
 
 import jakarta.validation.constraints.NotNull;
 
-// TODO BAR KursblockungStatic --> adt???
-
 /** Diese Klasse bietet statische Helfer-Methoden an.
  *
  * @author Benjamin A. Bartsch */

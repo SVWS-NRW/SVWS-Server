@@ -21,10 +21,10 @@ import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDy
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { ArrayMap } from '../../core/adt/map/ArrayMap';
-import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../core/utils/MapUtils';
 import { Schueler } from '../../core/data/schueler/Schueler';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { ListUtils } from '../../core/utils/ListUtils';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { UserNotificationException } from '../../core/exceptions/UserNotificationException';
 
@@ -130,7 +130,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
 		this.schritt11FehlerBeiRegel_4_oder_5();
 		this.schritt12FehlerBeiRegel_7_oder_8();
-		this.schritt13FehlerBeiRegel_9(input);
+		this.schritt13FehlerBeiRegel_9();
 		this.schritt14FehlerBeiRegel_10(input);
 		this.aktionZustandSpeichernS();
 		this.aktionZustandSpeichernK();
@@ -140,31 +140,31 @@ export class KursblockungDynDaten extends JavaObject {
 	/**
 	 * Überprüft alle Referenzen in {@link KursblockungInput} und auch die referentielle Integrität.
 	 *
-	 * @param pInput Das {@link KursblockungInput}-Objekt von der GUI.
+	 * @param input Das {@link KursblockungInput}-Objekt von der GUI.
 	 */
-	private schritt01FehlerBeiReferenzen(pInput : GostBlockungsdatenManager) : void {
-		DeveloperNotificationException.ifNull("pInput", pInput);
-		DeveloperNotificationException.ifNull("pInput.daten()", pInput.daten());
-		DeveloperNotificationException.ifNull("pInput.daten().fachwahlen", pInput.daten().fachwahlen);
-		DeveloperNotificationException.ifNull("pInput.faecherManager()", pInput.faecherManager());
-		DeveloperNotificationException.ifNull("pInput.faecherManager().faecher()", pInput.faecherManager().faecher());
+	private schritt01FehlerBeiReferenzen(input : GostBlockungsdatenManager) : void {
+		DeveloperNotificationException.ifNull("pInput", input);
+		DeveloperNotificationException.ifNull("pInput.daten()", input.daten());
+		DeveloperNotificationException.ifNull("pInput.daten().fachwahlen", input.daten().fachwahlen);
+		DeveloperNotificationException.ifNull("pInput.faecherManager()", input.faecherManager());
+		DeveloperNotificationException.ifNull("pInput.faecherManager().faecher()", input.faecherManager().faecher());
 		DeveloperNotificationException.ifNull("GostKursart.values()", GostKursart.values());
-		DeveloperNotificationException.ifNull("pInput.daten().kurse", pInput.daten().kurse);
-		DeveloperNotificationException.ifNull("pInput.daten().regeln", pInput.daten().regeln);
-		DeveloperNotificationException.ifInvalidID("pInput.getID()", pInput.getID());
-		DeveloperNotificationException.ifNull("pInput", pInput);
-		DeveloperNotificationException.ifNull("pInput", pInput);
-		DeveloperNotificationException.ifNull("pInput", pInput);
-		DeveloperNotificationException.ifNull("pInput", pInput);
-		DeveloperNotificationException.ifNull("pInput", pInput);
+		DeveloperNotificationException.ifNull("pInput.daten().kurse", input.daten().kurse);
+		DeveloperNotificationException.ifNull("pInput.daten().regeln", input.daten().regeln);
+		DeveloperNotificationException.ifInvalidID("pInput.getID()", input.getID());
+		DeveloperNotificationException.ifNull("pInput", input);
+		DeveloperNotificationException.ifNull("pInput", input);
+		DeveloperNotificationException.ifNull("pInput", input);
+		DeveloperNotificationException.ifNull("pInput", input);
+		DeveloperNotificationException.ifNull("pInput", input);
 		DeveloperNotificationException.ifArrayIsEmpty("GostKursart.values()", GostKursart.values());
-		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", pInput.daten().fachwahlen);
-		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", pInput.faecherManager().faecher());
-		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", pInput.daten().kurse);
-		const schienenAnzahl : number = pInput.getSchienenAnzahl();
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", input.daten().fachwahlen);
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", input.faecherManager().faecher());
+		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", input.daten().kurse);
+		const schienenAnzahl : number = input.getSchienenAnzahl();
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
 		const usedSchiene : HashSet<number | null> | null = new HashSet();
-		for (const gSchiene of pInput.daten().schienen) {
+		for (const gSchiene of input.daten().schienen) {
 			DeveloperNotificationException.ifInvalidID("gSchiene.id", gSchiene.id);
 			DeveloperNotificationException.ifSmaller("gSchiene.id", gSchiene.nummer, 1);
 			DeveloperNotificationException.ifGreater("gSchiene.id", gSchiene.nummer, schienenAnzahl);
@@ -177,13 +177,13 @@ export class KursblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifSetAddsDuplicate("setKursarten", setKursarten, iKursart.id);
 		}
 		const setFaecher : HashSet<number> = new HashSet();
-		for (const iFach of pInput.faecherManager().faecher()) {
+		for (const iFach of input.faecherManager().faecher()) {
 			DeveloperNotificationException.ifNull("iFach", iFach);
 			DeveloperNotificationException.ifInvalidID("iFach.id", iFach.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setFaecher", setFaecher, iFach.id);
 		}
 		const setKurse : HashSet<number> = new HashSet();
-		for (const iKurs of pInput.daten().kurse) {
+		for (const iKurs of input.daten().kurse) {
 			DeveloperNotificationException.ifNull("iKurs", iKurs);
 			DeveloperNotificationException.ifInvalidID("iKurs.id", iKurs.id);
 			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iKurs.fach_id);
@@ -191,16 +191,16 @@ export class KursblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifSetAddsDuplicate("setKurse", setKurse, iKurs.id);
 		}
 		const setSchueler : HashSet<number> = new HashSet();
-		for (const gSchueler of pInput.daten().schueler)
+		for (const gSchueler of input.daten().schueler)
 			DeveloperNotificationException.ifSetAddsDuplicate("setSchueler", setSchueler, gSchueler.id);
-		for (const iFachwahl of pInput.daten().fachwahlen) {
+		for (const iFachwahl of input.daten().fachwahlen) {
 			DeveloperNotificationException.ifNull("iFachwahl", iFachwahl);
 			DeveloperNotificationException.ifInvalidID("iFachwahl.schuelerID", iFachwahl.schuelerID);
 			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iFachwahl.fachID);
 			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iFachwahl.kursartID);
 			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, iFachwahl.schuelerID);
 		}
-		for (const iRegel of pInput.daten().regeln) {
+		for (const iRegel of input.daten().regeln) {
 			DeveloperNotificationException.ifNull("iRegel", iRegel);
 			DeveloperNotificationException.ifNull("iRegel.parameter", iRegel.parameter);
 			DeveloperNotificationException.ifInvalidID("iRegel.id", iRegel.id);
@@ -352,11 +352,11 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt03FehlerBeiFachartenErstellung(pInput : GostBlockungsdatenManager) : void {
+	private schritt03FehlerBeiFachartenErstellung(input : GostBlockungsdatenManager) : void {
 		let nFacharten : number = 0;
-		const nKurse : number = pInput.daten().kurse.size();
-		for (const gKurs of pInput.daten().kurse) {
-			const fach : GostFach = pInput.faecherManager().getOrException(gKurs.fach_id);
+		const nKurse : number = input.daten().kurse.size();
+		for (const gKurs of input.daten().kurse) {
+			const fach : GostFach = input.faecherManager().getOrException(gKurs.fach_id);
 			const kursart : GostKursart = GostKursart.fromID(gKurs.kursart);
 			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
@@ -366,8 +366,8 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			dynFachart.aktionMaxKurseErhoehen();
 		}
-		for (const iFachwahl of pInput.daten().fachwahlen) {
-			const fach : GostFach = pInput.faecherManager().getOrException(iFachwahl.fachID);
+		for (const iFachwahl of input.daten().fachwahlen) {
+			const fach : GostFach = input.faecherManager().getOrException(iFachwahl.fachID);
 			const kursart : GostKursart = GostKursart.fromID(iFachwahl.kursartID);
 			let dynFachart : KursblockungDynFachart | null = this._fachartMap2D.getOrNull(fach.id, kursart.id);
 			if (dynFachart === null) {
@@ -386,48 +386,39 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifTrue("Die Summe aller auf die Facharten verteilten Kurse ist ungleich der Gesamtkursanzahl.", kursSumme !== nKurse);
 	}
 
-	private schritt04FehlerBeiSchuelerErstellung(pInput : GostBlockungsdatenManager) : void {
+	private schritt04FehlerBeiSchuelerErstellung(input : GostBlockungsdatenManager) : void {
 		const setSchueler : HashSet<number> = new HashSet();
-		for (const fachwahl of pInput.daten().fachwahlen)
-			setSchueler.add(fachwahl.schuelerID);
+		for (const gSchueler of input.daten().schueler)
+			setSchueler.add(gSchueler.id);
+		for (const fachwahl of input.daten().fachwahlen)
+			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, fachwahl.schuelerID);
 		const nSchueler : number = setSchueler.size();
-		const nSchienen : number = pInput.getSchienenAnzahl();
-		const nKurse : number = pInput.getKursAnzahl();
-		let i : number = 0;
+		const nSchienen : number = input.getSchienenAnzahl();
+		const nKurse : number = input.getKursAnzahl();
 		this._schuelerArr = Array(nSchueler).fill(null);
-		for (const schuelerID of setSchueler) {
-			const sID : number = schuelerID.valueOf();
+		let i : number = 0;
+		for (const sID of setSchueler) {
 			const schueler : KursblockungDynSchueler = new KursblockungDynSchueler(this._logger, this._random, sID, this._statistik, nSchienen, nKurse);
 			this._schuelerArr[i] = schueler;
-			this._schuelerMap.put(schuelerID, schueler);
+			this._schuelerMap.put(sID, schueler);
 			i++;
 		}
 	}
 
-	private schritt05FehlerBeiSchuelerFachwahlenErstellung(pInput : GostBlockungsdatenManager, susArr : Array<KursblockungDynSchueler>) : void {
-		const mapSchuelerFA : HashMap<KursblockungDynSchueler, LinkedCollection<KursblockungDynFachart>> = new HashMap();
-		for (let i : number = 0; i < susArr.length; i++)
-			mapSchuelerFA.put(susArr[i], new LinkedCollection());
-		for (const iFachwahl of pInput.daten().fachwahlen) {
-			const schueler : KursblockungDynSchueler | null = this._schuelerMap.get(iFachwahl.schuelerID);
-			if (schueler === null)
-				throw new DeveloperNotificationException("GostFachwahl.schueler --> KursblockungDynSchueler (mapping fehlt)!")
-			const dynFacharten : LinkedCollection<KursblockungDynFachart> | null = mapSchuelerFA.get(schueler);
-			if (dynFacharten === null)
-				throw new DeveloperNotificationException("dynFacharten == null")
+	private schritt05FehlerBeiSchuelerFachwahlenErstellung(input : GostBlockungsdatenManager, susArr : Array<KursblockungDynSchueler>) : void {
+		const mapSchuelerFA : HashMap<number, List<KursblockungDynFachart>> = new HashMap();
+		for (const iFachwahl of input.daten().fachwahlen) {
 			const dynFachart : KursblockungDynFachart = this.gibFachart(iFachwahl.fachID, iFachwahl.kursartID);
-			dynFacharten.addLast(dynFachart);
+			MapUtils.getOrCreateArrayList(mapSchuelerFA, iFachwahl.schuelerID).add(dynFachart);
 		}
 		for (const schueler of susArr) {
-			const listFA : LinkedCollection<KursblockungDynFachart> | null = mapSchuelerFA.get(schueler);
-			if (listFA === null)
-				throw new DeveloperNotificationException("mapSchuelerFA.get(schueler) == null (mapping fehlt)!")
+			const listFA : List<KursblockungDynFachart> = MapUtils.getOrCreateArrayList(mapSchuelerFA, schueler.gibDatenbankID());
 			const arrFA : Array<KursblockungDynFachart> = listFA.toArray(Array(0).fill(null));
 			schueler.aktionSetzeFachartenUndIDs(arrFA);
 		}
 	}
 
-	private schritt06FehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>, pInput : GostBlockungsdatenManager) : void {
+	private schritt06FehlerBeiStatistikErstellung(fachartArr : Array<KursblockungDynFachart>, susArr : Array<KursblockungDynSchueler>, input : GostBlockungsdatenManager) : void {
 		const nFacharten : number = fachartArr.length;
 		const bewertungMatrixFachart : Array<Array<number>> = [...Array(nFacharten)].map(e => Array(nFacharten).fill(0));
 		for (let i : number = 0; i < susArr.length; i++) {
@@ -457,84 +448,76 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			bewertungMatrixFachart[nr1][nr1] += 10000000;
 		}
-		this._statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, pInput.getKursAnzahl());
+		this._statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.getKursAnzahl());
 	}
 
-	private schritt07FehlerBeiSchienenErzeugung(pSchienen : number) : void {
-		this._schienenArr = Array(pSchienen).fill(null);
-		for (let nr : number = 0; nr < pSchienen; nr++)
+	private schritt07FehlerBeiSchienenErzeugung(schienen : number) : void {
+		this._schienenArr = Array(schienen).fill(null);
+		for (let nr : number = 0; nr < schienen; nr++)
 			this._schienenArr[nr] = new KursblockungDynSchiene(this._logger, nr, this._statistik);
 	}
 
-	private schritt08FehlerBeiKursErstellung(pInput : GostBlockungsdatenManager) : void {
-		const nKurse : number = pInput.getKursAnzahl();
-		const nSchienen : number = pInput.getSchienenAnzahl();
-		const mapKursSchieneFrei : HashMap<number, LinkedCollection<KursblockungDynSchiene>> = new HashMap();
-		const mapKursSchieneLage : HashMap<number, LinkedCollection<KursblockungDynSchiene>> = new HashMap();
+	private schritt08FehlerBeiKursErstellung(input : GostBlockungsdatenManager) : void {
+		const nKurse : number = input.getKursAnzahl();
+		const nSchienen : number = input.getSchienenAnzahl();
 		this._kursArr = Array(nKurse).fill(null);
 		let i : number = 0;
-		for (const kurs of pInput.daten().kurse) {
-			const schieneLage : LinkedCollection<KursblockungDynSchiene> = new LinkedCollection();
-			mapKursSchieneLage.put(kurs.id, schieneLage);
-			const schieneFrei : LinkedCollection<KursblockungDynSchiene> = new LinkedCollection();
-			mapKursSchieneFrei.put(kurs.id, schieneFrei);
-			const perm : Array<number> = KursblockungStatic.gibPermutation(this._random, nSchienen);
-			for (let j : number = 0; j < nSchienen; j++)
-				schieneFrei.addLast(this._schienenArr[perm[j]]);
-			for (const regel1 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-				if (kurs.kursart === regel1.parameter.get(0)) {
-					const von : number = regel1.parameter.get(1)!;
-					const bis : number = regel1.parameter.get(2)!;
-					for (let schiene : number = von; schiene <= bis; schiene++)
-						schieneFrei.remove(this._schienenArr[schiene - 1]);
-				}
-			for (const regel6 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
-				const von : number = regel6.parameter.get(1)!;
-				const bis : number = regel6.parameter.get(2)!;
-				for (let schiene : number = 1; schiene <= this._schienenArr.length; schiene++) {
-					const innerhalb : boolean = (von <= schiene) && (schiene <= bis);
-					const gleicheArt : boolean = kurs.kursart === regel6.parameter.get(0);
-					if (innerhalb !== gleicheArt)
-						schieneFrei.remove(this._schienenArr[schiene - 1]);
-				}
-			}
-			for (const regel3 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-				if (kurs.id === regel3.parameter.get(0)) {
-					const schiene : number = regel3.parameter.get(1)!;
-					schieneFrei.remove(this._schienenArr[schiene - 1]);
-				}
-			for (const regel2 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-				if (kurs.id === regel2.parameter.get(0)) {
-					const schiene : number = regel2.parameter.get(1)!;
-					const dynSchiene : KursblockungDynSchiene = this._schienenArr[schiene - 1];
-					if (schieneLage.contains(dynSchiene))
-						continue;
-					if (!schieneFrei.contains(dynSchiene))
-						throw new UserNotificationException("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!")
-					schieneFrei.remove(dynSchiene);
-					schieneLage.addLast(dynSchiene);
-				}
-			const schienen : number = kurs.anzahlSchienen;
-			if (schienen <= 0)
-				throw new DeveloperNotificationException("Kurs (" + kurs.id + ") belegt nur " + schienen + " Schienen, das ist zu wenig.")
-			if (schienen > this._schienenArr.length)
-				throw new DeveloperNotificationException("Es gibt " + this._schienenArr.length + " Schienen, aber der Kurs (" + kurs.id + ") möchte " + schienen + " Schienen belegen.")
-			const pSchienenLageFixiert : number = schieneLage.size();
-			if (pSchienenLageFixiert > schienen)
-				throw new DeveloperNotificationException("Kurs (" + kurs.id + ") fixert " + pSchienenLageFixiert + " Schienen, das ist mehr als seine Schienenanzahl " + schienen + ".")
-			while (schieneLage.size() < schienen) {
-				if (schieneFrei.isEmpty())
-					throw new UserNotificationException("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!")
-				schieneLage.addLast(schieneFrei.pollFirst());
-			}
-			const pSchienenLage : Array<KursblockungDynSchiene> = schieneLage.toArray(Array(0).fill(null));
-			const pSchienenFrei : Array<KursblockungDynSchiene> = schieneFrei.toArray(Array(0).fill(null));
-			const dynFachart : KursblockungDynFachart = this.gibFachart(kurs.fach_id, kurs.kursart);
-			const dynKurs : KursblockungDynKurs = new KursblockungDynKurs(this._random, pSchienenLage, pSchienenLageFixiert, pSchienenFrei, kurs.id, dynFachart, this._logger, i);
+		for (const kurs of input.daten().kurse) {
+			const dynKurs : KursblockungDynKurs = this.schritt08FehlerBeiKursErstellungErzeuge(kurs, nSchienen, i);
 			this._kursArr[i] = dynKurs;
-			this._kursMap.put(kurs.id, dynKurs);
+			DeveloperNotificationException.ifMapPutOverwrites(this._kursMap, kurs.id, dynKurs);
 			i++;
 		}
+	}
+
+	private schritt08FehlerBeiKursErstellungErzeuge(kurs : GostBlockungKurs, nSchienen : number, kursNr : number) : KursblockungDynKurs {
+		DeveloperNotificationException.ifSmaller("kurs.anzahlSchienen", kurs.anzahlSchienen, 1);
+		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", kurs.anzahlSchienen, this._schienenArr.length);
+		const schieneLage : List<KursblockungDynSchiene> = new ArrayList();
+		const schieneFrei : List<KursblockungDynSchiene> = ListUtils.getCopyAsArrayListPermuted(this._schienenArr, this._random);
+		for (const regel1 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+			if (kurs.kursart === regel1.parameter.get(0)) {
+				const von : number = regel1.parameter.get(1)!;
+				const bis : number = regel1.parameter.get(2)!;
+				for (let schiene : number = von; schiene <= bis; schiene++)
+					schieneFrei.remove(this._schienenArr[schiene - 1]);
+			}
+		for (const regel6 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
+			const kursartStimmt : boolean = kurs.kursart === regel6.parameter.get(0);
+			const von : number = regel6.parameter.get(1)!;
+			const bis : number = regel6.parameter.get(2)!;
+			for (let schiene : number = 1; schiene <= nSchienen; schiene++) {
+				const innerhalb : boolean = (von <= schiene) && (schiene <= bis);
+				if (innerhalb !== kursartStimmt)
+					schieneFrei.remove(this._schienenArr[schiene - 1]);
+			}
+		}
+		for (const regel3 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			if (kurs.id === regel3.parameter.get(0)) {
+				const schiene : number = regel3.parameter.get(1)!;
+				schieneFrei.remove(this._schienenArr[schiene - 1]);
+			}
+		for (const regel2 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if (kurs.id === regel2.parameter.get(0)) {
+				const schiene : number = regel2.parameter.get(1)!;
+				const dynSchiene : KursblockungDynSchiene = this._schienenArr[schiene - 1];
+				if (schieneLage.contains(dynSchiene))
+					continue;
+				UserNotificationException.ifTrue("Die Regel 'KURS_FIXIERE_IN_SCHIENE' will Kurs (id=" + kurs.id + ") in Schiene (" + schiene + ") fixieren, aber die Schiene wurde bereits gesperrt!", !schieneFrei.contains(dynSchiene));
+				schieneFrei.remove(dynSchiene);
+				schieneLage.add(dynSchiene);
+			}
+		const anzahlFixierterSchienen : number = schieneLage.size();
+		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", anzahlFixierterSchienen, kurs.anzahlSchienen);
+		while (schieneLage.size() < kurs.anzahlSchienen) {
+			UserNotificationException.ifTrue("Der Kurs (" + kurs.id + ") hat zu viele Schienen gesperrt, so dass seine Schienenanzahl nicht erfüllt werden kann!", schieneFrei.isEmpty());
+			const indexLast : number = schieneFrei.size() - 1;
+			schieneLage.add(schieneFrei.remove(indexLast));
+		}
+		const schienenLageArray : Array<KursblockungDynSchiene> = schieneLage.toArray(Array(0).fill(null));
+		const schienenFreiArray : Array<KursblockungDynSchiene> = schieneFrei.toArray(Array(0).fill(null));
+		const dynFachart : KursblockungDynFachart = this.gibFachart(kurs.fach_id, kurs.kursart);
+		return new KursblockungDynKurs(this._random, schienenLageArray, anzahlFixierterSchienen, schienenFreiArray, kurs.id, dynFachart, this._logger, kursNr);
 	}
 
 	private schritt09FehlerBeiKursFreiErstellung() : void {
@@ -553,22 +536,17 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private schritt10FehlerBeiFachartKursArrayErstellung() : void {
 		const nFacharten : number = this._fachartArr.length;
-		const mapFachartList : HashMap<number, LinkedCollection<KursblockungDynKurs>> = new HashMap();
+		const mapFachartList : HashMap<number, List<KursblockungDynKurs>> = new HashMap();
 		for (let i : number = 0; i < nFacharten; i++)
-			mapFachartList.put(i, new LinkedCollection());
+			mapFachartList.put(i, new ArrayList());
 		for (const kurs of this._kursArr) {
 			const fachartNr : number = kurs.gibFachart().gibNr();
-			const fachartKurse : LinkedCollection<KursblockungDynKurs> | null = mapFachartList.get(fachartNr);
-			if (fachartKurse === null)
-				throw new DeveloperNotificationException("mapFachartList.get(fachartNr) == null")
-			fachartKurse.addLast(kurs);
+			DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr).add(kurs);
 		}
-		for (let nr : number = 0; nr < nFacharten; nr++) {
-			const list : LinkedCollection<KursblockungDynKurs> | null = mapFachartList.get(nr);
-			if (list === null)
-				throw new DeveloperNotificationException("mapFachartList.get(nr) == null")
+		for (let fachartNr : number = 0; fachartNr < nFacharten; fachartNr++) {
+			const list : List<KursblockungDynKurs> | null = DeveloperNotificationException.ifMapGetIsNull(mapFachartList, fachartNr);
 			const tmpKursArr : Array<KursblockungDynKurs> = list.toArray(Array(0).fill(null));
-			this._fachartArr[nr].aktionSetKurse(tmpKursArr);
+			this._fachartArr[fachartNr].aktionSetKurse(tmpKursArr);
 		}
 	}
 
@@ -608,7 +586,7 @@ export class KursblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private schritt13FehlerBeiRegel_9(pInput : GostBlockungsdatenManager) : void {
+	private schritt13FehlerBeiRegel_9() : void {
 		for (const regel9 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
 			DeveloperNotificationException.ifNull("regel9", regel9);
 		}
@@ -640,17 +618,11 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private gibSchueler(schuelerID : number) : KursblockungDynSchueler {
-		const schueler : KursblockungDynSchueler | null = this._schuelerMap.get(schuelerID);
-		if (schueler === null)
-			throw new DeveloperNotificationException("schuelerMap.get(" + schuelerID + ") --> kein Mapping!")
-		return schueler;
+		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerMap, schuelerID);
 	}
 
 	private gibKurs(kursID : number) : KursblockungDynKurs {
-		const kurs : KursblockungDynKurs | null = this._kursMap.get(kursID);
-		if (kurs === null)
-			throw new DeveloperNotificationException("kursMap.get(" + kursID + ") --> kein Mapping!")
-		return kurs;
+		return DeveloperNotificationException.ifMapGetIsNull(this._kursMap, kursID);
 	}
 
 	/**
@@ -697,6 +669,7 @@ export class KursblockungDynDaten extends JavaObject {
 	 *
 	 * @param  pDataManager  Das Eingabe-Objekt (der Daten-Manager).
 	 * @param  pErgebnisID   Die ID des Ergebnisses.
+	 *
 	 * @return               Das Blockungsergebnis für die GUI.
 	 */
 	gibErzeugtesKursblockungOutput(pDataManager : GostBlockungsdatenManager, pErgebnisID : number) : GostBlockungsergebnisManager {
@@ -756,25 +729,22 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Liefert ein Array aller Schülerinnen und Schüler. Falls der Parameter {@code pNurMultiKurse} TRUE ist, dann
-	 * werden nur SuS mit mindestens einem Multikurs ausgewählt.
+	 * Liefert ein Array aller Schülerinnen und Schüler.
+	 * Falls der Parameter {@code pNurMultiKurse} TRUE ist, dann werden nur SuS mit mindestens einem Multikurs ausgewählt.
 	 *
 	 * @param  pNurMultiKurse Falls TRUE, dann werden nur SuS mit mindestens einem Multikurs ausgewählt.
 	 *
-	 * @return                Ein Array aller Schülerinnen und Schüler.
+	 * @return ein Array aller Schülerinnen und Schüler.
 	 */
 	gibSchuelerArray(pNurMultiKurse : boolean) : Array<KursblockungDynSchueler> {
 		if (pNurMultiKurse) {
 			const list : LinkedCollection<KursblockungDynSchueler> = new LinkedCollection();
-			for (const schueler of this._schuelerArr) {
-				if (schueler.gibHatMultikurs()) {
+			for (const schueler of this._schuelerArr)
+				if (schueler.gibHatMultikurs())
 					list.addLast(schueler);
-				}
-			}
 			const temp : Array<KursblockungDynSchueler> = Array(list.size()).fill(null);
-			for (let i : number = 0; i < temp.length; i++) {
+			for (let i : number = 0; i < temp.length; i++)
 				temp[i] = list.removeFirst();
-			}
 			return temp;
 		}
 		return this._schuelerArr;
@@ -834,16 +804,15 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Entfernt alle SuS aus ihren Kursen.
+	 * Entfernt alle SuS aus ihren Kursen.
 	 */
 	aktionSchuelerAusAllenKursenEntfernen() : void {
-		for (let i : number = 0; i < this._schuelerArr.length; i++) {
+		for (let i : number = 0; i < this._schuelerArr.length; i++)
 			this._schuelerArr[i].aktionKurseAlleEntfernen();
-		}
 	}
 
 	/**
-	 *Debug Ausgaben. Nur für Testzwecke.
+	 * Debug Ausgaben. Nur für Testzwecke.
 	 */
 	debug() : void {
 		this._logger.modifyIndent(+4);
@@ -862,103 +831,86 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand S.
+	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand S.
 	 */
 	aktionZustandSpeichernS() : void {
 		this._statistik.aktionBewertungSpeichernS();
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandSpeichernS();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandSpeichernS();
-		}
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand K.
+	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand K.
 	 */
 	aktionZustandSpeichernK() : void {
 		this._statistik.aktionBewertungSpeichernK();
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandSpeichernK();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandSpeichernK();
-		}
 	}
 
 	/**
-	 *Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand G.
+	 * Speichert die Bewertung, die Kursverteilung und die Schülerverteilung im Zustand G.
 	 */
 	aktionZustandSpeichernG() : void {
 		this._statistik.aktionBewertungSpeichernG();
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandSpeichernG();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandSpeichernG();
-		}
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand S (Kursverteilung und Schülerverteilung).
+	 * Lädt den zuvor gespeicherten Zustand S (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenS() : void {
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionKurseAlleEntfernen();
-		}
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandLadenS();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandLadenS();
-		}
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand K (Kursverteilung und Schülerverteilung).
+	 * Lädt den zuvor gespeicherten Zustand K (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenK() : void {
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionKurseAlleEntfernen();
-		}
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandLadenK();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandLadenK();
-		}
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung).
+	 * Lädt den zuvor gespeicherten Zustand G (Kursverteilung und Schülerverteilung).
 	 */
 	aktionZustandLadenG() : void {
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionKurseAlleEntfernen();
-		}
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandLadenG();
-		}
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionZustandLadenG();
-		}
 	}
 
 	/**
-	 *Lädt den zuvor gespeicherten Zustand K (nur Kursverteilung, ohne Schülerverteilung).
+	 * Lädt den zuvor gespeicherten Zustand K (nur Kursverteilung, ohne Schülerverteilung).
 	 */
 	aktionZustandLadenKohneSuS() : void {
-		for (const schueler of this._schuelerArr) {
+		for (const schueler of this._schuelerArr)
 			schueler.aktionKurseAlleEntfernen();
-		}
-		for (const kurs of this._kursArr) {
+		for (const kurs of this._kursArr)
 			kurs.aktionZustandLadenK();
-		}
 	}
 
 	/**
-	 *Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
+	 * Verteilt alle Kurse auf ihre Schienen zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKurseFreieZufaelligVerteilen() : void {
 		for (const kurs of this._kursArrFrei)
@@ -966,7 +918,7 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 *Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
+	 * Verteilt genau einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert.
 	 */
 	aktionKursVerteilenEinenZufaelligenFreien() : void {
 		if (this._kursArrFrei.length === 0)
@@ -977,19 +929,16 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben, werden dabei ignoriert. Multikurse werden
-	 * ebenso ignoriert.
+	 * Verteilt einen Kurs zufällig. Kurse die keinen Freiheitsgrad haben und Multikurse, werden dabei ignoriert.
 	 */
 	aktionKursFreienEinenZufaelligVerteilenAberNichtMultikurse() : void {
-		if (this._kursArrFrei.length === 0) {
+		if (this._kursArrFrei.length === 0)
 			return;
-		}
 		const perm : Array<number> | null = KursblockungStatic.gibPermutation(this._random, this._kursArrFrei.length);
 		for (const index of perm) {
 			const kurs : KursblockungDynKurs = this._kursArrFrei[index];
-			if (kurs.gibSchienenAnzahl() === 1) {
+			if (kurs.gibSchienenAnzahl() === 1)
 				kurs.aktionZufaelligVerteilen();
-			}
 		}
 	}
 
