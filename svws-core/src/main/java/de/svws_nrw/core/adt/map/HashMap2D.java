@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.kursblockung.KursblockungDynFachart;
 import jakarta.validation.constraints.NotNull;
 
 /**
