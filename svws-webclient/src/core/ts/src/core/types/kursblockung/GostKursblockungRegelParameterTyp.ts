@@ -16,22 +16,22 @@ export class GostKursblockungRegelParameterTyp extends JavaObject implements Jav
 	private static readonly all_values_by_name : Map<string, GostKursblockungRegelParameterTyp> = new Map<string, GostKursblockungRegelParameterTyp>();
 
 	/**
-	 * Der Parameter-Typ Kursart
+	 * Der Parameter-Typ Kursart.
 	 */
 	public static readonly KURSART : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURSART", 0, );
 
 	/**
-	 * Der Parameter-Typ Schienennummer
+	 * Der Parameter-Typ Schienennummer.
 	 */
 	public static readonly SCHIENEN_NR : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHIENEN_NR", 1, );
 
 	/**
-	 * Der Parameter-Typ Kurs-ID
+	 * Der Parameter-Typ Kurs-ID.
 	 */
 	public static readonly KURS_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("KURS_ID", 2, );
 
 	/**
-	 * Der Parameter Typ Schüler-ID
+	 * Der Parameter Typ Schüler-ID.
 	 */
 	public static readonly SCHUELER_ID : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("SCHUELER_ID", 3, );
 
@@ -41,7 +41,7 @@ export class GostKursblockungRegelParameterTyp extends JavaObject implements Jav
 	public static readonly BOOLEAN : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("BOOLEAN", 4, );
 
 	/**
-	 * Der Parameter Typ für eine ganze Zahl. Gültig ist nur der INT-Bereich, obwohl es intern als LONG gespeichert wird.
+	 * Der Parameter Typ für eine ganze Zahl.
 	 */
 	public static readonly GANZZAHL : GostKursblockungRegelParameterTyp = new GostKursblockungRegelParameterTyp("GANZZAHL", 5, );
 

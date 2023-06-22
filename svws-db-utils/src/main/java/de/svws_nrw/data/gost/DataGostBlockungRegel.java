@@ -158,6 +158,9 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 									if ((pvalue < 0) || (pvalue > 1))
 										throw OperationError.BAD_REQUEST.exception();
 								}
+								case GANZZAHL -> {
+									break; // immer gültig
+								}
 								default -> throw OperationError.BAD_REQUEST.exception();
 	    					}
 	    					// Aktualisiere den Parameter-Wert in der Datenbank, sofern er sich geändert hat
@@ -189,7 +192,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 	 *
      * @param idBlockung       die ID der Blockung
 	 * @param idRegelTyp       die ID des Typs der Blockungsregel (siehe {@link GostKursblockungRegelTyp})
-	 * @param regelParameter   die Parameter der Regel oder null, falls Default-Paramater verwendet werden sollen
+	 * @param regelParameter   die Parameter der Regel oder null, falls Default-Parameter verwendet werden sollen
 	 *
 	 * @return Eine Response mit der neuen Regel
 	 */
@@ -276,8 +279,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 								throw OperationError.NOT_FOUND.exception();
 						}
 						case GANZZAHL -> {
-							if ((paramValue < Integer.MIN_VALUE) || (paramValue > Integer.MAX_VALUE))
-								throw OperationError.NOT_FOUND.exception();
+							break; // immer gültig
 						}
 		    		}
 	    		}

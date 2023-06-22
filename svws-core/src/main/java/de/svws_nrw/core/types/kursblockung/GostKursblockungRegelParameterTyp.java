@@ -8,22 +8,22 @@ import de.svws_nrw.core.data.gost.GostBlockungRegel;
  */
 public enum GostKursblockungRegelParameterTyp {
 
-	/** Der Parameter-Typ Kursart */
+	/** Der Parameter-Typ Kursart. */
 	KURSART,
 
-	/** Der Parameter-Typ Schienennummer*/
+	/** Der Parameter-Typ Schienennummer. */
 	SCHIENEN_NR,
 
-	/** Der Parameter-Typ Kurs-ID */
+	/** Der Parameter-Typ Kurs-ID. */
 	KURS_ID,
 
-	/** Der Parameter Typ Schüler-ID */
+	/** Der Parameter Typ Schüler-ID. */
 	SCHUELER_ID,
 
 	/** Der Parameter Typ für eine Ja=1/Nein=0 Entscheidung. */
 	BOOLEAN,
 
-	/** Der Parameter Typ für eine ganze Zahl. Gültig ist nur der INT-Bereich, obwohl es intern als LONG gespeichert wird.*/
+	/** Der Parameter Typ für eine ganze Zahl. */
 	GANZZAHL;
 
 }
