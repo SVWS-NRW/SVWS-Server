@@ -216,6 +216,26 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K nichts oder NULL zugeordnet ist.
+	 *
+	 * @param <K1>  Der Typ des 1. Schlüssels.
+	 * @param <K2>  Der Typ des 2. Schlüssels.
+	 * @param <V>   Der Typ des zugeordneten Wertes.
+	 * @param map   Die Map.
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 *
+	 * @return den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 * @throws DeveloperNotificationException falls dem Schlüssel (K1, K2) nichts oder NULL zugeordnet ist.
+	 */
+	public static <@NotNull K1, @NotNull K2, @NotNull V>  @NotNull V ifMap2DGetIsNull(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> map, final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
+		if (!map.contains(key1, key2))
+			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!");
+		return map.getNonNullOrException(key1, key2);
+	}
+
+	/**
 	 * Fügt ein Element der Liste hinzu, außer es erzeugt ein Duplikat, dann wird eine DeveloperNotificationException geworfen.
 	 *
 	 * @param <E>      Der Typ der Elemente der Liste
