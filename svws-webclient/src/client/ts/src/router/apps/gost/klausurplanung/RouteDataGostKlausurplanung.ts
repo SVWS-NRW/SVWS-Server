@@ -166,7 +166,7 @@ export class RouteDataGostKlausurplanung {
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 		const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
+		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 		api.status.stop();
 		this._state.value = {
 			abiturjahr: this._state.value.abiturjahr,
@@ -237,7 +237,7 @@ export class RouteDataGostKlausurplanung {
 	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
 		api.status.start();
 		const termin = await api.server.createGostKlausurenKlausurtermin(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.kursklausurmanager.addTermin(termin);
+		this.kursklausurmanager.addKlausurtermin(termin);
 		this.commit();
 		api.status.stop();
 		return termin;
@@ -246,7 +246,7 @@ export class RouteDataGostKlausurplanung {
 	loescheKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
 		api.status.start();
 		const result = await api.server.deleteGostKlausurenKlausurtermin(api.schema, termin.id);
-		this.kursklausurmanager.removeTermin(termin.id);
+		this.kursklausurmanager.removeKlausurtermin(termin.id);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -287,7 +287,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const result = await api.server.deleteGostKlausurenVorgabe(api.schema, vorgabe.idVorgabe);
 		// TODO Falls Constraint verletzt, nicht löschen
-		this.klausurvorgabenmanager.removeVorgabe(vorgabe);
+		this.klausurvorgabenmanager.removeVorgabe(vorgabe.idVorgabe);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -304,12 +304,9 @@ export class RouteDataGostKlausurplanung {
 
 	patchKlausurtermin = async (termin: Partial<GostKlausurtermin>, id: number): Promise<boolean> => {
 		api.status.start();
+		this.kursklausurmanager.patchKlausurterminDatum(id, termin.datum);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
-		const terminOrig = this.kursklausurmanager.gibKlausurtermin(id);
-		if (terminOrig !== null) {
-			Object.assign(terminOrig, termin);
-			this.kursklausurmanager.patchKlausurtermin(terminOrig);
-		}
+		Object.assign(this.kursklausurmanager.gibKlausurtermin(id), termin);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -319,7 +316,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id);
 		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, this.halbjahr.id);
-		this._state.value.klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben);
+		this._state.value.klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 		this.commit();
 		api.status.stop();
 		return true;

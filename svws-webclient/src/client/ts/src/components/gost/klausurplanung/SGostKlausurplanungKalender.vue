@@ -26,25 +26,16 @@
 					<template #dayContent="{day}">
 						<StundenplanTag :tag="day.getDay()" v-if="day.getDay() < 6 && day.getDay() > 0">
 							<StundenplanEntry v-for="stunde of stundenplanmanager.getListZeitrasterZuWochentag(Wochentag.fromIDorException(day.getDay()))" :key="stunde.id" :entry="stunde" class="hover:bg-slate-400 select-none cursor-pointer">
-								<StundenplanStunde :stunde="stunde">
-									<svws-ui-drop-data @drop="onDrop($event, day, stunde.unterrichtstunde)" class="h-full w-full" tag="td">
+								<svws-ui-drop-data class="h-full w-full" @drop="onDrop($event, day, stunde.unterrichtstunde)">
+									<StundenplanStunde :stunde="stunde">
 										<span v-if="dragTermin !== null && sumSchreiber(day, stunde.unterrichtstunde) > 0">{{ sumSchreiber(day, stunde.unterrichtstunde) }}</span> <span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-										<svws-ui-drag-data tag="div" v-if="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager) !== null" :data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!" @drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!)" @drag-end="dragStatus(null)">
+										<svws-ui-drag-data v-if="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager) !== null" :data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!" @drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!)" @drag-end="dragStatus(null)">
 											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager" :termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :kursmanager="kursmanager" />
 										</svws-ui-drag-data>
-									</svws-ui-drop-data>
-								</StundenplanStunde>
+									</StundenplanStunde>
+								</svws-ui-drop-data>
 							</StundenplanEntry>
 						</StundenplanTag>
-
-						<!--<table class="w-full">
-							<tr class="border-b last:border-0" v-for="stunde in 6" :key="stunde">
-								<td class="border-r">{{ stunde }}</td>
-								<svws-ui-drop-data @drop="onDrop($event, day, stunde)" class="w-full" tag="td">
-									<span v-if="dragTermin !== null && sumSchreiber(day, stunde) > 0">{{ sumSchreiber(day, stunde) }}</span> <span v-for="kurs in kurseGefiltert(day, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-								</svws-ui-drop-data>
-							</tr>
-						</table>-->
 					</template>
 					<template #weekNumber="{numberInYear}">
 						{{ currentWeekNumber = numberInYear }}
@@ -147,7 +138,7 @@
 		console.log(date);
 		if (termin !== null) {
 			if (date !== null) {
-//				date.setDate(date.getDate() + 1);
+				//				date.setDate(date.getDate() + 1);
 				termin.datum = formatDate(date);
 				props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde);
 				termin.startzeit = props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.MONTAG, stunde).stundenbeginn;

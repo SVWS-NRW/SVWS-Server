@@ -76,7 +76,7 @@
 	);
 
 	const klausuren = computed(() =>
-		props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTermin(props.quartal)) : props.kursklausurmanager().getKursklausuren(props.termin.id)
+		props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal)) : props.kursklausurmanager().getKursklausuren(props.termin.id)
 	);
 
 	const setKlausurToTermin = async (pKlausur: GostKursklausur) => {

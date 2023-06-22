@@ -6,7 +6,7 @@
 					<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
 					<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
 				</div>
-				<svws-ui-data-table :items="vorgaben" :columns="[{key: 'kursart', label: 'Kursart', sortable: true},{key:'idFach', label: 'Fach', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
+				<svws-ui-data-table :items="vorgaben" :columns="[{key:'idFach', label: 'Fach', sortable: true},{key: 'kursart', label: 'Kursart', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 					<template #cell(idFach)="{ value }">
 						{{ faecherManager.get(value)?.bezeichnung }}
 					</template>
@@ -58,7 +58,7 @@
 						<svws-ui-radio-group id="rbgKursart" :row="true">
 							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 						</svws-ui-radio-group>
-						<svws-ui-multi-select :items="props.faecherManager.values().sort((a,b) => a.bezeichnung!.localeCompare(b.bezeichnung!))" :item-text="(fach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
+						<svws-ui-multi-select :items="props.faecherManager.values().sort((a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung))" :item-text="(fach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
 					</svws-ui-input-wrapper>
 					<svws-ui-radio-group id="rbgQuartal" :row="true">
 						<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
