@@ -66,7 +66,7 @@ else
     	#Konfuguration
     	echo "MariaDB-Konfiguration:"
 
-    	read -p "Möchten Sie die MySQL-Datenbank erstellen? (j/N): " CREATE_MariaDB
+    	read -p "Möchten Sie MariaDB installieren? (j/N): " CREATE_MariaDB
 
     	if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
     		read -p "MariaDB_ROOT_PASSWORD (default: '${password1}'): " MariaDB_ROOT_PASSWORD
