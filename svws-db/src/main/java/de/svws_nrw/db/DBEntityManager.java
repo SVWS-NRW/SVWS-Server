@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.LongFunction;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
@@ -623,8 +624,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	@SuppressWarnings("resource")
 	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst, final int indexLast) {
-		if ((entities == null) || (colnames == null) || (tablename == null)
-				|| (colnames.isEmpty()) || (entities.isEmpty()))
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? entities.size() - 1 : indexLast;
@@ -632,26 +632,29 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			final Connection conn = em.unwrap(Connection.class);
-			final String sql = "INSERT INTO " + tablename + "("
-					+ colnames.stream().collect(Collectors.joining(", "))
-					+ ") VALUES ("
-					+ colnames.stream().map(col -> "?").collect(Collectors.joining(", "))
-					+ ")";
+			final StringBuilder sb = new StringBuilder();
+			final String prepCols = colnames.stream().map(col -> "?").collect(Collectors.joining(", ", "(", ")"));
+			sb.append("INSERT INTO ").append(tablename).append("(")
+				.append(colnames.stream().collect(Collectors.joining(", ")))
+				.append(") VALUES ")
+				.append(IntStream.rangeClosed(first, last).mapToObj(e -> prepCols).collect(Collectors.joining(", ")));
+			final String sql = sb.toString();
 			try (PreparedStatement prepared = conn.prepareStatement(sql)) {
+				int pos = 1;
 				for (int i = first; i <= last; i++) {
 					final Object[] data = entities.get(i);
 					for (int j = 0; j < colnames.size(); j++) {
 						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Timestamp timestamp)) {
-							prepared.setString(j + 1, datetimeFormatter.format(timestamp.toLocalDateTime()));
+							prepared.setString(pos, datetimeFormatter.format(timestamp.toLocalDateTime()));
 						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Date date)) {
-							prepared.setString(j + 1, dateFormatter.format(date.toLocalDate()));
+							prepared.setString(pos, dateFormatter.format(date.toLocalDate()));
 						} else {
-							prepared.setObject(j + 1, data[j]);
+							prepared.setObject(pos, data[j]);
 						}
+						pos++;
 					}
-					prepared.addBatch();
 				}
-				prepared.executeBatch();
+				prepared.executeUpdate();
 			}
 			if (this.transactionCommit())
 				return true;
