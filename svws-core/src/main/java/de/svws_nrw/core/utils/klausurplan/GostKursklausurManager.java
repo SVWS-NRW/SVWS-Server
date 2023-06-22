@@ -3,13 +3,19 @@ package de.svws_nrw.core.utils.klausurplan;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.utils.Map2DUtils;
+import de.svws_nrw.core.utils.Map3DUtils;
+import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,38 +29,38 @@ public class GostKursklausurManager {
 	/** Die Kursklausuren, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKursklausur> _klausuren;
 
+	/** Eine Map id -> GostKursklausur */
+	private final @NotNull Map<@NotNull Long, @NotNull GostKursklausur> _mapIdKursklausur = new HashMap<>();
+
+	/** Eine Map quartal -> Liste von GostKursklausuren */
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKursklausur>> _mapQuartalKursKlausuren = new HashMap<>();
+
+
+	/** Eine Map idTermin -> Liste von GostKursklausuren */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _mapTerminKursklausuren = new HashMap<>();
+
+	/** Eine Map quartal, idTermin -> Liste von GostKursklausuren */
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _mapQuartalTerminKursklausuren = new HashMap2D<>();
+
+	/** Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren */
+	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _mapQuartalKursartTerminKursklausuren = new HashMap3D<>();
+
+
 	/** Die Klausurtermine, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKlausurtermin> _termine = new ArrayList<>();
 
 	/** Eine Map quartal -> Liste von GostKlausurterminen */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull ArrayList<@NotNull GostKlausurtermin>> _mapQuartalKlausurtermine = new HashMap<>();
-
-	/** Eine Map id -> GostKursklausur */
-	private final @NotNull HashMap<@NotNull Long, @NotNull GostKursklausur> _mapIdKursklausur = new HashMap<>();
-
-	/** Eine Map idTermin -> Liste von GostKursklausuren */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> _mapTerminKursklausuren = new HashMap<>();
-
-	/** Eine Map quartal, idTermin -> Liste von GostKursklausuren */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> _mapQuartalTerminKursklausuren = new HashMap<>();
-
-	/** Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>>> _mapQuartalKursartTerminKursklausuren = new HashMap<>();
-
-	/** Eine Map quartal -> Liste von GostKursklausuren */
-	private final @NotNull HashMap<@NotNull Integer, @NotNull ArrayList<@NotNull GostKursklausur>> _mapQuartalKursKlausuren = new HashMap<>();
-
-//	/** Eine Map quartal -> kursart -> Liste von GostKursklausuren */
-//	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull String, @NotNull ArrayList<@NotNull GostKursklausur>>> _mapQuartalKursartKursKlausuren = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKlausurtermin>> _mapQuartalKlausurtermine = new HashMap<>();
 
 	/** Eine Map idTermin -> Liste von Schüler-IDs */
-	private final @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull Long>> _mapTerminSchuelerids = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull Long>> _mapTerminSchuelerids = new HashMap<>();
 
 	/** Eine Map idTermin -> GostKlausurtermin */
-	private final @NotNull HashMap<@NotNull Long, @NotNull GostKlausurtermin> _mapIdKlausurtermin = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurtermin> _mapIdKlausurtermin = new HashMap<>();
 
 	/** Eine Map date -> GostKlausurtermin */
-	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _mapDateKlausurtermin = new HashMap<>();
+	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _mapDateKlausurtermin = new HashMap<>();
+
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -69,7 +75,7 @@ public class GostKursklausurManager {
 		_klausuren = klausuren;
 		helpKonstruktor();
 		for (final @NotNull GostKlausurtermin t : termine) {
-			addTermin(t);
+			addKlausurtermin(t);
 		}
 	}
 
@@ -93,31 +99,11 @@ public class GostKursklausurManager {
 			addKlausurToInternalMaps(kk);
 
 			// Füllen von _mapQuartalKursKlausuren
-			ArrayList<@NotNull GostKursklausur> listKursklausurenMapQuartalKursKlausuren = _mapQuartalKursKlausuren.get(kk.quartal);
-			if (listKursklausurenMapQuartalKursKlausuren == null) {
-				listKursklausurenMapQuartalKursKlausuren = new ArrayList<>();
-				_mapQuartalKursKlausuren.put(kk.quartal, listKursklausurenMapQuartalKursKlausuren);
-			}
-			listKursklausurenMapQuartalKursKlausuren.add(kk);
-
-//			// Füllen von _mapQuartalKursartKursKlausuren
-//			HashMap<@NotNull String, @NotNull ArrayList<@NotNull GostKursklausur>> mapKursklausurenMapQuartalKursartKursKlausuren = _mapQuartalKursartKursKlausuren.get(kk.quartal);
-//			if (mapKursklausurenMapQuartalKursartKursKlausuren == null)
-//				_mapQuartalKursartKursKlausuren.put(kk.quartal, mapKursklausurenMapQuartalKursartKursKlausuren = new HashMap<>());
-//			ArrayList<@NotNull GostKursklausur> listKursklausurenMapQuartalKursartKursKlausuren = mapKursklausurenMapQuartalKursartKursKlausuren.get(kk.kursartAllg);
-//			if (listKursklausurenMapQuartalKursartKursKlausuren == null)
-//				mapKursklausurenMapQuartalKursartKursKlausuren.put(kk.kursartAllg, listKursklausurenMapQuartalKursartKursKlausuren = new ArrayList<>());
-//			listKursklausurenMapQuartalKursartKursKlausuren.add(kk);
+			MapUtils.getOrCreateArrayList(_mapQuartalKursKlausuren, kk.quartal).add(kk);
 
 			// Füllen von _mapTerminSchuelerids
-			if (kk.idTermin != null) {
-				ArrayList<@NotNull Long> listSchuelerIds = _mapTerminSchuelerids.get(kk.idTermin);
-				if (listSchuelerIds == null) {
-					listSchuelerIds = new ArrayList<>();
-					_mapTerminSchuelerids.put(kk.idTermin, listSchuelerIds);
-				}
-				listSchuelerIds.addAll(kk.schuelerIds);
-			}
+			if (kk.idTermin != null)
+				MapUtils.getOrCreateArrayList(_mapTerminSchuelerids, kk.idTermin).addAll(kk.schuelerIds);
 
 		}
 	}
@@ -125,45 +111,13 @@ public class GostKursklausurManager {
 	private void addKlausurToInternalMaps(final @NotNull GostKursklausur kk) {
 
 		// Füllen von _mapTermineKursklausuren
-		ArrayList<@NotNull GostKursklausur> listKursklausurenMapTermine = _mapTerminKursklausuren.get(kk.idTermin == null ? -1 : kk.idTermin);
-		if (listKursklausurenMapTermine == null) {
-			listKursklausurenMapTermine = new ArrayList<>();
-			_mapTerminKursklausuren.put(kk.idTermin == null ? -1 : kk.idTermin, listKursklausurenMapTermine);
-		}
-		listKursklausurenMapTermine.add(kk);
+		MapUtils.getOrCreateArrayList(_mapTerminKursklausuren, kk.idTermin != null ? kk.idTermin : -1).add(kk);
 
 		// Füllen von _mapQuartalTerminKursklausuren
-		HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(kk.quartal);
-		if (mapTerminKursklausuren == null) {
-			mapTerminKursklausuren = new HashMap<>();
-			_mapQuartalTerminKursklausuren.put(kk.quartal, mapTerminKursklausuren);
-		}
-		ArrayList<@NotNull GostKursklausur> listKursklausurenMapQuartalmapTermine = mapTerminKursklausuren.get(kk.idTermin == null ? -1 : kk.idTermin);
-		if (listKursklausurenMapQuartalmapTermine == null) {
-			listKursklausurenMapQuartalmapTermine = new ArrayList<>();
-			mapTerminKursklausuren.put(kk.idTermin == null ? -1 : kk.idTermin, listKursklausurenMapQuartalmapTermine);
-		}
-		listKursklausurenMapQuartalmapTermine.add(kk);
+		Map2DUtils.getOrCreateArrayList(_mapQuartalTerminKursklausuren, kk.quartal, kk.idTermin != null ? kk.idTermin : -1).add(kk);
 
 		// Füllen von _mapQuartalKursartTerminKursklausuren
-		HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> mapKursartTerminKursklausuren = _mapQuartalKursartTerminKursklausuren.get(kk.quartal);
-		if (mapKursartTerminKursklausuren == null) {
-			mapKursartTerminKursklausuren = new HashMap<>();
-			_mapQuartalKursartTerminKursklausuren.put(kk.quartal, mapKursartTerminKursklausuren);
-		}
-
-		HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapKursklausurenMapQuartalKursartTerminKursKlausuren = mapKursartTerminKursklausuren.get(kk.kursart);
-		if (mapKursklausurenMapQuartalKursartTerminKursKlausuren == null) {
-			mapKursklausurenMapQuartalKursartTerminKursKlausuren = new HashMap<>();
-			mapKursartTerminKursklausuren.put(kk.kursart, mapKursklausurenMapQuartalKursartTerminKursKlausuren);
-		}
-
-		ArrayList<@NotNull GostKursklausur> listKursklausurenMapQuartalKursartmapTermine = mapKursklausurenMapQuartalKursartTerminKursKlausuren.get(kk.idTermin == null ? -1 : kk.idTermin);
-		if (listKursklausurenMapQuartalKursartmapTermine == null) {
-			listKursklausurenMapQuartalKursartmapTermine = new ArrayList<>();
-			mapKursklausurenMapQuartalKursartTerminKursKlausuren.put(kk.idTermin == null ? -1 : kk.idTermin, listKursklausurenMapQuartalKursartmapTermine);
-		}
-		listKursklausurenMapQuartalKursartmapTermine.add(kk);
+		Map3DUtils.getOrCreateArrayList(_mapQuartalKursartTerminKursklausuren, kk.quartal, kk.kursart, kk.idTermin != null ? kk.idTermin : -1).add(kk);
 
 	}
 
@@ -171,31 +125,78 @@ public class GostKursklausurManager {
 	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
 	 * Termins geändert hat.
 	 *
-	 * @param pTermin das GostKlausurtermin-Objekt
+	 * @param id die ID des GostKlausurtermin-Objekts
+	 * @param datum das neue Datum der Klausur
+	 *
 	 */
-	public void patchKlausurtermin(final @NotNull GostKlausurtermin pTermin) {
+	public void patchKlausurterminDatum(final @NotNull Long id, final @NotNull String datum) {
+		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, id);
+		if (termin.datum != null)
+			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(_mapDateKlausurtermin, termin.datum), termin);
+		termin.datum = datum;
+		if (termin.datum != null)
+			MapUtils.getOrCreateArrayList(_mapDateKlausurtermin, termin.datum).add(termin);
+	}
 
-		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, pTermin.id);
-		final ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurtermine, termin.quartal);
-		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
+	/**
+	 * Löscht ein GostKlausurtermin-Objekt aus den internen Strukturen.
+	 *
+	 * @param id die ID des GostKlausurtermin-Objekts
+	 */
+	public void removeKlausurtermin(final @NotNull Long id) {
 
-		if (termin.datum != null) {
-			final List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
-			if (listDateKlausurtermin != null)
-				listDateKlausurtermin.remove(termin);
-		}
-/*		for (final @NotNull List<@NotNull GostKlausurtermin> listeTermine : _mapDateKlausurtermin.values()) {
-			for (final @NotNull GostKlausurtermin altTermin : listeTermine) {
-				if (altTermin.id == pTermin.id && !altTermin.datum.equals(pTermin.datum))
-					listeTermine.remove(altTermin);
-			}
-		}*/
-
-		_termine.remove(termin);
+		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, id);
 		_mapIdKlausurtermin.remove(termin.id);
 
-		addTermin(termin);
+		DeveloperNotificationException.ifListRemoveFailes("_termine", _termine, termin);
+
+		DeveloperNotificationException.ifListRemoveFailes("listKlausurtermineMapQuartalKlausurtermine", DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurtermine, termin.quartal),
+				termin);
+
+		final @NotNull List<@NotNull GostKursklausur> listKlausurenZuTermin = DeveloperNotificationException.ifMapGetIsNull(_mapTerminKursklausuren, id);
+		for (final @NotNull GostKursklausur k : new ArrayList<>(listKlausurenZuTermin)) {
+			k.idTermin = null;
+			updateKursklausur(k);
+		}
+
+		if (termin.datum != null)
+			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(_mapDateKlausurtermin, termin.datum), termin);
+
+		_mapTerminSchuelerids.remove(termin.id);
+
+		_mapTerminKursklausuren.remove(termin.id);
+
+		final @NotNull List<@NotNull GostKursklausur> klausuren = _mapQuartalTerminKursklausuren.getNonNullOrException(termin.quartal, termin.id);
+		_mapQuartalTerminKursklausuren.removeOrException(termin.quartal, termin.id);
+		for (@NotNull final GostKursklausur klausur : klausuren)
+			_mapQuartalKursartTerminKursklausuren.remove(termin.quartal, klausur.kursart, termin.id);
+
+
 	}
+
+	/**
+	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
+	 *
+	 * @param termin das GostKlausurtermin-Objekt
+	 */
+	public void addKlausurtermin(final @NotNull GostKlausurtermin termin) {
+		_termine.add(termin);
+
+		_mapIdKlausurtermin.put(termin.id, termin);
+
+		MapUtils.getOrCreateArrayList(_mapTerminKursklausuren, termin.id);
+
+		MapUtils.getOrCreateArrayList(_mapTerminSchuelerids, termin.id);
+
+		MapUtils.getOrCreateArrayList(_mapQuartalKlausurtermine, termin.quartal).add(termin);
+
+		if (termin.datum != null)
+			MapUtils.getOrCreateArrayList(_mapDateKlausurtermin, termin.datum).add(termin);
+
+		Map2DUtils.getOrCreateArrayList(_mapQuartalTerminKursklausuren, termin.quartal, termin.id);
+
+	}
+
 
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
@@ -205,14 +206,14 @@ public class GostKursklausurManager {
 	 */
 	public void updateKursklausur(final @NotNull GostKursklausur klausur) {
 
-		final List<GostKursklausur> terminNeuKlausuren = _mapTerminKursklausuren.get(klausur.idTermin == null ? -1 : klausur.idTermin);
+		final List<GostKursklausur> terminNeuKlausuren = _mapTerminKursklausuren.get(klausur.idTermin != null ? klausur.idTermin : -1);
 		if (terminNeuKlausuren == null || !terminNeuKlausuren.contains(klausur)) {
 			// Termin-ID hat sich geändert
-			long oldTerminId = -2;
+			Long oldTerminId = -2L;
 
 			// aus _mapTerminKursklausuren löschen
-			for (final @NotNull Entry<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> e : _mapTerminKursklausuren.entrySet()) {
-				@NotNull final ArrayList<@NotNull GostKursklausur> list = e.getValue();
+			for (final @NotNull Entry<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> e : _mapTerminKursklausuren.entrySet()) {
+				@NotNull final List<@NotNull GostKursklausur> list = e.getValue();
 				if (list.contains(klausur)) {
 					oldTerminId = e.getKey();
 					list.remove(klausur);
@@ -220,18 +221,12 @@ public class GostKursklausurManager {
 			}
 
 			// aus _mapQuartalTerminKursklausuren löschen
-			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> quartalMap = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalTerminKursklausuren, klausur.quartal);
-			final List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = quartalMap.get(oldTerminId);
-			if (listOldQuartalTerminKursklausuren != null)
-				listOldQuartalTerminKursklausuren.remove(klausur);
+			final @NotNull List<@NotNull GostKursklausur> listOldQuartalTerminKursklausuren = _mapQuartalTerminKursklausuren.getNonNullOrException(klausur.quartal, oldTerminId);
+			DeveloperNotificationException.ifListRemoveFailes("listOldQuartalTerminKursklausuren", listOldQuartalTerminKursklausuren, klausur);
 
 			// aus _mapQuartalKursartTerminKursklausuren löschen
-			final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> quartalKursartMap = DeveloperNotificationException
-					.ifMapGetIsNull(_mapQuartalKursartTerminKursklausuren, klausur.quartal);
-			final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> kursartMap = DeveloperNotificationException.ifMapGetIsNull(quartalKursartMap, klausur.kursart);
-			final List<@NotNull GostKursklausur> listOldQuartalKursartTerminKursklausuren = kursartMap.get(oldTerminId);
-			if (listOldQuartalKursartTerminKursklausuren != null)
-				listOldQuartalKursartTerminKursklausuren.remove(klausur);
+			final @NotNull List<@NotNull GostKursklausur> listOldQuartalKursartTerminKursklausuren = DeveloperNotificationException.ifMap3DGetIsNull(_mapQuartalKursartTerminKursklausuren, klausur.quartal, klausur.kursart, oldTerminId);
+			DeveloperNotificationException.ifListRemoveFailes("listOldQuartalKursartTerminKursklausuren", listOldQuartalKursartTerminKursklausuren, klausur);
 
 			// _mapQuartalKursKlausuren muss nicht geändert werden
 
@@ -257,35 +252,6 @@ public class GostKursklausurManager {
 		}
 	}
 
-	/**
-	 * Fügt den internen Strukturen einen neuen Klausurtermin hinzu.
-	 *
-	 * @param termin das GostKlausurtermin-Objekt
-	 */
-	public void addTermin(final @NotNull GostKlausurtermin termin) {
-		_termine.add(termin);
-		// Füllen von _mapIdKlausurtermin
-		_mapIdKlausurtermin.put(termin.id, termin);
-
-		// Füllen von _mapQuartalKlausurtermine
-		ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = _mapQuartalKlausurtermine.get(termin.quartal);
-		if (listKlausurtermineMapQuartalKlausurtermine == null) {
-			listKlausurtermineMapQuartalKlausurtermine = new ArrayList<>();
-			_mapQuartalKlausurtermine.put(termin.quartal, listKlausurtermineMapQuartalKlausurtermine);
-		}
-		listKlausurtermineMapQuartalKlausurtermine.add(termin);
-
-		// Füllen von _mapDateKlausurtermin
-		if (termin.datum != null) {
-			List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
-			if (listDateKlausurtermin == null) {
-				listDateKlausurtermin = new ArrayList<>();
-				_mapDateKlausurtermin.put(termin.datum, listDateKlausurtermin);
-			}
-			listDateKlausurtermin.add(termin);
-		}
-
-	}
 
 	/**
 	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
@@ -307,36 +273,6 @@ public class GostKursklausurManager {
 		for (final @NotNull GostKursklausur klausur : klausuren) {
 			addKlausur(klausur);
 		}
-	}
-
-	/**
-	 * Löscht einen Klausurtermin aus den internen Strukturen
-	 *
-	 * @param tId das GostKlausurtermin-Objekt
-	 */
-	public void removeTermin(final @NotNull Long tId) {
-		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, tId);
-		final ArrayList<@NotNull GostKlausurtermin> listKlausurtermineMapQuartalKlausurtermine = DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurtermine, termin.quartal);
-		listKlausurtermineMapQuartalKlausurtermine.remove(termin);
-
-		List<@NotNull GostKursklausur> listKlausurenZuTermin = getKursklausurenByTermin(termin.id);
-		if (listKlausurenZuTermin != null) {
-			listKlausurenZuTermin = new ArrayList<>(listKlausurenZuTermin);
-			for (final @NotNull GostKursklausur k : listKlausurenZuTermin) {
-				k.idTermin = null;
-				updateKursklausur(k);
-			}
-		}
-
-		if (termin.datum != null) {
-			final List<@NotNull GostKlausurtermin> listDateKlausurtermin = _mapDateKlausurtermin.get(termin.datum);
-			if (listDateKlausurtermin != null)
-				listDateKlausurtermin.remove(termin);
-		}
-
-		_termine.remove(termin);
-		_mapIdKlausurtermin.remove(termin.id);
-
 	}
 
 	/**
@@ -363,7 +299,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByDatum(final String datum) {
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByDatum(final @NotNull String datum) {
 		final List<@NotNull GostKlausurtermin> termine = _mapDateKlausurtermin.get(datum);
 		return termine != null ? termine : new ArrayList<>();
 	}
@@ -371,21 +307,23 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine
-	 * @param zr Zeitraster
+	 * @param datum   das Datum der Klausurtermine
+	 * @param zr      Zeitraster
 	 * @param manager Manager
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public GostKlausurtermin getKlausurtermineByDatumUhrzeit(final String datum, final @NotNull StundenplanZeitraster zr, final @NotNull StundenplanManager manager) {
+	public GostKlausurtermin getKlausurtermineByDatumUhrzeit(final @NotNull String datum, final @NotNull StundenplanZeitraster zr, final @NotNull StundenplanManager manager) {
 		final List<@NotNull GostKlausurtermin> termine = getKlausurtermineByDatum(datum);
 		for (final @NotNull GostKlausurtermin termin : termine) {
-			final StundenplanZeitraster zrTermin = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), 1).get(0);
+			final StundenplanZeitraster zrTermin = manager
+					.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), 1)
+					.get(0);
 			if (zrTermin != null && zrTermin.id == zr.id)
 				return termin;
 		}
 		return null;
-		//return termine != null ? termine : new ArrayList<>();
+		// return termine != null ? termine : new ArrayList<>();
 	}
 
 	/**
@@ -396,7 +334,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenByTermin(final Long idTermin) {
-		final List<@NotNull GostKursklausur> klausuren = _mapTerminKursklausuren.get(idTermin == null ? -1 : idTermin);
+		final List<@NotNull GostKursklausur> klausuren = _mapTerminKursklausuren.get(idTermin != null ? idTermin : -1);
 		return klausuren != null ? klausuren : new ArrayList<>();
 	}
 
@@ -439,11 +377,7 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTerminByQuartal(final int quartal) {
-		final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapTerminKursklausuren = _mapQuartalTerminKursklausuren.get(quartal <= 0 ? -1 : quartal);
-		if (mapTerminKursklausuren == null) {
-			return new ArrayList<>();
-		}
-		final List<@NotNull GostKursklausur> klausuren = mapTerminKursklausuren.get(-1L);
+		final List<@NotNull GostKursklausur> klausuren = _mapQuartalTerminKursklausuren.getOrNull(quartal <= 0 ? -1 : quartal, -1L);
 		return klausuren != null ? klausuren : new ArrayList<>();
 	}
 
@@ -457,10 +391,10 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull List<@NotNull List<@NotNull GostKursklausur>> getKursklausurenKursartOhneTermin(final int quartal) {
 		final List<@NotNull List<@NotNull GostKursklausur>> retList = new ArrayList<>();
-		final HashMap<@NotNull String, @NotNull HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>>> mapKursartTerminKursklausuren = _mapQuartalKursartTerminKursklausuren
-				.get(quartal <= 0 ? -1 : quartal);
+		final Map<@NotNull String, @NotNull Map<@NotNull Long, List<@NotNull GostKursklausur>>> mapKursartTerminKursklausuren = _mapQuartalKursartTerminKursklausuren
+				.getMap2OrNull(quartal <= 0 ? -1 : quartal);
 		if (mapKursartTerminKursklausuren != null) {
-			for (final HashMap<@NotNull Long, @NotNull ArrayList<@NotNull GostKursklausur>> mapKursarten : mapKursartTerminKursklausuren.values()) {
+			for (final Map<@NotNull Long, List<@NotNull GostKursklausur>> mapKursarten : mapKursartTerminKursklausuren.values()) {
 				if (mapKursarten != null)
 					retList.add(mapKursarten.get(-1L));
 			}

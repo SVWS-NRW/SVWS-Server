@@ -80,7 +80,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (vorgaben.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("Noch keine Klausurvorgaben für dieses Halbjahr definiert.");
 
-		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben);
+		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben, null);
 
 		final List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
 				vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
@@ -107,7 +107,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 
 		for (final DTOKurs kurs : kurse) {
-			final List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgaben(quartal, kurs.KursartAllg, kurs.Fach_ID);
+			final List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgabenByQuartalKursartFach(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID)
 						&& mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {

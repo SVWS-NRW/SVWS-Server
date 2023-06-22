@@ -1,11 +1,23 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { GostKlausurvorgabe } from '../../../core/data/gost/klausuren/GostKlausurvorgabe';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { GostFach } from '../../../core/data/gost/GostFach';
+import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { MapUtils } from '../../../core/utils/MapUtils';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
+import type { Comparator } from '../../../java/util/Comparator';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { GostKlausurvorgabe } from '../../../core/data/gost/klausuren/GostKlausurvorgabe';
+import type { List } from '../../../java/util/List';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 
 export class GostKlausurvorgabenManager extends JavaObject {
+
+	private _faecherManager : GostFaecherManager | null = new GostFaecherManager();
 
 	/**
 	 * Die GostKlausurvorgaben, die im Manager vorhanden sind
@@ -15,33 +27,56 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	/**
 	 * Eine Map quartal -> Liste von GostKlausurvorgaben
 	 */
-	private readonly _mapQuartalKlausurvorgaben : HashMap<number, ArrayList<GostKlausurvorgabe>> = new HashMap();
+	private readonly _mapQuartalKlausurvorgaben : JavaMap<number, List<GostKlausurvorgabe>> = new HashMap();
 
 	/**
 	 * Eine Map id -> GostKlausurvorgabe
 	 */
-	private readonly _mapIdKlausurvorgabe : HashMap<number, GostKlausurvorgabe> = new HashMap();
+	private readonly _mapIdKlausurvorgabe : JavaMap<number, GostKlausurvorgabe> = new HashMap();
 
 	/**
 	 * Eine Map quartal -> kursartAllg -> fachId -> GostKlausurvorgabe
 	 */
-	private readonly _mapQuartalKursartFachKlausurvorgabe : HashMap<number, HashMap<string, HashMap<number, GostKlausurvorgabe>>> = new HashMap();
+	private readonly _mapQuartalKursartFachKlausurvorgabe : HashMap3D<number, string, number, GostKlausurvorgabe> = new HashMap3D();
 
 	/**
 	 * Eine Map kursartAllg -> fachId -> Liste von GostKlausurvorgabe
 	 */
-	private readonly _mapKursartFachKlausurvorgaben : HashMap<string, HashMap<number, List<GostKlausurvorgabe>>> = new HashMap();
+	private readonly _mapKursartFachKlausurvorgaben : HashMap2D<string, number, List<GostKlausurvorgabe>> = new HashMap2D();
+
+	/**
+	 * Ein Comparator für die Klausurvorgaben.
+	 */
+	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
+		if (this._faecherManager !== null) {
+			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
+			const bFach : GostFach | null = this._faecherManager.get(b.idFach);
+			if (aFach !== null && bFach !== null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
+		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+			return -1;
+		return JavaInteger.compare(a.quartal, b.quartal);
+	} };
 
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen
 	 * GostKlausurvorgaben und erzeugt die privaten Attribute.
 	 *
-	 * @param vorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs und
-	 *                 Gost-Halbjahres
+	 * @param vorgaben       die Liste der GostKlausurvorgaben eines Abiturjahrgangs
+	 *                       und Gost-Halbjahres
+	 * @param faecherManager der Gost-Fächermanager
 	 */
-	public constructor(vorgaben : List<GostKlausurvorgabe>) {
+	public constructor(vorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager | null) {
 		super();
+		this._faecherManager = faecherManager;
 		for (const v of vorgaben) {
 			this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
 			this.addVorgabeToInternalMaps(v);
@@ -50,35 +85,12 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	private addVorgabeToInternalMaps(v : GostKlausurvorgabe) : void {
 		this._vorgaben.add(v);
+		this._vorgaben.sort(this._compVorgabe);
 		this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
-		let listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(v.quartal);
-		if (listKlausurvorgabenMapQuartalKlausurvorgaben === null) {
-			listKlausurvorgabenMapQuartalKlausurvorgaben = new ArrayList();
-			this._mapQuartalKlausurvorgaben.put(v.quartal, listKlausurvorgabenMapQuartalKlausurvorgaben);
-		}
-		listKlausurvorgabenMapQuartalKlausurvorgaben.add(v);
-		let mapKursartFachKlausurvorgabe : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(v.quartal);
-		if (mapKursartFachKlausurvorgabe === null) {
-			mapKursartFachKlausurvorgabe = new HashMap();
-			this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, mapKursartFachKlausurvorgabe);
-		}
-		let mapFachKlausurvorgabe : HashMap<number, GostKlausurvorgabe> | null = mapKursartFachKlausurvorgabe.get(v.kursart);
-		if (mapFachKlausurvorgabe === null) {
-			mapFachKlausurvorgabe = new HashMap();
-			mapKursartFachKlausurvorgabe.put(v.kursart, mapFachKlausurvorgabe);
-		}
-		mapFachKlausurvorgabe.put(v.idFach, v);
-		let mapFachKlausurvorgaben : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(v.kursart);
-		if (mapFachKlausurvorgaben === null) {
-			mapFachKlausurvorgaben = new HashMap();
-			this._mapKursartFachKlausurvorgaben.put(v.kursart, mapFachKlausurvorgaben);
-		}
-		let listKlausurvorgaben : List<GostKlausurvorgabe> | null = mapFachKlausurvorgaben.get(v.idFach);
-		if (listKlausurvorgaben === null) {
-			listKlausurvorgaben = new ArrayList();
-			mapFachKlausurvorgaben.put(v.idFach, listKlausurvorgaben);
-		}
-		listKlausurvorgaben.add(v);
+		MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, v.quartal).add(v);
+		this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, v.kursart, v.idFach, v);
+		Map2DUtils.getOrCreateArrayList(this._mapKursartFachKlausurvorgaben, v.kursart, v.idFach).add(v);
+		this._mapKursartFachKlausurvorgaben.getNonNullOrException(v.kursart, v.idFach).sort(this._compVorgabe);
 	}
 
 	/**
@@ -100,6 +112,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
 		this._vorgaben.add(vorgabe);
+		this._vorgaben.sort(this._compVorgabe);
 		this._mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
 		this.removeUpdateKlausurvorgabeCommons(vorgabe);
 		this.addVorgabeToInternalMaps(vorgabe);
@@ -108,26 +121,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
 		this._vorgaben.remove(vorgabe);
 		this._mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
-		const listKlausurvorgabenMapQuartalKlausurvorgaben : ArrayList<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(vorgabe.quartal);
-		if (listKlausurvorgabenMapQuartalKlausurvorgaben !== null) {
-			listKlausurvorgabenMapQuartalKlausurvorgaben.remove(vorgabe);
-		}
-		const map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(vorgabe.quartal);
-		if (map1 !== null) {
-			const map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(vorgabe.kursart);
-			if (map2 !== null) {
-				const kv : GostKlausurvorgabe | null = map2.get(vorgabe.idFach);
-				if (kv as unknown === vorgabe as unknown)
-					map2.remove(vorgabe.idFach);
-			}
-		}
-		const map3 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(vorgabe.kursart);
-		if (map3 !== null) {
-			const list : List<GostKlausurvorgabe> | null = map3.get(vorgabe.idFach);
-			if (list !== null) {
-				list.remove(vorgabe);
-			}
-		}
+		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
+		this._mapQuartalKursartFachKlausurvorgabe.removeOrException(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach);
+		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMap2DGetIsNull(this._mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
 	}
 
 	/**
@@ -175,7 +171,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe | null;
+	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe | null {
+		return this._mapIdKlausurvorgabe.get(idVorgabe);
+	}
 
 	/**
 	 * Gibt das GostKlausurvorgabe-Objekt zu den übergebenen Parametern zurück.
@@ -186,27 +184,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public gibGostKlausurvorgabe(quartal : number, kursartAllg : string | null, idFach : number) : GostKlausurvorgabe | null;
-
-	/**
-	 * Implementation for method overloads of 'gibGostKlausurvorgabe'
-	 */
-	public gibGostKlausurvorgabe(__param0 : number, __param1? : null | string, __param2? : number) : GostKlausurvorgabe | null {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			const idVorgabe : number = __param0 as number;
-			return this._mapIdKlausurvorgabe.get(idVorgabe);
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string") || (__param1 === null)) && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			const quartal : number = __param0 as number;
-			const kursartAllg : string | null = __param1;
-			const idFach : number = __param2 as number;
-			const map1 : HashMap<string, HashMap<number, GostKlausurvorgabe>> | null = this._mapQuartalKursartFachKlausurvorgabe.get(quartal);
-			if (map1 === null)
-				return null;
-			const map2 : HashMap<number, GostKlausurvorgabe> | null = map1.get(kursartAllg);
-			if (map2 !== null)
-				return map2.get(idFach);
-			return null;
-		} else throw new Error('invalid method overload');
+	public gibGostKlausurvorgabeByQuartalKursartFach(quartal : number, kursartAllg : string, idFach : number) : GostKlausurvorgabe | null {
+		return this._mapQuartalKursartFachKlausurvorgabe.getOrNull(quartal, kursartAllg, idFach);
 	}
 
 	/**
@@ -219,7 +198,16 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public gibGostKlausurvorgaben(quartal : number, kursartAllg : string | null, idFach : number) : List<GostKlausurvorgabe> | null;
+	public gibGostKlausurvorgabenByQuartalKursartFach(quartal : number, kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
+		if (quartal > 0) {
+			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
+			const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabeByQuartalKursartFach(quartal, kursartAllg, idFach);
+			if (vorgabe !== null)
+				retList.add(vorgabe);
+			return retList;
+		}
+		return this.gibGostKlausurvorgabenByKursartFach(kursartAllg, idFach);
+	}
 
 	/**
 	 * Gibt die Liste der GostKlausurvorgabe-Objekte zu den übergebenen Parametern
@@ -230,35 +218,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public gibGostKlausurvorgaben(kursartAllg : string | null, idFach : number) : List<GostKlausurvorgabe> | null;
-
-	/**
-	 * Implementation for method overloads of 'gibGostKlausurvorgaben'
-	 */
-	public gibGostKlausurvorgaben(__param0 : null | number | string, __param1 : null | number | string, __param2? : number) : List<GostKlausurvorgabe> | null {
-		if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && ((typeof __param1 !== "undefined") && (typeof __param1 === "string") || (__param1 === null)) && ((typeof __param2 !== "undefined") && typeof __param2 === "number")) {
-			const quartal : number = __param0 as number;
-			const kursartAllg : string | null = __param1;
-			const idFach : number = __param2 as number;
-			if (quartal > 0) {
-				const retList : List<GostKlausurvorgabe> | null = new ArrayList();
-				const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabe(quartal, kursartAllg, idFach);
-				if (vorgabe !== null)
-					retList.add(vorgabe);
-				return retList;
-			}
-			return this.gibGostKlausurvorgaben(kursartAllg, idFach);
-		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string") || (__param0 === null)) && ((typeof __param1 !== "undefined") && typeof __param1 === "number") && (typeof __param2 === "undefined")) {
-			const kursartAllg : string | null = __param0;
-			const idFach : number = __param1 as number;
-			const map1 : HashMap<number, List<GostKlausurvorgabe>> | null = this._mapKursartFachKlausurvorgaben.get(kursartAllg);
-			if (map1 === null)
-				return new ArrayList();
-			const list : List<GostKlausurvorgabe> | null = map1.get(idFach);
-			if (list === null)
-				return new ArrayList();
-			return list;
-		} else throw new Error('invalid method overload');
+	public gibGostKlausurvorgabenByKursartFach(kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
+		const list : List<GostKlausurvorgabe> | null = this._mapKursartFachKlausurvorgaben.getOrNull(kursartAllg, idFach);
+		return list !== null ? list : new ArrayList();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
