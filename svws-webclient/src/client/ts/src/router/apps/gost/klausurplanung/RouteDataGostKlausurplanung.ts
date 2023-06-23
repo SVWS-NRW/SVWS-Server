@@ -302,11 +302,13 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	patchKlausurtermin = async (termin: Partial<GostKlausurtermin>, id: number): Promise<boolean> => {
+	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
-		this.kursklausurmanager.patchKlausurterminDatum(id, termin.datum);
+		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.gibKlausurtermin(id);
+		if (oldTtermin.datum !== termin.datum)
+			this.kursklausurmanager.patchKlausurterminDatum(id, termin.datum);
+		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
-		Object.assign(this.kursklausurmanager.gibKlausurtermin(id), termin);
 		this.commit();
 		api.status.stop();
 		return true;
