@@ -11,6 +11,7 @@
 			</div>
 			<!--<svws-ui-text-input v-if="termin !== null" placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" />-->
 			<s-gost-klausurplanung-termin-common :kursklausurmanager="kursklausurmanager"
+				:quartal="quartal"
 				:termin="termin"
 				:alle-termine="alleTermine"
 				:map-lehrer="mapLehrer"
@@ -60,7 +61,7 @@
 		let konfliktfreiZuFremdtermin = false;
 		for (const termin of props.alleTermine) {
 			if (termin.id !== klausur.idTermin && termin.quartal === klausur.quartal)
-				konfliktfreiZuFremdtermin = props.kursklausurmanager().gibKonfliktTerminKursklausur(termin.id, klausur.id).isEmpty();
+				konfliktfreiZuFremdtermin = props.kursklausurmanager().gibKonfliktTerminKursklausurIds(termin.id, klausur.id).isEmpty();
 			if (konfliktfreiZuFremdtermin)
 				break;
 		}
@@ -71,14 +72,6 @@
 		}
 	};
 
-	const terminHeader = computed(()=>
-		props.termin === null ? "Zu verplanen:" : (props.termin.datum === null ? "Noch kein Datum" : new Date(props.termin.datum).toLocaleString("de-DE").split(",")[0])
-	);
-
-	const klausuren = computed(() =>
-		props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal)) : props.kursklausurmanager().getKursklausuren(props.termin.id)
-	);
-
 	const setKlausurToTermin = async (pKlausur: GostKursklausur) => {
 		const klausur = props.kursklausurmanager().gibKursklausur(pKlausur.id)!;
 		const terminNeu = props.termin !== null ? props.termin.id : null;
@@ -88,7 +81,7 @@
 	}
 
 	const konflikteTerminDragKlausur = computed(() =>
-		props.termin !== null && props.dragKlausur !== null ? props.kursklausurmanager().gibKonfliktTerminKursklausur(props.termin.id, props.dragKlausur!.id).size() : -1
+		props.termin !== null && props.dragKlausur !== null ? props.kursklausurmanager().gibKonfliktTerminKursklausurIds(props.termin.id, props.dragKlausur!.id).size() : -1
 	);
 
 	const konflikteTermin = computed(() =>
@@ -100,12 +93,6 @@
 			await props.loescheKlausurtermin(props.termin);
 	};
 
-	const anzahlSuS = computed(() => {
-		let anzahl = 0;
-		for(const klausur of klausuren.value.toArray() as GostKursklausur[]) {
-			anzahl += klausur.schuelerIds.size();
-		}
-		return anzahl;
-	});
+
 
 </script>
