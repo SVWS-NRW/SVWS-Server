@@ -95,7 +95,7 @@ export class RouteDataSchuelerAdressen {
 		const mapBetriebe = new Map<number, BetriebListeEintrag>();
 		for (const b of listBetriebe)
 			mapBetriebe.set(b.id, b);
-		const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema);
+		const listAnsprechpartner = await api.server.getBetriebeAnsprechpartner(api.schema);
 		this.setPatchedDefaultState({mapBeschaeftigungsarten, mapLehrer, mapBetriebe, listAnsprechpartner});
 	}
 
