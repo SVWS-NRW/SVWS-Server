@@ -818,16 +818,32 @@ public class GostBlockungsdatenManager {
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
-	 * @param pSchuelerID Die Datenbank.ID des Schülers.
-	 * @param pFach Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param pKursart Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param idKursart   Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 *
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
-	public boolean getOfSchuelerHatFachart(final long pSchuelerID, final long pFach, final long pKursart) throws DeveloperNotificationException {
-		final @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl> map = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + pSchuelerID + ")", _map_schuelerID_fachID_fachwahl.get(pSchuelerID));
-		final GostFachwahl wahl = map.get(pFach);
-		return (wahl != null) && (wahl.kursartID == pKursart);
+	public boolean getOfSchuelerHatFachart(final long idSchueler, final long idFach, final long idKursart) throws DeveloperNotificationException {
+		final @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl> map = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", _map_schuelerID_fachID_fachwahl.get(idSchueler));
+		final GostFachwahl wahl = map.get(idFach);
+		return (wahl != null) && (wahl.kursartID == idKursart);
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
+	 */
+	public boolean getOfSchuelerHatFach(final long idSchueler, final long idFach) throws DeveloperNotificationException {
+		final @NotNull HashMap<@NotNull Long, @NotNull GostFachwahl> map = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", _map_schuelerID_fachID_fachwahl.get(idSchueler));
+		final GostFachwahl wahl = map.get(idFach);
+		return wahl != null;
 	}
 
 	/**

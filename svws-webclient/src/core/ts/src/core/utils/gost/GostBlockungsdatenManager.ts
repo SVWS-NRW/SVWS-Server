@@ -806,16 +806,32 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 *
-	 * @param pSchuelerID Die Datenbank.ID des Schülers.
-	 * @param pFach Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param pKursart Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param idKursart   Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 *
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
-	public getOfSchuelerHatFachart(pSchuelerID : number, pFach : number, pKursart : number) : boolean {
-		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + pSchuelerID + ")", this._map_schuelerID_fachID_fachwahl.get(pSchuelerID));
-		const wahl : GostFachwahl | null = map.get(pFach);
-		return (wahl !== null) && (wahl.kursartID === pKursart);
+	public getOfSchuelerHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
+		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", this._map_schuelerID_fachID_fachwahl.get(idSchueler));
+		const wahl : GostFachwahl | null = map.get(idFach);
+		return (wahl !== null) && (wahl.kursartID === idKursart);
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
+	 */
+	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
+		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", this._map_schuelerID_fachID_fachwahl.get(idSchueler));
+		const wahl : GostFachwahl | null = map.get(idFach);
+		return wahl !== null;
 	}
 
 	/**

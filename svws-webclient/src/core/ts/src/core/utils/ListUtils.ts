@@ -14,18 +14,35 @@ export class ListUtils extends JavaObject {
 	/**
 	 * Liefert eine gefilterte Kopie der Liste.
 	 *
-	 * @param <T>    Der Inhaltstyp der Liste.
+	 * @param <E>    Der Inhaltstyp der Liste.
 	 * @param list   Die zu filternde Liste.
 	 * @param filter Die Funktion, welche bestimmt ob ein Objekt der Liste gefiltert werden soll.
 	 *
 	 * @return eine gefilterte Kopie der Liste.
 	 */
-	public static getCopyFiltered<T>(list : List<T>, filter : Predicate<T>) : List<T> {
-		const listFiltered : ArrayList<T> = new ArrayList();
+	public static getCopyFiltered<E>(list : List<E>, filter : Predicate<E>) : List<E> {
+		const listFiltered : ArrayList<E> = new ArrayList();
 		for (const t of list)
 			if (filter.test(t))
 				listFiltered.add(t);
 		return listFiltered;
+	}
+
+	/**
+	 * Liefert die Anzahl an Elementen, die in der Liste den Filterkriterien entsprechen.
+	 *
+	 * @param <E>    Der Inhaltstyp der Liste.
+	 * @param list   Die zu filternde Liste.
+	 * @param filter Die Funktion, welche bestimmt ob ein Objekt das Kriterium erfüllt.
+	 *
+	 * @return die Anzahl an Elementen, die in der Liste den Filterkriterien entsprechen.
+	 */
+	public static getCountFiltered<E>(list : List<E>, filter : Predicate<E>) : number {
+		let summe : number = 0;
+		for (const t of list)
+			if (filter.test(t))
+				summe++;
+		return summe;
 	}
 
 	/**

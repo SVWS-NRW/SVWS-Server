@@ -20,18 +20,35 @@ public final class ListUtils {
     /**
      * Liefert eine gefilterte Kopie der Liste.
      *
-     * @param <T>    Der Inhaltstyp der Liste.
+     * @param <E>    Der Inhaltstyp der Liste.
      * @param list   Die zu filternde Liste.
      * @param filter Die Funktion, welche bestimmt ob ein Objekt der Liste gefiltert werden soll.
      *
      * @return eine gefilterte Kopie der Liste.
      */
-    public static <@NotNull T> @NotNull List<@NotNull T> getCopyFiltered(final @NotNull List<@NotNull T> list, final @NotNull Predicate<@NotNull T> filter) {
-        @NotNull final ArrayList<@NotNull T> listFiltered = new ArrayList<>();
-        for (final @NotNull T t : list)
+    public static <@NotNull E> @NotNull List<@NotNull E> getCopyFiltered(final @NotNull List<@NotNull E> list, final @NotNull Predicate<@NotNull E> filter) {
+        @NotNull final ArrayList<@NotNull E> listFiltered = new ArrayList<>();
+        for (final @NotNull E t : list)
             if (filter.test(t))
                 listFiltered.add(t);
         return listFiltered;
+    }
+
+    /**
+     * Liefert die Anzahl an Elementen, die in der Liste den Filterkriterien entsprechen.
+     *
+     * @param <E>    Der Inhaltstyp der Liste.
+     * @param list   Die zu filternde Liste.
+     * @param filter Die Funktion, welche bestimmt ob ein Objekt das Kriterium erfüllt.
+     *
+     * @return die Anzahl an Elementen, die in der Liste den Filterkriterien entsprechen.
+     */
+    public static <@NotNull E> int getCountFiltered(final @NotNull List<@NotNull E> list, final @NotNull Predicate<@NotNull E> filter) {
+        int summe = 0;
+        for (final @NotNull E t : list)
+            if (filter.test(t))
+                summe++;
+        return summe;
     }
 
 	/**

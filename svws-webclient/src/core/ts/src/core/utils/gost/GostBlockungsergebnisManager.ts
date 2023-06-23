@@ -13,6 +13,7 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import type { List } from '../../../java/util/List';
+import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
@@ -874,6 +875,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 *
+	 * @param idSchueler   Die Datenbank.ID des Schülers.
+	 * @param idFach       Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 */
+	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
+		return this._parent.getOfSchuelerHatFach(idSchueler, idFach);
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler mindestens eine Kollision hat. <br>
 	 * Ein Schüler, der N>1 Mal in einer Schiene ist, erzeugt N-1 Kollisionen.
 	 *
@@ -1106,6 +1119,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const schueler : Schueler = this.getSchuelerG(idSchueler);
 		const text : string = subString.toLowerCase();
 		return JavaString.contains(schueler.nachname.toLowerCase(), text) || JavaString.contains(schueler.vorname.toLowerCase(), text);
+	}
+
+	/**
+	 * Liefert das Geschlecht des Schülers.<br>
+	 * Wirft eine Exception, falls das Enum {@link Geschlecht} nicht definiert ist.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return das Geschlecht des Schülers.
+	 * @throws DeveloperNotificationException falls das Enum {@link Geschlecht} nicht definiert ist.
+	 */
+	public getOfSchuelerGeschlechtOrException(idSchueler : number) : Geschlecht {
+		const schueler : Schueler = this.getSchuelerG(idSchueler);
+		const geschlecht : Geschlecht | null = Geschlecht.fromValue(schueler.geschlecht);
+		return DeveloperNotificationException.ifNull("Das Geschlecht des Schülers " + idSchueler + " ist nicht definiert!", geschlecht);
 	}
 
 	/**
@@ -1425,26 +1453,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
-	 * @return Die Menge an Kursen, die in der Schiene eine Kollision haben.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
-	public getOfSchieneAnzahlKursmengeMitKollisionen(pSchienenID : number) : number {
-		let summe : number = 0;
-		for (const kurs of this.getSchieneE(pSchienenID).kurse)
-			if (this.getOfKursHatKollision(kurs.id))
-				summe++;
-		return summe;
+	public getOfSchieneAnzahlKursmengeMitKollisionen(idSchiene : number) : number {
+		return this.getOfSchieneKursmengeMitKollisionen(idSchiene).size();
 	}
 
 	/**
 	 * Liefert die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
-	 * @return Die Menge an Kursen, die in der Schiene eine Kollision haben.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Menge an Kursen, die in der Schiene eine Kollision haben.
 	 */
-	public getOfSchieneKursmengeMitKollisionen(pSchienenID : number) : JavaSet<GostBlockungsergebnisKurs> {
+	public getOfSchieneKursmengeMitKollisionen(idSchiene : number) : JavaSet<GostBlockungsergebnisKurs> {
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
-		for (const kurs of this.getSchieneE(pSchienenID).kurse)
+		for (const kurs of this.getSchieneE(idSchiene).kurse)
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
@@ -1453,35 +1479,36 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Liefert eine "FachartID --> Kurse" Map der Schiene.
 	 *
-	 * @param pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene Die Datenbank-ID der Schiene.
 	 * @return Eine "FachartID --> Kurse" Map der Schiene.
 	 */
-	public getOfSchieneFachartKursmengeMap(pSchienenID : number) : JavaMap<number, List<GostBlockungsergebnisKurs>> {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_fachartID_kurse, pSchienenID);
+	public getOfSchieneFachartKursmengeMap(idSchiene : number) : JavaMap<number, List<GostBlockungsergebnisKurs>> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_fachartID_kurse, idSchiene);
 	}
 
 	/**
 	 * Liefert alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
 	 *
-	 * @param idSchienen Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 * @param idFachart  Die ID der Fachart.
 	 *
 	 * @return alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
 	 */
-	public getOfSchieneOfFachartKursmenge(idSchienen : number, idFachart : number) : List<GostBlockungsergebnisKurs> {
-		return DeveloperNotificationException.ifMapGetIsNull(this.getOfSchieneFachartKursmengeMap(idSchienen), idFachart);
+	public getOfSchieneOfFachartKursmenge(idSchiene : number, idFachart : number) : List<GostBlockungsergebnisKurs> {
+		return DeveloperNotificationException.ifMapGetIsNull(this.getOfSchieneFachartKursmengeMap(idSchiene), idFachart);
 	}
 
 	/**
-	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
+	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
-	 * @param  pSchienenID          Die Datenbank-ID der Schiene.
-	 * @return                      TRUE, falls ein Löschen der Schiene erlaubt ist.
+	 * @param  idShiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
-	public getOfSchieneRemoveAllowed(pSchienenID : number) : boolean {
-		return this.getSchieneE(pSchienenID).kurse.isEmpty();
+	public getOfSchieneRemoveAllowed(idShiene : number) : boolean {
+		return this.getSchieneE(idShiene).kurse.isEmpty();
 	}
 
 	/**
@@ -1569,6 +1596,223 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			menge.add(schueler);
 		}
 		return menge;
+	}
+
+	/**
+	 * Liefert die Anzahl der Schüler, die den Filterkriterien entsprechen.
+	 *
+	 * @param  idKurs           falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  idFach           falls > 0, werden Schüler mit diesem Fach herausgefiltert.
+	 * @param  idKursart        falls > 0 und idFach > 0, werden Schüler mit dieser Fach/Kursart Kombination herausgefiltert.
+	 * @param  konfliktTyp      falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  subString        falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * @param  geschlecht       falls != null, werden die Schüler mit diesem {@link Geschlecht} herausgefiltert.
+	 *
+	 * @return eine gefilterte Menge aller Schüler.
+	 */
+	public getCountDerSchuelerGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null) : number {
+		let summe : number = 0;
+		for (const schueler of this._parent.getMengeOfSchueler())
+			if (this.getOfSchuelerErfuelltKriteria(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht))
+				summe++;
+		return summe;
+	}
+
+	private getOfSchuelerErfuelltKriteria(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null) : boolean {
+		if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
+			return false;
+		if ((konfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(idSchueler)))
+			return false;
+		if ((konfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(idSchueler)) && (!this.getOfSchuelerHatNichtwahl(idSchueler))))
+			return false;
+		if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
+			return false;
+		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler) as unknown !== geschlecht as unknown))
+			return false;
+		if ((idKurs > 0) && !this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+			return false;
+		if (idFach > 0) {
+			if (idKursart > 0) {
+				if (!this.getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart))
+					return false;
+			} else {
+				if (!this.getOfSchuelerHatFach(idSchueler, idFach))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 */
+	public getStatistikSchuelerMaennlich() : number {
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.M);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 */
+	public getStatistikSchuelerWeiblich() : number {
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.W);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 */
+	public getStatistikSchuelerDivers() : number {
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.D);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 */
+	public getStatistikSchuelerOhneAngabe() : number {
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.X);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit dem Geschlecht {@link Geschlecht#M}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 */
+	public getStatistikOfKursSchuelerMaennlich(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.M);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit dem Geschlecht {@link Geschlecht#W}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 */
+	public getStatistikOfKursSchuelerWeiblich(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.W);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit dem Geschlecht {@link Geschlecht#D}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 */
+	public getStatistikOfKursSchuelerDivers(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.D);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit dem Geschlecht {@link Geschlecht#X}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 */
+	public getStatistikOfKursSchuelerOhneAngabe(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.X);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#M}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 */
+	public getStatistikOfFachSchuelerMaennlich(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.M);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#W}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 */
+	public getStatistikOfFachSchuelerWeiblich(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.W);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#D}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 */
+	public getStatistikOfFachSchuelerDivers(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.D);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#X}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 */
+	public getStatistikOfFachSchuelerOhneAngabe(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.X);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#M}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 */
+	public getStatistikOfFachOfKursartSchuelerMaennlich(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#W}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 */
+	public getStatistikOfFachOfKursartSchuelerWeiblich(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#D}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 */
+	public getStatistikOfFachOfKursartSchuelerDivers(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#X}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 */
+	public getStatistikOfFachOfKursartSchuelerOhneAngabe(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X);
 	}
 
 	/**
