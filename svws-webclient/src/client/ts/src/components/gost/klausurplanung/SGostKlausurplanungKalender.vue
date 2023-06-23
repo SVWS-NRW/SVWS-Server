@@ -20,6 +20,7 @@
 							:map-lehrer="mapLehrer"
 							:termin="termin"
 							:kursmanager="kursmanager"
+							:class="{'bg-green-100': dragTermin !== null && dragTermin.id === termin.id}"
 							@click="dragTermin = termin;$event.stopPropagation()" />
 					</svws-ui-drag-data>
 				</ul>
@@ -56,7 +57,8 @@
 												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0)"
 												:faecher-manager="faecherManager"
 												:map-lehrer="mapLehrer"
-												:kursmanager="kursmanager" />
+												:kursmanager="kursmanager"
+												:class="{'opacity-40': dragTermin !== null}" />
 										</svws-ui-drag-data>
 									</StundenplanStunde>
 								</svws-ui-drop-data>
