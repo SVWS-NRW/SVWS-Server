@@ -286,14 +286,16 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public getKlausurtermineByDatumUhrzeit(datum : string, zr : StundenplanZeitraster, manager : StundenplanManager) : GostKlausurtermin | null {
+	public getKlausurtermineByDatumUhrzeit(datum : string, zr : StundenplanZeitraster, manager : StundenplanManager) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = this.getKlausurtermineByDatum(datum);
+		const retList : List<GostKlausurtermin> | null = new ArrayList();
 		for (const termin of termine) {
-			const zrTermin : StundenplanZeitraster | null = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit)!, 1).get(0);
-			if (zrTermin !== null && zrTermin.id === zr.id)
-				return termin;
+			const zrsTermin : List<StundenplanZeitraster> | null = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit)!, this.getMaxKlausurdauerZuTermin(termin.id));
+			for (const zrTermin of zrsTermin)
+				if (zrTermin !== null && zrTermin.id === zr.id)
+					retList.add(termin);
 		}
-		return null;
+		return retList;
 	}
 
 	/**
@@ -369,6 +371,21 @@ export class GostKursklausurManager extends JavaObject {
 			}
 		}
 		return retList;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public getMaxKlausurdauerZuTermin(idTermin : number) : number {
+		const klausuren : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._mapTerminKursklausuren, idTermin);
+		let maxDauer : number = -1;
+		for (const klausur of klausuren)
+			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		return maxDauer;
 	}
 
 	/**

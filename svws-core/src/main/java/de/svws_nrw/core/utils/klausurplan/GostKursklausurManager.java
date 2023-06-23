@@ -313,17 +313,17 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public GostKlausurtermin getKlausurtermineByDatumUhrzeit(final @NotNull String datum, final @NotNull StundenplanZeitraster zr, final @NotNull StundenplanManager manager) {
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByDatumUhrzeit(final @NotNull String datum, final @NotNull StundenplanZeitraster zr, final @NotNull StundenplanManager manager) {
 		final List<@NotNull GostKlausurtermin> termine = getKlausurtermineByDatum(datum);
+		final List<@NotNull GostKlausurtermin> retList = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : termine) {
-			final StundenplanZeitraster zrTermin = manager
-					.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), 1)
-					.get(0);
-			if (zrTermin != null && zrTermin.id == zr.id)
-				return termin;
+			final List<@NotNull StundenplanZeitraster> zrsTermin = manager
+					.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), getMaxKlausurdauerZuTermin(termin.id));
+			for (@NotNull final StundenplanZeitraster zrTermin : zrsTermin)
+				if (zrTermin != null && zrTermin.id == zr.id)
+					retList.add(termin);
 		}
-		return null;
-		// return termine != null ? termine : new ArrayList<>();
+		return retList;
 	}
 
 	/**
@@ -400,6 +400,21 @@ public class GostKursklausurManager {
 			}
 		}
 		return retList;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public int getMaxKlausurdauerZuTermin(final long idTermin) {
+		final @NotNull List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_mapTerminKursklausuren, idTermin);
+		int maxDauer = -1;
+		for (@NotNull final GostKursklausur klausur : klausuren)
+			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		return maxDauer;
 	}
 
 	/**

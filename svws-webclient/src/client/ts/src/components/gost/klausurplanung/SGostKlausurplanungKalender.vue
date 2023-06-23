@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card>
+	<svws-ui-content-card @click="dragTermin = null">
 		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
@@ -19,7 +19,8 @@
 							:faecher-manager="faecherManager"
 							:map-lehrer="mapLehrer"
 							:termin="termin"
-							:kursmanager="kursmanager" />
+							:kursmanager="kursmanager"
+							@click="dragTermin = termin;$event.stopPropagation()" />
 					</svws-ui-drag-data>
 				</ul>
 			</svws-ui-drop-data>
@@ -47,12 +48,12 @@
 									<StundenplanStunde :stunde="stunde">
 										<span v-if="dragTermin !== null && sumSchreiber(day, stunde.unterrichtstunde) > 0">{{ sumSchreiber(day, stunde.unterrichtstunde) }}</span>
 										<span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-										<svws-ui-drag-data v-if="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager) !== null"
-											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!"
-											@drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!)"
+										<svws-ui-drag-data v-if="!kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).isEmpty()"
+											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0)"
+											@drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0))"
 											@drag-end="dragStatus(null) ">
 											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
-												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager)!"
+												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0)"
 												:faecher-manager="faecherManager"
 												:map-lehrer="mapLehrer"
 												:kursmanager="kursmanager" />
