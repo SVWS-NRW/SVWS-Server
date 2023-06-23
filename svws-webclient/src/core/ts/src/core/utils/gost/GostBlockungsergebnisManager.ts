@@ -102,6 +102,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_kursID_kurs : JavaMap<number, GostBlockungsergebnisKurs> = new HashMap();
 
 	/**
+	 * Kurs-ID --> Anzahl an Dummy-SuS
+	 */
+	private readonly _map_kursID_dummySuS : JavaMap<number, number> = new HashMap();
+
+	/**
 	 * Kurs-ID --> Set<SchuelerID>
 	 */
 	private readonly _map_kursID_schuelerIDs : JavaMap<number, JavaSet<number>> = new HashMap();
@@ -179,6 +184,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_kursID_schienen.clear();
 		this._map_kursID_kurs.clear();
 		this._map_kursID_schuelerIDs.clear();
+		this._map_kursID_dummySuS.clear();
 		this._map_fachID_kurse.clear();
 		this._map_fachartID_kurse.clear();
 		this._map_fachartID_kursdifferenz.clear();
@@ -257,6 +263,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung() : void {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
+		this._map_kursID_dummySuS.clear();
 		for (const r of this._parent.getMengeOfRegeln()) {
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 			switch (typ) {
@@ -293,7 +300,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					break;
 				}
 				case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
-					this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r, regelVerletzungen);
+					this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r);
 					break;
 				}
 				case GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN: {
@@ -371,9 +378,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
-	private stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
-		const anzahl : number = r.parameter.get(0).valueOf();
-		DeveloperNotificationException.ifTrue("Regel 9 Dummy SuS " + anzahl + " ungültig!", (anzahl < 0) || (anzahl > 1000));
+	private stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r : GostBlockungRegel) : void {
+		const idKurs : number = r.parameter.get(0).valueOf();
+		const anzahl : number = r.parameter.get(1)!;
+		DeveloperNotificationException.ifTrue("Regel 9 DummySuS Wert = " + anzahl + " ist ungültig!", (anzahl < 1) || (anzahl > 99));
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_dummySuS, idKurs, anzahl);
 	}
 
 	private stateRegelvalidierung10_lehrkraefte_beachten(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
@@ -550,7 +559,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let min : number = kurs1.schueler.size();
 		let max : number = min;
 		for (const kurs of kursmenge) {
-			const size : number = kurs.schueler.size();
+			const size : number = kurs.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs.id);
 			min = Math.min(min, size);
 			max = Math.max(max, size);
 		}
@@ -1244,6 +1253,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchueler(idKurs : number) : number {
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		return kursE.schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS des Kurses.  Dummy-SuS werden durch die Regel mit dem
+	 * Typ {@link GostKursblockungRegelTyp#KURS_MIT_DUMMY_SUS_AUFFUELLEN} einem Kurs zugeordnet.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Dummy-SuS des Kurses.
+	 */
+	public getOfKursAnzahlSchuelerDummy(idKurs : number) : number {
+		return MapUtils.getOrDefault(this._map_kursID_dummySuS, idKurs, 0)!;
 	}
 
 	/**

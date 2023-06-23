@@ -50,6 +50,24 @@ export class MapUtils extends JavaObject {
 		return listNeu;
 	}
 
+	/**
+	 * Liefert den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+	 *
+	 * @param <K>          Der Typ der Schlüssel.
+	 * @param <V>          Der Typ der Objekte in der Map.
+	 * @param map          Die Map, welche K auf V abbildet.
+	 * @param key          Der Schlüssel.
+	 * @param defaultValue Der Default Wert, falls kein Mapping existiert.
+	 *
+	 * @return den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+	 */
+	public static getOrDefault<K, V>(map : JavaMap<K, V>, key : K, defaultValue : V) : V {
+		const value : V | null = map.get(key);
+		if (value === null)
+			return defaultValue;
+		return value;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.MapUtils'].includes(name);
 	}

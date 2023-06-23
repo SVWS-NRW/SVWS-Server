@@ -58,4 +58,22 @@ public final class MapUtils {
 		return listNeu;
 	}
 
+    /**
+     * Liefert den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+     *
+     * @param <K>          Der Typ der Schlüssel.
+     * @param <V>          Der Typ der Objekte in der Map.
+     * @param map          Die Map, welche K auf V abbildet.
+     * @param key          Der Schlüssel.
+     * @param defaultValue Der Default Wert, falls kein Mapping existiert.
+     *
+     * @return den Wert V des Schlüssels K, falls diese existiert, andernfalls den Default-Wert.
+     */
+	public static <@NotNull K, @NotNull V> @NotNull V getOrDefault(final @NotNull Map<@NotNull K, @NotNull V> map, final @NotNull K key, final @NotNull V defaultValue) {
+		final V value = map.get(key);
+		if (value == null)
+			return defaultValue;
+		return value;
+	}
+
 }
