@@ -208,7 +208,8 @@ public final class ABPSchuldaten {
 				zuordnung.SMTP_User = r.getString(fieldSMTP_User);
 				zuordnung.SMTP_Password = r.getString(fieldSMTP_Password);
 				zuordnung.SMTP_Server = r.getString(fieldSMTP_Server);
-				zuordnung.SMTP_Port = r.getString(fieldSMTP_Port);
+				final Integer tmpPort = r.getInt(fieldSMTP_Port);
+				zuordnung.SMTP_Port = tmpPort == null ? null : "" + tmpPort;
 				zuordnung.SMTP_SSL = r.getString(fieldSMTP_SSL);
 				zuordnung.SMTP_StartTLS = r.getString(fieldSMTP_StartTLS);
 				liste.add(zuordnung);
