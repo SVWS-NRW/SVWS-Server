@@ -1,5 +1,6 @@
 import type { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class GostSchriftlichkeit extends JavaObject implements JavaEnum<GostSchriftlichkeit> {
 
@@ -42,6 +43,15 @@ export class GostSchriftlichkeit extends JavaObject implements JavaEnum<GostSchr
 		GostSchriftlichkeit.all_values_by_ordinal.push(this);
 		GostSchriftlichkeit.all_values_by_name.set(name, this);
 		this.istSchriftlich = istSchriftlich;
+	}
+
+	/**
+	 * Liefert TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 *
+	 * @return TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 */
+	public getIstSchriftlichOrException() : boolean {
+		return DeveloperNotificationException.ifNull("Schriftlichkeit sollte nicht NULL sein!", this.istSchriftlich)!;
 	}
 
 	/**

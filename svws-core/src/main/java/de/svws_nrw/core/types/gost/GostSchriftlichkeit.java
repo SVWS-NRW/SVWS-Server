@@ -1,5 +1,7 @@
 package de.svws_nrw.core.types.gost;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+
 /**
  * Diese Klasse stellt die Core-Types als Aufzählung für Schriftlichkeit von
  * Kursen in der Gymnasialen Oberstufe zur Verfügung.
@@ -24,6 +26,15 @@ public enum GostSchriftlichkeit {
 
 	GostSchriftlichkeit(final Boolean istSchriftlich) {
 		this.istSchriftlich = istSchriftlich;
+	}
+
+	/**
+	 * Liefert TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 *
+	 * @return TRUE, falls schriftlich, FALLS falls mündlich, andernfalls eine Exception.
+	 */
+	public boolean getIstSchriftlichOrException() {
+		return DeveloperNotificationException.ifNull("Schriftlichkeit sollte nicht NULL sein!", istSchriftlich);
 	}
 
 }

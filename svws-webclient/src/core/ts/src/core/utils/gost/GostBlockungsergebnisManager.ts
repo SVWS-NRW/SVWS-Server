@@ -12,6 +12,7 @@ import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
+import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
@@ -1567,34 +1568,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine gefilterte Menge aller Schüler.
+	 * Liefert eine nach Kriterien gefilterte Menge aller Schüler.
 	 *
-	 * @param  idKurs      Falls > 0, werden Schüler des Kurses herausgefiltert.
-	 * @param  idFach      Falls > 0 und
-	 * @param  idKursart   falls > 0, werden Schüler mit dieser Fachwahl herausgefiltert.
-	 * @param  konfliktTyp Falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
-	 * @param  subString   Falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
+	 * @param  idKurs           falls > 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  idFach           falls > 0, werden Schüler mit diesem Fach herausgefiltert.
+	 * @param  idKursart        falls > 0 und idFach > 0, werden Schüler mit dieser Fach/Kursart Kombination herausgefiltert.
+	 * @param  konfliktTyp      falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
+	 * @param  subString        falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
 	 *
-	 * @return eine gefilterte Menge aller Schüler.
+	 * @return eine nach Kriterien gefilterte Menge aller Schüler.
 	 */
 	public getMengeDerSchuelerGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string) : List<Schueler> {
 		const menge : List<Schueler> = new ArrayList();
-		for (const schueler of this._parent.getMengeOfSchueler()) {
-			const idSchueler : number = schueler.id;
-			if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
-				continue;
-			if ((konfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(idSchueler)))
-				continue;
-			if ((konfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(idSchueler)) && (!this.getOfSchuelerHatNichtwahl(idSchueler))))
-				continue;
-			if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
-				continue;
-			if ((idKurs > 0) && (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)))
-				continue;
-			if (((idFach > 0) && (idKursart > 0)) && (!this.getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart)))
-				continue;
-			menge.add(schueler);
-		}
+		for (const schueler of this._parent.getMengeOfSchueler())
+			if (this.getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, null, null))
+				menge.add(schueler);
 		return menge;
 	}
 
@@ -1607,18 +1595,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  konfliktTyp      falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
 	 * @param  subString        falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
 	 * @param  geschlecht       falls != null, werden die Schüler mit diesem {@link Geschlecht} herausgefiltert.
+	 * @param  schriftlichkeit  falls != null, werden die Schüler mit dieser {@link GostSchriftlichkeit} herausgefiltert (isKurs oder idFach/idKursart müssen definiert sein).
 	 *
-	 * @return eine gefilterte Menge aller Schüler.
+	 * @return die Anzahl der Schüler, die den Filterkriterien entsprechen.
 	 */
-	public getCountDerSchuelerGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null) : number {
+	public getCountDerSchuelerGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : number {
 		let summe : number = 0;
 		for (const schueler of this._parent.getMengeOfSchueler())
-			if (this.getOfSchuelerErfuelltKriteria(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht))
+			if (this.getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht, schriftlichkeit))
 				summe++;
 		return summe;
 	}
 
-	private getOfSchuelerErfuelltKriteria(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null) : boolean {
+	private getOfSchuelerErfuelltKriterien(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : boolean {
 		if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
 			return false;
 		if ((konfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(idSchueler)))
@@ -1629,8 +1618,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler) as unknown !== geschlecht as unknown))
 			return false;
-		if ((idKurs > 0) && !this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
-			return false;
+		if (idKurs > 0) {
+			if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
+				return false;
+			if ((schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerFachwahlZuKurs(idSchueler, idKurs).istSchriftlich))
+				return false;
+		}
 		if (idFach > 0) {
 			if (idKursart > 0) {
 				if (!this.getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart))
@@ -1639,8 +1632,35 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (!this.getOfSchuelerHatFach(idSchueler, idFach))
 					return false;
 			}
+			if ((schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerFachwahlZuFach(idSchueler, idFach).istSchriftlich))
+				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Liefert die Fachwahl des Schüler passend zu den Kurs.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Fachwahl des Schüler passend zu den Kurs.
+	 */
+	public getOfSchuelerFachwahlZuKurs(idSchueler : number, idKurs : number) : GostFachwahl {
+		const idFach : number = this.getKursE(idKurs).fachID;
+		return this._parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+	}
+
+	/**
+	 * Liefert die Fachwahl des Schüler passend zum Fach.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches.
+	 *
+	 * @return die Fachwahl des Schüler passend zum Fach.
+	 */
+	public getOfSchuelerFachwahlZuFach(idSchueler : number, idFach : number) : GostFachwahl {
+		return this._parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
@@ -1649,7 +1669,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public getStatistikSchuelerMaennlich() : number {
-		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.M);
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -1658,7 +1678,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public getStatistikSchuelerWeiblich() : number {
-		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.W);
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -1667,7 +1687,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public getStatistikSchuelerDivers() : number {
-		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.D);
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -1676,7 +1696,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public getStatistikSchuelerOhneAngabe() : number {
-		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.X);
+		return this.getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -1687,7 +1707,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public getStatistikOfKursSchuelerMaennlich(idKurs : number) : number {
-		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.M);
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -1698,7 +1718,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public getStatistikOfKursSchuelerWeiblich(idKurs : number) : number {
-		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.W);
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -1709,7 +1729,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public getStatistikOfKursSchuelerDivers(idKurs : number) : number {
-		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.D);
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -1720,7 +1740,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public getStatistikOfKursSchuelerOhneAngabe(idKurs : number) : number {
-		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.X);
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -1731,7 +1751,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public getStatistikOfFachSchuelerMaennlich(idFach : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.M);
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -1742,7 +1762,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public getStatistikOfFachSchuelerWeiblich(idFach : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.W);
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -1753,7 +1773,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public getStatistikOfFachSchuelerDivers(idFach : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.D);
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -1764,7 +1784,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public getStatistikOfFachSchuelerOhneAngabe(idFach : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.X);
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -1776,7 +1796,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public getStatistikOfFachOfKursartSchuelerMaennlich(idFach : number, idKursart : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M);
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -1788,7 +1808,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public getStatistikOfFachOfKursartSchuelerWeiblich(idFach : number, idKursart : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W);
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -1800,7 +1820,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public getStatistikOfFachOfKursartSchuelerDivers(idFach : number, idKursart : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D);
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -1812,7 +1832,75 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public getStatistikOfFachOfKursartSchuelerOhneAngabe(idFach : number, idKursart : number) : number {
-		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X);
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X, null);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 */
+	public getStatistikOfKursSchriftlich(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 */
+	public getStatistikOfKursMuendlich(idKurs : number) : number {
+		return this.getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 */
+	public getStatistikOfFachSchriftlich(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 */
+	public getStatistikOfFachMuendlich(idFach : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 */
+	public getStatistikOfFachUndKursartSchriftlich(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 *
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param idKursart  Die ID der Kursart.
+	 *
+	 * @return die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 */
+	public getStatistikOfFachUndKursartMuendlich(idFach : number, idKursart : number) : number {
+		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.MUENDLICH);
 	}
 
 	/**
