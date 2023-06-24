@@ -9486,6 +9486,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getServerModus für den Zugriff auf die URL https://{hostname}/status/mode
+	 *
+	 * Gibt den Betriebsmodus (stable, alpha, beta oder dev) des SVWS-Servers zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Betriebsmodus (stable, alpha, beta oder dev)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 *
+	 * @returns Der Betriebsmodus (stable, alpha, beta oder dev)
+	 */
+	public async getServerModus() : Promise<string | null> {
+		const path = "/status/mode";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return JSON.parse(text).toString();
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getServerVersion für den Zugriff auf die URL https://{hostname}/status/version
 	 *
 	 * Gibt die Version des SVWS-Servers zurück.

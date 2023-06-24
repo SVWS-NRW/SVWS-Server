@@ -7,6 +7,7 @@ import java.util.List;
 import de.svws_nrw.api.SVWSVersion;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,6 +74,24 @@ public class APIConfig {
         return JSONMapper.fromString(version);
     }
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Betriebsmodus des SVWS-Servers.
+     *
+     * @return der Betriebsmodus des SVWS-Servers
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/mode")
+    @Operation(summary = "Gibt den Betriebsmodus (stable, alpha, beta oder dev) des SVWS-Servers zurück.",
+               description = "Gibt den Betriebsmodus (stable, alpha, beta oder dev) des SVWS-Servers zurück.")
+    @ApiResponse(responseCode = "200", description = "Der Betriebsmodus (stable, alpha, beta oder dev)",
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                 schema = @Schema(implementation = String.class)))
+    public Response getServerModus() {
+        final ServerMode mode = SVWSKonfiguration.get().getServerMode();
+        return JSONMapper.fromString(mode.text);
+    }
 
 
     /**
