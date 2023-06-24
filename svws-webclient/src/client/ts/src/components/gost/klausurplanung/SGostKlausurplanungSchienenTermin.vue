@@ -10,18 +10,37 @@
 				</svws-ui-badge>
 			</div>
 			<!--<svws-ui-text-input v-if="termin !== null" placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" />-->
-			<s-gost-klausurplanung-termin-common :kursklausurmanager="kursklausurmanager"
+			<s-gost-klausurplanung-termin v-if="termin !== null" :kursklausurmanager="kursklausurmanager"
 				:toggle-details="false"
 				:show-details="showDetails"
 				:quartal="quartal"
 				:termin="termin"
-				:alle-termine="alleTermine"
 				:map-lehrer="mapLehrer"
 				:kursmanager="kursmanager"
 				:klausur-draggable="true"
 				@drag-start-klausur="dragStartKlausur"
 				@drag-end-klausur="dragEndKlausur"
 				:klausur-css-classes="klausurCssClasses" />
+			<table v-else class="w-full">
+				<thead />
+				<tbody>
+					<svws-ui-drag-data v-for="klausur in klausurenOhneTermin()"
+						:key="klausur.id"
+						:data="klausur"
+						:draggable="true"
+						@drag-start="dragStartKlausur($event, klausur)"
+						@drag-end="dragEndKlausur($event)"
+						tag="tr"
+						:class="klausurCssClasses === undefined ? '' : klausurCssClasses(klausur)">
+						<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
+						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
+						<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
+						<td class="text-center">{{ klausur.dauer }}</td>
+						<td>&nbsp;</td>
+						<td />
+					</svws-ui-drag-data>
+				</tbody>
+			</table>
 		</svws-ui-drop-data>
 	</div>
 </template>
@@ -47,6 +66,8 @@
 	}>();
 
 	const showDetails = ref(true);
+
+	const klausurenOhneTermin = () => (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal));
 
 	const emit = defineEmits<{
 		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;

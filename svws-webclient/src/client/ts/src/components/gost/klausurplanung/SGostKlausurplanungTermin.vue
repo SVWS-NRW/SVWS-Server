@@ -1,8 +1,8 @@
 <template>
 	<slot name="header">
-		<header v-if="termin !== null" class="border-b">
+		<header class="border-b">
 			<div class="text-headline-md">
-				<span>St HJ{{ termin?.halbjahr }}K{{ termin?.quartal }}</span>
+				<span>St HJ{{ termin.halbjahr }}K{{ termin?.quartal }}</span>
 				<SvwsUiToggle v-if="toggleDetails" class="float-right" v-model="showDetails" @click="$event.stopPropagation()">
 					Details zeigen
 				</SvwsUiToggle>
@@ -13,21 +13,31 @@
 			</div>
 		</header>
 	</slot>
-	<div v-if="!showDetails" class="break-normal">{{ kurzBezeichnungen }}</div>
-	<table v-if="showDetails" class="w-full">
-		<tbody>
-			<s-gost-klausurplanung-klausur-common v-for="klausur in klausuren"
-				:key="klausur.id"
-				:kursklausurmanager="kursklausurmanager"
-				:klausur="klausur"
-				:map-lehrer="mapLehrer"
-				:kursmanager="kursmanager"
-				:draggable="klausurDraggable"
-				@drag-start-klausur="dragStartKlausur"
-				@drag-end-klausur="dragEndKlausur"
-				:class="props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur)" />
-		</tbody>
-	</table>
+	<slot name="body">
+		<div v-if="!showDetails" class="break-normal">{{ kurzBezeichnungen }}</div>
+		<slot name="details" v-if="showDetails">
+			<table class="w-full">
+				<thead />
+				<tbody>
+					<svws-ui-drag-data v-for="klausur in klausuren"
+						:key="klausur.id"
+						:data="klausur"
+						:draggable="klausurDraggable"
+						@drag-start="dragStartKlausur($event, klausur)"
+						@drag-end="dragEndKlausur($event)"
+						tag="tr"
+						:class="props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur)">
+						<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
+						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
+						<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
+						<td class="text-center">{{ klausur.dauer }}</td>
+						<td>&nbsp;</td>
+						<td />
+					</svws-ui-drag-data>
+				</tbody>
+			</table>
+		</slot>
+	</slot>
 </template>
 
 <script setup lang="ts">
@@ -38,7 +48,7 @@
 	const props = defineProps<{
 		showDetails: boolean;
 		toggleDetails: boolean;
-		termin: GostKlausurtermin | null;
+		termin: GostKlausurtermin;
 		kursklausurmanager: () => GostKursklausurManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
@@ -62,7 +72,7 @@
 		emit("dragEndKlausur", e);
 	}
 
-	const klausuren = props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal)) : props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
+	const klausuren = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
 
 	const anzahlSuS = computed(() => {
 		let anzahl = 0;

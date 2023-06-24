@@ -76,6 +76,8 @@
 					:map-lehrer="mapLehrer"
 					:set-termin-to-kursklausur="setTerminToKursklausur"
 					:map-schueler="mapSchueler"
+					@drag-start-klausur="dragStartKlausur"
+					@drag-end-klausur="dragEndKlausur"
 					:kursmanager="kursmanager" />
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
