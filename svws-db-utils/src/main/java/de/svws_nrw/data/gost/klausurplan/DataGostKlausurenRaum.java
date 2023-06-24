@@ -59,9 +59,9 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
-	 * @param halbjahr das Gost-Halbjahr
+	 * @param idTermin die ID des Klausurtermins
 	 *
-	 * @return die Liste der Kursklausuren
+	 * @return die Liste der Klausurräume
 	 */
 	private List<GostKlausurraum> getKlausurraeume(final Long idTermin) {
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id", idTermin, DTOGostKlausurenRaeume.class);

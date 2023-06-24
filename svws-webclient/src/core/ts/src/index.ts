@@ -164,6 +164,7 @@ export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
 export { GostKlausurenKalenderinformation } from './core/data/gost/klausuren/GostKlausurenKalenderinformation';
 export { GostKlausurraum } from './core/data/gost/klausuren/GostKlausurraum';
+export { GostKlausurraumstunde } from './core/data/gost/klausuren/GostKlausurraumstunde';
 export { GostKlausurtermin } from './core/data/gost/klausuren/GostKlausurtermin';
 export { GostKlausurvorgabe } from './core/data/gost/klausuren/GostKlausurvorgabe';
 export { GostKursklausur } from './core/data/gost/klausuren/GostKursklausur';
