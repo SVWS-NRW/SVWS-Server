@@ -86,6 +86,10 @@ class SVWSKonfigurationDTO {
 	@JsonProperty("LoggingPath")
 	String loggingPath;
 
+	/** Gibt den Modus an, in welchem der Server betrieben (dev, alpha, beta  oder stable). */
+	@JsonProperty("ServerMode")
+	String serverMode;
+
 	/** Die Konfiguration des SVWS-Servers für den Datenbankzugriff */
 	@JsonProperty("DBKonfiguration")
 	SVWSKonfigurationDatabaseDTO dbKonfiguration;

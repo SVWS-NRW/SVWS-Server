@@ -40,6 +40,9 @@
 
 	<!-- Gibt das Kennwort an, welches für die TLS-Verbindung genutzt wird. -->
 	<TLSKeystorePassword>svwskeystore</TLSKeystorePassword>
+	
+	<!-- Gibt den Modus an, welche Funktionen vom Server bereitgestellt werden (dev, alpha, beta oder stable) -->
+	<ServerMode>stable</ServerMode>
 		
 	<!-- Beinhaltet die Datenbank-Konfiguration. Für den Zugriff auf mehrere Schemata können mehrere SchemaKonfigurations-Einträge angelegt werden -->
 	<DBKonfiguration>

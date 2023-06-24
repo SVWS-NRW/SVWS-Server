@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 
@@ -453,6 +454,21 @@ public final class SVWSKonfiguration {
 	public boolean useCORSHeader() {
 		return (dto == null) || (this.dto.useCORSHeader == null) ? default_use_cors_header : this.dto.useCORSHeader;
 	}
+
+	/** Gibt den Modus an, in welchem der Server betrieben wird */
+	public static final ServerMode default_server_mode = ServerMode.STABLE;
+
+	/**
+	 * Gibt an, in welchem Modus der Server (und der Client) betrieben werden und welche Funktionen
+	 * freigeschaltet werden können / sollen.
+	 *
+	 * @return der Modus, in welche der Server betrieben wird.
+	 */
+	public ServerMode getServerMode() {
+		return (dto == null) || (this.dto.serverMode == null) ? default_server_mode : ServerMode.getByText(this.dto.serverMode);
+	}
+
+
 
 
 	/**
