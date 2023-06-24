@@ -1,15 +1,20 @@
 <template>
-	<table class="w-full">
-		<thead v-if="termin !== null">
-			<tr>
-				<th class="text-left" colspan="2">St HJ{{ termin?.halbjahr }}K{{ termin?.quartal }}</th>
-				<th class="text-right" colspan="4">{{ termin.datum === null ? "Noch kein Datum" : new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</th>
-			</tr>
-			<tr>
-				<th colspan="5"></th>
-				<td colspan="1" class="text-right">{{ anzahlSuS }} SuS</td>
-			</tr>
-		</thead>
+	<slot name="header">
+		<header v-if="termin !== null" class="border-b">
+			<div class="text-headline-md">
+				<span>St HJ{{ termin?.halbjahr }}K{{ termin?.quartal }}</span>
+				<SvwsUiToggle v-if="toggleDetails" class="float-right" v-model="showDetails" @click="$event.stopPropagation()">
+					Details zeigen
+				</SvwsUiToggle>
+			</div>
+			<div>
+				<span class="">{{ anzahlSuS }} SuS</span>
+				<span class="float-right">{{ termin.datum === null ? "Noch kein Datum" : new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</span>
+			</div>
+		</header>
+	</slot>
+	<div v-if="!showDetails" class="break-normal">{{ kurzBezeichnungen }}</div>
+	<table v-if="showDetails" class="w-full">
 		<tbody>
 			<s-gost-klausurplanung-klausur-common v-for="klausur in klausuren"
 				:key="klausur.id"
@@ -28,9 +33,11 @@
 <script setup lang="ts">
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, KursManager} from "@core";
-	import { computed } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
+		showDetails: boolean;
+		toggleDetails: boolean;
 		termin: GostKlausurtermin | null;
 		kursklausurmanager: () => GostKursklausurManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
@@ -39,6 +46,8 @@
 		klausurDraggable: boolean;
 		klausurCssClasses?: (klausur: GostKursklausur) => void;
 	}>();
+
+	const showDetails = ref(props.showDetails);
 
 	const emit = defineEmits<{
 		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;
@@ -53,16 +62,16 @@
 		emit("dragEndKlausur", e);
 	}
 
-	const klausuren = computed(() =>
-		props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal)) : props.kursklausurmanager().getKursklausurenByTermin(props.termin.id)
-	);
+	const klausuren = props.termin === null ? (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal)) : props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
 
 	const anzahlSuS = computed(() => {
 		let anzahl = 0;
-		for(const klausur of klausuren.value.toArray() as GostKursklausur[]) {
+		for(const klausur of klausuren.toArray() as GostKursklausur[]) {
 			anzahl += klausur.schuelerIds.size();
 		}
 		return anzahl;
 	});
+
+	const kurzBezeichnungen = [...klausuren].map(k => k.kursKurzbezeichnung).join(", ");
 
 </script>

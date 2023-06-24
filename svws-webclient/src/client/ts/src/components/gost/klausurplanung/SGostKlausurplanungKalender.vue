@@ -49,12 +49,12 @@
 									<StundenplanStunde :stunde="stunde">
 										<span v-if="dragTermin !== null && sumSchreiber(day, stunde.unterrichtstunde) > 0">{{ sumSchreiber(day, stunde.unterrichtstunde) }}</span>
 										<span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-										<svws-ui-drag-data v-if="!kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).isEmpty()"
-											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0)"
-											@drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0))"
+										<svws-ui-drag-data v-if="!kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).isEmpty()"
+											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
+											@drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0))"
 											@drag-end="dragStatus(null) ">
 											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
-												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day), stunde, stundenplanmanager).get(0)"
+												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
 												:faecher-manager="faecherManager"
 												:map-lehrer="mapLehrer"
 												:kursmanager="kursmanager"

@@ -1,6 +1,8 @@
 <template>
 	<div class="rounded bg-dark-20 p-2">
 		<s-gost-klausurplanung-termin-common :kursklausurmanager="kursklausurmanager"
+			:toggle-details="true"
+			:show-details="false"
 			:termin="termin"
 			:map-lehrer="mapLehrer"
 			:drag-status="null"

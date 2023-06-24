@@ -11,6 +11,8 @@
 			</div>
 			<!--<svws-ui-text-input v-if="termin !== null" placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" />-->
 			<s-gost-klausurplanung-termin-common :kursklausurmanager="kursklausurmanager"
+				:toggle-details="false"
+				:show-details="showDetails"
 				:quartal="quartal"
 				:termin="termin"
 				:alle-termine="alleTermine"
@@ -27,7 +29,7 @@
 <script setup lang="ts">
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@core";
-	import { computed } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin | null;
@@ -43,6 +45,8 @@
 		alleTermine: List<GostKlausurtermin>;
 		dragKlausur?: GostKursklausur | null;
 	}>();
+
+	const showDetails = ref(true);
 
 	const emit = defineEmits<{
 		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;

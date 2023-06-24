@@ -1,6 +1,6 @@
 <template>
 	<div class="inline-block rounded bg-dark-20 ml-10 top-10 h-5">
-		{{ klausurBezeichnungen() }}
+		{{ klausurBezeichnungen }}
 	</div>
 </template>
 
@@ -8,7 +8,6 @@
 	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@core";
 
 	const props = defineProps<{
-		//itemTop: number;
 		termin: GostKlausurtermin;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;
@@ -17,6 +16,6 @@
 	}>();
 
 	const klausuren = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
-	const klausurBezeichnungen = () => [...klausuren].reduce((retVal, klaus) => retVal += klaus.kursKurzbezeichnung + ", ", "");
+	const klausurBezeichnungen = [...klausuren].map(k => k.kursKurzbezeichnung).join(", ");
 
 </script>
