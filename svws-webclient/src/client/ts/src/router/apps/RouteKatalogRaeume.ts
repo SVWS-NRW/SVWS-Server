@@ -4,7 +4,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
 import type { RaeumeAuswahlProps } from "~/components/kataloge/raeume/SRaeumeAuswahlProps";
 import type { RaeumeAppProps } from "~/components/kataloge/raeume/SRaeumeAppProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -123,6 +123,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume", "/kataloge/raeume/:id(\\d+)?", SRaeumeApp, new RouteDataKatalogRaeume());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
 		super.setView("liste", SRaeumeAuswahl, (route) => this.getAuswahlProps(route));

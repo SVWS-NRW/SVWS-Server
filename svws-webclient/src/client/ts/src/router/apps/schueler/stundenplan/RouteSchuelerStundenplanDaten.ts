@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -11,6 +11,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchue
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?", SSchuelerStundenplanDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [

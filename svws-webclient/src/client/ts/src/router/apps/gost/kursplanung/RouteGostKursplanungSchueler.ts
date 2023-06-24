@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteGostKursplanung} from "../RouteGostKursplanung";
 import { routeGostKursplanung } from "../RouteGostKursplanung";
@@ -18,6 +18,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SCardGostUmwahlansicht);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung - Schüler";

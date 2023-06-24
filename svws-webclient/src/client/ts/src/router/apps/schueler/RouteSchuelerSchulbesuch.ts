@@ -1,5 +1,5 @@
 import type { SchuelerSchulbesuchsdaten} from "@core";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
@@ -57,6 +57,7 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
 	}

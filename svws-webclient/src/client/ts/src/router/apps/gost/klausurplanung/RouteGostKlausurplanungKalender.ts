@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -11,6 +11,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender", SGostKlausurplanungKalender);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
 	}

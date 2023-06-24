@@ -1,5 +1,5 @@
 import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@core";
-import { BenutzerKompetenz, List, Schulform } from "@core";
+import { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -128,6 +128,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "/klassen/:id(\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));

@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { routeApp } from "~/router/RouteApp";
 import { api } from "../Api";
 import { RouteManager } from "../RouteManager";
@@ -21,6 +21,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan", "/stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));

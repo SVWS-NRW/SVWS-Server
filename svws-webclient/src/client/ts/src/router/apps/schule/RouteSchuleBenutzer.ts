@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
 import type {
@@ -22,71 +22,39 @@ const SBenutzerAuswahl = () =>
 const SBenutzerApp = () =>
 	import("~/components/schule/benutzer/SBenutzerApp.vue");
 
-export class RouteSchuleBenutzer extends RouteNode<
-	RouteDataSchuleBenutzer,
-	RouteApp
-> {
+export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,RouteApp> {
+
 	public constructor() {
-		super(
-			Schulform.values(),
-			[BenutzerKompetenz.ADMIN],
-			"benutzer",
-			"/schule/benutzer/:id(\\d+)?",
-			SBenutzerApp,
-			new RouteDataSchuleBenutzer()
-		);
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "benutzer", "/schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
-		super.setView("liste", SBenutzerAuswahl, (route) =>
-			this.getAuswahlProps(route)
-		);
+		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [routeSchuleBenutzerDaten];
 		super.defaultChild = routeSchuleBenutzerDaten;
 	}
 
-	public async beforeEach(
-		to: RouteNode<unknown, any>,
-		to_params: RouteParams,
-		from: RouteNode<unknown, any> | undefined,
-		from_params: RouteParams
-	): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
-			throw new Error(
-				"Fehler: Die Parameter der Route dürfen keine Arrays sein"
-			);
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		if (id !== undefined) return routeSchuleBenutzer.getRoute(id);
 		return true;
 	}
 
-	public async enter(
-		to: RouteNode<unknown, any>,
-		to_params: RouteParams
-	): Promise<any> {}
-
-	protected async update(
-		to: RouteNode<unknown, any>,
-		to_params: RouteParams
-	): Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
-			throw new Error(
-				"Fehler: Die Parameter der Route dürfen keine Arrays sein"
-			);
+			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		await this.data.ladeListe();
 		if (to.name === this.name) {
 			if (this.data.mapBenutzer.size === 0) return;
-			return this.getRoute(
-				this.data.mapBenutzer.values().next().value.id
-			);
+			return this.getRoute(this.data.mapBenutzer.values().next().value.id);
 		}
-		//Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
+		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
 		if (id !== undefined && !this.data.mapBenutzer.has(id))
-			return this.getRoute(
-				this.data.mapBenutzer.values().next().value.id
-			);
-		const eintrag =
-			id !== undefined ? this.data.mapBenutzer.get(id) : undefined;
+			return this.getRoute(this.data.mapBenutzer.values().next().value.id);
+		const eintrag = (id !== undefined) ? this.data.mapBenutzer.get(id) : undefined;
 		await this.data.setBenutzer(eintrag);
 	}
 
@@ -115,15 +83,13 @@ export class RouteSchuleBenutzer extends RouteNode<
 			tabsHidden: this.children_hidden().value,
 		};
 	}
+
 	public get childRouteSelector(): WritableComputedRef<RouteRecordRaw> {
 		return computed({
 			get: () => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				void RouteManager.doRoute({
-					name: value.name,
-					params: { id: this.data.auswahl?.id },
-				});
+				void RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id }, });
 			},
 		});
 	}
@@ -144,10 +110,7 @@ export class RouteSchuleBenutzer extends RouteNode<
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({
-			name: value.name,
-			params: { id: this.data.auswahl?.id },
-		});
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
 		await this.data.setView(node);
 	};
 }

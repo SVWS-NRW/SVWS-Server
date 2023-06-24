@@ -1,8 +1,8 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 import type { DBSchemaListeEintrag} from "@core";
 import type { Ref} from "vue";
 import type { LoginProps } from "~/components/SLoginProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { api } from "./Api";
 import { RouteManager } from "./RouteManager";
@@ -21,6 +21,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schemaname?", SLogin);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Login";
 	}

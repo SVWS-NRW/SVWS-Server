@@ -2,7 +2,7 @@ import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import type { RouteGost} from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef} from "vue";
 import { api } from "~/router/Api";
 import { routeGost } from "~/router/apps/RouteGost";
@@ -97,6 +97,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 	}

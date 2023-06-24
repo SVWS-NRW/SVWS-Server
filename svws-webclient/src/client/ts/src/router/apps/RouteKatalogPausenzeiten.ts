@@ -4,7 +4,7 @@ import type { StundenplanPausenzeit } from "@core";
 import type { PausenzeitenAppProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -123,6 +123,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten", "/kataloge/pausenzeiten/:id(\\d+)?", SPausenzeitenApp, new RouteDataKatalogPausenzeiten());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Pausenzeiten";
 		super.setView("liste", SPausenzeitenAuswahl, (route) => this.getAuswahlProps(route));

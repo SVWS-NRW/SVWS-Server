@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { RouteStundenplan} from "../RouteStundenplan";
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
 import { routeStundenplan} from "../RouteStundenplan";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
@@ -11,6 +11,7 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.daten", "daten", SStundenplanDaten);
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 	}

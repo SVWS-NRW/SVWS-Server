@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 import type { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
@@ -11,6 +11,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<unknown, RouteKatalog
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge.daten", "daten", SJahrgangDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgang";
 	}

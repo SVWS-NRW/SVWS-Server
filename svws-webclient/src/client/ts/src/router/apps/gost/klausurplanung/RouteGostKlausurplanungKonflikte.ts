@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 const SGostKlausurplanungKonflikte = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKonflikte.vue");
 
@@ -11,6 +11,7 @@ export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGo
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.konflikte", "konflikte", SGostKlausurplanungKonflikte);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konflikte";
 	}

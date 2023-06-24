@@ -1,5 +1,5 @@
 import type { SchuelerListeEintrag} from "@core";
-import { BenutzerKompetenz, SchuelerKAoADaten, Schulform } from "@core";
+import { BenutzerKompetenz, SchuelerKAoADaten, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
@@ -72,6 +72,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 
 	public constructor() {
 		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
 		super.isHidden = (params?: RouteParams) => routeSchueler.data.auswahl === undefined;

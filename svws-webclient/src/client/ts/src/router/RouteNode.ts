@@ -1,5 +1,5 @@
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw} from "vue-router";
-import type { Schulform } from "@core";
+import { Schulform, ServerMode } from "@core";
 import type { ComputedRef, Ref } from "vue";
 import { BenutzerKompetenz } from "@core";
 import { computed, ref } from "vue";
@@ -44,6 +44,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 
 	/** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
 	protected _defaultChild: RouteNode<unknown, any> | undefined = undefined;
+
+	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
+	private _mode: ServerMode = ServerMode.DEV;
 
 
 	/**
@@ -134,6 +137,20 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public set data(data : TRouteData ) {
 		this._data = data;
+	}
+
+	/**
+	 * Gibt den Server-Modus zurück, bei welchem diese Route dargestellt wird.
+	 */
+	public get mode() : ServerMode {
+		return this._mode;
+	}
+
+	/**
+	 * Setzt der Server-Modus, bei welchem diese Route angezeigt wird.
+	 */
+	protected set mode(mode : ServerMode) {
+		this._mode = mode;
 	}
 
 	/**

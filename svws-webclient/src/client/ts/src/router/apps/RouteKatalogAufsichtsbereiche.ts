@@ -4,7 +4,7 @@ import type { StundenplanAufsichtsbereich} from "@core";
 import type { AufsichtsbereicheAppProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
@@ -123,6 +123,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.aufsichtsbereiche", "/kataloge/aufsichtsbereiche/:id(\\d+)?", SAufsichtsbereicheApp, new RouteDataKatalogAufsichtsbereiche());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Aufsichtsbereiche";
 		super.setView("liste", SAufsichtsbereicheAuswahl, (route) => this.getAuswahlProps(route));

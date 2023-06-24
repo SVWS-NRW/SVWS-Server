@@ -1,5 +1,5 @@
 import type { ReligionEintrag} from "@core";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -98,6 +98,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.religionen", "/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));

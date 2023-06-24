@@ -1,5 +1,5 @@
 import type { FachDaten, FaecherListeEintrag, List} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import type { ShallowRef} from "vue";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
@@ -123,7 +123,8 @@ export class RouteDataKatalogFaecherx {
 		}
 		const redirect_name: string = (routeKatalogFaecher.selectedChild === undefined) ? routeKatalogFachDaten.name : routeKatalogFaecher.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
-	}}
+	}
+}
 
 const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
@@ -132,6 +133,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherApp, new RouteDataKatalogFaecher());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));

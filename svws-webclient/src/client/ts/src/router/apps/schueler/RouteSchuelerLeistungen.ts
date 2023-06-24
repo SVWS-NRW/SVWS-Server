@@ -1,5 +1,5 @@
 import type { List, SchuelerLernabschnittListeEintrag} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { api } from "~/router/Api";
@@ -71,6 +71,7 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [

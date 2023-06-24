@@ -1,5 +1,5 @@
 import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@core";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
 import { api } from "~/router/Api";
@@ -86,6 +86,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Individualdaten";
 	}

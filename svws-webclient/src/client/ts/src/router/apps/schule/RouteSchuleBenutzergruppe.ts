@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
 import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 import type { WritableComputedRef } from "vue";
@@ -18,7 +18,8 @@ const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBe
 export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzergruppe, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?",SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppen", "/schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
@@ -28,7 +29,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 		super.defaultChild = routeSchuleBenutzergruppeDaten;
 	}
 
-	//Wird beim zielgerichteten Aufruf der Route "/schule/benutzergruppe" ausgeführt!
+	// Wird beim zielgerichteten Aufruf der Route "/schule/benutzergruppe" ausgeführt!
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
@@ -39,10 +40,9 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
-		this.data.ladeListe();
+		await this.data.ladeListe();
 	}
 
-	//Wird bei jeder Änderung Routenänderung von "/schule/benutzergruppe" ausgeführt.""
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
@@ -53,7 +53,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 				return;
 			return this.getRoute(this.data.mapBenutzergruppe.values().next().value.id);
 		}
-		//Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
+		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
 		if(id !== undefined && !this.data.mapBenutzergruppe.has(id))
 			return this.getRoute(this.data.mapBenutzergruppe.values().next().value.id);
 		const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;

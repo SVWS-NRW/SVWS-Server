@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 import { api } from "~/router/Api";
@@ -77,6 +77,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch", "/schule/datenaustausch", SSchuleDatenaustauschApp, new RouteDataSchuleDatenaustausch());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Datenaustausch";
 		super.setView("liste", SSchuleDatenaustauschAuswahl, (route) => this.getAuswahlProps(route));

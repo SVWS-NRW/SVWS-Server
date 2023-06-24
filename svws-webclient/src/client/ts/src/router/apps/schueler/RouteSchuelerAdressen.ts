@@ -1,5 +1,5 @@
 import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
@@ -156,6 +156,7 @@ export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, 
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SSchuelerAdressen, new RouteDataSchuelerAdressen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ausbildungsbetriebe";
 	}

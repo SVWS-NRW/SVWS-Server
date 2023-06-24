@@ -3,7 +3,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import type { WritableComputedRef } from "vue";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import { Schuljahresabschnitt, Schulform, BenutzerKompetenz } from "@core";
+import { Schuljahresabschnitt, Schulform, BenutzerKompetenz, ServerMode } from "@core";
 import { computed, shallowRef } from "vue";
 import { routeSchule } from "~/router/apps/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
@@ -134,6 +134,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/", SApp, new RouteDataApp());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		super.children = [

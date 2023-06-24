@@ -3,7 +3,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteLehrer } from "~/router/apps/RouteLehrer";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
-import { BenutzerKompetenz, LehrerPersonaldaten, Schulform } from "@core";
+import { BenutzerKompetenz, LehrerPersonaldaten, Schulform, ServerMode } from "@core";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
@@ -11,6 +11,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
 	}

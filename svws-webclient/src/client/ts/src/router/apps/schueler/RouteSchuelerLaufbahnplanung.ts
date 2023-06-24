@@ -2,7 +2,7 @@ import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnpl
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
-import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList } from "@core";
+import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
@@ -235,6 +235,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schueler.laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {

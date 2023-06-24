@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "../../RouteGost";
@@ -11,6 +11,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.klausurdaten", "klausurdaten", SGostKlausurplanungDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klausurdaten";
 	}

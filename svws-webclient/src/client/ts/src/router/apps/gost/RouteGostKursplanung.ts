@@ -4,7 +4,7 @@ import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKu
 import type { RouteGost} from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, GostHalbjahr, Schulform } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 import { routeApp } from "~/router/RouteApp";
 import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
 import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
@@ -19,6 +19,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_child_auswahl", SGostKursplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Kursplanung";

@@ -3,7 +3,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
@@ -26,6 +26,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler", "/schueler/:id(\\d+)?", SSchuelerApp, new RouteDataSchueler());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler";
 		super.setView("liste", SSchuelerAuswahl, (route) => this.getAuswahlProps(route));

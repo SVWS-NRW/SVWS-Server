@@ -3,7 +3,7 @@ import { routeGost } from "~/router/apps/RouteGost";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, Vector } from "@core";
+import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode, Vector } from "@core";
 
 const SGostKlausurplanungPlanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue");
 
@@ -11,6 +11,7 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.planung", "planung", SGostKlausurplanungPlanung);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Detailplanung";
 	}

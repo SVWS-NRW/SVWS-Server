@@ -1,6 +1,6 @@
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { routeKatalogBetriebe } from "../RouteKatalogBetriebe";
 import { routeApp } from "~/router/RouteApp";
 import type { BetriebeDatenProps } from "~/components/kataloge/betriebe/daten/SBetriebeProps";
@@ -14,6 +14,7 @@ export class RouteKatalogBetriebeDaten extends RouteNode<unknown, RouteKatalogBe
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe.daten", "daten", SBetriebeDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Betrieb";
 	}

@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleDatenaustausch} from "../schule/RouteSchuleDatenaustausch";
@@ -11,6 +11,7 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<unknown,
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.laufbahnplanung.daten", "laufbahnplanung", SSchuleDatenaustauschLaufbahnplanung);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "LuPO Laufbahnplanung";
 	}

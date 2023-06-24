@@ -1,5 +1,5 @@
 import type { GostStatistikFachwahl, List} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
@@ -49,6 +49,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
 		this.isHidden = (params?: RouteParams) => {

@@ -1,23 +1,19 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { BenutzergruppeProps } from "~/components/schule/benutzergruppen/daten/SBenutzergruppeProps";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleBenutzergruppe} from "../schule/RouteSchuleBenutzergruppe";
 import { routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
-import { RouteDataSchuleBenutzergruppe } from "./RouteDataSchuleBenutzergruppe";
 import { routeSchule } from "../RouteSchule";
 
-
-
 const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/SBenutzergruppe.vue");
-
-
 
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppe";
 	}

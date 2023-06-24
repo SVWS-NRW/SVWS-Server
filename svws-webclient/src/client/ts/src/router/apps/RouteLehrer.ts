@@ -10,7 +10,7 @@ import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
 import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
 import { api } from "../Api";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 
@@ -22,6 +22,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer", "/lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lehrkräfte";
 		super.setView("liste", SLehrerAuswahl, (route) => this.getAuswahlProps(route));

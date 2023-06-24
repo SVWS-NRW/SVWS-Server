@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
 import type { RouteKurse } from "~/router/apps/RouteKurse";
@@ -11,6 +11,7 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse.daten", "daten", SKursDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs";
 	}

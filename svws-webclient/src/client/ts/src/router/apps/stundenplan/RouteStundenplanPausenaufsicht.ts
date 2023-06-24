@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteStundenplan} from "../RouteStundenplan";
@@ -9,6 +9,7 @@ export class RouteStundenplanPausenaufsicht extends RouteNode<unknown, RouteStun
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.pausenaufsicht", "pausenaufsicht", SStundenplanPausenaufsicht);
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Pausenaufsicht";
 	}

@@ -4,7 +4,7 @@ import type { List, StundenplanZeitraster } from "@core";
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
+import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { routeKatalogZeitrasterDaten } from "./zeitraster/RouteKatalogZeitrasterDaten";
 import { shallowRef, toRaw } from "vue";
 import { routeKataloge } from "./RouteKataloge";
@@ -94,6 +94,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.zeitraster", "/kataloge/zeitraster", SZeitrasterApp, new RouteDataKatalogZeitraster());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeitraster";
 		super.setView("liste", SZeitrasterAuswahl, (route) => this.getAuswahlProps(route));

@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteDataSchuelerStundenplan } from "./stundenplan/RouteDataSchuelerStundenplan";
 import type { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
 
@@ -12,6 +12,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan", "stundenplan", SSchuelerStundenplan, new RouteDataSchuelerStundenplan());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
 		super.children = [

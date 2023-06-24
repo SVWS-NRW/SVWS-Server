@@ -7,7 +7,7 @@ import type { RouteApp } from "~/router/RouteApp";
 import { shallowRef } from "vue";
 import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "../RouteNode";
 import { RouteManager } from "../RouteManager";
 import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";
@@ -53,6 +53,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "/schule", SSchuleApp, new RouteDataSchule());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getAuswahlProps(route));

@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
 import { RouteNode } from "~/router/RouteNode";
@@ -11,6 +11,7 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<unknown, RouteSchule
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm.daten", "enm", SSchuleDatenaustauschENM);
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "ENM Notenmanager";
 	}

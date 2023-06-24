@@ -2,7 +2,7 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
 import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ArrayList } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 import type { GostKlausurplanungSchienenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungSchienenProps";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
@@ -11,6 +11,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}

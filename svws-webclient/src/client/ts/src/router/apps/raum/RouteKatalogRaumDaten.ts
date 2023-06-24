@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteKatalogRaeume} from "../RouteKatalogRaeume";
 import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogRaeume } from "../RouteKatalogRaeume";
 
@@ -11,6 +11,7 @@ export class RouteKatalogRaumDaten extends RouteNode<unknown, RouteKatalogRaeume
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.daten", "daten", SRaumDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Raum";
 	}

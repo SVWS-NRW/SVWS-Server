@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 import { RouteNode } from "~/router/RouteNode";
@@ -11,6 +11,7 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher.daten", "daten", SFachDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fach";
 	}

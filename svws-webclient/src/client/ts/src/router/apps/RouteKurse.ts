@@ -1,5 +1,5 @@
 import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
-import { BenutzerKompetenz, List, Schulform } from "@core";
+import { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -126,6 +126,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse", "/kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
 		super.setView("liste", SKurseAuswahl, (route) => this.getAuswahlProps(route));

@@ -1,5 +1,5 @@
 import { shallowRef } from "vue";
-import { ArrayList, BetriebListeEintrag, DeveloperNotificationException } from "@core";
+import { ArrayList, BetriebListeEintrag, DeveloperNotificationException, ServerMode } from "@core";
 import type { BetriebStammdaten , BetriebAnsprechpartner, KatalogEintrag } from "@core";
 import { RouteNode } from "../RouteNode";
 import { RouteManager } from "../RouteManager";
@@ -213,6 +213,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 
 	public constructor(){
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe", "/kataloge/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataKatalogBetriebe());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));

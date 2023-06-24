@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchuleDatenaustausch} from "../schule/RouteSchuleDatenaustausch";
@@ -11,6 +11,7 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<unknown, RouteSch
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.daten", "kurs42", SSchuleDatenaustauschKurs42);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42 Blockungen";
 	}

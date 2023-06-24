@@ -2,7 +2,7 @@ import type { GostBelegpruefungsErgebnisse, List } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
 import type { RouteGost } from "~/router/apps/RouteGost";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
@@ -92,6 +92,7 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.laufbahnplanung", "laufbahnplanung", SGostLaufbahnplanung, new RouteDataGostLaufbahnplanung());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		this.isHidden = (params?: RouteParams) => {

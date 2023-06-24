@@ -2,7 +2,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { InitProps } from "~/components/init/SInitProps";
 import type { List, SchulenKatalogEintrag} from "@core";
 import type { Ref} from "vue";
-import { DatenbankVerbindungsdaten} from "@core";
+import { DatenbankVerbindungsdaten, ServerMode} from "@core";
 import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -19,6 +19,7 @@ export class RouteInit extends RouteNode<unknown, any> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "init", "/init/:source?/:db?", SInit);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Initialisierung";
 	}

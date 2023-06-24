@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { RouteKatalogRaeume} from "../RouteKatalogRaeume";
 import type { PausenzeitDatenProps } from "~/components/kataloge/pausenzeiten/daten/SPausenzeitDatenProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogPausenzeiten } from "../RouteKatalogPausenzeiten";
 
@@ -11,6 +11,7 @@ export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalog
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten.daten", "daten", SPausenzeitDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Pausenzeit";
 	}

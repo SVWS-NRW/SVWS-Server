@@ -1,5 +1,5 @@
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag} from "@core";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 import type { RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
@@ -18,6 +18,7 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer_daten", "daten", SBenutzer, new RouteDataSchuleBenutzerDaten());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
 	}

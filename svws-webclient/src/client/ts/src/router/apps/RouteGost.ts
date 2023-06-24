@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
@@ -23,6 +23,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "/gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";
 		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));

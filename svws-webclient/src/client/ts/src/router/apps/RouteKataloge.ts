@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
@@ -58,6 +58,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge", "/kataloge", SKatalogeApp, new RouteDataKataloge());
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Kataloge";
 		super.setView("liste", SKatalogeAuswahl, (route) => this.getAuswahlProps(route));

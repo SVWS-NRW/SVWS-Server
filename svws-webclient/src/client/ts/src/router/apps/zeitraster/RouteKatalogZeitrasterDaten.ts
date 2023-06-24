@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import type { RouteKatalogZeitraster} from "../RouteKatalogZeitraster";
 import type { ZeitrasterDatenProps } from "~/components/kataloge/zeitraster/daten/SZeitrasterDatenProps";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogZeitraster } from "../RouteKatalogZeitraster";
 
@@ -11,6 +11,7 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalog
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.zeitraster.daten", "daten", SZeitrasterDaten);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeitraster";
 	}
