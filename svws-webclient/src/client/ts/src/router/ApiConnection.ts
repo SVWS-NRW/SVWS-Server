@@ -1,5 +1,5 @@
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList } from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode } from "@core";
 import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 import { Config } from "~/components/Config";
@@ -44,6 +44,10 @@ export class ApiConnection {
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
 	protected _stammdaten: ShallowRef<SchuleStammdaten | undefined> = shallowRef(undefined);
+
+	// Der Modus, in welchem der Server betrieben wird
+	protected _serverMode: Ref<ServerMode> = shallowRef(ServerMode.STABLE)
+
 
 	public constructor() {
 		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
@@ -104,6 +108,11 @@ export class ApiConnection {
 		if (this._config.value === undefined)
 			throw new Error("Eine Konfiguration ist nicht vorhanden.");
 		return this._config.value;
+	}
+
+	// Gibt den Modus zurück, in welchem der Server betrieben wird.
+	get mode(): ServerMode {
+		return this._serverMode.value;
 	}
 
 	/**
@@ -172,7 +181,7 @@ export class ApiConnection {
 		try {
 			return await this.connect(host);
 		} catch (error) {
-			console.log(`Verbindung zum SVWS-Server unter https://${host}`);
+			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
 		const hostname = url.hostname;
 		if (host !== hostname) {
@@ -283,6 +292,7 @@ export class ApiConnection {
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
+			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.getConfig();
 		} catch (error) {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkreten Fehler könnte ggf. geloggt werden...
@@ -293,6 +303,7 @@ export class ApiConnection {
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
 			this._stammdaten.value = undefined;
+			this._serverMode.value = ServerMode.STABLE;
 		}
 	}
 

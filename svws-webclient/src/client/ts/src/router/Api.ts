@@ -1,5 +1,5 @@
 import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenListeEintrag, KursListeEintrag,
-	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz } from "@core";
+	JahrgangsListeEintrag, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode } from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp } from "@core";
 import { ApiConnection } from "./ApiConnection";
 import { ApiStatus } from "../components/ApiStatus";
@@ -20,6 +20,11 @@ class Api {
 
 	/** Die aktuelle Verbindung zum SVWS-Server */
 	private readonly conn: ApiConnection = new ApiConnection();
+
+	/** Gibt den Modus zurück, in welchem der Server betrieben wird. */
+	get mode(): ServerMode {
+		return this.conn.mode;
+	}
 
 	/** Gibt das Objekt für alle Aufrufe der Server-Schnittstelle des SVWS-Server zurück. */
 	get server(): ApiServer {
