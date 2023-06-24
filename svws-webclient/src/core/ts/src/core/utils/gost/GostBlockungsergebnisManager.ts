@@ -10,6 +10,7 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { Logger } from '../../../core/logger/Logger';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
+import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { SchuelerblockungInput } from '../../../core/data/kursblockung/SchuelerblockungInput';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
@@ -28,6 +29,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostBlockungsergebnis, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
+import { ListUtils } from '../../../core/utils/ListUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -1138,6 +1140,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
+	 */
+	public getOfSchuelerIstStatusExtern(idSchueler : number) : boolean {
+		return this.getSchuelerG(idSchueler!).status === SchuelerStatus.EXTERN.id;
+	}
+
+	/**
 	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
 	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
@@ -1273,15 +1286,39 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind.
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind.
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 */
 	public getOfKursAnzahlSchueler(idKurs : number) : number {
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		return kursE.schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl externen SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl externen SuS die dem Kurs zugeordnet sind.
+	 */
+	public getOfKursAnzahlSchuelerExterne(idKurs : number) : number {
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => this.getOfSchuelerIstStatusExtern(idSchueler) });
+	}
+
+	/**
+	 * Liefert die Anzahl nicht externen SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl nicht externen SuS die dem Kurs zugeordnet sind.
+	 */
+	public getOfKursAnzahlSchuelerNichtExtern(idKurs : number) : number {
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => !this.getOfSchuelerIstStatusExtern(idSchueler) });
 	}
 
 	/**
@@ -1305,17 +1342,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfKursAnzahlSchuelerSchriftlich(idKurs : number) : number {
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const idFach : number = kursE.fachID;
-		let summe : number = 0;
-		for (const idSchueler of kursE.schueler) {
-			const fachwahl : GostFachwahl = this._parent.getOfSchuelerOfFachFachwahl(idSchueler!, idFach);
-			DeveloperNotificationException.ifTrue("fachwahl.schuelerID != idSchueler", fachwahl.schuelerID !== idSchueler);
-			DeveloperNotificationException.ifTrue("fachwahl.kursartID != kursE.kursart", fachwahl.kursartID !== kursE.kursart);
-			DeveloperNotificationException.ifTrue("fachwahl.fachID != idFach", fachwahl.fachID !== idFach);
-			if (fachwahl.istSchriftlich)
-				summe++;
-		}
-		return summe;
+		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => this._parent.getOfSchuelerOfFachFachwahl(idSchueler!, kursE.fachID).istSchriftlich });
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn mündlich belegt haben.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn mündlich belegt haben.
+	 */
+	public getOfKursAnzahlSchuelerMuendlich(idKurs : number) : number {
+		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler, { test : (idSchueler: number) => !this._parent.getOfSchuelerOfFachFachwahl(idSchueler!, kursE.fachID).istSchriftlich });
 	}
 
 	/**

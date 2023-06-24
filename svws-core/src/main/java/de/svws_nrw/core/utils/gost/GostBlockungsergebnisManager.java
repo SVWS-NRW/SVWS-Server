@@ -27,10 +27,12 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.CollectionUtils;
+import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -924,7 +926,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 */
-	public boolean getOfSchuelerHatFachwahl(final long idSchueler, final long idFach, final long idKursart) {
+	public boolean getOfSchuelerHatFachwahl(final long idSchueler, final long idFach, final int idKursart) {
 		return _parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
 	}
 
@@ -1216,6 +1218,17 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
+	 */
+	public boolean getOfSchuelerIstStatusExtern(final @NotNull Long idSchueler) {
+		return getSchuelerG(idSchueler).status == SchuelerStatus.EXTERN.id;
+	}
+
+	/**
 	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
 	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
@@ -1351,15 +1364,39 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind.
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind.
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind ohne Dummy SuS.
 	 */
 	public int getOfKursAnzahlSchueler(final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
 		return kursE.schueler.size();
+	}
+
+	/**
+	 * Liefert die Anzahl externen SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl externen SuS die dem Kurs zugeordnet sind.
+	 */
+	public int getOfKursAnzahlSchuelerExterne(final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler,  (final @NotNull Long idSchueler) -> getOfSchuelerIstStatusExtern(idSchueler));
+	}
+
+	/**
+	 * Liefert die Anzahl nicht externen SuS die dem Kurs zugeordnet sind.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl nicht externen SuS die dem Kurs zugeordnet sind.
+	 */
+	public int getOfKursAnzahlSchuelerNichtExtern(final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler, (final @NotNull Long idSchueler) -> !getOfSchuelerIstStatusExtern(idSchueler));
 	}
 
 	/**
@@ -1383,19 +1420,19 @@ public class GostBlockungsergebnisManager {
 	 */
 	public int getOfKursAnzahlSchuelerSchriftlich(final long idKurs) {
 		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
-		final long idFach = kursE.fachID;
+		return ListUtils.getCountFiltered(kursE.schueler, (final @NotNull Long idSchueler) -> _parent.getOfSchuelerOfFachFachwahl(idSchueler, kursE.fachID).istSchriftlich);
+	}
 
-		int summe = 0;
-		for (final @NotNull Long idSchueler : kursE.schueler) {
-			final @NotNull GostFachwahl fachwahl = _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
-			DeveloperNotificationException.ifTrue("fachwahl.schuelerID != idSchueler", fachwahl.schuelerID != idSchueler);
-			DeveloperNotificationException.ifTrue("fachwahl.kursartID != kursE.kursart", fachwahl.kursartID != kursE.kursart);
-			DeveloperNotificationException.ifTrue("fachwahl.fachID != idFach", fachwahl.fachID != idFach);
-			if (fachwahl.istSchriftlich)
-				summe++;
-		}
-
-		return summe;
+	/**
+	 * Liefert die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn mündlich belegt haben.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern die dem Kurs zugeordnet sind und ihn mündlich belegt haben.
+	 */
+	public int getOfKursAnzahlSchuelerMuendlich(final long idKurs) {
+		final @NotNull GostBlockungsergebnisKurs kursE = getKursE(idKurs);
+		return ListUtils.getCountFiltered(kursE.schueler, (final @NotNull Long idSchueler) -> !_parent.getOfSchuelerOfFachFachwahl(idSchueler, kursE.fachID).istSchriftlich);
 	}
 
 	/**

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -9,7 +10,6 @@ import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
-import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { List } from '../../../java/util/List';
@@ -18,6 +18,7 @@ import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
+import { MapUtils } from '../../../core/utils/MapUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
@@ -125,7 +126,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet.
 	 */
-	private readonly _map_schuelerID_fachID_fachwahl : HashMap<number, HashMap<number, GostFachwahl>> = new HashMap();
+	private readonly _map2d_schuelerID_fachID_fachwahl : HashMap2D<number, number, GostFachwahl> = new HashMap2D();
 
 	/**
 	 * Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart.
@@ -394,19 +395,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		let mapSFA : HashMap<number, GostFachwahl> | null = this._map_schuelerID_fachID_fachwahl.get(pFachwahl.schuelerID);
-		if (mapSFA === null) {
-			mapSFA = new HashMap();
-			this._map_schuelerID_fachID_fachwahl.put(pFachwahl.schuelerID, mapSFA);
-		}
-		const fachID : number = pFachwahl.fachID;
-		if (mapSFA.put(fachID, pFachwahl) !== null)
-			throw new DeveloperNotificationException("Schüler-ID (" + pFachwahl.schuelerID + "), (Fach-ID" + fachID + ") doppelt!")
-		let fachwahlenDesSchuelers : List<GostFachwahl> | null = this._map_schuelerID_fachwahlen.get(pFachwahl.schuelerID);
-		if (fachwahlenDesSchuelers === null) {
-			fachwahlenDesSchuelers = new ArrayList();
-			this._map_schuelerID_fachwahlen.put(pFachwahl.schuelerID, fachwahlenDesSchuelers);
-		}
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_schuelerID_fachID_fachwahl, pFachwahl.schuelerID, pFachwahl.fachID, pFachwahl);
+		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_schuelerID_fachwahlen, pFachwahl.schuelerID);
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
 		const fachartID : number = GostKursart.getFachartIDByFachwahl(pFachwahl);
@@ -436,11 +426,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_schueler, pSchueler.id, pSchueler);
-		this._daten.schueler.add(pSchueler);
 		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
 			this._map_schuelerID_fachwahlen.put(pSchueler.id, new ArrayList());
-		if (!this._map_schuelerID_fachID_fachwahl.containsKey(pSchueler.id))
-			this._map_schuelerID_fachID_fachwahl.put(pSchueler.id, new HashMap());
+		this._daten.schueler.add(pSchueler);
 	}
 
 	/**
@@ -804,37 +792,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
-	 *
-	 * @param idSchueler  Die Datenbank.ID des Schülers.
-	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param idKursart   Die Datenbank-ID der Kursart der Fachwahl des Schülers.
-	 *
-	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
-	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
-	 */
-	public getOfSchuelerHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
-		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", this._map_schuelerID_fachID_fachwahl.get(idSchueler));
-		const wahl : GostFachwahl | null = map.get(idFach);
-		return (wahl !== null) && (wahl.kursartID === idKursart);
-	}
-
-	/**
-	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
-	 *
-	 * @param idSchueler  Die Datenbank.ID des Schülers.
-	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 *
-	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
-	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
-	 */
-	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
-		const map : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + idSchueler + ")", this._map_schuelerID_fachID_fachwahl.get(idSchueler));
-		const wahl : GostFachwahl | null = map.get(idFach);
-		return wahl !== null;
-	}
-
-	/**
 	 * Gibt das Halbjahr der gymnasialen Oberstufe zurück, für welches die Blockung angelegt wurde.
 	 *
 	 * @return das Halbjahr der gymnasialen Oberstufe
@@ -934,34 +891,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert zum Tupel (Schüler, Fach) die jeweilige Kursart. <br>
-	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
-	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID Die Datenbank-ID des Faches.
-	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostKursart}.
-	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
-	 */
-	public getOfSchuelerOfFachKursart(pSchuelerID : number, pFachID : number) : GostKursart {
-		const fachwahl : GostFachwahl = this.getOfSchuelerOfFachFachwahl(pSchuelerID, pFachID);
-		return GostKursart.fromID(fachwahl.kursartID);
-	}
-
-	/**
-	 * Liefert zum Tupel (Schüler, Fach) die jeweilige Fachwahl. <br>
-	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
-	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @param pFachID Die Datenbank-ID des Faches.
-	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostFachwahl}.
-	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
-	 */
-	public getOfSchuelerOfFachFachwahl(pSchuelerID : number, pFachID : number) : GostFachwahl {
-		const mapFachFachwahl : HashMap<number, GostFachwahl> = DeveloperNotificationException.ifNull("_map_schulerID_fachID_fachwahl.get(" + pSchuelerID + ")", this._map_schuelerID_fachID_fachwahl.get(pSchuelerID));
-		return DeveloperNotificationException.ifNull("mapFachFachwahl.get(" + pFachID + ")", mapFachFachwahl.get(pFachID));
-	}
-
-	/**
 	 * Liefert die aktuelle Menge aller Schüler.
 	 * Das ist die interne Referenz zur Liste der Schüler im {@link GostBlockungsdaten}-Objekt.
 	 *
@@ -969,6 +898,75 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getMengeOfSchueler() : List<Schueler> {
 		return this._daten.schueler;
+	}
+
+	/**
+	 * Liefert zum Tupel (Schüler, Fach) die jeweilige Kursart. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches.
+	 *
+	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostKursart}.
+	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
+	 */
+	public getOfSchuelerOfFachKursart(idSchueler : number, idFach : number) : GostKursart {
+		const fachwahl : GostFachwahl = this.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+		return GostKursart.fromID(fachwahl.kursartID);
+	}
+
+	/**
+	 * Liefert zum Tupel (Schüler, Fach) die jeweilige Fachwahl. <br>
+	 * Wirft eine Exception, falls der Schüler das Fach nicht gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches.
+	 *
+	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostFachwahl}.
+	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
+	 */
+	public getOfSchuelerOfFachFachwahl(idSchueler : number, idFach : number) : GostFachwahl {
+		return this._map2d_schuelerID_fachID_fachwahl.getNonNullOrException(idSchueler, idFach);
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
+	 */
+	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
+		return this._map2d_schuelerID_fachID_fachwahl.contains(idSchueler, idFach);
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 *
+	 * @param idSchueler  Die Datenbank.ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches der Fachwahl des Schülers.
+	 * @param idKursart   Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 *
+	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
+	 */
+	public getOfSchuelerHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
+		if (!this._map2d_schuelerID_fachID_fachwahl.contains(idSchueler, idFach))
+			return false;
+		return this._map2d_schuelerID_fachID_fachwahl.getNonNullOrException(idSchueler, idFach).kursartID === idKursart;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} des Schülers.
+	 *
+	 * @param pSchuelerID Die Datenbank-ID des Schülers.
+	 * @return Die Menge aller {@link GostFachwahl} des Schülers.
+	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
+	 */
+	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
+		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_schuelerID_fachwahlen.get(pSchuelerID));
 	}
 
 	/**
@@ -1033,17 +1031,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller {@link GostFachwahl} des Schülers.
-	 *
-	 * @param pSchuelerID Die Datenbank-ID des Schülers.
-	 * @return Die Menge aller {@link GostFachwahl} des Schülers.
-	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
-	 */
-	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
-		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_schuelerID_fachwahlen.get(pSchuelerID));
-	}
-
-	/**
 	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br>
 	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
 	 *
@@ -1051,11 +1038,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
 	 */
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
-		const itemCreator : JavaFunction<number, List<GostFachwahl>> = { apply : (key: number) => new ArrayList() };
-		const result : List<GostFachwahl> | null = this._map_fachartID_fachwahlen.computeIfAbsent(pFachartID, itemCreator);
-		if (result === null)
-			return new ArrayList();
-		return result;
+		return MapUtils.getOrCreateArrayList(this._map_fachartID_fachwahlen, pFachartID);
 	}
 
 	/**
