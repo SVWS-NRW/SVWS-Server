@@ -109,7 +109,7 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 *  - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
-	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs auf mit Dummy SuS.", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
+	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs mit Dummy SuS auf.", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
 
 	/**
 	 * Die ID des Regel-Typs

@@ -385,8 +385,8 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 
 		final int dummySuS = daten[1].intValue();
-		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
-		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 100);
+		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS,  1);
+		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 99);
 	}
 
 	private static void schritt01FehlerBeiReferenzen_Regeltyp10(@NotNull final Long @NotNull [] daten) {
@@ -721,7 +721,7 @@ public class KursblockungDynDaten {
 			final int susAnzahl = regel9.parameter.get(1).intValue();
 			final @NotNull KursblockungDynKurs kurs = gibKurs(kursID);
 			for (int i = 0; i < susAnzahl; i++)
-				kurs.aktionSchuelerHinzufuegen();
+				kurs.aktionSchuelerDummyHinzufuegen();
 		}
 	}
 

@@ -81,6 +81,11 @@ export class KursblockungDynKurs extends JavaObject {
 	private schuelerAnz : number = 0;
 
 	/**
+	 * Die Anzahl an Dummy-SuS in diesem Kurs.
+	 */
+	private schuelerAnzDummy : number = 0;
+
+	/**
 	 * Logger für Benutzerhinweise, Warnungen und Fehler.
 	 */
 	private readonly logger : Logger;
@@ -107,6 +112,7 @@ export class KursblockungDynKurs extends JavaObject {
 		this.databaseID = pKursID;
 		this.fachart = pFachart;
 		this.schuelerAnz = 0;
+		this.schuelerAnzDummy = 0;
 		this.logger = pLogger;
 		this.internalID = pInternalID;
 		this.schienenLageSaveS = Array(this.schienenLage.length).fill(null);
@@ -163,7 +169,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs.
 	 */
 	public gibSchuelerAnzahl() : number {
-		return this.schuelerAnz;
+		return this.schuelerAnz + this.schuelerAnzDummy;
 	}
 
 	/**
@@ -178,16 +184,15 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Liefert die aktuelle Schienenlage dieses Kurses.
+	 * Liefert die aktuelle Schienenlage dieses Kurses.
 	 *
 	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
 	 */
 	public gibSchienenLage() : Array<number> {
 		const length : number = this.schienenLage.length;
 		const lage : Array<number> = Array(length).fill(0);
-		for (let i : number = 0; i < length; i++) {
+		for (let i : number = 0; i < length; i++)
 			lage[i] = this.schienenLage[i].gibNr();
-		}
 		return lage;
 	}
 
@@ -206,7 +211,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser.
 	 */
 	public gibGewichtetesMatchingBewertung() : number {
-		return this.schuelerAnz * this.schuelerAnz as number;
+		const anzahl : number = this.gibSchuelerAnzahl();
+		return anzahl * anzahl;
 	}
 
 	/**
@@ -216,16 +222,12 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde.
 	 */
 	gibIstSchieneGesperrt(pSchiene : number) : boolean {
-		for (const s of this.schienenLage) {
-			if (s.gibNr() === pSchiene) {
+		for (const s of this.schienenLage)
+			if (s.gibNr() === pSchiene)
 				return false;
-			}
-		}
-		for (const s of this.schienenFrei) {
-			if (s.gibNr() === pSchiene) {
+		for (const s of this.schienenFrei)
+			if (s.gibNr() === pSchiene)
 				return false;
-			}
-		}
 		return true;
 	}
 
@@ -236,11 +238,9 @@ export class KursblockungDynKurs extends JavaObject {
 	 * @return          TRUE, wenn die Schiene für den Kurs fixiert wurde.
 	 */
 	gibIstSchieneFixiert(pSchiene : number) : boolean {
-		for (let iLage : number = 0; iLage < this.schienenLageFixiert; iLage++) {
-			if (this.schienenLage[iLage].gibNr() === pSchiene) {
+		for (let iLage : number = 0; iLage < this.schienenLageFixiert; iLage++)
+			if (this.schienenLage[iLage].gibNr() === pSchiene)
 				return true;
-			}
-		}
 		return false;
 	}
 
@@ -356,9 +356,8 @@ export class KursblockungDynKurs extends JavaObject {
 	 *Verteilt den Kurs auf die Schienen zufällig.
 	 */
 	public aktionZufaelligVerteilen() : void {
-		if (!this.gibHatFreiheitsgrade()) {
+		if (!this.gibHatFreiheitsgrade())
 			return;
-		}
 		if (this.schuelerAnz > 0) {
 			this.logger.log(LogLevel.ERROR, "Kurs.aktionZufaelligVerteilen: schuelerAnz > 0 (Ein Kurs mit SuS darf nicht verteilt werden)");
 			return;
@@ -423,7 +422,7 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Entfernt einen Schüler aus diesem Kurs.
+	 * Entfernt einen Schüler aus diesem Kurs.
 	 */
 	public aktionSchuelerEntfernen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
@@ -433,11 +432,21 @@ export class KursblockungDynKurs extends JavaObject {
 	}
 
 	/**
-	 *Fügt einen Schüler diesem Kurs hinzu.
+	 * Fügt einen Schüler diesem Kurs hinzu.
 	 */
 	public aktionSchuelerHinzufuegen() : void {
 		this.fachart.aktionKursdifferenzEntfernen();
 		this.schuelerAnz++;
+		this.fachart.aktionSchuelerWurdeHinzugefuegt();
+		this.fachart.aktionKursdifferenzHinzufuegen();
+	}
+
+	/**
+	 * Fügt einen Dummy-Schüler diesem Kurs hinzu.
+	 */
+	public aktionSchuelerDummyHinzufuegen() : void {
+		this.fachart.aktionKursdifferenzEntfernen();
+		this.schuelerAnzDummy++;
 		this.fachart.aktionSchuelerWurdeHinzugefuegt();
 		this.fachart.aktionKursdifferenzHinzufuegen();
 	}

@@ -596,8 +596,8 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfFachartKursmenge(idFachart);
 		final @NotNull GostBlockungsergebnisKurs kurs1 = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
 
-		// Neue Kursdifferenz berechnen
-		int min = kurs1.schueler.size();
+		// Neue Kursdifferenz berechnen (Wichtig: DummySuS müssen beachtet werden)
+		int min = kurs1.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs1.id);
 		int max = min;
 		for (final @NotNull GostBlockungsergebnisKurs kurs : kursmenge) {
 			final int size = kurs.schueler.size() + getOfKursAnzahlSchuelerDummy(kurs.id);

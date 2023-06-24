@@ -558,7 +558,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateKursdifferenzUpdate(idFachart : number) : void {
 		const kursmenge : List<GostBlockungsergebnisKurs> = this.getOfFachartKursmenge(idFachart);
 		const kurs1 : GostBlockungsergebnisKurs = DeveloperNotificationException.ifListGetFirstFailes("getOfFachartKursmenge", kursmenge);
-		let min : number = kurs1.schueler.size();
+		let min : number = kurs1.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs1.id);
 		let max : number = min;
 		for (const kurs of kursmenge) {
 			const size : number = kurs.schueler.size() + this.getOfKursAnzahlSchuelerDummy(kurs.id);

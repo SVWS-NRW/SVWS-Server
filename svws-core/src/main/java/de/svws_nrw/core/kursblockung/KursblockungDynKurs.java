@@ -54,6 +54,9 @@ public class KursblockungDynKurs {
 	/** Die Anzahl an SuS in diesem Kurs. */
 	private int schuelerAnz;
 
+	/** Die Anzahl an Dummy-SuS in diesem Kurs. */
+	private int schuelerAnzDummy;
+
 	/** Logger für Benutzerhinweise, Warnungen und Fehler. */
 	private final @NotNull Logger logger;
 
@@ -77,6 +80,7 @@ public class KursblockungDynKurs {
 		databaseID = pKursID;
 		fachart = pFachart;
 		schuelerAnz = 0;
+		schuelerAnzDummy = 0;
 		logger = pLogger;
 		internalID = pInternalID;
 
@@ -136,7 +140,7 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Die aktuelle Anzahl an Schülern in diesem Kurs. */
 	public int gibSchuelerAnzahl() {
-		return schuelerAnz;
+		return schuelerAnz + schuelerAnzDummy;
 	}
 
 	/**
@@ -150,15 +154,18 @@ public class KursblockungDynKurs {
 		return (schienenLageFixiert < schienenLage.length) && (schienenFrei.length > 0);
 	}
 
-	/** Liefert die aktuelle Schienenlage dieses Kurses.
+	/**
+	 * Liefert die aktuelle Schienenlage dieses Kurses.
 	 *
-	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert. */
+	 * @return Ein Array, das angibt, in welchen Schienen der Kurs ist. Die Werte sind 0-indiziert.
+	 */
 	public @NotNull int[] gibSchienenLage() {
 		final int length = schienenLage.length;
+
 		final @NotNull int[] lage = new int[length];
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length; i++)
 			lage[i] = schienenLage[i].gibNr();
-		}
+
 		return lage;
 	}
 
@@ -173,16 +180,8 @@ public class KursblockungDynKurs {
 	 *
 	 * @return Beurteilt das Hinzufügen eines Schülers zu diesem Kurs. Je kleiner der Wert desto besser. */
 	public long gibGewichtetesMatchingBewertung() {
-		return schuelerAnz * (long) schuelerAnz;
-		/*
-		 * // Alle Kurse in sortierter Reihenfolge (am Anfang kleinere Kurse)
-		 *
-		 * @NotNull KursblockungDynKurs @NotNull [] kurse = fachart.gibKurse(); // Falls dieser Kurs die gleiche
-		 * Schüleranzahl wie der kleinste Kurs hat, ist die Wahl optimal. if (schuelerAnz == kurse[0].schuelerAnz)
-		 * return -1; // Falls dieser Kurs nicht die gleiche Schüleranzahl wie der größte Kurs hat, ist die Wahl okay.
-		 * if (schuelerAnz != kurse[kurse.length-1].schuelerAnz) return 0; // Andernfalls erhöht sich die Kursdifferenz
-		 * --> Schlecht! return 1;
-		 */
+		final long anzahl = gibSchuelerAnzahl();
+		return anzahl * anzahl;
 	}
 
 	/** Liefert TRUE, wenn die Schiene für den Kurs gesperrt wurde.
@@ -190,16 +189,14 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs gesperrt wurde. */
 	boolean gibIstSchieneGesperrt(final int pSchiene) {
-		for (final @NotNull KursblockungDynSchiene s : schienenLage) {
-			if (s.gibNr() == pSchiene) {
+		for (final @NotNull KursblockungDynSchiene s : schienenLage)
+			if (s.gibNr() == pSchiene)
 				return false;
-			}
-		}
-		for (final @NotNull KursblockungDynSchiene s : schienenFrei) {
-			if (s.gibNr() == pSchiene) {
+
+		for (final @NotNull KursblockungDynSchiene s : schienenFrei)
+			if (s.gibNr() == pSchiene)
 				return false;
-			}
-		}
+
 		return true;
 	}
 
@@ -208,11 +205,10 @@ public class KursblockungDynKurs {
 	 * @param  pSchiene Die Schiene nach der gefragt wurde.
 	 * @return          TRUE, wenn die Schiene für den Kurs fixiert wurde. */
 	boolean gibIstSchieneFixiert(final int pSchiene) {
-		for (int iLage = 0; iLage < schienenLageFixiert; iLage++) {
-			if (schienenLage[iLage].gibNr() == pSchiene) {
+		for (int iLage = 0; iLage < schienenLageFixiert; iLage++)
+			if (schienenLage[iLage].gibNr() == pSchiene)
 				return true;
-			}
-		}
+
 		return false;
 	}
 
@@ -312,13 +308,12 @@ public class KursblockungDynKurs {
 	/** Verteilt den Kurs auf die Schienen zufällig. */
 	public void aktionZufaelligVerteilen() {
 		// Kurs kann nicht wandern? --> Abbruch
-		if (!gibHatFreiheitsgrade()) {
+		if (!gibHatFreiheitsgrade())
 			return;
-		}
-		// Sind SuS im Kurs? --> Fehler
+
+		// Sind SuS im Kurs? --> Fehler (aber 'schuelerAnzDummy' sind okay)
 		if (schuelerAnz > 0) {
-			logger.log(LogLevel.ERROR,
-					"Kurs.aktionZufaelligVerteilen: schuelerAnz > 0 (Ein Kurs mit SuS darf nicht verteilt werden)");
+			logger.log(LogLevel.ERROR, "Kurs.aktionZufaelligVerteilen: schuelerAnz > 0 (Ein Kurs mit SuS darf nicht verteilt werden)");
 			return;
 		}
 
@@ -391,7 +386,9 @@ public class KursblockungDynKurs {
 
 	}
 
-	/** Entfernt einen Schüler aus diesem Kurs. */
+	/**
+	 * Entfernt einen Schüler aus diesem Kurs.
+	 */
 	public void aktionSchuelerEntfernen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz--; // Darf erst hier passieren.
@@ -399,10 +396,22 @@ public class KursblockungDynKurs {
 		fachart.aktionKursdifferenzHinzufuegen();
 	}
 
-	/** Fügt einen Schüler diesem Kurs hinzu. */
+	/**
+	 * Fügt einen Schüler diesem Kurs hinzu.
+	 */
 	public void aktionSchuelerHinzufuegen() {
 		fachart.aktionKursdifferenzEntfernen();
 		schuelerAnz++; // Darf erst hier passieren.
+		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
+		fachart.aktionKursdifferenzHinzufuegen();
+	}
+
+	/**
+	 * Fügt einen Dummy-Schüler diesem Kurs hinzu.
+	 */
+	public void aktionSchuelerDummyHinzufuegen() {
+		fachart.aktionKursdifferenzEntfernen();
+		schuelerAnzDummy++; // Darf erst hier passieren.
 		fachart.aktionSchuelerWurdeHinzugefuegt(); // Sortiert das Kurs-Array der Fachart
 		fachart.aktionKursdifferenzHinzufuegen();
 	}

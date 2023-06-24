@@ -339,7 +339,7 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const dummySuS : number = daten[1]!;
 		DeveloperNotificationException.ifSmaller("dummySuS", dummySuS, 1);
-		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 100);
+		DeveloperNotificationException.ifGreater("dummySuS", dummySuS, 99);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp10(daten : Array<number>) : void {
@@ -597,7 +597,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const susAnzahl : number = regel9.parameter.get(1)!;
 			const kurs : KursblockungDynKurs = this.gibKurs(kursID);
 			for (let i : number = 0; i < susAnzahl; i++)
-				kurs.aktionSchuelerHinzufuegen();
+				kurs.aktionSchuelerDummyHinzufuegen();
 		}
 	}
 

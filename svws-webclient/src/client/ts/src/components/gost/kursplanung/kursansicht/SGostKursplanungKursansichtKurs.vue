@@ -183,27 +183,20 @@
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
 	});
 
-	const filtered_by_kursart: ComputedRef<GostBlockungsergebnisKurs[]> = computed(() => {
-		const kurse = props.getErgebnismanager().getOfFachKursmenge(props.kurs.fach_id);
-		const arr = kurse.toArray(new Array<GostBlockungsergebnisKurs>())
-		return arr.filter(k => k.kursart === props.kurs.kursart).sort((a, b) => {
-			const a_name: string = props.getDatenmanager().getNameOfKurs(a.id);
-			const b_name: string = props.getDatenmanager().getNameOfKurs(b.id);
-			return a_name.localeCompare(b_name, "de-DE");
-		})
+	const filtered_by_kursart: ComputedRef<List<GostBlockungsergebnisKurs>> = computed(() => {
+		const fachart_id = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
+		return props.getErgebnismanager().getOfFachartKursmenge(fachart_id);
 	})
 
-	const setze_kursdifferenz: ComputedRef<boolean> = computed(() => filtered_by_kursart.value[0] === kurs_blockungsergebnis.value);
+	const setze_kursdifferenz: ComputedRef<boolean> = computed(() => filtered_by_kursart.value.get(0) === kurs_blockungsergebnis.value);
 
 	const kursdifferenz: ComputedRef<[number, number, number]> = computed(() => {
-		if (!filtered_by_kursart.value.length)
-			return [-1,-1, -1]
+		if (filtered_by_kursart.value.isEmpty())
+			return [-1,-1, -1];
 		const fachart_id = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
 		const wahlen = props.getDatenmanager().getOfFachartMengeFachwahlen(fachart_id).size() || 0;
-		if (filtered_by_kursart.value.length === 2)
-			return [2, Math.abs(filtered_by_kursart.value[0].schueler.size() - filtered_by_kursart.value[1].schueler.size()), wahlen];
-		const sorted = [...filtered_by_kursart.value].sort((a, b) => b.schueler.size() - a.schueler.size());
-		return [filtered_by_kursart.value.length, sorted[0].schueler.size() - sorted[sorted.length - 1].schueler.size(), wahlen]
+		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
+		return [filtered_by_kursart.value.size(), kdiff, wahlen];
 	});
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
