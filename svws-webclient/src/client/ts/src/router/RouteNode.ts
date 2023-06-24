@@ -1,7 +1,7 @@
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw} from "vue-router";
-import { Schulform, ServerMode } from "@core";
+import type { Schulform} from "@core";
+import { ServerMode, BenutzerKompetenz } from "@core";
 import type { ComputedRef, Ref } from "vue";
-import { BenutzerKompetenz } from "@core";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { api } from "./Api";
@@ -154,6 +154,19 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	}
 
 	/**
+	 * Prüft, ob der Modus, in welchem der Server betrieben wird die Verwendung
+	 * dieser Route erlaubt oder nicht.
+	 *
+	 * @returns true, falls die Nutzung der Route erlaubt ist, ansonsten false
+	 */
+	public checkServerMode(): boolean {
+		return (api.mode == ServerMode.STABLE) && (this.mode === ServerMode.STABLE)
+			|| (api.mode == ServerMode.BETA) && (this.mode !== ServerMode.DEV) && (this.mode !== ServerMode.ALPHA)
+			|| (api.mode == ServerMode.ALPHA) && (this.mode !== ServerMode.DEV)
+			|| (api.mode == ServerMode.DEV);
+	}
+
+	/**
      * Setzt die Kind-Knoten für diesen Knoten in Bezug auf das
      * "Nested"-Routing.
      *
@@ -177,7 +190,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public get children() : RouteNode<unknown, any>[] {
 		const result : RouteNode<unknown, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && !node.hatSchulform() && !node.hatEineKompetenz())
+			if (api.authenticated && (!node.checkServerMode() || !node.hatSchulform() || !node.hatEineKompetenz()))
 				continue;
 			result.push(node);
 		}
@@ -201,7 +214,11 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @returns ein Array mit den Knoten
      */
 	public get menu() : RouteNode<unknown, any>[] {
-		return this._menu;
+		const result: RouteNode<unknown, any>[] = [];
+		for (const node of this._menu)
+			if (node.checkServerMode())
+				result.push(node);
+		return result;
 	}
 
 	/**
@@ -230,11 +247,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public get children_records() : RouteRecordRaw[] {
 		const result : RouteRecordRaw[] = [];
-		for (const node of this._children) {
-			if (api.authenticated && !node.hatSchulform() && !node.hatEineKompetenz())
-				continue;
+		for (const node of this.children)
 			result.push(node.record);
-		}
 		return result;
 	}
 

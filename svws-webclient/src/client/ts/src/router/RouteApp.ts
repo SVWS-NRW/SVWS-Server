@@ -220,9 +220,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getApps(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
-		for (const c of super.menu)
+		for (const c of super.menu) {
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
+		}
 		return result;
 	}
 
