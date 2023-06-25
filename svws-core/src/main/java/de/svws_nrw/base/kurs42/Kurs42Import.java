@@ -10,6 +10,7 @@ import java.util.function.Function;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -65,10 +66,10 @@ public class Kurs42Import {
 	public final List<GostBlockungSchiene> schienen = new ArrayList<>();
 
 	/** Die Kurs-Schienen-Zuordnungen der Blockung */
-	public final List<Pair<Long, Long>> zuordnung_kurs_schiene = new ArrayList<>();
+	public final HashMap2D<Long, Long, Pair<Long, Long>> zuordnung_kurs_schiene = new HashMap2D<>();
 
 	/** Die Kurs-Schüler-Zuordnungen der Blockung */
-	public final List<Pair<Long, Long>> zuordnung_kurs_schueler = new ArrayList<>();
+	public final HashMap2D<Long, Long, Pair<Long, Long>> zuordnung_kurs_schueler = new HashMap2D<>();
 
 	/** Eine Map von der DB-ID des Schülers auf das Kurs42-Import-Objekt */
 	private final Map<Long, Kurs42DataSchueler> mapSchuelerByID = new HashMap<>();
@@ -252,7 +253,7 @@ public class Kurs42Import {
 			final Long schienenID = mapSchieneNrToID.get(schienenNr);
 			if (schienenID == null)
 				throw new IOException("Die im Blockplan angegebene Schienennummer " + bp.Schiene + " existiert nicht in der Schienen-Liste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
-			this.zuordnung_kurs_schiene.add(new Pair<>(id, schienenID));
+			this.zuordnung_kurs_schiene.put(id, schienenID, new Pair<>(id, schienenID));
 			if (bp.Fixiert != 0) {
 				final GostBlockungRegel regel = new GostBlockungRegel();
 				regel.id = curRegelID++;
@@ -274,7 +275,7 @@ public class Kurs42Import {
 			final Long schuelerID = mapSchuelerKeyToID.get(schuelerKey);
 			if (schuelerID == null)
 				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey + "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
-			this.zuordnung_kurs_schueler.add(new Pair<>(kursID, schuelerID));
+			this.zuordnung_kurs_schueler.put(kursID, schuelerID, new Pair<>(kursID, schuelerID));
 		}
 	}
 

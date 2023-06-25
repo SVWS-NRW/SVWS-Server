@@ -170,11 +170,11 @@ public final class DBUtilsGostBlockung {
 				}
 			}
 			// Schreibe die Kurs-Schienen-Zuordnungen
-			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schiene)
+			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schiene.getNonNullValuesAsList())
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID,
 						kursID + zuordnung.a, schienenID + zuordnung.b));
 			// Schreibe die Kurs-Schüler-Zuordnungen
-			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schueler)
+			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schueler.getNonNullValuesAsList())
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID,
 						kursID + zuordnung.a, zuordnung.b));
 			if (!conn.transactionCommit()) {
