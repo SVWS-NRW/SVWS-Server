@@ -8,6 +8,7 @@ import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Gost_Klausuren_Raeume_Stunden.
@@ -43,6 +44,11 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden extends SchemaTabelle {
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Zeitraster_ID, Schema.tab_Katalog_Zeitraster.col_ID)
+		);
+
+	/** Die Definition des Unique-Index Gost_Klausuren_Raueme_Stunden_UC1 */
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raueme_Stunden_UC1 = addUniqueIndex("unique_Gost_Klausuren_Raueme_Stunden_UC1",
+			col_Klausurraum_ID, col_Zeitraster_ID
 		);
 
 

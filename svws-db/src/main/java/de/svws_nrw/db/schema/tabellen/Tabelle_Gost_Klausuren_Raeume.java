@@ -8,6 +8,7 @@ import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Gost_Klausuren_Raeume.
@@ -21,6 +22,7 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Termin_ID */
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
+		.setNotNull()
 		.setJavaComment("ID des Termins");
 
 	/** Die Definition der Tabellenspalte Katalog_Raum_ID */
@@ -46,6 +48,11 @@ public class Tabelle_Gost_Klausuren_Raeume extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
 	);
+
+	/** Die Definition des Unique-Index Gost_Klausuren_Raume_UC1 */
+	public SchemaTabelleUniqueIndex unique_Gost_Klausuren_Raume_UC1 = addUniqueIndex("Gost_Klausuren_Raume_UC1",
+			col_Termin_ID, col_Katalog_Raum_ID
+		);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Klausuren_Raeume.

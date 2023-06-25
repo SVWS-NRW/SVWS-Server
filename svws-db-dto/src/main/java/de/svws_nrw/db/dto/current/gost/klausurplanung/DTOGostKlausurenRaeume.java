@@ -42,7 +42,7 @@ public final class DTOGostKlausurenRaeume {
 	/** ID des Termins */
 	@Column(name = "Termin_ID")
 	@JsonProperty
-	public Long Termin_ID;
+	public long Termin_ID;
 
 	/** ID des Raums aus der Tabelle Katalog_Raeume */
 	@Column(name = "Katalog_Raum_ID")
@@ -64,9 +64,11 @@ public final class DTOGostKlausurenRaeume {
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenRaeume ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
+	 * @param Termin_ID   der Wert für das Attribut Termin_ID
 	 */
-	public DTOGostKlausurenRaeume(final long ID) {
+	public DTOGostKlausurenRaeume(final long ID, final long Termin_ID) {
 		this.ID = ID;
+		this.Termin_ID = Termin_ID;
 	}
 
 

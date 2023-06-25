@@ -140,7 +140,9 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Raeume");
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
-			raum = new DTOGostKlausurenRaeume(id);
+			long termin_ID = -1;
+			long katalog_Raum_ID = -1;
+			String bemerkungen = null;
 
 			final Map<String, Object> map = JSONMapper.toMap(is);
 			if (map.size() > 0) {
@@ -148,14 +150,19 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 					final String key = entry.getKey();
 					final Object value = entry.getValue();
 					switch (key) {
-					case "idTermin" -> raum.Termin_ID = JSONMapper.convertToLong(value, false);
-					case "idKatalogRaum" -> raum.Katalog_Raum_ID = JSONMapper.convertToLong(value, false);
-					case "bemerkung" -> raum.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
+					case "idTermin" -> termin_ID = JSONMapper.convertToLong(value, false);
+					case "idKatalogRaum" -> katalog_Raum_ID = JSONMapper.convertToLong(value, false);
+					case "bemerkung" -> bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
 					case "id" -> { /* do nothing */ }
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}
 			}
+
+			raum = new DTOGostKlausurenRaeume(id, termin_ID);
+			raum.Katalog_Raum_ID = katalog_Raum_ID;
+			raum.Bemerkungen = bemerkungen;
+
 			conn.transactionPersist(raum);
 			if (!conn.transactionCommit())
 				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Gost-Klausurraums");
