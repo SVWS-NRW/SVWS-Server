@@ -211,6 +211,18 @@ public class Kurs42Import {
 					throw new IOException(nfe);
 				}
 			}
+			if ((k42Kurs.FixiertInSchiene != null) && (!"".equals(k42Kurs.FixiertInSchiene))) {
+				try {
+					final GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = curRegelID++;
+					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+					regel.parameter.add(id);  // Kurs-ID
+					regel.parameter.add(Long.parseLong(k42Kurs.FixiertInSchiene) + 1);  // Die Schienen-Nummer (1-indiziert)
+					regeln.add(regel);
+				} catch (final NumberFormatException nfe) {
+					throw new IOException(nfe);
+				}
+			}
 		}
 		return curRegelID;
 	}
