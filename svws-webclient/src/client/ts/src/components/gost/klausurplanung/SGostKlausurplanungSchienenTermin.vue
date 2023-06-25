@@ -1,9 +1,10 @@
 <template>
 	<div class="flex flex-col border border-blue-900 border-solid w-72 shrink-0">
 		<svws-ui-drop-data @drop="setKlausurToTermin" class="h-full">
-			<div class="flex flex-row-reverse">
-				<svws-ui-badge class="-m-2 z-10"
-					v-if="(termin === null || dragKlausur === undefined || dragKlausur === null || termin?.quartal === dragKlausur?.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin > 0)"
+			<div class="">
+				<svws-ui-button v-if="loescheKlausurtermin !== undefined && termin !== null" class="float-right" type="danger" size="small" @click="loescheKlausurtermin(termin)"><i-ri-delete-bin-line /></svws-ui-button>
+				<svws-ui-badge class="-m-2 z-10 float-right"
+					v-if="(termin?.quartal === dragKlausur?.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin > 0)"
 					type="error"
 					size="big">
 					<span class="text-base">{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}</span>

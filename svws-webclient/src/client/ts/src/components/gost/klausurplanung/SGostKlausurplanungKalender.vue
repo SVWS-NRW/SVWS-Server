@@ -5,26 +5,28 @@
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
 		</svws-ui-radio-group>
 		<div class="flex h-screen gap-4 mt-4">
-			<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1"
-				:class="dropOverCssClasses()"
-				class="w-1/4"
-				@drop="onDrop($event, null, -1)">
-				<ul class="flex flex-col gap-y-1">
-					<svws-ui-drag-data tag="li" v-for="termin in termineOhne"
-						:key="termin.id"
-						:data="termin"
-						@drag-start="dragStatus(termin)"
-						@drag-end="dragStatus(null)">
-						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
-							:faecher-manager="faecherManager"
-							:map-lehrer="mapLehrer"
-							:termin="termin"
-							:kursmanager="kursmanager"
-							:class="{'bg-green-100': dragTermin !== null && dragTermin.id === termin.id}"
-							@click="dragTermin = termin;$event.stopPropagation()" />
-					</svws-ui-drag-data>
-				</ul>
-			</svws-ui-drop-data>
+			<div class="flex flex-col w-1/4">
+				<div class="text-headline-md">Zu verplanen:</div>
+				<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1"
+					:class="dropOverCssClasses()"
+					@drop="onDrop($event, null, -1)">
+					<ul class="flex flex-col gap-y-1">
+						<svws-ui-drag-data tag="li" v-for="termin in termineOhne"
+							:key="termin.id"
+							:data="termin"
+							@drag-start="dragStatus(termin)"
+							@drag-end="dragStatus(null)">
+							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
+								:faecher-manager="faecherManager"
+								:map-lehrer="mapLehrer"
+								:termin="termin"
+								:kursmanager="kursmanager"
+								:class="{'bg-green-100': dragTermin !== null && dragTermin.id === termin.id}"
+								@click="dragTermin = (dragTermin === null ? termin : null);$event.stopPropagation()" />
+						</svws-ui-drag-data>
+					</ul>
+				</svws-ui-drop-data>
+			</div>
 			<div class="w-full">
 				<calendar-view :display-period-uom="displayPeriodUom"
 					:display-period-count="displayPeriodUom === 'month' ? 1 : 2"

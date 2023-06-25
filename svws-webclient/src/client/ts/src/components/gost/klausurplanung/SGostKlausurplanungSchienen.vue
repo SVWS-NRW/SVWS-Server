@@ -68,17 +68,20 @@
 				</div>
 			</div>
 			<div class="flex flex-row gap-8 mt-4">
-				<s-gost-klausurplanung-schienen-termin :quartal="quartal"
-					:kursklausurmanager="kursklausurmanager"
-					:termin="null"
-					:alle-termine="termine"
-					:faecher-manager="faecherManager"
-					:map-lehrer="mapLehrer"
-					:set-termin-to-kursklausur="setTerminToKursklausur"
-					:map-schueler="mapSchueler"
-					@drag-start-klausur="dragStartKlausur"
-					@drag-end-klausur="dragEndKlausur"
-					:kursmanager="kursmanager" />
+				<div class="flex flex-col">
+					<div class="text-headline-md">Zu verplanen:</div>
+					<s-gost-klausurplanung-schienen-termin :quartal="quartal"
+						:kursklausurmanager="kursklausurmanager"
+						:termin="null"
+						:alle-termine="termine"
+						:faecher-manager="faecherManager"
+						:map-lehrer="mapLehrer"
+						:set-termin-to-kursklausur="setTerminToKursklausur"
+						:map-schueler="mapSchueler"
+						@drag-start-klausur="dragStartKlausur"
+						@drag-end-klausur="dragEndKlausur"
+						:kursmanager="kursmanager" />
+				</div>
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
 						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
@@ -132,7 +135,7 @@
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-success": dragKlausur.value !== null && dragKlausur.value.quartal === termin.quartal,
-		"bg-error": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
+		"opacity-40": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
 	});
 
 	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(quartal.value));
