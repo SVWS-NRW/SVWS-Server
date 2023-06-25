@@ -63,11 +63,13 @@ public final class DataKurs42 {
 	    		ZipEntry zipFile;
 	    		while ((zipFile = zipInput.getNextEntry()) != null) {
 	    			final String filename = switch (zipFile.getName()) {
-	    				case "Schueler.txt", "Faecher.txt", "Kurse.txt", "Schienen.txt", "Blockplan.txt", "Fachwahlen.txt" -> zipFile.getName();
+	    				case "Blockung.txt", "Schueler.txt", "Faecher.txt", "Kurse.txt", "Schienen.txt", "Blockplan.txt", "Fachwahlen.txt" -> zipFile.getName();
 	    				default -> null;
 	    			};
-	    			if (filename != null)
-	    				Files.writeString(path, zipFile.toString(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+	    			if (filename != null) {
+	    				final Path filePath = path.resolve(filename);
+	    				Files.writeString(filePath, zipFile.toString(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+	    			}
 	    			zipInput.closeEntry();
 	    		}
     		}
