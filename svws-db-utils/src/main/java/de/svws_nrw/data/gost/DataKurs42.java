@@ -17,7 +17,6 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -68,7 +67,7 @@ public final class DataKurs42 {
 	    			};
 	    			if (filename != null) {
 	    				final Path filePath = path.resolve(filename);
-	    				Files.writeString(filePath, zipFile.toString(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+	    				Files.write(filePath, zipInput.readAllBytes(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
 	    			}
 	    			zipInput.closeEntry();
 	    		}
@@ -82,8 +81,6 @@ public final class DataKurs42 {
 
     	logger.logLn("Importiere die Blockung mithilfe der extrahierten Daten:");
 
-		final LupoMDB lupoMDB = new LupoMDB(tmpDirectory + "/" + tmpFilename);
-		lupoMDB.logger.copyConsumer(logger);
 		try {
 			DBUtilsGostBlockung.importKurs42(conn, logger, path);
 			logger.logLn("  Import beendet");
