@@ -90,6 +90,9 @@ public final class DataKurs42 {
 			// Entferne die temporär angelegten Dateien wieder...
 			logger.logLn("Löschen des temporären Verzeichnis \"" + tmpDirectory + "/" + tmpFilename + "\".");
 			try {
+				final Path pBlockung = path.resolve("Blockung.txt");
+				if (Files.exists(pBlockung))
+					Files.delete(pBlockung);
 				final Path pSchueler = path.resolve("Schueler.txt");
 				if (Files.exists(pSchueler))
 					Files.delete(pSchueler);
