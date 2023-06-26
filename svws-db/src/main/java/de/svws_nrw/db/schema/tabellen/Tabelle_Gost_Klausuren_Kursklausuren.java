@@ -35,10 +35,6 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Termin_ID = add("Termin_ID", SchemaDatentypen.BIGINT, false)
 		.setJavaComment("ID des Klausurtermins");
 
-//	/** Die Definition der Tabellenspalte Raum_ID */
-//	public SchemaTabelleSpalte col_Raum_ID = add("Raum_ID", SchemaDatentypen.BIGINT, false)
-//		.setJavaComment("ID des Klausurraums");
-
 	/** Die Definition der Tabellenspalte Startzeit */
 	public SchemaTabelleSpalte col_Startzeit = add("Startzeit", SchemaDatentypen.TIME, false)
 		.setConverter(UhrzeitConverter.class)
@@ -69,14 +65,6 @@ public class Tabelle_Gost_Klausuren_Kursklausuren extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
 			new Pair<>(col_Termin_ID, Schema.tab_Gost_Klausuren_Termine.col_ID)
 		);
-
-//	/** Die Definition des Fremdschlüssels Gost_Klausuren_Kursklausuren_Raum_ID_FK */
-//	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Kursklausuren_Raum_ID_FK = addForeignKey(
-//			"Gost_Klausuren_Kursklausuren_Raum_ID_FK",
-//			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-//			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-//			new Pair<>(col_Raum_ID, Schema.tab_Gost_Klausuren_Raeume.col_ID)
-//		);
 
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Kursklausuren_UC1 */
