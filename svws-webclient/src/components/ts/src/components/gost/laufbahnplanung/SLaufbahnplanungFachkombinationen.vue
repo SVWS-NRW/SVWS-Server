@@ -63,7 +63,7 @@
 					const fach2 = props.faechermanager.get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erfordert ${fach2?.kuerzel} ${kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erfordert ${fach2?.kuerzelAnzeige} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
@@ -79,7 +79,7 @@
 					const fach2 = props.faechermanager.get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzel} ${kursart1} erlaubt kein ${fach2?.kuerzel} ${kursart2}`;
+					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erlaubt kein ${fach2?.kuerzelAnzeige} ${kursart2}`;
 				}
 				result.add(kombi);
 			}
@@ -97,17 +97,17 @@
 			return true;
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
-				const bel1 = kursart1
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, hj)
-					: props.abiturdatenManager.pruefeBelegung(f1, hj);
-				const bel2 = kursart2
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, hj)
-					: props.abiturdatenManager.pruefeBelegung(f2, hj);
+				const bel1 = kursart1 === null
+					? props.abiturdatenManager.pruefeBelegung(f1, hj)
+					: props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, hj);
+				const bel2 = kursart2 === null
+					? props.abiturdatenManager.pruefeBelegung(f2, hj)
+					: props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, hj);
 				if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
 					fehler.value.add(f1.fachID)
 					return false;
 				}
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 !== bel2) {
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 && !bel2) {
 					fehler.value.add(f1.fachID)
 					return false;
 				}
