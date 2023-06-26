@@ -261,7 +261,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public children_hidden() : ComputedRef<boolean[]> {
 		const route = useRoute();
-		return computed(() => this._children.map(c => c.hidden(route.params)));
+		return computed(() => this.children.map(c => c.hidden(route.params)));
 	}
 
 	/**
