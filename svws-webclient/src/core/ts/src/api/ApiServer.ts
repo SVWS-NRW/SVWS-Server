@@ -4135,6 +4135,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostKlausurenRaeumeTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/{termin : -?\d+}
+	 *
+	 * Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Klausurräume.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurraum>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurräume auszulesen.
+	 *   Code 404: Die Id des Klausurtermins wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} termin - der Pfad-Parameter termin
+	 *
+	 * @returns Die Liste der Klausurräume.
+	 */
+	public async getGostKlausurenRaeumeTermin(schema : string, termin : number) : Promise<List<GostKlausurraum>> {
+		const path = "/db/{schema}/gost/klausuren/raeume/{termin : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{termin\s*(:[^}]+)?}/g, termin.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKlausurraum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurraum.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der DELETE-Methode deleteGostKlausurenRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/delete/{id : \d+}
 	 *
 	 * Löscht einen Gost-Klausurraum.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Gost-Klausurraums besitzt.
@@ -4185,6 +4214,35 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurraum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenRaumstundenTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/{termin : -?\d+}
+	 *
+	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Klausurraumstunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurraumstunde>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
+	 *   Code 404: Der Termin-ID wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} termin - der Pfad-Parameter termin
+	 *
+	 * @returns Die Liste der Klausurraumstunden.
+	 */
+	public async getGostKlausurenRaumstundenTermin(schema : string, termin : number) : Promise<List<GostKlausurraumstunde>> {
+		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{termin\s*(:[^}]+)?}/g, termin.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKlausurraumstunde>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurraumstunde.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

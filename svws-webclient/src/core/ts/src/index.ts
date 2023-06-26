@@ -479,6 +479,7 @@ export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
+export { GostKlausurraumManager } from './core/utils/klausurplan/GostKlausurraumManager';
 export { GostKlausurvorgabenManager } from './core/utils/klausurplan/GostKlausurvorgabenManager';
 export { GostKursklausurManager } from './core/utils/klausurplan/GostKursklausurManager';
 export { KlausurblockungSchienenAlgorithmus } from './core/utils/klausurplan/KlausurblockungSchienenAlgorithmus';

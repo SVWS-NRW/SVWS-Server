@@ -1,4 +1,4 @@
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe} from "@core";
+import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, GostKlausurraumManager} from "@core";
 import { StundenplanManager} from "@core";
 import { KursManager } from "@core";
 import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
@@ -322,6 +322,24 @@ export class RouteDataGostKlausurplanung {
 		this.commit();
 		api.status.stop();
 		return true;
+	}
+
+	erzeugeKlausurraum = async (raum: GostKlausurraum): Promise<GostKlausurraum> => {
+		api.status.start();
+		const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
+		//this.klausurvorgabenmanager.addKlausurvorgabe(neueVorgabe);
+		this.commit();
+		api.status.stop();
+		return neuerRaum;
+	}
+
+	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
+		api.status.start();
+		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
+		const stunden = await api.server.getGostKlausurenRaumstundenTermin(api.schema, termin.id);
+		this.commit();
+		api.status.stop();
+		return new GostKlausurraumManager(raeume, stunden);
 	}
 
 }

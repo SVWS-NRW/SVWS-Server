@@ -508,6 +508,34 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Klausurräume eines Klausurtermins.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param termin 	die Id des Gost-Klausurtermins
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Gost-Klausurräume
+	 */
+	@GET
+	@Path("/raeume/{termin : -?\\d+}")
+	@Operation(summary = "Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurräume eines Gost-Klausurtermins aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurräume.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurraum.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurräume auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Die Id des Klausurtermins wurde nicht gefunden.")
+	public Response getGostKlausurenRaeumeTermin(@PathParam("schema") final String schema, @PathParam("termin") final long termin,
+			@Context final HttpServletRequest request) {
+		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
+		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
+			return (new DataGostKlausurenRaum(conn)).get(termin);
+		}
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Erstellen eines neuen Klausurraums.
 	 *
 	 * @param schema     das Datenbankschema, in welchem die Klausurvorgabe erstellt
@@ -579,6 +607,34 @@ public class APIGostKlausuren {
 	public Response deleteGostKlausurenRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
 			return (new DataGostKlausurenRaum(conn)).delete(id);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Klausurräume eines Klausurtermins.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param termin 	die Id des Gost-Klausurtermins
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Gost-Klausurräume
+	 */
+	@GET
+	@Path("/raumstunden/{termin : -?\\d+}")
+	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurraumstunden.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumstunde.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
+	public Response getGostKlausurenRaumstundenTermin(@PathParam("schema") final String schema, @PathParam("termin") final long termin,
+			@Context final HttpServletRequest request) {
+		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
+		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
+			return (new DataGostKlausurenRaumstunde(conn)).get(termin);
 		}
 	}
 

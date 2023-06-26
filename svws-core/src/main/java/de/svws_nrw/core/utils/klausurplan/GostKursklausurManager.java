@@ -205,9 +205,8 @@ public class GostKursklausurManager {
 	 */
 	public void updateKursklausur(final @NotNull GostKursklausur klausur) {
 
-		final @NotNull List<GostKursklausur> terminNeuKlausuren = DeveloperNotificationException.ifMapGetIsNull(_mapTerminKursklausuren, klausur.idTermin != null ? klausur.idTermin : -1);
-		DeveloperNotificationException.ifListNotContains("terminNeuKlausuren", terminNeuKlausuren, klausur);
-		if (!terminNeuKlausuren.contains(klausur)) {
+		final List<GostKursklausur> terminNeuKlausuren = _mapTerminKursklausuren.get(klausur.idTermin != null ? klausur.idTermin : -1);
+		if (terminNeuKlausuren == null || !terminNeuKlausuren.contains(klausur)) {
 			// Termin-ID hat sich geändert
 			Long oldTerminId = -2L;
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -57,12 +58,21 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
-	 * @param idRaum die ID des Klausurraums
+	 * @param idTermin die ID des Klausurtermins
 	 *
 	 * @return die Liste der Klausurraumstunden
 	 */
-	private List<GostKlausurraumstunde> getKlausurraumstunden(final Long idRaum) {
-		final List<DTOGostKlausurenRaeumeStunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class);
+	private List<GostKlausurraumstunde> getKlausurraumstunden(final Long idTermin) {
+
+		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeume(idTermin);
+
+		if (listRaeume.isEmpty()) {
+			// TODO Errorhandling nötig?
+			return new ArrayList<>();
+		}
+
+		final List<DTOGostKlausurenRaeumeStunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(), DTOGostKlausurenRaeumeStunden.class);
+
 		final List<GostKlausurraumstunde> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeumeStunden s : stunden)
 			daten.add(dtoMapper.apply(s));
@@ -70,9 +80,9 @@ public final class DataGostKlausurenRaumstunde extends DataManager<Long> {
 	}
 
 	@Override
-	public Response get(final Long idRaum) {
-		// Klausurraumstunden zu einem Klausurraum
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurraumstunden(idRaum)).build();
+	public Response get(final Long idTermin) {
+		// Klausurraumstunden zu einem Klausurtermin
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurraumstunden(idTermin)).build();
 	}
 
 	@Override

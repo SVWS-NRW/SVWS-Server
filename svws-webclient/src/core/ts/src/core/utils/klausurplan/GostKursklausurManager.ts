@@ -194,9 +194,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public updateKursklausur(klausur : GostKursklausur) : void {
-		const terminNeuKlausuren : List<GostKursklausur | null> = DeveloperNotificationException.ifMapGetIsNull(this._mapTerminKursklausuren, klausur.idTermin !== null ? klausur.idTermin : -1);
-		DeveloperNotificationException.ifListNotContains("terminNeuKlausuren", terminNeuKlausuren, klausur);
-		if (!terminNeuKlausuren.contains(klausur)) {
+		const terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin !== null ? klausur.idTermin : -1);
+		if (terminNeuKlausuren === null || !terminNeuKlausuren.contains(klausur)) {
 			let oldTerminId : number | null = -2;
 			for (const e of this._mapTerminKursklausuren.entrySet()) {
 				const list : List<GostKursklausur> = e.getValue();

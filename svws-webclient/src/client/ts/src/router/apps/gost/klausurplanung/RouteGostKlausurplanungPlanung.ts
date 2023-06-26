@@ -28,6 +28,9 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
+			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
+			erzeugeKlausurraum: routeGostKlausurplanung.data.erzeugeKlausurraum,
+			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 		}
 	}
 

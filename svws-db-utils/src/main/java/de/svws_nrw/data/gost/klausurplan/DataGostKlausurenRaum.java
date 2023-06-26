@@ -63,7 +63,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 *
 	 * @return die Liste der Klausurräume
 	 */
-	private List<GostKlausurraum> getKlausurraeume(final Long idTermin) {
+	public List<GostKlausurraum> getKlausurraeume(final Long idTermin) {
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryNamed("DTOGostKlausurenRaeume.termin_id", idTermin, DTOGostKlausurenRaeume.class);
 		final List<GostKlausurraum> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeume r : raeume)
@@ -100,7 +100,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 						if ((patch_idTermin != raum.Termin_ID))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "idStundenplanRaum" -> raum.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, false);
+					case "idStundenplanRaum" -> raum.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true);
 					case "bemerkung" -> raum.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
 
 					default -> throw OperationError.BAD_REQUEST.exception();
@@ -141,7 +141,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 			long termin_ID = -1;
-			long stundenplan_Raum_ID = -1;
+			Long stundenplan_Raum_ID = null;
 			String bemerkungen = null;
 
 			final Map<String, Object> map = JSONMapper.toMap(is);
@@ -151,7 +151,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 					final Object value = entry.getValue();
 					switch (key) {
 					case "idTermin" -> termin_ID = JSONMapper.convertToLong(value, false);
-					case "idStundenplanRaum" -> stundenplan_Raum_ID = JSONMapper.convertToLong(value, false);
+					case "idStundenplanRaum" -> stundenplan_Raum_ID = JSONMapper.convertToLong(value, true);
 					case "bemerkung" -> bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
 					case "id" -> { /* do nothing */ }
 					default -> throw OperationError.BAD_REQUEST.exception();

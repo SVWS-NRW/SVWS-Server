@@ -5,7 +5,6 @@
 			:show-details="false"
 			:termin="termin"
 			:map-lehrer="mapLehrer"
-			:drag-status="null"
 			:klausur-draggable="false"
 			:kursmanager="kursmanager" />
 	</div>

@@ -1,21 +1,22 @@
 <template>
-	<svws-ui-content-card @click="dragTermin = null">
+	<svws-ui-content-card @click="dragTermin = null" class="h-full">
 		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
 			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
 		</svws-ui-radio-group>
-		<div class="flex h-screen gap-4 mt-4">
-			<div class="flex flex-col w-1/4">
+		<div class="flex gap-4 mt-4 h-screen">
+			<div class="flex flex-col w-1/4 h-full">
 				<div class="text-headline-md">Zu verplanen:</div>
 				<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1"
 					:class="dropOverCssClasses()"
-					@drop="onDrop($event, null, -1)">
+					@drop="onDrop($event, null, -1)"
+					class="h-full">
 					<ul class="flex flex-col gap-y-1">
 						<svws-ui-drag-data tag="li" v-for="termin in termineOhne"
 							:key="termin.id"
 							:data="termin"
-							@drag-start="dragStatus(termin)"
-							@drag-end="dragStatus(null)">
+							@drag-start="dragTermin = termin"
+							@drag-end="dragTermin = null">
 							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
 								:faecher-manager="faecherManager"
 								:map-lehrer="mapLehrer"
@@ -53,8 +54,8 @@
 										<span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
 										<svws-ui-drag-data v-if="!kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).isEmpty()"
 											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
-											@drag-start="dragStatus(kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0))"
-											@drag-end="dragStatus(null) ">
+											@drag-start="dragTermin = kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
+											@drag-end="dragTermin = null">
 											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
 												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
 												:faecher-manager="faecherManager"
@@ -148,7 +149,6 @@
 	}
 
 	const dragTermin = ref<GostKlausurtermin | null>(null);
-	const dragStatus = (termin: GostKlausurtermin | null) => dragTermin.value = termin;
 
 	const termineOhne = computed(() => (props.kursklausurmanager().getKlausurtermine().toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
 
