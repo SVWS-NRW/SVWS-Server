@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -77,7 +78,7 @@ public class GostBlockungsergebnisManager {
 	private final @NotNull Map<@NotNull Long, @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs>> _map_schuelerID_fachID_kurs = new HashMap<>();
 
 	/** Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.*/
-	private final @NotNull Map<@NotNull Long, @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>>> _map_schuelerID_schienenID_kurse = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map2D_schuelerID_schienenID_kurse = new HashMap2D<>();
 
 	/** Kurs-ID --> Set<GostBlockungsergebnisSchiene> */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisSchiene>> _map_kursID_schienen = new HashMap<>();
@@ -142,7 +143,7 @@ public class GostBlockungsergebnisManager {
 		_map_schuelerID_ungueltige_kurse.clear();
 		_map_schuelerID_kollisionen.clear();
 		_map_schuelerID_fachID_kurs.clear();
-		_map_schuelerID_schienenID_kurse.clear();
+		_map2D_schuelerID_schienenID_kurse.clear();
 		_map_kursID_schienen.clear();
 		_map_kursID_kurs.clear();
 		_map_kursID_schuelerIDs.clear();
@@ -232,8 +233,7 @@ public class GostBlockungsergebnisManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 			// Map: schuelerID --> (fachID --> Kurs)
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_fachID_kurs, gSchueler.id, new HashMap<>());
-			// Map: schuelerID --> (schienenID --> Kurse)
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_schienenID_kurse, gSchueler.id, new HashMap<>());
+			// _map2D_schuelerID_schienenID_kurse nicht nötig
 		}
 
 		// Map: schuelerID --> (FachID --> Kurs) = Fachwahlen kopieren und hinzufügen
@@ -248,7 +248,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
 			for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 				final HashSet<@NotNull GostBlockungsergebnisKurs> newSet = new HashSet<>();
-				getOfSchuelerSchienenKursmengeMap(gSchueler.id).put(gSchiene.id, newSet);
+				DeveloperNotificationException.ifMap2DPutOverwrites(_map2D_schuelerID_schienenID_kurse, gSchueler.id, gSchiene.id, newSet);
 			}
 
 		// Zuordnungen kopieren (diese können leer sein).
@@ -547,7 +547,7 @@ public class GostBlockungsergebnisManager {
 		_map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl + 1);
 
 		// Schiene --> Schüler --> Kurse (erhöhen)
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 		kursmenge.add(kurs);
 
 		// Kollisionen erhöhen?
@@ -572,7 +572,7 @@ public class GostBlockungsergebnisManager {
 		_map_schienenID_schuelerAnzahl.put(idSchiene, schieneSchuelerzahl - 1);
 
 		// Schiene --> Schüler --> Integer (verringern)
-		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene);
+		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kursmenge = _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 		kursmenge.remove(kurs);
 
 		// Kollisionen verringern?
@@ -836,7 +836,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public int getOfFachAnzahlSchuelerMaennlich(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.M, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -847,7 +847,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public int getOfFachAnzahlSchuelerWeiblich(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.W, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -858,7 +858,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public int getOfFachAnzahlSchuelerDivers(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.D, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -869,7 +869,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public int getOfFachAnzahlSchuelerOhneAngabe(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", Geschlecht.X, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -880,7 +880,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 */
 	public int getOfFachAnzahlSchuelerSchriftlich(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
 	}
 
 	/**
@@ -891,7 +891,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler des übergebenen Faches mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
 	 */
 	public int getOfFachAnzahlSchuelerMuendlich(final long idFach) {
-		return getCountDerSchuelerGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
 	}
 
 	// #########################################################################
@@ -935,7 +935,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public int getOfFachartAnzahlSchuelerMaennlich(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -947,7 +947,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public int getOfFachartAnzahlSchuelerWeiblich(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -959,7 +959,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public int getOfFachartAnzahlSchuelerDivers(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -971,7 +971,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public int getOfFachartAnzahlSchuelerOhneAngabe(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X, null);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -983,7 +983,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 */
 	public int getOfFachartAnzahlSchuelerSchriftlich(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
 	}
 
 	/**
@@ -995,7 +995,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
 	 */
 	public int getOfFachartAnzahlSchuelerMuendlich(final long idFach, final int idKursart) {
-		return getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+		return getOfSchuelerAnzahlGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.MUENDLICH);
 	}
 
 	// #########################################################################
@@ -1047,12 +1047,14 @@ public class GostBlockungsergebnisManager {
 	 * @return Die Menge aller Kurse des Schülers mit Kollisionen.
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeMitKollisionen(final long idSchueler) {
-		final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> mapSchieneKurse = getOfSchuelerSchienenKursmengeMap(idSchueler);
-
+		// Muss ein Set sein, da ein Multikurs sonst zu Dopplungen führen kann.
 		final @NotNull HashSet<@NotNull GostBlockungsergebnisKurs> set = new HashSet<>();
-		for (final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseDerSchiene : mapSchieneKurse.values())
+
+		for (final @NotNull GostBlockungSchiene schiene : _parent.getMengeOfSchienen()) {
+			final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseDerSchiene = _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
 				set.addAll(kurseDerSchiene);
+		}
 
 		return set;
 	}
@@ -1075,13 +1077,13 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 * Liefert TRUE, falls der übergebene Schüler die entsprechende Fachwahl (Fach + Kursart) hat.
 	 *
 	 * @param idSchueler   Die Datenbank.ID des Schülers.
 	 * @param idFach       Die Datenbank-ID des Faches der Fachwahl des Schülers.
-	 * @param idKursart    Die Datenbank-ID der Kursart der Fachwahl des Schülers.
+	 * @param idKursart    Die ID der Kursart der Fachwahl des Schülers.
 	 *
-	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
+	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl (Fach + Kursart) hat.
 	 */
 	public boolean getOfSchuelerHatFachwahl(final long idSchueler, final long idFach, final int idKursart) {
 		return _parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
@@ -1089,12 +1091,12 @@ public class GostBlockungsergebnisManager {
 
 
 	/**
-	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach (unabhängig von der Kursart) gewählt hat.
 	 *
 	 * @param idSchueler   Die Datenbank.ID des Schülers.
 	 * @param idFach       Die Datenbank-ID des Faches der Fachwahl des Schülers.
 	 *
-	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
+	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach (unabhängig von der Kursart) gewählt hat.
 	 */
 	public boolean getOfSchuelerHatFach(final long idSchueler, final long idFach) {
 		return _parent.getOfSchuelerHatFach(idSchueler, idFach);
@@ -1125,46 +1127,80 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
 	 *
-	 * @return TRUE, falls alle Schüler-Fachwahlen noch nicht zugeordnet sind.
+	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 */
+	public int getOfSchuelerAnzahlMitKollisionenOderNichtwahlen() {
+		return getOfSchuelerAnzahlGefiltert(0, 0, 0, 3, "", null, null);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 */
+	public int getOfSchuelerAnzahlMaennlich() {
+		return getOfSchuelerAnzahlGefiltert(0, 0, 0, 0, "", Geschlecht.M, null);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 */
+	public int getOfSchuelerAnzahlWeiblich() {
+		return getOfSchuelerAnzahlGefiltert(0, 0, 0, 0, "", Geschlecht.W, null);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 */
+	public int getOfSchuelerAnzahlDivers() {
+		return getOfSchuelerAnzahlGefiltert(0, 0, 0, 0, "", Geschlecht.D, null);
+	}
+
+	/**
+	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 *
+	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 */
+	public int getOfSchuelerAnzahlOhneAngabe() {
+		return getOfSchuelerAnzahlGefiltert(0, 0, 0, 0, "", Geschlecht.X, null);
+	}
+
+	/**
+	 * Liefert TRUE, falls sämtliche Fachwahlen aller SuS noch nicht zugeordnet sind.
+	 *
+	 * @return TRUE, falls sämtliche Fachwahlen aller SuS noch nicht zugeordnet sind.
 	 */
 	public boolean getOfSchuelerAlleFachwahlenNichtZugeordnet() {
 		return _ergebnis.bewertung.anzahlSchuelerNichtZugeordnet == _parent.daten().fachwahlen.size();
 	}
 
 	/**
-	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
+	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs oder NULL zuordnet.
 	 *
-	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idSchueler  Die Datenbank-ID des Schülers.
 	 *
-	 * @return die Map die jedem Fach eines Schülers seinen Kurs zuordnet (oder null).
+	 * @return die Map die jedem Fach eines Schülers seinen Kurs oder NULL zuordnet.
 	 */
 	public @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> getOfSchuelerFachIDKursMap(final long idSchueler) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, idSchueler);
 	}
 
 	/**
-	 * Liefert die Map des Schülers, die pro Schiene die belegten Kurse des Schülers zuordnet.
+	 * Liefert die Menge der zugeordneten Kurse des Schülers in der Schiene.
 	 *
-	 * @param idSchueler Die Datenbank-ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idSchiene   Die Datenbank-ID der Schiene.
 	 *
-	 * @return die Map des Schülers, die pro Schiene die belegten Kurse des Schülers zuordnet.
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerSchienenKursmengeMap(final long idSchueler) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_schienenID_kurse, idSchueler);
-	}
-
-	/**
-	 * Liefert die Menge der belegten Kurse des Schülers in der Schiene.
-	 *
-	 * @param idSchueler Die Datenbank-ID des Schülers.
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return die Menge der belegten Kurse des Schülers in der Schiene.
+	 * @return die Menge der zugeordneten Kurse des Schülers in der Schiene.
 	 */
 	public @NotNull Set<@NotNull GostBlockungsergebnisKurs> getOfSchuelerOfSchieneKursmenge(final long idSchueler, final long idSchiene) {
-		return DeveloperNotificationException.ifMapGetIsNull(getOfSchuelerSchienenKursmengeMap(idSchueler), idSchiene);
+		return _map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene);
 	}
 
 	/**
@@ -1360,12 +1396,12 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert das Geschlecht des Schülers.<br>
+	 * Liefert das {@link Geschlecht} des Schülers.<br>
 	 * Wirft eine Exception, falls das Enum {@link Geschlecht} nicht definiert ist.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 *
-	 * @return das Geschlecht des Schülers.
+	 * @return das {@link Geschlecht} des Schülers.
 	 * @throws DeveloperNotificationException falls das Enum {@link Geschlecht} nicht definiert ist.
 	 */
 	public @NotNull Geschlecht getOfSchuelerGeschlechtOrException(final long idSchueler) throws DeveloperNotificationException {
@@ -1385,10 +1421,6 @@ public class GostBlockungsergebnisManager {
 		return getSchuelerG(idSchueler).status == SchuelerStatus.EXTERN.id;
 	}
 
-	// #########################################################################
-	// ##########       Anfragen bezüglich eines Kurses.              ##########
-	// #########################################################################
-
 	/**
 	 * Liefert die Map, welche einer Schüler-ID die Menge aller ungültigen Kurse zuordnet. <br>
 	 * Hinweis 1: Hat ein Schüler keine ungültige Kurse, dann gibt es die ID nicht. <br>
@@ -1401,34 +1433,36 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision.
+	 * Liefert die Fachwahl des Schüler passend zu den Kurs.
 	 *
-	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Fachwahl des Schüler passend zu den Kurs.
 	 */
-	public @NotNull Set<@NotNull Long> getMengeDerSchuelerMitKollisionen() {
-		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
-
-		for (final @NotNull Long schuelerID : _map_schuelerID_kollisionen.keySet())
-			if (getOfSchuelerHatKollision(schuelerID))
-				set.add(schuelerID);
-
-		return set;
+	public @NotNull GostFachwahl getOfSchuelerOfKursFachwahl(final long idSchueler, final long idKurs) {
+		final long idFach = getKursE(idKurs).fachID;
+		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
-	 * Liefert eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * Liefert die Fachwahl des Schüler passend zum Fach.
 	 *
-	 * @return Eine Menge aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches.
+	 *
+	 * @return die Fachwahl des Schüler passend zum Fach.
 	 */
-	public @NotNull Set<@NotNull Long> getMengeDerSchuelerMitKollisionenOderNichtwahlen() {
-		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
-
-		for (final @NotNull Long schuelerID : _map_schuelerID_kollisionen.keySet())
-			if (getOfSchuelerHatKollision(schuelerID) || getOfSchuelerHatNichtwahl(schuelerID))
-				set.add(schuelerID);
-
-		return set;
+	public @NotNull GostFachwahl getOfSchuelerOfFachFachwahl(final long idSchueler, final long idFach) {
+		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
 	}
+
+
+
+	// #########################################################################
+	// ##########       Anfragen bezüglich eines Kurses.              ##########
+	// #########################################################################
+
 
 	/**
 	 * Liefert eine nach Kriterien gefilterte Menge aller Schüler.
@@ -1441,7 +1475,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return eine nach Kriterien gefilterte Menge aller Schüler.
 	 */
-	public @NotNull List<@NotNull Schueler> getMengeDerSchuelerGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString) {
+	public @NotNull List<@NotNull Schueler> getOfSchuelerMengeGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString) {
 		final @NotNull List<@NotNull Schueler> menge = new ArrayList<>();
 
 		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler())
@@ -1464,7 +1498,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl der Schüler, die den Filterkriterien entsprechen.
 	 */
-	public int getCountDerSchuelerGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
+	public int getOfSchuelerAnzahlGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
 		int summe = 0;
 
 		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler())
@@ -1496,7 +1530,7 @@ public class GostBlockungsergebnisManager {
 			if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
 			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
-			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerFachwahlZuKurs(idSchueler, idKurs).istSchriftlich))
+			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
 				return false;
 		}
 
@@ -1511,82 +1545,11 @@ public class GostBlockungsergebnisManager {
 					return false;
 			}
 			// Schüler hat das Fach. Stimmt die Schriftlichkeit ebenfalls?
-			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerFachwahlZuFach(idSchueler, idFach).istSchriftlich))
+			if ((schriftlichkeit != null) && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfFachFachwahl(idSchueler, idFach).istSchriftlich))
 				return false;
 		}
 
 		return true;
-	}
-
-	/**
-	 * Liefert die Fachwahl des Schüler passend zu den Kurs.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idKurs      Die Datenbank-ID des Kurses.
-	 *
-	 * @return die Fachwahl des Schüler passend zu den Kurs.
-	 */
-	public @NotNull GostFachwahl getOfSchuelerFachwahlZuKurs(final long idSchueler, final long idKurs) {
-		final long idFach = getKursE(idKurs).fachID;
-		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
-	}
-
-	/**
-	 * Liefert die Fachwahl des Schüler passend zum Fach.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 * @param idFach      Die Datenbank-ID des Faches.
-	 *
-	 * @return die Fachwahl des Schüler passend zum Fach.
-	 */
-	public @NotNull GostFachwahl getOfSchuelerFachwahlZuFach(final long idSchueler, final long idFach) {
-		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
-	}
-
-	// TODO BAR refactored until here
-	/**
-	 * Liefert die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
-	 *
-	 * @return Die Anzahl aller Schüler-IDs mit mindestens einer Kollision oder Nichtwahl.
-	 */
-	public int getAnzahlDerSchuelerMitKollisionenOderNichtwahlen() {
-		return getMengeDerSchuelerMitKollisionenOderNichtwahlen().size();
-	}
-
-	/**
-	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
-	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
-	 */
-	public int getStatistikSchuelerMaennlich() {
-		return getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.M, null);
-	}
-
-	/**
-	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
-	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
-	 */
-	public int getStatistikSchuelerWeiblich() {
-		return getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.W, null);
-	}
-
-	/**
-	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
-	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
-	 */
-	public int getStatistikSchuelerDivers() {
-		return getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.D, null);
-	}
-
-	/**
-	 * Liefert die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
-	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
-	 */
-	public int getStatistikSchuelerOhneAngabe() {
-		return getCountDerSchuelerGefiltert(0, 0, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -1717,10 +1680,12 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull Set<@NotNull Long> getOfKursSchuelermengeMitKollisionen(final long idKursID) {
 		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
+
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKursID))
 			for (final @NotNull Long schuelerID : getKursE(idKursID).schueler)
 				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
 					set.add(schuelerID); // Set ist wichtig, da bei Multikursen ein Schüler mehrfach kollidieren kann.
+
 		return set;
 	}
 
@@ -1873,7 +1838,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
 	 */
 	public int getStatistikOfKursSchuelerMaennlich(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.M, null);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", Geschlecht.M, null);
 	}
 
 	/**
@@ -1884,7 +1849,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
 	 */
 	public int getStatistikOfKursSchuelerWeiblich(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.W, null);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", Geschlecht.W, null);
 	}
 
 	/**
@@ -1895,7 +1860,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
 	 */
 	public int getStatistikOfKursSchuelerDivers(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.D, null);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", Geschlecht.D, null);
 	}
 
 	/**
@@ -1906,7 +1871,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
 	 */
 	public int getStatistikOfKursSchuelerOhneAngabe(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", Geschlecht.X, null);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", Geschlecht.X, null);
 	}
 
 	/**
@@ -1917,7 +1882,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 */
 	public int getStatistikOfKursSchriftlich(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
 	}
 
 	/**
@@ -1928,7 +1893,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Anzahl aller Schüler des Kurses mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
 	 */
 	public int getStatistikOfKursMuendlich(final long idKurs) {
-		return getCountDerSchuelerGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+		return getOfSchuelerAnzahlGefiltert(idKurs, 0, 0, 0, "", null, GostSchriftlichkeit.MUENDLICH);
 	}
 
 	/**

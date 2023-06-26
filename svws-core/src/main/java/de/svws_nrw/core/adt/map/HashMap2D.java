@@ -148,6 +148,25 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Liefert eine Liste aller Values des 1. Keys in dieser Map.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return eine Liste aller Values des 1. Keys in dieser Map.
+	 */
+	public @NotNull List<@NotNull V> getNonNullValuesOfKey1AsList(final @NotNull K1 key1) {
+		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+
+		for (final V value : getSubMapOrException(key1).values()) {
+			if (value == null)
+				throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!");
+			list.add(value);
+		}
+
+		return list;
+	}
+
+	/**
 	 * Liefert eine Liste aller Values in dieser Map.
 	 *
 	 * @return eine Liste aller Values in dieser Map.

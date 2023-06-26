@@ -35,7 +35,7 @@ export class GostKursplanungSchuelerFilter {
 		if (this.ergebnismanager === undefined)
 			return gefiltert;
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
-		const res = this.ergebnismanager.getMengeDerSchuelerGefiltert(this.kurs.value?.id || 0,
+		const res = this.ergebnismanager.getOfSchuelerMengeGefiltert(this.kurs.value?.id || 0,
 			this.fach.value || 0,
 			this.kursart.value?.id || 0,
 			pKonfliktTyp,
