@@ -71,25 +71,8 @@ public class GostKlausurvorgabenManager {
 	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> vorgaben, final GostFaecherManager faecherManager) {
 		_faecherManager = faecherManager;
 		for (final @NotNull GostKlausurvorgabe v : vorgaben) {
-			_mapIdKlausurvorgabe.put(v.idVorgabe, v);
-			addVorgabeToInternalMaps(v);
+			addKlausurvorgabe(v);
 		}
-	}
-
-	private void addVorgabeToInternalMaps(final @NotNull GostKlausurvorgabe v) {
-		_vorgaben.add(v);
-		_vorgaben.sort(_compVorgabe);
-		_mapIdKlausurvorgabe.put(v.idVorgabe, v);
-
-		// Füllen von _mapQuartalKlausurvorgaben
-		MapUtils.getOrCreateArrayList(_mapQuartalKlausurvorgaben, v.quartal).add(v);
-
-		// Füllen von _mapQuartalKursartFachKlausurvorgabe
-		_mapQuartalKursartFachKlausurvorgabe.put(v.quartal, v.kursart, v.idFach, v);
-
-		// Füllen von _mapKursartFachKlausurvorgaben
-		Map2DUtils.getOrCreateArrayList(_mapKursartFachKlausurvorgaben, v.kursart, v.idFach).add(v);
-		_mapKursartFachKlausurvorgaben.getNonNullOrException(v.kursart, v.idFach).sort(_compVorgabe);
 	}
 
 	/**
@@ -101,7 +84,7 @@ public class GostKlausurvorgabenManager {
 	public void updateKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		@NotNull final GostKlausurvorgabe vorgabeOrig = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurvorgabe, vorgabe.idVorgabe);
 		removeUpdateKlausurvorgabeCommons(vorgabeOrig);
-		addVorgabeToInternalMaps(vorgabe);
+		addKlausurvorgabe(vorgabe);
 	}
 
 	/**
@@ -110,16 +93,24 @@ public class GostKlausurvorgabenManager {
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public void addKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
-		_vorgaben.add(vorgabe);
+		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", _vorgaben, vorgabe);
 		_vorgaben.sort(_compVorgabe);
-		_mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
-		removeUpdateKlausurvorgabeCommons(vorgabe);
-		addVorgabeToInternalMaps(vorgabe);
+		DeveloperNotificationException.ifMapPutOverwrites(_mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
+
+		// Füllen von _mapQuartalKlausurvorgaben
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKlausurvorgabenList", MapUtils.getOrCreateArrayList(_mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
+
+		// Füllen von _mapQuartalKursartFachKlausurvorgabe
+		_mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
+
+		// Füllen von _mapKursartFachKlausurvorgaben
+		DeveloperNotificationException.ifListAddsDuplicate("_mapKursartFachKlausurvorgabenList", Map2DUtils.getOrCreateArrayList(_mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
+		_mapKursartFachKlausurvorgaben.getNonNullOrException(vorgabe.kursart, vorgabe.idFach).sort(_compVorgabe);
 	}
 
 	private void removeUpdateKlausurvorgabeCommons(final @NotNull GostKlausurvorgabe vorgabe) {
-		_vorgaben.remove(vorgabe);
-		_mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
+		DeveloperNotificationException.ifListRemoveFailes("_vorgaben", _vorgaben, vorgabe);
+		DeveloperNotificationException.ifMapRemoveFailes(_mapIdKlausurvorgabe, vorgabe.idVorgabe);
 
 		// aus _mapQuartalKlausurvorgaben löschen
 		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMapGetIsNull(_mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);

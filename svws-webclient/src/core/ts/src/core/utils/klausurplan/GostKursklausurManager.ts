@@ -116,18 +116,18 @@ export class GostKursklausurManager extends JavaObject {
 
 	private helpKonstruktor() : void {
 		for (const kk of this._klausuren) {
-			this._mapIdKursklausur.put(kk.id, kk);
+			DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKursklausur, kk.id, kk);
 			this.addKlausurToInternalMaps(kk);
-			MapUtils.getOrCreateArrayList(this._mapQuartalKursKlausuren, kk.quartal).add(kk);
+			DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKursKlausurenList", MapUtils.getOrCreateArrayList(this._mapQuartalKursKlausuren, kk.quartal), kk);
 			if (kk.idTermin !== null)
 				MapUtils.getOrCreateArrayList(this._mapTerminSchuelerids, kk.idTermin).addAll(kk.schuelerIds);
 		}
 	}
 
 	private addKlausurToInternalMaps(kk : GostKursklausur) : void {
-		MapUtils.getOrCreateArrayList(this._mapTerminKursklausuren, kk.idTermin !== null ? kk.idTermin : -1).add(kk);
-		Map2DUtils.getOrCreateArrayList(this._mapQuartalTerminKursklausuren, kk.quartal, kk.idTermin !== null ? kk.idTermin : -1).add(kk);
-		Map3DUtils.getOrCreateArrayList(this._mapQuartalKursartTerminKursklausuren, kk.quartal, kk.kursart, kk.idTermin !== null ? kk.idTermin : -1).add(kk);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapTerminKursklausurenList", MapUtils.getOrCreateArrayList(this._mapTerminKursklausuren, kk.idTermin !== null ? kk.idTermin : -1), kk);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalTerminKursklausurenList", Map2DUtils.getOrCreateArrayList(this._mapQuartalTerminKursklausuren, kk.quartal, kk.idTermin !== null ? kk.idTermin : -1), kk);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKursartTerminKursklausurenList", Map3DUtils.getOrCreateArrayList(this._mapQuartalKursartTerminKursklausuren, kk.quartal, kk.kursart, kk.idTermin !== null ? kk.idTermin : -1), kk);
 	}
 
 	/**
@@ -143,7 +143,7 @@ export class GostKursklausurManager extends JavaObject {
 			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(this._mapDateKlausurtermin, termin.datum), termin);
 		termin.datum = datum;
 		if (termin.datum !== null)
-			MapUtils.getOrCreateArrayList(this._mapDateKlausurtermin, termin.datum).add(termin);
+			DeveloperNotificationException.ifListAddsDuplicate("_mapDateKlausurterminList", MapUtils.getOrCreateArrayList(this._mapDateKlausurtermin, termin.datum), termin);
 	}
 
 	/**
@@ -163,12 +163,12 @@ export class GostKursklausurManager extends JavaObject {
 		}
 		if (termin.datum !== null)
 			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(this._mapDateKlausurtermin, termin.datum), termin);
-		this._mapTerminSchuelerids.remove(termin.id);
-		this._mapTerminKursklausuren.remove(termin.id);
+		DeveloperNotificationException.ifMapRemoveFailes(this._mapTerminSchuelerids, termin.id);
+		DeveloperNotificationException.ifMapRemoveFailes(this._mapTerminKursklausuren, termin.id);
 		const klausuren : List<GostKursklausur> = this._mapQuartalTerminKursklausuren.getNonNullOrException(termin.quartal, termin.id);
 		this._mapQuartalTerminKursklausuren.removeOrException(termin.quartal, termin.id);
 		for (const klausur of klausuren)
-			this._mapQuartalKursartTerminKursklausuren.remove(termin.quartal, klausur.kursart, termin.id);
+			this._mapQuartalKursartTerminKursklausuren.removeOrException(termin.quartal, klausur.kursart, termin.id);
 	}
 
 	/**
@@ -177,13 +177,13 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param termin das GostKlausurtermin-Objekt
 	 */
 	public addKlausurtermin(termin : GostKlausurtermin) : void {
-		this._termine.add(termin);
-		this._mapIdKlausurtermin.put(termin.id, termin);
+		DeveloperNotificationException.ifListAddsDuplicate("_termine", this._termine, termin);
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKlausurtermin, termin.id, termin);
 		MapUtils.getOrCreateArrayList(this._mapTerminKursklausuren, termin.id);
 		MapUtils.getOrCreateArrayList(this._mapTerminSchuelerids, termin.id);
 		MapUtils.getOrCreateArrayList(this._mapQuartalKlausurtermine, termin.quartal).add(termin);
 		if (termin.datum !== null)
-			MapUtils.getOrCreateArrayList(this._mapDateKlausurtermin, termin.datum).add(termin);
+			DeveloperNotificationException.ifListAddsDuplicate("_mapDateKlausurterminList", MapUtils.getOrCreateArrayList(this._mapDateKlausurtermin, termin.datum), termin);
 		Map2DUtils.getOrCreateArrayList(this._mapQuartalTerminKursklausuren, termin.quartal, termin.id);
 	}
 
@@ -194,8 +194,9 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public updateKursklausur(klausur : GostKursklausur) : void {
-		const terminNeuKlausuren : List<GostKursklausur | null> | null = this._mapTerminKursklausuren.get(klausur.idTermin !== null ? klausur.idTermin : -1);
-		if (terminNeuKlausuren === null || !terminNeuKlausuren.contains(klausur)) {
+		const terminNeuKlausuren : List<GostKursklausur | null> = DeveloperNotificationException.ifMapGetIsNull(this._mapTerminKursklausuren, klausur.idTermin !== null ? klausur.idTermin : -1);
+		DeveloperNotificationException.ifListNotContains("terminNeuKlausuren", terminNeuKlausuren, klausur);
+		if (!terminNeuKlausuren.contains(klausur)) {
 			let oldTerminId : number | null = -2;
 			for (const e of this._mapTerminKursklausuren.entrySet()) {
 				const list : List<GostKursklausur> = e.getValue();
@@ -204,10 +205,8 @@ export class GostKursklausurManager extends JavaObject {
 					list.remove(klausur);
 				}
 			}
-			const listOldQuartalTerminKursklausuren : List<GostKursklausur> = this._mapQuartalTerminKursklausuren.getNonNullOrException(klausur.quartal, oldTerminId);
-			DeveloperNotificationException.ifListRemoveFailes("listOldQuartalTerminKursklausuren", listOldQuartalTerminKursklausuren, klausur);
-			const listOldQuartalKursartTerminKursklausuren : List<GostKursklausur> = DeveloperNotificationException.ifMap3DGetIsNull(this._mapQuartalKursartTerminKursklausuren, klausur.quartal, klausur.kursart, oldTerminId);
-			DeveloperNotificationException.ifListRemoveFailes("listOldQuartalKursartTerminKursklausuren", listOldQuartalKursartTerminKursklausuren, klausur);
+			DeveloperNotificationException.ifListRemoveFailes("_mapQuartalTerminKursklausurenList", this._mapQuartalTerminKursklausuren.getNonNullOrException(klausur.quartal, oldTerminId), klausur);
+			DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKursartTerminKursklausurenList", DeveloperNotificationException.ifMap3DGetIsNull(this._mapQuartalKursartTerminKursklausuren, klausur.quartal, klausur.kursart, oldTerminId), klausur);
 			this.addKlausurToInternalMaps(klausur);
 			this.updateSchuelerIdsZuTermin(oldTerminId!);
 			if (klausur.idTermin !== null)
@@ -218,9 +217,7 @@ export class GostKursklausurManager extends JavaObject {
 	private updateSchuelerIdsZuTermin(idTermin : number) : void {
 		const listSchuelerIds : ArrayList<number> | null = new ArrayList();
 		this._mapTerminSchuelerids.put(idTermin, listSchuelerIds);
-		const listKlausurenZuTermin : List<GostKursklausur> | null = this._mapTerminKursklausuren.get(idTermin);
-		if (listKlausurenZuTermin === null)
-			return;
+		const listKlausurenZuTermin : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._mapTerminKursklausuren, idTermin);
 		for (const k of listKlausurenZuTermin) {
 			listSchuelerIds.addAll(k.schuelerIds);
 		}
@@ -232,8 +229,8 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param klausur das GostKursklausur-Objekt
 	 */
 	public addKlausur(klausur : GostKursklausur) : void {
-		this._klausuren.add(klausur);
-		this._mapIdKursklausur.put(klausur.id, klausur);
+		DeveloperNotificationException.ifListAddsDuplicate("_klausuren", this._klausuren, klausur);
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKursklausur, klausur.id, klausur);
 		this.addKlausurToInternalMaps(klausur);
 	}
 

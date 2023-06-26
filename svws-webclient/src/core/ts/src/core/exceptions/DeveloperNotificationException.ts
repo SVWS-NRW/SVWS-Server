@@ -210,6 +210,22 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Entfernt ein Mapping aus der Map, außer es existiert nicht, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <K> Der Schlüssel-Typ des Mappings K --> V.
+	 * @param <V> Der Schlüssel-Wert des Mappings K --> V.
+	 * @param map Die Map.
+	 * @param key Der Schlüssel des Mappings K --> V.
+	 *
+	 * @throws DeveloperNotificationException falls das Element nicht in der Map existiert.
+	 */
+	public static ifMapRemoveFailes<K, V>(map : JavaMap<K, V>, key : K) : void {
+		if (!map.containsKey(key))
+			throw new DeveloperNotificationException("REMOVE von " + key + " fehlgeschlagen, da kein Mapping existiert!")
+		map.remove(key);
+	}
+
+	/**
 	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K nichts oder NULL zugeordnet ist.
 	 *
@@ -249,6 +265,21 @@ export class DeveloperNotificationException extends RuntimeException {
 		if (!map.contains(key1, key2, key3))
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ", " + key3 + ") fehlgeschlagen, da kein Mapping existiert!")
 		return map.getNonNullOrException(key1, key2, key3);
+	}
+
+	/**
+	 * Überprüft, ob eins Liste ein Element nicht enthält, dann wird eine DeveloperNotificationException geworfen.
+	 *
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
+	 * @param value    Das Element, welches vorkommen muss.
+	 *
+	 * @throws DeveloperNotificationException falls das Element bereits in der Liste existiert.
+	 */
+	public static ifListNotContains<E>(listName : string, list : List<E>, value : E) : void {
+		if (!list.contains(value))
+			throw new DeveloperNotificationException(listName! + " hat kein Element " + value + "!")
 	}
 
 	/**

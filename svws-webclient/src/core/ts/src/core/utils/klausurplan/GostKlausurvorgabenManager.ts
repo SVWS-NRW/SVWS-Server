@@ -78,19 +78,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		super();
 		this._faecherManager = faecherManager;
 		for (const v of vorgaben) {
-			this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
-			this.addVorgabeToInternalMaps(v);
+			this.addKlausurvorgabe(v);
 		}
-	}
-
-	private addVorgabeToInternalMaps(v : GostKlausurvorgabe) : void {
-		this._vorgaben.add(v);
-		this._vorgaben.sort(this._compVorgabe);
-		this._mapIdKlausurvorgabe.put(v.idVorgabe, v);
-		MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, v.quartal).add(v);
-		this._mapQuartalKursartFachKlausurvorgabe.put(v.quartal, v.kursart, v.idFach, v);
-		Map2DUtils.getOrCreateArrayList(this._mapKursartFachKlausurvorgaben, v.kursart, v.idFach).add(v);
-		this._mapKursartFachKlausurvorgaben.getNonNullOrException(v.kursart, v.idFach).sort(this._compVorgabe);
 	}
 
 	/**
@@ -102,7 +91,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	public updateKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
 		const vorgabeOrig : GostKlausurvorgabe = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, vorgabe.idVorgabe);
 		this.removeUpdateKlausurvorgabeCommons(vorgabeOrig);
-		this.addVorgabeToInternalMaps(vorgabe);
+		this.addKlausurvorgabe(vorgabe);
 	}
 
 	/**
@@ -111,16 +100,18 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * @param vorgabe das GostKlausurvorgabe-Objekt
 	 */
 	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
-		this._vorgaben.add(vorgabe);
+		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", this._vorgaben, vorgabe);
 		this._vorgaben.sort(this._compVorgabe);
-		this._mapIdKlausurvorgabe.put(vorgabe.idVorgabe, vorgabe);
-		this.removeUpdateKlausurvorgabeCommons(vorgabe);
-		this.addVorgabeToInternalMaps(vorgabe);
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKlausurvorgabenList", MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
+		this._mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapKursartFachKlausurvorgabenList", Map2DUtils.getOrCreateArrayList(this._mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
+		this._mapKursartFachKlausurvorgaben.getNonNullOrException(vorgabe.kursart, vorgabe.idFach).sort(this._compVorgabe);
 	}
 
 	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
-		this._vorgaben.remove(vorgabe);
-		this._mapIdKlausurvorgabe.remove(vorgabe.idVorgabe);
+		DeveloperNotificationException.ifListRemoveFailes("_vorgaben", this._vorgaben, vorgabe);
+		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdKlausurvorgabe, vorgabe.idVorgabe);
 		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
 		this._mapQuartalKursartFachKlausurvorgabe.removeOrException(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach);
 		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMap2DGetIsNull(this._mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
