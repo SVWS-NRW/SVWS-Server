@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
@@ -81,6 +83,17 @@ public final class DBUtilsGostBlockung {
 		}
 		logger.logLn("[OK]");
 		logger.modifyIndent(-2);
+		// Bestimme nun die IDs der Schüler, welche in der Schule vorhanden sind
+		logger.logLn("-> Bestimme die Schüler der Schule aus der Datenbank...");
+		logger.modifyIndent(2);
+		final List<DTOSchueler> listeSchueler = conn.queryAll(DTOSchueler.class);
+		if ((listeSchueler == null) || (listeSchueler.isEmpty())) {
+			logger.logLn("[Fehler] - Konnte die Liste der Schüler nicht einlesen");
+			return false;
+		}
+		final Set<Long> setSchueler = listeSchueler.stream().map(s -> s.ID).collect(Collectors.toSet());
+		logger.logLn("[OK]");
+		logger.modifyIndent(-2);
 		// Bestimme nun die Lehrkräfte, die an der Schule tätig sind.
 		logger.logLn("-> Bestimme die Lehrkräfte der Schule aus der Datenbank...");
 		logger.modifyIndent(2);
@@ -108,7 +121,7 @@ public final class DBUtilsGostBlockung {
 		logger.modifyIndent(2);
 		Kurs42Import k42 = null;
 		try {
-			k42 = new Kurs42Import(path, schule.SchulNr, mapLehrer, logger);
+			k42 = new Kurs42Import(path, schule.SchulNr, mapLehrer, setSchueler, logger);
 		} catch (final IOException e) {
 			logger.logLn("[Fehler] - Fehler beim Einlesen des Kurs42-Text-Exports: ");
 			final StringWriter sw = new StringWriter();

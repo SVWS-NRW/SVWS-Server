@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.function.Function;
 
@@ -29,6 +30,9 @@ public class Kurs42Import {
 
 	/** Der Logger */
 	private final Logger logger;
+
+	/** Die Menge der Schüler in der SVWS-DB zur Überprüfung auf gültige Schüler-IDs */
+	private final Set<Long> setSchueler;
 
 	/** Die Rohdaten zur Blockung aus dem Kurs42 */
 	private final Kurs42DataBlockung k42Blockung;
@@ -125,12 +129,14 @@ public class Kurs42Import {
 	 * @param parent        der Pfad unter dem die Kurs42-Text-Export-Dateien liegen
 	 * @param schulnummer   die Schulnummer der Schule, die die Daten importiert
 	 * @param mapLehrer     eine Map, welchen von den Lehrer-Kürzeln auf deren ID abbildet
+	 * @param setSchueler   ein Set, mit den Schüler-IDs aus der SVWS-DBs
 	 * @param logger        der Logger
 	 *
 	 * @throws IOException   falls die Dateien nicht erfolgreich gelesen werden können.
 	 */
-	public Kurs42Import(final Path parent, final int schulnummer, final Map<String, Long> mapLehrer, final Logger logger) throws IOException {
+	public Kurs42Import(final Path parent, final int schulnummer, final Map<String, Long> mapLehrer, final Set<Long> setSchueler, final Logger logger) throws IOException {
 		this.logger = logger;
+		this.setSchueler = setSchueler;
 		this.k42Blockung = new Kurs42DataBlockung(parent.resolve("Blockung.txt"));
 		this.k42Schueler = CsvReader.from(parent.resolve("Schueler.txt"), Kurs42DataSchueler.class);
 		this.k42Faecher = CsvReader.from(parent.resolve("Faecher.txt"), Kurs42DataFaecher.class);
@@ -290,6 +296,10 @@ public class Kurs42Import {
 			final Long schuelerID = mapSchuelerKeyToID.get(schuelerKey);
 			if (schuelerID == null)
 				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey + "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+			if (!setSchueler.contains(schuelerID)) {
+				logger.logLn("Der Schüler mit der ID %d existiert nicht in der SVWS-DB. Die Kurs-Schüler-Zuordnung wird beim Import ignoriert.".formatted(schuelerID));
+				continue;
+			}
 			this.zuordnung_kurs_schueler.put(kursID, schuelerID, new Pair<>(kursID, schuelerID));
 		}
 	}
