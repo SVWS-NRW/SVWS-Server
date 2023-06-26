@@ -13,7 +13,7 @@ export class GostKlausurraum extends JavaObject {
 	public idTermin : number = -1;
 
 	/**
-	 * Die ID des Katalog_Raumes.
+	 * Die ID des Stundenplan_Raumes.
 	 */
 	public idStundenplanRaum : number = -1;
 
