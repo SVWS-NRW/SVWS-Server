@@ -19,7 +19,7 @@
 				<svws-ui-sub-nav>
 					<slot name="triggerRegeln" />
 					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv) || (!existiertSchuljahresabschnitt)" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+						<svws-ui-button :disabled="!aktivieren_moeglich" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
@@ -143,7 +143,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 	import { GostKursart } from "@core";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import {computed, onMounted, ref} from "vue";
@@ -152,6 +152,7 @@
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
+		jahrgangsdaten: GostJahrgangsdaten;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
@@ -202,6 +203,10 @@
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
+
+	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt
+		&& (!props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]) && (!(blockungsergebnis_aktiv.value || blockung_aktiv.value)));
+
 
 	function calculateColumns(): DataTableColumn[] {
 		const cols: Array<DataTableColumn> = [];

@@ -202,6 +202,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
 			config: api.config,
+			jahrgangsdaten: this.data.jahrgangsdaten,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,
 			hatErgebnis: this.data.hatErgebnis,
