@@ -114,6 +114,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _mapRegeln : HashMap<number, GostBlockungRegel> = new HashMap();
 
 	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
+	 */
+	private readonly _map_regeltyp_regeln : HashMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new HashMap();
+
+	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID.
 	 */
 	private readonly _map_schuelerID_schueler : HashMap<number, Schueler> = new HashMap();
@@ -358,10 +363,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
 		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
-		DeveloperNotificationException.ifMapContains("_mapRegeln", this._mapRegeln, pRegel.id);
-		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
+		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapRegeln, pRegel.id, pRegel);
+		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(pRegel);
 		this._daten.regeln.add(pRegel);
-		this._mapRegeln.put(pRegel.id, pRegel);
 	}
 
 	/**
@@ -992,6 +998,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 *
+	 * @param typ Der {@link GostKursblockungRegelTyp}.
+	 *
+	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 */
+	public getMengeOfRegelnOfTyp(typ : GostKursblockungRegelTyp) : List<GostBlockungRegel> {
+		return MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ);
+	}
+
+	/**
 	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 *
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
@@ -1199,7 +1216,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public removeRegelByID(pRegelID : number) : void {
 		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const regel : GostBlockungRegel = this.getRegel(pRegelID);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		this._mapRegeln.remove(pRegelID);
+		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
 		this._daten.regeln.remove(regel);
 	}
 

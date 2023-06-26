@@ -89,6 +89,9 @@ public class GostBlockungsdatenManager {
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Regeln anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungRegel> _mapRegeln = new HashMap<>();
 
+	/** Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}. */
+	private final @NotNull HashMap<@NotNull GostKursblockungRegelTyp, @NotNull List<@NotNull GostBlockungRegel>> _map_regeltyp_regeln = new HashMap<>();
+
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull Schueler> _map_schuelerID_schueler = new HashMap<>();
 
@@ -345,12 +348,13 @@ public class GostBlockungsdatenManager {
 	private void addRegelOhneSortierung(final @NotNull GostBlockungRegel pRegel) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
-		DeveloperNotificationException.ifMapContains("_mapRegeln", _mapRegeln, pRegel.id);
-		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", GostKursblockungRegelTyp.fromTyp(pRegel.typ) == GostKursblockungRegelTyp.UNDEFINIERT);
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
+		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", typ == GostKursblockungRegelTyp.UNDEFINIERT);
 
 		// Hinzufügen der Regel.
+		DeveloperNotificationException.ifMapPutOverwrites(_mapRegeln, pRegel.id, pRegel);
+		MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).add(pRegel);
 		_daten.regeln.add(pRegel);
-		_mapRegeln.put(pRegel.id, pRegel);
 	}
 
 	/**
@@ -1008,6 +1012,17 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 *
+	 * @param typ Der {@link GostKursblockungRegelTyp}.
+	 *
+	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> getMengeOfRegelnOfTyp(final @NotNull GostKursblockungRegelTyp typ) {
+		return MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ);
+	}
+
+	/**
 	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 *
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
@@ -1229,10 +1244,12 @@ public class GostBlockungsdatenManager {
 	public void removeRegelByID(final long pRegelID) throws DeveloperNotificationException, UserNotificationException {
 		// Datenkonsistenz überprüfen.
 		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
+		final @NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
+		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
 
 		// Regel entfernen.
-		final @NotNull GostBlockungRegel regel = this.getRegel(pRegelID);
 		_mapRegeln.remove(pRegelID);
+		MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).remove(regel);
 		_daten.regeln.remove(regel);
 	}
 

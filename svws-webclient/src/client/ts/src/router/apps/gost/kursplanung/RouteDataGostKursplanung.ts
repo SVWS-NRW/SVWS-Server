@@ -610,7 +610,7 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		const ergebnisid = this._state.value.auswahlErgebnis.id;
-		const zuordnungen = this.ergebnismanager.getOfSchuelerNeuzuordnung(idSchueler);
+		const zuordnungen = this.ergebnismanager.getOfSchuelerNeuzuordnungMitFixierung(idSchueler, false);
 		for (const z of zuordnungen.fachwahlenZuKurs) {
 			const kursV = this.ergebnismanager.getOfSchuelerOfFachZugeordneterKurs(idSchueler, z.fachID);
 			const kursN = (z.kursID < 0) ? null : this.ergebnismanager.getKursE(z.kursID);
