@@ -213,6 +213,8 @@ public final class DBSchemaViews {
                   AND Schueler.ID = SchuelerLernabschnittsdaten.Schueler_ID AND SchuelerLernabschnittsdaten.WechselNr IS NULL
                 JOIN EigeneSchule_Jahrgaenge ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID
                 JOIN EigeneSchule
+                LEFT JOIN EigeneSchule_Jahrgaenge jg_abgang ON Schueler.Entlassjahrgang_ID = jg_abgang.ID
+                WHERE Schueler.Status <> 8 OR jg_abgang.ASDJahrgang IN ('EF', 'Q1', 'Q2')
                 """
 		).add("ID", "Die ID des Schülers", "Long", "Schueler.ID", null, true)
 		 .add("Status", "Der Status des Schülers", "SchuelerStatus", "Schueler.Status", SchuelerStatusConverter.class, false)
