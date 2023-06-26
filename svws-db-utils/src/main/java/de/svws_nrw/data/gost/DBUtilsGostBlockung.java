@@ -108,7 +108,7 @@ public final class DBUtilsGostBlockung {
 		logger.modifyIndent(2);
 		Kurs42Import k42 = null;
 		try {
-			k42 = new Kurs42Import(path, schule.SchulNr, schule.AnzahlAbschnitte == 4, mapLehrer);
+			k42 = new Kurs42Import(path, schule.SchulNr, mapLehrer, logger);
 		} catch (final IOException e) {
 			logger.logLn("[Fehler] - Fehler beim Einlesen des Kurs42-Text-Exports: ");
 			final StringWriter sw = new StringWriter();

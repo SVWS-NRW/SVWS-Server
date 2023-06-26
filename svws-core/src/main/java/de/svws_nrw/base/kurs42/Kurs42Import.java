@@ -15,6 +15,7 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
@@ -25,6 +26,10 @@ import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
  * sie mit den Daten aus der SVWS-Datenbank abgeglichen werden könne.
  */
 public class Kurs42Import {
+
+	/** Der Logger */
+	private final Logger logger;
+
 	/** Die Rohdaten zur Blockung aus dem Kurs42 */
 	private final Kurs42DataBlockung k42Blockung;
 
@@ -117,14 +122,15 @@ public class Kurs42Import {
 	 * Liest die Informationen aus dem Kurs-42-Text-Export unter dem
 	 * angegebenen Pfad ein.
 	 *
-	 * @param parent            der Pfad unter dem die Kurs42-Text-Export-Dateien liegen
-	 * @param schulnummer       die Schulnummer der Schule, die die Daten importiert
-	 * @param istQuartalsmodus  gibt an, ob die importierende Schule im Quartalsmodus arbeitet oder nicht
-	 * @param mapLehrer         eine Map, welchen von den Lehrer-Kürzeln auf deren ID abbildet
+	 * @param parent        der Pfad unter dem die Kurs42-Text-Export-Dateien liegen
+	 * @param schulnummer   die Schulnummer der Schule, die die Daten importiert
+	 * @param mapLehrer     eine Map, welchen von den Lehrer-Kürzeln auf deren ID abbildet
+	 * @param logger        der Logger
 	 *
 	 * @throws IOException   falls die Dateien nicht erfolgreich gelesen werden können.
 	 */
-	public Kurs42Import(final Path parent, final int schulnummer, final boolean istQuartalsmodus, final Map<String, Long> mapLehrer) throws IOException {
+	public Kurs42Import(final Path parent, final int schulnummer, final Map<String, Long> mapLehrer, final Logger logger) throws IOException {
+		this.logger = logger;
 		this.k42Blockung = new Kurs42DataBlockung(parent.resolve("Blockung.txt"));
 		this.k42Schueler = CsvReader.from(parent.resolve("Schueler.txt"), Kurs42DataSchueler.class);
 		this.k42Faecher = CsvReader.from(parent.resolve("Faecher.txt"), Kurs42DataFaecher.class);
@@ -135,9 +141,7 @@ public class Kurs42Import {
 		if (!("" + schulnummer).equals(k42Blockung.Schulnummer))
 			throw new IOException("Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");
 		this.name = (k42Blockung.Bezeichnung == null) || "".equals(k42Blockung.Bezeichnung) ? "Blockung importiert aus Kurs42" : k42Blockung.Bezeichnung;
-		int abschnitt = istQuartalsmodus ? (k42Blockung.Abschnitt / 2) : k42Blockung.Abschnitt;
-		if (abschnitt > 2)
-			abschnitt = 2;
+		final int abschnitt = k42Blockung.Abschnitt > 2 ? 2 : k42Blockung.Abschnitt;
 		this.halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(k42Blockung.Jahrgang, abschnitt);
 		this.abiturjahrgang = halbjahr.getAbiturjahrFromSchuljahr(k42Blockung.Jahr);
 		for (final Kurs42DataSchueler schueler : k42Schueler) {
@@ -187,8 +191,10 @@ public class Kurs42Import {
 			kurs.anzahlSchienen = k42Kurs.Schienenzahl;
 			if (k42Kurs.Lehrer != null && !"".equals(k42Kurs.Lehrer) && !"--".equals(k42Kurs.Lehrer)) {
 				final Long lehrerID = mapLehrer.get(k42Kurs.Lehrer);
-				if (lehrerID == null)
-					throw new IOException("Das bei den Kursen angegeben Lehrer-Kürzel " + k42Kurs.Lehrer + " existiert nicht in der Lehrer-Liste. Die zu importierenden Daten sind inkonsistent oder passen nicht zu der SVWS-Datenbank. Der Import wird abgebrochen.");
+				if (lehrerID == null) {
+					logger.logLn("Das bei den Kursen angegeben Lehrer-Kürzel %s existiert nicht in der Lehrer-Liste. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird kein Lehrer zugeordnet.".formatted(k42Kurs.Lehrer));
+					continue;
+				}
 				final GostBlockungKursLehrer kl = new GostBlockungKursLehrer();
 				kl.id = lehrerID;
 				kl.kuerzel = k42Kurs.Lehrer;
