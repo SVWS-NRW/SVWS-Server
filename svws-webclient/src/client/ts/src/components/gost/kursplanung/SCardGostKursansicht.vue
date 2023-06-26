@@ -19,7 +19,14 @@
 				<svws-ui-sub-nav>
 					<slot name="triggerRegeln" />
 					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<svws-ui-button :disabled="!aktivieren_moeglich" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+						<svws-ui-tooltip>
+							<svws-ui-button :disabled="!aktivieren_moeglich" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+							<template #content>
+								<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
+								<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
+								<span v-else />
+							</template>
+						</svws-ui-tooltip>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
@@ -204,8 +211,9 @@
 
 	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
 
-	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt
-		&& (!props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]) && (!(blockungsergebnis_aktiv.value || blockung_aktiv.value)));
+	const bereits_aktiv: ComputedRef<boolean> = computed(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id] || blockungsergebnis_aktiv.value || blockung_aktiv.value);
+
+	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
 
 
 	function calculateColumns(): DataTableColumn[] {
