@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag} from "@core";
+import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
 import { shallowRef } from "vue";
@@ -20,6 +20,7 @@ interface RouteStateGostKursplanung {
 	// ... auch abhängig vom ausgewählten Halbjahr der gymnasialen Oberstufe
 	halbjahr: GostHalbjahr;
 	mapBlockungen: Map<number, GostBlockungListeneintrag>;
+	existiertSchuljahresabschnitt: boolean;
 	// ...auch abhängig von der ausgewählten Blockung
 	auswahlBlockung: GostBlockungListeneintrag | undefined;
 	datenmanager: GostBlockungsdatenManager | undefined;
@@ -42,6 +43,7 @@ export class RouteDataGostKursplanung {
 		mapLehrer: new Map(),
 		halbjahr: GostHalbjahr.EF1,
 		mapBlockungen: new Map(),
+		existiertSchuljahresabschnitt: false,
 		auswahlBlockung: undefined,
 		datenmanager: undefined,
 		auswahlErgebnis: undefined,
@@ -169,10 +171,14 @@ export class RouteDataGostKursplanung {
 			if (auswahlBlockung === undefined)
 				auswahlBlockung = listBlockungen.get(0);
 		}
+		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
+		const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+		const existiertSchuljahresabschnitt = (abschnitt !== undefined);
 		api.status.stop();
 		this.setPatchedState({
 			halbjahr: halbjahr,
 			mapBlockungen: mapBlockungen,
+			existiertSchuljahresabschnitt: existiertSchuljahresabschnitt,
 			auswahlBlockung: auswahlBlockung,
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
@@ -180,6 +186,10 @@ export class RouteDataGostKursplanung {
 			schuelerFilter: undefined,
 		});
 		return true;
+	}
+
+	public get existiertSchuljahresabschnitt() : boolean {
+		return this._state.value.existiertSchuljahresabschnitt;
 	}
 
 	public get hatBlockung(): boolean {

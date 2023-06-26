@@ -23,6 +23,7 @@ export interface GostKursplanungProps {
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
+	existiertSchuljahresabschnitt: boolean;
 	config: Config;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;

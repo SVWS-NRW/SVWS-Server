@@ -19,7 +19,7 @@
 				<svws-ui-sub-nav>
 					<slot name="triggerRegeln" />
 					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv)" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+						<svws-ui-button :disabled="blockungsergebnis_aktiv || (blockung_aktiv && !blockungsergebnis_aktiv) || (!existiertSchuljahresabschnitt)" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
@@ -171,6 +171,7 @@
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		existiertSchuljahresabschnitt: boolean;
 		config: Config;
 		hatErgebnis: boolean;
 		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
