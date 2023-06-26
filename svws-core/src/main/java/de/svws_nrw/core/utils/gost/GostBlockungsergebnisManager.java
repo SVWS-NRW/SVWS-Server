@@ -38,7 +38,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsergebnis}. Hierbei werden auch Hilfsmethoden zur
- * Interpretation der Daten erzeugt. <br>
+ * Interpretation der Daten erzeugt.<br>
  * Nur Methoden, die mit "state" beginnen verändern den Zustand der Daten. <br>
  */
 public class GostBlockungsergebnisManager {
