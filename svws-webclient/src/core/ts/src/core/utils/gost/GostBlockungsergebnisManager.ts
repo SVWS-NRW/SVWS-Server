@@ -837,10 +837,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Kursmenge, die zur Fachart gehört.<br>
-	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * Liefert die Kursmenge, die zur Fachart gehört. Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.<br>
+	 * Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
 	 *
-	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * @param  idFachart  Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
 	 * @return die Kursmenge, die zur Fachart gehört.
 	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
@@ -850,87 +850,89 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Kursdifferenz der Fachart.<br>
+	 * Liefert die Kursdifferenz der Fachart und beachtet dabei Dummy-SuS von Kursen.
 	 * Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * Die Methode beachtet auch Kurse mit Dummy-SuS. <br>
+	 * Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
 	 *
-	 * @param  idFachart  Die ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
+	 * @param  idFachart  Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
-	 * @return die Kursdifferenz der Fachart.
-	 * @throws DeveloperNotificationException Falls die Fachart-ID unbekannt ist.
+	 * @return die Kursdifferenz der Fachart und beachtet dabei Dummy-SuS von Kursen.
+	 * @throws DeveloperNotificationException falls die Fachart-ID unbekannt ist.
 	 */
 	public getOfFachartKursdifferenz(idFachart : number) : number {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachartID_kursdifferenz, idFachart)!;
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#M}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#M}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#M}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#M}.
 	 */
-	public getStatistikOfFachOfKursartSchuelerMaennlich(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerMaennlich(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.M, null);
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#W}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#W}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#W}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#W}.
 	 */
-	public getStatistikOfFachOfKursartSchuelerWeiblich(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerWeiblich(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.W, null);
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#D}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#D}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#D}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#D}.
 	 */
-	public getStatistikOfFachOfKursartSchuelerDivers(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerDivers(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.D, null);
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler eines Faches mit dem Geschlecht {@link Geschlecht#X}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#X}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler mit dem Geschlecht {@link Geschlecht#X}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit dem Geschlecht {@link Geschlecht#X}.
 	 */
-	public getStatistikOfFachOfKursartSchuelerOhneAngabe(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerOhneAngabe(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", Geschlecht.X, null);
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#SCHRIFTLICH}.
 	 */
-	public getStatistikOfFachUndKursartSchriftlich(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerSchriftlich(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.SCHRIFTLICH);
 	}
 
 	/**
-	 * Liefert die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 * Liefert die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
 	 *
 	 * @param idFach     Die Datenbank-ID des Faches.
 	 * @param idKursart  Die ID der Kursart.
 	 *
-	 * @return die Anzahl aller Schüler des übergebenen Faches und Kursart mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
+	 * @return die Anzahl aller Schüler einer Fachart (Fach + Kursart) mit Schriftlichkeit {@link GostSchriftlichkeit#MUENDLICH}.
 	 */
-	public getStatistikOfFachUndKursartMuendlich(idFach : number, idKursart : number) : number {
+	public getOfFachartAnzahlSchuelerMuendlich(idFach : number, idKursart : number) : number {
 		return this.getCountDerSchuelerGefiltert(0, idFach, idKursart, 0, "", null, GostSchriftlichkeit.MUENDLICH);
 	}
 
