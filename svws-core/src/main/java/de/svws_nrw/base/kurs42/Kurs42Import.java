@@ -258,9 +258,11 @@ public class Kurs42Import {
 		long curRegelID = firstRegelID;
 		for (final Kurs42DataBlockplan bp : k42Blockplan) {
 			final Long id = mapKursNameToID.get(bp.Kursbezeichnung);
-			if (id == null)
-				throw new IOException("Der im Blockplan angegebene Kurs existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
 			final int schienenNr = bp.Schiene + 1; // der SVWS-Server verwendet eine 1-Indizierung => Umwandlung
+			if (id == null) {
+				logger.logLn("Der im Blockplan angegebene Kurs '%s' existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent. Dem Kurs wird nicht die Schiene %d zugeordnet.".formatted(bp.Kursbezeichnung, schienenNr));
+				continue;
+			}
 			final Long schienenID = mapSchieneNrToID.get(schienenNr);
 			if (schienenID == null)
 				throw new IOException("Die im Blockplan angegebene Schienennummer " + bp.Schiene + " existiert nicht in der Schienen-Liste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
@@ -281,8 +283,10 @@ public class Kurs42Import {
 		for (final Kurs42DataFachwahlen fw : k42Fachwahlen) {
 			final String schuelerKey = getSchuelerKeyFW.apply(fw);
 			final Long kursID = mapKursNameToID.get(fw.Kurs);
-			if (kursID == null)
-				throw new IOException("Der bei den Fachwahlen angegebene Kurs (" + fw.Kurs + ") existiert nicht in der Schülerliste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+			if (kursID == null) {
+				logger.logLn("Der bei den Fachwahlen angegebene Kurs (%s) existiert nicht in der Liste der Kurse. Die zu importierenden Daten sind inkonsistent.".formatted(fw.Kurs));
+				continue;
+			}
 			final Long schuelerID = mapSchuelerKeyToID.get(schuelerKey);
 			if (schuelerID == null)
 				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey + "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
