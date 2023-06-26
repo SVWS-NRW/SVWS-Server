@@ -9,6 +9,7 @@
 		</Teleport>
 		<div class="flex justify-between items-center gap-12 mb-4 mt-1">
 			<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
+			<svws-ui-toggle v-model="filterExterne">keine Externen</svws-ui-toggle>
 			<svws-ui-toggle v-model="filterFehler">Nur Fehler</svws-ui-toggle>
 		</div>
 		<div v-if="filtered.isEmpty()">
@@ -54,8 +55,8 @@
 	const props = defineProps<{
 		config: Config;
 		listBelegpruefungsErgebnisse: () =>List<GostBelegpruefungsErgebnisse>;
-		gostBelegpruefungsArt: () => 'ef1'|'gesamt';
-		setGostBelegpruefungsArt: (value: 'ef1'|'gesamt') => Promise<void>;
+		gostBelegpruefungsArt: () => 'ef1' | 'gesamt';
+		setGostBelegpruefungsArt: (value: 'ef1' | 'gesamt') => Promise<void>;
 		gotoLaufbahnplanung: (id: number) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		abiturjahr: number;
@@ -65,12 +66,16 @@
 	const cols: DataTableColumn[] = [{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true}, {key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
-		if (!filterFehler.value)
+		if ((!filterFehler.value) && (!filterExterne.value))
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
-		for (const e of props.listBelegpruefungsErgebnisse())
-			if (e.ergebnis.erfolgreich === false)
-				a.add(e);
+		for (const e of props.listBelegpruefungsErgebnisse()) {
+			if (filterFehler.value && e.ergebnis.erfolgreich)
+				continue;
+			if ((filterExterne.value) && (SchuelerStatus.fromID(e.schueler.status) === SchuelerStatus.EXTERN))
+				continue;
+			a.add(e);
+		}
 		return a;
 	})
 
@@ -84,7 +89,12 @@
 
 	const filterFehler: WritableComputedRef<boolean> = computed({
 		get: () => props.config.getValue('gost.laufbahnplanung.filterFehler') === 'true',
-		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterFehler', value === true ? 'true':'false')
+		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterFehler', value === true ? 'true' : 'false')
+	});
+
+	const filterExterne: WritableComputedRef<boolean> = computed({
+		get: () => props.config.getValue('gost.laufbahnplanung.filterExterne') === 'true',
+		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterExterne', value === true ? 'true' : 'false')
 	});
 
 	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({

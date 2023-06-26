@@ -99,7 +99,8 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.laufbahnplanung.filterFehler", "user", "true")
+			new ConfigElement("gost.laufbahnplanung.filterFehler", "user", "true"),
+			new ConfigElement("gost.laufbahnplanung.filterExterne", "user", "false")
 		]);
 	}
 
