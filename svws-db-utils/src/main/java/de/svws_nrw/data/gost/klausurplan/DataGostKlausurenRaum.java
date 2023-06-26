@@ -50,7 +50,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 		final GostKlausurraum daten = new GostKlausurraum();
 		daten.id = z.ID;
 		daten.idTermin = z.Termin_ID;
-		daten.idKatalogRaum = z.Katalog_Raum_ID;
+		daten.idStundenplanRaum = z.Stundenplan_Raum_ID;
 		daten.bemerkung = z.Bemerkungen;
 		return daten;
 	};
@@ -100,7 +100,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 						if ((patch_idTermin != raum.Termin_ID))
 							throw OperationError.BAD_REQUEST.exception();
 					}
-					case "idKatalogRaum" -> raum.Katalog_Raum_ID = JSONMapper.convertToLong(value, false);
+					case "idStundenplanRaum" -> raum.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, false);
 					case "bemerkung" -> raum.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
 
 					default -> throw OperationError.BAD_REQUEST.exception();
@@ -141,7 +141,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 			long termin_ID = -1;
-			long katalog_Raum_ID = -1;
+			long stundenplan_Raum_ID = -1;
 			String bemerkungen = null;
 
 			final Map<String, Object> map = JSONMapper.toMap(is);
@@ -151,7 +151,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 					final Object value = entry.getValue();
 					switch (key) {
 					case "idTermin" -> termin_ID = JSONMapper.convertToLong(value, false);
-					case "idKatalogRaum" -> katalog_Raum_ID = JSONMapper.convertToLong(value, false);
+					case "idStundenplanRaum" -> stundenplan_Raum_ID = JSONMapper.convertToLong(value, false);
 					case "bemerkung" -> bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge());
 					case "id" -> { /* do nothing */ }
 					default -> throw OperationError.BAD_REQUEST.exception();
@@ -160,7 +160,7 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 			}
 
 			raum = new DTOGostKlausurenRaeume(id, termin_ID);
-			raum.Katalog_Raum_ID = katalog_Raum_ID;
+			raum.Stundenplan_Raum_ID = stundenplan_Raum_ID;
 			raum.Bemerkungen = bemerkungen;
 
 			conn.transactionPersist(raum);

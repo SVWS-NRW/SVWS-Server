@@ -21,9 +21,9 @@ public class GostKlausurraum {
 	@Schema(description = "die ID des Klausurtermins", example = "2242")
 	public long idTermin = -1;
 
-	/** Die ID des Katalog_Raumes. */
-	@Schema(description = "die ID des Katalog_Raumes", example = "221")
-	public long idKatalogRaum = -1;
+	/** Die ID des Stundenplan_Raumes. */
+	@Schema(description = "die ID des Stundenplan_Raumes", example = "221")
+	public long idStundenplanRaum = -1;
 
 	/** Die textuelle Bemerkung zum Klausurraum, sofern vorhanden. */
 	@Schema(description = "die textuelle Bemerkung zum Klausurraum, sofern vorhanden", example = "Bemerkung")

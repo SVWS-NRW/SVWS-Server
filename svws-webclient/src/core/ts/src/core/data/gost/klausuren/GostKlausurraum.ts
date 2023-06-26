@@ -15,7 +15,7 @@ export class GostKlausurraum extends JavaObject {
 	/**
 	 * Die ID des Katalog_Raumes.
 	 */
-	public idKatalogRaum : number = -1;
+	public idStundenplanRaum : number = -1;
 
 	/**
 	 * Die textuelle Bemerkung zum Klausurraum, sofern vorhanden.
@@ -40,9 +40,9 @@ export class GostKlausurraum extends JavaObject {
 		if (typeof obj.idTermin === "undefined")
 			 throw new Error('invalid json format, missing attribute idTermin');
 		result.idTermin = obj.idTermin;
-		if (typeof obj.idKatalogRaum === "undefined")
-			 throw new Error('invalid json format, missing attribute idKatalogRaum');
-		result.idKatalogRaum = obj.idKatalogRaum;
+		if (typeof obj.idStundenplanRaum === "undefined")
+			 throw new Error('invalid json format, missing attribute idStundenplanRaum');
+		result.idStundenplanRaum = obj.idStundenplanRaum;
 		result.bemerkung = typeof obj.bemerkung === "undefined" ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
@@ -51,7 +51,7 @@ export class GostKlausurraum extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idTermin" : ' + obj.idTermin + ',';
-		result += '"idKatalogRaum" : ' + obj.idKatalogRaum + ',';
+		result += '"idStundenplanRaum" : ' + obj.idStundenplanRaum + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -66,8 +66,8 @@ export class GostKlausurraum extends JavaObject {
 		if (typeof obj.idTermin !== "undefined") {
 			result += '"idTermin" : ' + obj.idTermin + ',';
 		}
-		if (typeof obj.idKatalogRaum !== "undefined") {
-			result += '"idKatalogRaum" : ' + obj.idKatalogRaum + ',';
+		if (typeof obj.idStundenplanRaum !== "undefined") {
+			result += '"idStundenplanRaum" : ' + obj.idStundenplanRaum + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
