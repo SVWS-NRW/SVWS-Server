@@ -36,13 +36,13 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Wert zum Mapping (key1, key2). <br>
+	 * Liefert den Wert zum Mapping (key1, key2). Das Ergebnis kann NULL sein!<br>
 	 * Falls es den Pfad (key1) oder (key1, key2) nicht gibt, wird eine Exception geworfen.
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
 	 *
-	 * @return Den Wert zum Mapping (key1, key2).
+	 * @return den Wert zum Mapping (key1, key2). Das Ergebnis kann NULL sein!
 	 * @throws NullPointerException Falls ein Teilpfad (key1, key2) nicht existiert!
 	 */
 	public getOrException(key1 : K1, key2 : K2) : V | null {
@@ -168,6 +168,20 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Mapping (key1, ...) auf NULL existiert.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls ein Mapping (key1, ...) auf NULL existiert.
+	 */
+	public containsNullValuesOfKey1(key1 : K1) : boolean {
+		for (const value of this.getSubMapOrException(key1).values())
+			if (value === null)
+				return true;
+		return false;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
