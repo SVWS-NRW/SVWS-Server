@@ -24,13 +24,7 @@
 		<svws-ui-input-wrapper>
 			<input type="file" accept=".zip" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
-			<br>{{
-				status === false
-					? "Fehler beim Upload"
-					: status === true
-						? "Upload erfolgreich"
-						: ""
-			}}
+			<br> {{ status === false ? "Fehler beim Importieren" : status === true ? "Import erfolgreich" : "" }}
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -52,6 +46,7 @@
 		const file = target.files.item(0);
 		if (!file)
 			return;
+		status.value = undefined;
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);

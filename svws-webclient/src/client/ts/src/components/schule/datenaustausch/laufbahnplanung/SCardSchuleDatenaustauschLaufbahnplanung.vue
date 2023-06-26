@@ -3,13 +3,7 @@
 		<div class="flex items-start gap-3">
 			<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
-			<br>{{
-				status === false
-					? "Fehler beim Upload"
-					: status === true
-						? "Upload erfolgreich"
-						: ""
-			}}
+			<br> {{ status === false ? "Fehler beim Import" : status === true ? "Import erfolgreich" : "" }}
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -31,6 +25,7 @@
 		const file = target.files.item(0);
 		if (!file)
 			return;
+		status.value = undefined;
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);
