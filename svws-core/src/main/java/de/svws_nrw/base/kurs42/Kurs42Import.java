@@ -210,11 +210,13 @@ public class Kurs42Import {
 				try {
 					final String[] tmpSchienen = k42Kurs.Gesperrt.substring(1, k42Kurs.Gesperrt.length() - 1).split(",");
 					for (final String schiene : tmpSchienen) {
+						if ("".equals(schiene.trim()))
+							continue;
 						final GostBlockungRegel regel = new GostBlockungRegel();
 						regel.id = curRegelID++;
 						regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 						regel.parameter.add(id);  // Kurs-ID
-						regel.parameter.add(Long.parseLong(schiene) + 1);  // Die Schienen-Nummer (1-indiziert)
+						regel.parameter.add(Long.parseLong(schiene.trim()) + 1);  // Die Schienen-Nummer (1-indiziert)
 						regeln.add(regel);
 					}
 				} catch (final NumberFormatException nfe) {
