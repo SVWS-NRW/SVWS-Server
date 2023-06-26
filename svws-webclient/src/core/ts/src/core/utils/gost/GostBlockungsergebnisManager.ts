@@ -18,6 +18,7 @@ import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
+import { Pair } from '../../../core/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
@@ -111,11 +112,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_kursID_dummySuS : JavaMap<number, number> = new HashMap();
 
 	/**
-	 * Kurs-ID --> Set<SchuelerID>
-	 */
-	private readonly _map_kursID_schuelerIDs : JavaMap<number, JavaSet<number>> = new HashMap();
-
-	/**
 	 * Fach-ID --> ArrayList<GostBlockungsergebnisKurs>
 	 */
 	private readonly _map_fachID_kurse : JavaMap<number, List<GostBlockungsergebnisKurs>> = new HashMap();
@@ -187,7 +183,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map2D_schuelerID_schienenID_kurse.clear();
 		this._map_kursID_schienen.clear();
 		this._map_kursID_kurs.clear();
-		this._map_kursID_schuelerIDs.clear();
 		this._map_kursID_dummySuS.clear();
 		this._map_fachID_kurse.clear();
 		this._map_fachartID_kurse.clear();
@@ -220,7 +215,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this._ergebnis.bewertung.anzahlKurseNichtZugeordnet += eKurs.anzahlSchienen;
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_kurs, eKurs.id, eKurs);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schienen, eKurs.id, new HashSet<GostBlockungsergebnisSchiene>());
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_kursID_schuelerIDs, eKurs.id, new HashSet<number>());
 			MapUtils.getOrCreateArrayList(this._map_fachID_kurse, eKurs.fachID).add(eKurs);
 			const fachartID : number = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
 			MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, fachartID).add(eKurs);
@@ -382,11 +376,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach) !== null)
 			return;
 		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(idSchueler);
-		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
 		const fachartID : number = GostKursart.getFachartID(idFach, kurs.kursart);
 		kurs.schueler.add(idSchueler);
 		kurseOfSchueler.add(kurs);
-		schuelerIDsOfKurs.add(idSchueler);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		this._map2D_schuelerID_fachID_kurs.put(idSchueler, idFach, kurs);
 		this.stateKursdifferenzUpdate(fachartID);
@@ -413,11 +405,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (this.getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach) as unknown !== kurs as unknown)
 			return;
 		const kurseOfSchueler : JavaSet<GostBlockungsergebnisKurs> = this.getOfSchuelerKursmenge(idSchueler);
-		const schuelerIDsOfKurs : JavaSet<number> = this.getOfKursSchuelerIDmenge(idKurs);
 		const fachartID : number = GostKursart.getFachartID(idFach, kurs.kursart);
 		kurs.schueler.remove(idSchueler);
 		kurseOfSchueler.remove(kurs);
-		schuelerIDsOfKurs.remove(idSchueler);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		this._map2D_schuelerID_fachID_kurs.put(idSchueler, idFach, null);
 		this.stateKursdifferenzUpdate(fachartID);
@@ -1386,19 +1376,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
-	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return zur Kurs-ID die zugehörige Menge aller Schüler-IDs.
-	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
-	 */
-	public getOfKursSchuelerIDmenge(idKurs : number) : JavaSet<number> {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_schuelerIDs, idKurs);
-	}
-
-	/**
 	 * Liefert die Schienenmenge des Kurses.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
@@ -1613,15 +1590,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfKursRemoveAllowed(idKurs : number) : boolean {
 		return this.getOfKursAnzahlSchueler(idKurs) === 0;
-	}
-
-	/**
-	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
-	 *
-	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
-	 */
-	public getMappingKursIDSchuelerIDs() : JavaMap<number, JavaSet<number>> {
-		return this._map_kursID_schuelerIDs;
 	}
 
 	/**
@@ -2061,6 +2029,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		logger.logLn("KursdifferenzMax = " + this._ergebnis.bewertung.kursdifferenzMax);
 		logger.logLn("KursdifferenzHistogramm = " + Arrays.toString(this._ergebnis.bewertung.kursdifferenzHistogramm)!);
 		logger.modifyIndent(-4);
+	}
+
+	/**
+	 * Liefert die aktuelle Menge an Kurs-Schüler-Zuordnungen.
+	 *
+	 * @return die aktuelle Menge an Kurs-Schüler-Zuordnungen.
+	 */
+	public getMengeKursSchuelerZuordnungen() : List<Pair<number, number>> {
+		const list : ArrayList<Pair<number, number>> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const idSchueler of kurs.schueler)
+				list.add(new Pair(kurs.id, idSchueler));
+		return list;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
