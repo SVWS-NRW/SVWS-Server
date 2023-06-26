@@ -89,8 +89,8 @@
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
 		const fach1 = props.faechermanager.get(kombi.fachID1);
 		const fach2 = props.faechermanager.get(kombi.fachID2);
-		const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1?.kuerzel || null)
-		const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(fach2?.kuerzel || null)
+		const f1 = (fach1 === null) ? null : props.abiturdatenManager.getFachbelegungByID(fach1.id);
+		const f2 = (fach2 === null) ? null : props.abiturdatenManager.getFachbelegungByID(fach2.id);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 		if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() && (f1 === null || f2 === null) || f1 === null)

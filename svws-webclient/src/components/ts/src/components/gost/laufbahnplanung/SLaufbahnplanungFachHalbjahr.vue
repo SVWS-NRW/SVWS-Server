@@ -111,8 +111,8 @@
 				const fach1 = props.faechermanager.get(kombi.fachID1);
 				if (!fach1)
 					return false;
-				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1.kuerzel)
-				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
+				const f1 = props.abiturdatenManager.getFachbelegungByID(fach1.id)
+				const f2 = props.abiturdatenManager.getFachbelegungByID(props.fach.id)
 				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 				const bel1 = kursart1
@@ -137,8 +137,8 @@
 				const fach1 = props.faechermanager.get(kombi.fachID1)
 				if (!fach1)
 					return false;
-				const f1 = props.abiturdatenManager.getFachbelegungByKuerzel(fach1.kuerzel)
-				const f2 = props.abiturdatenManager.getFachbelegungByKuerzel(props.fach.kuerzel)
+				const f1 = props.abiturdatenManager.getFachbelegungByID(fach1.id)
+				const f2 = props.abiturdatenManager.getFachbelegungByID(props.fach.id)
 				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 				const bel1 = kursart1
