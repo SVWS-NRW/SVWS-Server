@@ -135,7 +135,10 @@ public class Kurs42Import {
 		if (!("" + schulnummer).equals(k42Blockung.Schulnummer))
 			throw new IOException("Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");
 		this.name = (k42Blockung.Bezeichnung == null) || "".equals(k42Blockung.Bezeichnung) ? "Blockung importiert aus Kurs42" : k42Blockung.Bezeichnung;
-		this.halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(k42Blockung.Jahrgang, istQuartalsmodus ? (k42Blockung.Abschnitt / 2) : k42Blockung.Abschnitt);
+		int abschnitt = istQuartalsmodus ? (k42Blockung.Abschnitt / 2) : k42Blockung.Abschnitt;
+		if (abschnitt > 2)
+			abschnitt = 2;
+		this.halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(k42Blockung.Jahrgang, abschnitt);
 		this.abiturjahrgang = halbjahr.getAbiturjahrFromSchuljahr(k42Blockung.Jahr);
 		for (final Kurs42DataSchueler schueler : k42Schueler) {
 			final long id = schueler.DB_IdNr;
