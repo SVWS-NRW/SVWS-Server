@@ -101,17 +101,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID.
 	 */
-	private readonly _mapKurse : HashMap<number, GostBlockungKurs> = new HashMap();
+	private readonly _map_idKurs_kurs : HashMap<number, GostBlockungKurs> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID.
 	 */
-	private readonly _mapSchienen : HashMap<number, GostBlockungSchiene> = new HashMap();
+	private readonly _map_idSchiene_schiene : HashMap<number, GostBlockungSchiene> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln anhand ihrer Datenbank-ID.
 	 */
-	private readonly _mapRegeln : HashMap<number, GostBlockungRegel> = new HashMap();
+	private readonly _map_idRegel_regel : HashMap<number, GostBlockungRegel> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
@@ -121,37 +121,37 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID.
 	 */
-	private readonly _map_schuelerID_schueler : HashMap<number, Schueler> = new HashMap();
+	private readonly _map_idSchueler_schueler : HashMap<number, Schueler> = new HashMap();
 
 	/**
 	 * Schüler-ID --> List<Fachwahl> = Die Fachwahlen des Schülers der jeweiligen Fachart.
 	 */
-	private readonly _map_schuelerID_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_idSchueler_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
 
 	/**
-	 * Schüler-ID --> Fach-ID --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet.
+	 * (Schüler-ID, Fach-ID) --> Kursart = Die Fachwahl des Schülers die dem Fach die Kursart zuordnet.
 	 */
-	private readonly _map2d_schuelerID_fachID_fachwahl : HashMap2D<number, number, GostFachwahl> = new HashMap2D();
+	private readonly _map2d_idSchueler_idFach_fachwahl : HashMap2D<number, number, GostFachwahl> = new HashMap2D();
 
 	/**
 	 * Fachart-ID --> List<Fachwahl> = Die Fachwahlen einer Fachart.
 	 */
-	private readonly _map_fachartID_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
+	private readonly _map_idFachart_fachwahlen : HashMap<number, List<GostFachwahl>> = new HashMap();
 
 	/**
 	 * Ergebnis-ID --> {@link GostBlockungsergebnisListeneintrag}
 	 */
-	private readonly _mapErgebnis : HashMap<number, GostBlockungsergebnisListeneintrag> = new HashMap();
+	private readonly _map_idErgebnis_Ergebnis : HashMap<number, GostBlockungsergebnisListeneintrag> = new HashMap();
 
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (FACH, KURSART, KURSNUMMER).
 	 */
-	private readonly _kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList();
+	private readonly _list_kurse_sortiert_fach_kursart_kursnummer : List<GostBlockungKurs> = new ArrayList();
 
 	/**
 	 * Eine sortierte, gecachte Menge der Kurse nach: (KURSART, FACH, KURSNUMMER)
 	 */
-	private readonly _kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new ArrayList();
+	private readonly _list_kurse_sortiert_kursart_fach_kursnummer : List<GostBlockungKurs> = new ArrayList();
 
 	/**
 	 * Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf.
@@ -167,10 +167,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 *Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
 	 *
-	 * @param pDaten          die Blockungsdaten
-	 * @param pFaecherManager der Fächer-Manager
+	 * @param daten           die Blockungsdaten
+	 * @param faecherManager  der Fächer-Manager
 	 */
-	public constructor(pDaten : GostBlockungsdaten, pFaecherManager : GostFaecherManager);
+	public constructor(daten : GostBlockungsdaten, faecherManager : GostFaecherManager);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
@@ -185,24 +185,24 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsdaten')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))))) {
-			const pDaten : GostBlockungsdaten = cast_de_svws_nrw_core_data_gost_GostBlockungsdaten(__param0);
-			const pFaecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
-			this._faecherManager = pFaecherManager;
+			const daten : GostBlockungsdaten = cast_de_svws_nrw_core_data_gost_GostBlockungsdaten(__param0);
+			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
+			this._faecherManager = faecherManager;
 			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
 			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
 			this._compFachwahlen = this.createComparatorFachwahlen();
 			this._daten = new GostBlockungsdaten();
-			this._daten.id = pDaten.id;
-			this._daten.name = pDaten.name;
-			this._daten.abijahrgang = pDaten.abijahrgang;
-			this._daten.gostHalbjahr = pDaten.gostHalbjahr;
-			this._daten.istAktiv = pDaten.istAktiv;
-			this.addSchienListe(pDaten.schienen);
-			this.addRegelListe(pDaten.regeln);
-			this.addKursListe(pDaten.kurse);
-			this.addSchuelerListe(pDaten.schueler);
-			this.addFachwahlListe(pDaten.fachwahlen);
-			this.addErgebnisListe(pDaten.ergebnisse);
+			this._daten.id = daten.id;
+			this._daten.name = daten.name;
+			this._daten.abijahrgang = daten.abijahrgang;
+			this._daten.gostHalbjahr = daten.gostHalbjahr;
+			this._daten.istAktiv = daten.istAktiv;
+			this.addSchienListe(daten.schienen);
+			this.addRegelListe(daten.regeln);
+			this.addKursListe(daten.kurse);
+			this.addSchuelerListe(daten.schueler);
+			this.addFachwahlListe(daten.fachwahlen);
+			this.addErgebnisListe(daten.ergebnisse);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -255,77 +255,310 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private addErgebnisOhneSortierung(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
-		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
-		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
-		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + pErgebnis.gostHalbjahr + ")", GostHalbjahr.fromID(pErgebnis.gostHalbjahr));
-		DeveloperNotificationException.ifMapContains("_mapErgebnis", this._mapErgebnis, pErgebnis.id);
-		this._daten.ergebnisse.add(pErgebnis);
-		this._mapErgebnis.put(pErgebnis.id, pErgebnis);
+	private addErgebnisOhneSortierung(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
+		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idErgebnis_Ergebnis, ergebnis.id, ergebnis);
+		this._daten.ergebnisse.add(ergebnis);
 	}
 
 	/**
 	 * Fügt das übergebenen Ergebnis der Blockung hinzu.
 	 *
-	 * @param pErgebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
+	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
 	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
 	 */
-	public addErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.addErgebnisOhneSortierung(pErgebnis);
+	public addErgebnis(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+		this.addErgebnisOhneSortierung(ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
 	/**
 	 * Fügt die Menge an Ergebnissen {@link GostBlockungsergebnisListeneintrag} hinzu.
 	 *
-	 * @param pErgebnisse Die Menge an Ergebnissen.
+	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
-	public addErgebnisListe(pErgebnisse : List<GostBlockungsergebnisListeneintrag>) : void {
-		for (const ergebnis of pErgebnisse)
+	public addErgebnisListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+		for (const ergebnis of ergebnismenge)
 			this.addErgebnisOhneSortierung(ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
-	private addKursOhneSortierung(pKurs : GostBlockungKurs) : void {
+	private addKursOhneSortierung(kurs : GostBlockungKurs) : void {
 		const nSchienen : number = this.getSchienenAnzahl();
-		DeveloperNotificationException.ifInvalidID("pKurs.id", pKurs.id);
-		DeveloperNotificationException.ifMapContains("_mapKurse", this._mapKurse, pKurs.id);
-		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", this._faecherManager.get(pKurs.fach_id));
-		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(pKurs.kursart));
-		DeveloperNotificationException.ifSmaller("pKurs.wochenstunden", pKurs.wochenstunden, 0);
-		DeveloperNotificationException.ifSmaller("pKurs.anzahlSchienen", pKurs.anzahlSchienen, 1);
-		DeveloperNotificationException.ifGreater("pKurs.anzahlSchienen", pKurs.anzahlSchienen, nSchienen);
-		DeveloperNotificationException.ifSmaller("pKurs.nummer", pKurs.nummer, 1);
-		this._daten.kurse.add(pKurs);
-		this._mapKurse.put(pKurs.id, pKurs);
-		this._kurse_sortiert_fach_kursart_kursnummer.add(pKurs);
-		this._kurse_sortiert_kursart_fach_kursnummer.add(pKurs);
+		DeveloperNotificationException.ifInvalidID("pKurs.id", kurs.id);
+		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", this._faecherManager.get(kurs.fach_id));
+		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(kurs.kursart));
+		DeveloperNotificationException.ifSmaller("pKurs.wochenstunden", kurs.wochenstunden, 0);
+		DeveloperNotificationException.ifSmaller("pKurs.anzahlSchienen", kurs.anzahlSchienen, 1);
+		DeveloperNotificationException.ifGreater("pKurs.anzahlSchienen", kurs.anzahlSchienen, nSchienen);
+		DeveloperNotificationException.ifSmaller("pKurs.nummer", kurs.nummer, 1);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKurs_kurs, kurs.id, kurs);
+		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_fach_kursart_kursnummer", this._list_kurse_sortiert_fach_kursart_kursnummer, kurs);
+		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_kursart_fach_kursnummer", this._list_kurse_sortiert_kursart_fach_kursnummer, kurs);
+		this._daten.kurse.add(kurs);
 	}
 
 	/**
 	 * Fügt den übergebenen Kurs zu der Blockung hinzu.
 	 *
-	 * @param pKurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 * @param kurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls die Daten des Kurses inkonsistent sind.
 	 */
-	public addKurs(pKurs : GostBlockungKurs) : void {
-		this.addKursOhneSortierung(pKurs);
-		this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
-		this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
+	public addKurs(kurs : GostBlockungKurs) : void {
+		this.addKursOhneSortierung(kurs);
+		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
+		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
 
 	/**
 	 * Fügt die Menge an Kursen hinzu.
 	 *
-	 * @param pKurse Die Menge an Kursen.
+	 * @param kursmenge Die Menge an Kursen.
 	 * @throws DeveloperNotificationException Falls die Daten der Kurse inkonsistent sind.
 	 */
-	public addKursListe(pKurse : List<GostBlockungKurs>) : void {
-		for (const gKurs of pKurse)
+	public addKursListe(kursmenge : List<GostBlockungKurs>) : void {
+		for (const gKurs of kursmenge)
 			this.addKursOhneSortierung(gKurs);
-		this._kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
-		this._kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
+		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
+		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs mit der übergebenen ID existiert.
+	 *
+	 * @param idKurs Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Kurs mit der übergebenen ID existiert.
+	 */
+	public getKursExistiert(idKurs : number) : boolean {
+		return this._map_idKurs_kurs.get(idKurs) !== null;
+	}
+
+	/**
+	 * Liefert die Anzahl an Kursen.
+	 *
+	 * @return Die Anzahl an Kursen.
+	 */
+	public getKursAnzahl() : number {
+		return this._map_idKurs_kurs.size();
+	}
+
+	/**
+	 * Liefert den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return Den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public getNameOfKurs(idKurs : number) : string {
+		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
+		const sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
+	}
+
+	/**
+	 * Liefert das {@link GostBlockungKurs}-Objekt mit der übergebenen ID.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses
+	 *
+	 * @return das {@link GostBlockungKurs}-Objekt mit der übergebenen ID.
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public getKurs(idKurs : number) : GostBlockungKurs {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_kurs, idKurs);
+	}
+
+	/**
+	 * Liefert die Lehrkraft des Kurses, welche die angegebene Nummer hat. <br>
+	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
+	 *
+	 * @param idKurs         Die Datenbank-ID des Kurses.
+	 * @param reihenfolgeNr  Die Lehrkraft mit der Nummer, die gesucht wird.
+	 *
+	 * @return die Lehrkraft des Kurses, welche die angegebene Nummer hat.
+	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkraftMitNummer(idKurs : number, reihenfolgeNr : number) : GostBlockungKursLehrer | null {
+		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+			if (lehrkraft.reihenfolge === reihenfolgeNr)
+				return lehrkraft;
+		throw new DeveloperNotificationException("Es gibt im Kurs " + idKurs + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
+	}
+
+	/**
+	 * Liefert die Lehrkraft des Kurses, welche die angegebene ID hat. <br>
+	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
+	 *
+	 * @param idKurs       Die Datenbank-ID des Kurses.
+	 * @param idLehrkraft  Die Datenbank-ID der gesuchten Lehrkraft.
+	 *
+	 * @return Die Lehrkraft des Kurses, welche die angegebene ID hat.
+	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
+	 */
+	public getOfKursLehrkraftMitID(idKurs : number, idLehrkraft : number) : GostBlockungKursLehrer | null {
+		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+			if (lehrkraft.id === idLehrkraft)
+				return lehrkraft;
+		throw new DeveloperNotificationException("Es gibt im Kurs " + idKurs + " keine Lehrkraft mit ID " + idLehrkraft + "!")
+	}
+
+	/**
+	 * Liefert eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
+	 *
+	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
+	 */
+	public getKursmengeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
+		return this._list_kurse_sortiert_fach_kursart_kursnummer;
+	}
+
+	/**
+	 * Liefert eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
+	 *
+	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
+	 */
+	public getKursmengeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
+		return this._list_kurse_sortiert_kursart_fach_kursnummer;
+	}
+
+	/**
+	 * Liefert alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public getOfKursLehrkraefteSortiert(idKurs : number) : List<GostBlockungKursLehrer> {
+		return this.getKurs(idKurs).lehrer;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
+	 * Kriterium: Der Kurs muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls ein Löschen des Kurses erlaubt ist.
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public removeKursAllowed(idKurs : number) : boolean {
+		return (this._map_idKurs_kurs.get(idKurs) !== null) && this.getIstBlockungsVorlage();
+	}
+
+	/**
+	 * Entfernt den Kurs mit der übergebenen ID aus der Blockung.
+	 *
+	 * @param idKurs  Die Datenbank-ID des zu entfernenden Kurses.
+	 *
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public removeKursByID(idKurs : number) : void {
+		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+		this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
+		this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
+		this._map_idKurs_kurs.remove(idKurs);
+		this._daten.kurse.remove(kurs);
+	}
+
+	/**
+	 * Entfernt den übergebenen Kurs aus der Blockung.<br>
+	 * Wirft eine DeveloperNotificationException, falls der Kurs nicht existiert.
+	 *
+	 * @param kurs  Der zu entfernende Kurs.
+	 *
+	 * @throws DeveloperNotificationException falls der Kurs nicht existiert.
+	 */
+	public removeKurs(kurs : GostBlockungKurs) : void {
+		this.removeKursByID(kurs.id);
+	}
+
+	/**
+	 * Fügt die übergebene Lehrkraft zum Kurs hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls der Kurs nicht existiert oder die Lehrkraft oder die ReihenfolgeNr bereits im Kurs existiert.
+	 *
+	 * @param idKurs         Die Datenbank-ID des Kurses.
+	 * @param neueLehrkraft  Das {@link GostBlockungKursLehrer}-Objekt.
+	 *
+	 * @throws DeveloperNotificationException falls der Kurs nicht existiert oder die Lehrkraft oder die ReihenfolgeNr bereits im Kurs existiert.
+	 */
+	public patchOfKursAddLehrkraft(idKurs : number, neueLehrkraft : GostBlockungKursLehrer) : void {
+		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
+		for (const lehrkraft of listOfLehrer) {
+			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === neueLehrkraft.id);
+			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === neueLehrkraft.reihenfolge);
+		}
+		listOfLehrer.add(neueLehrkraft);
+		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
+	}
+
+	/**
+	 * Löscht aus dem übergebenen Kurs die angegebene Lehrkraft. <br>
+	 * Wirft eine DeveloperNotificationException, falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
+	 *
+	 * @param idKurs           Die Datenbank-ID des Kurses.
+	 * @param idAlteLehrkraft  Die Datenbank-ID des {@link GostBlockungKursLehrer}-Objekt.
+	 *
+	 * @throws DeveloperNotificationException falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
+	 */
+	public patchOfKursRemoveLehrkraft(idKurs : number, idAlteLehrkraft : number) : void {
+		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
+		for (let i : number = 0; i < listOfLehrer.size(); i++)
+			if (listOfLehrer.get(i).id === idAlteLehrkraft) {
+				listOfLehrer.remove(listOfLehrer.get(i));
+				return;
+			}
+		throw new DeveloperNotificationException("patchOfKursRemoveLehrkraft: Kurs (" + idKurs + ") hat keine Lehrkraft (" + idAlteLehrkraft + ")!")
+	}
+
+	/**
+	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
+	 *
+	 * @param idKurs         Die Datenbank-ID des Kurses.
+	 * @param reihenfolgeNr  Die Lehrkraft mit der Nummer, die gesucht wird.
+	 *
+	 * @return TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
+	 */
+	public getOfKursLehrkraftMitNummerExists(idKurs : number, reihenfolgeNr : number) : boolean {
+		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+			if (lehrkraft.reihenfolge === reihenfolgeNr)
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
+	 *
+	 * @param idKurs       Die Datenbank-ID des Kurses.
+	 * @param idLehrkraft  Die Datenbank-ID der gesuchten Lehrkraft.
+	 *
+	 * @return TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
+	 */
+	public getOfKursLehrkraftMitIDExists(idKurs : number, idLehrkraft : number) : boolean {
+		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+			if (lehrkraft.id === idLehrkraft)
+				return true;
+		return false;
+	}
+
+	/**
+	 * Setzt den Suffix des Kurses.
+	 *
+	 * @param  idKurs  Die Datenbank-ID des Kurses.
+	 * @param  suffix  Der neue Suffix des Kurses.
+	 *
+	 * @throws DeveloperNotificationException falls der Kurs nicht in der Blockung existiert.
+	 */
+	public setSuffixOfKurs(idKurs : number, suffix : string) : void {
+		this.getKurs(idKurs).suffix = suffix;
 	}
 
 	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {
@@ -333,8 +566,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (pSchiene.bezeichnung)));
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", pSchiene.nummer, 1);
 		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", pSchiene.wochenstunden, 1);
-		DeveloperNotificationException.ifMapContains("mapSchienen", this._mapSchienen, pSchiene.id);
-		this._mapSchienen.put(pSchiene.id, pSchiene);
+		DeveloperNotificationException.ifMapContains("mapSchienen", this._map_idSchiene_schiene, pSchiene.id);
+		this._map_idSchiene_schiene.put(pSchiene.id, pSchiene);
 		this._daten.schienen.add(pSchiene);
 	}
 
@@ -361,11 +594,100 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
+	/**
+	 * Gibt die Schiene der Blockung anhand von deren ID zurück.
+	 *
+	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @return Das zugehörige {@link GostBlockungSchiene} Objekt.
+	 * @throws DeveloperNotificationException Falls die Schiene nicht in der Blockung existiert.
+	 */
+	public getSchiene(pSchienenID : number) : GostBlockungSchiene {
+		return DeveloperNotificationException.ifNull("_mapSchienen.get(" + pSchienenID + ")", this._map_idSchiene_schiene.get(pSchienenID));
+	}
+
+	/**
+	 * Liefert TRUE, falls eine Schiene mit der übergebenen ID existiert.
+	 *
+	 * @param pSchienenID  Die Datenbank-ID der Schiene.
+	 * @return TRUE, falls eine Schiene mit der übergebenen ID existiert.
+	 */
+	public getSchieneExistiert(pSchienenID : number) : boolean {
+		return this._map_idSchiene_schiene.get(pSchienenID) !== null;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Schienen.
+	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt.
+	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
+	 *
+	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
+	 */
+	public getMengeOfSchienen() : List<GostBlockungSchiene> {
+		return this._daten.schienen;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
+	 * Kriterium: Die Schiene muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 *
+	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
+	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
+	 */
+	public removeSchieneAllowed(pSchienenID : number) : boolean {
+		return (this.getSchiene(pSchienenID) !== null) && this.getIstBlockungsVorlage();
+	}
+
+	/**
+	 * Entfernt die Schiene mit der übergebenen ID aus der Blockung.
+	 * Konsequenz: <br>
+	 * (1) Das Löschen der Schiene muss erlaubt sein, sonst Exception.
+	 * (2) Die Schienen werden neu nummeriert. <br>
+	 * (3) Die Konsistenz der sortierten Schienen muss überprüft werden. <br>
+	 * (4) Die Regeln müssen bei Schienen-Nummern angepasst werden. <br>
+	 *
+	 * @param pSchienenID Die Datenbank-ID der zu entfernenden Schiene.
+	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
+	 */
+	public removeSchieneByID(pSchienenID : number) : void {
+		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		const schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
+		this._map_idSchiene_schiene.remove(pSchienenID);
+		this._daten.schienen.remove(schieneR);
+		for (const schiene of this._daten.schienen)
+			if (schiene.nummer > schieneR.nummer)
+				schiene.nummer--;
+		for (let index : number = 0; index < this._daten.schienen.size(); index++)
+			DeveloperNotificationException.ifTrue("Schiene am Index " + index + " hat nicht Nr. " + (index + 1) + "!", this._daten.schienen.get(index).nummer !== index + 1);
+		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
+		if (iRegel === null)
+			return;
+		while (iRegel.hasNext()) {
+			const r : GostBlockungRegel = iRegel.next();
+			const a : Array<number> | null = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
+			if (a === null)
+				iRegel.remove();
+			else
+				for (let i : number = 0; i < a.length; i++)
+					r.parameter.set(i, a[i]);
+		}
+	}
+
+	/**
+	 * Entfernt die übergebene Schiene aus der Blockung.
+	 *
+	 * @param pSchiene Die zu entfernende Schiene.
+	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
+	 */
+	public removeSchiene(pSchiene : GostBlockungSchiene) : void {
+		this.removeSchieneByID(pSchiene.id);
+	}
+
 	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
 		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
 		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
-		DeveloperNotificationException.ifMapPutOverwrites(this._mapRegeln, pRegel.id, pRegel);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, pRegel.id, pRegel);
 		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(pRegel);
 		this._daten.regeln.add(pRegel);
 	}
@@ -401,8 +723,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
 	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_schuelerID_fachID_fachwahl, pFachwahl.schuelerID, pFachwahl.fachID, pFachwahl);
-		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_schuelerID_fachwahlen, pFachwahl.schuelerID);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idSchueler_idFach_fachwahl, pFachwahl.schuelerID, pFachwahl.fachID, pFachwahl);
+		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_idSchueler_fachwahlen, pFachwahl.schuelerID);
 		fachwahlenDesSchuelers.add(pFachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
 		const fachartID : number = GostKursart.getFachartIDByFachwahl(pFachwahl);
@@ -431,9 +753,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public addSchuelerOhneSortierung(pSchueler : Schueler) : void {
 		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
 		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_schueler, pSchueler.id, pSchueler);
-		if (!this._map_schuelerID_fachwahlen.containsKey(pSchueler.id))
-			this._map_schuelerID_fachwahlen.put(pSchueler.id, new ArrayList());
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idSchueler_schueler, pSchueler.id, pSchueler);
+		if (!this._map_idSchueler_fachwahlen.containsKey(pSchueler.id))
+			this._map_idSchueler_fachwahlen.put(pSchueler.id, new ArrayList());
 		this._daten.schueler.add(pSchueler);
 	}
 
@@ -634,21 +956,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Kursen.
-	 *
-	 * @return Die Anzahl an Kursen.
-	 */
-	public getKursAnzahl() : number {
-		return this._mapKurse.size();
-	}
-
-	/**
 	 * Liefert die Anzahl an Schienen.
 	 *
 	 * @return Die Anzahl an Schienen.
 	 */
 	public getSchienenAnzahl() : number {
-		return this._mapSchienen.size();
+		return this._map_idSchiene_schiene.size();
 	}
 
 	/**
@@ -667,7 +980,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Anzahl an Regeln.
 	 */
 	public getRegelAnzahl() : number {
-		return this._mapRegeln.size();
+		return this._map_idRegel_regel.size();
 	}
 
 	/**
@@ -710,20 +1023,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
-	 *
-	 * @param pKursID  Die Datenbank-ID des Kurses.
-	 * @return Den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public getNameOfKurs(pKursID : number) : string {
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		const sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
-		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
-	}
-
-	/**
 	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
 	 *
 	 * @param pFachwahl Das Fachwahl-Objekt.
@@ -737,64 +1036,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Kurs mit der übergebenen ID existiert.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @return TRUE, falls der Kurs mit der übergebenen ID existiert.
-	 */
-	public getKursExistiert(pKursID : number) : boolean {
-		const kurs : GostBlockungKurs | null = this._mapKurse.get(pKursID);
-		return kurs !== null;
-	}
-
-	/**
-	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pReihenfolgeNr Die Lehrkraft mit der Nummer, die gesucht wird.
-	 * @return TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
-	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
-	 */
-	public getOfKursLehrkraftMitNummerExists(pKursID : number, pReihenfolgeNr : number) : boolean {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
-			if (lehrkraft.reihenfolge === pReihenfolgeNr)
-				return true;
-		return false;
-	}
-
-	/**
-	 * Liefert TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pLehrkraftID Die Datenbank-ID der gesuchten Lehrkraft.
-	 * @return TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
-	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
-	 */
-	public getOfKursLehrkraftMitIDExists(pKursID : number, pLehrkraftID : number) : boolean {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
-			if (lehrkraft.id === pLehrkraftID)
-				return true;
-		return false;
-	}
-
-	/**
-	 * Liefert TRUE, falls eine Schiene mit der übergebenen ID existiert.
-	 *
-	 * @param pSchienenID  Die Datenbank-ID der Schiene.
-	 * @return TRUE, falls eine Schiene mit der übergebenen ID existiert.
-	 */
-	public getSchieneExistiert(pSchienenID : number) : boolean {
-		return this._mapSchienen.get(pSchienenID) !== null;
-	}
-
-	/**
 	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
 	 *
 	 * @param pRegelID Die Datenbank-ID der Regel.
 	 * @return TRUE, falls die Regel mit der übergebenen ID existiert.
 	 */
 	public getRegelExistiert(pRegelID : number) : boolean {
-		return this._mapRegeln.get(pRegelID) !== null;
+		return this._map_idRegel_regel.get(pRegelID) !== null;
 	}
 
 	/**
@@ -815,62 +1063,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
 	public getErgebnis(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
-		const e : GostBlockungsergebnisListeneintrag | null = this._mapErgebnis.get(pErgebnisID);
+		const e : GostBlockungsergebnisListeneintrag | null = this._map_idErgebnis_Ergebnis.get(pErgebnisID);
 		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
-	}
-
-	/**
-	 * Gibt den Kurs der Blockung anhand von dessen ID zurück.
-	 *
-	 * @param  pKursID die ID des Kurses
-	 * @return Das zugehörige {@link GostBlockungKurs} Objekt.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public getKurs(pKursID : number) : GostBlockungKurs {
-		return DeveloperNotificationException.ifNull("_mapKurse.get(" + pKursID + ")", this._mapKurse.get(pKursID));
-	}
-
-	/**
-	 * Liefert die Lehrkraft des Kurses, welche die angegebene Nummer hat. <br>
-	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pReihenfolgeNr Die Lehrkraft mit der Nummer, die gesucht wird.
-	 * @return Die Lehrkraft des Kurses, welche die angegebene Nummer hat.
-	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
-	 */
-	public getOfKursLehrkraftMitNummer(pKursID : number, pReihenfolgeNr : number) : GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
-			if (lehrkraft.reihenfolge === pReihenfolgeNr)
-				return lehrkraft;
-		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ReihenfolgeNr. " + pReihenfolgeNr + "!")
-	}
-
-	/**
-	 * Liefert die Lehrkraft des Kurses, welche die angegebene ID hat. <br>
-	 * Wirft eine Exceptions, falls es eine solche Lehrkraft nicht gibt.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pLehrkraftID Die Datenbank-ID der gesuchten Lehrkraft.
-	 * @return Die Lehrkraft des Kurses, welche die angegebene ID hat.
-	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
-	 */
-	public getOfKursLehrkraftMitID(pKursID : number, pLehrkraftID : number) : GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(pKursID))
-			if (lehrkraft.id === pLehrkraftID)
-				return lehrkraft;
-		throw new DeveloperNotificationException("Es gibt im Kurs " + pKursID + " keine Lehrkraft mit ID " + pLehrkraftID)
-	}
-
-	/**
-	 * Gibt die Schiene der Blockung anhand von deren ID zurück.
-	 *
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
-	 * @return Das zugehörige {@link GostBlockungSchiene} Objekt.
-	 * @throws DeveloperNotificationException Falls die Schiene nicht in der Blockung existiert.
-	 */
-	public getSchiene(pSchienenID : number) : GostBlockungSchiene {
-		return DeveloperNotificationException.ifNull("_mapSchienen.get(" + pSchienenID + ")", this._mapSchienen.get(pSchienenID));
 	}
 
 	/**
@@ -881,7 +1075,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Regel nicht in der Blockung existiert.
 	 */
 	public getRegel(pRegelID : number) : GostBlockungRegel {
-		return DeveloperNotificationException.ifNull("_mapRegeln.get(" + pRegelID + ")", this._mapRegeln.get(pRegelID));
+		return DeveloperNotificationException.ifNull("_mapRegeln.get(" + pRegelID + ")", this._map_idRegel_regel.get(pRegelID));
 	}
 
 	/**
@@ -893,7 +1087,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls die Schüler-ID unbekannt ist.
 	 */
 	public getSchueler(pSchuelerID : number) : Schueler {
-		return DeveloperNotificationException.ifNull("_map_id_schueler.get(" + pSchuelerID + ")", this._map_schuelerID_schueler.get(pSchuelerID));
+		return DeveloperNotificationException.ifNull("_map_id_schueler.get(" + pSchuelerID + ")", this._map_idSchueler_schueler.get(pSchuelerID));
 	}
 
 	/**
@@ -932,7 +1126,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
 	public getOfSchuelerOfFachFachwahl(idSchueler : number, idFach : number) : GostFachwahl {
-		return this._map2d_schuelerID_fachID_fachwahl.getNonNullOrException(idSchueler, idFach);
+		return this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach);
 	}
 
 	/**
@@ -945,7 +1139,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
-		return this._map2d_schuelerID_fachID_fachwahl.contains(idSchueler, idFach);
+		return this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach);
 	}
 
 	/**
@@ -959,9 +1153,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public getOfSchuelerHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
-		if (!this._map2d_schuelerID_fachID_fachwahl.contains(idSchueler, idFach))
+		if (!this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach))
 			return false;
-		return this._map2d_schuelerID_fachID_fachwahl.getNonNullOrException(idSchueler, idFach).kursartID === idKursart;
+		return this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach).kursartID === idKursart;
 	}
 
 	/**
@@ -972,18 +1166,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
-		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_schuelerID_fachwahlen.get(pSchuelerID));
-	}
-
-	/**
-	 * Liefert die aktuelle Menge aller Schienen.
-	 * Das ist die interne Referenz zur Liste der Schienen im {@link GostBlockungsdaten}-Objekt.
-	 * Diese Liste ist stets sortiert nach der Schienen-Nummer.
-	 *
-	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
-	 */
-	public getMengeOfSchienen() : List<GostBlockungSchiene> {
-		return this._daten.schienen;
+		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_idSchueler_fachwahlen.get(pSchuelerID));
 	}
 
 	/**
@@ -1018,36 +1201,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
-	 *
-	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
-	 */
-	public getKursmengeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
-		return this._kurse_sortiert_fach_kursart_kursnummer;
-	}
-
-	/**
-	 * Liefert eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
-	 *
-	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
-	 */
-	public getKursmengeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
-		return this._kurse_sortiert_kursart_fach_kursnummer;
-	}
-
-	/**
-	 * Liefert alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
-	 *
-	 * @param pKursID  Die Datenbank-ID des Kurses.
-	 * @return Alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public getOfKursLehrkraefteSortiert(pKursID : number) : List<GostBlockungKursLehrer> {
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		return kurs.lehrer;
-	}
-
-	/**
 	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br>
 	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
 	 *
@@ -1055,7 +1208,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
 	 */
 	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
-		return MapUtils.getOrCreateArrayList(this._map_fachartID_fachwahlen, pFachartID);
+		return MapUtils.getOrCreateArrayList(this._map_idFachart_fachwahlen, pFachartID);
 	}
 
 	/**
@@ -1085,7 +1238,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public removeErgebnisByID(pErgebnisID : number) : void {
 		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
 		this._daten.ergebnisse.remove(e);
-		this._mapErgebnis.remove(pErgebnisID);
+		this._map_idErgebnis_Ergebnis.remove(pErgebnisID);
 	}
 
 	/**
@@ -1096,101 +1249,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public removeErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
 		this.removeErgebnisByID(pErgebnis.id);
-	}
-
-	/**
-	 * Liefert TRUE, falls ein Löschen des Kurses erlaubt ist. <br>
-	 * Kriterium: Der Kurs muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
-	 *
-	 * @param  pKursID               Die Datenbank-ID des Kurses.
-	 * @return                       TRUE, falls ein Löschen des Kurses erlaubt ist.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public removeKursAllowed(pKursID : number) : boolean {
-		return (this.getKurs(pKursID) !== null) && this.getIstBlockungsVorlage();
-	}
-
-	/**
-	 * Entfernt den Kurs mit der übergebenen ID aus der Blockung.
-	 *
-	 * @param pKursID Die Datenbank-ID des zu entfernenden Kurses.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 * @throws UserNotificationException Falls es sich derzeit nicht um die Blockungsvorlage handelt.
-	 */
-	public removeKursByID(pKursID : number) : void {
-		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		this._kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
-		this._kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
-		this._mapKurse.remove(pKursID);
-		this._daten.kurse.remove(kurs);
-	}
-
-	/**
-	 * Entfernt den übergebenen Kurs aus der Blockung.
-	 *
-	 * @param pKurs  Der zu entfernende Kurs.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public removeKurs(pKurs : GostBlockungKurs) : void {
-		this.removeKursByID(pKurs.id);
-	}
-
-	/**
-	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
-	 * Kriterium: Die Schiene muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
-	 *
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
-	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
-	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
-	 */
-	public removeSchieneAllowed(pSchienenID : number) : boolean {
-		return (this.getSchiene(pSchienenID) !== null) && this.getIstBlockungsVorlage();
-	}
-
-	/**
-	 * Entfernt die Schiene mit der übergebenen ID aus der Blockung.
-	 * Konsequenz: <br>
-	 * (1) Das Löschen der Schiene muss erlaubt sein, sonst Exception.
-	 * (2) Die Schienen werden neu nummeriert. <br>
-	 * (3) Die Konsistenz der sortierten Schienen muss überprüft werden. <br>
-	 * (4) Die Regeln müssen bei Schienen-Nummern angepasst werden. <br>
-	 *
-	 * @param pSchienenID Die Datenbank-ID der zu entfernenden Schiene.
-	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
-	 */
-	public removeSchieneByID(pSchienenID : number) : void {
-		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
-		this._mapSchienen.remove(pSchienenID);
-		this._daten.schienen.remove(schieneR);
-		for (const schiene of this._daten.schienen)
-			if (schiene.nummer > schieneR.nummer)
-				schiene.nummer--;
-		for (let index : number = 0; index < this._daten.schienen.size(); index++)
-			DeveloperNotificationException.ifTrue("Schiene am Index " + index + " hat nicht Nr. " + (index + 1) + "!", this._daten.schienen.get(index).nummer !== index + 1);
-		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
-		if (iRegel === null)
-			return;
-		while (iRegel.hasNext()) {
-			const r : GostBlockungRegel = iRegel.next();
-			const a : Array<number> | null = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
-			if (a === null)
-				iRegel.remove();
-			else
-				for (let i : number = 0; i < a.length; i++)
-					r.parameter.set(i, a[i]);
-		}
-	}
-
-	/**
-	 * Entfernt die übergebene Schiene aus der Blockung.
-	 *
-	 * @param pSchiene Die zu entfernende Schiene.
-	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
-	 */
-	public removeSchiene(pSchiene : GostBlockungSchiene) : void {
-		this.removeSchieneByID(pSchiene.id);
 	}
 
 	/**
@@ -1217,7 +1275,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const regel : GostBlockungRegel = this.getRegel(pRegelID);
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		this._mapRegeln.remove(pRegelID);
+		this._map_idRegel_regel.remove(pRegelID);
 		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
 		this._daten.regeln.remove(regel);
 	}
@@ -1274,18 +1332,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Setzt den Suffix des Kurses.
-	 *
-	 * @param  pKursID  Die Datenbank-ID des Kurses.
-	 * @param  pSuffix  Der neue Suffix des Kurses.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
-	 */
-	public setSuffixOfKurs(pKursID : number, pSuffix : string) : void {
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		kurs.suffix = pSuffix;
-	}
-
-	/**
 	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
 	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
 	 *
@@ -1299,44 +1345,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (eintrag.id === pErgebnis.id)
 				eintrag.bewertung = pErgebnis.bewertung;
 		this._daten.ergebnisse.sort(this._compErgebnisse);
-	}
-
-	/**
-	 * Fügt die übergebene Lehrkraft zum Kurs hinzu. <br>
-	 * Wirft eine DeveloperNotificationException, falls der Kurs nicht existiert oder die Lehrkraft oder die ReihenfolgeNr bereits im Kurs gibt.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pKursLehrer Das {@link GostBlockungKursLehrer}-Objekt.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es die Lehrkraft oder die ReihenfolgeNr im Kurs bereits gibt.
-	 */
-	public patchOfKursAddLehrkraft(pKursID : number, pKursLehrer : GostBlockungKursLehrer) : void {
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		const lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
-		for (const lehrkraft of lehrer) {
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === pKursLehrer.id);
-			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === pKursLehrer.reihenfolge);
-		}
-		lehrer.add(pKursLehrer);
-		lehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
-	}
-
-	/**
-	 * Löscht aus dem übergebenen Kurs die angegebene Lehrkraft. <br>
-	 * Wirft eine DeveloperNotificationException, falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
-	 *
-	 * @param pKursID Die Datenbank-ID des Kurses.
-	 * @param pLehrkraftID Die Datenbank-ID des {@link GostBlockungKursLehrer}-Objekt.
-	 * @throws DeveloperNotificationException Falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
-	 */
-	public patchOfKursRemoveLehrkraft(pKursID : number, pLehrkraftID : number) : void {
-		const kurs : GostBlockungKurs = this.getKurs(pKursID);
-		const lehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
-		for (let i : number = 0; i < lehrer.size(); i++)
-			if (lehrer.get(i).id === pLehrkraftID) {
-				lehrer.remove(lehrer.get(i));
-				return;
-			}
-		throw new DeveloperNotificationException("patchOfKursRemoveLehrkraft: Kurs (" + pKursID + ") hat keine Lehrkraft (" + pLehrkraftID + ")!")
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

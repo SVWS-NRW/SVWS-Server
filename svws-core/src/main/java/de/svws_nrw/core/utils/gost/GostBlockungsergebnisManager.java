@@ -62,8 +62,8 @@ public class GostBlockungsergebnisManager {
 	/** Schienen-ID --> Anzahl Kollisionen */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_schienenID_kollisionen = new HashMap<>();
 
-	/** Schienen-ID --> Fachart-ID --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>>> _map_schienenID_fachartID_kurse = new HashMap<>();
+	/** (Schienen-ID, Fachart-ID) --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart. */
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map2D_schienenID_fachartID_kurse = new HashMap2D<>();
 
 	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
@@ -138,7 +138,7 @@ public class GostBlockungsergebnisManager {
 		_map_schienenID_schiene.clear();
 		_map_schienenID_schuelerAnzahl.clear();
 		_map_schienenID_kollisionen.clear();
-		_map_schienenID_fachartID_kurse.clear();
+		_map2D_schienenID_fachartID_kurse.clear();
 		_map_schuelerID_kurse.clear();
 		_map_schuelerID_ungueltige_kurse.clear();
 		_map_schuelerID_kollisionen.clear();
@@ -218,12 +218,10 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			MapUtils.getOrCreateArrayList(_map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
 
-		// Map: schienenID --> fachartID --> Kurse = Alle Kurse einer Fachart pro Schiene
-		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schienenID_fachartID_kurse, gSchiene.id, new HashMap<>());
+		// Map: (schienenID, fachartID) --> Kursmenge = Alle Kurse einer Fachart pro Schiene
+		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
 			for (final @NotNull Long fachartID : _map_fachartID_kursdifferenz.keySet())
-				getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList<>());
-		}
+				DeveloperNotificationException.ifMap2DPutOverwrites(_map2D_schienenID_fachartID_kurse, gSchiene.id, fachartID, new ArrayList<>());
 
 		// Schüler kopieren und hinzufügen.
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler) {
@@ -489,7 +487,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> setSchienenOfKurs = getOfKursSchienenmenge(idKurs);
 		final long idFach = kurs.fachID;
 		final long idFachart = GostKursart.getFachartID(idFach, kurs.kursart);
-		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 
 		// Hinzufügen
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
@@ -517,7 +515,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull Set<@NotNull GostBlockungsergebnisSchiene> setSchienenOfKurs = getOfKursSchienenmenge(idKurs);
 		final long idFach = kurs.fachID;
 		final long idFachart = GostKursart.getFachartID(idFach, kurs.kursart);
-		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
+		final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursGruppe = _map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 
 		// Entfernen
 		_ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
@@ -1593,9 +1591,9 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Kollision: Der Schüler muss in mindestens einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
 	 */
@@ -1604,11 +1602,11 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 *
-	 * @param  idKursID  Die Datenbank-ID des Kurses.
+	 * @param idKursID  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 */
 	public @NotNull Set<@NotNull Long> getOfKursSchuelermengeMitKollisionen(final long idKursID) {
 		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
@@ -1947,32 +1945,10 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert eine "FachartID --> Kurse" Map der Schiene.
-	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
-	 * @return Eine "FachartID --> Kurse" Map der Schiene.
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> getOfSchieneFachartKursmengeMap(final long idSchiene) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_schienenID_fachartID_kurse, idSchiene);
-	}
-
-	/**
-	 * Liefert alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
-	 *
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 * @param idFachart  Die ID der Fachart.
-	 *
-	 * @return alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
-	 */
-	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfSchieneOfFachartKursmenge(final long idSchiene, final long idFachart) {
-		return DeveloperNotificationException.ifMapGetIsNull(getOfSchieneFachartKursmengeMap(idSchiene), idFachart);
-	}
-
-	/**
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
-	 * @param  idShiene  Die Datenbank-ID der Schiene.
+	 * @param idShiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.

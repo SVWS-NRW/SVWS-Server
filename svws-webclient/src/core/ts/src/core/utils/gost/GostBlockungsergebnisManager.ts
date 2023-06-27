@@ -66,9 +66,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private readonly _map_schienenID_kollisionen : JavaMap<number, number> = new HashMap();
 
 	/**
-	 * Schienen-ID --> Fachart-ID --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart.
+	 * (Schienen-ID, Fachart-ID) --> ArrayList<Kurse> = Alle Kurse in der Schiene mit der Fachart.
 	 */
-	private readonly _map_schienenID_fachartID_kurse : JavaMap<number, JavaMap<number, List<GostBlockungsergebnisKurs>>> = new HashMap();
+	private readonly _map2D_schienenID_fachartID_kurse : HashMap2D<number, number, List<GostBlockungsergebnisKurs>> = new HashMap2D();
 
 	/**
 	 * Schüler-ID --> Set<GostBlockungsergebnisKurs>
@@ -179,7 +179,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._map_schienenID_schiene.clear();
 		this._map_schienenID_schuelerAnzahl.clear();
 		this._map_schienenID_kollisionen.clear();
-		this._map_schienenID_fachartID_kurse.clear();
+		this._map2D_schienenID_fachartID_kurse.clear();
 		this._map_schuelerID_kurse.clear();
 		this._map_schuelerID_ungueltige_kurse.clear();
 		this._map_schuelerID_kollisionen.clear();
@@ -231,11 +231,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 		for (const gFachwahl of this._parent.daten().fachwahlen)
 			MapUtils.getOrCreateArrayList(this._map_fachartID_kurse, GostKursart.getFachartIDByFachwahl(gFachwahl));
-		for (const gSchiene of this._parent.daten().schienen) {
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_schienenID_fachartID_kurse, gSchiene.id, new HashMap());
+		for (const gSchiene of this._parent.daten().schienen)
 			for (const fachartID of this._map_fachartID_kursdifferenz.keySet())
-				this.getOfSchieneFachartKursmengeMap(gSchiene.id).put(fachartID, new ArrayList());
-		}
+				DeveloperNotificationException.ifMap2DPutOverwrites(this._map2D_schienenID_fachartID_kurse, gSchiene.id, fachartID, new ArrayList());
 		for (const gSchueler of this._parent.daten().schueler) {
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kurse, gSchueler.id, new HashSet<GostBlockungsergebnisKurs>());
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_kollisionen, gSchueler.id, 0);
@@ -458,7 +456,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
 		const idFach : number = kurs.fachID;
 		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		const kursGruppe : List<GostBlockungsergebnisKurs> = this.getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
+		const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		DeveloperNotificationException.ifListAddsDuplicate("kurs.schienen", kurs.schienen, schiene.id);
 		DeveloperNotificationException.ifListAddsDuplicate("schiene.kurse", schiene.kurse, kurs);
@@ -483,7 +481,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const setSchienenOfKurs : JavaSet<GostBlockungsergebnisSchiene> = this.getOfKursSchienenmenge(idKurs);
 		const idFach : number = kurs.fachID;
 		const idFachart : number = GostKursart.getFachartID(idFach, kurs.kursart);
-		const kursGruppe : List<GostBlockungsergebnisKurs> = this.getOfSchieneOfFachartKursmenge(idSchiene, idFachart);
+		const kursGruppe : List<GostBlockungsergebnisKurs> = this._map2D_schienenID_fachartID_kurse.getNonNullOrException(idSchiene, idFachart);
 		this._ergebnis.bewertung.anzahlKurseNichtZugeordnet -= Math.abs(kurs.anzahlSchienen - setSchienenOfKurs.size());
 		DeveloperNotificationException.ifListRemoveFailes("kurs.schienen", kurs.schienen, schiene.id);
 		DeveloperNotificationException.ifListRemoveFailes("schiene.kurse", schiene.kurse, kurs);
@@ -1468,9 +1466,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	/**
 	 * Liefert die Anzahl an Schülern des Kurses mit Kollisionen.<br>
-	 * Kollision: Der Schüler muss in einer Schiene des Kurses eine Kollision haben.
+	 * Kollision: Der Schüler muss in mindestens einer Schiene des Kurses eine Kollision haben.
 	 *
-	 * @param  idKurs Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Anzahl an Schülern des Kurses mit Kollisionen.
 	 */
@@ -1479,11 +1477,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * Liefert die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 *
-	 * @param  idKursID  Die Datenbank-ID des Kurses.
+	 * @param idKursID  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen.
+	 * @return die Menge aller Schüler-IDs des Kurses mit Kollisionen (in den Schienen des Kurses).
 	 */
 	public getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
@@ -1816,32 +1814,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine "FachartID --> Kurse" Map der Schiene.
-	 *
-	 * @param idSchiene Die Datenbank-ID der Schiene.
-	 * @return Eine "FachartID --> Kurse" Map der Schiene.
-	 */
-	public getOfSchieneFachartKursmengeMap(idSchiene : number) : JavaMap<number, List<GostBlockungsergebnisKurs>> {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_schienenID_fachartID_kurse, idSchiene);
-	}
-
-	/**
-	 * Liefert alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
-	 *
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 * @param idFachart  Die ID der Fachart.
-	 *
-	 * @return alle Kurse, die in einer bestimmten Schiene eine bestimmte Fachart haben.
-	 */
-	public getOfSchieneOfFachartKursmenge(idSchiene : number, idFachart : number) : List<GostBlockungsergebnisKurs> {
-		return DeveloperNotificationException.ifMapGetIsNull(this.getOfSchieneFachartKursmengeMap(idSchiene), idFachart);
-	}
-
-	/**
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
-	 * @param  idShiene  Die Datenbank-ID der Schiene.
+	 * @param idShiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
