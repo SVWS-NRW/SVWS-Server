@@ -15,7 +15,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<unknown, Rout
 		super.text = "Förderschwerpunkt";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFoerderschwerpunkte.data.auswahl === undefined)
 			return routeKatalogFoerderschwerpunkte.getRoute(undefined)
 	}

@@ -16,7 +16,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<unknown, RouteKatalog
 		super.text = "Jahrgang";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogJahrgaenge.data.auswahl === undefined)
 			return routeKatalogJahrgaenge.getRoute(undefined)
 	}

@@ -401,7 +401,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Quell-Route
      * @param from_params die Parameter der Quell-Route
      */
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return true;
 	}
 
@@ -478,7 +478,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -490,7 +490,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -502,7 +502,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (this._parent !== undefined)
 			this._parent._selectedChild.value = this;
 		return await this.update(to, to_params);
@@ -515,7 +515,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-	public async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) {
+	public async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -525,7 +525,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams) {
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void> {
 	}
 
 	/**

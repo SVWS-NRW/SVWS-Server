@@ -16,7 +16,7 @@ export class RouteKursDaten extends RouteNode<unknown, RouteKurse> {
 		super.text = "Kurs";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKurse.data.auswahl === undefined)
 			return routeKurse.getRoute(undefined)
 	}

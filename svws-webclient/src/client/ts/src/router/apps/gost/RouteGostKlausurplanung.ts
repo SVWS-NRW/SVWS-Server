@@ -43,17 +43,17 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return (abiturjahr === undefined)/* || (abiturjahr === -1)*/;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
 		if ((abiturjahr === undefined))
 			return routeGost.defaultChild!.getRoute(-1);
 		return true;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe die Parameter zunächst allgemein
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");

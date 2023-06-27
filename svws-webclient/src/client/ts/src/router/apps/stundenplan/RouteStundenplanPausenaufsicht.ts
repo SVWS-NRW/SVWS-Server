@@ -14,7 +14,7 @@ export class RouteStundenplanPausenaufsicht extends RouteNode<unknown, RouteStun
 		super.text = "Pausenaufsicht";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

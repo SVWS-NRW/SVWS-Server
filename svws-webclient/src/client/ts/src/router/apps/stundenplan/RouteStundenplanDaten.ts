@@ -16,7 +16,7 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 		super.text = "Stundenplan";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

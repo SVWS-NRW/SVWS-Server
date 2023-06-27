@@ -38,15 +38,15 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		super.defaultChild = routeGostJahrgangsdaten;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		let cur: RouteNode<unknown, any> = to;

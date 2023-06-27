@@ -18,7 +18,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<unknown, RouteSchu
 		super.text = "Benutzergruppe";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any>{
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if(routeSchuleBenutzergruppe.data.auswahl === undefined )
 			return routeSchuleBenutzergruppe.getRoute(undefined);
 	}

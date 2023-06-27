@@ -17,7 +17,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> 
 		super.text = "Individualdaten";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeLehrer.data.auswahl === undefined)
 			return routeLehrer.getRoute(undefined);
 	}

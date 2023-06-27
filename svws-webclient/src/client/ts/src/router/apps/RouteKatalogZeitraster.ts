@@ -104,11 +104,11 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 		super.defaultChild = routeKatalogZeitrasterDaten;
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return this.getRoute();
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.ladeListe();
 	}
 

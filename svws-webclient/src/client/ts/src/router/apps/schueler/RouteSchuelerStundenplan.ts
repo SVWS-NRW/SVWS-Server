@@ -21,7 +21,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 		super.defaultChild = routeSchuelerStundenplanDaten;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.idStundenplan instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idSchueler = to_params.id === undefined ? undefined : parseInt(to_params.id);

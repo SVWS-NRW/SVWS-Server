@@ -23,7 +23,7 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 		super.text = "Benutzer";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		console.log("benutzer_daten->update");
 	}
 

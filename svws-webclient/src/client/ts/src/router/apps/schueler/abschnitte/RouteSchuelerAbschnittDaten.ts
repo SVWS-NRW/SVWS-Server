@@ -20,6 +20,7 @@ interface RouteStateDataSchuelerAbschnittDaten {
 
 }
 export class RouteDataSchuelerAbschnittDaten {
+
 	private static _defaultState: RouteStateDataSchuelerAbschnittDaten = {
 		auswahl: undefined,
 		daten: undefined,
@@ -131,15 +132,15 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 		];
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams): Promise<any> {
+	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return (to_params.id !== undefined);
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		await this.data.ladeListe();
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<any> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (to_params.id === undefined)

@@ -19,7 +19,7 @@ export class RouteKatalogBetriebeDaten extends RouteNode<unknown, RouteKatalogBe
 		super.text = "Betrieb";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogBetriebe.data.auswahl === undefined)
 			return routeKatalogBetriebe.getRoute(undefined)
 	}

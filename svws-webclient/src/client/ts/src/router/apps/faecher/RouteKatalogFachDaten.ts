@@ -16,7 +16,7 @@ export class RouteKatalogFachDaten extends RouteNode<unknown, RouteKatalogFaeche
 		super.text = "Fach";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFaecher.data.auswahl === undefined)
 			return routeKatalogFaecher.getRoute(undefined)
 	}

@@ -89,7 +89,7 @@ export class RouteManager {
 	 *
 	 * @returns false im Fehlerfall, void/true bei Erfolg oder ein Redirect
 	 */
-	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) {
+	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized) : Promise<boolean | void | Error | RouteLocationRaw> {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
 		if ((this.active) && (to.redirectedFrom === undefined))
 			return false;

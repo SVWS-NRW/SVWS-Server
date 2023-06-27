@@ -16,7 +16,7 @@ export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalog
 		super.text = "Pausenzeit";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<any> {
+	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogPausenzeiten.data.auswahl === undefined)
 			return routeKatalogPausenzeiten.getRoute(undefined)
 	}
