@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -444,8 +443,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				conn.transactionPersist(erg);
 
 				// Kurse <--> Schüler
-				for (final @NotNull Pair<@NotNull Long, @NotNull Long> pairKursSchueler : output.getMengeKursSchuelerZuordnungen())
-					conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, pairKursSchueler.a, pairKursSchueler.b));
+				final Map<Long, Set<@NotNull Long>> map_KursID_SchuelerIDs = output.getMappingKursIDSchuelerIDs();
+				for (final Map.Entry<Long, Set<Long>> entry : map_KursID_SchuelerIDs.entrySet())
+					for (final long schuelerID : entry.getValue())
+						conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID, entry.getKey(), schuelerID));
 
 				// Kurse <--> Schienen
 				final Map<Long, Set<@NotNull GostBlockungsergebnisSchiene>> map_KursID_SchienenIDs = output.getMappingKursIDSchienenmenge();

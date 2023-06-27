@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -89,6 +88,9 @@ public class GostBlockungsergebnisManager {
 	/** Kurs-ID --> Anzahl an Dummy-SuS */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_kursID_dummySuS = new HashMap<>();
 
+	/** Kurs-ID --> Set<SchuelerID> */
+	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> _map_kursID_schuelerIDs = new HashMap<>();
+
 	/** Fach-ID --> ArrayList<GostBlockungsergebnisKurs> */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachID_kurse = new HashMap<>();
 
@@ -143,6 +145,7 @@ public class GostBlockungsergebnisManager {
 		_map2D_schuelerID_schienenID_kurse.clear();
 		_map_kursID_schienen.clear();
 		_map_kursID_kurs.clear();
+		_map_kursID_schuelerIDs.clear();
 		_map_kursID_dummySuS.clear();
 		_map_fachID_kurse.clear();
 		_map_fachartID_kurse.clear();
@@ -192,6 +195,9 @@ public class GostBlockungsergebnisManager {
 
 			// Map: kursID --> Schienen des Kurses
 			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schienen, eKurs.id, new HashSet<@NotNull GostBlockungsergebnisSchiene>());
+
+			// Map: kursID --> Schüler des Kurses
+			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_schuelerIDs, eKurs.id, new HashSet<@NotNull Long>());
 
 			// Map: fachID --> Kursliste
 			MapUtils.getOrCreateArrayList(_map_fachID_kurse, eKurs.fachID).add(eKurs);
@@ -397,11 +403,13 @@ public class GostBlockungsergebnisManager {
 			return;
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
+		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		final long fachartID = GostKursart.getFachartID(idFach, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.add(idSchueler); // Data-Objekt aktualisieren
 		kurseOfSchueler.add(kurs);
+		schuelerIDsOfKurs.add(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, idFach, kurs);
 		stateKursdifferenzUpdate(fachartID);
@@ -433,11 +441,13 @@ public class GostBlockungsergebnisManager {
 			return;
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
+		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
 		final long fachartID = GostKursart.getFachartID(idFach, kurs.kursart);
 
 		// Hinzufügen
 		kurs.schueler.remove(idSchueler); // Data-Objekt aktualisieren
 		kurseOfSchueler.remove(kurs);
+		schuelerIDsOfKurs.remove(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
 		_map2D_schuelerID_fachID_kurs.put(idSchueler, idFach, null);
 		stateKursdifferenzUpdate(fachartID);
@@ -1498,6 +1508,19 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
+	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return zur Kurs-ID die zugehörige Menge aller Schüler-IDs.
+	 * @throws DeveloperNotificationException falls der ID kein Kurs zugeordnet ist.
+	 */
+	public @NotNull Set<@NotNull Long> getOfKursSchuelerIDmenge(final long idKurs) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_kursID_schuelerIDs, idKurs);
+	}
+
+	/**
 	 * Liefert die Schienenmenge des Kurses.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
@@ -1714,6 +1737,15 @@ public class GostBlockungsergebnisManager {
 	 */
 	public boolean getOfKursRemoveAllowed(final long idKurs) throws DeveloperNotificationException {
 		return getOfKursAnzahlSchueler(idKurs) == 0;
+	}
+
+	/**
+	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
+	 *
+	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull Long>> getMappingKursIDSchuelerIDs() {
+		return _map_kursID_schuelerIDs;
 	}
 
 	/**
@@ -2203,19 +2235,5 @@ public class GostBlockungsergebnisManager {
 		logger.modifyIndent(-4);
 	}
 
-	/**
-	 * Liefert die aktuelle Menge an Kurs-Schüler-Zuordnungen.
-	 *
-	 * @return die aktuelle Menge an Kurs-Schüler-Zuordnungen.
-	 */
-	public @NotNull List<@NotNull Pair<@NotNull Long, @NotNull Long>> getMengeKursSchuelerZuordnungen() {
-		final @NotNull ArrayList<@NotNull Pair<@NotNull Long, @NotNull Long>> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
-			for (final @NotNull Long idSchueler : kurs.schueler)
-				list.add(new Pair<>(kurs.id, idSchueler));
-
-		return list;
-	}
 
 }
