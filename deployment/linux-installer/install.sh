@@ -203,9 +203,9 @@ fi
 # Laden von Abhängigkeiten
 echo "Lade Abhängigkeiten ..."
 # Paketliste aktualisieren ohne Ausgabe
-apt update > /dev/null
+apt update
 # Installieren von Abhängigkeiten in ruhigem Modus (-qq)
-apt-get -y -qq install gettext zip wget openjdk-17-jre curl software-properties-common dirmngr gnupg2 > /dev/null
+apt-get -y install gettext zip wget openjdk-17-jre curl software-properties-common dirmngr gnupg2
 
 # Installation der Datenbank
 
@@ -217,7 +217,7 @@ if [ "$CREATE_MariaDB" = "j" ] || [ "$CREATE_MariaDB" = "J" ]; then
     curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=10.9 --skip-maxscale --skip-tools
 
     # Installieren der MariaDB-Datenbank
-    apt-get -y -qq install mariadb-server > /dev/null
+    apt-get -y install mariadb-server
 
     # Ausgabe der Erfolgsmeldung
     echo "MariaDB 10.9 erfolgreich installiert."
