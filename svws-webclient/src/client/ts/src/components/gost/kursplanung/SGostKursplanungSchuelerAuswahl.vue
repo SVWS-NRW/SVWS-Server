@@ -58,7 +58,7 @@
 				</div>
 			</template>
 		</svws-ui-data-table>
-		<s-gost-kursplanung-ungueltige-kurswahl-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" />
+		<s-gost-kursplanung-ungueltige-kurswahl-modal v-if="props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" />
 	</svws-ui-content-card>
 </template>
 

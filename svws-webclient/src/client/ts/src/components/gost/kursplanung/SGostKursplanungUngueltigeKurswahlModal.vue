@@ -20,7 +20,7 @@
 	}>();
 
 
-		console.log(props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse())
+		console.log(props.getErgebnismanager().getMappingSchuelerIDzuUngueltigeKurse())
 
 	const modal = ref();
 
