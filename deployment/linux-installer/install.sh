@@ -48,6 +48,78 @@ export MDBFILE=${MDBFILE:-$TMP_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-
 
 export INIT_EMPTY_DB=N
 
+
+if [[ "$1" == "--update" ]]; then
+
+	if [ -f .env ]; then
+     export $(grep -v '^#' .env | xargs)
+    fi
+
+    if [ ! -f "LINUX_INSTALLER_FILE_NAME" ]; then
+        DOWNLOAD_PFAD=BASE_DOWNLOAD_URL/LINUX_INSTALLER_FILE_NAME
+    fi
+
+    script_dir="$PWD"
+
+    # SVWS laden und auspacken
+    echo "Lade SVWS ..."
+
+    # Wenn DOWNLOAD_PFAD gesetzt ist, lade Datei herunter
+    if [ ! -z "$DOWNLOAD_PFAD" ]; then
+      echo "Lade Datei herunter von $DOWNLOAD_PFAD..."
+      wget -N $DOWNLOAD_PFAD
+      echo "Herunterladen abgeschlossen."
+    fi
+
+    # SVWS Dienst stoppen
+    echo "stoppe SVWS ..."
+    systemctl stop svws
+
+    # SVWS Dateien löschen
+    echo "lösche SVWS ..."
+    rm -r $APP_PATH/app
+    rm -r $APP_PATH/client
+
+    # Entpacke die SVWS-Installationsdatei
+    tar xzf ./LINUX_INSTALLER_FILE_NAME
+
+    # Erstelle Verzeichnisse
+    mkdir -p $APP_PATH
+    mkdir $APP_PATH/client
+
+    # Kopiere App
+    cp -r ./svws/app $APP_PATH
+
+    # Entpacke den Client in das Client-Verzeichnis
+    unzip -d $APP_PATH/client $APP_PATH/app/svws-client*.zip
+
+    # Lösche die entpackte Client-Datei
+    rm -rf $APP_PATH/app/svws-client*.zip
+
+    # Erstelle einen symbolischen Link zur Konfigurationsdatei
+    ln $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
+
+    cd $script_dir
+
+    # Lösche das Verzeichnis 'svws' im Home-Verzeichnis
+    echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis..."
+    rm -r ./svws
+
+    # Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis
+    echo "Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis..."
+    rm -r ./init-scripts
+
+    # Aktualisieren der Systemd-Konfigurationen und Starten des Services
+    # Der Service wird automatisch gestartet, sobald das System hochfährt (systemctl enable)
+    systemctl start svws.service
+
+    # Überprüfen des Status des Services
+    systemctl status svws.service
+
+	exit 1
+fi
+
+
 if [ -f .env ]; then
  export $(grep -v '^#' .env | xargs)
 else
