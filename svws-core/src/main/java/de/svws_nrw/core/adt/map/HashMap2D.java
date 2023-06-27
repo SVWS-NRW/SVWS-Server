@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
@@ -183,6 +184,17 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		}
 
 		return list;
+	}
+
+	/**
+	 * Liefert das KeySet der SubMap des 1. Schlüssels.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<@NotNull K2> getKeySetOf(final @NotNull K1 key1) {
+		return getSubMapOrException(key1).keySet();
 	}
 
 

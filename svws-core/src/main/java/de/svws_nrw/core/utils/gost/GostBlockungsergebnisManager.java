@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -68,14 +67,14 @@ public class GostBlockungsergebnisManager {
 	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_kurse = new HashMap<>();
 
-	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> */
+	/** Schüler-ID --> Set<GostBlockungsergebnisKurs> = Kurse des Schüler, die aufgrund der aktuellen Fachwahlen ungültig sind.*/
 	private final @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map_schuelerID_ungueltige_kurse = new HashMap<>();
 
 	/** Schüler-ID --> Integer (Kollisionen) */
 	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_schuelerID_kollisionen = new HashMap<>();
 
-	/** Schüler-ID --> Fach-ID --> GostBlockungsergebnisKurs */
-	private final @NotNull Map<@NotNull Long, @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs>> _map_schuelerID_fachID_kurs = new HashMap<>();
+	/** (Schüler-ID, Fach-ID) --> GostBlockungsergebnisKurs = Die aktuelle Wahl des Schülers in dem Fach.*/
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, GostBlockungsergebnisKurs> _map2D_schuelerID_fachID_kurs = new HashMap2D<>();
 
 	/** Schüler-ID --> Schienen-ID --> Set<GostBlockungsergebnisKurs> = Alle Kurse des Schülers in der Schiene.*/
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> _map2D_schuelerID_schienenID_kurse = new HashMap2D<>();
@@ -142,7 +141,7 @@ public class GostBlockungsergebnisManager {
 		_map_schuelerID_kurse.clear();
 		_map_schuelerID_ungueltige_kurse.clear();
 		_map_schuelerID_kollisionen.clear();
-		_map_schuelerID_fachID_kurs.clear();
+		_map2D_schuelerID_fachID_kurs.clear();
 		_map2D_schuelerID_schienenID_kurse.clear();
 		_map_kursID_schienen.clear();
 		_map_kursID_kurs.clear();
@@ -230,17 +229,13 @@ public class GostBlockungsergebnisManager {
 			// Map: schuelerID --> Anzahl Kollisionen
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 			// Map: schuelerID --> (fachID --> Kurs)
-			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_fachID_kurs, gSchueler.id, new HashMap<>());
+			// _map2D_schuelerID_fachID_kurs nicht nötig
 			// _map2D_schuelerID_schienenID_kurse nicht nötig
 		}
 
-		// Map: schuelerID --> (FachID --> Kurs) = Fachwahlen kopieren und hinzufügen
-		final String strErrorDoppeltesFach = "Schüler %d hat Fach %d doppelt!";
-		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen) {
-			final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachKurs = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, gFachwahl.schuelerID);
-			if (mapFachKurs.put(gFachwahl.fachID, null) != null)
-				throw new DeveloperNotificationException(strErrorDoppeltesFach.formatted(gFachwahl.schuelerID, gFachwahl.fachID));
-		}
+		// _map2D_schuelerID_fachID_kurs: Fachwahlen kopieren und hinzufügen
+		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
+			DeveloperNotificationException.ifMap2DPutOverwrites(_map2D_schuelerID_fachID_kurs,  gFachwahl.schuelerID, gFachwahl.fachID, null);
 
 		// Map: schuelerID --> (schienenID --> Kurse) = Alle Kurse des Schülers pro Schiene
 		for (final @NotNull Schueler gSchueler : _parent.daten().schueler)
@@ -410,7 +405,6 @@ public class GostBlockungsergebnisManager {
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(idSchueler);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
@@ -418,7 +412,7 @@ public class GostBlockungsergebnisManager {
 		kurseOfSchueler.add(kurs);
 		schuelerIDsOfKurs.add(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet--;
-		mapSFK.put(fachID, kurs);
+		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, kurs);
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneHinzufuegen(idSchueler, schieneID, kurs);
@@ -449,7 +443,6 @@ public class GostBlockungsergebnisManager {
 
 		final @NotNull Set<@NotNull GostBlockungsergebnisKurs> kurseOfSchueler = getOfSchuelerKursmenge(idSchueler);
 		final @NotNull Set<@NotNull Long> schuelerIDsOfKurs = getOfKursSchuelerIDmenge(idKurs);
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> mapSFK = getOfSchuelerFachIDKursMap(idSchueler);
 		final long fachartID = GostKursart.getFachartID(fachID, kurs.kursart);
 
 		// Hinzufügen
@@ -457,7 +450,7 @@ public class GostBlockungsergebnisManager {
 		kurseOfSchueler.remove(kurs);
 		schuelerIDsOfKurs.remove(idSchueler);
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet++;
-		mapSFK.put(fachID, null);
+		_map2D_schuelerID_fachID_kurs.put(idSchueler, fachID, null);
 		stateKursdifferenzUpdate(fachartID);
 		for (final @NotNull Long schieneID : kurs.schienen)
 			stateSchuelerSchieneEntfernen(idSchueler, schieneID, kurs);
@@ -1057,10 +1050,8 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public boolean getOfSchuelerHatNichtwahl(final long idSchueler) {
-		final @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> map = getOfSchuelerFachIDKursMap(idSchueler);
-
-		for (@NotNull final Entry<@NotNull Long, @NotNull GostBlockungsergebnisKurs> e : map.entrySet())
-			if (e.getValue() == null)
+		for (final @NotNull long idFach : _map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
+			if (_map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) == null)
 				return true;
 
 		return false;
@@ -1194,17 +1185,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Map die jedem Fach eines Schülers seinen Kurs oder NULL zuordnet.
-	 *
-	 * @param  idSchueler  Die Datenbank-ID des Schülers.
-	 *
-	 * @return die Map die jedem Fach eines Schülers seinen Kurs oder NULL zuordnet.
-	 */
-	public @NotNull Map<@NotNull Long, GostBlockungsergebnisKurs> getOfSchuelerFachIDKursMap(final long idSchueler) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_fachID_kurs, idSchueler);
-	}
-
-	/**
 	 * Liefert die Menge der zugeordneten Kurse des Schülers in der Schiene.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -1237,9 +1217,7 @@ public class GostBlockungsergebnisManager {
 	 * @return den zu (idSchueler, idFach) passenden Kurs.
 	 */
 	public GostBlockungsergebnisKurs getOfSchuelerOfFachZugeordneterKurs(final long idSchueler, final long idFach) {
-		@NotNull final Map<@NotNull Long, GostBlockungsergebnisKurs> mapFachZuKurs = getOfSchuelerFachIDKursMap(idSchueler);
-		DeveloperNotificationException.ifMapNotContains("mapFachZuKurs", mapFachZuKurs, idFach);
-		return mapFachZuKurs.get(idFach);
+		return _map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach);
 	}
 
 	/**

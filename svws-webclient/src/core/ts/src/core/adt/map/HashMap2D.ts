@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -168,6 +169,17 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 			}
 		}
 		return list;
+	}
+
+	/**
+	 * Liefert das KeySet der SubMap des 1. Schlüssels.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public getKeySetOf(key1 : K1) : JavaSet<K2> {
+		return this.getSubMapOrException(key1).keySet();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
