@@ -1567,6 +1567,8 @@ public class AbiturdatenManager {
 			return pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
 					? kursart : null;
 		// GK ?
+		if (belegung.belegungen[GostHalbjahr.Q22.id] == null)
+			return null;
 		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
 		return pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)
