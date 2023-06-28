@@ -200,8 +200,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this.schieneAddListe(daten.schienen);
 			this.regelAddListe(daten.regeln);
 			this.kursAddListe(daten.kurse);
-			this.addSchuelerListe(daten.schueler);
-			this.addFachwahlListe(daten.fachwahlen);
+			this.schuelerAddListe(daten.schueler);
+			this.fachwahlAddListe(daten.fachwahlen);
 			this.ergebnisAddListe(daten.ergebnisse);
 		} else throw new Error('invalid method overload');
 	}
@@ -348,6 +348,138 @@ export class GostBlockungsdatenManager extends JavaObject {
 			if (eintrag.id === ergebnis.id)
 				eintrag.bewertung = ergebnis.bewertung;
 		this._daten.ergebnisse.sort(this._compErgebnisse);
+	}
+
+	/**
+	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 *
+	 * @param idErgebnis Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Den Wert des 1. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung1Wert(idErgebnis : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlKurseNichtZugeordnet;
+		summe += e.bewertung.regelVerletzungen.size();
+		return summe;
+	}
+
+	/**
+	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung1Intervall(idErgebnis : number) : number {
+		const summe : number = this.ergebnisGetBewertung1Wert(idErgebnis);
+		return 1 - 1 / (0.25 * summe + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Den Wert des 2. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung2Wert(idErgebnis : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
+		summe += e.bewertung.anzahlSchuelerKollisionen;
+		return summe;
+	}
+
+	/**
+	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung2Intervall(idErgebnis : number) : number {
+		const summe : number = this.ergebnisGetBewertung2Wert(idErgebnis);
+		return 1 - 1 / (0.25 * summe + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Den Wert des 3. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung3Wert(idErgebnis : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		return e.bewertung.kursdifferenzMax;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung3Intervall(idErgebnis : number) : number {
+		let wert : number = this.ergebnisGetBewertung3Wert(idErgebnis);
+		if (wert > 0)
+			wert--;
+		return 1 - 1 / (0.25 * wert + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Den Wert des 4. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung4Wert(idErgebnis : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
+	}
+
+	/**
+	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Listeneintrages.
+	 *
+	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGetBewertung4Intervall(idErgebnis : number) : number {
+		const wert : number = this.ergebnisGetBewertung4Wert(idErgebnis);
+		return 1 - 1 / (0.25 * wert + 1);
 	}
 
 	private kursAddKursOhneSortierung(kurs : GostBlockungKurs) : void {
@@ -904,31 +1036,33 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt eine Fachwahl hinzu.
+	 * Fügt eine Fachwahl hinzu.<br>
 	 * Wirft eine Exception, falls die Fachwahl-Daten inkonsistent sind.
 	 *
-	 * @param pFachwahl Die Fachwahl, die hinzugefügt wird.
+	 * @param fachwahl  Die Fachwahl, die hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
-	public addFachwahl(pFachwahl : GostFachwahl) : void {
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idSchueler_idFach_fachwahl, pFachwahl.schuelerID, pFachwahl.fachID, pFachwahl);
-		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_idSchueler_fachwahlen, pFachwahl.schuelerID);
-		fachwahlenDesSchuelers.add(pFachwahl);
+	public fachwahlAdd(fachwahl : GostFachwahl) : void {
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idSchueler_idFach_fachwahl, fachwahl.schuelerID, fachwahl.fachID, fachwahl);
+		const fachwahlenDesSchuelers : List<GostFachwahl> = MapUtils.getOrCreateArrayList(this._map_idSchueler_fachwahlen, fachwahl.schuelerID);
+		fachwahlenDesSchuelers.add(fachwahl);
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
-		const fachartID : number = GostKursart.getFachartIDByFachwahl(pFachwahl);
-		this.getOfFachartMengeFachwahlen(fachartID).add(pFachwahl);
-		this._daten.fachwahlen.add(pFachwahl);
+		const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
+		this.fachwahlGetListeOfFachart(fachartID).add(fachwahl);
+		this._daten.fachwahlen.add(fachwahl);
 	}
 
 	/**
 	 * Fügt alle Fachwahlen hinzu.
 	 *
-	 * @param pFachwahlen Die Menge an Fachwahlen.
+	 * @param fachwahlmenge  Die Menge an Fachwahlen.
+	 *
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
-	public addFachwahlListe(pFachwahlen : List<GostFachwahl>) : void {
-		for (const gFachwahl of pFachwahlen)
-			this.addFachwahl(gFachwahl);
+	public fachwahlAddListe(fachwahlmenge : List<GostFachwahl>) : void {
+		for (const gFachwahl of fachwahlmenge)
+			this.fachwahlAdd(gFachwahl);
 	}
 
 	/**
@@ -936,71 +1070,88 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Die Anzahl an Fachwahlen.
 	 */
-	public getFachwahlAnzahl() : number {
+	public fachwahlGetAnzahl() : number {
 		return this._daten.fachwahlen.size();
 	}
 
 	/**
-	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
+	 * Liefert den Namen (Fach-Kursart) der Fachwahl, beispielsweise 'M-GK'.
 	 *
-	 * @param pFachwahl Das Fachwahl-Objekt.
-	 * @return Den Namen (Fach-Kursart) der Fachwahl.
+	 * @param fachwahl  Das Fachwahl-Objekt.
+	 *
+	 * @return den Namen (Fach-Kursart) der Fachwahl, beispielsweise 'M-GK'.
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
-	public getNameOfFachwahl(pFachwahl : GostFachwahl) : string {
-		const gFach : GostFach = this._faecherManager.getOrException(pFachwahl.fachID);
-		const gKursart : GostKursart = GostKursart.fromID(pFachwahl.kursartID);
+	public fachwahlGetName(fachwahl : GostFachwahl) : string {
+		const gFach : GostFach = this._faecherManager.getOrException(fachwahl.fachID);
+		const gKursart : GostKursart = GostKursart.fromID(fachwahl.kursartID);
 		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
 	}
 
 	/**
 	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br>
-	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
+	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen.
 	 *
-	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
+	 * @param idFachart Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
+	 *
 	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
 	 */
-	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
-		return MapUtils.getOrCreateArrayList(this._map_idFachart_fachwahlen, pFachartID);
+	public fachwahlGetListeOfFachart(idFachart : number) : List<GostFachwahl> {
+		return MapUtils.getOrCreateArrayList(this._map_idFachart_fachwahlen, idFachart);
+	}
+
+	/**
+	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
+	 *
+	 * @return Die Anzahl verschiedenen Kursarten.
+	 */
+	public fachwahlGetAnzahlVerwendeterKursarten() : number {
+		const setKursartenIDs : HashSet<number> = new HashSet();
+		for (const fachwahl of this._daten.fachwahlen)
+			setKursartenIDs.add(fachwahl.kursartID);
+		return setKursartenIDs.size();
 	}
 
 	/**
 	 * Fügt einen Schüler hinzu.<br>
 	 * Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
 	 *
-	 * @param pSchueler Der Schüler, der hinzugefügt wird.
+	 * @param schueler  Der Schüler, der hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
-	public addSchuelerOhneSortierung(pSchueler : Schueler) : void {
-		DeveloperNotificationException.ifInvalidID("pSchueler.id", pSchueler.id);
-		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", pSchueler.geschlecht, 0);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idSchueler_schueler, pSchueler.id, pSchueler);
-		if (!this._map_idSchueler_fachwahlen.containsKey(pSchueler.id))
-			this._map_idSchueler_fachwahlen.put(pSchueler.id, new ArrayList());
-		this._daten.schueler.add(pSchueler);
+	private schuelerAddOhneSortierung(schueler : Schueler) : void {
+		DeveloperNotificationException.ifInvalidID("pSchueler.id", schueler.id);
+		DeveloperNotificationException.ifSmaller("pSchueler.geschlecht", schueler.geschlecht, 0);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idSchueler_schueler, schueler.id, schueler);
+		if (!this._map_idSchueler_fachwahlen.containsKey(schueler.id))
+			this._map_idSchueler_fachwahlen.put(schueler.id, new ArrayList());
+		this._daten.schueler.add(schueler);
 	}
 
 	/**
 	 * Fügt einen Schüler hinzu.<br>
 	 * Wirft eine Exception, falls die Schüler Daten inkonsistent sind.
 	 *
-	 * @param pSchueler Der Schüler, der hinzugefügt wird.
+	 * @param schueler  Der Schüler, der hinzugefügt wird.
+	 *
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
-	public addSchueler(pSchueler : Schueler) : void {
-		this.addSchuelerOhneSortierung(pSchueler);
+	public schuelerAdd(schueler : Schueler) : void {
+		this.schuelerAddOhneSortierung(schueler);
 		this._daten.schueler.sort(GostBlockungsdatenManager._compSchueler);
 	}
 
 	/**
 	 * Fügt alle Schüler hinzu.
 	 *
-	 * @param pSchueler Die Menge an Schülern.
+	 * @param schuelermenge  Die Menge an Schülern.
+	 *
 	 * @throws DeveloperNotificationException Falls die Schüler Daten inkonsistent sind.
 	 */
-	public addSchuelerListe(pSchueler : List<Schueler>) : void {
-		for (const schueler of pSchueler)
-			this.addSchuelerOhneSortierung(schueler);
+	public schuelerAddListe(schuelermenge : List<Schueler>) : void {
+		for (const schueler of schuelermenge)
+			this.schuelerAddOhneSortierung(schueler);
 		this._daten.schueler.sort(GostBlockungsdatenManager._compSchueler);
 	}
 
@@ -1009,7 +1160,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 */
-	public getSchuelerAnzahlMitFachwahlen() : number {
+	public schuelerGetAnzahlMitMindestensEinerFachwahl() : number {
 		const setSchuelerIDs : HashSet<number> | null = new HashSet();
 		for (const fachwahl of this._daten.fachwahlen)
 			setSchuelerIDs.add(fachwahl.schuelerID);
@@ -1021,7 +1172,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Die Anzahl an Schülern.
 	 */
-	public getSchuelerAnzahl() : number {
+	public schuelerGetAnzahl() : number {
 		return this._daten.schueler.size();
 	}
 
@@ -1029,12 +1180,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Ermittelt den Schüler für die angegebene ID. <br>
 	 * Wirft eine DeveloperNotificationException, falls die Schüler-ID unbekannt ist.
 	 *
-	 * @param  pSchuelerID Die Datenbank-ID des Schülers.
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
 	 * @return Das zugehörige {@link Schueler}-Objekt.
 	 * @throws DeveloperNotificationException  Falls die Schüler-ID unbekannt ist.
 	 */
-	public getSchueler(pSchuelerID : number) : Schueler {
-		return DeveloperNotificationException.ifNull("_map_id_schueler.get(" + pSchuelerID + ")", this._map_idSchueler_schueler.get(pSchuelerID));
+	public schuelerGet(idSchueler : number) : Schueler {
+		return DeveloperNotificationException.ifNull("_map_id_schueler.get(" + idSchueler + ")", this._map_idSchueler_schueler.get(idSchueler));
 	}
 
 	/**
@@ -1043,7 +1195,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Die aktuelle Menge aller Schüler.
 	 */
-	public getMengeOfSchueler() : List<Schueler> {
+	public schuelerGetListe() : List<Schueler> {
 		return this._daten.schueler;
 	}
 
@@ -1057,8 +1209,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostKursart}.
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
-	public getOfSchuelerOfFachKursart(idSchueler : number, idFach : number) : GostKursart {
-		const fachwahl : GostFachwahl = this.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+	public schuelerGetOfFachKursart(idSchueler : number, idFach : number) : GostKursart {
+		const fachwahl : GostFachwahl = this.schuelerGetOfFachFachwahl(idSchueler, idFach);
 		return GostKursart.fromID(fachwahl.kursartID);
 	}
 
@@ -1072,7 +1224,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostFachwahl}.
 	 * @throws DeveloperNotificationException Falls der Schüler das Fach nicht gewählt hat.
 	 */
-	public getOfSchuelerOfFachFachwahl(idSchueler : number, idFach : number) : GostFachwahl {
+	public schuelerGetOfFachFachwahl(idSchueler : number, idFach : number) : GostFachwahl {
 		return this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach);
 	}
 
@@ -1085,7 +1237,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
-	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
+	public schuelerGetHatFach(idSchueler : number, idFach : number) : boolean {
 		return this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach);
 	}
 
@@ -1099,7 +1251,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl=Fach+Kursart hat.
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
-	public getOfSchuelerHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
+	public schuelerGetHatFachart(idSchueler : number, idFach : number, idKursart : number) : boolean {
 		if (!this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach))
 			return false;
 		return this._map2d_idSchueler_idFach_fachwahl.getNonNullOrException(idSchueler, idFach).kursartID === idKursart;
@@ -1112,141 +1264,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Menge aller {@link GostFachwahl} des Schülers.
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
-	public getOfSchuelerFacharten(pSchuelerID : number) : List<GostFachwahl> {
+	public schuelerGetListeOfFachwahlen(pSchuelerID : number) : List<GostFachwahl> {
 		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_idSchueler_fachwahlen.get(pSchuelerID));
-	}
-
-	/**
-	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
-	 *
-	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
-	 */
-	public getIstBlockungsVorlage() : boolean {
-		return this._daten.ergebnisse.size() === 1;
-	}
-
-	/**
-	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 * - Die Anzahl der Regelverletzungen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 1. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung1Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
-		let summe : number = 0;
-		summe += e.bewertung.anzahlKurseNichtZugeordnet;
-		summe += e.bewertung.regelVerletzungen.size();
-		return summe;
-	}
-
-	/**
-	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl der Regelverletzungen. <br>
-	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung1Intervall(pErgebnisID : number) : number {
-		const summe : number = this.getOfBewertung1Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * summe + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
-	 * - Die Anzahl der Schülerkollisionen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 2. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung2Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
-		let summe : number = 0;
-		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
-		summe += e.bewertung.anzahlSchuelerKollisionen;
-		return summe;
-	}
-
-	/**
-	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
-	 * - Die Anzahl der Schülerkollisionen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung2Intervall(pErgebnisID : number) : number {
-		const summe : number = this.getOfBewertung2Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * summe + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 3. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung3Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
-		return e.bewertung.kursdifferenzMax;
-	}
-
-	/**
-	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung3Intervall(pErgebnisID : number) : number {
-		let wert : number = this.getOfBewertung3Wert(pErgebnisID);
-		if (wert > 0)
-			wert--;
-		return 1 - 1 / (0.25 * wert + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
-	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
-	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
-	 * Raumkapazitäten (Fachräume).
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 4. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung4Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
-		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
-	}
-
-	/**
-	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
-	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
-	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
-	 * Raumkapazitäten (Fachräume).
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung4Intervall(pErgebnisID : number) : number {
-		const wert : number = this.getOfBewertung4Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * wert + 1);
 	}
 
 	/**
@@ -1259,6 +1278,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Setzt die ID der Blockung.
+	 *
+	 * @param pBlockungsID die ID, welche der Blockung zugewiesen wird.
+	 * @throws DeveloperNotificationException Falls die übergebene ID ungültig bzw. negativ ist.
+	 */
+	public setID(pBlockungsID : number) : void {
+		DeveloperNotificationException.ifInvalidID("pBlockungsID", pBlockungsID);
+		this._daten.id = pBlockungsID;
+	}
+
+	/**
 	 * Liefert die maximale Blockungszeit in Millisekunden.
 	 *
 	 * @return Die maximale Blockungszeit in Millisekunden.
@@ -1268,24 +1298,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Fächern.
+	 * Setzt die maximale Blockungszeit in Millisekunden.
 	 *
-	 * @return Die Anzahl an Fächern.
+	 * @param pZeit die maximale Blockungszeit in Millisekunden.
 	 */
-	public getFaecherAnzahl() : number {
-		return this._faecherManager.faecher().size();
-	}
-
-	/**
-	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
-	 *
-	 * @return Die Anzahl verschiedenen Kursarten.
-	 */
-	public getKursartenAnzahl() : number {
-		const setKursartenIDs : HashSet<number> = new HashSet();
-		for (const fachwahl of this._daten.fachwahlen)
-			setKursartenIDs.add(fachwahl.kursartID);
-		return setKursartenIDs.size();
+	public setMaxTimeMillis(pZeit : number) : void {
+		this._maxTimeMillis = pZeit;
 	}
 
 	/**
@@ -1298,12 +1316,50 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Setzt den Namen der Blockung
+	 *
+	 * @param pName der Name, welcher der Blockung zugewiesen wird.
+	 * @throws UserNotificationException Falls der übergebene String leer ist.
+	 */
+	public setName(pName : string) : void {
+		UserNotificationException.ifTrue("Ein leerer Name ist für die Blockung nicht zulässig.", JavaObject.equalsTranspiler("", (pName)));
+		this._daten.name = pName;
+	}
+
+	/**
 	 * Gibt das Halbjahr der gymnasialen Oberstufe zurück, für welches die Blockung angelegt wurde.
 	 *
 	 * @return das Halbjahr der gymnasialen Oberstufe
 	 */
 	public getHalbjahr() : GostHalbjahr {
 		return GostHalbjahr.fromIDorException(this._daten.gostHalbjahr);
+	}
+
+	/**
+	 * Setzt das Halbjahr der gymnasialen Oberstufe, für welches die Blockung angelegt wurde.
+	 *
+	 * @param pHalbjahr das Halbjahr der gymnasialen Oberstufe
+	 */
+	public setHalbjahr(pHalbjahr : GostHalbjahr) : void {
+		this._daten.gostHalbjahr = pHalbjahr.id;
+	}
+
+	/**
+	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 *
+	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
+	 */
+	public getIstBlockungsVorlage() : boolean {
+		return this._daten.ergebnisse.size() === 1;
+	}
+
+	/**
+	 * Liefert die Anzahl an Fächern.
+	 *
+	 * @return Die Anzahl an Fächern.
+	 */
+	public getFaecherAnzahl() : number {
+		return this._faecherManager.faecher().size();
 	}
 
 	/**
@@ -1322,46 +1378,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public daten() : GostBlockungsdaten {
 		return this._daten;
-	}
-
-	/**
-	 * Setzt den Namen der Blockung
-	 *
-	 * @param pName der Name, welcher der Blockung zugewiesen wird.
-	 * @throws UserNotificationException Falls der übergebene String leer ist.
-	 */
-	public setName(pName : string) : void {
-		UserNotificationException.ifTrue("Ein leerer Name ist für die Blockung nicht zulässig.", JavaObject.equalsTranspiler("", (pName)));
-		this._daten.name = pName;
-	}
-
-	/**
-	 * Setzt das Halbjahr der gymnasialen Oberstufe, für welches die Blockung angelegt wurde.
-	 *
-	 * @param pHalbjahr das Halbjahr der gymnasialen Oberstufe
-	 */
-	public setHalbjahr(pHalbjahr : GostHalbjahr) : void {
-		this._daten.gostHalbjahr = pHalbjahr.id;
-	}
-
-	/**
-	 * Setzt die ID der Blockung.
-	 *
-	 * @param pBlockungsID die ID, welche der Blockung zugewiesen wird.
-	 * @throws DeveloperNotificationException Falls die übergebene ID ungültig bzw. negativ ist.
-	 */
-	public setID(pBlockungsID : number) : void {
-		DeveloperNotificationException.ifInvalidID("pBlockungsID", pBlockungsID);
-		this._daten.id = pBlockungsID;
-	}
-
-	/**
-	 * Setzt die maximale Blockungszeit in Millisekunden.
-	 *
-	 * @param pZeit die maximale Blockungszeit in Millisekunden.
-	 */
-	public setMaxTimeMillis(pZeit : number) : void {
-		this._maxTimeMillis = pZeit;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

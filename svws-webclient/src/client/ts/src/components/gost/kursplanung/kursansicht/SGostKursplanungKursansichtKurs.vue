@@ -194,7 +194,7 @@
 		if (filtered_by_kursart.value.isEmpty())
 			return [-1,-1, -1];
 		const fachart_id = GostKursart.getFachartID(props.kurs.fach_id, props.kurs.kursart);
-		const wahlen = props.getDatenmanager().getOfFachartMengeFachwahlen(fachart_id).size() || 0;
+		const wahlen = props.getDatenmanager().fachwahlGetListeOfFachart(fachart_id).size() || 0;
 		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
 		return [filtered_by_kursart.value.size(), kdiff, wahlen];
 	});

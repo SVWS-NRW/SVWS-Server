@@ -200,7 +200,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._ergebnis.istMarkiert = pOld.istMarkiert;
 		this._ergebnis.istVorlage = pOld.istVorlage;
 		this._ergebnis.bewertung.kursdifferenzMax = 0;
-		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.getSchuelerAnzahl() + 1).fill(0);
+		this._ergebnis.bewertung.kursdifferenzHistogramm = Array(this._parent.schuelerGetAnzahl() + 1).fill(0);
 		this._ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += this._parent.daten().fachwahlen.size();
 		for (const gSchiene of this._parent.daten().schienen) {
 			const eSchiene : GostBlockungsergebnisSchiene = new GostBlockungsergebnisSchiene();
@@ -908,7 +908,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die Schüler-ID unbekannt ist.
 	 */
 	public getSchuelerG(idSchueler : number) : Schueler {
-		return this._parent.getSchueler(idSchueler);
+		return this._parent.schuelerGet(idSchueler);
 	}
 
 	/**
@@ -919,7 +919,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return einen Schüler-String im Format: 'Nachname, Vorname'.
 	 */
 	public getOfSchuelerNameVorname(idSchueler : number) : string {
-		const schueler : Schueler = this._parent.getSchueler(idSchueler);
+		const schueler : Schueler = this._parent.schuelerGet(idSchueler);
 		return schueler.nachname + ", " + schueler.vorname;
 	}
 
@@ -977,7 +977,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl (Fach + Kursart) hat.
 	 */
 	public getOfSchuelerHatFachwahl(idSchueler : number, idFach : number, idKursart : number) : boolean {
-		return this._parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
+		return this._parent.schuelerGetHatFachart(idSchueler, idFach, idKursart);
 	}
 
 	/**
@@ -989,7 +989,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach (unabhängig von der Kursart) gewählt hat.
 	 */
 	public getOfSchuelerHatFach(idSchueler : number, idFach : number) : boolean {
-		return this._parent.getOfSchuelerHatFach(idSchueler, idFach);
+		return this._parent.schuelerGetHatFach(idSchueler, idFach);
 	}
 
 	/**
@@ -1076,7 +1076,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerAnzahlGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : number {
 		let summe : number = 0;
-		for (const schueler of this._parent.getMengeOfSchueler())
+		for (const schueler of this._parent.schuelerGetListe())
 			if (this.getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht, schriftlichkeit))
 				summe++;
 		return summe;
@@ -1112,7 +1112,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return Die zu (idSchueler, idFach) die jeweilige Kursart.
 	 */
 	public getOfSchuelerOfFachKursart(idSchueler : number, idFach : number) : GostKursart {
-		return this._parent.getOfSchuelerOfFachKursart(idSchueler, idFach);
+		return this._parent.schuelerGetOfFachKursart(idSchueler, idFach);
 	}
 
 	/**
@@ -1152,9 +1152,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchuelerNeuzuordnungMitFixierung(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
 		const input : SchuelerblockungInput = new SchuelerblockungInput();
 		input.schienen = this._parent.schieneGetAnzahl();
-		for (const fachwahl of this._parent.getOfSchuelerFacharten(idSchueler)) {
+		for (const fachwahl of this._parent.schuelerGetListeOfFachwahlen(idSchueler)) {
 			input.fachwahlen.add(fachwahl);
-			input.fachwahlenText.add(this._parent.getNameOfFachwahl(fachwahl));
+			input.fachwahlenText.add(this._parent.fachwahlGetName(fachwahl));
 			const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
 			for (const kursE of this.getOfFachartKursmenge(fachartID)) {
 				const kursS : SchuelerblockungInputKurs = new SchuelerblockungInputKurs();
@@ -1261,7 +1261,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerOfKursFachwahl(idSchueler : number, idKurs : number) : GostFachwahl {
 		const idFach : number = this.getKursE(idKurs).fachID;
-		return this._parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+		return this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
@@ -1273,7 +1273,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Fachwahl des Schüler passend zum Fach.
 	 */
 	public getOfSchuelerOfFachFachwahl(idSchueler : number, idFach : number) : GostFachwahl {
-		return this._parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+		return this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
@@ -1289,7 +1289,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerMengeGefiltert(idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string) : List<Schueler> {
 		const menge : List<Schueler> = new ArrayList();
-		for (const schueler of this._parent.getMengeOfSchueler())
+		for (const schueler of this._parent.schuelerGetListe())
 			if (this.getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, null, null))
 				menge.add(schueler);
 		return menge;

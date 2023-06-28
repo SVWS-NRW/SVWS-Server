@@ -162,7 +162,7 @@ public class GostBlockungsergebnisManager {
 
 		// Bewertungskriterium 3a und 3b (Kursdifferenzen)
 		_ergebnis.bewertung.kursdifferenzMax = 0;
-		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.getSchuelerAnzahl() + 1];
+		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
 
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
 		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
@@ -995,7 +995,7 @@ public class GostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls die Schüler-ID unbekannt ist.
 	 */
 	public @NotNull Schueler getSchuelerG(final long idSchueler) throws DeveloperNotificationException {
-		return _parent.getSchueler(idSchueler);
+		return _parent.schuelerGet(idSchueler);
 	}
 
 	/**
@@ -1006,7 +1006,7 @@ public class GostBlockungsergebnisManager {
 	 * @return einen Schüler-String im Format: 'Nachname, Vorname'.
 	 */
 	public @NotNull String getOfSchuelerNameVorname(final long idSchueler) {
-		final @NotNull Schueler schueler = _parent.getSchueler(idSchueler);
+		final @NotNull Schueler schueler = _parent.schuelerGet(idSchueler);
 		return schueler.nachname + ", " + schueler.vorname;
 	}
 
@@ -1069,7 +1069,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der übergebene Schüler die entsprechende Fachwahl (Fach + Kursart) hat.
 	 */
 	public boolean getOfSchuelerHatFachwahl(final long idSchueler, final long idFach, final int idKursart) {
-		return _parent.getOfSchuelerHatFachart(idSchueler, idFach, idKursart);
+		return _parent.schuelerGetHatFachart(idSchueler, idFach, idKursart);
 	}
 
 
@@ -1082,7 +1082,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der übergebene Schüler das entsprechende Fach (unabhängig von der Kursart) gewählt hat.
 	 */
 	public boolean getOfSchuelerHatFach(final long idSchueler, final long idFach) {
-		return _parent.getOfSchuelerHatFach(idSchueler, idFach);
+		return _parent.schuelerGetHatFach(idSchueler, idFach);
 	}
 
 	/**
@@ -1170,7 +1170,7 @@ public class GostBlockungsergebnisManager {
 	public int getOfSchuelerAnzahlGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
 		int summe = 0;
 
-		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler())
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			if (getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, geschlecht, schriftlichkeit))
 				summe++;
 
@@ -1207,7 +1207,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Die zu (idSchueler, idFach) die jeweilige Kursart.
 	 */
 	public @NotNull GostKursart getOfSchuelerOfFachKursart(final long idSchueler, final long idFach) {
-		return _parent.getOfSchuelerOfFachKursart(idSchueler, idFach);
+		return _parent.schuelerGetOfFachKursart(idSchueler, idFach);
 	}
 
 	/**
@@ -1251,9 +1251,9 @@ public class GostBlockungsergebnisManager {
 		input.schienen = _parent.schieneGetAnzahl();
 
 		// Sammle alle Facharten des Schülers...
-		for (final @NotNull GostFachwahl fachwahl : _parent.getOfSchuelerFacharten(idSchueler)) {
+		for (final @NotNull GostFachwahl fachwahl : _parent.schuelerGetListeOfFachwahlen(idSchueler)) {
 			input.fachwahlen.add(fachwahl);
-			input.fachwahlenText.add(_parent.getNameOfFachwahl(fachwahl));
+			input.fachwahlenText.add(_parent.fachwahlGetName(fachwahl));
 			final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
 
 			// Sammle alle potentiellen Kurse der Fachart des Schülers...
@@ -1367,7 +1367,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull GostFachwahl getOfSchuelerOfKursFachwahl(final long idSchueler, final long idKurs) {
 		final long idFach = getKursE(idKurs).fachID;
-		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+		return _parent.schuelerGetOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
@@ -1379,7 +1379,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Fachwahl des Schüler passend zum Fach.
 	 */
 	public @NotNull GostFachwahl getOfSchuelerOfFachFachwahl(final long idSchueler, final long idFach) {
-		return _parent.getOfSchuelerOfFachFachwahl(idSchueler, idFach);
+		return _parent.schuelerGetOfFachFachwahl(idSchueler, idFach);
 	}
 
 	/**
@@ -1396,7 +1396,7 @@ public class GostBlockungsergebnisManager {
 	public @NotNull List<@NotNull Schueler> getOfSchuelerMengeGefiltert(final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, final @NotNull String subString) {
 		final @NotNull List<@NotNull Schueler> menge = new ArrayList<>();
 
-		for (final @NotNull Schueler schueler : _parent.getMengeOfSchueler())
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			if (getOfSchuelerErfuelltKriterien(schueler.id, idKurs, idFach, idKursart, konfliktTyp, subString, null, null))
 				menge.add(schueler);
 

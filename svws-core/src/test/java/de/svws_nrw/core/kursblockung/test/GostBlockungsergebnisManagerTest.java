@@ -130,12 +130,6 @@ class GostBlockungsergebnisManagerTest {
 
 		final Random lRandom = new Random(1);
 
-		// System.out.println(out.getOfBewertung1Wert() + "/" + out.getOfBewertung1Farbcode());
-		// System.out.println(out.getOfBewertung2Wert() + "/" + out.getOfBewertung2Farbcode());
-		// System.out.println(out.getOfBewertung3Wert() + "/" + out.getOfBewertung3Farbcode());
-		// System.out.println(out.getOfBewertung4Wert() + "/" + out.getOfBewertung4Farbcode());
-		// System.out.println();
-
 		for (int i = 0; i < 1000; i++) {
 			if (lRandom.nextBoolean()) {
 				// Schülerveränderung
@@ -180,12 +174,6 @@ class GostBlockungsergebnisManagerTest {
 
 			check_conistency(mapFaKu, mapScFaKu, out);
 		}
-
-		// System.out.println(out.getOfBewertung1Wert() + "/" + out.getOfBewertung1Farbcode());
-		// System.out.println(out.getOfBewertung2Wert() + "/" + out.getOfBewertung2Farbcode());
-		// System.out.println(out.getOfBewertung3Wert() + "/" + out.getOfBewertung3Farbcode());
-		// System.out.println(out.getOfBewertung4Wert() + "/" + out.getOfBewertung4Farbcode());
-		// System.out.println();
 
 	}
 

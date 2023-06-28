@@ -162,20 +162,20 @@ class KursblockungTests {
 		if (manager.schieneGetAnzahl() != 14)
 			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
 
-		if (manager.getSchuelerAnzahlMitFachwahlen() != 137)
-			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
+		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 137)
+			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.schuelerGetAnzahlMitMindestensEinerFachwahl() + ".");
 
 		if (manager.getFaecherAnzahl() != 33)
 			fail("Blockung001 hat nicht 33 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
 
-		if (manager.getKursartenAnzahl() != 3)
-			fail("Blockung001 hat nicht 3 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
+		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 3)
+			fail("Blockung001 hat nicht 3 Kursarten, sondern " + manager.fachwahlGetAnzahlVerwendeterKursarten() + ".");
 
 		if (manager.kursGetAnzahl() != 69)
 			fail("Blockung001 hat nicht 69 Kurse, sondern " + manager.kursGetAnzahl() + ".");
 
-		if (manager.getFachwahlAnzahl() != 1146)
-			fail("Blockung001 hat nicht 1146 Fachwahlen, " + manager.getFachwahlAnzahl() + ".");
+		if (manager.fachwahlGetAnzahl() != 1146)
+			fail("Blockung001 hat nicht 1146 Fachwahlen, " + manager.fachwahlGetAnzahl() + ".");
 	}
 
 	/**
@@ -368,20 +368,20 @@ class KursblockungTests {
 		if (manager.schieneGetAnzahl() != 12)
 			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
 
-		if (manager.getSchuelerAnzahlMitFachwahlen() != 150)
-			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
+		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 150)
+			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.schuelerGetAnzahlMitMindestensEinerFachwahl() + ".");
 
 		if (manager.getFaecherAnzahl() != 23)
 			fail("Blockung002 hat nicht 23 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
 
-		if (manager.getKursartenAnzahl() != 2)
-			fail("Blockung002 hat nicht 2 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
+		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 2)
+			fail("Blockung002 hat nicht 2 Kursarten, sondern " + manager.fachwahlGetAnzahlVerwendeterKursarten() + ".");
 
 		if (manager.kursGetAnzahl() != 86)
 			fail("Blockung002 hat nicht 86 Kurse, sondern " + manager.kursGetAnzahl());
 
-		if (manager.getFachwahlAnzahl() != 1798)
-			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + manager.getFachwahlAnzahl() + ".");
+		if (manager.fachwahlGetAnzahl() != 1798)
+			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + manager.fachwahlGetAnzahl() + ".");
 
 	}
 

@@ -23,44 +23,44 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer" v-if="rows_ergebnisse.contains(row)">
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().getOfBewertung1Wert(row.id) }}</span>
+						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
-								{{ getDatenmanager().getOfBewertung1Wert(row.id) }} Regelverletzungen
-								<span v-if="getDatenmanager().getOfBewertung1Wert(row.id) === 0">
+								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
+								<span v-if="getDatenmanager().ergebnisGetBewertung1Wert(row.id) === 0">
 									<i-ri-check-line class="opacity-25" />
 								</span>
 							</span>
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color2(row)}">{{ getDatenmanager().getOfBewertung2Wert(row.id) }}</span>
+						<span :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
-								{{ getDatenmanager().getOfBewertung2Wert(row.id) }} Wahlkonflikte
-								<span v-if="getDatenmanager().getOfBewertung2Wert(row.id) === 0">
+								{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }} Wahlkonflikte
+								<span v-if="getDatenmanager().ergebnisGetBewertung2Wert(row.id) === 0">
 									<i-ri-check-line class="opacity-25" />
 								</span>
 							</span>
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color3(row)}">{{ getDatenmanager().getOfBewertung3Wert(row.id) }}</span>
+						<span :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
-								max. Kursdifferenz: {{ getDatenmanager().getOfBewertung3Wert(row.id) }}
-								<span v-if="getDatenmanager().getOfBewertung3Wert(row.id) === 0">
+								max. Kursdifferenz: {{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}
+								<span v-if="getDatenmanager().ergebnisGetBewertung3Wert(row.id) === 0">
 									<i-ri-check-line class="opacity-25" />
 								</span>
 							</span>
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color4(row)}">{{ getDatenmanager().getOfBewertung4Wert(row.id) }}</span>
+						<span :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
-								Fächerparallelität: {{ getDatenmanager().getOfBewertung4Wert(row.id) }}
-								<span v-if="getDatenmanager().getOfBewertung4Wert(row.id) === 0">
+								Fächerparallelität: {{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}
+								<span v-if="getDatenmanager().ergebnisGetBewertung4Wert(row.id) === 0">
 									<i-ri-check-line class="opacity-25" />
 								</span>
 							</span>
@@ -141,22 +141,22 @@
 	}
 
 	function color1(ergebnis: DataTableItem): string {
-		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color2(ergebnis: DataTableItem): string {
-		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color3(ergebnis: DataTableItem): string {
-		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function color4(ergebnis: DataTableItem): string {
-		return `hsl(${Math.round((1 - (props.getDatenmanager().getOfBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
 	function colorMix(ergebnis: DataTableItem): string {
-		const combined = (props.getDatenmanager().getOfBewertung1Intervall(ergebnis.id))
-			+ (props.getDatenmanager().getOfBewertung2Intervall(ergebnis.id))
-			+ (props.getDatenmanager().getOfBewertung3Intervall(ergebnis.id))
-			+ (props.getDatenmanager().getOfBewertung4Intervall(ergebnis.id));
+		const combined = (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id))
+                       + (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
+                       + (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))
+                       + (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id));
 		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
 	}
 

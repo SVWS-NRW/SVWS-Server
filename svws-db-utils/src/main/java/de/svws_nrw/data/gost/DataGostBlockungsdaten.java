@@ -208,11 +208,11 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
             daten.geschlecht = dto.Geschlecht.id;
             return daten;
         }).toList();
-        manager.addSchuelerListe(schueler);
+        manager.schuelerAddListe(schueler);
 
         // Schüler-Fachwahl-Menge hinzufügen.
         final List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlen(blockung.Halbjahr);
-        manager.addFachwahlListe(fachwahlen);
+        manager.fachwahlAddListe(fachwahlen);
 
 		return manager;
 	}
