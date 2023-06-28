@@ -4,11 +4,11 @@
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" span="full" />
+			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" span="full" statistics />
 			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i=>i.text ?? ''" />
 			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i=>i.text ?? ''" />
 			<svws-ui-text-input placeholder="Anmeldedatum" v-model="inputAnmeldedatum" type="date" />
-			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" />
+			<svws-ui-text-input placeholder="Aufnahmedatum" v-model="inputAufnahmedatum" type="date" statistics />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
 				<svws-ui-checkbox v-model="inputIstVolljaehrig"> Volljährig </svws-ui-checkbox>

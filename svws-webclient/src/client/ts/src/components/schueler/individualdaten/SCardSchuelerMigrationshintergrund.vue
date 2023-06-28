@@ -4,18 +4,18 @@
 			<svws-ui-checkbox v-model="hatMigrationshintergrund">Migrationshintergrund vorhanden</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" />
+			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" statistics />
 			<svws-ui-multi-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`"
-				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
+				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 			<svws-ui-multi-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
 				:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
-				:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" span="full" />
+				:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" span="full" statistics />
 			<svws-ui-multi-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
+				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 			<svws-ui-multi-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete />
+				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
