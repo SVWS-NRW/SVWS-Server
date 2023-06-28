@@ -13,7 +13,7 @@
 			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data().geburtsdatum"
 				@update:model-value="doPatch({ geburtsdatum: String($event) })" type="date" required statistics />
 			<svws-ui-text-input placeholder="Geburtsort" :model-value="data().geburtsort"
-				@update:model-value="doPatch({ geburtsort: String($event) })" type="text" statistics />
+				@update:model-value="doPatch({ geburtsort: String($event) })" type="text" />
 			<svws-ui-text-input placeholder="Geburtsname" :model-value="data().geburtsname"
 				@update:model-value="doPatch({ geburtsname: String($event) })" type="text" />
 		</svws-ui-input-wrapper>
