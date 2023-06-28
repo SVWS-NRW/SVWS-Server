@@ -960,9 +960,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public getOfSchuelerHatNichtwahl(idSchueler : number) : boolean {
-		for (const idFach of this._map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
-			if (this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) === null)
-				return true;
+		if (this._map2D_schuelerID_fachID_kurs.containsKey1(idSchueler))
+			for (const idFach of this._map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
+				if (this._map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) === null)
+					return true;
 		return false;
 	}
 

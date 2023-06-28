@@ -116,6 +116,17 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public containsKey1(key1 : K1) : boolean {
+		return this._map.containsKey(key1);
+	}
+
+	/**
 	 * Löscht alle Zuordnungen der Map.
 	 */
 	public clear() : void {
