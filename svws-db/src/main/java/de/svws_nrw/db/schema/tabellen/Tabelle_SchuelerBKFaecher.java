@@ -127,7 +127,7 @@ public class Tabelle_SchuelerBKFaecher extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_SchuelerBKFaecher_Fach_FK = addForeignKey(
 			"SchuelerBKFaecher_Fach_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

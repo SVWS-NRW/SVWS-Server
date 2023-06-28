@@ -145,7 +145,7 @@ public class Tabelle_Kurse extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_Kurse_Fach_FK = addForeignKey(
 			"Kurse_Fach_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		)
 		.setRevision(SchemaRevisionen.REV_2);

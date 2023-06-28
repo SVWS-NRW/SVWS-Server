@@ -198,7 +198,7 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_SchuelerLeistungsdaten_Fach_FK = addForeignKey(
 			"SchuelerLeistungsdaten_Fach_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

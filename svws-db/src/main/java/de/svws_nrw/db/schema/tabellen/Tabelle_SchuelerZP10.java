@@ -79,7 +79,7 @@ public class Tabelle_SchuelerZP10 extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_SchuelerZP10_Fach_FK = addForeignKey(
 			"SchuelerZP10_Fach_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 

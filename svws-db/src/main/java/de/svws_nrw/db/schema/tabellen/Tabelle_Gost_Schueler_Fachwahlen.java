@@ -127,7 +127,7 @@ public class Tabelle_Gost_Schueler_Fachwahlen extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_Gost_Schueler_Fachwahlen_Fach_ID_FK = addForeignKey(
 			"Gost_Schueler_Fachwahlen_Fach_ID_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
 
