@@ -121,23 +121,30 @@
 		emit("update:modelValue", {kurs: undefined, schiene: undefined});
 	}
 
-	const is_drop_zone = computed(()=>
-		props.modelValue?.schiene?.id !== props.schiene.id && props.modelValue.kurs?.id === props.kurs.id && props.modelValue.schiene?.id !== props.schiene.id && schiene_gesperrt.value !== true);
+	const is_drop_zone = computed(() => {
+        if (!props.modelValue.kurs || !props.modelValue.schiene)
+			return false;
+		if ( (props.modelValue.kurs.id === props.kurs.id) && (kurs_schiene_zugeordnet.value) )
+		    return false;
+	    return true;
+	});
 
 	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
 
 	let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
 
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
-		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined || schiene_gesperrt.value === true)
-			return
-		if ((drag_data.kurs.id !== kurs_blockungsergebnis.value.id) && kurs_schiene_zugeordnet) {
+		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
+			return;
+			
+		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id) {
 			kurs1 = drag_data.kurs;
 			isModalOpen_KurseZusammen.value = true;
 			return;
 		}
-		if (drag_data.kurs.id === kurs_blockungsergebnis.value.id && schiene.id !== drag_data.schiene.id) {
-			if (fixier_regeln.value && props.allowRegeln) {
+		
+		if ( (drag_data.kurs.id === kurs_blockungsergebnis.value.id) && (!kurs_schiene_zugeordnet.value) ) {
+			if (fixier_regeln.value && props.allowRegeln) { // Entferne potentielle Fixierung beim Verschieben.
 				const s = props.getErgebnismanager().getSchieneG(schiene.id);
 				await fixieren_regel_entfernen(s);
 			}
@@ -177,9 +184,13 @@
 				&& ((regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
 					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2)))))
 				return true;
-			else if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
-				&& regel.parameter.get(0) === props.kurs.kursart
+			if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
+				&& (regel.parameter.get(0) === props.kurs.kursart)
 				&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
+				return true;
+			if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ
+				&& (regel.parameter.get(0) === props.kurs.id)
+				&& (nummer == regel.parameter.get(1)))
 				return true;
 		}
 		return false;
