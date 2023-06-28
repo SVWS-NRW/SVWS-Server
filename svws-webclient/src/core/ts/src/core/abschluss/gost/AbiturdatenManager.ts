@@ -1484,7 +1484,7 @@ export class AbiturdatenManager extends JavaObject {
 			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
 		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
 			return null;
-		const fachbelegungen : List<AbiturFachbelegung> = this.getFachbelegungByFachkuerzel(fach.kuerzel);
+		const fachbelegungen : List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
 		return this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21) ? kursart : null;
 	}
 

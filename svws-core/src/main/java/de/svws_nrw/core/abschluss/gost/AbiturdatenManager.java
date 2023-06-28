@@ -1569,7 +1569,11 @@ public class AbiturdatenManager {
 		// GK ?
 		if (belegung.belegungen[GostHalbjahr.Q22.id] == null)
 			return null;
-		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
+		// Bestimme die Fachbelegungen für das Fach bzw. Fächer mit gleichem Statistikkürzel bzw. mit den anderen Konfessionen
+		// im Falle einer Religion, da ein Konfessionswechsel ggf. auch die Belegung als Abiturfach erlaubt
+		final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen = GostFachbereich.RELIGION.hat(fach)
+				? getFachbelegungen(GostFachbereich.RELIGION)
+				: getFachbelegungByFachkuerzel(fach.kuerzel);
 		return pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)
 				&& pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)
