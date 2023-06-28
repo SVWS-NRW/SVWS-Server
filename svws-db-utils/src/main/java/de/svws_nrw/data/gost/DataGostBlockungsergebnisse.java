@@ -489,7 +489,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    				kursLehrerZusatzkraefte.add(kl);
 	    			}
 	    		}
-	    		final DTOKurs dto = new DTOKurs(id, abschnitt.ID, datenManager.getNameOfKurs(kurs.id), kurs.fach_id);
+	    		final DTOKurs dto = new DTOKurs(id, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id);
 	    		dto.Jahrgang_ID = jahrgang.ID;
 	    		dto.ASDJahrgang = halbjahr.jahrgang;
 	    		dto.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
@@ -530,7 +530,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    		// Bestimme die Kurse, in welche der Schüler gesetzt wurde
 	    		final Set<GostBlockungsergebnisKurs> kursMenge = ergebnisManager.getOfSchuelerKursmenge(schueler.id);
 	    		for (final GostBlockungsergebnisKurs kurszuordnung : kursMenge) {
-	    			final GostBlockungKurs kurs = datenManager.getKurs(kurszuordnung.id);
+	    			final GostBlockungKurs kurs = datenManager.kursGet(kurszuordnung.id);
 	    			final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
 	    			final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
 	    			final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);

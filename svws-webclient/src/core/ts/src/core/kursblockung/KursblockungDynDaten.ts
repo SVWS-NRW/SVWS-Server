@@ -124,7 +124,7 @@ export class KursblockungDynDaten extends JavaObject {
 		this.schritt04FehlerBeiSchuelerErstellung(input);
 		this.schritt05FehlerBeiSchuelerFachwahlenErstellung(input, this._schuelerArr);
 		this.schritt06FehlerBeiStatistikErstellung(this._fachartArr, this._schuelerArr, input);
-		this.schritt07FehlerBeiSchienenErzeugung(input.getSchienenAnzahl());
+		this.schritt07FehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
 		this.schritt08FehlerBeiKursErstellung(input);
 		this.schritt09FehlerBeiKursFreiErstellung();
 		this.schritt10FehlerBeiFachartKursArrayErstellung();
@@ -161,7 +161,7 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", input.daten().fachwahlen);
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", input.faecherManager().faecher());
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", input.daten().kurse);
-		const schienenAnzahl : number = input.getSchienenAnzahl();
+		const schienenAnzahl : number = input.schieneGetAnzahl();
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
 		const usedSchiene : HashSet<number | null> | null = new HashSet();
 		for (const gSchiene of input.daten().schienen) {
@@ -398,8 +398,8 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const fachwahl of input.daten().fachwahlen)
 			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, fachwahl.schuelerID);
 		const nSchueler : number = setSchueler.size();
-		const nSchienen : number = input.getSchienenAnzahl();
-		const nKurse : number = input.getKursAnzahl();
+		const nSchienen : number = input.schieneGetAnzahl();
+		const nKurse : number = input.kursGetAnzahl();
 		this._schuelerArr = Array(nSchueler).fill(null);
 		let i : number = 0;
 		for (const sID of setSchueler) {
@@ -453,7 +453,7 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 			bewertungMatrixFachart[nr1][nr1] += 10000000;
 		}
-		this._statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.getKursAnzahl());
+		this._statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
 	}
 
 	private schritt07FehlerBeiSchienenErzeugung(schienen : number) : void {
@@ -463,8 +463,8 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private schritt08FehlerBeiKursErstellung(input : GostBlockungsdatenManager) : void {
-		const nKurse : number = input.getKursAnzahl();
-		const nSchienen : number = input.getSchienenAnzahl();
+		const nKurse : number = input.kursGetAnzahl();
+		const nSchienen : number = input.schieneGetAnzahl();
 		this._kursArr = Array(nKurse).fill(null);
 		let i : number = 0;
 		for (const kurs of input.daten().kurse) {
@@ -690,7 +690,7 @@ export class KursblockungDynDaten extends JavaObject {
 			for (const kurs of dynSchueler.gibKurswahlen())
 				if (kurs !== null)
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
-		for (const gRegel of pDataManager.getMengeOfRegeln())
+		for (const gRegel of pDataManager.regelGetListe())
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const schuelerID : number = gRegel.parameter.get(0).valueOf();
 				const kursID : number = gRegel.parameter.get(1).valueOf();

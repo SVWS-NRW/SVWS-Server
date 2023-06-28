@@ -117,11 +117,11 @@
 
 	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		if (sort_by.value === 'kursart')
-			return props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer()
-		else return props.getDatenmanager().getKursmengeSortiertNachFachKursartNummer()
+			return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
+		else return props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
 	})
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().getMengeOfSchienen())
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().schieneGetListe())
 
 	const fach_halbjahr: ComputedRef<GostStatistikFachwahlHalbjahr> = computed(() => props.fach.fachwahlen[props.halbjahr] ||	new GostStatistikFachwahlHalbjahr());
 

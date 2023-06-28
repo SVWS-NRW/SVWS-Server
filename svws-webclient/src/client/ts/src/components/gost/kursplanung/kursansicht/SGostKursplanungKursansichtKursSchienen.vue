@@ -151,7 +151,7 @@
 
 	// Regeln
 
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.getDatenmanager().getMengeOfRegeln());
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.getDatenmanager().regelGetListe());
 
 	// Regeln zum Sperren
 

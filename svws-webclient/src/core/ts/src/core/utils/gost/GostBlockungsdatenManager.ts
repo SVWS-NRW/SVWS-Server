@@ -197,12 +197,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._daten.abijahrgang = daten.abijahrgang;
 			this._daten.gostHalbjahr = daten.gostHalbjahr;
 			this._daten.istAktiv = daten.istAktiv;
-			this.addSchienListe(daten.schienen);
-			this.addRegelListe(daten.regeln);
-			this.addKursListe(daten.kurse);
+			this.schieneAddListe(daten.schienen);
+			this.regelAddListe(daten.regeln);
+			this.kursAddListe(daten.kurse);
 			this.addSchuelerListe(daten.schueler);
 			this.addFachwahlListe(daten.fachwahlen);
-			this.addErgebnisListe(daten.ergebnisse);
+			this.ergebnisAddListe(daten.ergebnisse);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -255,7 +255,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return comp;
 	}
 
-	private addErgebnisOhneSortierung(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+	private ergebnisAddOhneSortierung(ergebnis : GostBlockungsergebnisListeneintrag) : void {
 		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
 		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
 		DeveloperNotificationException.ifNull("GostHalbjahr.fromID(" + ergebnis.gostHalbjahr + ")", GostHalbjahr.fromID(ergebnis.gostHalbjahr));
@@ -269,8 +269,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param ergebnis Das {@link GostBlockungsergebnisListeneintrag}-Objekt, welches hinzugefügt wird.
 	 * @throws DeveloperNotificationException Falls in den Daten des Listeneintrags Inkonsistenzen sind.
 	 */
-	public addErgebnis(ergebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.addErgebnisOhneSortierung(ergebnis);
+	public ergebnisAdd(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+		this.ergebnisAddOhneSortierung(ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
@@ -280,14 +280,78 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param ergebnismenge Die Menge an Ergebnissen.
 	 * @throws DeveloperNotificationException Falls in den Daten der Listeneinträge Inkonsistenzen sind.
 	 */
-	public addErgebnisListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
+	public ergebnisAddListe(ergebnismenge : List<GostBlockungsergebnisListeneintrag>) : void {
 		for (const ergebnis of ergebnismenge)
-			this.addErgebnisOhneSortierung(ergebnis);
+			this.ergebnisAddOhneSortierung(ergebnis);
 		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
-	private addKursOhneSortierung(kurs : GostBlockungKurs) : void {
-		const nSchienen : number = this.getSchienenAnzahl();
+	/**
+	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des Ergebnisses.
+	 *
+	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisGet(idErgebnis : number) : GostBlockungsergebnisListeneintrag {
+		const e : GostBlockungsergebnisListeneintrag | null = this._map_idErgebnis_Ergebnis.get(idErgebnis);
+		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + idErgebnis + ") gefunden!", e);
+	}
+
+	/**
+	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 *
+	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 */
+	public ergebnisGetListeSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
+		return this._daten.ergebnisse;
+	}
+
+	/**
+	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
+	 *
+	 * @param idErgebnis  Die Datenbank-ID des zu entfernenden Ergebnisses.
+	 *
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisRemoveByID(idErgebnis : number) : void {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(idErgebnis);
+		this._daten.ergebnisse.remove(e);
+		this._map_idErgebnis_Ergebnis.remove(idErgebnis);
+	}
+
+	/**
+	 * Entfernt das übergebenen Ergebnis aus der Blockung.
+	 *
+	 * @param ergebnis  Das zu entfernende Ergebnis.
+	 *
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public ergebnisRemove(ergebnis : GostBlockungsergebnisListeneintrag) : void {
+		this.ergebnisRemoveByID(ergebnis.id);
+	}
+
+	/**
+	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
+	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 *
+	 * @param ergebnis  Das Ergebnis mit der neuen Bewertung.
+	 *
+	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
+	 */
+	public ergebnisUpdateBewertung(ergebnis : GostBlockungsergebnis) : void {
+		DeveloperNotificationException.ifInvalidID("pErgebnis.id", ergebnis.id);
+		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", ergebnis.blockungID);
+		for (const eintrag of this._daten.ergebnisse)
+			if (eintrag.id === ergebnis.id)
+				eintrag.bewertung = ergebnis.bewertung;
+		this._daten.ergebnisse.sort(this._compErgebnisse);
+	}
+
+	private kursAddKursOhneSortierung(kurs : GostBlockungKurs) : void {
+		const nSchienen : number = this.schieneGetAnzahl();
 		DeveloperNotificationException.ifInvalidID("pKurs.id", kurs.id);
 		DeveloperNotificationException.ifNull("_faecherManager.get(pKurs.fach_id)", this._faecherManager.get(kurs.fach_id));
 		DeveloperNotificationException.ifNull("GostKursart.fromIDorNull(pKurs.kursart)", GostKursart.fromIDorNull(kurs.kursart));
@@ -304,12 +368,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Fügt den übergebenen Kurs zu der Blockung hinzu.
 	 *
-	 * @param kurs Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
+	 * @param kurs  Das {@link GostBlockungKurs}-Objekt, welches hinzugefügt wird.
 	 *
-	 * @throws DeveloperNotificationException Falls die Daten des Kurses inkonsistent sind.
+	 * @throws DeveloperNotificationException falls die Daten des Kurses inkonsistent sind.
 	 */
-	public addKurs(kurs : GostBlockungKurs) : void {
-		this.addKursOhneSortierung(kurs);
+	public kursAdd(kurs : GostBlockungKurs) : void {
+		this.kursAddKursOhneSortierung(kurs);
 		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
@@ -320,9 +384,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param kursmenge Die Menge an Kursen.
 	 * @throws DeveloperNotificationException Falls die Daten der Kurse inkonsistent sind.
 	 */
-	public addKursListe(kursmenge : List<GostBlockungKurs>) : void {
+	public kursAddListe(kursmenge : List<GostBlockungKurs>) : void {
 		for (const gKurs of kursmenge)
-			this.addKursOhneSortierung(gKurs);
+			this.kursAddKursOhneSortierung(gKurs);
 		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
@@ -334,7 +398,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return TRUE, falls der Kurs mit der übergebenen ID existiert.
 	 */
-	public getKursExistiert(idKurs : number) : boolean {
+	public kursGetExistiert(idKurs : number) : boolean {
 		return this._map_idKurs_kurs.get(idKurs) !== null;
 	}
 
@@ -343,7 +407,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Die Anzahl an Kursen.
 	 */
-	public getKursAnzahl() : number {
+	public kursGetAnzahl() : number {
 		return this._map_idKurs_kurs.size();
 	}
 
@@ -355,8 +419,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer][Suffix], beispielsweise D-GK1.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public getNameOfKurs(idKurs : number) : string {
-		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+	public kursGetName(idKurs : number) : string {
+		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
 		const sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
@@ -370,7 +434,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return das {@link GostBlockungKurs}-Objekt mit der übergebenen ID.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public getKurs(idKurs : number) : GostBlockungKurs {
+	public kursGet(idKurs : number) : GostBlockungKurs {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_kurs, idKurs);
 	}
 
@@ -384,8 +448,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return die Lehrkraft des Kurses, welche die angegebene Nummer hat.
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkraftMitNummer(idKurs : number, reihenfolgeNr : number) : GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+	public kursGetLehrkraftMitNummer(idKurs : number, reihenfolgeNr : number) : GostBlockungKursLehrer | null {
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.reihenfolge === reihenfolgeNr)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + idKurs + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
@@ -401,8 +465,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Die Lehrkraft des Kurses, welche die angegebene ID hat.
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
-	public getOfKursLehrkraftMitID(idKurs : number, idLehrkraft : number) : GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+	public kursGetLehrkraftMitID(idKurs : number, idLehrkraft : number) : GostBlockungKursLehrer | null {
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.id === idLehrkraft)
 				return lehrkraft;
 		throw new DeveloperNotificationException("Es gibt im Kurs " + idKurs + " keine Lehrkraft mit ID " + idLehrkraft + "!")
@@ -413,7 +477,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Eine nach 'Fach, Kursart, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
-	public getKursmengeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
+	public kursGetListeSortiertNachFachKursartNummer() : List<GostBlockungKurs> {
 		return this._list_kurse_sortiert_fach_kursart_kursnummer;
 	}
 
@@ -422,7 +486,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Eine nach 'Kursart, Fach, Kursnummer' sortierte Kopie der Menge der Kurse.
 	 */
-	public getKursmengeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
+	public kursGetListeSortiertNachKursartFachNummer() : List<GostBlockungKurs> {
 		return this._list_kurse_sortiert_kursart_fach_kursnummer;
 	}
 
@@ -434,8 +498,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public getOfKursLehrkraefteSortiert(idKurs : number) : List<GostBlockungKursLehrer> {
-		return this.getKurs(idKurs).lehrer;
+	public kursGetLehrkraefteSortiert(idKurs : number) : List<GostBlockungKursLehrer> {
+		return this.kursGet(idKurs).lehrer;
 	}
 
 	/**
@@ -447,7 +511,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls ein Löschen des Kurses erlaubt ist.
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public removeKursAllowed(idKurs : number) : boolean {
+	public kursGetIsRemoveAllowed(idKurs : number) : boolean {
 		return (this._map_idKurs_kurs.get(idKurs) !== null) && this.getIstBlockungsVorlage();
 	}
 
@@ -458,9 +522,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
 	 */
-	public removeKursByID(idKurs : number) : void {
+	public kursRemoveByID(idKurs : number) : void {
 		DeveloperNotificationException.ifTrue("Ein Löschen des Kurses ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
 		this._map_idKurs_kurs.remove(idKurs);
@@ -475,8 +539,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException falls der Kurs nicht existiert.
 	 */
-	public removeKurs(kurs : GostBlockungKurs) : void {
-		this.removeKursByID(kurs.id);
+	public kursRemove(kurs : GostBlockungKurs) : void {
+		this.kursRemoveByID(kurs.id);
 	}
 
 	/**
@@ -488,8 +552,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException falls der Kurs nicht existiert oder die Lehrkraft oder die ReihenfolgeNr bereits im Kurs existiert.
 	 */
-	public patchOfKursAddLehrkraft(idKurs : number, neueLehrkraft : GostBlockungKursLehrer) : void {
-		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+	public kursAddLehrkraft(idKurs : number, neueLehrkraft : GostBlockungKursLehrer) : void {
+		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (const lehrkraft of listOfLehrer) {
 			DeveloperNotificationException.ifTrue("patchOfKursAddLehrkraft: Der Kurs hat bereits eine Lehrkraft mit ID " + lehrkraft.id, lehrkraft.id === neueLehrkraft.id);
@@ -508,8 +572,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException falls der Kurs nicht existiert oder es eine solche Lehrkraft im Kurs nicht gibt.
 	 */
-	public patchOfKursRemoveLehrkraft(idKurs : number, idAlteLehrkraft : number) : void {
-		const kurs : GostBlockungKurs = this.getKurs(idKurs);
+	public kursRemoveLehrkraft(idKurs : number, idAlteLehrkraft : number) : void {
+		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (let i : number = 0; i < listOfLehrer.size(); i++)
 			if (listOfLehrer.get(i).id === idAlteLehrkraft) {
@@ -527,8 +591,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return TRUE, falls im Kurs die Lehrkraft mit der Nummer existiert.
 	 */
-	public getOfKursLehrkraftMitNummerExists(idKurs : number, reihenfolgeNr : number) : boolean {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+	public kursGetLehrkraftMitNummerExists(idKurs : number, reihenfolgeNr : number) : boolean {
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.reihenfolge === reihenfolgeNr)
 				return true;
 		return false;
@@ -542,8 +606,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
 	 */
-	public getOfKursLehrkraftMitIDExists(idKurs : number, idLehrkraft : number) : boolean {
-		for (const lehrkraft of this.getOfKursLehrkraefteSortiert(idKurs))
+	public kursGetLehrkraftMitIDExists(idKurs : number, idLehrkraft : number) : boolean {
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.id === idLehrkraft)
 				return true;
 		return false;
@@ -557,62 +621,64 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @throws DeveloperNotificationException falls der Kurs nicht in der Blockung existiert.
 	 */
-	public setSuffixOfKurs(idKurs : number, suffix : string) : void {
-		this.getKurs(idKurs).suffix = suffix;
+	public kursSetSuffix(idKurs : number, suffix : string) : void {
+		this.kursGet(idKurs).suffix = suffix;
 	}
 
-	private addSchieneOhneSortierung(pSchiene : GostBlockungSchiene) : void {
-		DeveloperNotificationException.ifInvalidID("GostBlockungSchiene.id", pSchiene.id);
-		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (pSchiene.bezeichnung)));
-		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", pSchiene.nummer, 1);
-		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", pSchiene.wochenstunden, 1);
-		DeveloperNotificationException.ifMapContains("mapSchienen", this._map_idSchiene_schiene, pSchiene.id);
-		this._map_idSchiene_schiene.put(pSchiene.id, pSchiene);
-		this._daten.schienen.add(pSchiene);
+	private schieneAddOhneSortierung(schiene : GostBlockungSchiene) : void {
+		DeveloperNotificationException.ifInvalidID("GostBlockungSchiene.id", schiene.id);
+		DeveloperNotificationException.ifTrue("GostBlockungSchiene.bezeichnung darf nicht leer sein!", JavaObject.equalsTranspiler("", (schiene.bezeichnung)));
+		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.nummer", schiene.nummer, 1);
+		DeveloperNotificationException.ifSmaller("GostBlockungSchiene.wochenstunden", schiene.wochenstunden, 1);
+		DeveloperNotificationException.ifMapContains("mapSchienen", this._map_idSchiene_schiene, schiene.id);
+		this._map_idSchiene_schiene.put(schiene.id, schiene);
+		this._daten.schienen.add(schiene);
 	}
 
 	/**
 	 * Fügt die übergebene Schiene zu der Blockung hinzu.
 	 *
-	 * @param pSchiene Die hinzuzufügende Schiene.
+	 * @param schiene  Die hinzuzufügende Schiene.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
 	 */
-	public addSchiene(pSchiene : GostBlockungSchiene) : void {
-		this.addSchieneOhneSortierung(pSchiene);
+	public schieneAdd(schiene : GostBlockungSchiene) : void {
+		this.schieneAddOhneSortierung(schiene);
 		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
 	/**
 	 * Fügt die Menge an Schienen hinzu.
 	 *
-	 * @param pSchienen Die Menge an Schienen.
+	 * @param schienenmenge  Die Menge an Schienen.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
 	 */
-	public addSchienListe(pSchienen : List<GostBlockungSchiene>) : void {
-		for (const schiene of pSchienen)
-			this.addSchieneOhneSortierung(schiene);
+	public schieneAddListe(schienenmenge : List<GostBlockungSchiene>) : void {
+		for (const schiene of schienenmenge)
+			this.schieneAddOhneSortierung(schiene);
 		this._daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
 	/**
 	 * Gibt die Schiene der Blockung anhand von deren ID zurück.
 	 *
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
 	 * @return Das zugehörige {@link GostBlockungSchiene} Objekt.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht in der Blockung existiert.
 	 */
-	public getSchiene(pSchienenID : number) : GostBlockungSchiene {
-		return DeveloperNotificationException.ifNull("_mapSchienen.get(" + pSchienenID + ")", this._map_idSchiene_schiene.get(pSchienenID));
+	public schieneGet(idSchiene : number) : GostBlockungSchiene {
+		return DeveloperNotificationException.ifNull("_mapSchienen.get(" + idSchiene + ")", this._map_idSchiene_schiene.get(idSchiene));
 	}
 
 	/**
 	 * Liefert TRUE, falls eine Schiene mit der übergebenen ID existiert.
 	 *
-	 * @param pSchienenID  Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
 	 * @return TRUE, falls eine Schiene mit der übergebenen ID existiert.
 	 */
-	public getSchieneExistiert(pSchienenID : number) : boolean {
-		return this._map_idSchiene_schiene.get(pSchienenID) !== null;
+	public schieneGetExistiert(idSchiene : number) : boolean {
+		return this._map_idSchiene_schiene.get(idSchiene) !== null;
 	}
 
 	/**
@@ -622,7 +688,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 *
 	 * @return Die aktuelle Menge aller Schienen sortiert nach der Schienen-Nummer.
 	 */
-	public getMengeOfSchienen() : List<GostBlockungSchiene> {
+	public schieneGetListe() : List<GostBlockungSchiene> {
 		return this._daten.schienen;
 	}
 
@@ -630,12 +696,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist. <br>
 	 * Kriterium: Die Schiene muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
 	 *
-	 * @param  pSchienenID Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
 	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
-	public removeSchieneAllowed(pSchienenID : number) : boolean {
-		return (this.getSchiene(pSchienenID) !== null) && this.getIstBlockungsVorlage();
+	public schieneGetIsRemoveAllowed(idSchiene : number) : boolean {
+		return (this.schieneGet(idSchiene) !== null) && this.getIstBlockungsVorlage();
 	}
 
 	/**
@@ -646,13 +713,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * (3) Die Konsistenz der sortierten Schienen muss überprüft werden. <br>
 	 * (4) Die Regeln müssen bei Schienen-Nummern angepasst werden. <br>
 	 *
-	 * @param pSchienenID Die Datenbank-ID der zu entfernenden Schiene.
+	 * @param idSchiene  Die Datenbank-ID der zu entfernenden Schiene.
+	 *
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
 	 */
-	public removeSchieneByID(pSchienenID : number) : void {
+	public schieneRemoveByID(idSchiene : number) : void {
 		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const schieneR : GostBlockungSchiene = this.getSchiene(pSchienenID);
-		this._map_idSchiene_schiene.remove(pSchienenID);
+		const schieneR : GostBlockungSchiene = this.schieneGet(idSchiene);
+		this._map_idSchiene_schiene.remove(idSchiene);
 		this._daten.schienen.remove(schieneR);
 		for (const schiene of this._daten.schienen)
 			if (schiene.nummer > schieneR.nummer)
@@ -676,43 +744,163 @@ export class GostBlockungsdatenManager extends JavaObject {
 	/**
 	 * Entfernt die übergebene Schiene aus der Blockung.
 	 *
-	 * @param pSchiene Die zu entfernende Schiene.
+	 * @param schiene  Die zu entfernende Schiene.
+	 *
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert oder ein Löschen nicht erlaubt ist.
 	 */
-	public removeSchiene(pSchiene : GostBlockungSchiene) : void {
-		this.removeSchieneByID(pSchiene.id);
+	public schieneRemove(schiene : GostBlockungSchiene) : void {
+		this.schieneRemoveByID(schiene.id);
 	}
 
-	private addRegelOhneSortierung(pRegel : GostBlockungRegel) : void {
-		DeveloperNotificationException.ifInvalidID("Regel.id", pRegel.id);
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
-		DeveloperNotificationException.ifTrue("Der Typ(" + pRegel.typ + ") der Regel(" + pRegel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, pRegel.id, pRegel);
-		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(pRegel);
-		this._daten.regeln.add(pRegel);
+	/**
+	 * Liefert die Anzahl an Schienen.
+	 *
+	 * @return Die Anzahl an Schienen.
+	 */
+	public schieneGetAnzahl() : number {
+		return this._map_idSchiene_schiene.size();
+	}
+
+	/**
+	 * Liefert die Default-Anzahl an Schienen zurück, die für eine neue Blockung verwendet wird.
+	 *
+	 * @param  halbjahr  Das Halbjahr, für welches die Blockung angelegt werden soll.
+	 *
+	 * @return Die Default-Anzahl an Schienen zurück, die für eine neue Blockung verwendet wird.
+	 */
+	public static schieneGetDefaultAnzahl(halbjahr : GostHalbjahr) : number {
+		return (halbjahr.id < 2) ? 13 : 11;
+	}
+
+	private regelAddOhneSortierung(regel : GostBlockungRegel) : void {
+		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, regel.id, regel);
+		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(regel);
+		this._daten.regeln.add(regel);
 	}
 
 	/**
 	 * Fügt die übergebene Regel zu der Blockung hinzu.
 	 *
-	 * @param pRegel die hinzuzufügende Regel
+	 * @param regel  Die hinzuzufügende Regel
+	 *
 	 * @throws DeveloperNotificationException Falls die Daten der Regel inkonsistent sind.
 	 */
-	public addRegel(pRegel : GostBlockungRegel) : void {
-		this.addRegelOhneSortierung(pRegel);
+	public regelAdd(regel : GostBlockungRegel) : void {
+		this.regelAddOhneSortierung(regel);
 		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
 	}
 
 	/**
 	 * Fügt eine Menge an Regeln hinzu.
 	 *
-	 * @param pRegeln Die Menge an Regeln.
+	 * @param regelmenge  Die Menge an Regeln.
+	 *
 	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
 	 */
-	public addRegelListe(pRegeln : List<GostBlockungRegel>) : void {
-		for (const regel of pRegeln)
-			this.addRegelOhneSortierung(regel);
+	public regelAddListe(regelmenge : List<GostBlockungRegel>) : void {
+		for (const regel of regelmenge)
+			this.regelAddOhneSortierung(regel);
 		this._daten.regeln.sort(GostBlockungsdatenManager._compRegel);
+	}
+
+	/**
+	 * Liefert die Anzahl an Regeln.
+	 *
+	 * @return Die Anzahl an Regeln.
+	 */
+	public regelGetAnzahl() : number {
+		return this._map_idRegel_regel.size();
+	}
+
+	/**
+	 * Gibt die Regel der Blockung anhand von deren ID zurück.
+	 *
+	 * @param idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @return Das {@link GostBlockungRegel} Objekt.
+	 * @throws DeveloperNotificationException Falls die Regel nicht in der Blockung existiert.
+	 */
+	public regelGet(idRegel : number) : GostBlockungRegel {
+		return DeveloperNotificationException.ifNull("_mapRegeln.get(" + idRegel + ")", this._map_idRegel_regel.get(idRegel));
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller Regeln.
+	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt.
+	 * Diese Liste ist stets sortiert nach (TYP, ID).
+	 *
+	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
+	 */
+	public regelGetListe() : List<GostBlockungRegel> {
+		return this._daten.regeln;
+	}
+
+	/**
+	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 *
+	 * @param typ Der {@link GostKursblockungRegelTyp}.
+	 *
+	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 */
+	public regelGetListeOfTyp(typ : GostKursblockungRegelTyp) : List<GostBlockungRegel> {
+		return MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
+	 *
+	 * @param idRegel  Die Datenbank-ID der Regel.
+	 *
+	 * @return TRUE, falls die Regel mit der übergebenen ID existiert.
+	 */
+	public regelGetExistiert(idRegel : number) : boolean {
+		return this._map_idRegel_regel.get(idRegel) !== null;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
+	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 *
+	 * @param  idRegel Die Datenbank-ID der Regel.
+	 *
+	 * @return TRUE, falls ein Löschen der Regel erlaubt ist.
+	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
+	 */
+	public regelGetIsRemoveAllowed(idRegel : number) : boolean {
+		return this._map_idRegel_regel.containsKey(idRegel) && this.getIstBlockungsVorlage();
+	}
+
+	/**
+	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
+	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
+	 *
+	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
+	 *
+	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
+	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
+	 */
+	public regelRemoveByID(idRegel : number) : void {
+		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
+		const regel : GostBlockungRegel = this.regelGet(idRegel);
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		this._map_idRegel_regel.remove(idRegel);
+		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
+		this._daten.regeln.remove(regel);
+	}
+
+	/**
+	 * Entfernt die übergebene Regel aus der Blockung.
+	 *
+	 * @param regel  Die zu entfernende Regel
+	 *
+	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
+	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
+	 */
+	public regelRemove(regel : GostBlockungRegel) : void {
+		this.regelRemoveByID(regel.id);
 	}
 
 	/**
@@ -741,6 +929,39 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public addFachwahlListe(pFachwahlen : List<GostFachwahl>) : void {
 		for (const gFachwahl of pFachwahlen)
 			this.addFachwahl(gFachwahl);
+	}
+
+	/**
+	 * Liefert die Anzahl an Fachwahlen.
+	 *
+	 * @return Die Anzahl an Fachwahlen.
+	 */
+	public getFachwahlAnzahl() : number {
+		return this._daten.fachwahlen.size();
+	}
+
+	/**
+	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
+	 *
+	 * @param pFachwahl Das Fachwahl-Objekt.
+	 * @return Den Namen (Fach-Kursart) der Fachwahl.
+	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
+	 */
+	public getNameOfFachwahl(pFachwahl : GostFachwahl) : string {
+		const gFach : GostFach = this._faecherManager.getOrException(pFachwahl.fachID);
+		const gKursart : GostKursart = GostKursart.fromID(pFachwahl.kursartID);
+		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br>
+	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
+	 *
+	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
+	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
+	 */
+	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
+		return MapUtils.getOrCreateArrayList(this._map_idFachart_fachwahlen, pFachartID);
 	}
 
 	/**
@@ -784,206 +1005,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
-	 *
-	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
-	 */
-	public getIstBlockungsVorlage() : boolean {
-		return this._daten.ergebnisse.size() === 1;
-	}
-
-	/**
-	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 * - Die Anzahl der Regelverletzungen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 1. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung1Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
-		let summe : number = 0;
-		summe += e.bewertung.anzahlKurseNichtZugeordnet;
-		summe += e.bewertung.regelVerletzungen.size();
-		return summe;
-	}
-
-	/**
-	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl der Regelverletzungen. <br>
-	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung1Intervall(pErgebnisID : number) : number {
-		const summe : number = this.getOfBewertung1Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * summe + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
-	 * - Die Anzahl der Schülerkollisionen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 2. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung2Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
-		let summe : number = 0;
-		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
-		summe += e.bewertung.anzahlSchuelerKollisionen;
-		return summe;
-	}
-
-	/**
-	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
-	 * - Die Anzahl der Schülerkollisionen. <br>
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung2Intervall(pErgebnisID : number) : number {
-		const summe : number = this.getOfBewertung2Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * summe + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 3. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung3Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
-		return e.bewertung.kursdifferenzMax;
-	}
-
-	/**
-	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Größte Kursdifferenz. <br>
-	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung3Intervall(pErgebnisID : number) : number {
-		let wert : number = this.getOfBewertung3Wert(pErgebnisID);
-		if (wert > 0)
-			wert--;
-		return 1 - 1 / (0.25 * wert + 1);
-	}
-
-	/**
-	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
-	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
-	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
-	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
-	 * Raumkapazitäten (Fachräume).
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Den Wert des 4. Bewertungskriteriums.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung4Wert(pErgebnisID : number) : number {
-		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
-		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
-	}
-
-	/**
-	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
-	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
-	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
-	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
-	 * Raumkapazitäten (Fachräume).
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
-	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getOfBewertung4Intervall(pErgebnisID : number) : number {
-		const wert : number = this.getOfBewertung4Wert(pErgebnisID);
-		return 1 - 1 / (0.25 * wert + 1);
-	}
-
-	/**
-	 * Gibt die ID der Blockung zurück.
-	 *
-	 * @return die ID der Blockung
-	 */
-	public getID() : number {
-		return this._daten.id;
-	}
-
-	/**
-	 * Liefert die maximale Blockungszeit in Millisekunden.
-	 *
-	 * @return Die maximale Blockungszeit in Millisekunden.
-	 */
-	public getMaxTimeMillis() : number {
-		return this._maxTimeMillis;
-	}
-
-	/**
-	 * Liefert die Anzahl an Fächern.
-	 *
-	 * @return Die Anzahl an Fächern.
-	 */
-	public getFaecherAnzahl() : number {
-		return this._faecherManager.faecher().size();
-	}
-
-	/**
-	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
-	 *
-	 * @return Die Anzahl verschiedenen Kursarten.
-	 */
-	public getKursartenAnzahl() : number {
-		const setKursartenIDs : HashSet<number> = new HashSet();
-		for (const fachwahl of this._daten.fachwahlen)
-			setKursartenIDs.add(fachwahl.kursartID);
-		return setKursartenIDs.size();
-	}
-
-	/**
-	 * Liefert die Anzahl an Schienen.
-	 *
-	 * @return Die Anzahl an Schienen.
-	 */
-	public getSchienenAnzahl() : number {
-		return this._map_idSchiene_schiene.size();
-	}
-
-	/**
-	 * Liefert die Default-Anzahl an Schienen zurück, die für eine neue Blockung verwendet wird.
-	 *
-	 * @param  pHalbjahr  Das Halbjahr, für welches die Blockung angelegt werden soll.
-	 * @return Die Default-Anzahl an Schienen zurück, die für eine neue Blockung verwendet wird.
-	 */
-	public static getDefaultSchienenAnzahl(pHalbjahr : GostHalbjahr) : number {
-		return (pHalbjahr.id < 2) ? 13 : 11;
-	}
-
-	/**
-	 * Liefert die Anzahl an Regeln.
-	 *
-	 * @return Die Anzahl an Regeln.
-	 */
-	public getRegelAnzahl() : number {
-		return this._map_idRegel_regel.size();
-	}
-
-	/**
 	 * Liefert die Anzahl an Schülern, die mindestens eine Fachwahl haben.
 	 *
 	 * @return die Anzahl an Schülern, die mindestens eine Fachwahl haben.
@@ -1002,80 +1023,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getSchuelerAnzahl() : number {
 		return this._daten.schueler.size();
-	}
-
-	/**
-	 * Liefert die Anzahl an Fachwahlen.
-	 *
-	 * @return Die Anzahl an Fachwahlen.
-	 */
-	public getFachwahlAnzahl() : number {
-		return this._daten.fachwahlen.size();
-	}
-
-	/**
-	 * Gibt den Namen der Blockung zurück.
-	 *
-	 * @return der Name der Blockung
-	 */
-	public getName() : string {
-		return this._daten.name;
-	}
-
-	/**
-	 * Liefert den Namen (Fach-Kursart) der Fachwahl.
-	 *
-	 * @param pFachwahl Das Fachwahl-Objekt.
-	 * @return Den Namen (Fach-Kursart) der Fachwahl.
-	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
-	 */
-	public getNameOfFachwahl(pFachwahl : GostFachwahl) : string {
-		const gFach : GostFach = this._faecherManager.getOrException(pFachwahl.fachID);
-		const gKursart : GostKursart = GostKursart.fromID(pFachwahl.kursartID);
-		return gFach.kuerzelAnzeige + "-" + gKursart.kuerzel;
-	}
-
-	/**
-	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
-	 *
-	 * @param pRegelID Die Datenbank-ID der Regel.
-	 * @return TRUE, falls die Regel mit der übergebenen ID existiert.
-	 */
-	public getRegelExistiert(pRegelID : number) : boolean {
-		return this._map_idRegel_regel.get(pRegelID) !== null;
-	}
-
-	/**
-	 * Gibt das Halbjahr der gymnasialen Oberstufe zurück, für welches die Blockung angelegt wurde.
-	 *
-	 * @return das Halbjahr der gymnasialen Oberstufe
-	 */
-	public getHalbjahr() : GostHalbjahr {
-		return GostHalbjahr.fromIDorException(this._daten.gostHalbjahr);
-	}
-
-	/**
-	 * Liefert einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
-	 * Wirft eine Exception, falls es keinen Listeneintrag mit dieser ID gibt.
-	 *
-	 * @param pErgebnisID  Die Datenbank-ID des Ergebnisses.
-	 * @return einen {@link GostBlockungsergebnisListeneintrag} aus der Liste der Ergebnisse.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public getErgebnis(pErgebnisID : number) : GostBlockungsergebnisListeneintrag {
-		const e : GostBlockungsergebnisListeneintrag | null = this._map_idErgebnis_Ergebnis.get(pErgebnisID);
-		return DeveloperNotificationException.ifNull("Es wurde kein Listeneintrag mit ID(" + pErgebnisID + ") gefunden!", e);
-	}
-
-	/**
-	 * Gibt die Regel der Blockung anhand von deren ID zurück.
-	 *
-	 * @param  pRegelID Die Datenbank-ID der Regel.
-	 * @return Das {@link GostBlockungRegel} Objekt.
-	 * @throws DeveloperNotificationException Falls die Regel nicht in der Blockung existiert.
-	 */
-	public getRegel(pRegelID : number) : GostBlockungRegel {
-		return DeveloperNotificationException.ifNull("_mapRegeln.get(" + pRegelID + ")", this._map_idRegel_regel.get(pRegelID));
 	}
 
 	/**
@@ -1170,45 +1117,193 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die aktuelle Menge aller Regeln.
-	 * Das ist die interne Referenz zur Liste der Regeln im {@link GostBlockungsdaten}-Objekt.
-	 * Diese Liste ist stets sortiert nach (TYP, ID).
+	 * Liefert TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
 	 *
-	 * @return Die aktuelle Menge aller Regeln sortiert nach (TYP, id).
+	 * @return TRUE, falls in dieser Blockung genau 1 Ergebnis (die Blockungsvorlage) vorhanden ist.
 	 */
-	public getMengeOfRegeln() : List<GostBlockungRegel> {
-		return this._daten.regeln;
+	public getIstBlockungsVorlage() : boolean {
+		return this._daten.ergebnisse.size() === 1;
 	}
 
 	/**
-	 * Liefert die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
 	 *
-	 * @param typ Der {@link GostKursblockungRegelTyp}.
-	 *
-	 * @return die aktuelle Menge aller eines bestimmten {@link GostKursblockungRegelTyp}.
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Den Wert des 1. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
-	public getMengeOfRegelnOfTyp(typ : GostKursblockungRegelTyp) : List<GostBlockungRegel> {
-		return MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ);
+	public getOfBewertung1Wert(pErgebnisID : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlKurseNichtZugeordnet;
+		summe += e.bewertung.regelVerletzungen.size();
+		return summe;
 	}
 
 	/**
-	 * Liefert eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * Liefert eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der Regelverletzungen. <br>
+	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 *
-	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
-	public getErgebnisseSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
-		return this._daten.ergebnisse;
+	public getOfBewertung1Intervall(pErgebnisID : number) : number {
+		const summe : number = this.getOfBewertung1Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * summe + 1);
 	}
 
 	/**
-	 * Liefert die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID. <br>
-	 * Die Fachart-ID lässt sich mit {@link GostKursart#getFachartID} berechnen. <br>
+	 * Liefert den Wert des 2. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
 	 *
-	 * @param pFachartID Die Fachart-ID berechnet aus Fach-ID und Kursart-ID.
-	 * @return Die Menge aller {@link GostFachwahl} einer bestimmten Fachart-ID.
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Den Wert des 2. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
 	 */
-	public getOfFachartMengeFachwahlen(pFachartID : number) : List<GostFachwahl> {
-		return MapUtils.getOrCreateArrayList(this._map_idFachart_fachwahlen, pFachartID);
+	public getOfBewertung2Wert(pErgebnisID : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
+		let summe : number = 0;
+		summe += e.bewertung.anzahlSchuelerNichtZugeordnet;
+		summe += e.bewertung.anzahlSchuelerKollisionen;
+		return summe;
+	}
+
+	/**
+	 * Liefert eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl der nicht zugeordneten Schülerfachwahlen. <br>
+	 * - Die Anzahl der Schülerkollisionen. <br>
+	 *
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getOfBewertung2Intervall(pErgebnisID : number) : number {
+		const summe : number = this.getOfBewertung2Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * summe + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 3. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Den Wert des 3. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getOfBewertung3Wert(pErgebnisID : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
+		return e.bewertung.kursdifferenzMax;
+	}
+
+	/**
+	 * Liefert eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Größte Kursdifferenz. <br>
+	 * Der Wert 0 und 1 werden unterschieden, sind aber von der Bewertung her Äquivalent.
+	 *
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Eine Güte des 3. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getOfBewertung3Intervall(pErgebnisID : number) : number {
+		let wert : number = this.getOfBewertung3Wert(pErgebnisID);
+		if (wert > 0)
+			wert--;
+		return 1 - 1 / (0.25 * wert + 1);
+	}
+
+	/**
+	 * Liefert den Wert des 4. Bewertungskriteriums. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Den Wert des 4. Bewertungskriteriums.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getOfBewertung4Wert(pErgebnisID : number) : number {
+		const e : GostBlockungsergebnisListeneintrag = this.ergebnisGet(pErgebnisID);
+		return e.bewertung.anzahlKurseMitGleicherFachartProSchiene;
+	}
+
+	/**
+	 * Liefert eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal. Darin enthalten sind: <br>
+	 * - Die Anzahl an Kursen mit gleicher Fachart (Fach, Kursart) in einer Schiene. <br>
+	 * Dieses Bewertungskriterium wird teilweise absichtlich verletzt, wenn z. B. Schienen erzeugt werden mit dem selben
+	 * Fach (Sport-Schiene). Nichtsdestotrotz möchte man häufig nicht die selben Fächer in einer Schiene, aufgrund von
+	 * Raumkapazitäten (Fachräume).
+	 *
+	 * @param pErgebnisID Die Datenbank-ID des Listeneintrages.
+	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
+	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
+	 */
+	public getOfBewertung4Intervall(pErgebnisID : number) : number {
+		const wert : number = this.getOfBewertung4Wert(pErgebnisID);
+		return 1 - 1 / (0.25 * wert + 1);
+	}
+
+	/**
+	 * Gibt die ID der Blockung zurück.
+	 *
+	 * @return die ID der Blockung
+	 */
+	public getID() : number {
+		return this._daten.id;
+	}
+
+	/**
+	 * Liefert die maximale Blockungszeit in Millisekunden.
+	 *
+	 * @return Die maximale Blockungszeit in Millisekunden.
+	 */
+	public getMaxTimeMillis() : number {
+		return this._maxTimeMillis;
+	}
+
+	/**
+	 * Liefert die Anzahl an Fächern.
+	 *
+	 * @return Die Anzahl an Fächern.
+	 */
+	public getFaecherAnzahl() : number {
+		return this._faecherManager.faecher().size();
+	}
+
+	/**
+	 * Liefert die Anzahl verschiedenen Kursarten. Dies passiert indem über alle Fachwahlen summiert wird.
+	 *
+	 * @return Die Anzahl verschiedenen Kursarten.
+	 */
+	public getKursartenAnzahl() : number {
+		const setKursartenIDs : HashSet<number> = new HashSet();
+		for (const fachwahl of this._daten.fachwahlen)
+			setKursartenIDs.add(fachwahl.kursartID);
+		return setKursartenIDs.size();
+	}
+
+	/**
+	 * Gibt den Namen der Blockung zurück.
+	 *
+	 * @return der Name der Blockung
+	 */
+	public getName() : string {
+		return this._daten.name;
+	}
+
+	/**
+	 * Gibt das Halbjahr der gymnasialen Oberstufe zurück, für welches die Blockung angelegt wurde.
+	 *
+	 * @return das Halbjahr der gymnasialen Oberstufe
+	 */
+	public getHalbjahr() : GostHalbjahr {
+		return GostHalbjahr.fromIDorException(this._daten.gostHalbjahr);
 	}
 
 	/**
@@ -1227,68 +1322,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public daten() : GostBlockungsdaten {
 		return this._daten;
-	}
-
-	/**
-	 * Entfernt das Ergebnis mit der übergebenen ID aus der Blockung.
-	 *
-	 * @param pErgebnisID Die Datenbank-ID des zu entfernenden Ergebnisses.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public removeErgebnisByID(pErgebnisID : number) : void {
-		const e : GostBlockungsergebnisListeneintrag = this.getErgebnis(pErgebnisID);
-		this._daten.ergebnisse.remove(e);
-		this._map_idErgebnis_Ergebnis.remove(pErgebnisID);
-	}
-
-	/**
-	 * Entfernt das übergebenen Ergebnis aus der Blockung.
-	 *
-	 * @param pErgebnis Das zu entfernende Ergebnis.
-	 * @throws DeveloperNotificationException Falls es keinen Listeneintrag mit dieser ID gibt.
-	 */
-	public removeErgebnis(pErgebnis : GostBlockungsergebnisListeneintrag) : void {
-		this.removeErgebnisByID(pErgebnis.id);
-	}
-
-	/**
-	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
-	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
-	 *
-	 * @param  pRegelID Die Datenbank-ID der Regel.
-	 * @return TRUE, falls ein Löschen der Regel erlaubt ist.
-	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 */
-	public removeRegelAllowed(pRegelID : number) : boolean {
-		return (this.getRegel(pRegelID) !== null) && this.getIstBlockungsVorlage();
-	}
-
-	/**
-	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
-	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
-	 *
-	 * @param pRegelID Die Datenbank-ID der zu entfernenden Regel.
-	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
-	 */
-	public removeRegelByID(pRegelID : number) : void {
-		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		const regel : GostBlockungRegel = this.getRegel(pRegelID);
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		this._map_idRegel_regel.remove(pRegelID);
-		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
-		this._daten.regeln.remove(regel);
-	}
-
-	/**
-	 * Entfernt die übergebene Regel aus der Blockung.
-	 *
-	 * @param pRegel die zu entfernende Regel
-	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
-	 */
-	public removeRegel(pRegel : GostBlockungRegel) : void {
-		this.removeRegelByID(pRegel.id);
 	}
 
 	/**
@@ -1329,22 +1362,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public setMaxTimeMillis(pZeit : number) : void {
 		this._maxTimeMillis = pZeit;
-	}
-
-	/**
-	 * Aktualisiert die Bewertung im {@link GostBlockungsdatenManager} mit der aus dem {@link GostBlockungsergebnis}. <br>
-	 * Wirft eine Exception, falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
-	 *
-	 * @param pErgebnis Das Ergebnis mit der neuen Bewertung.
-	 * @throws DeveloperNotificationException Falls kein  {@link GostBlockungsergebnisListeneintrag} mit der ID gefunden wurde.
-	 */
-	public updateErgebnisBewertung(pErgebnis : GostBlockungsergebnis) : void {
-		DeveloperNotificationException.ifInvalidID("pErgebnis.id", pErgebnis.id);
-		DeveloperNotificationException.ifInvalidID("pErgebnis.blockungID", pErgebnis.blockungID);
-		for (const eintrag of this._daten.ergebnisse)
-			if (eintrag.id === pErgebnis.id)
-				eintrag.bewertung = pErgebnis.bewertung;
-		this._daten.ergebnisse.sort(this._compErgebnisse);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

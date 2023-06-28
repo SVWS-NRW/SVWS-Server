@@ -56,9 +56,9 @@
 
 	const collapsed: Ref<boolean> = ref(true);
 
-	const regelzahl: ComputedRef<number> = computed(() => props.hatBlockung ? props.getDatenmanager().getRegelAnzahl() : 0);
+	const regelzahl: ComputedRef<number> = computed(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.hatBlockung ? props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1 : false);
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.hatBlockung ? props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1 : false);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;

@@ -203,9 +203,9 @@
 
 	const blockungsname: ComputedRef<string> = computed(() => props.getDatenmanager().daten().name);
 
-	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().getMengeOfSchienen());
+	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().schieneGetListe());
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1));
+	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
@@ -245,7 +245,7 @@
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
 		if (!props.hatErgebnis)
 			return false;
-		return props.getDatenmanager().removeSchieneAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
+		return props.getDatenmanager().schieneGetIsRemoveAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {

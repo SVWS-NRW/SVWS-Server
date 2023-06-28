@@ -118,7 +118,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		if (idErgebnis === undefined) {
 			// ... wurde die ID des Ergebnisses auf undefined setzt, so prüfe, ob die Ergebnisliste leer ist und wähle ggf. das erste Element aus
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() > 0)) {
-				const ergebnis = this.data.datenmanager.getErgebnisseSortiertNachBewertung().get(0);
+				const ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 				return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))
@@ -127,12 +127,12 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		}
 		let ergebnisEintrag;
 		try {
-			ergebnisEintrag = routeGostKursplanung.data.datenmanager.getErgebnis(idErgebnis);
+			ergebnisEintrag = routeGostKursplanung.data.datenmanager.ergebnisGet(idErgebnis);
 		} catch (e) {
 			// ...wenn die Ergebnis-ID ungültig ist, dann setze ggf. das erste Ergebnis und route dahin
 			if (this.data.ergebnisse.size() <= 0)
 				throw new Error("Fehler bei der Blockung. Es muss bei einer Blockung immer mindestens das Vorlagen-Ergebnis vorhanden sein.");
-			const ergebnis = this.data.datenmanager.getErgebnisseSortiertNachBewertung().get(0);
+			const ergebnis = this.data.datenmanager.ergebnisGetListeSortiertNachBewertung().get(0);
 			return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 		}
 		if (routeGostKursplanung.data.auswahlErgebnis.id !== ergebnisEintrag.id) {

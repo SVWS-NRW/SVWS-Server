@@ -116,7 +116,7 @@
 	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
 
 	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> = computed(() =>
-		props.getDatenmanager().getErgebnisseSortiertNachBewertung());
+		props.getDatenmanager().ergebnisGetListeSortiertNachBewertung());
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() =>
 		props.getDatenmanager().daten().istAktiv);
@@ -161,7 +161,7 @@
 	}
 
 	const visible: ComputedRef<boolean> = computed(() =>
-		props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() > 0);
+		props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 0);
 
 </script>
 

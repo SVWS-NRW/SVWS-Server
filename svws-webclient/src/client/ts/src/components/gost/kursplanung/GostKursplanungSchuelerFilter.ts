@@ -27,7 +27,7 @@ export class GostKursplanungSchuelerFilter {
 	}
 
 	public getKurse() : List<GostBlockungKurs> {
-		return this.datenmanager?.getKursmengeSortiertNachKursartFachNummer() || new ArrayList<GostBlockungKurs>();
+		return this.datenmanager?.kursGetListeSortiertNachKursartFachNummer() || new ArrayList<GostBlockungKurs>();
 	}
 
 	public filtered: ComputedRef<SchuelerListeEintrag[]> = computed(() => {

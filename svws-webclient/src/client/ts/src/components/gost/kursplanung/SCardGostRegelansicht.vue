@@ -36,11 +36,11 @@
 	});
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
-		return props.getDatenmanager().getMengeOfSchienen()?.toArray() as GostBlockungSchiene[];
+		return props.getDatenmanager().schieneGetListe()?.toArray() as GostBlockungSchiene[];
 	});
 
 	const kurse: ComputedRef<GostBlockungKurs[]> = computed(() => {
-		return props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[];
+		return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[];
 	});
 
 	const _regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
@@ -55,7 +55,7 @@
 		}
 	})
 
-	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.getDatenmanager().getMengeOfRegeln().toArray() as GostBlockungRegel[]);
+	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.getDatenmanager().regelGetListe().toArray() as GostBlockungRegel[]);
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 	for (let i = 1; i < 11; i++)
 		regeln[i] = computed(() => alle_regeln.value.filter(r => r.typ === i));

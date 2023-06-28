@@ -35,7 +35,7 @@
 	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
-		const liste = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id);
+		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
 		const lehrer = new Set();
 		for (const l of liste)
 			lehrer.add(l.id)
@@ -73,7 +73,7 @@
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN;
-		const regeln = props.getDatenmanager().getMengeOfRegeln();
+		const regeln = props.getDatenmanager().regelGetListe();
 		if (!regeln)
 			return undefined;
 		for (const r of regeln)

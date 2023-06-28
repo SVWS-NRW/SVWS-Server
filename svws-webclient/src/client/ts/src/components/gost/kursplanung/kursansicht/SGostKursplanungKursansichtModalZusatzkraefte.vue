@@ -34,7 +34,7 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
-	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
+	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
 	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {
@@ -42,7 +42,7 @@
 	}
 
 	const anzahl_zusatzkraefte = computed(()=>{
-		const nr = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id).size();
+		const nr = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id).size();
 		return nr ? `${nr}` : ""
 	})
 

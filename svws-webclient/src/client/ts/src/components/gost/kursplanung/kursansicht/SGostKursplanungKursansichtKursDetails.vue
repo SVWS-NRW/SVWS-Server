@@ -65,7 +65,7 @@
 	});
 
 	function get_kursbezeichnung(kurs_id: number): string {
-		return props.getDatenmanager().getNameOfKurs(kurs_id);
+		return props.getDatenmanager().kursGetName(kurs_id);
 	}
 
 	async function add_kurs() {

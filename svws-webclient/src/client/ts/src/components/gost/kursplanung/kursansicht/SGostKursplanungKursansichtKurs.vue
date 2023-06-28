@@ -111,7 +111,7 @@
 		edit_name.value = undefined;
 	}
 
-	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().getNameOfKurs(props.kurs.id));
+	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
 	const kuerzel = computed(()=> props.getErgebnismanager().getFach(props.kurs.fach_id).kuerzel);
 
@@ -130,7 +130,7 @@
 	}
 
 	const kurslehrer: ComputedRef<LehrerListeEintrag | undefined> = computed(() => {
-		const liste = props.getDatenmanager().getOfKursLehrkraefteSortiert(props.kurs.id);
+		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
 		return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
 	});
 
@@ -153,7 +153,7 @@
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-		const regeln = props.getDatenmanager().getMengeOfRegeln()
+		const regeln = props.getDatenmanager().regelGetListe()
 		if (!regeln)
 			return undefined;
 		for (const r of regeln)
@@ -172,7 +172,7 @@
 		await props.addRegel(r);
 	}
 
-	const anzahlSchienen: ComputedRef<number> = computed(() => props.getDatenmanager().getSchienenAnzahl());
+	const anzahlSchienen: ComputedRef<number> = computed(() => props.getDatenmanager().schieneGetAnzahl());
 
 	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs | undefined> = computed(() =>
 		props.hatErgebnis ? props.getErgebnismanager().getKursE(props.kurs.id) : undefined

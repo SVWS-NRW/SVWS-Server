@@ -121,7 +121,7 @@ public class KursblockungDynDaten {
 		schritt06FehlerBeiStatistikErstellung(_fachartArr, _schuelerArr, input);
 
 		// Definiert: schienenArr
-		schritt07FehlerBeiSchienenErzeugung(input.getSchienenAnzahl());
+		schritt07FehlerBeiSchienenErzeugung(input.schieneGetAnzahl());
 
 		// Benötigt: fachartArr
 		// Definiert: kursArr
@@ -175,7 +175,7 @@ public class KursblockungDynDaten {
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", input.daten().fachwahlen);
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", input.faecherManager().faecher());
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().kurse", input.daten().kurse);
-		final int schienenAnzahl = input.getSchienenAnzahl();
+		final int schienenAnzahl = input.schieneGetAnzahl();
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
 
 		// #################### GostBlockungSchiene ####################
@@ -466,8 +466,8 @@ public class KursblockungDynDaten {
 			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, fachwahl.schuelerID);
 
 		final int nSchueler = setSchueler.size();
-		final int nSchienen = input.getSchienenAnzahl();
-		final int nKurse = input.getKursAnzahl();
+		final int nSchienen = input.schieneGetAnzahl();
+		final int nKurse = input.kursGetAnzahl();
 
 		_schuelerArr = new KursblockungDynSchueler[nSchueler];
 		int i = 0;
@@ -535,7 +535,7 @@ public class KursblockungDynDaten {
 			bewertungMatrixFachart[nr1][nr1] += 10000000;
 		}
 
-		_statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.getKursAnzahl());
+		_statistik.aktionInitialisiere(bewertungMatrixFachart, susArr.length, fachartArr.length, input.kursGetAnzahl());
 	}
 
 	private void schritt07FehlerBeiSchienenErzeugung(final int schienen) {
@@ -545,8 +545,8 @@ public class KursblockungDynDaten {
 	}
 
 	private void schritt08FehlerBeiKursErstellung(final @NotNull GostBlockungsdatenManager input) {
-		final int nKurse = input.getKursAnzahl();
-		final int nSchienen = input.getSchienenAnzahl();
+		final int nKurse = input.kursGetAnzahl();
+		final int nSchienen = input.schieneGetAnzahl();
 
 		_kursArr = new KursblockungDynKurs[nKurse];
 		int i = 0;
@@ -829,7 +829,7 @@ public class KursblockungDynDaten {
 					out.setSchuelerKurs(dynSchueler.gibDatenbankID(), kurs.gibDatenbankID(), true);
 
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
-		for (final @NotNull GostBlockungRegel gRegel : pDataManager.getMengeOfRegeln())
+		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				final long schuelerID = gRegel.parameter.get(0);
 				final long kursID = gRegel.parameter.get(1);

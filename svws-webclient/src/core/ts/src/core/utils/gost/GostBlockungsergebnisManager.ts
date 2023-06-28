@@ -260,27 +260,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const regelVerletzungen : List<number> = this._ergebnis.bewertung.regelVerletzungen;
 		regelVerletzungen.clear();
 		this._map_kursID_dummySuS.clear();
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
 			this.stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
 			this.stateRegelvalidierung2_kurs_fixieren_in_schiene(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
 			this.stateRegelvalidierung3_kurs_sperren_in_schiene(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
 			this.stateRegelvalidierung4_schueler_fixieren_in_kurs(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
 			this.stateRegelvalidierung5_schueler_verbieten_in_kurs(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
 			this.stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
 			this.stateRegelvalidierung7_kurs_verbieten_mit_kurs(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
 			this.stateRegelvalidierung8_kurs_zusammen_mit_kurs(r, regelVerletzungen);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
 			this.stateRegelvalidierung9_kurs_mit_dummy_sus_auffuellen(r);
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN))
 			this.stateRegelvalidierung10_lehrkraefte_beachten(r, regelVerletzungen);
-		this._parent.updateErgebnisBewertung(this._ergebnis);
+		this._parent.ergebnisUpdateBewertung(this._ergebnis);
 	}
 
 	private stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(r : GostBlockungRegel, regelVerletzungen : List<number>) : void {
@@ -944,7 +944,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerKursmengeMitKollisionen(idSchueler : number) : JavaSet<GostBlockungsergebnisKurs> {
 		const set : HashSet<GostBlockungsergebnisKurs> = new HashSet();
-		for (const schiene of this._parent.getMengeOfSchienen()) {
+		for (const schiene of this._parent.schieneGetListe()) {
 			const kurseDerSchiene : JavaSet<GostBlockungsergebnisKurs> = this._map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, schiene.id);
 			if (kurseDerSchiene.size() > 1)
 				set.addAll(kurseDerSchiene);
@@ -1151,7 +1151,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerNeuzuordnungMitFixierung(idSchueler : number, fixiereBelegteKurse : boolean) : SchuelerblockungOutput {
 		const input : SchuelerblockungInput = new SchuelerblockungInput();
-		input.schienen = this._parent.getSchienenAnzahl();
+		input.schienen = this._parent.schieneGetAnzahl();
 		for (const fachwahl of this._parent.getOfSchuelerFacharten(idSchueler)) {
 			input.fachwahlen.add(fachwahl);
 			input.fachwahlenText.add(this._parent.getNameOfFachwahl(fachwahl));
@@ -1184,7 +1184,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler im Kurs via Regel fixiert sein soll.
 	 */
 	public getOfSchuelerOfKursIstFixiert(idSchueler : number, idKurs : number) : boolean {
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) {
 			const schuelerID : number = r.parameter.get(0).valueOf();
 			const kursID : number = r.parameter.get(1).valueOf();
 			if ((schuelerID === idSchueler) && (kursID === idKurs))
@@ -1202,7 +1202,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 */
 	public getOfSchuelerOfKursIstGesperrt(idSchueler : number, idKurs : number) : boolean {
-		for (const r of this._parent.getMengeOfRegelnOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
+		for (const r of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) {
 			const schuelerID : number = r.parameter.get(0).valueOf();
 			const kursID : number = r.parameter.get(1).valueOf();
 			if ((schuelerID === idSchueler) && (kursID === idKurs))
@@ -1348,7 +1348,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
 	public getKursG(idKurs : number) : GostBlockungKurs {
-		return this._parent.getKurs(idKurs);
+		return this._parent.kursGet(idKurs);
 	}
 
 	/**
@@ -1372,7 +1372,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return den Namen des Kurses, erzeugt aus Fach, der Kursart und der Nummer, beispielsweise D-GK1.
 	 */
 	public getOfKursName(idKurs : number) : string {
-		return this._parent.getNameOfKurs(idKurs);
+		return this._parent.kursGetName(idKurs);
 	}
 
 	/**
@@ -1427,7 +1427,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const a : Array<number> | null = Array(schienenIDs.size()).fill(0);
 		for (let i : number = 0; i < a.length; i++) {
 			const schienenID : number = schienenIDs.get(i).valueOf();
-			a[i] = this._parent.getSchiene(schienenID).nummer;
+			a[i] = this._parent.schieneGet(schienenID).nummer;
 		}
 		return a;
 	}
@@ -1661,7 +1661,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
 	 */
 	public getSchieneG(idSchiene : number) : GostBlockungSchiene {
-		return this._parent.getSchiene(idSchiene);
+		return this._parent.schieneGet(idSchiene);
 	}
 
 	/**
@@ -1880,7 +1880,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Schiene nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddSchieneByID(idSchiene : number) : void {
-		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getSchieneExistiert(idSchiene));
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.schieneGetExistiert(idSchiene));
 		this.stateRevalidateEverything();
 	}
 
@@ -1893,7 +1893,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *                                         falls die Schiene noch Kurszuordnungen hat.
 	 */
 	public setRemoveSchieneByID(idSchiene : number) : void {
-		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager entfernt werden!", this._parent.getSchieneExistiert(idSchiene));
+		DeveloperNotificationException.ifTrue("Die Schiene " + idSchiene + " muss erst beim Datenmanager entfernt werden!", this._parent.schieneGetExistiert(idSchiene));
 		const nKurse : number = this.getSchieneE(idSchiene).kurse.size();
 		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Schiene " + idSchiene + " hat noch " + nKurse + " Kurse!", nKurse > 0);
 		this.stateRevalidateEverything();
@@ -1907,7 +1907,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
 	 */
 	public setAddRegelByID(idRegel : number) : void {
-		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getRegelExistiert(idRegel));
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
@@ -1919,7 +1919,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveRegelByID(idRegel : number) : void {
-		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", this._parent.getRegelExistiert(idRegel));
+		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(idRegel));
 		this.stateRevalidateEverything();
 	}
 
@@ -1931,9 +1931,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager hinzugefügt wurde.
 	 */
 	public setAddKursByID(idKurs : number) : void {
-		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.getKursExistiert(idKurs));
-		const kurs : GostBlockungKurs = this._parent.getKurs(idKurs);
-		const nSchienen : number = this._parent.getSchienenAnzahl();
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.kursGetExistiert(idKurs));
+		const kurs : GostBlockungKurs = this._parent.kursGet(idKurs);
+		const nSchienen : number = this._parent.schieneGetAnzahl();
 		DeveloperNotificationException.ifTrue("Es gibt " + nSchienen + " Schienen, da passt ein Kurs mit " + kurs.anzahlSchienen + " nicht hinein!", nSchienen < kurs.anzahlSchienen);
 		this.stateRevalidateEverything();
 		for (let nr : number = 1; nr <= kurs.anzahlSchienen; nr++)
@@ -1949,7 +1949,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *                                         falls der Kurs noch Schülerzuordnungen hat.
 	 */
 	public setRemoveKursByID(idKurs : number) : void {
-		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.getKursExistiert(idKurs));
+		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
 		const nSchueler : number = this.getKursE(idKurs).schueler.size();
 		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
@@ -1973,7 +1973,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			this.stateSchuelerKursEntfernen(schuelerID!, idKursID2delete);
 			this.stateSchuelerKursHinzufuegen(schuelerID!, idKursID1keep);
 		}
-		this._parent.removeKursByID(idKursID2delete);
+		this._parent.kursRemoveByID(idKursID2delete);
 		this.setRemoveKursByID(idKursID2delete);
 	}
 
@@ -1987,7 +1987,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  susVon1nach2 Die Datenbank-IDs der Schüler, die verschoben werden sollen.
 	 */
 	public setSplitKurs(kurs1alt : GostBlockungKurs, kurs2neu : GostBlockungKurs, susVon1nach2 : Array<number>) : void {
-		this._parent.addKurs(kurs2neu);
+		this._parent.kursAdd(kurs2neu);
 		this.setAddKursByID(kurs2neu.id);
 		for (const schuelerID of susVon1nach2) {
 			this.stateSchuelerKursEntfernen(schuelerID, kurs1alt.id);
@@ -2006,7 +2006,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public patchOfKursSchienenAnzahl(idKurs : number, anzahlSchienenNeu : number) : void {
 		const kursG : GostBlockungKurs = this.getKursG(idKurs);
 		const kursE : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		const nSchienen : number = this._parent.getSchienenAnzahl();
+		const nSchienen : number = this._parent.schieneGetAnzahl();
 		DeveloperNotificationException.ifTrue("Die Schienenanzahl eines Kurses darf nur bei der Blockungsvorlage verändert werden!", !this._parent.getIstBlockungsVorlage());
 		DeveloperNotificationException.ifTrue("Der GostBlockungKurs hat " + kursG.anzahlSchienen + " Schienen, der GostBlockungsergebnisKurs hat hingegen " + kursE.anzahlSchienen + " Schienen!", kursE.anzahlSchienen !== kursG.anzahlSchienen);
 		DeveloperNotificationException.ifTrue("Die Blockung hat 0 Schienen. Das darf nicht passieren!", nSchienen === 0);

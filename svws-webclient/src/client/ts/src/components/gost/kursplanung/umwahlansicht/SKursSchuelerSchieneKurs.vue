@@ -106,7 +106,7 @@
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.getDatenmanager().getMengeOfRegeln());
+	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.getDatenmanager().regelGetListe());
 
 	// const fixier_regel: ComputedRef<boolean> = computed(() => props.getDatenmanager().getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id))
 	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {

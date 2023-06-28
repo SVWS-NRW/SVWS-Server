@@ -54,20 +54,20 @@ class GostBlockungsdatenManagerTest {
 
 		final GostBlockungsdatenManager man = new GostBlockungsdatenManager();
 		man.faecherManager().add(fa1);
-		man.addSchiene(sch1);
-		man.addKurs(ku1);
+		man.schieneAdd(sch1);
+		man.kursAdd(ku1);
 
-		man.patchOfKursAddLehrkraft(1, le1);
+		man.kursAddLehrkraft(1, le1);
 		try {
-			man.patchOfKursAddLehrkraft(1, le1);
+			man.kursAddLehrkraft(1, le1);
 			fail("Ein doppeltes Hinzufügen hätte eine Exception werfen müssen!");
 		} catch (final DeveloperNotificationException ex) {
 			// richtig
 		}
 
-		man.patchOfKursRemoveLehrkraft(1, 1);
+		man.kursRemoveLehrkraft(1, 1);
 		try {
-			man.patchOfKursRemoveLehrkraft(1, 1);
+			man.kursRemoveLehrkraft(1, 1);
 			fail("Ein doppeltes Löschen hätte eine Exception werfen müssen!");
 		} catch (final DeveloperNotificationException ex) {
 			// richtig

@@ -69,9 +69,9 @@
 
 	const dragAndDropData: Ref<DndData | undefined> = ref(undefined);
 
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().getErgebnisseSortiertNachBewertung().size() === 1);
+	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.getDatenmanager().getKursmengeSortiertNachKursartFachNummer());
+	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
 
 	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => props.getErgebnismanager().getMengeAllerSchienen());
 

@@ -147,12 +147,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		// Schienen hinzufügen.
 		final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", blockung.ID, DTOGostBlockungSchiene.class);
 		for (final DTOGostBlockungSchiene schiene : schienen)
-			manager.addSchiene(DataGostBlockungSchiene.dtoMapper.apply(schiene));
+			manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
 
 		// Kurse hinzufügen.
 		final List<DTOGostBlockungKurs> kurse = conn.queryNamed("DTOGostBlockungKurs.blockung_id", blockung.ID, DTOGostBlockungKurs.class);
 		for (final DTOGostBlockungKurs kurs : kurse)
-			manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
+			manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
 
 		// Kurs-Lehrer hinzufügen
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
@@ -174,7 +174,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					kl.istExtern = (lehrer.StammschulNr != null);
 					kl.reihenfolge = kurslehrer.Reihenfolge;
 					kl.wochenstunden = kurslehrer.Wochenstunden;
-					manager.patchOfKursAddLehrkraft(kurslehrer.Blockung_Kurs_ID, kl);
+					manager.kursAddLehrkraft(kurslehrer.Blockung_Kurs_ID, kl);
 				}
 			}
 		}
@@ -195,7 +195,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				if ((p != null) && (!p.isEmpty()))
 					eintrag.parameter.addAll(p.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer))
 							.map(r -> r.Parameter).toList());
-				manager.addRegel(eintrag);
+				manager.regelAdd(eintrag);
 			}
 		}
 
@@ -298,7 +298,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
 			if (gostHalbjahr == null)
 				throw OperationError.CONFLICT.exception();
-			final int anzahlSchienen = GostBlockungsdatenManager.getDefaultSchienenAnzahl(gostHalbjahr);
+			final int anzahlSchienen = GostBlockungsdatenManager.schieneGetDefaultAnzahl(gostHalbjahr);
 			final DTOGostJahrgangsdaten abijahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 			if (abijahrgang == null)
 				throw OperationError.CONFLICT.exception();
@@ -346,7 +346,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i,
 						"Schiene " + i, 3);
 				conn.transactionPersist(schiene);
-				manager.addSchiene(DataGostBlockungSchiene.dtoMapper.apply(schiene));
+				manager.schieneAdd(DataGostBlockungSchiene.dtoMapper.apply(schiene));
 			}
 			// Anhand der Fachwahlstatistik eine Default-Anzahl für die Kursanzahl ermitteln und
 			// DTOGostBlockungKurs-Objekte dafür persistieren
@@ -366,7 +366,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				for (int i = 1; i <= anzahlLK; i++) {
 					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.LK, i, false, 1, 5);
 					conn.transactionPersist(kurs);
-					manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
+					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
 				}
 				for (int i = 1; i <= anzahlGK; i++) {
 					GostKursart kursart = GostKursart.GK;
@@ -384,12 +384,12 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					}
 					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, kursart, i, false, 1, wstd);
 					conn.transactionPersist(kurs);
-					manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
+					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
 				}
 				for (int i = 1; i <= anzahlZK; i++) {
 					final DTOGostBlockungKurs kurs = new DTOGostBlockungKurs(++kurseID, blockungID, fw.id, GostKursart.ZK, i, false, 1, 3);
 					conn.transactionPersist(kurs);
-					manager.addKurs(DataGostBlockungKurs.dtoMapper.apply(kurs));
+					manager.kursAdd(DataGostBlockungKurs.dtoMapper.apply(kurs));
 				}
 			}
 			// Lege eine Kurs-Schienen-Zuordnung für das "leere" Ergebnis fest. Diese Kurse werden der ersten Schiene der neuen Blockung zugeordnet.

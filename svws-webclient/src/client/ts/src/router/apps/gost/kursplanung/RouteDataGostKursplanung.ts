@@ -224,7 +224,7 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, value.id);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
-		const ergebnisse = datenmanager.getErgebnisseSortiertNachBewertung();
+		const ergebnisse = datenmanager.ergebnisGetListeSortiertNachBewertung();
 		api.status.stop();
 		this.setPatchedState({
 			auswahlBlockung: value,
@@ -247,7 +247,7 @@ export class RouteDataGostKursplanung {
 	}
 
 	public get ergebnisse(): List<GostBlockungsergebnisListeneintrag> {
-		return this.datenmanager.getErgebnisseSortiertNachBewertung();
+		return this.datenmanager.ergebnisGetListeSortiertNachBewertung();
 	}
 
 	public get auswahlErgebnis() : GostBlockungsergebnisListeneintrag {
@@ -370,7 +370,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return;
 		}
-		this.datenmanager.addRegel(result);
+		this.datenmanager.regelAdd(result);
 		this.ergebnismanager.setAddRegelByID(result.id);
 		this.commit();
 		api.status.stop();
@@ -386,7 +386,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return
 		}
-		this.datenmanager.removeRegel(result);
+		this.datenmanager.regelRemove(result);
 		this.ergebnismanager.setRemoveRegelByID(result.id);
 		this.commit();
 		api.status.stop();
@@ -398,9 +398,9 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		await api.server.patchGostBlockungRegel(data, api.schema, idRegel);
-		this.datenmanager.removeRegelByID(idRegel);
+		this.datenmanager.regelRemoveByID(idRegel);
 		this.ergebnismanager.setRemoveRegelByID(idRegel);
-		this.datenmanager.addRegel(data);
+		this.datenmanager.regelAdd(data);
 		this.ergebnismanager.setAddRegelByID(data.id);
 		this.commit();
 		api.status.stop();
@@ -412,9 +412,9 @@ export class RouteDataGostKursplanung {
 		api.status.start();
 		await api.server.patchGostBlockungKurs(data, api.schema, kurs_id);
 		if (data.suffix !== undefined)
-			this.datenmanager.setSuffixOfKurs(kurs_id, data.suffix);
+			this.datenmanager.kursSetSuffix(kurs_id, data.suffix);
 		if (data.istKoopKurs !== undefined)
-			this.datenmanager.getKurs(kurs_id).istKoopKurs = data.istKoopKurs;
+			this.datenmanager.kursGet(kurs_id).istKoopKurs = data.istKoopKurs;
 		this.commit();
 		api.status.stop();
 	}
@@ -428,7 +428,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return;
 		}
-		this.datenmanager.addKurs(kurs);
+		this.datenmanager.kursAdd(kurs);
 		this.ergebnismanager.setAddKursByID(kurs.id);
 		this.commit();
 		api.status.stop();
@@ -444,9 +444,9 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return;
 		}
-		this.datenmanager.removeKurs(kurs)
-		this.ergebnismanager.setRemoveKursByID(kurs.id)
-		this.commit()
+		this.datenmanager.kursRemove(kurs);
+		this.ergebnismanager.setRemoveKursByID(kurs.id);
+		this.commit();
 		api.status.stop();
 		return kurs;
 	}
@@ -498,7 +498,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return
 		}
-		this.datenmanager.patchOfKursAddLehrkraft(kurs_id, lehrer);
+		this.datenmanager.kursAddLehrkraft(kurs_id, lehrer);
 		this.ergebnismanager.patchOfKursLehrkaefteChanged();
 		this.commit();
 		api.status.stop();
@@ -510,7 +510,7 @@ export class RouteDataGostKursplanung {
 			return;
 		api.status.start();
 		await api.server.deleteGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
-		this.datenmanager.patchOfKursRemoveLehrkraft(kurs_id, lehrer_id);
+		this.datenmanager.kursRemoveLehrkraft(kurs_id, lehrer_id);
 		this.ergebnismanager.patchOfKursLehrkaefteChanged();
 		this.commit();
 		api.status.stop();
@@ -519,7 +519,7 @@ export class RouteDataGostKursplanung {
 	patchSchiene = async (data: Partial<GostBlockungSchiene>, id : number) => {
 		api.status.start();
 		await api.server.patchGostBlockungSchiene(data, api.schema, id);
-		const schiene = this.datenmanager.getSchiene(id);
+		const schiene = this.datenmanager.schieneGet(id);
 		Object.assign(schiene, data);
 		api.status.stop();
 	}
@@ -533,7 +533,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return
 		}
-		this.datenmanager.addSchiene(schiene);
+		this.datenmanager.schieneAdd(schiene);
 		this.ergebnismanager.setAddSchieneByID(schiene.id)
 		this.commit();
 		api.status.stop();
@@ -549,7 +549,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return;
 		}
-		this.datenmanager.removeSchieneByID(result.id);
+		this.datenmanager.schieneRemoveByID(result.id);
 		this.ergebnismanager.setRemoveSchieneByID(result.id);
 		this.commit();
 		api.status.stop();
@@ -564,7 +564,7 @@ export class RouteDataGostKursplanung {
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneAlt, false);
 		this.ergebnismanager.setKursSchiene(idKurs, idSchieneNeu, true);
 		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.updateErgebnisBewertung(ergebnis);
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -584,7 +584,7 @@ export class RouteDataGostKursplanung {
 		}
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKursNeu, true);
 		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.updateErgebnisBewertung(ergebnis);
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -599,7 +599,7 @@ export class RouteDataGostKursplanung {
 		await api.server.deleteGostBlockungsergebnisKursSchuelerZuordnung(api.schema, ergebnisid, idSchueler, idKurs);
 		this.ergebnismanager.setSchuelerKurs(idSchueler, idKurs, false);
 		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.updateErgebnisBewertung(ergebnis);
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -626,7 +626,7 @@ export class RouteDataGostKursplanung {
 			}
 		}
 		const ergebnis = this.ergebnismanager.getErgebnis();
-		this.datenmanager.updateErgebnisBewertung(ergebnis);
+		this.datenmanager.ergebnisUpdateBewertung(ergebnis);
 		this.commit();
 		api.status.stop();
 	}
@@ -639,7 +639,7 @@ export class RouteDataGostKursplanung {
 		const reselect = ergebnisse.some(e => e.id === ergebnisid);
 		for (const ergebnis of ergebnisse) {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
-			this.datenmanager.removeErgebnis(ergebnis);
+			this.datenmanager.ergebnisRemove(ergebnis);
 		}
 		if (reselect) {
 			for (const e of this.ergebnisse)

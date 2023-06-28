@@ -159,8 +159,8 @@ class KursblockungTests {
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (manager.getSchienenAnzahl() != 14)
-			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
+		if (manager.schieneGetAnzahl() != 14)
+			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
 
 		if (manager.getSchuelerAnzahlMitFachwahlen() != 137)
 			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
@@ -171,8 +171,8 @@ class KursblockungTests {
 		if (manager.getKursartenAnzahl() != 3)
 			fail("Blockung001 hat nicht 3 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
 
-		if (manager.getKursAnzahl() != 69)
-			fail("Blockung001 hat nicht 69 Kurse, sondern " + manager.getKursAnzahl() + ".");
+		if (manager.kursGetAnzahl() != 69)
+			fail("Blockung001 hat nicht 69 Kurse, sondern " + manager.kursGetAnzahl() + ".");
 
 		if (manager.getFachwahlAnzahl() != 1146)
 			fail("Blockung001 hat nicht 1146 Fachwahlen, " + manager.getFachwahlAnzahl() + ".");
@@ -252,7 +252,7 @@ class KursblockungTests {
 		final GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Fixierungen
-		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.getSchienenAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.schieneGetAnzahl());
 		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
 		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
 		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
@@ -303,7 +303,7 @@ class KursblockungTests {
 		final GostBlockungsdatenManager kbInput = k42Converter.gibKursblockungInput();
 
 		// Fixierungen
-		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.getSchienenAnzahl());
+		regelSperreSchieneFuerKursart(kbInput, "LK", 3, kbInput.schieneGetAnzahl());
 		regelSperreSchieneFuerKursart(kbInput, "GK", 1, 2);
 		regelSperreSchieneFuerKursart(kbInput, "PJK", 1, 2);
 		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 35, 36, 37 }, 12);
@@ -365,8 +365,8 @@ class KursblockungTests {
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (manager.getSchienenAnzahl() != 12)
-			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.getSchienenAnzahl() + ".");
+		if (manager.schieneGetAnzahl() != 12)
+			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
 
 		if (manager.getSchuelerAnzahlMitFachwahlen() != 150)
 			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.getSchuelerAnzahlMitFachwahlen() + ".");
@@ -377,8 +377,8 @@ class KursblockungTests {
 		if (manager.getKursartenAnzahl() != 2)
 			fail("Blockung002 hat nicht 2 Kursarten, sondern " + manager.getKursartenAnzahl() + ".");
 
-		if (manager.getKursAnzahl() != 86)
-			fail("Blockung002 hat nicht 86 Kurse, sondern " + manager.getKursAnzahl());
+		if (manager.kursGetAnzahl() != 86)
+			fail("Blockung002 hat nicht 86 Kurse, sondern " + manager.kursGetAnzahl());
 
 		if (manager.getFachwahlAnzahl() != 1798)
 			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + manager.getFachwahlAnzahl() + ".");
@@ -567,15 +567,12 @@ class KursblockungTests {
 		final GostBlockungsdatenManager man = k42Converter.gibKursblockungInput();
 
 		// Weitere Regeln manuell hinzufügen.
-		// System.out.println(man.getNameOfKurs(1)+", "+man.getKurs(1).id);
-		// System.out.println(man.getNameOfKurs(2)+", "+man.getKurs(2).id);
-
 		final GostBlockungRegel regel = new GostBlockungRegel();
 		regel.id = 1;
 		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
 		regel.parameter.add(1L);
 		regel.parameter.add(2L);
-		man.addRegel(regel);
+		man.regelAdd(regel);
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
 		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(man);
@@ -637,12 +634,12 @@ class KursblockungTests {
 			throw new AssertionError("GostKursart '" + pKursart + "' nicht gefunden.");
 
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl() + 1;
+		gRegel.id = pInput.regelGetAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ;
 		gRegel.parameter.add(Long.valueOf(gKursart.id));
 		gRegel.parameter.add(Long.valueOf(pVon));
 		gRegel.parameter.add(Long.valueOf(pBis));
-		pInput.addRegel(gRegel);
+		pInput.regelAdd(gRegel);
 	}
 
 	private static void regelFixiereKurseInSchieneSonstNichts(@NotNull final GostBlockungsdatenManager pInput, final long[] pKursID,
@@ -656,12 +653,12 @@ class KursblockungTests {
 					gefunden = true;
 
 			final GostBlockungRegel gRegel = new GostBlockungRegel();
-			gRegel.id = pInput.getRegelAnzahl() + 1;
+			gRegel.id = pInput.regelGetAnzahl() + 1;
 			gRegel.typ = gefunden ? GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ
 					: GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 			gRegel.parameter.add(gKurs.id);
 			gRegel.parameter.add(Long.valueOf(pSchiene));
-			pInput.addRegel(gRegel);
+			pInput.regelAdd(gRegel);
 		}
 
 	}
@@ -669,33 +666,33 @@ class KursblockungTests {
 	private static void regelVerbieteSchuelerInKurs(@NotNull final GostBlockungsdatenManager pInput, final long pSchuelerID,
 			final long pKursID) {
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl() + 1;
+		gRegel.id = pInput.regelGetAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
 		gRegel.parameter.add(pSchuelerID);
 		gRegel.parameter.add(pKursID);
-		pInput.addRegel(gRegel);
+		pInput.regelAdd(gRegel);
 	}
 
 	private static void regelFixiereKursInSchiene(@NotNull final GostBlockungsdatenManager pInput, final long pKursID, final int pSchiene) {
 		@NotNull
-		final GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
+		final GostBlockungKurs kurs = pInput.kursGet(pKursID); // wirft ggf. Exception
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl() + 1;
+		gRegel.id = pInput.regelGetAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 		gRegel.parameter.add(kurs.id);
 		gRegel.parameter.add(Long.valueOf(pSchiene));
-		pInput.addRegel(gRegel);
+		pInput.regelAdd(gRegel);
 	}
 
 	private static void regelFixiereSchuelerInKurs(@NotNull final GostBlockungsdatenManager pInput, final long pSchuelerID, final long pKursID) {
 		@NotNull
-		final GostBlockungKurs kurs = pInput.getKurs(pKursID); // wirft ggf. Exception
+		final GostBlockungKurs kurs = pInput.kursGet(pKursID); // wirft ggf. Exception
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
-		gRegel.id = pInput.getRegelAnzahl() + 1;
+		gRegel.id = pInput.regelGetAnzahl() + 1;
 		gRegel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 		gRegel.parameter.add(pSchuelerID);
 		gRegel.parameter.add(kurs.id);
-		pInput.addRegel(gRegel);
+		pInput.regelAdd(gRegel);
 	}
 
 	/** Testet die Kursblockungsalgorithmen mit randomisierten Daten. */
