@@ -152,23 +152,19 @@
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
-		const regeln = props.getDatenmanager().regelGetListe()
-		if (!regeln)
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
+		const regeln = props.getDatenmanager().regelGetListeOfTyp(regel_typ);
+		if (regeln.isEmpty())
 			return undefined;
-		for (const r of regeln)
-			if (r.typ === regel_typ.typ)
-				return r;
-		return undefined;
+		return regeln.get(0);
 	})
 
 	async function add_lehrer_regel() {
 		if (lehrer_regel.value !== undefined)
 			return;
 		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
 		r.typ = regel_typ.typ;
-		r.parameter.add(1);
 		await props.addRegel(r);
 	}
 
