@@ -126,6 +126,17 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Liefert TRUE, falls es den Teilpfad gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return TRUE, falls es den Teilpfad gibt.
+	 */
+	public boolean containsKey1(final @NotNull K1 key1) {
+		return _map.containsKey(key1);
+	}
+
+	/**
 	 * Löscht alle Zuordnungen der Map.
 	 */
 	public void clear() {

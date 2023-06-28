@@ -230,6 +230,7 @@ public class GostBlockungsergebnisManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 			// Map: schuelerID --> (fachID --> Kurs)
 			// _map2D_schuelerID_fachID_kurs nicht nötig
+			// _map2D_schuelerID_fachID_kurs.put(gSchueler.id);
 			// _map2D_schuelerID_schienenID_kurse nicht nötig
 		}
 
@@ -1050,9 +1051,11 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public boolean getOfSchuelerHatNichtwahl(final long idSchueler) {
-		for (final @NotNull long idFach : _map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
-			if (_map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) == null)
-				return true;
+
+		if (_map2D_schuelerID_fachID_kurs.containsKey1(idSchueler))
+			for (final @NotNull long idFach : _map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
+				if (_map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) == null)
+					return true;
 
 		return false;
 	}
