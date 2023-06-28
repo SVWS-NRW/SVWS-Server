@@ -27,7 +27,7 @@ import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsdaten}.
+ * Ein Manager zur Handhabung von Daten des Typs {@link GostBlockungsdaten}.<br>
  * Hierbei werden auch Hilfsmethoden zur Interpretation der Daten erzeugt.
  */
 public class GostBlockungsdatenManager {
