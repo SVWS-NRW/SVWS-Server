@@ -22,7 +22,7 @@
 		abiturdatenManager: () => AbiturdatenManager;
 		faechermanager: () => GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
-		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
+		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	}>();
 

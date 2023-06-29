@@ -39,7 +39,7 @@
 				Zur Laufbahnplanung
 			</svws-ui-button>
 		</template>
-		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+		<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 	</svws-ui-content-card>
 </template>
 

@@ -16,12 +16,12 @@
 	import { type ComputedRef, computed } from 'vue';
 
 	const props = defineProps<{
-		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
+		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 	}>();
 
 	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of props.fehlerliste)
+		for (const fehler of props.fehlerliste())
 			if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
 				res.add(fehler);
 		return res;
