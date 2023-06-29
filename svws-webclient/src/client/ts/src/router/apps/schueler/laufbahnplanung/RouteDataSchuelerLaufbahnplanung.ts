@@ -3,7 +3,7 @@ import { shallowRef } from "vue";
 import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
 	List, SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
-	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, ArrayList } from "@core";
+	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, ArrayList, GostHalbjahr } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -123,10 +123,8 @@ export class RouteDataSchuelerLaufbahnplanung {
 		if (art === 'gesamt')
 			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
 		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
-		if (art === 'auto')
-			for (const fachwahl of abiturdatenManager.getSchuelerFachwahlen().values())
-				if (fachwahl.halbjahre.some((w, i) => i > 0 && w !== null))
-					return abiturdatenManager;
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+			return abiturdatenManager;
 		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
 	}
 
