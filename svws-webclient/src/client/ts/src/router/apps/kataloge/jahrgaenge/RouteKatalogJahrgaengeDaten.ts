@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogJahrgaenge, type RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+import { routeKatalogJahrgaenge, type RouteKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
 
 import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 

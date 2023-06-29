@@ -1,5 +1,4 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import { shallowRef } from "vue";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -10,53 +9,22 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 
-import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
-import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
-import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
-import { routeKatalogRaeume } from "~/router/apps/RouteKatalogRaeume";
-import { routeKatalogAufsichtsbereiche } from "~/router/apps/RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "~/router/apps/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/RouteKatalogZeitraster";
-import { routeKatalogBetriebe } from "~/router/apps/RouteKatalogBetriebe";
+import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
+import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
+import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
+import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
+import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
+import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
+
+import { RouteDataKataloge } from "~/router/apps/kataloge/RouteDataKataloge";
 
 import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 
-interface RouteStateKataloge {
-	view: RouteNode<any, any>;
-}
-export class RouteDataKataloge {
-
-	private static _defaultState: RouteStateKataloge = {
-		view: routeKatalogFaecher,
-	}
-	private _state = shallowRef(RouteDataKataloge._defaultState);
-
-	private setPatchedDefaultState(patch: Partial<RouteStateKataloge>) {
-		this._state.value = Object.assign({ ... RouteDataKataloge._defaultState }, patch);
-	}
-
-	private setPatchedState(patch: Partial<RouteStateKataloge>) {
-		this._state.value = Object.assign({ ... this._state.value }, patch);
-	}
-
-	private commit(): void {
-		this._state.value = { ... this._state.value };
-	}
-
-	public async setView(view: RouteNode<any,any>) {
-		if (routeKataloge.menu.includes(view))
-			this.setPatchedState({ view: view });
-		else
-			throw new Error("Diese für die Kataloge gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	public get view(): RouteNode<any,any> {
-		return this._state.value.view;
-	}
-}
 const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
 const SKatalogeApp = () => import("~/components/kataloge/SKatalogeApp.vue")
 

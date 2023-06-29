@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
+import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 
 import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 

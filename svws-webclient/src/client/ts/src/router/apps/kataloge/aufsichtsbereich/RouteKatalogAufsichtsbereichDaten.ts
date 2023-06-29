@@ -4,7 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeKatalogAufsichtsbereiche, type RouteKatalogAufsichtsbereiche } from "~/router/apps/RouteKatalogAufsichtsbereiche";
+import { routeKatalogAufsichtsbereiche, type RouteKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 
 import type { AufsichtsbereichDatenProps } from "~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDatenProps";
 

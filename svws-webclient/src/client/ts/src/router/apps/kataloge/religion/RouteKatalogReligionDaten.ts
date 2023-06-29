@@ -3,8 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteKatalogReligionen } from "~/router/apps/RouteKatalogReligionen";
-import { routeKatalogReligion } from "../RouteKatalogReligionen";
+import { routeKatalogReligion, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 
 import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 

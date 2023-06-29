@@ -4,14 +4,13 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import type { RouteKatalogRaeume} from "~/router/apps/RouteKatalogRaeume";
-import { routeKatalogPausenzeiten } from "~/router/apps/RouteKatalogPausenzeiten";
+import { routeKatalogPausenzeiten, type RouteKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
 
 import type { PausenzeitDatenProps } from "~/components/kataloge/pausenzeiten/daten/SPausenzeitDatenProps";
 
 const SPausenzeitDaten = () => import("~/components/kataloge/pausenzeiten/daten/SPausenzeitDaten.vue");
 
-export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalogRaeume> {
+export class RouteKatalogPausenzeitDaten extends RouteNode<unknown, RouteKatalogPausenzeiten> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten.daten", "daten", SPausenzeitDaten);

@@ -10,8 +10,8 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogReligionDaten } from "~/router/apps/kataloge/religion/RouteKatalogReligionDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { ReligionenAppProps } from "~/components/kataloge/religionen/SReligionenAppProps";

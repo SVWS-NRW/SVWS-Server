@@ -4,7 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKatalogBetriebe, type RouteKatalogBetriebe } from "~/router/apps/RouteKatalogBetriebe";
+import { routeKatalogBetriebe, type RouteKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 
 import type { BetriebeDatenProps } from "~/components/kataloge/betriebe/daten/SBetriebeProps";
 

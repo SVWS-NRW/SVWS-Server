@@ -10,8 +10,8 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { routeKatalogBetriebeDaten } from "~/router/apps/betriebe/RouteKatalogBetriebeDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogBetriebeDaten } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebeDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { BetriebeAppProps } from "~/components/kataloge/betriebe/SBetriebeAppProps";

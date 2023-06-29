@@ -3,7 +3,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeKatalogRaeume, type RouteKatalogRaeume } from "~/router/apps/RouteKatalogRaeume";
+import { routeKatalogRaeume, type RouteKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 
 import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
 

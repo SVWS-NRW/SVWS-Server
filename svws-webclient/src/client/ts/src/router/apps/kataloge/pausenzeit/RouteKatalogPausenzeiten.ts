@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { StundenplanAufsichtsbereich} from "@core";
+import type { StundenplanPausenzeit } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -10,35 +10,35 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { routeKatalogAufsichtsbereichDaten } from "~/router/apps/aufsichtsbereich/RouteKatalogAufsichtsbereichDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogPausenzeitDaten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeitDaten";
 
-import type { AufsichtsbereicheAuswahlProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
-import type { AufsichtsbereicheAppProps } from "~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAppProps";
+import type { PausenzeitenAuswahlProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
+import type { PausenzeitenAppProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
-interface RouteStateKatalogAufsichtsbereiche {
-	auswahl: StundenplanAufsichtsbereich | undefined;
-	daten: StundenplanAufsichtsbereich | undefined;
-	mapKatalogeintraege: Map<number, StundenplanAufsichtsbereich>;
+interface RouteStateKatalogPausenzeiten {
+	auswahl: StundenplanPausenzeit | undefined;
+	daten: StundenplanPausenzeit | undefined;
+	mapKatalogeintraege: Map<number, StundenplanPausenzeit>;
 	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogAufsichtsbereiche {
+export class RouteDataKatalogPausenzeiten {
 
-	private static _defaultState: RouteStateKatalogAufsichtsbereiche = {
+	private static _defaultState: RouteStateKatalogPausenzeiten = {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
-		view: routeKatalogAufsichtsbereichDaten,
+		view: routeKatalogPausenzeitDaten,
 	}
-	private _state = shallowRef(RouteDataKatalogAufsichtsbereiche._defaultState);
+	private _state = shallowRef(RouteDataKatalogPausenzeiten._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogAufsichtsbereiche._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateKatalogPausenzeiten>) {
+		this._state.value = Object.assign({ ... RouteDataKatalogPausenzeiten._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateKatalogAufsichtsbereiche>) {
+	private setPatchedState(patch: Partial<RouteStateKatalogPausenzeiten>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 
@@ -47,62 +47,62 @@ export class RouteDataKatalogAufsichtsbereiche {
 	}
 
 	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogAufsichtsbereiche.children.includes(view))
+		if (routeKatalogPausenzeiten.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für die Pausenzeiten gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {
 		return this._state.value.view;
 	}
 
-	get auswahl(): StundenplanAufsichtsbereich | undefined {
+	get auswahl(): StundenplanPausenzeit | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, StundenplanAufsichtsbereich> {
+	get mapKatalogeintraege(): Map<number, StundenplanPausenzeit> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
-	get daten(): StundenplanAufsichtsbereich {
+	get daten(): StundenplanPausenzeit {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
+			throw new Error("Unerwarteter Fehler: Pausenzeitdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
 	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getAufsichtsbereiche(api.schema);
-		const mapKatalogeintraege = new Map<number, StundenplanAufsichtsbereich>();
+		const listKatalogeintraege = await api.server.getPausenzeiten(api.schema);
+		const mapKatalogeintraege = new Map<number, StundenplanPausenzeit>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
 	}
 
-	setEintrag = async (auswahl: StundenplanAufsichtsbereich) => {
+	setEintrag = async (auswahl: StundenplanPausenzeit) => {
 		const daten = this.mapKatalogeintraege.get(auswahl.id);
 		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => {
-		await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag: StundenplanPausenzeit) => {
+		await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(eintrag.id));
 	}
 
-	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
+	addEintrag = async (eintrag: Partial<StundenplanPausenzeit>) => {
 		delete eintrag.id;
-		const raum = await api.server.addAufsichtsbereich(eintrag, api.schema);
+		const pausenzeit = await api.server.addPausenzeit(eintrag, api.schema);
 		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(raum.id, raum);
+		mapKatalogeintraege.set(pausenzeit.id, pausenzeit);
 		this.setPatchedState({mapKatalogeintraege});
-		await this.gotoEintrag(raum);
+		await this.gotoEintrag(pausenzeit);
 	}
 
-	deleteEintraege = async (eintraege: StundenplanAufsichtsbereich[]) => {
+	deleteEintraege = async (eintraege: StundenplanPausenzeit[]) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
 		for (const eintrag of eintraege) {
-			const raum = await api.server.deleteAufsichtsbereich(api.schema, eintrag.id);
-			mapKatalogeintraege.delete(raum.id);
+			const pausenzeit = await api.server.deleteStundenplanPausenzeit(api.schema, eintrag.id);
+			mapKatalogeintraege.delete(pausenzeit.id);
 		}
 		let auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
@@ -110,30 +110,30 @@ export class RouteDataKatalogAufsichtsbereiche {
 		this.setPatchedState({mapKatalogeintraege, auswahl});
 	}
 
-	patch = async (eintrag : Partial<StundenplanAufsichtsbereich>) => {
+	patch = async (eintrag : Partial<StundenplanPausenzeit>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
+		await api.server.patchStundenplanPausenzeit(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
 	}
 }
 
-const SAufsichtsbereicheAuswahl = () => import("~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue")
-const SAufsichtsbereicheApp = () => import("~/components/kataloge/aufsichtsbereiche/SAufsichtsbereicheApp.vue")
+const SPausenzeitenAuswahl = () => import("~/components/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue")
+const SPausenzeitenApp = () => import("~/components/kataloge/pausenzeiten/SPausenzeitenApp.vue")
 
-export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAufsichtsbereiche, RouteApp> {
+export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenzeiten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.aufsichtsbereiche", "/kataloge/aufsichtsbereiche/:id(\\d+)?", SAufsichtsbereicheApp, new RouteDataKatalogAufsichtsbereiche());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.pausenzeiten", "/kataloge/pausenzeiten/:id(\\d+)?", SPausenzeitenApp, new RouteDataKatalogPausenzeiten());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Aufsichtsbereiche";
-		super.setView("liste", SAufsichtsbereicheAuswahl, (route) => this.getAuswahlProps(route));
+		super.text = "Pausenzeiten";
+		super.setView("liste", SPausenzeitenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogAufsichtsbereichDaten
+			routeKatalogPausenzeitDaten
 		];
-		super.defaultChild = routeKatalogAufsichtsbereichDaten;
+		super.defaultChild = routeKatalogPausenzeitDaten;
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -145,7 +145,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
-		let eintrag: StundenplanAufsichtsbereich | undefined;
+		let eintrag: StundenplanPausenzeit | undefined;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
@@ -167,7 +167,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): AufsichtsbereicheAuswahlProps {
+	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
@@ -182,7 +182,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): AufsichtsbereicheAppProps {
+	public getProps(to: RouteLocationNormalized): PausenzeitenAppProps {
 		return {
 			auswahl: this.data.auswahl,
 			// Props für die Navigation
@@ -216,4 +216,4 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	}
 }
 
-export const routeKatalogAufsichtsbereiche = new RouteKatalogAufsichtsbereiche();
+export const routeKatalogPausenzeiten = new RouteKatalogPausenzeiten();

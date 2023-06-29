@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
+import type { FoerderschwerpunktEintrag} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -10,35 +10,35 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogFoerderschwerpunktDaten } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunktDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { JahrgaengeAppProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAppProps";
-import type { JahrgaengeAuswahlProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAuswahlProps";
+import type { FoerderschwerpunkteAppProps } from "~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAppProps";
+import type { FoerderschwerpunkteAuswahlProps } from "~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahlProps";
 
-interface RouteStateKatalogJahrgaenge {
-	auswahl: JahrgangsListeEintrag | undefined;
-	daten: JahrgangsDaten | undefined;
-	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
+interface RouteStateKatalogFoerderschwerpunkte {
+	auswahl: FoerderschwerpunktEintrag | undefined;
+	daten: FoerderschwerpunktEintrag | undefined;
+	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
 	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogJahrgaenge {
+export class RouteDataKatalogFoerderschwerpunkte {
 
-	private static _defaultState: RouteStateKatalogJahrgaenge = {
+	private static _defaultState: RouteStateKatalogFoerderschwerpunkte = {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
-		view: routeKatalogJahrgaengeDaten,
+		view: routeKatalogFoerderschwerpunktDaten,
 	}
-	private _state = shallowRef(RouteDataKatalogJahrgaenge._defaultState);
+	private _state = shallowRef(RouteDataKatalogFoerderschwerpunkte._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogJahrgaenge>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogJahrgaenge._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateKatalogFoerderschwerpunkte>) {
+		this._state.value = Object.assign({ ... RouteDataKatalogFoerderschwerpunkte._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateKatalogJahrgaenge>) {
+	private setPatchedState(patch: Partial<RouteStateKatalogFoerderschwerpunkte>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 
@@ -47,7 +47,7 @@ export class RouteDataKatalogJahrgaenge {
 	}
 
 	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogJahrgaenge.children.includes(view))
+		if (routeKatalogFoerderschwerpunkte.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
 			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
@@ -57,60 +57,61 @@ export class RouteDataKatalogJahrgaenge {
 		return this._state.value.view;
 	}
 
-	get auswahl(): JahrgangsListeEintrag | undefined {
+	get auswahl(): FoerderschwerpunktEintrag | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, JahrgangsListeEintrag> {
+	get mapKatalogeintraege(): Map<number, FoerderschwerpunktEintrag> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
-	get daten(): JahrgangsDaten {
+	get daten(): FoerderschwerpunktEintrag {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
 	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getJahrgaenge(api.schema);
-		const mapKatalogeintraege = new Map<number, JahrgangsListeEintrag>();
+		const listKatalogeintraege = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
+		const mapKatalogeintraege = new Map<number, FoerderschwerpunktEintrag>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
 	}
 
-	setEintrag = async (auswahl: JahrgangsListeEintrag) => {
-		const daten = await api.server.getJahrgang(api.schema, auswahl.id)
+	setEintrag = async (auswahl: FoerderschwerpunktEintrag) => {
+		const daten = this.mapKatalogeintraege.get(auswahl.id);
 		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: JahrgangsListeEintrag) => {
-		await RouteManager.doRoute(routeKatalogJahrgaenge.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag: FoerderschwerpunktEintrag) => {
+		await RouteManager.doRoute(routeKatalogFoerderschwerpunkte.getRoute(eintrag.id));
 	}
 
-	patch = async (data : Partial<JahrgangsDaten>) => {
+	patch = async (data : Partial<FoerderschwerpunktEintrag>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patchJahrgangDaten", data);
-		//await api.server.patchJahrgangDaten(data, api.schema, this.item.id);
+		console.log("TODO: Implementierung patch...Daten", data);
+		//await api.server.patch...Daten(data, api.schema, this.item.id);
 	}
 }
-const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
-const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
 
-export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge, RouteApp> {
+const SFoerderschwerpunkteAuswahl = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue")
+const SFoerderschwerpunkteApp = () => import("~/components/kataloge/foerderschwerpunkte/SFoerderschwerpunkteApp.vue")
+
+export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogFoerderschwerpunkte, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.foerderschwerpunkte", "/kataloge/foerderschwerpunkte/:id(\\d+)?", SFoerderschwerpunkteApp, new RouteDataKatalogFoerderschwerpunkte());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Jahrgänge";
-		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
+		super.text = "Förderschwerpunkte";
+		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogJahrgaengeDaten
+			routeKatalogFoerderschwerpunktDaten
 		];
-		super.defaultChild = routeKatalogJahrgaengeDaten;
+		super.defaultChild = routeKatalogFoerderschwerpunktDaten;
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -122,7 +123,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
-		let eintrag: JahrgangsListeEintrag | undefined;
+		let eintrag: FoerderschwerpunktEintrag | undefined;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
@@ -144,7 +145,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): JahrgaengeAuswahlProps {
+	public getAuswahlProps(to: RouteLocationNormalized): FoerderschwerpunkteAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
@@ -157,7 +158,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): JahrgaengeAppProps {
+	public getProps(to: RouteLocationNormalized): FoerderschwerpunkteAppProps {
 		return {
 			auswahl: this.data.auswahl,
 			// Props für die Navigation
@@ -191,4 +192,4 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 	}
 }
 
-export const routeKatalogJahrgaenge = new RouteKatalogJahrgaenge();
+export const routeKatalogFoerderschwerpunkte = new RouteKatalogFoerderschwerpunkte();

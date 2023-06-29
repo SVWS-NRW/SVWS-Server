@@ -10,8 +10,8 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/RouteKataloge";
-import { routeKatalogZeitrasterDaten } from "./zeitraster/RouteKatalogZeitrasterDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogZeitrasterDaten } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitrasterDaten";
 
 import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZeitrasterAuswahlProps";
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";

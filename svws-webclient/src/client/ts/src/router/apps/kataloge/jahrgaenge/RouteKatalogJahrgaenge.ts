@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { Raum} from "@core";
+import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -10,35 +10,35 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "./RouteKataloge";
-import { routeKatalogRaumDaten } from "./raum/RouteKatalogRaumDaten";
+import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
+import { routeKatalogJahrgaengeDaten } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaengeDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { RaeumeAuswahlProps } from "~/components/kataloge/raeume/SRaeumeAuswahlProps";
-import type { RaeumeAppProps } from "~/components/kataloge/raeume/SRaeumeAppProps";
+import type { JahrgaengeAppProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAppProps";
+import type { JahrgaengeAuswahlProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAuswahlProps";
 
-interface RouteStateKatalogRaeume {
-	auswahl: Raum | undefined;
-	daten: Raum | undefined;
-	mapKatalogeintraege: Map<number, Raum>;
+interface RouteStateKatalogJahrgaenge {
+	auswahl: JahrgangsListeEintrag | undefined;
+	daten: JahrgangsDaten | undefined;
+	mapKatalogeintraege: Map<number, JahrgangsListeEintrag>;
 	view: RouteNode<any, any>;
 }
 
-export class RouteDataKatalogRaeume {
+export class RouteDataKatalogJahrgaenge {
 
-	private static _defaultState: RouteStateKatalogRaeume = {
+	private static _defaultState: RouteStateKatalogJahrgaenge = {
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
-		view: routeKatalogRaumDaten,
+		view: routeKatalogJahrgaengeDaten,
 	}
-	private _state = shallowRef(RouteDataKatalogRaeume._defaultState);
+	private _state = shallowRef(RouteDataKatalogJahrgaenge._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateKatalogRaeume>) {
-		this._state.value = Object.assign({ ... RouteDataKatalogRaeume._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateKatalogJahrgaenge>) {
+		this._state.value = Object.assign({ ... RouteDataKatalogJahrgaenge._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateKatalogRaeume>) {
+	private setPatchedState(patch: Partial<RouteStateKatalogJahrgaenge>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 
@@ -47,93 +47,70 @@ export class RouteDataKatalogRaeume {
 	}
 
 	public async setView(view: RouteNode<any,any>) {
-		if (routeKatalogRaeume.children.includes(view))
+		if (routeKatalogJahrgaenge.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Räume gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {
 		return this._state.value.view;
 	}
 
-	get auswahl(): Raum | undefined {
+	get auswahl(): JahrgangsListeEintrag | undefined {
 		return this._state.value.auswahl;
 	}
 
-	get mapKatalogeintraege(): Map<number, Raum> {
+	get mapKatalogeintraege(): Map<number, JahrgangsListeEintrag> {
 		return this._state.value.mapKatalogeintraege;
 	}
 
-	get daten(): Raum {
+	get daten(): JahrgangsDaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Raumdaten nicht initialisiert");
+			throw new Error("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
 	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getRaeume(api.schema);
-		const mapKatalogeintraege = new Map<number, Raum>();
+		const listKatalogeintraege = await api.server.getJahrgaenge(api.schema);
+		const mapKatalogeintraege = new Map<number, JahrgangsListeEintrag>();
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege })
 	}
 
-	setEintrag = async (auswahl: Raum) => {
-		const daten = this.mapKatalogeintraege.get(auswahl.id);
+	setEintrag = async (auswahl: JahrgangsListeEintrag) => {
+		const daten = await api.server.getJahrgang(api.schema, auswahl.id)
 		this.setPatchedState({ auswahl, daten })
 	}
 
-	gotoEintrag = async (eintrag: Raum) => {
-		await RouteManager.doRoute(routeKatalogRaeume.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag: JahrgangsListeEintrag) => {
+		await RouteManager.doRoute(routeKatalogJahrgaenge.getRoute(eintrag.id));
 	}
 
-	addEintrag = async (eintrag: Partial<Raum>) => {
-		delete eintrag.id;
-		const raum = await api.server.addRaum(eintrag, api.schema);
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		mapKatalogeintraege.set(raum.id, raum);
-		this.setPatchedState({mapKatalogeintraege});
-		await this.gotoEintrag(raum);
-	}
-
-	deleteEintraege = async (eintraege: Raum[]) => {
-		const mapKatalogeintraege = this.mapKatalogeintraege;
-		for (const eintrag of eintraege) {
-			const raum = await api.server.deleteRaum(api.schema, eintrag.id);
-			mapKatalogeintraege.delete(raum.id);
-		}
-		let auswahl;
-		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
-			auswahl = mapKatalogeintraege.values().next().value;
-		this.setPatchedState({mapKatalogeintraege, auswahl});
-	}
-
-	patch = async (eintrag : Partial<Raum>) => {
+	patch = async (data : Partial<JahrgangsDaten>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		await api.server.patchRaum(eintrag, api.schema, this.auswahl.id);
-		const auswahl = this.auswahl;
-		this.setPatchedState({auswahl: Object.assign(auswahl, eintrag)});
+		console.log("TODO: Implementierung patchJahrgangDaten", data);
+		//await api.server.patchJahrgangDaten(data, api.schema, this.item.id);
 	}
 }
+const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
+const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
 
-const SRaeumeAuswahl = () => import("~/components/kataloge/raeume/SRaeumeAuswahl.vue")
-const SRaeumeApp = () => import("~/components/kataloge/raeume/SRaeumeApp.vue")
-
-export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteApp> {
+export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume", "/kataloge/raeume/:id(\\d+)?", SRaeumeApp, new RouteDataKatalogRaeume());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge", "/kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Räume";
-		super.setView("liste", SRaeumeAuswahl, (route) => this.getAuswahlProps(route));
+		super.text = "Jahrgänge";
+		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogRaumDaten
+			routeKatalogJahrgaengeDaten
 		];
-		super.defaultChild = routeKatalogRaumDaten;
+		super.defaultChild = routeKatalogJahrgaengeDaten;
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -145,7 +122,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)
 			return;
-		let eintrag: Raum | undefined;
+		let eintrag: JahrgangsListeEintrag | undefined;
 		if (!to_params.id && this.data.auswahl)
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
@@ -167,22 +144,20 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): RaeumeAuswahlProps {
+	public getAuswahlProps(to: RouteLocationNormalized): JahrgaengeAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
+			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
-			addEintrag: this.data.addEintrag,
-			deleteEintraege: this.data.deleteEintraege,
 			returnToKataloge: routeKataloge.returnToKataloge
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): RaeumeAppProps {
+	public getProps(to: RouteLocationNormalized): JahrgaengeAppProps {
 		return {
 			auswahl: this.data.auswahl,
 			// Props für die Navigation
@@ -216,4 +191,4 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 	}
 }
 
-export const routeKatalogRaeume = new RouteKatalogRaeume();
+export const routeKatalogJahrgaenge = new RouteKatalogJahrgaenge();
