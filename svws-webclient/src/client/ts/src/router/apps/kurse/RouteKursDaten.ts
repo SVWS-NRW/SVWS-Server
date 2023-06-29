@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKurse, type RouteKurse } from "~/router/apps/RouteKurse";
+import { routeKurse, type RouteKurse } from "~/router/apps/kurse/RouteKurse";
 
 import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
 

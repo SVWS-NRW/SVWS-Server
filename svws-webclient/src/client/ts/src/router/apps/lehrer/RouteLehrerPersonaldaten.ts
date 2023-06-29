@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, LehrerPersonaldaten, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeLehrer, type RouteLehrer } from "~/router/apps/RouteLehrer";
+import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
 

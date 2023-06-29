@@ -8,7 +8,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { routeStundenplan } from "../RouteStundenplan";
+import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
 
 interface RouteStateStundenplan {

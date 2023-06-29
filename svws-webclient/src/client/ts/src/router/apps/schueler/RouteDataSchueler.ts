@@ -8,8 +8,8 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 
 import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
 

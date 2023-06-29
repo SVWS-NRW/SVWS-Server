@@ -8,17 +8,17 @@ import { RouteManager } from "~/router/RouteManager";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
-import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
-import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
-import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
-import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
-import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
-import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { routeSchuelerKAoA } from "./schueler/RouteSchuelerKAoA";
+import { routeSchuelerAbschnitt } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnitt";
+import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
+import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
+import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
+import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
+import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
+import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
+import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
 
-import { RouteDataSchueler } from "./schueler/RouteDataSchueler";
+import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
@@ -39,7 +39,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		super.children = [
 			routeSchuelerIndividualdaten,
 			routeSchuelerErziehungsberechtigte,
-			routeSchuelerAdressen,
+			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerSchulbesuch,
 			routeSchuelerAbschnitt,
 			routeSchuelerLeistungen,

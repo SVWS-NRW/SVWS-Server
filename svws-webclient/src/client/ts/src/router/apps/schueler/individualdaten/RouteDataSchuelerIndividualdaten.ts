@@ -1,18 +1,9 @@
 import { shallowRef } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import type { RouteSchueler} from "~/router/apps/RouteSchueler";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
 
-import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
-
-const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 
 interface RouteStateDataSchuelerIndividualdaten {
 	mapFahrschuelerarten: Map<number, KatalogEintrag>;
@@ -20,6 +11,7 @@ interface RouteStateDataSchuelerIndividualdaten {
 	mapHaltestellen: Map<number, KatalogEintrag>;
 	mapReligionen: Map<number, ReligionEintrag>;
 }
+
 export class RouteDataSchuelerIndividualdaten {
 
 	private static _defaultState: RouteStateDataSchuelerIndividualdaten = {
@@ -84,38 +76,4 @@ export class RouteDataSchuelerIndividualdaten {
 	}
 
 }
-
-export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerIndividualdaten, RouteSchueler> {
-
-	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.daten", "daten", SSchuelerIndividualdaten, new RouteDataSchuelerIndividualdaten());
-		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
-		super.text = "Individualdaten";
-	}
-
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
-	}
-
-	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
-		return {
-			patch: routeSchueler.data.patch,
-			data: ()=> routeSchueler.data.stammdaten,
-			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile,
-			mapFahrschuelerarten: this.data.mapFahrschuelerarten,
-			mapFoerderschwerpunkte: this.data.mapFoerderschwerpunkte,
-			mapHaltestellen: this.data.mapHaltestellen,
-			mapReligionen: this.data.mapReligionen
-		};
-	}
-
-}
-
-export const routeSchuelerIndividualdaten = new RouteSchuelerIndividualdaten();
 

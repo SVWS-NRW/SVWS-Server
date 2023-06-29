@@ -7,7 +7,7 @@ import { Schuljahresabschnitt } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
 
 interface RouteStateApp {

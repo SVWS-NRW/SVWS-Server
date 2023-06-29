@@ -6,7 +6,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { routeLehrer } from "~/router/apps/RouteLehrer";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 
 interface RouteStateLehrer {

@@ -1,20 +1,12 @@
 import { shallowRef} from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+import { ArrayList } from "@core";
 
 import { api } from "~/router/Api";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
-import type { RouteSchueler } from "~/router/apps/RouteSchueler";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
 
-import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
 
-const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
-
-interface RouteStateDataSchuelerAdressen {
+interface RouteStateDataSchuelerAusbildungsbetriebe {
 	daten: BetriebStammdaten | undefined;
 	idSchueler: number | undefined;
 	betrieb: SchuelerBetriebsdaten | undefined;
@@ -25,9 +17,10 @@ interface RouteStateDataSchuelerAdressen {
 	listAnsprechpartner: List<BetriebAnsprechpartner>;
 	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 }
-export class RouteDataSchuelerAdressen {
 
-	private static _defaultState: RouteStateDataSchuelerAdressen = {
+export class RouteDataSchuelerAusbildungsbetriebe {
+
+	private static _defaultState: RouteStateDataSchuelerAusbildungsbetriebe = {
 		daten: undefined,
 		idSchueler: undefined,
 		betrieb: undefined,
@@ -39,13 +32,13 @@ export class RouteDataSchuelerAdressen {
 		mapAnsprechpartner: new Map(),
 	}
 
-	private _state = shallowRef(RouteDataSchuelerAdressen._defaultState);
+	private _state = shallowRef(RouteDataSchuelerAusbildungsbetriebe._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerAdressen>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerAdressen._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerAusbildungsbetriebe>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerAusbildungsbetriebe._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerAdressen>) {
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerAusbildungsbetriebe>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 
@@ -154,54 +147,4 @@ export class RouteDataSchuelerAdressen {
 		this.setPatchedState({listSchuelerbetriebe, mapAnsprechpartner})
 	}
 }
-
-export class RouteSchuelerAdressen extends RouteNode<RouteDataSchuelerAdressen, RouteSchueler> {
-
-	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SSchuelerAdressen, new RouteDataSchuelerAdressen());
-		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
-		super.text = "Ausbildungsbetriebe";
-	}
-
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
-	}
-
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const id = to_params.id === undefined ? undefined : parseInt(to_params.id);
-		await this.data.setSchueler(id);
-		await this.data.setSchuelerBetrieb();
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
-	}
-
-	public getProps(to: RouteLocationNormalized): SchuelerAdressenProps {
-		return {
-			patchBetrieb: this.data.patchBetrieb,
-			patchSchuelerBetriebsdaten: this.data.patchSchuelerBetriebsdaten,
-			patchAnsprechpartner: this.data.patchAnsprechpartner,
-			setSchuelerBetrieb: this.data.setSchuelerBetrieb,
-			createAnsprechpartner: this.data.createAnsprechpartner,
-			createSchuelerBetriebsdaten: this.data.createSchuelerBetriebsdaten,
-			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile,
-			idSchueler: routeSchueler.data.stammdaten.id,
-			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
-			betrieb: this.data.betrieb,
-			betriebsStammdaten: this.data.daten,
-			mapBeschaeftigungsarten: this.data.mapBeschaeftigungsarten,
-			mapLehrer: this.data.mapLehrer,
-			mapBetriebe: this.data.mapBetriebe,
-			mapAnsprechpartner: this.data.mapAnsprechpartner,
-		};
-	}
-
-}
-
-export const routeSchuelerAdressen = new RouteSchuelerAdressen();
 

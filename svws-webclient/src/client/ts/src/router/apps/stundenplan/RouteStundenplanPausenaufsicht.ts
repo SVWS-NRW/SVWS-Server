@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteStundenplan} from "~/router/apps/RouteStundenplan";
+import type { RouteStundenplan} from "~/router/apps/stundenplan/RouteStundenplan";
 
 const SStundenplanPausenaufsicht = () => import("~/components/stundenplan/pausenaufsicht/SStundenplanPausenaufsicht.vue");
 

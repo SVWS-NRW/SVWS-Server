@@ -2,9 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-
-import type { RouteStundenplan} from "~/router/apps/RouteStundenplan";
-import { routeStundenplan} from "~/router/apps/RouteStundenplan";
+import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
 

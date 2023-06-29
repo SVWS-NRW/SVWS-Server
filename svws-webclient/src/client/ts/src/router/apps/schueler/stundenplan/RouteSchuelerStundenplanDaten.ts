@@ -4,8 +4,8 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 
 import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
 

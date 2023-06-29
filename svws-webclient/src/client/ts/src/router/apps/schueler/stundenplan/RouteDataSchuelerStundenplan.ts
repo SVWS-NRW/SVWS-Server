@@ -6,7 +6,7 @@ import { SchuelerStundenplanManager } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 

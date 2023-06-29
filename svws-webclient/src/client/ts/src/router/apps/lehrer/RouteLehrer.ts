@@ -13,7 +13,7 @@ import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndi
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 
-import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
+import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
 
 import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";

@@ -22,13 +22,13 @@ import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeu
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
 import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { routeLehrer } from "~/router/apps/RouteLehrer";
-import { routeKlassen } from "~/router/apps/RouteKlassen";
-import { routeKurse } from "~/router/apps/RouteKurse";
+import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
+import { routeKurse } from "~/router/apps/kurse/RouteKurse";
 import { routeGost } from "~/router/apps/gost/RouteGost";
-import { routeStatistik } from "~/router/apps/RouteStatistik";
-import { routeStundenplan } from "~/router/apps/RouteStundenplan";
+import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
+import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 
 import { ConfigElement } from "~/components/Config";
