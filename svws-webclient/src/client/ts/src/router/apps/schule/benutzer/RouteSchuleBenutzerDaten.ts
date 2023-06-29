@@ -1,20 +1,17 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { BenutzerListeEintrag} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchule } from "~/router/apps/RouteSchule";
-import { routeSchuleBenutzer, type RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleBenutzer, type RouteSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
+
+import { RouteDataSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteDataSchuleBenutzerDaten";
 
 import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
-
-export class RouteDataSchuleBenutzerDaten {
-	auswahl: BenutzerListeEintrag | undefined = undefined;
-}
 
 export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenutzer> {
 
@@ -26,7 +23,6 @@ export class RouteSchuleBenutzerDaten extends RouteNode<unknown, RouteSchuleBenu
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		console.log("benutzer_daten->update");
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

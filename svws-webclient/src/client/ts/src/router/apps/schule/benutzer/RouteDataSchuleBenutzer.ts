@@ -6,9 +6,9 @@ import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { routeSchule } from "~/router/apps/RouteSchule";
-import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
+import { routeSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteSchuleBenutzerDaten";
 
 
 interface RouteStateSchuleBenutzer {

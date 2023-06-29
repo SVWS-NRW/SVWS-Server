@@ -8,10 +8,10 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 
-import { routeSchule } from "~/router/apps/RouteSchule";
-import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { routeSchuleDatenaustausch } from "~/router/apps/schule/RouteSchuleDatenaustausch";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
+import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
+import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
 import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";

@@ -4,8 +4,8 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchuleBenutzergruppe, type RouteSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { routeSchule } from "~/router/apps/RouteSchule";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleBenutzergruppe, type RouteSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 
 import type { BenutzergruppeProps } from "~/components/schule/benutzergruppen/daten/SBenutzergruppeProps";
 

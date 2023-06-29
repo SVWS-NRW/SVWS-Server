@@ -8,9 +8,9 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeSchule } from "~/router/apps/RouteSchule";
-import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
-import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteSchuleBenutzerDaten";
+import { RouteDataSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteDataSchuleBenutzer";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
