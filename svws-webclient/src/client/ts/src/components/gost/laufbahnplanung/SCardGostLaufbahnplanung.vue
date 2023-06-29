@@ -39,24 +39,24 @@
 				Zur Laufbahnplanung
 			</svws-ui-button>
 		</template>
-		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt()" />
+		<s-laufbahnplanung-fehler :fehlerliste="schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
-	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis } from '@core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
+	import { computed, ref, toRaw, onMounted } from 'vue';
+	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
 	import type { DataTableColumn } from '@ui';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { Config } from '~/components/Config';
-	import { ArrayList, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
-	import { computed, ref, toRaw, onMounted } from 'vue';
 
 	const props = defineProps<{
 		config: Config;
 		listBelegpruefungsErgebnisse: () =>List<GostBelegpruefungsErgebnisse>;
-		gostBelegpruefungsArt: () => 'ef1' | 'gesamt';
-		setGostBelegpruefungsArt: (value: 'ef1' | 'gesamt') => Promise<void>;
+		gostBelegpruefungsArt: () => GostBelegpruefungsArt;
+		setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 		gotoLaufbahnplanung: (id: number) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
 		abiturjahr: number;
@@ -97,9 +97,15 @@
 		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterExterne', value === true ? 'true' : 'false')
 	});
 
-	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed({
-		get: () => props.gostBelegpruefungsArt(),
-		set: (value) => void props.setGostBelegpruefungsArt(value)
+	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed<'ef1'|'gesamt'|'auto'>({
+		get: () => {
+			return props.gostBelegpruefungsArt() === GostBelegpruefungsArt.EF1 ? 'ef1' : 'gesamt';
+		},
+		set: (value) => {
+			if (value === 'auto')
+				return;
+			void props.setGostBelegpruefungsArt(value === 'ef1' ? GostBelegpruefungsArt.EF1 : GostBelegpruefungsArt.GESAMT);
+		}
 	});
 
 

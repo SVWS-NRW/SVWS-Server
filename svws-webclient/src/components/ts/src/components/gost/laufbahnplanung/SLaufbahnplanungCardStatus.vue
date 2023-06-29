@@ -4,7 +4,7 @@
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 		</template>
 		<div class="print:hidden -mt-4">
-			<s-laufbahnplanung-fehler :abiturdaten-manager="abiturdatenManager" :fehlerliste="fehlerliste" />
+			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager.getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />

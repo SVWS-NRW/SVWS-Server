@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { GostBelegpruefungsErgebnisse, List } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,7 +12,7 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnpla
 interface RouteStateDataGostLaufbahnplanung {
 	abiturjahr: number;
 	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
-	gostBelegpruefungsArt: 'ef1'|'gesamt';
+	gostBelegpruefungsArt: GostBelegpruefungsArt;
 }
 
 export class RouteDataGostLaufbahnplanung  {
@@ -20,7 +20,7 @@ export class RouteDataGostLaufbahnplanung  {
 	private static _defaultState: RouteStateDataGostLaufbahnplanung = {
 		abiturjahr: -1,
 		listBelegpruefungsErgebnisse: new ArrayList(),
-		gostBelegpruefungsArt: 'gesamt',
+		gostBelegpruefungsArt: GostBelegpruefungsArt.GESAMT,
 	}
 
 	private _state = shallowRef(RouteDataGostLaufbahnplanung._defaultState);
@@ -37,7 +37,7 @@ export class RouteDataGostLaufbahnplanung  {
 		this._state.value = { ... this._state.value };
 	}
 
-	get gostBelegpruefungsArt(): 'ef1'|'gesamt' {
+	get gostBelegpruefungsArt(): GostBelegpruefungsArt {
 		return this._state.value.gostBelegpruefungsArt;
 	}
 
@@ -49,10 +49,10 @@ export class RouteDataGostLaufbahnplanung  {
 		return this._state.value.listBelegpruefungsErgebnisse;
 	}
 
-	private async updateList(abiturjahr : number, gostBelegpruefungsArt : 'ef1'|'gesamt') {
+	private async updateList(abiturjahr : number, gostBelegpruefungsArt : GostBelegpruefungsArt) {
 		if (abiturjahr < 1)
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`)
-		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === 'gesamt')
+		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === GostBelegpruefungsArt.GESAMT)
 			? await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(api.schema, abiturjahr)
 			: await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseEF1(api.schema, abiturjahr);
 		this.setPatchedState({ listBelegpruefungsErgebnisse, gostBelegpruefungsArt, abiturjahr });
@@ -62,7 +62,7 @@ export class RouteDataGostLaufbahnplanung  {
 		await this.updateList(abiturjahr, this._state.value.gostBelegpruefungsArt);
 	}
 
-	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt') => {
+	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsArt) => {
 		if (gostBelegpruefungsArt === this.gostBelegpruefungsArt)
 			return;
 		await this.updateList(this.abiturjahr, gostBelegpruefungsArt)

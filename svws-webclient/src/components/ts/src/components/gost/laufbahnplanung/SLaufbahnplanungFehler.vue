@@ -4,7 +4,7 @@
 			<i-ri-checkbox-circle-fill v-if="!belegungsfehler.size()" class="flex-shrink-0 text-success" />
 			<span v-if="!belegungsfehler.size()">Keine</span>
 			<span>Laufbahnfehler</span>
-			<span>{{ props.abiturdatenManager.getPruefungsArt() === GostBelegpruefungsArt.EF1 ? 'EF1' : 'Gesamt' }}</span>
+			<span>{{ belegpruefungsArt().kuerzel }}</span>
 			<svws-ui-badge v-if="belegungsfehler.size()" type="error" size="big">
 				{{ belegungsfehler.size() }}
 			</svws-ui-badge>
@@ -20,14 +20,14 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, AbiturdatenManager } from "@core";
-	import { ArrayList, GostBelegungsfehlerArt, GostBelegpruefungsArt } from "@core";
+	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungsArt } from "@core";
+	import { ArrayList, GostBelegungsfehlerArt } from "@core";
 	import type { ComputedRef} from 'vue';
 	import { computed } from 'vue';
 
 	const props = defineProps<{
-		abiturdatenManager: AbiturdatenManager;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
+		belegpruefungsArt: () => GostBelegpruefungsArt;
 	}>();
 
 	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
