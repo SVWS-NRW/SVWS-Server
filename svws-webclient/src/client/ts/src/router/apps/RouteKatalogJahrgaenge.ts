@@ -1,17 +1,21 @@
-import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { JahrgaengeAppProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAppProps";
 import type { JahrgaengeAuswahlProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAuswahlProps";
-import { routeKatalogJahrgaengeDaten } from "~/router/apps/jahrgaenge/RouteKatalogJahrgaengeDaten";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { routeKataloge } from "./RouteKataloge";
 
 interface RouteStateKatalogJahrgaenge {
 	auswahl: JahrgangsListeEintrag | undefined;

@@ -1,13 +1,16 @@
-import type { List, SchuelerLernabschnittListeEintrag} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { List, SchuelerLernabschnittListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+
+import { routeApp } from "~/router/apps/RouteApp";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import { routeSchueler} from "~/router/apps/RouteSchueler";
 import { routeSchuelerAbschnittDaten } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnittDaten";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
 
 interface RoutetateDataSchuelerAbschnitt {
 	idSchueler: number | undefined;

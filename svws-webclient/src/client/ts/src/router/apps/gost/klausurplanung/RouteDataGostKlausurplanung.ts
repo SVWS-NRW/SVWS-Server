@@ -1,16 +1,17 @@
-import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, GostKlausurraumManager} from "@core";
-import { StundenplanManager} from "@core";
-import { KursManager } from "@core";
-import { GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
 import { shallowRef } from "vue";
+
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum} from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { routeGostKlausurplanungKalender } from "./RouteGostKlausurplanungKalender";
-import { routeGostKlausurplanungKlausurdaten } from "./RouteGostKlausurplanungKlausurdaten";
-import { routeGostKlausurplanungKonflikte } from "./RouteGostKlausurplanungKonflikte";
-import { routeGostKlausurplanungPlanung } from "./RouteGostKlausurplanungPlanung";
-import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
+
+import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
+import { routeGostKlausurplanungKlausurdaten } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKlausurdaten";
+import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
+import { routeGostKlausurplanungPlanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungPlanung";
+import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 
 interface RouteStateGostKlausurplanung {
 	// Daten nur abhängig von dem Abiturjahrgang

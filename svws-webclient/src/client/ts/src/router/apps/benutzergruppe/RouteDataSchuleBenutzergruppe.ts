@@ -1,12 +1,15 @@
-import { routeSchuleBenutzergruppeDaten } from "./RouteSchuleBenutzergruppeDaten";
+import { shallowRef } from "vue";
+
 import type { BenutzerKompetenzGruppe, BenutzerListeEintrag, List} from "@core";
 import { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzergruppenManager, BenutzerKompetenz, ArrayList } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { routeSchule } from "../RouteSchule";
-import { routeSchuleBenutzergruppe } from "../schule/RouteSchuleBenutzergruppe";
+
+import { routeSchule } from "~/router/apps/RouteSchule";
+import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
+import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
 
 
 interface RoutStateSchuleBenutzergruppe {

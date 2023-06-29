@@ -1,9 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteStundenplan} from "../RouteStundenplan";
-import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
-import { routeStundenplan} from "../RouteStundenplan";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteStundenplan} from "~/router/apps/RouteStundenplan";
+import { routeStundenplan} from "~/router/apps/RouteStundenplan";
+
+import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
 

@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
-import type { RouteKurse } from "~/router/apps/RouteKurse";
-import { routeKurse } from "~/router/apps/RouteKurse";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
+import { routeKurse, type RouteKurse } from "~/router/apps/RouteKurse";
+
+import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 

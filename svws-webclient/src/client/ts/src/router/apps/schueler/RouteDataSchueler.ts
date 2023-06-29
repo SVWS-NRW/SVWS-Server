@@ -1,15 +1,18 @@
+import { shallowReactive, shallowRef, type ShallowReactive } from "vue";
+import { useDebounceFn } from '@vueuse/shared';
+
 import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang} from "@core";
-import type { ShallowReactive} from "vue";
-import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
-import type { RouteNode } from "~/router/RouteNode";
 import { SchuelerStatus } from "@core";
-import { shallowReactive, shallowRef } from "vue";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { routeSchueler } from "../RouteSchueler";
-import { routeSchuelerIndividualdaten } from "./RouteSchuelerIndividualdaten";
+import type { RouteNode } from "~/router/RouteNode";
 
-import { useDebounceFn } from '@vueuse/shared';
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
+
+import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
+
 interface RouteStateSchueler {
 	idSchuljahresabschnitt: number,
 	auswahl: SchuelerListeEintrag | undefined;

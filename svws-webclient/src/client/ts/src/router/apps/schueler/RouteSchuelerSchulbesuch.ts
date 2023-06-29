@@ -1,11 +1,14 @@
-import type { SchuelerSchulbesuchsdaten} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
+
+import type { SchuelerSchulbesuchsdaten} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
+
+import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 

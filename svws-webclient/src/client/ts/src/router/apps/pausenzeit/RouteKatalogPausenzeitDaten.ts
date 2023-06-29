@@ -1,9 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteKatalogRaeume} from "../RouteKatalogRaeume";
-import type { PausenzeitDatenProps } from "~/components/kataloge/pausenzeiten/daten/SPausenzeitDatenProps";
+
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogPausenzeiten } from "../RouteKatalogPausenzeiten";
+
+import type { RouteKatalogRaeume} from "~/router/apps/RouteKatalogRaeume";
+import { routeKatalogPausenzeiten } from "~/router/apps/RouteKatalogPausenzeiten";
+
+import type { PausenzeitDatenProps } from "~/components/kataloge/pausenzeiten/daten/SPausenzeitDatenProps";
 
 const SPausenzeitDaten = () => import("~/components/kataloge/pausenzeiten/daten/SPausenzeitDaten.vue");
 

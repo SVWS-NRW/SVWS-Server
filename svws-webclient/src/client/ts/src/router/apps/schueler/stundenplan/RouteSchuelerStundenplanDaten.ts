@@ -1,9 +1,14 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { RouteNode } from "~/router/RouteNode";
+
 import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { RouteNode } from "~/router/RouteNode";
+
+import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
+
 
 const SSchuelerStundenplanDaten = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanDaten.vue");
 

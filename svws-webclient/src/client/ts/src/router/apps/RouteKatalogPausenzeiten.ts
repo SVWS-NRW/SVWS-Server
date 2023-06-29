@@ -1,18 +1,21 @@
+import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { PausenzeitenAuswahlProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
+
 import type { StundenplanPausenzeit } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogPausenzeitDaten } from "~/router/apps/pausenzeit/RouteKatalogPausenzeitDaten";
+
+import type { PausenzeitenAuswahlProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
 import type { PausenzeitenAppProps } from "~/components/kataloge/pausenzeiten/SPausenzeitenAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { shallowRef } from "vue";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { routeKataloge } from "./RouteKataloge";
-import { routeKatalogPausenzeitDaten } from "./pausenzeit/RouteKatalogPausenzeitDaten";
-
 
 interface RouteStateKatalogPausenzeiten {
 	auswahl: StundenplanPausenzeit | undefined;

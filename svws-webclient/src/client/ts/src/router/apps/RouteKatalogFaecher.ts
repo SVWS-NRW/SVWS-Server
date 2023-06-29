@@ -1,18 +1,22 @@
-import type { FachDaten, FaecherListeEintrag, List} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import type { ShallowRef} from "vue";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { FachDaten, FaecherListeEintrag, List} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogFachDaten } from "~/router/apps/faecher/RouteKatalogFachDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppProps";
 import type { FaecherAuswahlProps } from "~/components/kataloge/faecher/SFaecherAuswahlProps";
-import { routeKatalogFachDaten } from "~/router/apps/faecher/RouteKatalogFachDaten";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { routeKataloge } from "./RouteKataloge";
 
 interface RouteStateKatalogFaecher {
 	auswahl: FaecherListeEintrag | undefined;

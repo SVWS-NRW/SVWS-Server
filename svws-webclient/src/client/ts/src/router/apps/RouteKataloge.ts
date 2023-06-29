@@ -1,22 +1,28 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { RouteApp } from "~/router/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+
 import { routeKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
 import { routeKatalogReligion } from "~/router/apps/RouteKatalogReligionen";
-import { routeKatalogRaeume } from "./RouteKatalogRaeume";
-import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
-import { routeApp } from "~/router/RouteApp";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { RouteNode } from "../RouteNode";
-import { routeKatalogZeitraster } from "./RouteKatalogZeitraster";
-import { routeKatalogBetriebe } from "./RouteKatalogBetriebe";
+import { routeKatalogRaeume } from "~/router/apps/RouteKatalogRaeume";
+import { routeKatalogAufsichtsbereiche } from "~/router/apps/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "~/router/apps/RouteKatalogPausenzeiten";
+import { routeKatalogZeitraster } from "~/router/apps/RouteKatalogZeitraster";
+import { routeKatalogBetriebe } from "~/router/apps/RouteKatalogBetriebe";
+
+import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+
 
 interface RouteStateKataloge {
 	view: RouteNode<any, any>;

@@ -1,15 +1,19 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
+
+import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
+
+import { ConfigElement } from "~/components/Config";
 import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
-import type { RouteGost} from "~/router/apps/RouteGost";
-import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
-import { routeApp } from "~/router/RouteApp";
-import { RouteDataGostKursplanung } from "./kursplanung/RouteDataGostKursplanung";
-import { routeGostKursplanungSchueler } from "./kursplanung/RouteGostKursplanungSchueler";
-import { api } from "~/router/Api";
-import { ConfigElement } from "~/components/Config";
 
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");

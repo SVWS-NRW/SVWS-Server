@@ -1,16 +1,20 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
-import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/RouteApp";
-import { RouteDataSchuleBenutzergruppe } from "../benutzergruppe/RouteDataSchuleBenutzergruppe";
-import type { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteManager } from "~/router/RouteManager";
-import type { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
-import { routeSchule } from "../RouteSchule";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeSchule } from "~/router/apps/RouteSchule";
+import { routeSchuleBenutzergruppeDaten } from "~/router/apps/benutzergruppe/RouteSchuleBenutzergruppeDaten";
+import { RouteDataSchuleBenutzergruppe } from "~/router/apps/benutzergruppe/RouteDataSchuleBenutzergruppe";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
+import type { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
 
 const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBenutzergruppeApp.vue")

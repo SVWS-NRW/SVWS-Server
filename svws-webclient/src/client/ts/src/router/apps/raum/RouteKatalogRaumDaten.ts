@@ -1,9 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteKatalogRaeume} from "../RouteKatalogRaeume";
-import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogRaeume } from "../RouteKatalogRaeume";
+
+import { routeKatalogRaeume, type RouteKatalogRaeume } from "~/router/apps/RouteKatalogRaeume";
+
+import type { RaumDatenProps } from "~/components/kataloge/raeume/daten/SRaumDatenProps";
 
 const SRaumDaten = () => import("~/components/kataloge/raeume/daten/SRaumDaten.vue");
 

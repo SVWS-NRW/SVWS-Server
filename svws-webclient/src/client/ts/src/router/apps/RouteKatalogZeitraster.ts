@@ -1,17 +1,21 @@
+import { shallowRef, toRaw } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZeitrasterAuswahlProps";
+
+import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { List, StundenplanZeitraster } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogZeitrasterDaten } from "./zeitraster/RouteKatalogZeitrasterDaten";
+
+import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZeitrasterAuswahlProps";
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { RouteApp } from "~/router/RouteApp";
-import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { routeKatalogZeitrasterDaten } from "./zeitraster/RouteKatalogZeitrasterDaten";
-import { shallowRef, toRaw } from "vue";
-import { routeKataloge } from "./RouteKataloge";
-import { RouteManager } from "../RouteManager";
-import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/RouteApp";
-import { api } from "../Api";
 
 
 interface RouteStateKatalogZeitraster {

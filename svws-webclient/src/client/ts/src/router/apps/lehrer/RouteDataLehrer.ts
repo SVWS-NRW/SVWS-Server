@@ -1,10 +1,13 @@
-import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@core";
 import { shallowRef } from "vue";
+
+import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@core";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { routeLehrer } from "../RouteLehrer";
-import { routeLehrerIndividualdaten } from "./RouteLehrerIndividualdaten";
+
+import { routeLehrer } from "~/router/apps/RouteLehrer";
+import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 
 interface RouteStateLehrer {
 	// Daten, allgemein

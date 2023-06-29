@@ -1,9 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { RouteKatalogZeitraster} from "../RouteKatalogZeitraster";
-import type { ZeitrasterDatenProps } from "~/components/kataloge/zeitraster/daten/SZeitrasterDatenProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogZeitraster } from "../RouteKatalogZeitraster";
+
+import type { RouteKatalogZeitraster} from "~/router/apps/RouteKatalogZeitraster";
+import { routeKatalogZeitraster } from "~/router/apps/RouteKatalogZeitraster";
+
+import type { ZeitrasterDatenProps } from "~/components/kataloge/zeitraster/daten/SZeitrasterDatenProps";
 
 const SZeitrasterDaten = () => import("~/components/kataloge/zeitraster/daten/SZeitrasterDaten.vue");
 

@@ -1,16 +1,22 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteManager } from "../RouteManager";
+
+import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
+
 import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
-import { RouteDataLehrer } from "./lehrer/RouteDataLehrer";
-import { api } from "../Api";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 

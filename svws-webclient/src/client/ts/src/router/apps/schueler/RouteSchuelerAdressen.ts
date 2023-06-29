@@ -1,13 +1,16 @@
-import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef} from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
+
+import type { BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+import { routeApp } from "~/router/apps/RouteApp";
 import type { RouteSchueler } from "~/router/apps/RouteSchueler";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
+
+import type { SchuelerAdressenProps } from "~/components/schueler/adressen/SSChuelerAdressenProps";
 
 const SSchuelerAdressen = () => import("~/components/schueler/adressen/SSchuelerAdressen.vue");
 

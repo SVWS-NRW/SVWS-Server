@@ -1,20 +1,25 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeGostFachwahlen } from "~/router/apps/gost/RouteGostFachwahlen";
+import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
+import { routeGostJahrgangsdaten } from "~/router/apps/gost/RouteGostJahrgangsdaten";
+import { routeGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
+import { routeGostKursplanung } from "~/router/apps/gost/RouteGostKursplanung";
+import { routeGostLaufbahnplanung } from "~/router/apps/gost/RouteGostLaufbahnplanung";
+
+import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { RouteDataGost } from "./gost/RouteDataGost";
-import { routeGostFachwahlen } from "./gost/RouteGostFachwahlen";
-import { routeGostFaecher } from "./gost/RouteGostFaecher";
-import { routeGostJahrgangsdaten } from "./gost/RouteGostJahrgangsdaten";
-import { routeGostKlausurplanung } from "./gost/RouteGostKlausurplanung";
-import { routeGostKursplanung } from "./gost/RouteGostKursplanung";
-import { routeGostLaufbahnplanung } from "./gost/RouteGostLaufbahnplanung";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")

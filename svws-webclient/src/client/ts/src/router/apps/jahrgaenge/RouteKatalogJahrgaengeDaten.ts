@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
-import type { RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
-import { routeKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
+import { routeKatalogJahrgaenge, type RouteKatalogJahrgaenge } from "~/router/apps/RouteKatalogJahrgaenge";
+
+import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
 
 const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJahrgangDaten.vue");
 

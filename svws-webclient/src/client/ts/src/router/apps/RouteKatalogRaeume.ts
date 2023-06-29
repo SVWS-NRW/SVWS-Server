@@ -1,18 +1,21 @@
-import type { Raum} from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { RouteApp } from "~/router/RouteApp";
-import type { RaeumeAuswahlProps } from "~/components/kataloge/raeume/SRaeumeAuswahlProps";
-import type { RaeumeAppProps } from "~/components/kataloge/raeume/SRaeumeAppProps";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
-import { routeApp } from "~/router/RouteApp";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { Raum} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { routeKataloge } from "./RouteKataloge";
 import { routeKatalogRaumDaten } from "./raum/RouteKatalogRaumDaten";
 
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { RaeumeAuswahlProps } from "~/components/kataloge/raeume/SRaeumeAuswahlProps";
+import type { RaeumeAppProps } from "~/components/kataloge/raeume/SRaeumeAppProps";
 
 interface RouteStateKatalogRaeume {
 	auswahl: Raum | undefined;

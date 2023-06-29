@@ -1,12 +1,15 @@
-import type { Erzieherart, ErzieherStammdaten, List} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
+
+import type { Erzieherart, ErzieherStammdaten, List} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import type { RouteSchueler } from "~/router/apps/RouteSchueler";
-import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
+import { routeApp } from "~/router/apps/RouteApp";
+import type { RouteSchueler } from "~/router/apps/RouteSchueler";
+
+import type { SchuelerErziehungsberechtigteProps } from "~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigteProps";
 
 const SSchuelerErziehungsberechtigte = () => import("~/components/schueler/erziehungsberechtigte/SSchuelerErziehungsberechtigte.vue");
 

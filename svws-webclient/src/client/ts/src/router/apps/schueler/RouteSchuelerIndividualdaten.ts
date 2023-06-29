@@ -1,13 +1,16 @@
+import { shallowRef } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
 import type { FoerderschwerpunktEintrag, KatalogEintrag, ReligionEintrag } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
+
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/RouteApp";
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteSchueler} from "../RouteSchueler";
-import { routeSchueler } from "../RouteSchueler";
-import { shallowRef } from "vue";
+import { routeApp } from "~/router/apps/RouteApp";
+import type { RouteSchueler} from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+
+import type { SchuelerIndividualdatenProps } from "~/components/schueler/individualdaten/SSchuelerIndividualdatenProps";
 
 const SSchuelerIndividualdaten = () => import("~/components/schueler/individualdaten/SSchuelerIndividualdaten.vue");
 

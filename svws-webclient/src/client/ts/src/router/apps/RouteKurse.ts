@@ -1,17 +1,22 @@
-import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
-import { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { JahrgangsListeEintrag, KursDaten, KursListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { KurseAppProps } from "~/components/kurse/SKurseAppProps";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
-import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import type { RouteApp } from "../RouteApp";
-import { routeApp } from "../RouteApp";
-import { RouteManager } from "../RouteManager";
-import { routeSchueler } from "./RouteSchueler";
+
 
 interface RouteStateKurse {
 	auswahl: KursListeEintrag | undefined;

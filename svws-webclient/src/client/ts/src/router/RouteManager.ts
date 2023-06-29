@@ -1,11 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/RouteApp";
-import { routeInit } from "./RouteInit";
-import { routeLogin } from "~/router/RouteLogin";
-import { createRouter, createWebHashHistory } from "vue-router";
-import { api } from "./Api";
+import { api } from "~/router/Api";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeInit } from "~/router/init/RouteInit";
+import { routeLogin } from "~/router/login/RouteLogin";
 
 
 export class RouteManager {

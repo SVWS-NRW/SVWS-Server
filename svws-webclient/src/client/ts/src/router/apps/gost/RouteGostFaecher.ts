@@ -1,12 +1,14 @@
-import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
-import type { RouteGost} from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef} from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
+import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+
+import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 
 interface RouteStateDataGostFaecher {
 	abiturjahr: number | undefined;

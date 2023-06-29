@@ -1,14 +1,17 @@
-import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";
-import type { SchuelerAbschnittDatenProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittDatenProps";
+
+import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, SchuelerLernabschnittBemerkungen, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import type { RouteSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
-import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
+import type { RouteSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
+import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
+
+import type { SchuelerAbschnittAuswahlProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittAuswahlProps";
+import type { SchuelerAbschnittDatenProps } from "~/components/schueler/abschnitt/SSchuelerAbschnittDatenProps";
 
 interface RouteStateDataSchuelerAbschnittDaten {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;

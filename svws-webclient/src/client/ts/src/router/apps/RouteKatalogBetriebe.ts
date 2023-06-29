@@ -1,19 +1,21 @@
 import { shallowRef } from "vue";
-import { ArrayList, BetriebListeEintrag, DeveloperNotificationException, ServerMode } from "@core";
-import type { BetriebStammdaten , BetriebAnsprechpartner, KatalogEintrag } from "@core";
-import { RouteNode } from "../RouteNode";
-import { RouteManager } from "../RouteManager";
-import type { RouteApp} from "../RouteApp";
-import { routeApp } from "../RouteApp";
-import { Schulform } from "@core";
-import { BenutzerKompetenz } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { BetriebStammdaten , BetriebAnsprechpartner, KatalogEintrag } from "@core";
+import { ArrayList, BetriebListeEintrag, DeveloperNotificationException, ServerMode, Schulform, BenutzerKompetenz } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogBetriebeDaten } from "~/router/apps/betriebe/RouteKatalogBetriebeDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import { routeKataloge } from "./RouteKataloge";
-import { api } from "../Api";
 import type { BetriebeAppProps } from "~/components/kataloge/betriebe/SBetriebeAppProps";
 import type { BetriebeAuswahlProps } from "~/components/kataloge/betriebe/SBetriebeAuswahlProps";
-import { routeKatalogBetriebeDaten } from "./betriebe/RouteKatalogBetriebeDaten";
 
 interface RouteStateKatalogBetriebe{
     auswahl: BetriebListeEintrag | undefined;

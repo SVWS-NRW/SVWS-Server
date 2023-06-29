@@ -1,9 +1,13 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
-import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
-import type { RouteApp } from "~/router/RouteApp";
+
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/RouteSchuelerAbschnitt";
 import { routeSchuelerAdressen } from "~/router/apps/schueler/RouteSchuelerAdressen";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/RouteSchuelerErziehungsberechtigte";
@@ -12,15 +16,17 @@ import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuel
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/RouteSchuelerStundenplan";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { RouteDataSchueler } from "./schueler/RouteDataSchueler";
 import { routeSchuelerKAoA } from "./schueler/RouteSchuelerKAoA";
+
+import { RouteDataSchueler } from "./schueler/RouteDataSchueler";
+
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
+import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue")
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue")
+
 
 export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 

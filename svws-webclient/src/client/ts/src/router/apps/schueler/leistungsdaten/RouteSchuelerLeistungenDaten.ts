@@ -1,14 +1,18 @@
-import type { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
-import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
+
+import type { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
-import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
+import { routeSchuelerLeistungen } from "~/router/apps/schueler/RouteSchuelerLeistungen";
+
+import type { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
+import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
 
 interface RouteStateSchuelerLeistungenDaten {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;

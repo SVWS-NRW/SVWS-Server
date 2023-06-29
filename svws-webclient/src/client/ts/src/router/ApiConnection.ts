@@ -1,7 +1,9 @@
-import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
-import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode } from "@core";
 import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
+
+import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
+import { ApiSchema, ApiServer, BenutzerKompetenz, ArrayList, ServerMode } from "@core";
+
 import { Config } from "~/components/Config";
 
 export class ApiConnection {

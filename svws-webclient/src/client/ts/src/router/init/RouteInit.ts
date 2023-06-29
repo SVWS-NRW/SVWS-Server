@@ -1,16 +1,20 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { InitProps } from "~/components/init/SInitProps";
-import type { List, SchulenKatalogEintrag} from "@core";
 import type { Ref} from "vue";
+import { ref} from "vue";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { List, SchulenKatalogEintrag} from "@core";
 import { DatenbankVerbindungsdaten, ServerMode} from "@core";
 import { ArrayList, BenutzerKompetenz, Schulform } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
-import { ref} from "vue";
-import { api } from "./Api";
-import { routeApp } from "./RouteApp";
+import { api } from "~/router/Api";
+import { routeApp } from "~/router/apps/RouteApp";
 
-const SInit = () => import("~/components/init/SInit.vue")
+import SInit from "~/components/init/SInit.vue";
+import type { InitProps } from "~/components/init/SInitProps";
+
+
 export class RouteInit extends RouteNode<unknown, any> {
 
 	protected listSchulkatalog: Ref<List<SchulenKatalogEintrag>> = ref(new ArrayList<SchulenKatalogEintrag>());

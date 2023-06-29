@@ -1,19 +1,24 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
-import { api } from "~/router/Api";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteSchule } from "../RouteSchule";
-import { routeSchule } from "../RouteSchule";
-import { routeSchuleDatenaustauschKurs42 } from "../datenaustausch/RouteDatenaustauschKurs42";
-import { routeSchuleDatenaustauschLaufbahnplanung } from "../datenaustausch/RouteDatenaustauschLupo";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { shallowRef } from "vue";
-import { RouteManager } from "~/router/RouteManager";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { AES } from "~/utils/crypto/aes";
 import { AESAlgo } from "~/utils/crypto/aesAlgo";
-import { routeSchuleDatenaustauschENM } from "../datenaustausch/RouteDatenaustauschENM";
+
+import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+import { routeApp } from "~/router/apps/RouteApp";
+import type { RouteSchule } from "~/router/apps/RouteSchule";
+import { routeSchule } from "~/router/apps/RouteSchule";
+
+import { routeSchuleDatenaustauschKurs42 } from "~/router/apps/datenaustausch/RouteDatenaustauschKurs42";
+import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/datenaustausch/RouteDatenaustauschLupo";
+import { routeSchuleDatenaustauschENM } from "~/router/apps/datenaustausch/RouteDatenaustauschENM";
+
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 
 const SSchuleDatenaustauschApp = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue")
 const SSchuleDatenaustauschAuswahl = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahl.vue")

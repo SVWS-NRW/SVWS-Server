@@ -1,9 +1,12 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { RouteApp } from "../RouteApp";
-import { RouteNode } from "../RouteNode";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
 
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")

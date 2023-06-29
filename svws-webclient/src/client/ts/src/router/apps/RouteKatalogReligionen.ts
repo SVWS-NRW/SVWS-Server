@@ -1,17 +1,21 @@
-import type { ReligionEintrag} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { ReligionEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKataloge } from "~/router/apps/RouteKataloge";
+import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { ReligionenAppProps } from "~/components/kataloge/religionen/SReligionenAppProps";
 import type { ReligionenAuswahlProps } from "~/components/kataloge/religionen/SReligionenAuswahlPops";
-import { routeKatalogReligionDaten } from "~/router/apps/religion/RouteKatalogReligionDaten";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { routeKataloge } from "./RouteKataloge";
 
 interface RouteStateKatalogeReligionen {
 	auswahl: ReligionEintrag | undefined;

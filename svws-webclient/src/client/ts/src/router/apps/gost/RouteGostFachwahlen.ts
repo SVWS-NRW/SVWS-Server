@@ -1,12 +1,14 @@
-import type { GostStatistikFachwahl, List} from "@core";
-import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
+
+import type { GostStatistikFachwahl, List} from "@core";
+import { BenutzerKompetenz, Schulform, ArrayList, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import type { RouteGost} from "~/router/apps/RouteGost";
-import { routeGost } from "~/router/apps/RouteGost";
 import { RouteNode } from "~/router/RouteNode";
+import { type RouteGost} from "~/router/apps/RouteGost";
+
+import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 
 
 interface RouteStateDataGostFachwahlen {

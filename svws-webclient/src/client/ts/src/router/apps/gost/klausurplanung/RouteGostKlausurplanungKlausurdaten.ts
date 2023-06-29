@@ -1,9 +1,9 @@
-import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+
+import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "../../RouteGost";
-import type { RouteGostKlausurplanung } from "../RouteGostKlausurplanung";
-import { routeGostKlausurplanung } from "../RouteGostKlausurplanung";
+import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
 
 const SGostKlausurplanungDaten = () => import("~/components/gost/klausurplanung/SGostKlausurplanungDaten.vue");
 

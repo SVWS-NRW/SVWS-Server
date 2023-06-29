@@ -1,13 +1,15 @@
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/RouteGost";
-import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteGostKursplanung} from "../RouteGostKursplanung";
-import { routeGostKursplanung } from "../RouteGostKursplanung";
-import { RouteManager } from "~/router/RouteManager";
+import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/RouteGostKursplanung";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
-import { api } from "~/router/Api";
+
 import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
 

@@ -1,14 +1,17 @@
-import type { RouteLocationRaw } from "vue-router";
-import type { DBSchemaListeEintrag} from "@core";
 import type { Ref} from "vue";
-import type { LoginProps } from "~/components/SLoginProps";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "./Api";
-import { RouteManager } from "./RouteManager";
-import { routeInit } from "./RouteInit";
 import { ref } from "vue";
+import type { RouteLocationRaw } from "vue-router";
+
+import type { DBSchemaListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+import { api } from "~/router/Api";
+import { routeInit } from "~/router/init/RouteInit";
+
 import SLogin from "~/components/SLogin.vue";
+import type { LoginProps } from "~/components/SLoginProps";
 
 export class RouteLogin extends RouteNode<unknown, any> {
 

@@ -1,15 +1,17 @@
-import type { GostBelegpruefungsErgebnisse, List } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
-import type { RouteGost } from "~/router/apps/RouteGost";
-import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
-import { ConfigElement } from "~/components/Config";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { GostBelegpruefungsErgebnisse, List } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchuelerLaufbahnplanung } from "../schueler/RouteSchuelerLaufbahnplanung";
+import type { RouteGost } from "~/router/apps/RouteGost";
+import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 
+import { ConfigElement } from "~/components/Config";
+import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
 
 interface RouteStateDataGostLaufbahnplanung {
 	abiturjahr: number;

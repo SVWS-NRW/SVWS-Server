@@ -1,8 +1,10 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteSchuleDatenaustausch} from "../schule/RouteSchuleDatenaustausch";
-import { routeSchuleDatenaustausch } from "../schule/RouteSchuleDatenaustausch";
+import { routeSchuleDatenaustausch, type RouteSchuleDatenaustausch } from "~/router/apps/schule/RouteSchuleDatenaustausch";
+
 import type { SchuleDatenaustauschLaufbahnplanungProps } from "~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanungProps";
 
 const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue");

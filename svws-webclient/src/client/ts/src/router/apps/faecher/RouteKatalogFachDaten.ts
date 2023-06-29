@@ -1,9 +1,11 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteKatalogFaecher } from "../RouteKatalogFaecher";
-import { routeKatalogFaecher } from "../RouteKatalogFaecher";
+import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/RouteKatalogFaecher";
+
+import type { FachDatenProps } from "~/components/kataloge/faecher/daten/SFachDatenProps";
 
 const SFachDaten = () => import("~/components/kataloge/faecher/daten/SFachDaten.vue");
 

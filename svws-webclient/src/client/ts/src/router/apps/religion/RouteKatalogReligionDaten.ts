@@ -1,9 +1,12 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteKatalogReligionen } from "../RouteKatalogReligionen";
+import type { RouteKatalogReligionen } from "~/router/apps/RouteKatalogReligionen";
 import { routeKatalogReligion } from "../RouteKatalogReligionen";
+
+import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 
 const SReligionDaten = () => import("~/components/kataloge/religionen/daten/SReligionDaten.vue");
 

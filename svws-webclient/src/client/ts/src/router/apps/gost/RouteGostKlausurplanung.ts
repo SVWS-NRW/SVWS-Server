@@ -1,16 +1,20 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { RouteNode } from "~/router/RouteNode";
-import type { RouteGost} from "~/router/apps/RouteGost";
-import { routeGost } from "~/router/apps/RouteGost";
-import { RouteDataGostKlausurplanung } from "./klausurplanung/RouteDataGostKlausurplanung";
-import { routeGostKlausurplanungKlausurdaten } from "./klausurplanung/RouteGostKlausurplanungKlausurdaten";
-import { routeGostKlausurplanungSchienen } from "./klausurplanung/RouteGostKlausurplanungSchienen";
-import { routeGostKlausurplanungKalender } from "./klausurplanung/RouteGostKlausurplanungKalender";
-import { routeGostKlausurplanungPlanung } from "./klausurplanung/RouteGostKlausurplanungPlanung";
-import { routeGostKlausurplanungKonflikte } from "./klausurplanung/RouteGostKlausurplanungKonflikte";
+
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
-import { routeApp } from "~/router/RouteApp";
+
 import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+
+import { routeGostKlausurplanungKlausurdaten } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKlausurdaten";
+import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
+import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
+import { routeGostKlausurplanungPlanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungPlanung";
+import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
+
+import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteDataGostKlausurplanung";
+
 import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 
 

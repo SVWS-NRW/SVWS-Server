@@ -1,13 +1,16 @@
-import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
-import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import type { RouteParams } from "vue-router";
+
+import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
+import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList } from "@core";
+
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "../RouteGost";
-import { routeGostJahrgangsdaten } from "./RouteGostJahrgangsdaten";
-import { routeApp } from "~/router/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeGost } from "~/router/apps/RouteGost";
+
+import { routeGostJahrgangsdaten } from "~/router/apps/gost/RouteGostJahrgangsdaten";
 
 interface RouteStateGost {
 	params: RouteParams;

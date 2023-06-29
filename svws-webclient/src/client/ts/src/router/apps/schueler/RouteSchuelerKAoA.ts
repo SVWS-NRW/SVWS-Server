@@ -1,11 +1,14 @@
-import type { SchuelerListeEintrag} from "@core";
-import { BenutzerKompetenz, SchuelerKAoADaten, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
+
+import type { SchuelerListeEintrag} from "@core";
+import { BenutzerKompetenz, SchuelerKAoADaten, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchueler} from "~/router/apps/RouteSchueler";
 import { routeSchueler } from "~/router/apps/RouteSchueler";
+
+import type { SchuelerKAoAProps } from "~/components/schueler/kaoa/SSchuelerKaoaProps";
 
 interface RouteStateSchuelerKAoA {
 	auswahl: SchuelerListeEintrag | undefined;

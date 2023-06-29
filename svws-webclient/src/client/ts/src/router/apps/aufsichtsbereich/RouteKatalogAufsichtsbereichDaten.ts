@@ -1,9 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteKatalogAufsichtsbereiche} from "../RouteKatalogAufsichtsbereiche";
-import type { AufsichtsbereichDatenProps } from "~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDatenProps";
+
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogAufsichtsbereiche } from "../RouteKatalogAufsichtsbereiche";
+
+import { routeKatalogAufsichtsbereiche, type RouteKatalogAufsichtsbereiche } from "~/router/apps/RouteKatalogAufsichtsbereiche";
+
+import type { AufsichtsbereichDatenProps } from "~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDatenProps";
 
 const SAufsichtsbereichDaten = () => import("~/components/kataloge/aufsichtsbereiche/daten/SAufsichtsbereichDaten.vue");
 

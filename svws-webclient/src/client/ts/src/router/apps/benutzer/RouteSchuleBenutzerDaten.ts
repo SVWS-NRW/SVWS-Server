@@ -1,12 +1,14 @@
-import type { BenutzerKompetenzGruppe, BenutzerListeEintrag} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
-import type { RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+
+import type { BenutzerListeEintrag} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchule } from "../RouteSchule";
+import { routeSchule } from "~/router/apps/RouteSchule";
+import { routeSchuleBenutzer, type RouteSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+
+import type { BenutzerProps } from "~/components/schule/benutzer/daten/SBenutzerProps";
 
 const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue");
 

@@ -1,26 +1,23 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
-import type {
-	RouteLocationNormalized,
-	RouteLocationRaw,
-	RouteParams,
-	RouteRecordRaw,
-} from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeSchule } from "~/router/apps/RouteSchule";
+import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
+import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
+
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
 import type { BenutzerAuswahlProps } from "~/components/schule/benutzer/SBenutzerAuswahlProps";
-import { routeSchuleBenutzerDaten } from "~/router/apps/benutzer/RouteSchuleBenutzerDaten";
-import type { RouteApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteManager } from "~/router/RouteManager";
-import { RouteDataSchuleBenutzer } from "~/router/apps/benutzer/RouteDataSchuleBenutzer";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import { routeSchule } from "../RouteSchule";
 
-const SBenutzerAuswahl = () =>
-	import("~/components/schule/benutzer/SBenutzerAuswahl.vue");
-const SBenutzerApp = () =>
-	import("~/components/schule/benutzer/SBenutzerApp.vue");
+const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue");
+const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue");
 
 export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,RouteApp> {
 

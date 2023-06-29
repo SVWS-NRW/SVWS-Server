@@ -1,11 +1,14 @@
+import { shallowRef } from "vue";
+
 import type { StundenplanListeEintrag} from "@core";
 import { SchuelerStundenplanManager } from "@core";
-import { shallowRef } from "vue";
+
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
-import { routeSchueler } from "../../RouteSchueler";
-import { routeSchuelerStundenplanDaten } from "./RouteSchuelerStundenplanDaten";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+
+import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 
 
 interface RouteStateSchuelerDataStundenplan {

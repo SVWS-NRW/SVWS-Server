@@ -1,17 +1,21 @@
+import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+
 import type { BenutzerKompetenzGruppe, List} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
+import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
+import { routeSchuleDatenaustausch } from "~/router/apps/schule/RouteSchuleDatenaustausch";
+
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
-import type { RouteApp } from "~/router/RouteApp";
-import { shallowRef } from "vue";
-import { routeSchuleBenutzer } from "~/router/apps/schule/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/RouteSchuleBenutzergruppe";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { RouteNode } from "../RouteNode";
-import { RouteManager } from "../RouteManager";
-import { routeSchuleDatenaustausch } from "./schule/RouteSchuleDatenaustausch";
-import { api } from "../Api";
 
 interface RouteStateSchule {
 	view: RouteNode<any, any>;

@@ -1,14 +1,18 @@
-import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { RouteSchueler} from "~/router/apps/RouteSchueler";
-import type { SchuelerLaufbahnplanungProps } from "@comp";
-import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList, ServerMode } from "@core";
 import { shallowRef } from "vue";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag } from "@core";
+import { AbiturdatenManager, BenutzerKompetenz, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, Schulform, ArrayList, ServerMode } from "@core";
+
 import { api } from "~/router/Api";
-import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { RouteNode } from "~/router/RouteNode";
-import { SSchuelerLaufbahnplanung } from "@comp";
+
+import type { RouteSchueler} from "~/router/apps/RouteSchueler";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+
 import { ConfigElement } from "~/components/Config";
+import { SSchuelerLaufbahnplanung } from "@comp";
+import type { SchuelerLaufbahnplanungProps } from "@comp";
 
 interface RouteStateSchuelerLaufbahnplanung {
 	auswahl: SchuelerListeEintrag | undefined;

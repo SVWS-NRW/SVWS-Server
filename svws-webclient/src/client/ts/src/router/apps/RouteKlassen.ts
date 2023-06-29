@@ -1,17 +1,22 @@
-import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@core";
-import { BenutzerKompetenz, List, Schulform, ServerMode } from "@core";
 import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+
+import { api } from "~/router/Api";
+import { RouteNode } from "~/router/RouteNode";
+import { RouteManager } from "~/router/RouteManager";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeSchueler } from "~/router/apps/RouteSchueler";
+
+import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
-import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
-import type { RouteApp } from "~/router/RouteApp";
-import { routeApp } from "~/router/RouteApp";
-import { RouteNode } from "~/router/RouteNode";
-import { api } from "../Api";
-import { RouteManager } from "../RouteManager";
-import { routeSchueler } from "./RouteSchueler";
 
 
 interface RouteStateKlassen {

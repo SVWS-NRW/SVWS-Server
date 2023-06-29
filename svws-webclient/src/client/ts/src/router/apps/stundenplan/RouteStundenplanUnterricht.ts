@@ -1,7 +1,7 @@
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import type { RouteStundenplan} from "../RouteStundenplan";
+import type { RouteStundenplan} from "~/router/apps/RouteStundenplan";
 
 const SStundenplanUnterricht = () => import("~/components/stundenplan/unterricht/SStundenplanUnterricht.vue");
 
