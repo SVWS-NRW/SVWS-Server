@@ -6,6 +6,7 @@ import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
+import { routeError } from "~/router/error/RouteError";
 
 
 export class RouteManager {
@@ -32,6 +33,7 @@ export class RouteManager {
 		// Füge die Haupt-Routen hinzu
 		this.router.addRoute(routeLogin.record);
 		this.router.addRoute(routeInit.record);
+		this.router.addRoute(routeError.record);
 		this.router.addRoute(routeApp.record);
 	}
 
