@@ -12,8 +12,8 @@ export interface SchuelerLaufbahnplanungProps {
 	patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
-	abiturdatenManager: AbiturdatenManager;
-	faechermanager: GostFaecherManager;
+	abiturdatenManager: () => AbiturdatenManager;
+	faechermanager: () => GostFaecherManager;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;

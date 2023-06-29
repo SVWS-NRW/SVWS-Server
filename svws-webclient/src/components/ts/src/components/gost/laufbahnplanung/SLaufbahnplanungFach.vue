@@ -36,13 +36,13 @@
 	import type { AbiturFachbelegung, GostFach, GostFaecherManager,
 		GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, Sprachbelegung} from "@core";
-	import { AbiturdatenManager} from "@core";
+	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp,
+		Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
-	import { Note, AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp, Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
-		abiturdatenManager: AbiturdatenManager;
-		faechermanager: GostFaecherManager;
+		abiturdatenManager: () => AbiturdatenManager;
+		faechermanager: () => GostFaecherManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
@@ -63,11 +63,11 @@
 
 	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : bgColorDisabled.value);
 
-	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager.getFachbelegungByID(props.fach.id));
+	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
 	const sprachbelegung: ComputedRef<Sprachbelegung | null> = computed(()=> {
 		const sprach_kuerzel = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel;
-		for (const sprache of props.abiturdatenManager.getSprachendaten().belegungen) {
+		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen) {
 			if (sprache.sprache === sprach_kuerzel)
 				return sprache;
 		}
@@ -77,7 +77,7 @@
 	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
 	const getFallsSpracheMoeglich: ComputedRef<boolean> = computed(()=> {
 		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
-			props.abiturdatenManager.getSprachendaten(), ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel
+			props.abiturdatenManager().getSprachendaten(), ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel
 		);
 		sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
 		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
@@ -92,7 +92,7 @@
 	);
 
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
-		return props.abiturdatenManager.istBewertet(halbjahr);
+		return props.abiturdatenManager().istBewertet(halbjahr);
 	}
 
 	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
@@ -143,7 +143,7 @@
 	})
 
 
-	const getAbiMoeglich: ComputedRef<boolean> = computed(() => props.abiturdatenManager.getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
+	const getAbiMoeglich: ComputedRef<boolean> = computed(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
 
 
 	/**
@@ -158,10 +158,10 @@
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
 			return false;
-		const fachbelegungen = props.abiturdatenManager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
+		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
 		if (fachbelegungen !== undefined) {
 			for (const fachbelegung of fachbelegungen) {
-				if (props.abiturdatenManager.pruefeBelegung(fachbelegung, hj)) {
+				if (props.abiturdatenManager().pruefeBelegung(fachbelegung, hj)) {
 					if (fachbelegung.fachID !== props.fach.id)
 						return true;
 				}

@@ -46,8 +46,8 @@
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{
-		abiturdatenManager: AbiturdatenManager;
-		faechermanager: GostFaecherManager;
+		abiturdatenManager: () => AbiturdatenManager;
+		faechermanager: () => GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
 
@@ -59,8 +59,8 @@
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
-					const fach1 = props.faechermanager.get(kombi.fachID1);
-					const fach2 = props.faechermanager.get(kombi.fachID2);
+					const fach1 = props.faechermanager().get(kombi.fachID1);
+					const fach2 = props.faechermanager().get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
 					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erfordert ${fach2?.kuerzelAnzeige} ${kursart2}`;
@@ -75,8 +75,8 @@
 		for (const kombi of props.mapFachkombinationen.values())
 			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
 				if (kombi.hinweistext === "") {
-					const fach1 = props.faechermanager.get(kombi.fachID1);
-					const fach2 = props.faechermanager.get(kombi.fachID2);
+					const fach1 = props.faechermanager().get(kombi.fachID1);
+					const fach2 = props.faechermanager().get(kombi.fachID2);
 					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
 					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
 					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erlaubt kein ${fach2?.kuerzelAnzeige} ${kursart2}`;
@@ -87,10 +87,10 @@
 	})
 
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		const fach1 = props.faechermanager.get(kombi.fachID1);
-		const fach2 = props.faechermanager.get(kombi.fachID2);
-		const f1 = (fach1 === null) ? null : props.abiturdatenManager.getFachbelegungByID(fach1.id);
-		const f2 = (fach2 === null) ? null : props.abiturdatenManager.getFachbelegungByID(fach2.id);
+		const fach1 = props.faechermanager().get(kombi.fachID1);
+		const fach2 = props.faechermanager().get(kombi.fachID2);
+		const f1 = (fach1 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach1.id);
+		const f2 = (fach2 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach2.id);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 		if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() && (f1 === null || f2 === null) || f1 === null)
@@ -98,11 +98,11 @@
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
 				const bel1 = kursart1 === null
-					? props.abiturdatenManager.pruefeBelegung(f1, hj)
-					: props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, hj);
+					? props.abiturdatenManager().pruefeBelegung(f1, hj)
+					: props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj);
 				const bel2 = kursart2 === null
-					? props.abiturdatenManager.pruefeBelegung(f2, hj)
-					: props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, hj);
+					? props.abiturdatenManager().pruefeBelegung(f2, hj)
+					: props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj);
 				if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
 					fehler.value.add(f1.fachID)
 					return false;

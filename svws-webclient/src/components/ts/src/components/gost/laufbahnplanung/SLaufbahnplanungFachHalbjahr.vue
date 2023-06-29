@@ -82,8 +82,8 @@
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
-		abiturdatenManager: AbiturdatenManager;
-		faechermanager: GostFaecherManager;
+		abiturdatenManager: () => AbiturdatenManager;
+		faechermanager: () => GostFaecherManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
 		halbjahr?: GostHalbjahr;
@@ -108,19 +108,19 @@
 			return false;
 		for (const kombi of props.fachkombiErforderlich) {
 			if (kombi.gueltigInHalbjahr[props.halbjahr.id]) {
-				const fach1 = props.faechermanager.get(kombi.fachID1);
+				const fach1 = props.faechermanager().get(kombi.fachID1);
 				if (!fach1)
 					return false;
-				const f1 = props.abiturdatenManager.getFachbelegungByID(fach1.id)
-				const f2 = props.abiturdatenManager.getFachbelegungByID(props.fach.id)
+				const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
+				const f2 = props.abiturdatenManager().getFachbelegungByID(props.fach.id)
 				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 				const bel1 = kursart1
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
-					: props.abiturdatenManager.pruefeBelegung(f1, props.halbjahr);
+					? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
+					: props.abiturdatenManager().pruefeBelegung(f1, props.halbjahr);
 				const bel2 = kursart2
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
-					: props.abiturdatenManager.pruefeBelegung(f2, props.halbjahr);
+					? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
+					: props.abiturdatenManager().pruefeBelegung(f2, props.halbjahr);
 				if (bel2)
 					return false;
 				return bel1 !== bel2;
@@ -134,19 +134,19 @@
 			return false;
 		for (const kombi of props.fachkombiVerboten) {
 			if (kombi.gueltigInHalbjahr[props.halbjahr.id]) {
-				const fach1 = props.faechermanager.get(kombi.fachID1)
+				const fach1 = props.faechermanager().get(kombi.fachID1)
 				if (!fach1)
 					return false;
-				const f1 = props.abiturdatenManager.getFachbelegungByID(fach1.id)
-				const f2 = props.abiturdatenManager.getFachbelegungByID(props.fach.id)
+				const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
+				const f2 = props.abiturdatenManager().getFachbelegungByID(props.fach.id)
 				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
 				const bel1 = kursart1
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
-					: props.abiturdatenManager.pruefeBelegung(f1, props.halbjahr);
+					? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
+					: props.abiturdatenManager().pruefeBelegung(f1, props.halbjahr);
 				const bel2 = kursart2
-					? props.abiturdatenManager.pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
-					: props.abiturdatenManager.pruefeBelegung(f2, props.halbjahr);
+					? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
+					: props.abiturdatenManager().pruefeBelegung(f2, props.halbjahr);
 				return bel1 && bel2;
 			}
 		}
@@ -187,11 +187,11 @@
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
 			return;
-		const fachbelegungen = props.abiturdatenManager.getFachbelegungByFachkuerzel(props.fach.kuerzel);
+		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
 		if (fachbelegungen !== undefined)
 			for (const fachbelegung of fachbelegungen)
 				if (fachbelegung.fachID !== props.fach.id)
-					return props.abiturdatenManager.getSchuelerFachwahl(fachbelegung.fachID)
+					return props.abiturdatenManager().getSchuelerFachwahl(fachbelegung.fachID)
 		return
 	})
 
@@ -202,7 +202,7 @@
 		}
 		if ((!props.moeglich) || props.bewertet)
 			return;
-		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		if (props.halbjahr === undefined)
 			setAbiturWahl(wahl);
 		else if (props.halbjahr === GostHalbjahr.EF1)
@@ -223,7 +223,7 @@
 	function deleteFachwahl() {
 		if (!props.wahl || props.moeglich === true || props.halbjahr === undefined)
 			return;
-		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.halbjahre[props.halbjahr.id] = null;
 		emit('update:wahl', wahl, props.fach.id);
 	}
@@ -231,7 +231,7 @@
 	function stepper_manuell() : void {
 		if (props.bewertet)
 			return;
-		const wahl = props.abiturdatenManager.getSchuelerFachwahl(props.fach.id);
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		if (props.halbjahr === undefined) {
 			if (!wahl.halbjahre[GostHalbjahr.Q22.id])
 				return
@@ -403,9 +403,9 @@
 				wahl.halbjahre[GostHalbjahr.Q21.id] = props.fach.istMoeglichQ21 ? wahl.halbjahre[GostHalbjahr.Q11.id] : null;
 				wahl.halbjahre[GostHalbjahr.Q22.id] = props.fach.istMoeglichQ22 ? wahl.halbjahre[GostHalbjahr.Q11.id] : null;
 				// Bedingungen für LK1
-				const alle_fachbelegungen = props.abiturdatenManager.getFachbelegungen();
-				const lk1_belegt = props.abiturdatenManager.pruefeExistiertAbiFach(alle_fachbelegungen, GostAbiturFach.LK1);
-				const lk2_belegt = props.abiturdatenManager.pruefeExistiertAbiFach(alle_fachbelegungen, GostAbiturFach.LK2);
+				const alle_fachbelegungen = props.abiturdatenManager().getFachbelegungen();
+				const lk1_belegt = props.abiturdatenManager().pruefeExistiertAbiFach(alle_fachbelegungen, GostAbiturFach.LK1);
+				const lk2_belegt = props.abiturdatenManager().pruefeExistiertAbiFach(alle_fachbelegungen, GostAbiturFach.LK2);
 				if (GostFachbereich.DEUTSCH.hat(props.fach) || GostFachbereich.MATHEMATIK.hat(props.fach)
 					|| GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(props.fach)
 					|| (GostFachbereich.FREMDSPRACHE.hat(props.fach) && !props.fach.istFremdSpracheNeuEinsetzend)) {
@@ -647,9 +647,9 @@
 		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null || wahl.halbjahre[GostHalbjahr.Q22.id] === "ZK")
 			wahl.abiturFach = null;
 		if (wahl.abiturFach === 3 && wahl.halbjahre[GostHalbjahr.Q22.id] === "M")
-			wahl.abiturFach = props.abiturdatenManager.pruefeExistiertAbiFach(props.abiturdatenManager.getFachbelegungen(), GostAbiturFach.AB4) ? null : 4;
+			wahl.abiturFach = props.abiturdatenManager().pruefeExistiertAbiFach(props.abiturdatenManager().getFachbelegungen(), GostAbiturFach.AB4) ? null : 4;
 		if (wahl.abiturFach === 4 && wahl.halbjahre[GostHalbjahr.Q22.id] === "S")
-			wahl.abiturFach = props.abiturdatenManager.pruefeExistiertAbiFach(props.abiturdatenManager.getFachbelegungen(), GostAbiturFach.AB3) ? null : 3;
+			wahl.abiturFach = props.abiturdatenManager().pruefeExistiertAbiFach(props.abiturdatenManager().getFachbelegungen(), GostAbiturFach.AB3) ? null : 3;
 	}
 
 
@@ -690,7 +690,7 @@
 
 
 	function setAbiturWahl(wahl: GostSchuelerFachwahl): void {
-		const abiMoeglicheKursart : GostKursart | null = props.abiturdatenManager.getMoeglicheKursartAlsAbiturfach(props.fach.id);
+		const abiMoeglicheKursart : GostKursart | null = props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id);
 		if (abiMoeglicheKursart === null) {
 			wahl.abiturFach = null;
 			return;
@@ -706,7 +706,7 @@
 						wahl.abiturFach = 1;
 					break;
 				default:
-					if (GostFachUtils.istWaehlbarLeistungskurs1(props.fach) && !props.abiturdatenManager.hatAbiFach(GostAbiturFach.LK1))
+					if (GostFachUtils.istWaehlbarLeistungskurs1(props.fach) && !props.abiturdatenManager().hatAbiFach(GostAbiturFach.LK1))
 						wahl.abiturFach = 1;
 					wahl.abiturFach = 2;
 					break;

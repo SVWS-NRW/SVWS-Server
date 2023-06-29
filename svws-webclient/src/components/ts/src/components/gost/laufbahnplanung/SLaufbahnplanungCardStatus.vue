@@ -4,10 +4,10 @@
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 		</template>
 		<div class="print:hidden -mt-4">
-			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager.getPruefungsArt()" />
+			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
-			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="sprachendaten" />
+			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
 		</div>
 	</svws-ui-content-card>
 </template>
@@ -19,8 +19,8 @@
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		abiturdatenManager: AbiturdatenManager;
-		faechermanager: GostFaecherManager;
+		abiturdatenManager: () => AbiturdatenManager;
+		faechermanager: () => GostFaecherManager;
 		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
@@ -35,6 +35,6 @@
 		set: (value) => emit('update:gost-belegpruefungs-art', value)
 	});
 
-	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager.getSprachendaten());
+	const sprachendaten: ComputedRef<Sprachendaten | null> = computed(() => props.abiturdatenManager().getSprachendaten());
 
 </script>
