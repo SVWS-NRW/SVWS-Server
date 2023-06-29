@@ -26,7 +26,7 @@ import { routeSchueler } from "~/router/apps/RouteSchueler";
 import { routeLehrer } from "~/router/apps/RouteLehrer";
 import { routeKlassen } from "~/router/apps/RouteKlassen";
 import { routeKurse } from "~/router/apps/RouteKurse";
-import { routeGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeStatistik } from "~/router/apps/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";

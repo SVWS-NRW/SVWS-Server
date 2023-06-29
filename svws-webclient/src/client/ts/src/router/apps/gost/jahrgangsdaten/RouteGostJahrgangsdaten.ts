@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 
 import type { GostStammdatenProps } from "~/components/gost/stammdaten/SGostStammdatenProps";
 

@@ -8,12 +8,12 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeGostFachwahlen } from "~/router/apps/gost/RouteGostFachwahlen";
-import { routeGostFaecher } from "~/router/apps/gost/RouteGostFaecher";
-import { routeGostJahrgangsdaten } from "~/router/apps/gost/RouteGostJahrgangsdaten";
-import { routeGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
-import { routeGostKursplanung } from "~/router/apps/gost/RouteGostKursplanung";
-import { routeGostLaufbahnplanung } from "~/router/apps/gost/RouteGostLaufbahnplanung";
+import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
+import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
+import { routeGostJahrgangsdaten } from "~/router/apps/gost/jahrgangsdaten/RouteGostJahrgangsdaten";
+import { routeGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
+import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
+import { routeGostLaufbahnplanung } from "~/router/apps/gost/laufbahnplanung/RouteGostLaufbahnplanung";
 
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 

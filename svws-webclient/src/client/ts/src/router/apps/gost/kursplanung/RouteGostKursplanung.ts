@@ -6,7 +6,7 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";

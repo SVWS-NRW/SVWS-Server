@@ -5,7 +5,7 @@ import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeGost, type RouteGost } from "~/router/apps/RouteGost";
+import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostKlausurplanungKlausurdaten } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKlausurdaten";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";

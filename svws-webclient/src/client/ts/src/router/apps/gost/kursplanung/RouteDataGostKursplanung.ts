@@ -5,8 +5,8 @@ import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBloc
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { routeGostKursplanung } from "../RouteGostKursplanung";
-import { routeGostKursplanungSchueler } from "./RouteGostKursplanungSchueler";
+import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
+import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";

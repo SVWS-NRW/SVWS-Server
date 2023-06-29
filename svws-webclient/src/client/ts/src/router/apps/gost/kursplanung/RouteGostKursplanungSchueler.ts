@@ -5,8 +5,8 @@ import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-import { routeGost } from "~/router/apps/RouteGost";
-import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/RouteGostKursplanung";
+import { routeGost } from "~/router/apps/gost/RouteGost";
+import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/RouteSchuelerIndividualdaten";
 

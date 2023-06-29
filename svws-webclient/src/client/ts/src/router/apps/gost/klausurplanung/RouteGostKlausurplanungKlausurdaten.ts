@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/RouteGostKlausurplanung";
+import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 
 const SGostKlausurplanungDaten = () => import("~/components/gost/klausurplanung/SGostKlausurplanungDaten.vue");
 

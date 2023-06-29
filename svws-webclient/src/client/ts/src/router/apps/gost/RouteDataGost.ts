@@ -8,9 +8,9 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeGost } from "~/router/apps/RouteGost";
+import { routeGost } from "~/router/apps/gost/RouteGost";
 
-import { routeGostJahrgangsdaten } from "~/router/apps/gost/RouteGostJahrgangsdaten";
+import { routeGostJahrgangsdaten } from "~/router/apps/gost/jahrgangsdaten/RouteGostJahrgangsdaten";
 
 interface RouteStateGost {
 	params: RouteParams;
