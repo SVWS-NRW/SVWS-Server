@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-
+import { routeError } from "~/router/error/RouteError";
 import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
 import { RouteDataSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteDataSchuelerLeistungenDaten";
@@ -32,9 +32,9 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (to_params.id === undefined)
-			return false;
+			return routeError.getRoute(new Error("Fehler: Keine Schüler-ID in der URL angegeben."));
 		const id = parseInt(to_params.id);
 		if (to_params.abschnitt === undefined) {
 			return routeSchuelerLeistungen.getRoute(id);

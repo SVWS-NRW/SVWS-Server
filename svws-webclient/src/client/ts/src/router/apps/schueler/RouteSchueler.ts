@@ -5,7 +5,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
-
+import { routeError } from "~/router/error/RouteError";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnitt";
@@ -56,7 +56,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		const eintrag = (id !== undefined) ? this.data.mapSchueler.get(id) : undefined;
 		await this.data.setSchueler(eintrag);
@@ -80,7 +80,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public getChildRoute(id: number | undefined) : RouteLocationRaw {
 		const redirect_name: string = (routeSchueler.selectedChild === undefined) ? routeSchuelerIndividualdaten.name : routeSchueler.selectedChild.name;
-		return { name: redirect_name, params: { id: id }};
+		return { name: redirect_name, params: { id: id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {

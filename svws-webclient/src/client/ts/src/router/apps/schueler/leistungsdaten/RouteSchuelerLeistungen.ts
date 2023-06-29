@@ -3,7 +3,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-
+import { routeError } from "~/router/error/RouteError";
 import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 import { RouteDataSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteDataSchuelerLeistungen";
@@ -26,14 +26,14 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (to_params.id === undefined)
-			return false;
+			return routeError.getRoute(new Error("Fehler: Keine Schüler-ID in der URL angegeben."));
 		const id = parseInt(to_params.id);
 		if ((this.data.idSchueler !== id) || (to_params.abschnitt === undefined)) {
 			await this.data.ladeListe(id);
-			if (this.data.listAbschnitte.size()<=0)
-				return false;
+			if (this.data.listAbschnitte.isEmpty())
+				return routeError.getRoute(new Error("Fehler: Lernabschnitt vorhanden."));
 			if (to_params.abschnitt !== undefined) {
 				const abschnitt = parseInt(to_params.abschnitt);
 				const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
@@ -48,7 +48,7 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 			}
 			const lernabschnitt = this.data.getEntryDefault();
 			if (lernabschnitt === undefined)
-				return false;
+				return routeError.getRoute(new Error("Fehler: Lernabschnitt gefunden."));
 			return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
 		}
 	}

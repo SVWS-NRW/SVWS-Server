@@ -14,13 +14,11 @@
 								<div v-if="code !== undefined" class="w-full mt-1 px-8">
 									HTTP-Fehlercode: {{ code }}
 								</div>
-								<div v-if="message !== undefined" class="w-full mt-1 px-8">
-									Message : {{ message }}
-								</div>
 								<div v-if="error !== undefined" class="w-full mt-1 px-8">
 									<div> Fehler : {{ error.name }} </div>
 									<div> Message : {{ error.message }} </div>
-									<div> Stack Trace : {{ error.stack }} </div>
+									<div> Stack Trace : </div>
+									<div class="ml-5"> {{ error.stack }} </div>
 								</div>
 							</div>
 						</div>

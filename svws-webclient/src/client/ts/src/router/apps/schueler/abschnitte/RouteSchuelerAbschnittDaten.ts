@@ -4,6 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
+import { routeError } from "~/router/error/RouteError";
 import type { RouteSchuelerAbschnitt } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnitt";
 import { routeSchuelerAbschnitt } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnitt";
 import { RouteDataSchuelerAbschnittDaten } from "~/router/apps/schueler/abschnitte/RouteDataSchuelerAbschnittDaten";
@@ -36,9 +37,9 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw routeError.getRoute(new Error("Die Parameter der Route dürfen keine Arrays sein"));
 		if (to_params.id === undefined)
-			return false;
+			return routeError.getRoute(new Error("Keine Schüler-ID in der URL angegeben."));
 		const id = parseInt(to_params.id);
 		if (to_params.abschnitt === undefined) {
 			return routeSchuelerAbschnitt.getRoute(id);
@@ -46,6 +47,8 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 			const abschnitt = parseInt(to_params.abschnitt);
 			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
 			const eintrag = routeSchuelerAbschnitt.data.getEntry(abschnitt, wechselNr);
+			if (eintrag === undefined)
+				return routeError.getRoute(new Error("Der Schüler mit der ID `id` hat keinen Lernabschnitt für den Schuljahresabschnitt mit der ID `abschnitt` vorhanden"), 404);
 			await this.data.setEintrag(eintrag);
 		}
 	}

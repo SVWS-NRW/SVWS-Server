@@ -4,15 +4,16 @@ import { ServerMode} from "@core";
 import { BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
+import { RouteDataError } from "~/router/error/RouteDataError";
 
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
 
 
-export class RouteError extends RouteNode<unknown, any> {
+export class RouteError extends RouteNode<RouteDataError, any> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "error", "/error/:errorcode?", SError);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "error", "/error/:errorcode?", SError, new RouteDataError());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Fehler";
@@ -26,15 +27,18 @@ export class RouteError extends RouteNode<unknown, any> {
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 	}
 
-	public getRoute(errorcode : number | undefined): RouteLocationRaw {
-		return { name: this.name, params: { errorcode: errorcode } };
+	public getRoute(error?: Error, errorcode? : number): RouteLocationRaw {
+		this.data.reset();
+		this.data.code = errorcode;
+		this.data.error = error;
+		const params = errorcode === undefined ? {} : { errorcode };
+		return { name: this.name, params: params };
 	}
 
 	public getProps(): ErrorProps {
 		return {
-			code: 418,
-			message: "Test-Message",
-			error: new Error("Test Error")
+			code: this.data.code,
+			error: this.data.error
 		}
 	}
 
