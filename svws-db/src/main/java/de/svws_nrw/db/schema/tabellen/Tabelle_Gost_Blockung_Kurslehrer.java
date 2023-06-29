@@ -49,7 +49,7 @@ public class Tabelle_Gost_Blockung_Kurslehrer extends SchemaTabelle {
 	public SchemaTabelleFremdschluessel fk_Gost_Blockung_Kurslehrer_Lehrer_FK = addForeignKey(
 			"Gost_Blockung_Kurslehrer_Lehrer_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 
