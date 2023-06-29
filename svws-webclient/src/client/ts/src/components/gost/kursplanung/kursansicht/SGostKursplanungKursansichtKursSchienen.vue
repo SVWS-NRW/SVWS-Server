@@ -122,11 +122,11 @@
 	}
 
 	const is_drop_zone = computed(() => {
-        if (!props.modelValue.kurs || !props.modelValue.schiene)
+		if (!props.modelValue.kurs || !props.modelValue.schiene)
 			return false;
 		if ( (props.modelValue.kurs.id === props.kurs.id) && (kurs_schiene_zugeordnet.value) )
-		    return false;
-	    return true;
+			return false;
+		return true;
 	});
 
 	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
@@ -136,13 +136,11 @@
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
 		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
 			return;
-			
 		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id) {
 			kurs1 = drag_data.kurs;
 			isModalOpen_KurseZusammen.value = true;
 			return;
 		}
-		
 		if ( (drag_data.kurs.id === kurs_blockungsergebnis.value.id) && (!kurs_schiene_zugeordnet.value) ) {
 			if (fixier_regeln.value && props.allowRegeln) { // Entferne potentielle Fixierung beim Verschieben.
 				const s = props.getErgebnismanager().getSchieneG(schiene.id);
