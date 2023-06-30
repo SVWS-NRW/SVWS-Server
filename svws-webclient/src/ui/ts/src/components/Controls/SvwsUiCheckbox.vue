@@ -68,9 +68,14 @@
 			<template v-else>
 				{{ title }}
 			</template>
-			<svws-ui-icon v-if="statistics" class="ml-1">
-				<i-ri-bar-chart-2-line />
-			</svws-ui-icon>
+			<span class="cursor-pointer inline-block -my-4" v-if="statistics">
+				<svws-ui-tooltip position="right">
+					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1 pt-1 relative top-0.5" />
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
 		</span>
 	</label>
 </template>
@@ -117,11 +122,20 @@
 		@apply opacity-25;
 	}
 
-	&:hover,
-	&:focus {
+	&:not(.checkbox--disabled) {
+		&:hover,
+		&:focus-visible {
+			.icon {
+				@apply opacity-100;
+				@apply text-svws;
+			}
+		}
+	}
+
+	&.checkbox--statistics:hover,
+	&.checkbox--statistics:focus-visible {
 		.icon {
-			@apply opacity-100;
-			@apply text-svws;
+			@apply text-violet-500;
 		}
 	}
 
@@ -159,6 +173,10 @@
 	&:not(.checkbox--bw) .icon {
 		@apply text-svws;
 	}
+
+	&.checkbox--statistics .icon {
+		@apply text-violet-500;
+	}
 }
 
 
@@ -178,6 +196,7 @@
 .checkbox--disabled .checkbox--label {
 	@apply text-black/50 dark:text-white/50;
 }
+
 .checkbox--statistics {
 	@apply text-violet-500;
 
