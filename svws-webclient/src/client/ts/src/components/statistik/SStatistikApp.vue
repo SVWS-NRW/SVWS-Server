@@ -21,8 +21,27 @@
 						</template>
 						<div>{{ schulname }}</div>
 						<div class="mt-5 whitespace-pre-line">{{ adresse }}</div>
+						<div class="mt-2 flex gap-1">
+							<svws-ui-button type="secondary" size="small">Schuldaten bearbeiten</svws-ui-button>
+						</div>
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Schuldaten">
+					<svws-ui-dashboard-tile color="dark" title="Nächster Termin" number="1.9.2023" number-label="Frist zur Einreichung">
+						Meldung der Statistik
+					</svws-ui-dashboard-tile>
+					<svws-ui-dashboard-tile title="Platzhalter">
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+						<template #number>
+							<div class="flex gap-1">
+								<svws-ui-button type="secondary">
+									Button
+								</svws-ui-button>
+								<svws-ui-button>
+									Anderer Button
+								</svws-ui-button>
+							</div>
+						</template>
+					</svws-ui-dashboard-tile>
+					<!--<svws-ui-dashboard-tile title="Kontaktdaten der Schule">
 						<div class="flex flex-col gap-3">
 							<div>
 								<div v-if="telefon" title="Telefon">
@@ -34,28 +53,49 @@
 									{{ fax }}
 								</div>
 							</div>
-							<div v-if="email" title="E-Mail">
-								{{ email }}
-							</div>
-							<div v-if="webAdresse" title="Web-Adresse">
-								{{ webAdresse }}
+							<div>
+								<div v-if="email" title="E-Mail">
+									{{ email }}
+								</div>
+								<div title="Web-Adresse">
+									{{ webAdresse || 'https://schule.nrw.de' }}
+								</div>
 							</div>
 						</div>
-						<div class="mt-3">
-							<svws-ui-button type="secondary" size="small">Bearbeiten</svws-ui-button>
-						</div>
+					</svws-ui-dashboard-tile>-->
+					<svws-ui-dashboard-tile span="full" color="transparent" title="Hinweis" class="my-20">
+						Die Statistik ist noch in Entwicklung und aktuell nur zur Vorschau.<br>
+						Alle Zahlen, Fehler und andere Inhalte in diesem Bereich sind Beispiele und keine aktuellen Daten aus dem Client.
 					</svws-ui-dashboard-tile>
 					<!--TODO: Dynamic Anzahl Schüler*innen und andere Daten-->
-					<svws-ui-dashboard-tile title="An unserer Schule sind aktuell" color="dark" number="1.421" number-label="Schüler*innen" />
-					<svws-ui-dashboard-tile span="full" color="transparent" title="Relevant für die Statistik" class="my-20">
-						<div class="mb-5">10 Fehler müssen aktuell noch behoben werden.</div>
-						<div class="mb-5">
-							<svws-ui-button @click="() => selectedRoute = routes[1]">Alle Fehler anzeigen</svws-ui-button>
-						</div>
+					<svws-ui-dashboard-tile color="dark" number="516" number-label="Fehler insgesamt">
+						Relevante Daten für die Statistik müssen noch korrigiert werden.
+					</svws-ui-dashboard-tile>
+					<svws-ui-dashboard-tile title="Schülerdaten" number="351" number-label="zu korrigieren" @click="() => selectedRoute = routes[1]" clickable>
+						1.421 Schüler angemeldet
+					</svws-ui-dashboard-tile>
+					<svws-ui-dashboard-tile title="Lehrerdaten" number="51" number-label="zu korrigieren" @click="() => selectedRoute = routes[2]" clickable>
+						121 Lehrkräfte angestellt
+					</svws-ui-dashboard-tile>
+					<svws-ui-dashboard-tile title="Unterrichtsdaten" number="32" number-label="zu korrigieren" @click="() => selectedRoute = routes[3]" clickable>
+						80 Kurse angeboten
+					</svws-ui-dashboard-tile>
+				</div>
+			</template>
+			<template v-if="selectedRoute.name !== 'dashboard'">
+				<div class="page--content--dashboard">
+					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${selectedRoute.name}daten`">
+						<p>
+							Dieser Bereich ist aktuell nur eine Vorschau. Alle Inhalte sind Beispiele und keine aktuellen Daten aus dem Client.
+						</p>
+					</svws-ui-dashboard-tile>
+					<svws-ui-dashboard-tile number="1.425" number-label="Datensätze" />
+					<svws-ui-dashboard-tile color="dark" number="512" number-label="Fehler zu korrigieren" />
+					<svws-ui-dashboard-tile span="full" color="transparent">
+						<svws-ui-spacing :size="2" />
 						<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 							<template #body>
 								<svws-ui-table-row>
-									<svws-ui-table-cell>Lehrerdaten</svws-ui-table-cell>
 									<svws-ui-table-cell>22</svws-ui-table-cell>
 									<svws-ui-table-cell>ZUR</svws-ui-table-cell>
 									<svws-ui-table-cell>LBA02</svws-ui-table-cell>
@@ -72,7 +112,6 @@
 									</svws-ui-table-cell>
 								</svws-ui-table-row>
 								<svws-ui-table-row>
-									<svws-ui-table-cell>Lehrerdaten</svws-ui-table-cell>
 									<svws-ui-table-cell>254</svws-ui-table-cell>
 									<svws-ui-table-cell>VAN</svws-ui-table-cell>
 									<svws-ui-table-cell>LBA02</svws-ui-table-cell>
@@ -88,44 +127,35 @@
 										</svws-ui-tooltip>
 									</svws-ui-table-cell>
 								</svws-ui-table-row>
-								<svws-ui-table-row>
-									<svws-ui-table-cell>Schülerdaten</svws-ui-table-cell>
-									<svws-ui-table-cell>5687</svws-ui-table-cell>
+								<svws-ui-table-row v-for="index in 40" :key="index">
+									<svws-ui-table-cell>{{ Math.floor(Math.random() * 9999) }}</svws-ui-table-cell>
 									<svws-ui-table-cell><span class="opacity-25">—</span></svws-ui-table-cell>
-									<svws-ui-table-cell>A03</svws-ui-table-cell>
+									<svws-ui-table-cell>XYZ{{ Math.floor(Math.random() * 16) + 10 }}</svws-ui-table-cell>
 									<svws-ui-table-cell>
-										<span class="line-clamp-1">Individualdaten l: Konfession fehlt/fehlerhaft.</span>
+										<span v-if="Math.floor(Math.random() * 16) % 2 === 1" class="line-clamp-1">Individualdaten l: Konfession fehlt/fehlerhaft.</span>
+										<span v-else class="line-clamp-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab corporis cupiditate deleniti, eum ipsa iste molestiae nam nostrum praesentium quas qui quisquam soluta tempore, ullam vel veniam vitae voluptatem voluptatum!</span>
 									</svws-ui-table-cell>
 									<svws-ui-table-cell align="center">
-										<svws-ui-tooltip>
+										<svws-ui-tooltip v-if="Math.floor(Math.random() * 8) % 2 === 1">
 											<i-ri-information-line />
 											<template #content>
 												Hinweis
 											</template>
 										</svws-ui-tooltip>
+										<svws-ui-tooltip v-else>
+											<i-ri-alert-fill />
+											<template #content>
+												Harter Fehler
+											</template>
+										</svws-ui-tooltip>
 									</svws-ui-table-cell>
 								</svws-ui-table-row>
-								<svws-ui-table-row>
+								<!--<svws-ui-table-row>
 									<svws-ui-table-cell span="full"><span class="opacity-50">+ 7 weitere Fehler</span></svws-ui-table-cell>
-								</svws-ui-table-row>
+								</svws-ui-table-row>-->
 							</template>
 						</svws-ui-data-table>
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Aktuell angestellt" number="104" number-label="Lehrkräfte" />
-					<svws-ui-dashboard-tile title="Weitere Zahl" number="59.210" number-label="XYZ" />
-					<svws-ui-dashboard-tile :span="2" color="dark" title="Hinweis">
-						<p>
-							Die Statistik ist noch in Entwicklung und aktuell nur zur Vorschau. <br>
-							Alle Zahlen, Fehler und andere Inhalte in diesem Bereich sind Beispiele und keine aktuellen Daten aus dem Client.
-						</p>
-					</svws-ui-dashboard-tile>
-				</div>
-			</template>
-			<template v-if="selectedRoute.name === 'pruefen'">
-				<div class="page--content">
-					<div class="col-span-full">
-						<svws-ui-data-table :items="[]" :columns="cols" no-data-html="Der Bereich für die Statistik ist noch in Entwicklung und ist aktuell nur eine Vorschau." />
-					</div>
 				</div>
 			</template>
 		</svws-ui-router-tab-bar>
@@ -191,8 +221,7 @@
 	const data = true;
 
 	const cols: DataTableColumn[] = [
-		{ key: "in", label: "Bereich", span: 0.5 },
-		{ key: "id", label: "ID", span: 0.25 },
+		{ key: "id", label: "ID", span: 0.25, fixedWidth: 5 },
 		{ key: "kuerzel", label: "Kürzel", span: 0.25 },
 		{ key: "fehler", label: "Fehler", span: 0.25 },
 		{ key: "fehlertext", label: "Erläuterung", span: 2 },
@@ -200,8 +229,10 @@
 	];
 
 	const routes = [
-		{ path: "/", name: "dashboard", component: { render: () => h("h1", "Dashboard") }, meta: { text: "Dashboard" } },
-		{ path: "/pruefen", name: "pruefen", component: { render: () => h("h1", "Prüfen") }, meta: { text: "Prüfen" } },
+		{ path: "/", name: "dashboard", component: { render: () => h("h1", "Dashboard") }, meta: { text: "Übersicht" } },
+		{ path: "/schueler", name: "Schüler", component: { render: () => h("h1", "Schüler") }, meta: { text: "Schüler" } },
+		{ path: "/lehrkraefte", name: "Lehrer", component: { render: () => h("h1", "Lehrkräfte") }, meta: { text: "Lehrkräfte" } },
+		{ path: "/unterricht", name: "Unterrichts", component: { render: () => h("h1", "Unterricht") }, meta: { text: "Unterricht" } },
 	];
 
 	const hidden = ref([false, false, false]);

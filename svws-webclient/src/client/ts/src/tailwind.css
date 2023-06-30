@@ -29,7 +29,8 @@
 }
 
 .page--statistik .router-tab-bar--wrapper,
-.page--statistik .router-tab-bar--panel,
+.page--statistik .page--content,
+.page--statistik .page--content--dashboard,
 .page--statistik .page--header {
 	max-width: 140rem;
 	@apply mx-auto w-full;
