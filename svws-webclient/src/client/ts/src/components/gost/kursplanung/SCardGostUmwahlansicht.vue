@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-content-card v-if="schueler" title="Kurszuordnungen" class="min-w-[30rem]">
+	<svws-ui-content-card v-if="schueler !== undefined" title="Kurszuordnungen" class="min-w-[30rem]">
 		<template #actions>
-			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler?.vorname + ' ' + schueler?.nachname}`">
+			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`">
 				<i-ri-group-line />
-				{{ schueler?.vorname + ' ' + schueler?.nachname }}
+				{{ schueler.vorname + ' ' + schueler.nachname }}
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene, GostFachwahl, List } from "@core";
+	import { ArrayList, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostBlockungsergebnisSchiene, type GostFachwahl, type List } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
@@ -92,22 +92,26 @@
 	});
 
 	async function drop_entferne_kurszuordnung(kurs: any) {
-		const schuelerid = props.schueler.id;
-		if (kurs === undefined || kurs.id === undefined)
+		const schuelerid = props.schueler?.id;
+		if (schuelerid === undefined || kurs === undefined || kurs.id === undefined)
 			return;
 		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
 	}
 
 	async function auto_verteilen() {
-		await props.autoKursSchuelerZuordnung(props.schueler.id);
+		if (props.schueler !== undefined)
+			await props.autoKursSchuelerZuordnung(props.schueler.id);
 	}
 
 	const fachbelegungen: ComputedRef<List<GostFachwahl>> = computed(() => {
+		if (props.schueler === undefined)
+			return new ArrayList<GostFachwahl>();
 		return props.getDatenmanager().schuelerGetListeOfFachwahlen(props.schueler.id);
 	});
 
 	function routeLaufbahnplanung() {
-		void props.gotoLaufbahnplanung(props.schueler.id);
+		if (props.schueler !== undefined)
+			void props.gotoLaufbahnplanung(props.schueler.id);
 	}
 
 	function updateDragAndDropData(data: DndData | undefined) {

@@ -11,6 +11,6 @@ export interface GostUmwahlansichtProps {
 	gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
-	schueler: SchuelerListeEintrag;
+	schueler: SchuelerListeEintrag | undefined;
 	apiStatus: ApiStatus;
 }

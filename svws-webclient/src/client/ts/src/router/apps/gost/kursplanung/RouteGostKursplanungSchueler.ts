@@ -120,7 +120,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		return {
 			setSchueler: routeGostKursplanung.data.gotoSchueler,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
-			schueler: routeGostKursplanung.data.auswahlSchueler,
+			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
 			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager
 		}
@@ -137,7 +137,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			gotoLaufbahnplanung: this.gotoLaufbahnplanung,
 			getDatenmanager: () => routeGostKursplanung.data.datenmanager,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
-			schueler: routeGostKursplanung.data.auswahlSchueler,
+			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
 			apiStatus: api.status,
 		}
 	}
