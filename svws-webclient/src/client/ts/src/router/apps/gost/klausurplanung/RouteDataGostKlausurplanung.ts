@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum} from "@core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -109,19 +109,16 @@ export class RouteDataGostKlausurplanung {
 				view = routeGostKlausurplanungKlausurdaten;
 		}
 		// Setze den State neu
-		this._state.value = {
+		this.setPatchedDefaultState({
 			abiturjahr: abiturjahr,
 			jahrgangsdaten: jahrgangsdaten,
 			mapSchueler: mapSchueler,
 			faecherManager: faecherManager,
 			mapLehrer: mapLehrer,
 			halbjahr: this._state.value.halbjahr,
-			kursklausurmanager: undefined,
-			klausurvorgabenmanager: undefined,
-			stundenplanmanager: undefined,
 			kursmanager: kursManager,
 			view: view,
-		};
+		});
 	}
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
@@ -159,29 +156,41 @@ export class RouteDataGostKlausurplanung {
 
 		api.status.start();
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-		const stundenplandaten = await api.server.getStundenplan(api.schema, 1);
-		const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, 1);
-		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, 1);
-		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, 1);
+		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
+		const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+		if (abschnitt === undefined) {
+			// TODO reagiere beim Routing ensprechend auf diesen Fehler
+			api.status.stop();
+			throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
+		}
+		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
+		if (listStundenplaene.isEmpty()) {
+			api.status.stop();
+			this.setPatchedState({
+				halbjahr: halbjahr,
+				kursklausurmanager: undefined,
+				stundenplanmanager: undefined,
+				klausurvorgabenmanager: undefined,
+			});
+			return true;
+		}
+		const stundenplan = listStundenplaene.get(0);
+		const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
+		const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
+		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
+		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 		const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 		api.status.stop();
-		this._state.value = {
-			abiturjahr: this._state.value.abiturjahr,
-			jahrgangsdaten: this._state.value.jahrgangsdaten,
-			mapSchueler: this._state.value.mapSchueler,
-			faecherManager: this._state.value.faecherManager,
-			mapLehrer: this._state.value.mapLehrer,
+		this.setPatchedState({
 			halbjahr: halbjahr,
 			kursklausurmanager,
 			stundenplanmanager,
 			klausurvorgabenmanager,
-			kursmanager: this._state.value.kursmanager,
-			view: this._state.value.view,
-		};
+		});
 		return true;
 	}
 
