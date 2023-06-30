@@ -124,12 +124,15 @@
 				'text-input--placeholder--required': required,
 				'text-input--placeholder--prefix': url
 			}">
-			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" />
 			{{ placeholder }}
+			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" class="ml-0.5" />
 			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${modelValue?.toLocaleString() ? modelValue?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />
+					<span class="inline-flex items-center">
+						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
+						<i-ri-alert-fill v-if="`${modelValue}`.length === 0 || `${modelValue}` === 'null'" />
+					</span>
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -223,6 +226,24 @@
 
 	.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
 		@apply border-black/25 dark:border-white/25;
+	}
+
+	.text-input--statistics.text-input--filled:not(:focus-within):not(:hover) .text-input--control,
+	.text-input--statistics:not(:focus-within):not(:hover) .text-input--control {
+		@apply border-violet-500/25 dark:border-violet-800/25;
+	}
+
+	.text-input--invalid.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
+		@apply border-error/25 dark:border-error/25;
+	}
+
+	.text-input--statistics.text-input--filled:not(:focus-within):hover .text-input--control,
+	.text-input--statistics:not(:focus-within):hover .text-input--control {
+		@apply border-violet-500/50 dark:border-violet-800/50;
+	}
+
+	.text-input--invalid.text-input--filled:not(:focus-within):hover .text-input--control {
+		@apply border-error/50 dark:border-error/50;
 	}
 
 	.text-input--filled:not(:focus-within):hover .text-input--control {
@@ -335,16 +356,8 @@
 		}
 	}
 
-	.text-input--statistics .text-input--control {
-		@apply border-violet-500;
-	}
-
-	.text-input--invalid:not(:focus-within) .text-input--control {
-		@apply border-error;
-	}
-
 	.text-input--statistics .text-input--placeholder {
-		@apply text-violet-500 font-medium;
+		@apply text-violet-500 font-bold;
 	}
 
 	.text-input--invalid:not(:focus-within) .text-input--placeholder,

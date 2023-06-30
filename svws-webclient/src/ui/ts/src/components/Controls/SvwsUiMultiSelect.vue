@@ -370,8 +370,6 @@
 	@apply inline-block overflow-visible;
 
 	&--statistics {
-		@apply border-violet-500;
-
 		.multiselect-tags--placeholder {
 			@apply text-violet-500;
 		}
@@ -391,6 +389,14 @@
 		.tag-list-wrapper {
 			@apply border-black dark:border-white;
 			@apply outline-none;
+		}
+	}
+
+	&--statistics.with-open-list,
+	&--statistics.with-value,
+	&--statistics:focus-within {
+		.tag-list-wrapper {
+			@apply border-violet-500 dark:border-violet-800;
 		}
 	}
 
@@ -487,6 +493,10 @@
 
 	&:hover .icon {
 		@apply bg-black text-white dark:bg-white dark:text-black;
+
+		.multiselect-input-component--statistics:not(.multiselect-input-component--disabled) & {
+			@apply bg-violet-500 dark:bg-violet-800 dark:text-white;
+		}
 	}
 
 	.multiselect-input-component--disabled & {
@@ -501,6 +511,10 @@
 			@apply rounded-none;
 			font-size: 0.9em;
 		}
+	}
+
+	.multiselect-input-component--statistics & {
+		@apply text-purple-500;
 	}
 }
 
