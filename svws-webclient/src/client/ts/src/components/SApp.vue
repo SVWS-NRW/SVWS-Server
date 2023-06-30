@@ -3,6 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
+					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
 					<svws-ui-menu-header :user="username" :schule="schulname" />
 				</template>
 				<template #default>

@@ -40,16 +40,16 @@
 				</svws-ui-radio-group>
 			</template>
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title">
-								Schülerauswahl ({{ schuelerFilter.filtered.value.length }})
-							</span>
+				<svws-ui-table-row thead>
+					<svws-ui-table-cell thead>
+						<div class="inline-flex items-center gap-2">
+							<span>Schülerauswahl</span>
+							<svws-ui-badge size="big">
+								{{ schuelerFilter.filtered.value.length }}
+							</svws-ui-badge>
 						</div>
-					</div>
-				</div>
+					</svws-ui-table-cell>
+				</svws-ui-table-row>
 			</template>
 			<template #body>
 				<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr--clicked': selected === s}"

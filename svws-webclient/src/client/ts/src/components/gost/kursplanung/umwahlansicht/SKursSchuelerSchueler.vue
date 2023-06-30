@@ -2,11 +2,14 @@
 	<div role="cell" class="data-table__td">
 		<div class="flex items-center justify-between gap-1 w-full">
 			<span>
-				{{ `${schueler.nachname}, ${schueler.vorname} (${schueler.geschlecht})` }}
+				{{ `${schueler.nachname}, ${schueler.vorname}` }}
 			</span>
 			<div class="flex items-center gap-1 cursor-pointer">
 				<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" :short="true">
 					{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}
+				</svws-ui-badge>
+				<svws-ui-badge v-if="schueler.geschlecht" type="light" size="big">
+					<span>{{ schueler.geschlecht }}</span>
 				</svws-ui-badge>
 				<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision, 'text-black': !kollision, }">
 					<svws-ui-tooltip v-if="kollision && !nichtwahl">

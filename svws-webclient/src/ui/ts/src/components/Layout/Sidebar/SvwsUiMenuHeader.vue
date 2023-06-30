@@ -21,9 +21,10 @@
 <template>
 	<a class="app--menu--initials"
 		href="#" @click.prevent="onClick">
-		<svws-ui-tooltip position="right" v-if="user">
+		<svws-ui-tooltip position="right" v-if="user" :indicator="false">
 			<div class="app--menu--initials--icon">
-				{{ user.charAt(0).toUpperCase() }}{{ user.charAt(1).toUpperCase() }}
+				<template v-if="user.length > 5">{{ user.split(' ').map((username) => username[0]).join('').toUpperCase() }}</template>
+				<template v-else>{{ user.slice(0, 2).toUpperCase() }}</template>
 			</div>
 			<template #content>
 				<div class="app--menu--initials--label">
@@ -45,7 +46,7 @@
 
 .app--menu--initials .app--menu--initials--icon {
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
-	@apply rounded-full overflow-hidden bg-svws-950 text-white font-bold;
+	@apply rounded-lg overflow-hidden bg-white text-black dark:text-white dark:bg-white/5 border border-black/10 dark:border-white/10 font-bold;
 	@apply w-12 h-12 xl:w-14 xl:h-14;
 }
 

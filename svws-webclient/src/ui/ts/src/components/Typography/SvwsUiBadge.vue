@@ -53,7 +53,7 @@
 <style lang="postcss">
 .badge {
 	@apply font-bold leading-none;
-	@apply rounded-full inline-flex items-center align-text-top;
+	@apply rounded inline-flex items-center align-text-top;
 	font-size: 0.65em;
 	padding: 0.35em 0.5em;
 	gap: 0.25em;
@@ -64,6 +64,7 @@
 }
 
 .badge--lg {
+	@apply rounded-md;
 	font-size: 0.8em;
 	padding: 0.25em 0.45em;
 }
@@ -82,7 +83,7 @@
 
 .badge--light {
 	@apply bg-light dark:bg-white/10;
-	@apply border-light dark:border-white/20;
+	@apply border border-black/5 dark:border-white/20;
 	@apply text-dark dark:text-white;
 }
 
@@ -99,7 +100,7 @@
 }
 
 .badge--short {
-	@apply overflow-hidden relative line-clamp-1 overflow-ellipsis w-full max-w-full break-all;
+	@apply overflow-hidden relative line-clamp-1 overflow-ellipsis w-16 max-w-full break-all;
 }
 
 .badge--small {

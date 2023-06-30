@@ -2,7 +2,7 @@
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
-				<div class="flex justify-between w-full">
+				<div class="flex justify-between w-full items-start">
 					<div class="flex items-center gap-1">
 						<div class="flex" v-if="row === auswahlBlockung">
 							<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
@@ -21,7 +21,7 @@
 							</template>
 						</svws-ui-tooltip>
 					</div>
-					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="inline-flex -my-0.5 gap-1">
+					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="inline-flex gap-1 h-5">
 						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
 							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
 						</s-gost-kursplanung-remove-blockung-modal>

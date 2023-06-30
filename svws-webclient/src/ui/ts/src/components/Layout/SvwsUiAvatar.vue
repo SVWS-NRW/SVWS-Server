@@ -38,7 +38,7 @@
 <template>
 	<div class="relative" :class="{'is-capturing': isCapturing}">
 		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
-			<span class="avatar--edit-trigger w-5 h-5 p-0.5 rounded-full bg-light mt-auto ml-auto -mr-1">
+			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
 				<i-ri-camera-line class="w-full h-full opacity-50" />
 			</span>
 
@@ -106,12 +106,12 @@
 
 <style lang="postcss">
 .avatar {
-	@apply w-full rounded-full overflow-hidden relative bg-light;
-	@apply border border-black/10;
+	@apply w-full rounded-lg overflow-hidden relative bg-light;
+	@apply border border-black/5 dark:border-white/5;
 	padding-bottom: 100%;
 
 	svg {
-		@apply absolute bottom-0 w-full h-4/5 text-svws-950 opacity-20;
+		@apply absolute -bottom-0.5 w-full h-5/6 text-svws-950 opacity-20;
 		margin-bottom: -5%;
 	}
 
@@ -158,7 +158,7 @@
 			}
 
 			+ .avatar {
-				@apply opacity-25 border-black/50;
+				@apply opacity-10 border-black/50;
 			}
 		}
 
@@ -180,12 +180,12 @@
 
 .is-capturing {
 	@apply fixed inset-0 z-[100] h-screen;
-	@apply bg-white bg-opacity-20;
+	@apply bg-light/90 dark:bg-[#000]/90 backdrop-filter backdrop-grayscale;
 	@apply flex flex-col justify-center items-center;
-	backdrop-filter: blur(0.5rem);
 
 	.avatar {
 		@apply p-0 -order-1;
+		@apply rounded-3xl;
 		width: 90vmin;
 		height: 90vmin;
 		@apply md:w-[37.5rem] md:h-[37.5rem];
