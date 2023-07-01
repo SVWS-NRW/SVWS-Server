@@ -41,8 +41,8 @@
 			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
 			<svws-ui-icon>
-				<i-ri-lock2-line v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block !opacity-100" />
-				<i-ri-lock2-line v-if="allowRegeln && !sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)" class="inline-block !opacity-0 group-hover:!opacity-25" />
+				<i-ri-lock2-line v-if="props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)" class="inline-block !opacity-100" />
+				<i-ri-lock2-line v-if="allowRegeln && !props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)" class="inline-block !opacity-0 group-hover:!opacity-25" />
 			</svws-ui-icon>
 		</div>
 	</svws-ui-drop-data>
@@ -55,7 +55,7 @@
 			<svws-ui-icon class="absolute right-1" v-if="istFixiert">
 				<i-ri-pushpin-fill class="inline-block" />
 			</svws-ui-icon>
-			<svws-ui-icon v-if="sperr_regeln.find(r=>r.parameter.get(1) === ermittel_parent_schiene.nummer)">
+			<svws-ui-icon v-if="props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)">
 				<i-ri-lock2-line class="inline-block" />
 			</svws-ui-icon>
 		</div>
@@ -136,16 +136,20 @@
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
 		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
 			return;
+
 		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id) {
 			kurs1 = drag_data.kurs;
 			isModalOpen_KurseZusammen.value = true;
 			return;
 		}
+
 		if ( (drag_data.kurs.id === kurs_blockungsergebnis.value.id) && (!kurs_schiene_zugeordnet.value) ) {
-			if (fixier_regeln.value && props.allowRegeln) { // Entferne potentielle Fixierung beim Verschieben.
+			// Entferne potentielle Fixierung beim Verschieben.
+			if (props.allowRegeln && props.getDatenmanager().kursGetHatFixierungInSchiene(drag_data.kurs.id, schiene.id)) {
 				const s = props.getErgebnismanager().getSchieneG(schiene.id);
 				await fixieren_regel_entfernen(s);
 			}
+
 			await props.updateKursSchienenZuordnung(drag_data.kurs.id, drag_data.schiene.id, schiene.id);
 		}
 	}
@@ -153,20 +157,7 @@
 	const kurs_schiene_zugeordnet = computed(() =>
 		props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(props.kurs.id, props.schiene.id));
 
-
-	// Regeln
-
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(() => props.getDatenmanager().regelGetListe());
-
 	// Regeln zum Sperren
-
-	const sperr_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
-		const arr = []
-		for (const regel of regeln.value)
-			if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ && regel.parameter.get(0) === props.kurs.id)
-				arr.push(regel)
-		return arr;
-	})
 
 	const ermittel_parent_schiene = computed(() => {
 		const schiene =	props.getErgebnismanager().getSchieneG(props.schiene.id)
@@ -176,73 +167,43 @@
 	})
 
 	const schiene_gesperrt = computed(()=>{
-		for (const regel of regeln.value) {
-			const { nummer } = ermittel_parent_schiene.value;
-			if (regel.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ
-				&& ((regel.parameter.get(0) !== props.kurs.kursart && (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-					|| (regel.parameter.get(0) === props.kurs.kursart && (nummer < regel.parameter.get(1) || nummer > regel.parameter.get(2)))))
-				return true;
-			if (regel.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ
-				&& (regel.parameter.get(0) === props.kurs.kursart)
-				&& (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)))
-				return true;
-			if (regel.typ === GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ
-				&& (regel.parameter.get(0) === props.kurs.id)
-				&& (nummer == regel.parameter.get(1)))
-				return true;
-		}
-		return false;
+		return props.getDatenmanager().kursGetIstVerbotenInSchiene(props.kurs.id, props.schiene.id);
 	})
-
 
 	async function sperren_regel_toggle() {
 		if (!props.allowRegeln)
 			return;
-		const { nummer } = ermittel_parent_schiene.value;
-		if (sperr_regeln.value.find(r => r.parameter.get(1) === nummer))
-			await sperren_regel_entfernen(nummer);
+		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
+		if (props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id))
+			await sperren_regel_entfernen(s);
 		else
-			await sperren_regel_hinzufuegen(nummer);
+			await sperren_regel_hinzufuegen(s);
 	}
 
-	async function sperren_regel_hinzufuegen(nummer: number) {
+	async function sperren_regel_hinzufuegen(schiene: GostBlockungSchiene) {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
 		regel.parameter.add(props.kurs.id);
-		regel.parameter.add(nummer);
+		regel.parameter.add(schiene.nummer);
 		await props.addRegel(regel);
 	}
 
 	async function sperren_regel_entfernen(nummer: number) {
-		if (!sperr_regeln.value.length)
-			return
-		const regel = sperr_regeln.value.find(r=>r.parameter.get(1) === nummer);
-		if (!regel)
-			return
+		const regel = props.getDatenmanager().kursGetRegelGesperrtInSchiene(props.kurs.id, props.schiene.id);
 		await props.removeRegel(regel.id);
 	}
-
 
 	// Regeln zum Fixieren
 
 	const istFixiert = computed(() => {
-		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
-		return fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer);
+		return props.getDatenmanager().kursGetHatFixierungInSchiene(props.kurs.id, props.schiene.id);
 	})
-
-	const fixier_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => {
-		const arr = []
-		for (const regel of regeln.value)
-			if (regel.typ === GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ && regel.parameter.get(0) === props.kurs.id)
-				arr.push(regel);
-		return arr;
-	});
 
 	async function fixieren_regel_toggle() {
 		if (!props.allowRegeln)
 			return;
 		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
-		if (fixier_regeln.value.some(r=>r.parameter.get(1) === s.nummer))
+		if (props.getDatenmanager().kursGetHatFixierungInSchiene(props.kurs.id, props.schiene.id))
 			await fixieren_regel_entfernen(s);
 		else
 			await fixieren_regel_hinzufuegen(s);
@@ -251,16 +212,14 @@
 	async function fixieren_regel_hinzufuegen(schiene: GostBlockungSchiene) {
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
-		const kurs = kurs_blockungsergebnis.value;
-		regel.parameter.add(kurs.id);
+		regel.parameter.add(props.kurs.id);
 		regel.parameter.add(schiene.nummer);
 		await props.addRegel(regel);
 	}
 
 	async function fixieren_regel_entfernen(schiene: GostBlockungSchiene) {
-		for (const regel of fixier_regeln.value)
-			if (regel.parameter.get(1) === schiene.nummer)
-				await props.removeRegel(regel.id);
+		const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(props.kurs.id, props.schiene.id);
+		await props.removeRegel(regel.id);
 	}
 
 </script>
