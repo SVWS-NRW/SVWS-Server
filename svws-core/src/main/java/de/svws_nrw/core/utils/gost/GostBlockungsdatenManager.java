@@ -625,6 +625,78 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Kurs aufgrund von Regeln in der angegebenen Schiene verboten ist.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs aufgrund von Regeln in der angegebenen Schiene verboten ist.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public boolean kursGetIstVerbotenInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
+		final int nummer = schieneGet(idSchiene).nummer;
+		final int kursart = kursGet(idKurs).kursart;
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
+				return true;
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) { // Nummer innerhalb des Intervalls.
+				if (regel.parameter.get(0) != kursart)
+					return true;
+			} else {
+				if (regel.parameter.get(0) == kursart)
+					return true;
+			}
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
+			if ((nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2))  // Nummer innerhalb des Intervalls.
+				&& (regel.parameter.get(0) == kursart))
+					return true;
+
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE} in der angegebenen Schiene gesperrt ist.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_SPERRE_IN_SCHIENE} in der angegebenen Schiene gesperrt ist.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public boolean kursGetHatSperrungInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
+		final int nummer = schieneGet(idSchiene).nummer;
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
+				return true;
+
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public boolean kursGetHatFixierungInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
+		final int nummer = schieneGet(idSchiene).nummer;
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
+				return true;
+
+		return false;
+	}
+
+	/**
 	 * Entfernt den Kurs mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idKurs  Die Datenbank-ID des zu entfernenden Kurses.
