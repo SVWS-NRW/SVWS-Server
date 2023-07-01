@@ -712,7 +712,26 @@ public class GostBlockungsdatenManager {
 			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
 				return regel;
 
-		throw new DeveloperNotificationException("Kurs " + idKurs + " ist nicht fixiert in " + idSchiene + "!");
+		throw new DeveloperNotificationException("Kurs " + idKurs + " ist nicht fixiert in Schiene " + idSchiene + "!");
+	}
+
+	/**
+	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Regel, welche den Kurs in einer Schiene gesperrt hat.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public @NotNull GostBlockungRegel kursGetRegelGesperrtInSchiene(final long idKurs, final long idSchiene) throws DeveloperNotificationException {
+		final int nummer = schieneGet(idSchiene).nummer;
+
+		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
+			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
+				return regel;
+
+		throw new DeveloperNotificationException("Kurs " + idKurs + " ist nicht gesperrt in Schiene " + idSchiene + "!");
 	}
 
 	/**
