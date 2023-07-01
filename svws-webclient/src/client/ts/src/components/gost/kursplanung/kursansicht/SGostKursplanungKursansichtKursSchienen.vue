@@ -159,13 +159,6 @@
 
 	// Regeln zum Sperren
 
-	const ermittel_parent_schiene = computed(() => {
-		const schiene =	props.getErgebnismanager().getSchieneG(props.schiene.id)
-		if (!schiene)
-			throw new Error(`Schiene mit der ID: ${props.schiene.id} fehlt in der Definition`);
-		return schiene;
-	})
-
 	const schiene_gesperrt = computed(()=>{
 		return props.getDatenmanager().kursGetIstVerbotenInSchiene(props.kurs.id, props.schiene.id);
 	})
