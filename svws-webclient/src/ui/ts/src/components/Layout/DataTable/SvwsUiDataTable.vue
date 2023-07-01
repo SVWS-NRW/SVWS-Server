@@ -120,10 +120,13 @@
 					<div role="cell" v-if="selectable"
 						class="data-table__td data-table__cell-select"
 						:key="`selectable__${row}_${index}`">
-						<svws-ui-checkbox class="data-table__cell-checkbox"
-							:model-value="isRowSelected(row)"
-							@update:model-value="toggleRowSelection(row)"
-							@click.stop />
+						<label role="none" class="checkbox" @click.stop>
+							<input class="checkbox--control" type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)">
+							<div role="checkbox" class="icon">
+								<i-ri-checkbox-fill v-if="isRowSelected(row)" />
+								<i-ri-checkbox-blank-line v-else />
+							</div>
+						</label>
 					</div>
 					<div role="cell" v-for="cell in row.cells"
 						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
