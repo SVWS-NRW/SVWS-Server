@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 	import { computed } from 'vue';
 
 	type CheckboxValue = string | number | boolean | null;
@@ -50,17 +51,17 @@
 			'col-span-full': span === 'full'
 		}">
 		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
-		<svws-ui-icon v-if="value === 'indeterminate' && value !== undefined" role="checkbox">
+		<div v-if="value === 'indeterminate' && value !== undefined" role="checkbox" class="icon">
 			<i-ri-checkbox-indeterminate-fill />
-		</svws-ui-icon>
-		<svws-ui-icon v-else-if="value" role="checkbox">
+		</div>
+		<div v-else-if="value" role="checkbox" class="icon">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-line v-if="circle" />
-		</svws-ui-icon>
-		<svws-ui-icon v-else-if="!value" role="checkbox">
+		</div>
+		<div v-else-if="!value" role="checkbox" class="icon">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 			<i-ri-checkbox-blank-circle-line v-if="circle" />
-		</svws-ui-icon>
+		</div>
 		<span class="checkbox--label" v-if="$slots.default || statistics || title">
 			<template v-if="$slots.default">
 				<slot />
