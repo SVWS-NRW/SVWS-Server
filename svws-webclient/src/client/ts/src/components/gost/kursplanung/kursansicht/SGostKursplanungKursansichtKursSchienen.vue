@@ -4,9 +4,9 @@
 		:class="{
 			'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id,
 			'bg-white text-black/25': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id === schiene.id,
-			'data-table__td__disabled': schiene_gesperrt,
+			'data-table__td__disabled': schiene_verboten,
 		}"
-		:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
+		:style="{'background-color': schiene_verboten ? bgColorNichtMoeglich : ''}"
 		tag="div"
 		role="cell"
 		:drop-allowed="is_drop_zone"
@@ -32,17 +32,17 @@
 			</span>
 			<svws-ui-icon class="cursor-pointer group absolute right-0.5 text-sm" @click.stop="fixieren_regel_toggle">
 				<i-ri-pushpin-fill v-if="istFixiert" class="inline-block group-hover:opacity-75" />
-				<i-ri-pushpin-line v-if="!istFixiert && allowRegeln" class="inline-block opacity-25 group-hover:opacity-100" />
+				<i-ri-pushpin-line v-if="allowRegeln && !istFixiert" class="inline-block opacity-25 group-hover:opacity-100" />
 			</svws-ui-icon>
 		</svws-ui-drag-data>
 		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
-			:style="{'background-color': schiene_gesperrt ? bgColorNichtMoeglich : ''}"
-			:class="{'bg-white': active && is_drop_zone, 'data-table__td__disabled': schiene_gesperrt}">
+			:style="{'background-color': schiene_verboten ? bgColorNichtMoeglich : ''}"
+			:class="{'bg-white': active && is_drop_zone, 'data-table__td__disabled': schiene_verboten}">
 			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
 			<svws-ui-icon>
-				<i-ri-lock2-line v-if="props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)" class="inline-block !opacity-100" />
-				<i-ri-lock2-line v-if="allowRegeln && !props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)" class="inline-block !opacity-0 group-hover:!opacity-25" />
+				<i-ri-lock2-line v-if="istGesperrt" class="inline-block !opacity-100" />
+				<i-ri-lock2-line v-if="allowRegeln && !istGesperrt" class="inline-block !opacity-0 group-hover:!opacity-25" />
 			</svws-ui-icon>
 		</div>
 	</svws-ui-drop-data>
@@ -55,7 +55,7 @@
 			<svws-ui-icon class="absolute right-1" v-if="istFixiert">
 				<i-ri-pushpin-fill class="inline-block" />
 			</svws-ui-icon>
-			<svws-ui-icon v-if="props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id)">
+			<svws-ui-icon v-if="istGesperrt">
 				<i-ri-lock2-line class="inline-block" />
 			</svws-ui-icon>
 		</div>
@@ -159,7 +159,11 @@
 
 	// Regeln zum Sperren
 
-	const schiene_gesperrt = computed(()=>{
+	const istGesperrt = computed(() => {
+		return props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id);
+	})
+
+	const schiene_verboten = computed(()=>{
 		return props.getDatenmanager().kursGetIstVerbotenInSchiene(props.kurs.id, props.schiene.id);
 	})
 
@@ -167,7 +171,7 @@
 		if (!props.allowRegeln)
 			return;
 		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
-		if (props.getDatenmanager().kursGetHatSperrungInSchiene(props.kurs.id, props.schiene.id))
+		if (istGesperrt.value)
 			await sperren_regel_entfernen(s);
 		else
 			await sperren_regel_hinzufuegen(s);
@@ -196,7 +200,7 @@
 		if (!props.allowRegeln)
 			return;
 		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
-		if (props.getDatenmanager().kursGetHatFixierungInSchiene(props.kurs.id, props.schiene.id))
+		if (istFixiert.value)
 			await fixieren_regel_entfernen(s);
 		else
 			await fixieren_regel_hinzufuegen(s);
