@@ -140,15 +140,13 @@ export class RouteManager {
 				result = await node.enter(to_node, to.params);
 				if (result !== undefined)
 					return result;
-			}
-			result = await to_node.enter(to_node, to.params);
-			if (result !== undefined)
-				return result;
-			for (const node of to_predecessors) {
 				result = await node.doUpdate(to_node, to.params);
 				if (result !== undefined)
 					return result;
 			}
+			result = await to_node.enter(to_node, to.params);
+			if (result !== undefined)
+				return result;
 			result = await to_node.doUpdate(to_node, to.params);
 			if (result !== undefined)
 				return result;
@@ -162,18 +160,19 @@ export class RouteManager {
 			const from_is_successor = from_node.checkSuccessorOf(to_node);
 			const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
 			if (to_is_successor) {
-				for (const node of to_is_successor) {
-					if (node.name !== from_node.name) {
+				for (const node of to_predecessors_all) {
+					if (to_is_successor.includes(node) && (node.name !== from_node.name)) {
 						result = await node.enter(to_node, to.params);
 						if (result !== undefined)
 							return result;
 					}
-				}
-				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params);
 					if (result !== undefined)
 						return result;
 				}
+				result = await to_node.enter(to_node, to.params);
+				if (result !== undefined)
+					return result;
 				result = await to_node.doUpdate(to_node, to.params);
 				if (result !== undefined)
 					return result;
@@ -216,19 +215,19 @@ export class RouteManager {
 					if (result !== undefined)
 						return result;
 				}
-				for (const node of to_predecessors) {
-					result = await node.enter(to_node, to.params);
+				for (const node of to_predecessors_all) {
+					if (to_predecessors.includes(node)) {
+						result = await node.enter(to_node, to.params);
+						if (result !== undefined)
+							return result;
+					}
+					result = await node.doUpdate(to_node, to.params);
 					if (result !== undefined)
 						return result;
 				}
 				result = await to_node.enter(to_node, to.params);
 				if (result !== undefined)
 					return result;
-				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params);
-					if (result !== undefined)
-						return result;
-				}
 				result = await to_node.doUpdate(to_node, to.params);
 				if (result !== undefined)
 					return result;
