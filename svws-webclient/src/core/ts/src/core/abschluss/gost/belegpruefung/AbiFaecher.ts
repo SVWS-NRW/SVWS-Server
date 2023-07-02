@@ -159,6 +159,24 @@ export class AbiFaecher extends GostBelegpruefung {
 		}
 	}
 
+	private pruefeSchriftlichkeitVorQ22(belegung : AbiturFachbelegung | null) : boolean {
+		if (this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			return true;
+		const fach : GostFach | null = this.manager.getFach(belegung);
+		if (fach !== null) {
+			let belegungen : List<AbiturFachbelegung>;
+			belegungen = this.manager.getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+				return true;
+			if (GostFachbereich.RELIGION.hat(fach)) {
+				belegungen = this.manager.getFachbelegungen(GostFachbereich.RELIGION);
+				if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+					return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Gesamtprüfung Punkte 76 und 77:
 	 * Prüfe ob das 3. Abiturfach von Q1.1 bis Q2.2 schriftlich belegt wurde
@@ -167,14 +185,14 @@ export class AbiFaecher extends GostBelegpruefung {
 	private pruefeSchriftlichkeitAB3undAB4() : void {
 		const ab3 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 !== null) {
-			if (!this.manager.pruefeBelegungMitSchriftlichkeit(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			if (!this.pruefeSchriftlichkeitVorQ22(ab3))
 				this.addFehler(GostBelegungsfehler.ABI_17);
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22))
 				this.addFehler(GostBelegungsfehler.ABI_12);
 		}
 		const ab4 : AbiturFachbelegung | null = this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 !== null) {
-			if (!this.manager.pruefeBelegungMitSchriftlichkeit(ab4, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			if (!this.pruefeSchriftlichkeitVorQ22(ab4))
 				this.addFehler(GostBelegungsfehler.ABI_18);
 			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22))
 				this.addFehler(GostBelegungsfehler.ABI_13);

@@ -199,23 +199,49 @@ public final class AbiFaecher extends GostBelegpruefung {
 	}
 
 
+	private boolean pruefeSchriftlichkeitVorQ22(final AbiturFachbelegung belegung) {
+		// Prüfe zunächst, ob das Fach selbst schriftlich belegt wurde
+		if (manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			return true;
+		// Prüfe weitere Fach-spezifische Fälle...
+		final GostFach fach = manager.getFach(belegung);
+		if (fach != null) {
+			@NotNull List<@NotNull AbiturFachbelegung> belegungen;
+			// Fall Kurs-Wechsel bei bilingualen Fächern: Prüfe, ob ein Fach mit dem gleichen Statistik-Kürzel schriftlich belegt wurde
+			belegungen = manager.getFachbelegungByFachkuerzel(fach.kuerzel);
+			if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
+					&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
+					&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+				return true;
+			// Fall Kurs-Wechsel bei einem Religionskurs: Prüfe, ob in einer anderen Konfession ein Kurs belegt wurde
+			if (GostFachbereich.RELIGION.hat(fach)) {
+				belegungen = manager.getFachbelegungen(GostFachbereich.RELIGION);
+				if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
+						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
+						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+					return true;
+			}
+		}
+		return false;
+	}
+
+
 	/**
 	 * Gesamtprüfung Punkte 76 und 77:
 	 * Prüfe ob das 3. Abiturfach von Q1.1 bis Q2.2 schriftlich belegt wurde
 	 *   und on das 4. Abiturfach von Q1.1 bis Q2.1 schriftlich und in Q2.2 mündlich belegt wurde
-	 *
 	 */
 	private void pruefeSchriftlichkeitAB3undAB4() {
 		final AbiturFachbelegung ab3 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 != null) {
-			if (!manager.pruefeBelegungMitSchriftlichkeit(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			if (!pruefeSchriftlichkeitVorQ22(ab3))
 				addFehler(GostBelegungsfehler.ABI_17);
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22))
 				addFehler(GostBelegungsfehler.ABI_12);
 		}
 		final AbiturFachbelegung ab4 = mapAbiturFachbelegungen == null ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 != null) {
-			if (!manager.pruefeBelegungMitSchriftlichkeit(ab4, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+			if (!pruefeSchriftlichkeitVorQ22(ab4))
 				addFehler(GostBelegungsfehler.ABI_18);
 			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22))
 				addFehler(GostBelegungsfehler.ABI_13);
