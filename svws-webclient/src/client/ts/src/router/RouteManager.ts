@@ -124,9 +124,6 @@ export class RouteManager {
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;
-		// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
-		if (to_node.hidden(to.params))
-			return to_node.parent.getRoute();
 		console.log("Routing:");
 		console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
 		console.log("  to: " + to_node.name + " params=" + JSON.stringify(to.params));

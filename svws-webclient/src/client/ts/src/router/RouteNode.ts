@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
-import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw} from "vue-router";
+import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
 import { useRoute } from "vue-router";
 
 import type { Schulform} from "@core";
@@ -505,6 +505,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to_params   die Routen-Parameter
      */
 	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
+		if (this.hidden(to_params))
+			return this.parent === undefined ? this.getRoute() : this.parent.getRoute();
 		if (this._parent !== undefined)
 			this._parent._selectedChild.value = this;
 		return await this.update(to, to_params);
