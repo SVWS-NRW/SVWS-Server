@@ -198,6 +198,15 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Liefert das KeySet des 1. Schlüssels.
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<@NotNull K1> getKeySet() {
+		return this._map.keySet();
+	}
+
+	/**
 	 * Liefert das KeySet der SubMap des 1. Schlüssels.
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).

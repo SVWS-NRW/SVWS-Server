@@ -183,6 +183,15 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert das KeySet des 1. Schlüssels.
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public getKeySet() : JavaSet<K1> {
+		return this._map.keySet();
+	}
+
+	/**
 	 * Liefert das KeySet der SubMap des 1. Schlüssels.
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).

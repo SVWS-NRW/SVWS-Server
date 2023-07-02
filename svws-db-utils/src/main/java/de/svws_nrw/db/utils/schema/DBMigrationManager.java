@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -12,11 +13,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -81,6 +83,7 @@ import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerLernplat
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.migration.schild.schueler.abitur.MigrationDTOSchuelerAbiturFach;
 import de.svws_nrw.db.dto.migration.schild.schule.MigrationDTOEigeneSchule;
+import de.svws_nrw.db.dto.migration.schild.schule.MigrationDTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.migration.schild.schule.MigrationDTOTeilstandorte;
 import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentials;
 import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen;
@@ -170,6 +173,9 @@ public final class DBMigrationManager {
 
 	// Eine Liste zum Zwischenspeichern der Erzieher-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> erzieherIDs = new HashSet<>();
+
+	// Eine Map für von Abschnitten auf Folgeabschnitte, welche aufgrund von Eintragungen einer Folge-Klassen-ID bei Schüler-Lernabschnitten angelegt werden sollten
+	private final HashMap2D<Integer, Integer, Pair<Integer, Integer>> folgeAbschnitteFuerKlassen = new HashMap2D<>();
 
 
 	private static final String strOK = "[OK]";
@@ -386,6 +392,16 @@ public final class DBMigrationManager {
 					} catch (@SuppressWarnings("unused") final DBConnectionException e) {
 						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
 					}
+
+					logger.logLn("-> Lege ggf. weitere Schuljahresabschnitte an, falls Folgeklassen bei Schüler-Lernabschnitte angelegt sind...");
+					logger.modifyIndent(2);
+					result = erstelleFolgeSchuljahresabschnitte(tgtConn);
+					logger.modifyIndent(-2);
+					if (!result) {
+						logger.logLn(" " + strFehler);
+						throw new DBException("Fehler beim Anlegen der Schuljahresabschnitte");
+					}
+					logger.logLn(strOK);
 
 					logger.logLn("-> Überprüfe die in der DB eingetragene Schulform anhand der Statistik-Vorgaben und korrigiere diese ggf. ...");
 					logger.modifyIndent(2);
@@ -642,6 +658,34 @@ public final class DBMigrationManager {
 		}
 		logger.logLn("Schulnummer: " + schulNummer);
 		logger.modifyIndent(-2);
+		return true;
+	}
+
+
+	private boolean erstelleFolgeSchuljahresabschnitte(final DBEntityManager tgtConn) {
+		// Gehe alle potentiell anzulegenden Abschnitt durch, die zuvor bei der Schüler-Lernabschnittsdaten gefunden wurden
+		for (final Integer schuljahr : folgeAbschnitteFuerKlassen.getKeySet()) {
+			for (final Integer abschnitt : folgeAbschnitteFuerKlassen.getKeySetOf(schuljahr)) {
+				final Pair<Integer, Integer> pairFolgeAbschnitt = folgeAbschnitteFuerKlassen.getOrNull(schuljahr, abschnitt);
+				if (pairFolgeAbschnitt == null) {
+					logger.logLn("Programmfehler: Es ist kein Folgeabschnitt eingetragen, obwohl dies in der Map notwendig ist.");
+					return false;
+				}
+				final List<MigrationDTOSchuljahresabschnitte> abschnitte = tgtConn.queryList("SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2", MigrationDTOSchuljahresabschnitte.class, schuljahr, abschnitt);
+				if (abschnitte.size() != 1) {
+					logger.logLn("Fehler: Genau ein Abschnitt %d.%d müsste bereits angelegt sein.".formatted(schuljahr, abschnitt));
+					return false;
+				}
+				// Prüfe, ob der Folge-Abschnitt bereits existiert
+				final List<MigrationDTOSchuljahresabschnitte> folgeAbschnitte = tgtConn.queryList("SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2", MigrationDTOSchuljahresabschnitte.class, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b);
+				if (!folgeAbschnitte.isEmpty())
+					continue;
+				logger.logLn("Ergänze Schuljahresabschnitt %d.%d ...".formatted(pairFolgeAbschnitt.a, pairFolgeAbschnitt.b));
+				tgtConn.persistNewWithAutoInkrement(MigrationDTOSchuljahresabschnitte.class, (final long id) ->
+					new MigrationDTOSchuljahresabschnitte(id, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b)
+				);
+			}
+		}
 		return true;
 	}
 
@@ -1056,6 +1100,13 @@ public final class DBMigrationManager {
 					}
 				}
 			}
+			// Merke alle Abschnitte, für welche ggf. ein Schuljahresabschnitt abgelegt werden muss, als Map vom Abschnitt auf den Folgeabschnitt
+			if ((daten.Folgeklasse != null) && (!"".equals(daten.Folgeklasse))) {
+				final int schuljahr = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? daten.Jahr + 1 : daten.Jahr;
+				final int abschnitt = daten.Abschnitt.equals(schuleAnzahlAbschnitte) ? 1 : daten.Abschnitt + 1;
+				folgeAbschnitteFuerKlassen.put(daten.Jahr, daten.Abschnitt, new Pair<>(schuljahr, abschnitt));
+			}
+			// Merke die IDs für Überprüfung von Foreign-Key-Constraints in anderen Tabellen
 			schuelerLernabschnittsIDs.add(daten.ID);
 		}
 		return true;
