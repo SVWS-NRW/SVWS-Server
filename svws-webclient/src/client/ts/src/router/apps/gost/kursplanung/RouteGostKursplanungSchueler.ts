@@ -41,24 +41,13 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
 		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
-		if ((abiturjahr === undefined) || (routeGost.data.auswahl !== undefined) && (abiturjahr !== routeGost.data.auswahl.abiturjahr))
+		if (abiturjahr === undefined)
 			return { name: routeGost.name, params: { } };
 		if ((halbjahr === undefined) || (idBlockung === undefined))
 			return routeGostKursplanung.getRouteHalbjahr(abiturjahr, (halbjahr === undefined) ? GostHalbjahr.EF1.id : halbjahr.id);
 		if (idErgebnis === undefined)
 			return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
 		return true;
-	}
-
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
-			throw new Error("Fehler: Die Parameter dürfen keine Arrays sein");
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const idBlockung = to_params.idblockung === undefined ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = to_params.idergebnis === undefined ? undefined : parseInt(to_params.idergebnis);
-		if ((abiturjahr === undefined) || (halbjahr === undefined) || (idBlockung === undefined) || (idErgebnis === undefined))
-			throw new Error("Fehler: Abiturjahr, Halbjahr und ID der Blockung und des Ergebnisses müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
