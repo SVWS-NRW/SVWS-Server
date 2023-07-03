@@ -34,7 +34,7 @@ export class GostFaecherManager extends JavaObject {
 	private readonly _map : HashMap<number, GostFach> = new HashMap();
 
 	/**
-	 * Eine Map für den schnellen Zugriff auf die Leitfächer
+	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
 	 */
 	private readonly _leitfaecher : List<GostFach> = new ArrayList();
 
@@ -65,27 +65,25 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt das übergebene Fach zu diesem Manager hinzu.
-	 * Die interne Sortierung wird nicht korrigiert
+	 * Fügt das übergebene Fach zu diesem Manager hinzu. Die interne Sortierung wird nicht korrigiert.
 	 *
 	 * @param fach   das hinzuzufügende Fach
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
-	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
+	 *
+	 * @throws DeveloperNotificationException Falls die ID des Faches negativ ist.
 	 */
-	private addInternal(fach : GostFach) : boolean {
-		if (fach.id < 0)
-			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!")
-		const old : GostFach | null = this._map.put(fach.id, fach);
-		if (old !== null)
+	private addFachInternal(fach : GostFach) : boolean {
+		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
+		if (this._map.containsKey(fach.id))
 			return false;
+		this._map.put(fach.id, fach);
 		const added : boolean = this._faecher.add(fach);
-		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
-			return added;
-		const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
-		if ((fg as unknown === Fachgruppe.FG_VX as unknown) || (fg as unknown === Fachgruppe.FG_PX as unknown))
-			return added;
-		this._leitfaecher.add(fach);
+		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
+			const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown))
+				this._leitfaecher.add(fach);
+		}
 		return added;
 	}
 
@@ -106,7 +104,7 @@ export class GostFaecherManager extends JavaObject {
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
 	public add(fach : GostFach) : boolean {
-		const result : boolean = this.addInternal(fach);
+		const result : boolean = this.addFachInternal(fach);
 		this.sort();
 		return result;
 	}
@@ -121,7 +119,7 @@ export class GostFaecherManager extends JavaObject {
 	public addAll(faecher : Collection<GostFach>) : boolean {
 		let result : boolean = true;
 		for (const fach of faecher)
-			if (!this.addInternal(fach))
+			if (!this.addFachInternal(fach))
 				result = false;
 		this.sort();
 		return result;
@@ -131,6 +129,7 @@ export class GostFaecherManager extends JavaObject {
 	 * Gibt das Fach mit der angegebenen ID zurück oder null, falls es das Fach nicht gibt.
 	 *
 	 * @param id   die ID des gesuchten Faches
+	 *
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public get(id : number) : GostFach | null {
@@ -140,15 +139,14 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Liefert das Fach mit der angegebenen ID zurück.
 	 *
-	 * @param pFachID die ID des gesuchten Faches.
+	 * @param idFach   die ID des gesuchten Faches.
+	 *
 	 * @return Das Fach mit der angegebenen ID zurück.
+	 *
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
-	public getOrException(pFachID : number) : GostFach {
-		const fach : GostFach | null = this._map.get(pFachID);
-		if (fach === null)
-			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.")
-		return fach;
+	public getOrException(idFach : number) : GostFach {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map, idFach);
 	}
 
 	/**
@@ -177,15 +175,6 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getLeitfaecher() : List<GostFach> {
 		return this._leitfaecher;
-	}
-
-	/**
-	 * Erstellt aus der internen Liste der Fächer ein Array
-	 *
-	 * @return ein Array mit den Fächern
-	 */
-	public values() : Array<GostFach> {
-		return this._faecher.toArray(Array(0).fill(null));
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

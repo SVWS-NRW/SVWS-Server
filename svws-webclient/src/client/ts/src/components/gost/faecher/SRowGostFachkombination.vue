@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, LinkedCollection} from "@core";
+	import type { GostJahrgangFachkombination, GostFach, GostFaecherManager, List} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
@@ -57,7 +57,7 @@
 		kombination: GostJahrgangFachkombination;
 	}>();
 
-	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => props.faecherManager().faecher());
+	const faecher: ComputedRef<List<GostFach>> = computed(() => props.faecherManager().faecher());
 	const kursarten: ComputedRef<GostKursart[]> = computed(() => GostKursart.values());
 
 	const fach1: WritableComputedRef<GostFach | undefined> = computed({

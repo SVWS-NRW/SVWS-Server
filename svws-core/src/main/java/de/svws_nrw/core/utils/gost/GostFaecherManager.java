@@ -1,10 +1,10 @@
 package de.svws_nrw.core.utils.gost;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -32,7 +32,7 @@ public class GostFaecherManager {
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostFach> _map = new HashMap<>();
 
-	/** Eine Map für den schnellen Zugriff auf die Leitfächer */
+	/** Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen. */
 	private final @NotNull List<@NotNull GostFach> _leitfaecher = new ArrayList<>();
 
 
@@ -55,28 +55,27 @@ public class GostFaecherManager {
 
 
 	/**
-	 * Fügt das übergebene Fach zu diesem Manager hinzu.
-	 * Die interne Sortierung wird nicht korrigiert
+	 * Fügt das übergebene Fach zu diesem Manager hinzu. Die interne Sortierung wird nicht korrigiert.
 	 *
 	 * @param fach   das hinzuzufügende Fach
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
-	 * @throws DeveloperNotificationException Falls die ID des Faches nagativ ist.
+	 *
+	 * @throws DeveloperNotificationException Falls die ID des Faches negativ ist.
 	 */
-	private boolean addInternal(final @NotNull GostFach fach) throws DeveloperNotificationException {
-		if (fach.id < 0)
-			throw new DeveloperNotificationException("Die Fach-ID darf nicht negativ sein!");
-		final GostFach old = _map.put(fach.id, fach);
-		if (old != null)
+	private boolean addFachInternal(final @NotNull GostFach fach) throws DeveloperNotificationException {
+		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist...
+		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
+		if (_map.containsKey(fach.id))
 			return false;
+		_map.put(fach.id, fach);
 		final boolean added = _faecher.add(fach);
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
-		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
-			return added;
-		final Fachgruppe fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
-		if ((fg == Fachgruppe.FG_VX) || (fg == Fachgruppe.FG_PX))
-			return added;
-		_leitfaecher.add(fach);
+		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
+			final Fachgruppe fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX))
+				_leitfaecher.add(fach);
+		}
 		return added;
 	}
 
@@ -99,7 +98,7 @@ public class GostFaecherManager {
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
 	public boolean add(final @NotNull GostFach fach) {
-		final boolean result = addInternal(fach);
+		final boolean result = addFachInternal(fach);
 		sort();
 		return result;
 	}
@@ -115,7 +114,7 @@ public class GostFaecherManager {
 	public boolean addAll(final @NotNull Collection<@NotNull GostFach> faecher) {
 		boolean result = true;
 		for (final @NotNull GostFach fach : faecher)
-			if (!addInternal(fach))
+			if (!addFachInternal(fach))
 				result = false;
 		sort();
 		return result;
@@ -126,24 +125,25 @@ public class GostFaecherManager {
 	 * Gibt das Fach mit der angegebenen ID zurück oder null, falls es das Fach nicht gibt.
 	 *
 	 * @param id   die ID des gesuchten Faches
+	 *
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public GostFach get(final long id) {
 		return _map.get(id);
 	}
 
+
 	/**
 	 * Liefert das Fach mit der angegebenen ID zurück.
 	 *
-	 * @param pFachID die ID des gesuchten Faches.
+	 * @param idFach   die ID des gesuchten Faches.
+	 *
 	 * @return Das Fach mit der angegebenen ID zurück.
+	 *
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
-	public @NotNull GostFach getOrException(final long pFachID) throws DeveloperNotificationException {
-		final GostFach fach = _map.get(pFachID);
-		if (fach == null)
-			throw new DeveloperNotificationException("GostFach mit id=" + pFachID + " gibt es nicht.");
-		return fach;
+	public @NotNull GostFach getOrException(final long idFach) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_map, idFach);
 	}
 
 
@@ -175,16 +175,6 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<@NotNull GostFach> getLeitfaecher() {
 		return _leitfaecher;
-	}
-
-
-	/**
-	 * Erstellt aus der internen Liste der Fächer ein Array
-	 *
-	 * @return ein Array mit den Fächern
-	 */
-	public @NotNull GostFach@NotNull[] values() {
-		return _faecher.toArray(new GostFach[0]);
 	}
 
 }

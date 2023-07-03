@@ -79,7 +79,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls pWert kleiner als pMinimum ist.
 	 */
-	public static void ifSmaller(final @NotNull String pVariablenname, final int pWert, final int pMinimum) throws DeveloperNotificationException {
+	public static void ifSmaller(final @NotNull String pVariablenname, final long pWert, final long pMinimum) throws DeveloperNotificationException {
 		if (pWert < pMinimum)
 			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")" + " darf nicht kleiner sein als " + pMinimum + "!");
 	}
@@ -93,7 +93,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls pWert größer als pMaximum ist.
 	 */
-	public static void ifGreater(final @NotNull String pVariablenname, final int pWert, final int pMaximum) throws DeveloperNotificationException {
+	public static void ifGreater(final @NotNull String pVariablenname, final long pWert, final long pMaximum) throws DeveloperNotificationException {
 		if (pWert > pMaximum)
 			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")"  + " darf nicht größer sein als " + pMaximum + "!");
 	}
@@ -107,7 +107,7 @@ public class DeveloperNotificationException extends RuntimeException {
 	 *
 	 * @throws DeveloperNotificationException falls pVariable gleich pWert ist..
 	 */
-	public static void ifEqual(final @NotNull String pVariablenname, final int pVariable, final int pWert) throws DeveloperNotificationException {
+	public static void ifEqual(final @NotNull String pVariablenname, final long pVariable, final long pWert) throws DeveloperNotificationException {
 		if (pVariable == pWert)
 			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")" + " darf nicht gleich " + pWert + " sein!");
 	}

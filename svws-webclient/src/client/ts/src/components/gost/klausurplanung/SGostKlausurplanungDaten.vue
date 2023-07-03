@@ -58,7 +58,7 @@
 						<svws-ui-radio-group id="rbgKursart" :row="true">
 							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
 						</svws-ui-radio-group>
-						<svws-ui-multi-select :items="props.faecherManager.values().sort((a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung))" :item-text="(fach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
+						<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
 					</svws-ui-input-wrapper>
 					<svws-ui-radio-group id="rbgQuartal" :row="true">
 						<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
@@ -102,7 +102,7 @@
 
 	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostFach } from "@core";
 	import type { Ref , WritableComputedRef } from 'vue'
-	import { GostKlausurvorgabe } from "@core";
+	import { ArrayList, GostKlausurvorgabe } from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -134,6 +134,12 @@
 			if (val !== undefined)
 				activeVorgabe.value.idFach = val.id;
 		}
+	});
+
+	const faecherSortiert = computed(() => {
+		const f = new ArrayList(props.faecherManager.faecher());
+		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
+		return f;
 	});
 
 	const neueVorgabe = () => {

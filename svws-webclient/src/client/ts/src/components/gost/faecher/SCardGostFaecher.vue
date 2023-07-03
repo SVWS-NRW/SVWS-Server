@@ -69,9 +69,9 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import {computed, onUpdated, ref} from "vue";
+	import {computed } from "vue";
 
-	import type { GostFach, GostFaecherManager, LinkedCollection} from "@core";
+	import type { GostFach, GostFaecherManager, List } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
@@ -80,7 +80,7 @@
 		abiturjahr: number;
 	}>();
 
-	const faecher: ComputedRef<LinkedCollection<GostFach>> = computed(() => {
+	const faecher: ComputedRef<List<GostFach>> = computed(() => {
 		return props.faecherManager().faecher();
 	});
 
