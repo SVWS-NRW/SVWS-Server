@@ -71,6 +71,21 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
   	/**
+	 * Überprüft, ob ein pWert nicht in dem Bereich von min und max liegt und wirft in diesem Fall eine DeveloperNotificationException.
+	 *
+	 * @param pVariablenname Der Name der Variablen.
+	 * @param pWert          Der Wert der Variablen.
+	 * @param pMinimum       Der kleinste noch erlaubte Wert.
+	 * @param pMaximum       Der größte noch erlaubte Wert.
+	 *
+	 * @throws DeveloperNotificationException falls pWert kleiner als pMinimum ist.
+	 */
+	public static void ifNotInRange(final @NotNull String pVariablenname, final long pWert, final long pMinimum, final long pMaximum) throws DeveloperNotificationException {
+		if ((pWert < pMinimum) || (pWert > pMaximum))
+			throw new DeveloperNotificationException(pVariablenname + "(" + pWert + ")" + " muss in dem Bereich [ " + pMinimum + ", " + pMaximum + " ] liegen!");
+	}
+
+  	/**
 	 * Überprüft, ob eine pWert kleiner ist als pMinimum und wirft in diesem Fall eine DeveloperNotificationException.
 	 *
 	 * @param pVariablenname Der Name der Variablen.

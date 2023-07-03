@@ -1,16 +1,19 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
-import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
-import { GostFach } from '../../../core/data/gost/GostFach';
+import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
+import { GostLaufbahnplanungFachkombinationTyp } from '../../../core/types/gost/GostLaufbahnplanungFachkombinationTyp';
+import type { Comparator } from '../../../java/util/Comparator';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
+import { GostJahrgangFachkombination, cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 
@@ -38,6 +41,21 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	private readonly _leitfaecher : List<GostFach> = new ArrayList();
 
+	/**
+	 * Die Liste der erforderlichen oder nicht erlaubten Fachkombinationen
+	 */
+	private readonly _fachkombis : List<GostJahrgangFachkombination> = new ArrayList();
+
+	/**
+	 * Die Liste mit den geforderten Fachkombinationen
+	 */
+	private readonly _fachkombisErforderlich : List<GostJahrgangFachkombination> = new ArrayList();
+
+	/**
+	 * Die Liste mit den nicht erlaubten Fachkombinationen
+	 */
+	private readonly _fachkombisVerboten : List<GostJahrgangFachkombination> = new ArrayList();
+
 
 	/**
 	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
@@ -52,15 +70,29 @@ export class GostFaecherManager extends JavaObject {
 	public constructor(faecher : List<GostFach>);
 
 	/**
+	 * Erstellt einen neuen Manager mit den übergebenen Fächern und den
+	 * übergebenen geforderten und nicht erlaubten Fächerkombinationen.
+	 *
+	 * @param faecher      die Liste mit den Fächern
+	 * @param fachkombis   die Liste mit den Fächerkombinationen
+	 */
+	public constructor(faecher : List<GostFach>, fachkombis : List<GostJahrgangFachkombination>);
+
+	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : List<GostFach>) {
+	public constructor(__param0? : List<GostFach>, __param1? : List<GostJahrgangFachkombination>) {
 		super();
-		if ((typeof __param0 === "undefined")) {
+		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
 			const faecher : List<GostFach> = cast_java_util_List(__param0);
 			this.addAll(faecher);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
+			const faecher : List<GostFach> = cast_java_util_List(__param0);
+			const fachkombis : List<GostJahrgangFachkombination> = cast_java_util_List(__param1);
+			this.addAll(faecher);
+			this.addFachkombinationenAll(fachkombis);
 		} else throw new Error('invalid method overload');
 	}
 
@@ -96,6 +128,38 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt die übergebene Fachkombination zu diesem Manager hinzu.
+	 *
+	 * @param fachkombi   die hinzuzufügende Fachkombinationen
+	 *
+	 * @return true, falls die Fachkombination hinzugefügt wurde
+	 *
+	 * @throws DeveloperNotificationException Falls die Fachkombination nicht zu den Fächern des Managers passt.
+	 */
+	private addFachkombinationInternal(fachkombi : GostJahrgangFachkombination) : boolean {
+		DeveloperNotificationException.ifSmaller("fachkombi.fachID1", fachkombi.fachID1, 0);
+		DeveloperNotificationException.ifSmaller("fachkombi.fachID2", fachkombi.fachID2, 0);
+		DeveloperNotificationException.ifMapNotContains("_map", this._map, fachkombi.fachID1);
+		DeveloperNotificationException.ifMapNotContains("_map", this._map, fachkombi.fachID2);
+		DeveloperNotificationException.ifNotInRange("fachkombi.typ", fachkombi.typ, 0, 1);
+		const typ : GostLaufbahnplanungFachkombinationTyp = GostLaufbahnplanungFachkombinationTyp.fromValue(fachkombi.typ);
+		if (JavaString.isBlank(fachkombi.hinweistext)) {
+			const fach1 : GostFach = this.getOrException(fachkombi.fachID1);
+			const fach2 : GostFach = this.getOrException(fachkombi.fachID2);
+			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? " als " + fachkombi.kursart1 : "";
+			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? " als " + fachkombi.kursart2 : "";
+			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1! + ((typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) ? " erfordert " : " erlaubt kein ") + fach2.kuerzelAnzeige + kursart2!;
+		}
+		if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) {
+			this._fachkombisErforderlich.add(fachkombi);
+		} else
+			if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.VERBOTEN as unknown) {
+				this._fachkombisVerboten.add(fachkombi);
+			}
+		return this._fachkombis.add(fachkombi);
+	}
+
+	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu und
 	 * passt intern die Sortierung der Fächer an.
 	 *
@@ -103,16 +167,37 @@ export class GostFaecherManager extends JavaObject {
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 */
-	public add(fach : GostFach) : boolean {
-		const result : boolean = this.addFachInternal(fach);
-		this.sort();
-		return result;
+	public add(fach : GostFach) : boolean;
+
+	/**
+	 * Fügt die geforderten oder nicht erlaubte Fächerkombination zu diesem
+	 * Manager hinzu.
+	 *
+	 * @param fachkombi   das hinzuzufügende Fachkombination
+	 *
+	 * @return true, falls die Fachkombination hinzugefügt wurde
+	 */
+	public add(fachkombi : GostJahrgangFachkombination) : boolean;
+
+	/**
+	 * Implementation for method overloads of 'add'
+	 */
+	public add(__param0 : GostFach | GostJahrgangFachkombination) : boolean {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostFach'))))) {
+			const fach : GostFach = cast_de_svws_nrw_core_data_gost_GostFach(__param0);
+			const result : boolean = this.addFachInternal(fach);
+			this.sort();
+			return result;
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachkombination'))))) {
+			const fachkombi : GostJahrgangFachkombination = cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination(__param0);
+			return this.addFachkombinationInternal(fachkombi);
+		} else throw new Error('invalid method overload');
 	}
 
 	/**
 	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
 	 *
-	 * @param faecher   die einzufügenden Fächer
+	 * @param faecher   die hinzuzufügenden Fächer
 	 *
 	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
 	 */
@@ -122,6 +207,22 @@ export class GostFaecherManager extends JavaObject {
 			if (!this.addFachInternal(fach))
 				result = false;
 		this.sort();
+		return result;
+	}
+
+	/**
+	 * Fügt die geforderten und nicht erlaubten Fächerkombinationen in der übergebenen
+	 * Liste zu diesem Manager hinzu.
+	 *
+	 * @param fachkombis   die hinzuzufügenden Fachkombinationen
+	 *
+	 * @return true, falls <i>alle</i> Fachkombinationen eingefügt wurden, sonst false
+	 */
+	public addFachkombinationenAll(fachkombis : List<GostJahrgangFachkombination>) : boolean {
+		let result : boolean = true;
+		for (const fachkombi of fachkombis)
+			if (!this.addFachkombinationInternal(fachkombi))
+				result = false;
 		return result;
 	}
 
@@ -175,6 +276,33 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getLeitfaecher() : List<GostFach> {
 		return this._leitfaecher;
+	}
+
+	/**
+	 * Liefert die interne Liste mit den Fachkombinationen zurück.
+	 *
+	 * @return die interne Liste mit den Fachkombinationen
+	 */
+	public getFachkombinationen() : List<GostJahrgangFachkombination> {
+		return this._fachkombis;
+	}
+
+	/**
+	 * Liefert die interne Liste mit den geforderten Fachkombinationen zurück.
+	 *
+	 * @return die interne Liste mit den geforderten Fachkombinationen
+	 */
+	public getFachkombinationenErforderlich() : List<GostJahrgangFachkombination> {
+		return this._fachkombisErforderlich;
+	}
+
+	/**
+	 * Liefert die interne Liste mit den nicht erlaubten Fachkombinationen zurück.
+	 *
+	 * @return die interne Liste mit den nicht erlaubten Fachkombinationen
+	 */
+	public getFachkombinationenVerboten() : List<GostJahrgangFachkombination> {
+		return this._fachkombisVerboten;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
