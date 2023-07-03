@@ -17,7 +17,6 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
@@ -64,10 +63,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	private final GostJahrgangsdaten gostJahrgangsdaten;
 
 	/** Die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers */
-	private final GostFaecherManager gostFaecher;
-
-	/** Die Liste der nicht erlaubten und geforderten Fachkombinationen */
-	private final List<GostJahrgangFachkombination> gostFaecherkombinationen;
+	private final GostFaecherManager faecherManager;
 
 	/** Der Abiturdaten-Manager */
 	private final AbiturdatenManager manager;
@@ -86,23 +82,21 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	 * @param schulbezeichnung    die Bezeichnung der Schule bestehend aus drei Teilen
 	 * @param abidaten            die Laufbahndaten des Schülers
 	 * @param gostJahrgangsdaten  die Jahrgangsdaten des Abiturjahrganges
-	 * @param gostFaecher         die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers
-	 * @param gostFaecherkombinationen   die Informationen zu den nicht erlaubten und den geforderten Fachkombinationen
+	 * @param faecherManager      die Fächer der gymnasialen Oberstufe für den Abiturjahrgang des Schülers und
+	 *                            die Informationen zu den nicht erlaubten und den geforderten Fachkombinationen
 	 * @param planungsHalbjahr    das Halbjahr der gymnasialen Oberstufe, auf welches sich die Planung bezieht
 	 * @param bemerkungJahrgang   der Text, der bei diesem Schüler oben auf dem Beratungsbogen erscheinen soll.
 	 * @param datumBeratung       das Datum der letzten Beratung des Schülers
 	 */
 	private PDFGostWahlbogen(final String schuelerVorname, final String schuelerNachname, final Geschlecht geschlecht, final String klasse, final String[] schulbezeichnung, final Abiturdaten abidaten,
-                             final GostJahrgangsdaten gostJahrgangsdaten, final GostFaecherManager gostFaecher, final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen,
-                             final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang,
-			                 final String datumBeratung) {
+                             final GostJahrgangsdaten gostJahrgangsdaten, final GostFaecherManager faecherManager,
+                             final GostHalbjahr planungsHalbjahr, final String bemerkungJahrgang, final String datumBeratung) {
 		// Setze den Titel des Dokuments, das HTML-Template und die speziellen CSS-Definitionen für dieses Dokument
 		super("Wahlbogen für das Halbjahr " + planungsHalbjahr.kuerzel + " von " + schuelerVorname + " " + schuelerNachname, html, css);
 		this.abidaten = abidaten;
 		this.gostJahrgangsdaten = gostJahrgangsdaten;
-		this.gostFaecher = gostFaecher;
-		this.gostFaecherkombinationen = gostFaecherkombinationen;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.gostFaecher.faecher(), this.gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
+		this.faecherManager = faecherManager;
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.faecherManager, GostBelegpruefungsArt.GESAMT);
 		this.filename = "Laufbahnplanung_%d_%s_%s_%s_%d.pdf".formatted(
 			gostJahrgangsdaten.abiturjahr,
 			gostJahrgangsdaten.jahrgang,
@@ -207,7 +201,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		final Map<String, Sprachpruefung> sprachpruefungen = abidaten.sprachendaten.pruefungen.stream().collect(Collectors.toMap(b -> b.sprache, b -> b));
 		// Erzeuge für jedes Fach eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		final StringBuilder rows = new StringBuilder();
-		for (final GostFach fach : gostFaecher.faecher()) {
+		for (final GostFach fach : faecherManager.faecher()) {
 			final AbiturFachbelegung belegung = belegungen.get(fach.id);
 			final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 			rows.append("<tr>");
@@ -348,10 +342,10 @@ public final class PDFGostWahlbogen extends PDFCreator {
     	GostHalbjahr planungsHalbjahr = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(daten.abiturjahr, abschnitt.Jahr, abschnitt.Abschnitt);
     	if (planungsHalbjahr == null)
     		planungsHalbjahr = (halbjahr == null) ? GostHalbjahr.EF1 : GostHalbjahr.Q22;
-    	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
-    	if (gostFaecher.isEmpty())
+    	final GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, daten.abiturjahr);
+    	if (faecherManager.isEmpty())
     		throw OperationError.NOT_FOUND.exception();
-    	final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, daten.abiturjahr);
+    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, daten.abiturjahr));
     	return new PDFGostWahlbogen(
     		schueler.Vorname,
     		schueler.Nachname,
@@ -360,8 +354,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
     		new String[] { schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3 },
     		daten,
     		gostJahrgangsdaten,
-    		gostFaecher,
-    		gostFaecherkombinationen,
+    		faecherManager,
     		planungsHalbjahr,
     		gostJahrgangsdaten.textBeratungsbogen,
     		gostSchueler.DatumBeratung

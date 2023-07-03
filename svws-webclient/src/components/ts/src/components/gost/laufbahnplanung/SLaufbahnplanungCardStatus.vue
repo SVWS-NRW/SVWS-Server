@@ -6,7 +6,7 @@
 		<div class="print:hidden -mt-4">
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
-			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :map-fachkombinationen="mapFachkombinationen" />
+			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" />
 			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
 		</div>
 	</svws-ui-content-card>
@@ -14,14 +14,12 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, GostJahrgangFachkombination, AbiturdatenManager, GostFaecherManager, Sprachendaten } from "@core";
+	import type { List, GostBelegpruefungErgebnisFehler, AbiturdatenManager, Sprachendaten } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
-		faechermanager: () => GostFaecherManager;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	}>();

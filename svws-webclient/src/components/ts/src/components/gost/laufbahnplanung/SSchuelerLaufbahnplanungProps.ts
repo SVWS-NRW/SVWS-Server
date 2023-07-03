@@ -1,4 +1,5 @@
-import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten } from "@core";
+import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
+	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten } from "@core";
 
 export interface SchuelerLaufbahnplanungProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
@@ -13,8 +14,6 @@ export interface SchuelerLaufbahnplanungProps {
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
-	faechermanager: () => GostFaecherManager;
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
 	zwischenspeicher?: GostLaufbahnplanungDaten;

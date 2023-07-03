@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurvorgabenManager {
 
-	private GostFaecherManager _faecherManager = new GostFaecherManager();
+	private @NotNull GostFaecherManager _faecherManager = new GostFaecherManager();
 
 	/** Die GostKlausurvorgaben, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKlausurvorgabe> _vorgaben = new ArrayList<>();
@@ -42,15 +42,13 @@ public class GostKlausurvorgabenManager {
 
 	/** Ein Comparator für die Klausurvorgaben. */
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
-		if (_faecherManager != null) {
-			final GostFach aFach = _faecherManager.get(a.idFach);
-			final GostFach bFach = _faecherManager.get(b.idFach);
-			if (aFach != null && bFach != null) {
-				if (aFach.sortierung > bFach.sortierung)
-					return +1;
-				if (aFach.sortierung < bFach.sortierung)
-					return -1;
-			}
+		final GostFach aFach = _faecherManager.get(a.idFach);
+		final GostFach bFach = _faecherManager.get(b.idFach);
+		if (aFach != null && bFach != null) {
+			if (aFach.sortierung > bFach.sortierung)
+				return +1;
+			if (aFach.sortierung < bFach.sortierung)
+				return -1;
 		}
 		if (a.kursart.compareTo(b.kursart) < 0)
 			return +1;
@@ -68,7 +66,7 @@ public class GostKlausurvorgabenManager {
 	 * @param faecherManager der Gost-Fächermanager
 	 *
 	 */
-	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> vorgaben, final GostFaecherManager faecherManager) {
+	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> vorgaben, final @NotNull GostFaecherManager faecherManager) {
 		_faecherManager = faecherManager;
 		for (final @NotNull GostKlausurvorgabe v : vorgaben) {
 			addKlausurvorgabe(v);

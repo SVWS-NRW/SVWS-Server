@@ -4,13 +4,13 @@ import java.io.InputStream;
 import java.text.Collator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
@@ -21,7 +21,6 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung;
@@ -741,10 +740,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
 
 			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
-			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).faecher();
+	    	final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
 
 			// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
-	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr);
+	    	faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
 
 			// Führe für alle Schüler nacheinander die Belegprüfung durch
 			for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
@@ -758,7 +757,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				final GostBelegpruefungsErgebnisse ergebnisse = new GostBelegpruefungsErgebnisse();
 
 				// Führe die Belegprüfung für den Schüler durch
-				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher, faecherkombinationen, pruefungsArt);
+				final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, pruefungsArt);
 				ergebnisse.ergebnis = abiManager.getBelegpruefungErgebnis();
 
 				// F+lle das zugehörige Schüler-DTO

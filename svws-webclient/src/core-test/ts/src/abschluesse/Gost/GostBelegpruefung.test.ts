@@ -1,11 +1,13 @@
 import { readFileSync, readdirSync } from "fs";
 import { resolve, basename } from "path";
 import { describe, test, expect } from "vitest";
-import { GostBelegpruefungErgebnisFehler, GostJahrgangsdaten} from "~/index";
+import type { GostBelegpruefungErgebnisFehler} from "~/index";
 import {
 	Abiturdaten,
 	AbiturdatenManager,
 	GostJahrgangFachkombination,
+	GostFaecherManager,
+	GostJahrgangsdaten,
 	GostBelegpruefungErgebnis,
 	GostBelegpruefungsArt,
 	GostFach,
@@ -112,9 +114,10 @@ describe.each(Object.entries(abiturdaten))(
 		for (let index = 0; index < gost_fachkombis.length; index++) {
 			listKombis.add(gost_fachkombis[index]);
 		}
+		const faecherManager = new GostFaecherManager(list, listKombis);
 		describe.each(Object.entries(schueler))("Testfall %s", (id, abitur) => {
 			test("EF1", () => {
-				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, list, listKombis, GostBelegpruefungsArt.EF1);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =
                     belegpruefungsergebnisse_ef1[jahrgang][id];
@@ -134,7 +137,7 @@ describe.each(Object.entries(abiturdaten))(
 				expect(fehlercodes_expected).toEqual(fehlercodes_ergebnis);
 			});
 			test("Gesamt", () => {
-				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, list, listKombis, GostBelegpruefungsArt.GESAMT);
+				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =
                     belegpruefungsergebnisse_gesamt[jahrgang][id];

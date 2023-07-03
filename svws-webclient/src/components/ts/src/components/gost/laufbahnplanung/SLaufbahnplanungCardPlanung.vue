@@ -19,7 +19,7 @@
 				<svws-ui-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<svws-ui-data-table :items="faechermanager().faecher()"
+		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()"
 			:columns="cols" panel-height overflow-x-hidden>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
@@ -104,9 +104,9 @@
 				</div>
 			</template>
 			<template #body>
-				<template v-for="row in rows" :key="row.id">
-					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :map-fachkombinationen="mapFachkombinationen" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+				<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
+					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
+						:fach="row" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
 				</template>
 			</template>
 			<template #footer>
@@ -241,14 +241,12 @@
 	import type { ComputedRef } from "vue";
 	import {computed, onMounted, ref} from "vue";
 
-	import type { List, GostFach, SchuelerListeEintrag, AbiturdatenManager, GostFaecherManager, GostJahrgangFachkombination, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@core";
+	import type { SchuelerListeEintrag, AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@core";
 	import { GostHalbjahr } from "@core";
-	import type {DataTableColumn} from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
-		faechermanager: () => GostFaecherManager;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		getPdfWahlbogen: () => Promise<Blob>;
@@ -278,8 +276,6 @@
 			}
 		}
 	}
-
-	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager().faecher());
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getAnrechenbareKurse());
 

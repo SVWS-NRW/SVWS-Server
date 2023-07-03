@@ -77,79 +77,87 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import type { AbiturdatenManager, GostFach, GostFaecherManager, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl, List } from "@core";
-	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, Jahrgaenge, ArrayList, ZulaessigesFach, GostFachUtils } from "@core";
+	import type { AbiturdatenManager, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten, GostSchuelerFachwahl } from "@core";
+	import { Fachgruppe, GostAbiturFach, GostFachbereich, GostHalbjahr, GostKursart, ZulaessigesFach, GostFachUtils } from "@core";
 	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
-		faechermanager: () => GostFaecherManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
 		halbjahr?: GostHalbjahr;
 		wahl: string;
 		moeglich: boolean;
 		bewertet: boolean;
-		fachkombiErforderlich?: List<GostJahrgangFachkombination>;
-		fachkombiVerboten?: List<GostJahrgangFachkombination>;
 		manuellerModus: boolean;
 	}>(), {
-		halbjahr: undefined,
-		fachkombiErforderlich: () => new ArrayList<GostJahrgangFachkombination>(),
-		fachkombiVerboten: () => new ArrayList<GostJahrgangFachkombination>()
+		halbjahr: undefined
 	});
 
 	const emit = defineEmits<{
 		(e: 'update:wahl', wahl: GostSchuelerFachwahl, fachID?: number): void,
 	}>();
 
+	function pruefeKombinationErforderlich(fachid: number, kombi: GostJahrgangFachkombination, hj: GostHalbjahr) {
+		if (!kombi.gueltigInHalbjahr[hj.id])
+			return false;
+		if (fachid !== kombi.fachID2)
+			return false;
+		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
+		if (fach1 === null)
+			return false;
+		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
+		const f2 = props.abiturdatenManager().getFachbelegungByID(fachid)
+		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
+		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
+		const bel1 = kursart1
+			? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj)
+			: props.abiturdatenManager().pruefeBelegung(f1, hj);
+		const bel2 = kursart2
+			? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj)
+			: props.abiturdatenManager().pruefeBelegung(f2, hj);
+		if (bel2)
+			return false;
+		return bel1 !== bel2;
+	}
+
 	const istFachkombiErforderlich: ComputedRef<boolean> = computed(() => {
 		if (props.halbjahr === undefined)
 			return false;
-		for (const kombi of props.fachkombiErforderlich) {
-			if (kombi.gueltigInHalbjahr[props.halbjahr.id]) {
-				const fach1 = props.faechermanager().get(kombi.fachID1);
-				if (!fach1)
-					return false;
-				const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
-				const f2 = props.abiturdatenManager().getFachbelegungByID(props.fach.id)
-				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
-				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
-				const bel1 = kursart1
-					? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
-					: props.abiturdatenManager().pruefeBelegung(f1, props.halbjahr);
-				const bel2 = kursart2
-					? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
-					: props.abiturdatenManager().pruefeBelegung(f2, props.halbjahr);
-				if (bel2)
-					return false;
-				return bel1 !== bel2;
-			}
-		}
+		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationenErforderlich())
+			if (pruefeKombinationErforderlich(props.fach.id, kombi, props.halbjahr))
+				return true;
 		return false;
 	});
+
+	function pruefeKombinationVerboten(fachid: number, kombi: GostJahrgangFachkombination, hj: GostHalbjahr) {
+		if (!kombi.gueltigInHalbjahr[hj.id])
+			return false;
+		if (fachid !== kombi.fachID2)
+			return false;
+		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1)
+		if (fach1 === null)
+			return false;
+		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
+		const f2 = props.abiturdatenManager().getFachbelegungByID(fachid)
+		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
+		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
+		const bel1 = kursart1
+			? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, hj)
+			: props.abiturdatenManager().pruefeBelegung(f1, hj);
+		const bel2 = kursart2
+			? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj)
+			: props.abiturdatenManager().pruefeBelegung(f2, hj);
+		return bel1 && bel2;
+	}
 
 	const istFachkombiVerboten: ComputedRef<boolean> = computed(() => {
 		if (props.halbjahr === undefined)
 			return false;
-		for (const kombi of props.fachkombiVerboten) {
-			if (kombi.gueltigInHalbjahr[props.halbjahr.id]) {
-				const fach1 = props.faechermanager().get(kombi.fachID1)
-				if (!fach1)
-					return false;
-				const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id)
-				const f2 = props.abiturdatenManager().getFachbelegungByID(props.fach.id)
-				const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
-				const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
-				const bel1 = kursart1
-					? props.abiturdatenManager().pruefeBelegungMitKursart(f1, kursart1, props.halbjahr)
-					: props.abiturdatenManager().pruefeBelegung(f1, props.halbjahr);
-				const bel2 = kursart2
-					? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, props.halbjahr)
-					: props.abiturdatenManager().pruefeBelegung(f2, props.halbjahr);
-				return bel1 && bel2;
-			}
-		}
+		const fachkombis = props.abiturdatenManager().faecher().getFachkombinationenVerboten();
+		for (const kombi of fachkombis)
+			if (pruefeKombinationVerboten(props.fach.id, kombi, props.halbjahr))
+				return true;
 		return false;
 	});
 

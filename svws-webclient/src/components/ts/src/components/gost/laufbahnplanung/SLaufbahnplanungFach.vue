@@ -21,11 +21,11 @@
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-			<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
+			<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
 				:fach="fach" :halbjahr="halbjahr" :wahl="wahlen[halbjahr.id]" :moeglich="istMoeglich(halbjahr)" :bewertet="istBewertet(halbjahr)"
-				:fachkombi-erforderlich="fachkombi_erforderlich" :fachkombi-verboten="fachkombi_verboten" @update:wahl="onUpdateWahl" />
+				@update:wahl="onUpdateWahl" />
 		</template>
-		<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :faechermanager="faechermanager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
+		<s-laufbahnplanung-fach-halbjahr :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten" :manueller-modus="manuellerModus"
 			:fach="fach" :wahl="abi_wahl" :moeglich="istMoeglich()" :bewertet="istBewertet(GostHalbjahr.Q22)" @update:wahl="onUpdateWahl" />
 	</div>
 </template>
@@ -33,19 +33,16 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import type { AbiturFachbelegung, GostFach, GostFaecherManager,
-		GostJahrgangFachkombination, GostJahrgangsdaten,
+	import type { AbiturFachbelegung, GostFach, GostJahrgangFachkombination, GostJahrgangsdaten,
 		GostSchuelerFachwahl, List, Sprachbelegung} from "@core";
 	import { AbiturdatenManager, AbiturFachbelegungHalbjahr, Fachgruppe, GostHalbjahr, GostKursart, GostLaufbahnplanungFachkombinationTyp,
-		Jahrgaenge, SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
+		SprachendatenUtils, ArrayList, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
-		faechermanager: () => GostFaecherManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 		manuellerModus: boolean;
 	}>();
 
@@ -89,31 +86,6 @@
 	function istBewertet(halbjahr: GostHalbjahr): boolean {
 		return props.abiturdatenManager().istBewertet(halbjahr);
 	}
-
-	const fachkombis: ComputedRef<List<GostJahrgangFachkombination>> = computed(() => {
-		const result = new ArrayList<GostJahrgangFachkombination>();
-		for (const kombi of props.mapFachkombinationen.values())
-			if (kombi.fachID2 === props.fach.id && kombi.abiturjahr === props.gostJahrgangsdaten.abiturjahr)
-				result.add(kombi)
-		return result;
-	});
-
-	const fachkombi_erforderlich: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
-		const result = new ArrayList<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis.value)
-			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ)
-				result.add(kombi);
-		return result;
-	})
-
-	const fachkombi_verboten: ComputedRef<List<GostJahrgangFachkombination>> = computed(()=> {
-		const result = new ArrayList<GostJahrgangFachkombination>()
-		for (const kombi of fachkombis.value)
-			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ)
-				result.add(kombi);
-		return result;
-	})
-
 
 	function onUpdateWahl(wahl: GostSchuelerFachwahl, fachID?: number) {
 		emit('update:wahl', fachID || props.fach.id, wahl);

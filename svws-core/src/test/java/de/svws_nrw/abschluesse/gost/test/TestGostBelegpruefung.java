@@ -26,6 +26,7 @@ import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 
 /**
  * Diese Klasse enthält die Testroutinen für den Belegprüfungsalgorithmus
@@ -168,7 +169,8 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: EF1-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, gostFaecher, gostFachkombinationen, GostBelegpruefungsArt.EF1);
+							final GostFaecherManager faecherManager = new GostFaecherManager(gostFaecher, gostFachkombinationen);
+							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 							final List<String> log = ergebnis.log;
 							if (log != null) {
@@ -209,7 +211,8 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: Gesamt-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, gostFaecher, gostFachkombinationen, GostBelegpruefungsArt.GESAMT);
+							final GostFaecherManager faecherManager = new GostFaecherManager(gostFaecher, gostFachkombinationen);
+							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 							final List<String> log = ergebnis.log;
 							if (log != null) {

@@ -1,50 +1,51 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Naturwissenschaften } from '../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
 import { Schwerpunkt } from '../../../core/abschluss/gost/belegpruefung/Schwerpunkt';
-import type { JavaSet } from '../../../java/util/JavaSet';
+import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { GostFachUtils } from '../../../core/utils/gost/GostFachUtils';
 import { KurszahlenUndWochenstunden } from '../../../core/abschluss/gost/belegpruefung/KurszahlenUndWochenstunden';
-import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
-import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Latinum } from '../../../core/abschluss/gost/belegpruefung/Latinum';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
-import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
+import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
+import type { List } from '../../../java/util/List';
+import { Collections } from '../../../java/util/Collections';
+import { AbiFaecher } from '../../../core/abschluss/gost/belegpruefung/AbiFaecher';
+import { HashSet } from '../../../java/util/HashSet';
+import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/LiterarischKuenstlerisch';
+import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
+import { ArrayMap } from '../../../core/adt/map/ArrayMap';
+import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
+import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
+import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
+import { Note } from '../../../core/types/Note';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
+import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
+import { GostSchuelerFachwahl } from '../../../core/data/gost/GostSchuelerFachwahl';
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
-import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
-import type { List } from '../../../java/util/List';
-import { Collections } from '../../../java/util/Collections';
 import { GesellschaftswissenschaftenUndReligion } from '../../../core/abschluss/gost/belegpruefung/GesellschaftswissenschaftenUndReligion';
 import { GostBelegungsfehler } from '../../../core/abschluss/gost/GostBelegungsfehler';
-import { AbiFaecher } from '../../../core/abschluss/gost/belegpruefung/AbiFaecher';
-import { HashSet } from '../../../java/util/HashSet';
 import { GostFach } from '../../../core/data/gost/GostFach';
-import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/LiterarischKuenstlerisch';
-import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
-import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostBelegpruefung } from '../../../core/abschluss/gost/GostBelegpruefung';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 import { Projektkurse } from '../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { SprachendatenUtils } from '../../../core/utils/schueler/SprachendatenUtils';
-import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
-import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
-import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
 import { Fremdsprachen } from '../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
-import { Note } from '../../../core/types/Note';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { Mathematik } from '../../../core/abschluss/gost/belegpruefung/Mathematik';
-import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class AbiturdatenManager extends JavaObject {
 
@@ -59,14 +60,9 @@ export class AbiturdatenManager extends JavaObject {
 	private readonly _jahrgangsdaten : GostJahrgangsdaten | null;
 
 	/**
-	 * Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang
+	 * Der Manager für die Fächer und Fachkombinationen der gymnasialen Oberstufe für diesen Abiturjahrgang
 	 */
-	private readonly gostFaecher : JavaMap<number, GostFach>;
-
-	/**
-	 * Die Informationen zu nicht zulässigen und erforderten Fächerkombinationen
-	 */
-	private readonly gostFaecherKombinationen : List<GostJahrgangFachkombination>;
+	private readonly faecherManager : GostFaecherManager;
 
 	/**
 	 * Die Art der durchzuführenden Belegprüfung
@@ -104,21 +100,14 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @param abidaten       die Abiturdaten
 	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
-	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen.
-	 * @param gostFaecherKombinationen   die nicht zulässigen und geforderten Fächerkombinationen
+	 * @param faecherManager der Manager für die Fächer und Fachkombinationen der Gymnasialen Oberstufe
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
-	public constructor(abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, gostFaecher : List<GostFach>, gostFaecherKombinationen : List<GostJahrgangFachkombination>, pruefungsArt : GostBelegpruefungsArt) {
+	public constructor(abidaten : Abiturdaten, gostJahrgang : GostJahrgangsdaten | null, faecherManager : GostFaecherManager, pruefungsArt : GostBelegpruefungsArt) {
 		super();
 		this.abidaten = abidaten;
 		this._jahrgangsdaten = gostJahrgang;
-		this.gostFaecher = new HashMap();
-		for (let i : number = 0; i < gostFaecher.size(); i++) {
-			const fach : GostFach | null = gostFaecher.get(i);
-			if (fach !== null)
-				this.gostFaecher.put(fach.id, fach);
-		}
-		this.gostFaecherKombinationen = gostFaecherKombinationen;
+		this.faecherManager = faecherManager;
 		this.pruefungsArt = pruefungsArt;
 		this.init();
 	}
@@ -192,6 +181,15 @@ export class AbiturdatenManager extends JavaObject {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Gibt den zugehörigen Fächer-Manager zurück.
+	 *
+	 * @return der Fächer-Manager
+	 */
+	public faecher() : GostFaecherManager {
+		return this.faecherManager;
 	}
 
 	/**
@@ -300,7 +298,7 @@ export class AbiturdatenManager extends JavaObject {
 	public getFach(belegung : AbiturFachbelegung | null) : GostFach | null {
 		if (belegung === null)
 			return null;
-		return this.gostFaecher.get(belegung.fachID);
+		return this.faecherManager.get(belegung.fachID);
 	}
 
 	/**
@@ -624,7 +622,7 @@ export class AbiturdatenManager extends JavaObject {
 		if ((halbjahre === null) || (halbjahre.length === 0))
 			return true;
 		for (const fachbelegung of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -667,7 +665,7 @@ export class AbiturdatenManager extends JavaObject {
 		if (fachbelegungen === null)
 			return false;
 		for (const fachbelegung of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -698,7 +696,7 @@ export class AbiturdatenManager extends JavaObject {
 		if (fachbelegungen === null)
 			return false;
 		for (const fachbelegung of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
 			if (fach === null)
 				continue;
 			const alleBelegungen : List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -967,7 +965,7 @@ export class AbiturdatenManager extends JavaObject {
 			return 0;
 		let anzahl : number = 0;
 		for (const fachbelegung of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
 			if (fach === null)
 				continue;
 			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] === null)
@@ -1270,7 +1268,7 @@ export class AbiturdatenManager extends JavaObject {
 	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach | null> {
 		const faecher : HashSet<ZulaessigesFach | null> = new HashSet();
 		for (const fb of fachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fb.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fb.fachID);
 			if (fach === null)
 				continue;
 			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
@@ -1300,7 +1298,7 @@ export class AbiturdatenManager extends JavaObject {
 			for (const halbjahr of GostHalbjahr.values()) {
 				let belegung_vorhanden : boolean = false;
 				for (const fb of fachbelegungen) {
-					const fbFach : GostFach | null = this.gostFaecher.get(fb.fachID);
+					const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 					if (fbFach === null)
 						continue;
 					const fbZulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
@@ -1341,7 +1339,7 @@ export class AbiturdatenManager extends JavaObject {
 			for (const halbjahr of GostHalbjahr.values()) {
 				let belegung_vorhanden : boolean = false;
 				for (const fb of fachbelegungen) {
-					const fbFach : GostFach | null = this.gostFaecher.get(fb.fachID);
+					const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 					if (fbFach === null)
 						continue;
 					const fbZulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
@@ -1417,7 +1415,7 @@ export class AbiturdatenManager extends JavaObject {
 			return fachbelegungen;
 		const tmpFachbelegungen : List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of tmpFachbelegungen) {
-			const fach : GostFach | null = this.gostFaecher.get(fachbelegung.fachID);
+			const fach : GostFach | null = this.faecherManager.get(fachbelegung.fachID);
 			if ((fach === null) || (!JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel))))
 				continue;
 			fachbelegungen.add(fachbelegung);
@@ -1471,7 +1469,7 @@ export class AbiturdatenManager extends JavaObject {
 	 *         ausgewählt werden kann.
 	 */
 	public getMoeglicheKursartAlsAbiturfach(id : number) : GostKursart | null {
-		const fach : GostFach | null = this.gostFaecher.get(id);
+		const fach : GostFach | null = this.faecherManager.get(id);
 		if (fach === null)
 			return null;
 		const belegung : AbiturFachbelegung | null = this.getFachbelegungByID(id);
@@ -1688,7 +1686,7 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getFachkombinationenEF1() : List<GostJahrgangFachkombination> {
 		const kombis : List<GostJahrgangFachkombination> = new ArrayList();
-		for (const kombi of this.gostFaecherKombinationen)
+		for (const kombi of this.faecherManager.getFachkombinationen())
 			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
 				kombis.add(kombi);
 		return kombis;
@@ -1700,7 +1698,7 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Liste mit den Fachkombinationen
 	 */
 	public getFachkombinationenGesamt() : List<GostJahrgangFachkombination> {
-		return this.gostFaecherKombinationen;
+		return this.faecherManager.getFachkombinationen();
 	}
 
 	/**

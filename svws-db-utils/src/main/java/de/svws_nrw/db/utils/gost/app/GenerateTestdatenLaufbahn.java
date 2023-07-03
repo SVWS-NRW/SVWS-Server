@@ -166,13 +166,13 @@ public class GenerateTestdatenLaufbahn {
 						continue;
 					final String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
 					final GostJahrgangsdaten gostJahrgangsdaten = mapJahrgangIDToGostJahrgangsdaten.get(strJahrgangID);
-					final GostFaecherManager gostFaecher = mapJahrgangIDToGostFaecher.get(strJahrgangID);
-					final List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = mapJahrgangIDToGostFaecherkombinationen.get(strJahrgangID);
+					final GostFaecherManager faecherManager = mapJahrgangIDToGostFaecher.get(strJahrgangID);
+					faecherManager.addFachkombinationenAll(mapJahrgangIDToGostFaecherkombinationen.get(strJahrgangID));
 					logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher.faecher(), gostFaecherkombinationen, GostBelegpruefungsArt.EF1);
+					AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 					final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
-					manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecher.faecher(), gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
+					manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 					final GostBelegpruefungErgebnis ergebnisGesamt = manager.getBelegpruefungErgebnis();
 
 					writeTo(outPath + "/Jahrgang_" + strJahrgangID + "_" + strSchuelerID + "_Abiturdaten.json", mapper.writeValueAsString(abiturdaten));

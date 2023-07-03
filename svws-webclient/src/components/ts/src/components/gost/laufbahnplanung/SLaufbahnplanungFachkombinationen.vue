@@ -1,5 +1,5 @@
 <template>
-	<template v-if="mapFachkombinationen.size">
+	<template v-if="!abiturdatenManager().faecher().getFachkombinationen().isEmpty()">
 		<h4 class="gap-1 flex items-center font-bold mt-5 cursor-pointer" @click="show=!show">
 			<span class="inline-flex gap-1 items-center">
 				<template v-if="fehler.size">
@@ -25,12 +25,12 @@
 			</svws-ui-button>
 		</h4>
 		<ul class="mt-1 flex flex-col gap-1.5" v-show="show">
-			<li v-for="regel in fachkombi_erforderlich" :key="regel.id" class="flex gap-1 leading-tight">
+			<li v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="flex gap-1 leading-tight">
 				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span>{{ regel.hinweistext }}</span>
 			</li>
-			<li v-for="regel in fachkombi_verboten" :key="regel.id" class="flex gap-1 leading-tight">
+			<li v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="flex gap-1 leading-tight">
 				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
 				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
 				<span>{{ regel.hinweistext }}</span>
@@ -41,54 +41,20 @@
 
 <script setup lang="ts">
 
-	import type { GostJahrgangFachkombination, GostFaecherManager, AbiturdatenManager} from "@core";
+	import type { GostJahrgangFachkombination, AbiturdatenManager} from "@core";
 	import { GostLaufbahnplanungFachkombinationTyp, GostHalbjahr, GostKursart } from "@core";
-	import { computed, ref } from "vue";
+	import { ref } from "vue";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
-		faechermanager: () => GostFaecherManager;
-		mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	}>();
 
 	const fehler = ref(new Set());
 	const show = ref(false);
 
-	const fachkombi_erforderlich = computed((): Set<GostJahrgangFachkombination> => {
-		const result = new Set<GostJahrgangFachkombination>()
-		for (const kombi of props.mapFachkombinationen.values())
-			if (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === kombi.typ) {
-				if (kombi.hinweistext === "") {
-					const fach1 = props.faechermanager().get(kombi.fachID1);
-					const fach2 = props.faechermanager().get(kombi.fachID2);
-					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
-					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erfordert ${fach2?.kuerzelAnzeige} ${kursart2}`;
-				}
-				result.add(kombi);
-			}
-		return result;
-	})
-
-	const fachkombi_verboten = computed((): Set<GostJahrgangFachkombination> => {
-		const result = new Set<GostJahrgangFachkombination>()
-		for (const kombi of props.mapFachkombinationen.values())
-			if (GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue() === kombi.typ) {
-				if (kombi.hinweistext === "") {
-					const fach1 = props.faechermanager().get(kombi.fachID1);
-					const fach2 = props.faechermanager().get(kombi.fachID2);
-					const kursart1 = kombi.kursart1 ? `als ${kombi.kursart1}`: '';
-					const kursart2 = kombi.kursart2 ? `als ${kombi.kursart2}` : '';
-					kombi.hinweistext = `${fach1?.kuerzelAnzeige} ${kursart1} erlaubt kein ${fach2?.kuerzelAnzeige} ${kursart2}`;
-				}
-				result.add(kombi);
-			}
-		return result;
-	})
-
 	function regel_umgesetzt(kombi: GostJahrgangFachkombination): boolean {
-		const fach1 = props.faechermanager().get(kombi.fachID1);
-		const fach2 = props.faechermanager().get(kombi.fachID2);
+		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
+		const fach2 = props.abiturdatenManager().faecher().get(kombi.fachID2);
 		const f1 = (fach1 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach1.id);
 		const f2 = (fach2 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach2.id);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);

@@ -63,8 +63,6 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => this.data.abiturdatenManager,
-			faechermanager: () => this.data.faechermanager,
-			mapFachkombinationen: this.data.mapFachkombinationen,
 			mapLehrer: this.data.mapLehrer,
 			id: this.data.id,
 			zwischenspeicher: this.data.zwischenspeicher,

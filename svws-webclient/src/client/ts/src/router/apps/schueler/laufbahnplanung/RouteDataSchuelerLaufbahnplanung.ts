@@ -1,9 +1,9 @@
 import { shallowRef } from "vue";
 
-import type { Abiturdaten, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
-	List, SchuelerListeEintrag } from "@core";
+import type { Abiturdaten, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
+	SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
-	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, ArrayList, GostHalbjahr } from "@core";
+	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -12,14 +12,11 @@ interface RouteStateSchuelerLaufbahnplanung {
 	auswahl: SchuelerListeEintrag | undefined;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
-	faecherManager: GostFaecherManager | undefined;
+	faecherManager: GostFaecherManager;
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
-	listGostFaecher: List<GostFach>;
-	listFachkombinationen: List<GostJahrgangFachkombination>;
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: GostLaufbahnplanungDaten | undefined;
 }
@@ -30,14 +27,11 @@ export class RouteDataSchuelerLaufbahnplanung {
 		auswahl: undefined,
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
-		faecherManager: undefined,
+		faecherManager: new GostFaecherManager(),
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
-		listGostFaecher: new ArrayList(),
-		listFachkombinationen: new ArrayList(),
-		mapFachkombinationen: new Map(),
 		mapLehrer: new Map(),
 		zwischenspeicher: undefined,
 	}
@@ -72,10 +66,6 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
 		return this._state.value.gostBelegpruefungErgebnis;
-	}
-
-	get mapFachkombinationen(): Map<number, GostJahrgangFachkombination> {
-		return this._state.value.mapFachkombinationen;
 	}
 
 	get gostLaufbahnBeratungsdaten(): GostLaufbahnplanungBeratungsdaten {
@@ -119,13 +109,13 @@ export class RouteDataSchuelerLaufbahnplanung {
 			return;
 		const art = this.gostBelegpruefungsArt;
 		if (art === 'ef1')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
+			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 		if (art === 'gesamt')
-			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
-		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.GESAMT);
+			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
 			return abiturdatenManager;
-		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.listGostFaecher, this._state.value.listFachkombinationen, GostBelegpruefungsArt.EF1);
+		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}
 
 	setGostBelegpruefungErgebnis = async () => {
@@ -211,15 +201,12 @@ export class RouteDataSchuelerLaufbahnplanung {
 				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
 				const faecherManager = new GostFaecherManager(listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
-				const mapFachkombinationen = new Map<number, GostJahrgangFachkombination>();
-				for (const fk of listFachkombinationen)
-					mapFachkombinationen.set(fk.id, fk);
+				faecherManager.addFachkombinationenAll(listFachkombinationen);
 				const listLehrer = await api.server.getLehrer(api.schema);
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
-				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten,
-					listGostFaecher, faecherManager, listFachkombinationen, mapFachkombinationen, mapLehrer })
+				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")

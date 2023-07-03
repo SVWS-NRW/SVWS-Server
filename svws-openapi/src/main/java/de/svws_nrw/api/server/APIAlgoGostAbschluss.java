@@ -11,6 +11,7 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsdaten;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,7 +52,8 @@ public class APIAlgoGostAbschluss {
     					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
     		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, daten.gostFaecher, daten.gostFaecherKombinationen, GostBelegpruefungsArt.GESAMT);
+    	final GostFaecherManager faecherManager = new GostFaecherManager(daten.gostFaecher, daten.gostFaecherKombinationen);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, faecherManager, GostBelegpruefungsArt.GESAMT);
 		return manager.getBelegpruefungErgebnis();
     }
 
@@ -78,7 +80,8 @@ public class APIAlgoGostAbschluss {
     					 schema = @Schema(implementation = GostBelegpruefungsdaten.class))) final GostBelegpruefungsdaten daten,
     		@Context final HttpServletRequest request) {
     	// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, daten.gostFaecher, daten.gostFaecherKombinationen, GostBelegpruefungsArt.EF1);
+    	final GostFaecherManager faecherManager = new GostFaecherManager(daten.gostFaecher, daten.gostFaecherKombinationen);
+		final AbiturdatenManager manager = new AbiturdatenManager(daten.abiturdaten, daten.gostJahrgang, faecherManager, GostBelegpruefungsArt.EF1);
 		return manager.getBelegpruefungErgebnis();
     }
 

@@ -42,6 +42,7 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -57,11 +58,8 @@ public class AbiturdatenManager {
 	/** Die Informationen zu den Jahrgangsdaten, sofern welche vorhanden sind - ansonsten null */
 	private final GostJahrgangsdaten _jahrgangsdaten;
 
-	/** Eine Map mit der Zuordnung der zulässigen Fächer der gymnasialen Oberstufe für diesen Abiturjahrgang */
-	private final @NotNull Map<@NotNull Long, @NotNull GostFach> gostFaecher;
-
-	/** Die Informationen zu nicht zulässigen und erforderten Fächerkombinationen  */
-	private final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherKombinationen;
+	/** Der Manager für die Fächer und Fachkombinationen der gymnasialen Oberstufe für diesen Abiturjahrgang */
+	private final @NotNull GostFaecherManager faecherManager;
 
 	/** Die Art der durchzuführenden Belegprüfung */
 	private final @NotNull GostBelegpruefungsArt pruefungsArt;
@@ -89,22 +87,14 @@ public class AbiturdatenManager {
 	 *
 	 * @param abidaten       die Abiturdaten
 	 * @param gostJahrgang   die Informationen zu dem Abiturjahrgang
-	 * @param gostFaecher    die Fächer der Gymnasialen Oberstufe, die bei dem Abiturjahrgang zur Verfügung stehen.
-	 * @param gostFaecherKombinationen   die nicht zulässigen und geforderten Fächerkombinationen
+	 * @param faecherManager der Manager für die Fächer und Fachkombinationen der Gymnasialen Oberstufe
 	 * @param pruefungsArt   die Art der Belegpruefung (z.B. EF1 oder GESAMT)
 	 */
 	public AbiturdatenManager(final @NotNull Abiturdaten abidaten, final GostJahrgangsdaten gostJahrgang,
-			final @NotNull List<@NotNull GostFach> gostFaecher, final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherKombinationen,
-			final @NotNull GostBelegpruefungsArt pruefungsArt) {
+			final @NotNull GostFaecherManager faecherManager, final @NotNull GostBelegpruefungsArt pruefungsArt) {
 		this.abidaten = abidaten;
 		this._jahrgangsdaten = gostJahrgang;
-		this.gostFaecher = new HashMap<>();
-		for (int i = 0; i < gostFaecher.size(); i++) {
-			final GostFach fach = gostFaecher.get(i);
-			if (fach != null)
-				this.gostFaecher.put(fach.id, fach);
-		}
-		this.gostFaecherKombinationen = gostFaecherKombinationen;
+		this.faecherManager = faecherManager;
 		this.pruefungsArt = pruefungsArt;
 		init();
 	}
@@ -189,6 +179,17 @@ public class AbiturdatenManager {
 			}
 		}
 	}
+
+
+	/**
+	 * Gibt den zugehörigen Fächer-Manager zurück.
+	 *
+	 * @return der Fächer-Manager
+	 */
+	public @NotNull GostFaecherManager faecher() {
+		return this.faecherManager;
+	}
+
 
 	/**
 	 * gibt die gewählte Prüfungsart zurück
@@ -302,7 +303,7 @@ public class AbiturdatenManager {
 	public GostFach getFach(final AbiturFachbelegung belegung) {
 		if (belegung == null)
 			return null;
-		return gostFaecher.get(belegung.fachID);
+		return faecherManager.get(belegung.fachID);
 	}
 
 
@@ -644,7 +645,7 @@ public class AbiturdatenManager {
 			return true;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -689,7 +690,7 @@ public class AbiturdatenManager {
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -722,7 +723,7 @@ public class AbiturdatenManager {
 			return false;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
 			// Beachte alle Fachbelegungen von Fächern des gleichen Statistik-Faches - dies kann bei bilingualen Fächern wichtig sein
-			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
 			final List<@NotNull AbiturFachbelegung> alleBelegungen = getFachbelegungByFachkuerzel(fach.kuerzel);
@@ -1011,7 +1012,7 @@ public class AbiturdatenManager {
 			return 0;
 		int anzahl = 0;
 		for (final AbiturFachbelegung fachbelegung : fachbelegungen) {
-			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
 			if (fach == null)
 				continue;
 			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] == null)
@@ -1333,7 +1334,7 @@ public class AbiturdatenManager {
 	private @NotNull Set<ZulaessigesFach> getMengeStatistikFaecher(final @NotNull List<@NotNull AbiturFachbelegung> fachbelegungen) {
 		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
 		for (final AbiturFachbelegung fb : fachbelegungen) {
-			final GostFach fach = gostFaecher.get(fb.fachID);
+			final GostFach fach = faecherManager.get(fb.fachID);
 			if (fach == null)
 				continue;
 			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
@@ -1366,7 +1367,7 @@ public class AbiturdatenManager {
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;
 				for (final AbiturFachbelegung fb : fachbelegungen) {
-					final GostFach fbFach = gostFaecher.get(fb.fachID);
+					final GostFach fbFach = faecherManager.get(fb.fachID);
 					if (fbFach == null)
 						continue;
 					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
@@ -1410,7 +1411,7 @@ public class AbiturdatenManager {
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;
 				for (final AbiturFachbelegung fb : fachbelegungen) {
-					final GostFach fbFach = gostFaecher.get(fb.fachID);
+					final GostFach fbFach = faecherManager.get(fb.fachID);
 					if (fbFach == null)
 						continue;
 					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
@@ -1490,7 +1491,7 @@ public class AbiturdatenManager {
 			return fachbelegungen;
 		final @NotNull List<@NotNull AbiturFachbelegung> tmpFachbelegungen = abidaten.fachbelegungen;
 		for (final AbiturFachbelegung fachbelegung : tmpFachbelegungen) {
-			final GostFach fach = gostFaecher.get(fachbelegung.fachID);
+			final GostFach fach = faecherManager.get(fachbelegung.fachID);
 			if ((fach == null) || (!kuerzel.equals(fach.kuerzel)))
 				continue;
 			fachbelegungen.add(fachbelegung);
@@ -1551,7 +1552,7 @@ public class AbiturdatenManager {
 	 *         ausgewählt werden kann.
 	 */
 	public GostKursart getMoeglicheKursartAlsAbiturfach(final long id) {
-		final GostFach fach = gostFaecher.get(id);
+		final GostFach fach = faecherManager.get(id);
 		if (fach == null)
 			return null;
 		final AbiturFachbelegung belegung = getFachbelegungByID(id);
@@ -1793,7 +1794,7 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenEF1() {
 		final @NotNull List<@NotNull GostJahrgangFachkombination> kombis = new ArrayList<>();
-		for (final @NotNull GostJahrgangFachkombination kombi : gostFaecherKombinationen)
+		for (final @NotNull GostJahrgangFachkombination kombi : faecherManager.getFachkombinationen())
 			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
 				kombis.add(kombi);
 		return kombis;
@@ -1806,7 +1807,7 @@ public class AbiturdatenManager {
 	 * @return die Liste mit den Fachkombinationen
 	 */
 	public @NotNull List<@NotNull GostJahrgangFachkombination> getFachkombinationenGesamt() {
-		return gostFaecherKombinationen;
+		return faecherManager.getFachkombinationen();
 	}
 
 

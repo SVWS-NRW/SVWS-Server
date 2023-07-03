@@ -87,7 +87,7 @@
 
 	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
 		let fach
-		for (const f of props.getDatenmanager().faecherManager().values()) {
+		for (const f of props.getDatenmanager().faecherManager().faecher()) {
 			if (f.id === kurs_original.value?.fach_id) {
 				fach = f;
 				break;

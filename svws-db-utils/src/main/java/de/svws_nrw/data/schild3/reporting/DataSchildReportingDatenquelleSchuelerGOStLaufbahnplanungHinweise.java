@@ -1,12 +1,16 @@
 package de.svws_nrw.data.schild3.reporting;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungHinweise;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
@@ -20,11 +24,6 @@ import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Hinweise in der Laufbahnplanung in der gymnasialen Oberstufe
@@ -68,9 +67,9 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinw
 				// kann beim Erzeugen der Manager ein Fehler auftreten. Dieser wird hier abgefangen, das Füllen der Datenquelle beendet und eine Exception geworfen.
 				try {
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
-					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
-			    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
-					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher.faecher(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
+					final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
+					faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
+					final @NotNull AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 
 					final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
 					if (!ergebnis.fehlercodes.isEmpty()) {
