@@ -57,11 +57,6 @@
 	const istFremdsprache: ComputedRef<boolean> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
-	// const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
-
-	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
-
-	const bgColorIfLanguage: ComputedRef<string> = computed(() => istFremdsprache.value ? bgColor.value : bgColorDisabled.value);
 
 	const fachbelegung: ComputedRef<AbiturFachbelegung | null> = computed(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
@@ -123,24 +118,6 @@
 	function onUpdateWahl(wahl: GostSchuelerFachwahl, fachID?: number) {
 		emit('update:wahl', fachID || props.fach.id, wahl);
 	}
-
-
-	const getAbiGKMoeglich: ComputedRef<boolean> = computed(()=> {
-		const fachgruppe = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
-		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX)
-			return false;
-		return props.fach.istMoeglichAbiGK;
-	})
-
-
-	const getAbiLKMoeglich: ComputedRef<boolean> = computed(() => {
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		const fachgruppe = fach.getFachgruppe();
-		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX
-			|| fach.getJahrgangAb() === Jahrgaenge.JG_EF || (props.fach.biliSprache === null && props.fach.biliSprache === "D"))
-			return false;
-		return props.fach.istMoeglichAbiLK;
-	})
 
 
 	const getAbiMoeglich: ComputedRef<boolean> = computed(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);

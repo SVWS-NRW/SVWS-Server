@@ -159,9 +159,6 @@
 			!props.moeglich || props.bewertet || istFachkombiVerboten.value
 	);
 
-	const bgColorDisabled: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(100,100,100)`);
-	// const bgColorDisabled: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
-
 	const bgColor: ComputedRef<string> = computed(() => {
 		/*if (!props.moeglich)
 			return bgColorDisabled.value;*/
@@ -169,13 +166,6 @@
 			? ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGBA(1) //'gray'
 			: ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB();
 	});
-
-	const bgColorTransparent: ComputedRef<string> = computed(() => {
-		if (!props.moeglich)
-			return bgColorDisabled.value;
-		return `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`;
-	});
-
 
 	const ist_VTF: ComputedRef<boolean> = computed(() =>
 		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_VX);
@@ -652,23 +642,6 @@
 			wahl.abiturFach = props.abiturdatenManager().pruefeExistiertAbiFach(props.abiturdatenManager().getFachbelegungen(), GostAbiturFach.AB3) ? null : 3;
 	}
 
-
-	const getAbiGKMoeglich: ComputedRef<boolean> = computed(()=> {
-		const fachgruppe = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe();
-		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX)
-			return false;
-		return props.fach.istMoeglichAbiGK;
-	})
-
-
-	const getAbiLKMoeglich: ComputedRef<boolean> = computed(() => {
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		const fachgruppe = fach.getFachgruppe();
-		if (fachgruppe === Fachgruppe.FG_ME || fachgruppe === Fachgruppe.FG_VX || fachgruppe === Fachgruppe.FG_PX
-			|| fach.getJahrgangAb() === Jahrgaenge.JG_EF || (props.fach.biliSprache === null && props.fach.biliSprache === "D"))
-			return false;
-		return props.fach.istMoeglichAbiLK;
-	})
 
 	//**Gibt ein false zurück, falls ein Fach mit GE/SW an diesem HJ gesetzt ist */
 	const zkMoeglich: ComputedRef<boolean> = computed(()=>{
