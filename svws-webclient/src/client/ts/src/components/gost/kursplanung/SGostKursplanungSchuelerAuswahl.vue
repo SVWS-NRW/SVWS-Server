@@ -22,7 +22,7 @@
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="fach_filter_toggle">
-					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.toList()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
+					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
 					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
@@ -78,7 +78,7 @@
 
 	const fach: WritableComputedRef<GostFach|undefined> = computed({
 		get: () => {
-			for (const fach of props.faecherManager.toList())
+			for (const fach of props.faecherManager.faecher())
 				if (fach.id === props.schuelerFilter.fach.value)
 					return fach;
 			return undefined

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.adt.collection.LinkedCollection;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.fach.Fachgruppe;
@@ -28,7 +27,7 @@ public class GostFaecherManager {
 	};
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */
-	private final @NotNull LinkedCollection<@NotNull GostFach> _faecher = new LinkedCollection<>();
+	private final @NotNull List<@NotNull GostFach> _faecher = new ArrayList<>();
 
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostFach> _map = new HashMap<>();
@@ -164,7 +163,7 @@ public class GostFaecherManager {
 	 *
 	 * @return die interne Liste der Fächer
 	 */
-	public @NotNull LinkedCollection<@NotNull GostFach> faecher() {
+	public @NotNull List<@NotNull GostFach> faecher() {
 		return _faecher;
 	}
 
@@ -186,19 +185,6 @@ public class GostFaecherManager {
 	 */
 	public @NotNull GostFach@NotNull[] values() {
 		return _faecher.toArray(new GostFach[0]);
-	}
-
-
-	/**
-	 * Erstellt aus der internen Liste einen ArrayList mit den Daten
-	 *
-	 * @return ein ArrayList mit den Fächern
-	 */
-	public @NotNull List<@NotNull GostFach> toList() {
-		final @NotNull List<@NotNull GostFach> result = new ArrayList<>();
-		for (final @NotNull GostFach fach : _faecher)
-			result.add(fach);
-		return result;
 	}
 
 }

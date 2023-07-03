@@ -70,7 +70,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehl
 			    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 			    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
-					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher.toList(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecher.faecher(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
 
 					final GostBelegpruefungErgebnis ergebnis = abiManager.getBelegpruefungErgebnis();
 					if (!ergebnis.fehlercodes.isEmpty()) {

@@ -102,7 +102,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		this.gostJahrgangsdaten = gostJahrgangsdaten;
 		this.gostFaecher = gostFaecher;
 		this.gostFaecherkombinationen = gostFaecherkombinationen;
-		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.gostFaecher.toList(), this.gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
+		this.manager = new AbiturdatenManager(this.abidaten, this.gostJahrgangsdaten, this.gostFaecher.faecher(), this.gostFaecherkombinationen, GostBelegpruefungsArt.GESAMT);
 		this.filename = "Laufbahnplanung_%d_%s_%s_%s_%d.pdf".formatted(
 			gostJahrgangsdaten.abiturjahr,
 			gostJahrgangsdaten.jahrgang,

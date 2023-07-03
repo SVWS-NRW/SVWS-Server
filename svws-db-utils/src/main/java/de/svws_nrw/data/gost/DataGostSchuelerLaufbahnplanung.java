@@ -357,7 +357,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.hatZusatzkursSW = jahrgangsdaten.ZusatzkursSWVorhanden;
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
 			daten.beratungslehrer.addAll(DataGostBeratungslehrer.getBeratungslehrer(conn, dtosBeratungslehrer));
-			daten.faecher.addAll(gostFaecher.toList());
+			daten.faecher.addAll(gostFaecher.faecher());
 		for (final DTOGostJahrgangFachkombinationen kombi : kombis)
 			daten.fachkombinationen.add(DataGostJahrgangFachkombinationen.dtoMapper.apply(kombi));
 		final GostLaufbahnplanungDatenSchueler schuelerDaten = new GostLaufbahnplanungDatenSchueler();
@@ -741,7 +741,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	    	final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
 
 			// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
-			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).toList();
+			final @NotNull List<@NotNull GostFach> gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr).faecher();
 
 			// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
 	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr);

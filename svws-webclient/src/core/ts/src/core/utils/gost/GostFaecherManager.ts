@@ -1,17 +1,16 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
+import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
-import { LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../java/util/Comparator';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
-import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostFaecherManager extends JavaObject {
 
@@ -27,7 +26,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
 	 */
-	private readonly _faecher : LinkedCollection<GostFach> = new LinkedCollection();
+	private readonly _faecher : List<GostFach> = new ArrayList();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
@@ -167,7 +166,7 @@ export class GostFaecherManager extends JavaObject {
 	 *
 	 * @return die interne Liste der Fächer
 	 */
-	public faecher() : LinkedCollection<GostFach> {
+	public faecher() : List<GostFach> {
 		return this._faecher;
 	}
 
@@ -187,18 +186,6 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public values() : Array<GostFach> {
 		return this._faecher.toArray(Array(0).fill(null));
-	}
-
-	/**
-	 * Erstellt aus der internen Liste einen ArrayList mit den Daten
-	 *
-	 * @return ein ArrayList mit den Fächern
-	 */
-	public toList() : List<GostFach> {
-		const result : List<GostFach> = new ArrayList();
-		for (const fach of this._faecher)
-			result.add(fach);
-		return result;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

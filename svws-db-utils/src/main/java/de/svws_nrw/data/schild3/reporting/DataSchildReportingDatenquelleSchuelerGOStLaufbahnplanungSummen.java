@@ -91,7 +91,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 			    	final @NotNull GostJahrgangsdaten gostjahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 					final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr);
 			    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
-					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostjahrgangsdaten, gostFaecher.toList(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
+					final AbiturdatenManager abiManager = new AbiturdatenManager(abidaten, gostjahrgangsdaten, gostFaecher.faecher(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
 
 					final int[] kurse = abiManager.getAnrechenbareKurse();
 					final int[] wstd = abiManager.getWochenstunden();

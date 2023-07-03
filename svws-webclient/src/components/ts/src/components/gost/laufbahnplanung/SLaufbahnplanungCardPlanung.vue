@@ -19,7 +19,7 @@
 				<svws-ui-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<svws-ui-data-table :items="faechermanager().toList()"
+		<svws-ui-data-table :items="faechermanager().faecher()"
 			:columns="cols" panel-height overflow-x-hidden>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
@@ -279,7 +279,7 @@
 		}
 	}
 
-	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager().toList());
+	const rows: ComputedRef<List<GostFach>> = computed(() => props.faechermanager().faecher());
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getAnrechenbareKurse());
 

@@ -878,7 +878,7 @@ public class APIGost {
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
 	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.toList(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.faecher(), faecherkombinationen, GostBelegpruefungsArt.GESAMT);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
@@ -918,7 +918,7 @@ public class APIGost {
 	    	if (gostFaecherManager.isEmpty())
 	    		gostFaecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, null);
 	    	final @NotNull List<@NotNull GostJahrgangFachkombination> faecherkombinationen = DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr);
-			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.toList(), faecherkombinationen, GostBelegpruefungsArt.EF1);
+			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, gostFaecherManager.faecher(), faecherkombinationen, GostBelegpruefungsArt.EF1);
 			return manager.getBelegpruefungErgebnis();
     	}
     }
