@@ -225,7 +225,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		final List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
+		final List<DTOSchuljahresabschnitte> listSchuljahresabschnitte = listSchuljahresabschnitteIDs.isEmpty()
+				? new ArrayList<>()
+				: conn.queryNamed("DTOSchuljahresabschnitte.id.multiple", listSchuljahresabschnitteIDs, DTOSchuljahresabschnitte.class);
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = listSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
     	// Erstelle die Schüler-Liste und sortiere sie
     	final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
