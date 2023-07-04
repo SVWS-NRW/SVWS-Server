@@ -38,7 +38,7 @@
 				<svws-ui-data-table :items="[]" :columns="cols" :disable-header="true" :disable-footer="true" :no-data="false">
 					<template #header><div /></template>
 					<template #body>
-						<s-kurs-schueler-schiene v-for="(schiene, index) in schienen"
+						<s-kurs-schueler-schiene v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()"
 							:key="index" :schiene="schiene" :selected="schueler" :max-kurse="maxKurseInSchienen"
 							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostBlockungsergebnisSchiene, type GostFachwahl, type List } from "@core";
+	import { ArrayList, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostFachwahl, type List } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
@@ -73,16 +73,15 @@
 
 	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
 
-	const schienen: ComputedRef<List<GostBlockungsergebnisSchiene>> = computed(() => props.getErgebnismanager().getMengeAllerSchienen());
-
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
 
 	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
 		const map = new Map();
-		if (!schienen.value?.size())
+		const schienen = props.getErgebnismanager().getMengeAllerSchienen();
+		if (schienen.isEmpty())
 			return map;
 		for (const k of kurse.value)
-			for (const s of schienen.value) {
+			for (const s of schienen) {
 				const arr = []
 				for (const kk of s.kurse)
 					kk.id === k.id ? arr.push(kk) : arr.push(undefined)
@@ -120,21 +119,16 @@
 
 	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
 		let max = 0;
-		for (let i = 0; i < schienen.value.size(); i++) {
-			if (schienen.value?.get(i)?.kurse) {
-				max = Math.max(max, schienen.value.get(i).kurse.size());
-			}
-		}
+		const schienen = props.getErgebnismanager().getMengeAllerSchienen();
+		for (let i = 0; i < schienen.size(); i++)
+			max = Math.max(max, schienen.get(i).kurse.size());
 		return max;
 	});
 
 	function calculateColumns(): DataTableColumn[] {
 		const cols: Array<DataTableColumn> = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1 }];
-
-		for (let i = 0; i < maxKurseInSchienen?.value; i++) {
+		for (let i = 0; i < maxKurseInSchienen?.value; i++)
 			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6 });
-		}
-
 		return cols;
 	}
 
