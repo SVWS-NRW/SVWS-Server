@@ -40,21 +40,21 @@
 				</svws-ui-radio-group>
 			</template>
 			<template #header>
-				<svws-ui-table-row thead>
-					<svws-ui-table-cell thead>
+				<div role="row" class="data-table__tr data-table__thead__tr">
+					<div role="columnheader" class="data-table__th data-table__thead__th">
 						<div class="inline-flex items-center gap-2">
 							<span>Schülerauswahl</span>
 							<svws-ui-badge size="big">
 								{{ schuelerFilter.filtered.value.length }}
 							</svws-ui-badge>
 						</div>
-					</svws-ui-table-cell>
-				</svws-ui-table-row>
+					</div>
+				</div>
 			</template>
 			<template #body>
 				<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr--clicked': selected === s}"
 					v-for="(s, index) in schuelerFilter.filtered.value" @click="selected = s" :key="index">
-					<s-kurs-schueler-schueler :schueler="s" :selected="selected === s" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
+					<s-kurs-schueler-schueler :schueler="s" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
 				</div>
 			</template>
 		</svws-ui-data-table>

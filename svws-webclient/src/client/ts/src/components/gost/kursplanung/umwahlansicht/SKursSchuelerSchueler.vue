@@ -5,34 +5,25 @@
 				{{ `${schueler.nachname}, ${schueler.vorname}` }}
 			</span>
 			<div class="flex items-center gap-1 cursor-pointer">
-				<svws-ui-badge v-if="schueler.status !== 2" type="light" size="big" :short="true">
-					{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}
-				</svws-ui-badge>
-				<svws-ui-badge v-if="schueler.geschlecht" type="light" size="big">
-					<span>{{ schueler.geschlecht }}</span>
-				</svws-ui-badge>
+				<svws-ui-tooltip v-if="schueler.status !== 2">
+					<span class="badge badge--light badge--lg badge--short">{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}</span>
+					<template #content>{{ SchuelerStatus.fromID(schueler.status)?.bezeichnung }}</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip>
+					<span class="badge badge--light badge--lg">{{ schueler.geschlecht }}</span>
+					<template #content>{{ schueler.geschlecht }}</template>
+				</svws-ui-tooltip>
 				<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision, 'text-black': !kollision, }">
 					<svws-ui-tooltip v-if="kollision && !nichtwahl">
-						<i-ri-alert-line />
-						<template #content>
-							<span>Kollision</span>
-						</template>
+						<i-ri-alert-line /> <template #content> Kollision </template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip v-else-if="!kollision && nichtwahl">
-						<i-ri-forbid-2-line />
-						<template #content>
-							<span>Nichtverteilt</span>
-						</template>
+						<i-ri-forbid-2-line /> <template #content> Nichtverteilt </template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip v-else-if="kollision && nichtwahl" color="danger">
-						<i-ri-alert-fill />
-						<template #content>
-							<span>Kollision und Nichtverteilt</span>
-						</template>
+						<i-ri-alert-fill /> <template #content> Kollision und Nichtverteilt </template>
 					</svws-ui-tooltip>
-					<svws-ui-icon v-else class="opacity-25">
-						<i-ri-check-fill />
-					</svws-ui-icon>
+					<div v-else class="icon opacity-25"> <i-ri-check-fill /> </div>
 				</div>
 			</div>
 		</div>
@@ -51,7 +42,6 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schueler: SchuelerListeEintrag;
 		schuelerFilter: GostKursplanungSchuelerFilter;
-		selected: boolean;
 	}>();
 
 	const kollision: ComputedRef<boolean> = computed(() => {
