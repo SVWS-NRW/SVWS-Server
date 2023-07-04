@@ -1,5 +1,6 @@
 <template>
 	<div role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': schiene_hat_kollisionen }">
+		<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
 		<div role="cell" class="data-table__td" :class="{ 'text-error': schiene_hat_kollisionen }">
 			<div class="flex flex-col py-1" :title="schiene_g?.bezeichnung">
 				<span class="font-medium inline-flex items-center gap-1 text-base">
@@ -15,13 +16,15 @@
 				<span class="text-sm font-medium opacity-50">{{ anzahl_schueler }} Schüler</span>
 			</div>
 		</div>
+
+		<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind. -->
 		<s-kurs-schueler-schiene-kurs v-for="kurs of getSchieneKurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="selected"
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 			:api-status="apiStatus" :allow-regeln="allowRegeln" :add-regel="addRegel" :remove-regel="removeRegel"
 			:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="emit('dnd', $event)" />
-		<template v-if="maxKurse">
-			<div v-for="n in (maxKurse - getSchieneKurse.size())" :key="n" role="cell" class="data-table__td" />
-		</template>
+
+		<!-- Auffüllen mit leeren Zellen, falls in der Schiene nicht die maximale Anzahl von Kursen vorliegt. -->
+		<div v-for="n in (maxKurse - getSchieneKurse.size())" :key="n" role="cell" class="data-table__td" />
 	</div>
 </template>
 
@@ -46,7 +49,7 @@
 		apiStatus: ApiStatus;
 		allowRegeln: boolean;
 		dragAndDropData?: DndData;
-		maxKurse?: number;
+		maxKurse: number;
 	}>();
 
 	const emit = defineEmits<{

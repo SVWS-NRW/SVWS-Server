@@ -1,39 +1,49 @@
 <template>
 	<svws-ui-content-card v-if="schueler !== undefined" title="Kurszuordnungen" class="min-w-[30rem]">
+		<!-- Link für den Wechsel zur Laufbahnplanung -->
 		<template #actions>
 			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`">
 				<i-ri-group-line />
 				{{ 'Laufbahnplanung von ' + schueler.vorname + ' ' + schueler.nachname }}
 			</svws-ui-button>
 		</template>
+
+		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
+			<!-- Übersicht über die Fachwahlen des Schülers -->
 			<div class="w-1/6 min-w-[9rem]">
+				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
 				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
 					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
-						<div class="">
-							<svws-ui-data-table :items="[]" :no-data="false" :disable-header="true">
-								<template #body>
-									<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
-										:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
-								</template>
-							</svws-ui-data-table>
-							<template v-if="!blockung_aktiv">
-								<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
-									<div v-if="active" class="flex gap-2 items-center w-full h-full">
-										<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
-										<span>Entfernen</span>
-									</div>
-									<div v-else class="flex gap-2 items-center w-full h-full">
-										<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
-										<span class="opacity-25">Entfernen</span>
-									</div>
-								</div>
+						<!-- Die Liste mit den Fachwahlen -->
+						<svws-ui-data-table :items="[]" :no-data="false" :disable-header="true">
+							<template #body>
+								<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
+									:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
 							</template>
-						</div>
+						</svws-ui-data-table>
+
+						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
+						<template v-if="!blockung_aktiv">
+							<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
+								<div v-if="active" class="flex gap-2 items-center w-full h-full">
+									<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
+									<span>Entfernen</span>
+								</div>
+								<div v-else class="flex gap-2 items-center w-full h-full">
+									<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
+									<span class="opacity-25">Entfernen</span>
+								</div>
+							</div>
+						</template>
 					</div>
 				</svws-ui-drop-data>
+
+				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
 				<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
 			</div>
+
+			<!-- Übersicht über die Kurs-Schienen-Zuordnung für den Schüler -->
 			<div class="flex-grow">
 				<svws-ui-data-table :items="[]" :columns="cols" :disable-header="true" :disable-footer="true" :no-data="false">
 					<template #header><div /></template>
@@ -47,11 +57,14 @@
 				</svws-ui-data-table>
 			</div>
 		</div>
+
+		<!-- ... ansonsten keine Anzeige der Umwahlansicht, falls keine Fächer belegt wurden -->
 		<div v-else class="opacity-50">
 			Keine Fachbelegungen vorhanden.
 		</div>
 	</svws-ui-content-card>
 </template>
+
 
 <script setup lang="ts">
 
