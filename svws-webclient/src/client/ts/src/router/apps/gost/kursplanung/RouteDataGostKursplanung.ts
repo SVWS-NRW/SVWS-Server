@@ -389,7 +389,7 @@ export class RouteDataGostKursplanung {
 			api.status.stop();
 			return
 		}
-		this.datenmanager.regelRemove(result);
+		this.datenmanager.regelRemoveByID(result.id);
 		this.ergebnismanager.setRemoveRegelByID(result.id);
 		this.commit();
 		api.status.stop();

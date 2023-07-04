@@ -9,7 +9,7 @@
 			<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">{{ schueler_schriftlich }}/{{ kurs.schueler.size() }}</span>
 			<span class="py-0.5 font-medium">{{ kurs_name }}</span>
 			<span class="inline-flex items-center gap-1">
-				<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
+				<span v-if="(allowRegeln && fach_gewaehlt && !getDatenmanager().daten().istAktiv)">
 					<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle" :title="verbieten_regel ? 'Verboten' : 'Verbieten'">
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block" />
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
@@ -29,8 +29,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		List, SchuelerListeEintrag} from "@core";
+	import type { GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, SchuelerListeEintrag} from "@core";
 	import { GostBlockungRegel, GostKursblockungRegelTyp, ZulaessigesFach } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
@@ -60,7 +59,7 @@
 	);
 
 	const is_draggable: ComputedRef<boolean> = computed(() => {
-		if (props.apiStatus.pending || blockung_aktiv.value)
+		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
 			return false;
 		return props.getErgebnismanager().getOfKursSchuelerIDmenge(props.kurs.id).contains(props.schueler.id);
 	});
@@ -90,27 +89,23 @@
 		return "";
 	});
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
-
-	const regeln: ComputedRef<List<GostBlockungRegel>> = computed(()=> props.getDatenmanager().regelGetListe());
-
-	// const fixier_regel: ComputedRef<boolean> = computed(() => props.getDatenmanager().getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id))
-	const fixier_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		for (const regel of regeln.value)
+	// const fixier_regel: ComputedRef<boolean> = computed(() => props.getErgebnismanager().getOfSchuelerOfKursIstFixiert(props.schueler.id, props.kurs.id))
+	const fixier_regel: ComputedRef<number | undefined> = computed(() => {
+		for (const regel of props.getDatenmanager().regelGetListe())
 			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ
 				&& regel.parameter.get(0) === props.schueler.id
 				&& regel.parameter.get(1) === props.kurs.id)
-				return regel;
+				return regel.id;
 		return undefined;
 	})
 
-	// const verbieten_regel: ComputedRef<boolean> = computed(() => props.getDatenmanager().getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id))
-	const verbieten_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		for (const regel of regeln.value)
+	// const verbieten_regel: ComputedRef<boolean> = computed(() => props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(props.schueler.id, props.kurs.id))
+	const verbieten_regel: ComputedRef<number | undefined> = computed(() => {
+		for (const regel of props.getDatenmanager().regelGetListe())
 			if (regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ
 				&& regel.parameter.get(0) === props.schueler.id
 				&& regel.parameter.get(1) === props.kurs.id)
-				return regel;
+				return regel.id;
 		return undefined;
 	})
 
@@ -133,7 +128,7 @@
 	const fixieren_regel_entfernen = async () => {
 		if (!fixier_regel.value)
 			return
-		await props.removeRegel(fixier_regel.value.id);
+		await props.removeRegel(fixier_regel.value);
 	}
 
 	const verbieten_regel_hinzufuegen = async () => {
@@ -145,7 +140,7 @@
 	const verbieten_regel_entfernen = async () => {
 		if (verbieten_regel.value === undefined)
 			return
-		await props.removeRegel(verbieten_regel.value.id);
+		await props.removeRegel(verbieten_regel.value);
 	}
 
 	function drag_started(e: DragEvent) {
