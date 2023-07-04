@@ -11,17 +11,17 @@
 			<div role="cell" class="data-table__td data-table__td__align-center">
 				<span class="opacity-25">—</span>
 			</div>
-			<svws-ui-table-cell align="center" class="cursor-pointer group relative text-black/50" @click="toggle_active_fachwahl">
+			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative text-black/50" @click="toggle_active_fachwahl">
 				{{ wahlen.get(kursart.id) }}
-			</svws-ui-table-cell>
-			<svws-ui-table-cell align="center">
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center">
 				<span class="opacity-25">—</span>
-			</svws-ui-table-cell>
-			<svws-ui-table-cell align="center" :style="{'gridColumn': 'span ' + schienen.size()}">
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + schienen.size()}">
 				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="text-black">
 					Kurs anlegen <i-ri-add-circle-line class="-mr-0.5" />
 				</svws-ui-button>
-			</svws-ui-table-cell>
+			</div>
 		</div>
 	</template>
 	<template v-else>
