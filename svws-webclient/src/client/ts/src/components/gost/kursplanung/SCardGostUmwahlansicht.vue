@@ -48,11 +48,34 @@
 				<svws-ui-data-table :items="[]" :columns="cols" :disable-header="true" :disable-footer="true" :no-data="false">
 					<template #header><div /></template>
 					<template #body>
-						<s-kurs-schueler-schiene v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()"
-							:key="index" :schiene="schiene" :selected="schueler" :max-kurse="maxKurseInSchienen"
-							:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-							:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
-							:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index"
+							role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': hatSchieneKollisionen(schiene.id, schueler.id).value }">
+							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
+							<div role="cell" class="data-table__td" :class="{ 'text-error': hatSchieneKollisionen(schiene.id, schueler.id).value }">
+								<div class="flex flex-col py-1" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
+									<span class="font-medium inline-flex items-center gap-1 text-base">
+										<svws-ui-tooltip v-if="hatSchieneKollisionen(schiene.id, schueler.id).value">
+											<i-ri-alert-line />
+											<template #content>
+												<span>Kollision in dieser Schiene</span>
+											</template>
+										</svws-ui-tooltip>
+										<span class="line-clamp-1">{{ getErgebnismanager().getSchieneG(schiene.id).bezeichnung }}</span>
+									</span>
+									<span class="text-sm font-medium opacity-50">{{ schiene.kurse.size() }} Kurs{{ schiene.kurse.size() === 1 ? '' : 'e' }}</span>
+									<span class="text-sm font-medium opacity-50">{{ getErgebnismanager().getOfSchieneAnzahlSchueler(schiene.id) }} Schüler</span>
+								</div>
+							</div>
+
+							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind. -->
+							<s-kurs-schueler-schiene-kurs v-for="kurs of schiene.kurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="schueler"
+								:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+								:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
+								:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+
+							<!-- Auffüllen mit leeren Zellen, falls in der Schiene nicht die maximale Anzahl von Kursen vorliegt. -->
+							<div v-for="n in (maxKurseInSchienen - schiene.kurse.size())" :key="n" role="cell" class="data-table__td" />
+						</div>
 					</template>
 				</svws-ui-data-table>
 			</div>
@@ -146,5 +169,9 @@
 	}
 
 	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
+
+	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) : ComputedRef<boolean> => computed(() =>
+		props.getErgebnismanager().getOfSchieneSchuelermengeMitKollisionen(idSchiene).contains(idSchueler)
+	);
 
 </script>
