@@ -1,5 +1,5 @@
 <template>
-	<div :style="{ 'background-color': bgColor }" class="table--row-kursdetail">
+	<div class="table--row-kursdetail" :style="{ 'background-color': bgColor }">
 		<div class="pr-3 pl-6 pt-2 pb-6 flex gap-10 items-center">
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />

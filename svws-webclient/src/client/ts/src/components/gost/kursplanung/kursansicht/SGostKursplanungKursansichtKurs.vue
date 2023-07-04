@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table-row :style="{ 'background-color': bgColor }">
+	<div role="row" class="data-table__tr" :style="{ 'background-color': bgColor }">
 		<template v-if="allowRegeln">
 			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black"
 				:class="{'text-black' : kursdetail_anzeige, 'text-black/50' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige"
@@ -33,11 +33,11 @@
 			</template>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center">
-			<svws-ui-checkbox headless circle bw v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
-			<svws-ui-icon v-else class="inline-block">
+			<svws-ui-checkbox v-if="allowRegeln" headless circle bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
+			<span v-else class="icon inline-block">
 				<i-ri-check-fill v-if="kurs.istKoopKurs" />
 				<i-ri-close-line v-else class="opacity-25" />
-			</svws-ui-icon>
+			</span>
 		</div>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
 			<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl" :class="{'border-b-transparent': kursOhneBorder}">
@@ -57,7 +57,7 @@
 			:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 			v-model="drag_data" />
-	</svws-ui-table-row>
+	</div>
 	<!--Wenn Kursdtails angewählt sind, erscheint die zusätzliche Zeile-->
 	<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 		:kurs="kurs" :kurse-mit-kursart="kurseMitKursart" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"

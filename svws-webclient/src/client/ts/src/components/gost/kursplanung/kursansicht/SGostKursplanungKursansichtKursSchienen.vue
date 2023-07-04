@@ -30,20 +30,18 @@
 			<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 				<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 			</span>
-			<svws-ui-icon class="cursor-pointer group absolute right-0.5 text-sm" @click.stop="fixieren_regel_toggle">
+			<div class="icon cursor-pointer group absolute right-0.5 text-sm" @click.stop="fixieren_regel_toggle">
 				<i-ri-pushpin-fill v-if="istFixiert" class="inline-block group-hover:opacity-75" />
 				<i-ri-pushpin-line v-if="allowRegeln && !istFixiert" class="inline-block opacity-25 group-hover:opacity-100" />
-			</svws-ui-icon>
+			</div>
 		</svws-ui-drag-data>
 		<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="sperren_regel_toggle"
 			:style="{'background-color': schiene_verboten ? bgColorNichtMoeglich : ''}"
 			:class="{'bg-white': active && is_drop_zone, 'data-table__td__disabled': schiene_verboten}">
 			&NonBreakingSpace;
 			<div v-if="active && is_drop_zone" class="absolute inset-1 border-2 border-dashed border-black/25" />
-			<svws-ui-icon>
-				<i-ri-lock2-line v-if="istGesperrt" class="inline-block !opacity-100" />
-				<i-ri-lock2-line v-if="allowRegeln && !istGesperrt" class="inline-block !opacity-0 group-hover:!opacity-25" />
-			</svws-ui-icon>
+			<div v-if="istGesperrt" class="icon"> <i-ri-lock2-line class="inline-block !opacity-100" /> </div>
+			<div v-if="allowRegeln && !istGesperrt" class="icon"> <i-ri-lock2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
 		</div>
 	</svws-ui-drop-data>
 	<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
@@ -52,12 +50,8 @@
 			:class="{'bg-light text-primary font-bold border border-black/50': selected_kurs, 'bg-white/50 border border-black/25': !selected_kurs}"
 			@click="toggle_active_kurs">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
-			<svws-ui-icon class="absolute right-1" v-if="istFixiert">
-				<i-ri-pushpin-fill class="inline-block" />
-			</svws-ui-icon>
-			<svws-ui-icon v-if="istGesperrt">
-				<i-ri-lock2-line class="inline-block" />
-			</svws-ui-icon>
+			<div class="icon absolute right-1" v-if="istFixiert"> <i-ri-pushpin-fill class="inline-block" /> </div>
+			<div v-if="istGesperrt" class="icon"> <i-ri-lock2-line class="inline-block" /> </div>
 		</div>
 	</div>
 	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
@@ -172,7 +166,7 @@
 			return;
 		const s = props.getErgebnismanager().getSchieneG(props.schiene.id);
 		if (istGesperrt.value)
-			await sperren_regel_entfernen(s);
+			await sperren_regel_entfernen(s.id);
 		else
 			await sperren_regel_hinzufuegen(s);
 	}
