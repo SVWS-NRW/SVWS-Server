@@ -18,8 +18,24 @@
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-data-table :items="[]" :no-data="false" :disable-header="true">
 							<template #body>
-								<s-kurs-schueler-fachbelegung v-for="fach in fachbelegungen" :key="fach.fachID" :fach="fach" :kurse="blockungsergebnisse"
-									:schueler-id="schueler.id" :get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
+									<svws-ui-drag-data :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id" tag="div" role="cell" :data="{ id: fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fachID: fach.fachID, kursart: fachwahlKursart(fach.fachID, schueler.id).value.id }"
+										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
+										class="select-none data-table__td group" :class="{ 'bg-white' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined), 'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv) }"
+										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id) }">
+										<div class="flex items-center justify-between gap-1 w-full">
+											<div class="inline-flex items-center gap-1">
+												<span class="group-hover:bg-light rounded w-3 -ml-1">
+													<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" v-if="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" />
+												</span>
+												<span>{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
+											</div>
+											<div class="flex items-center gap-1 cursor-pointer">
+												<svws-ui-tooltip v-if="!fachwahlKurszuordnung(fach.fachID, schueler.id).value"> <i-ri-forbid-2-line /> <template #content> <span>Nichtverteilt</span> </template> </svws-ui-tooltip>
+											</div>
+										</div>
+									</svws-ui-drag-data>
+								</div>
 							</template>
 						</svws-ui-data-table>
 
@@ -118,7 +134,8 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, ZulaessigesFach, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostFachwahl, type List, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
+	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List } from "@core";
+	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
@@ -134,24 +151,7 @@
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 
-	const kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer());
-
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
-
-	const blockungsergebnisse: ComputedRef<Map<GostBlockungKurs, GostBlockungsergebnisKurs[]>> = computed(() => {
-		const map = new Map();
-		const schienen = props.getErgebnismanager().getMengeAllerSchienen();
-		if (schienen.isEmpty())
-			return map;
-		for (const k of kurse.value)
-			for (const s of schienen) {
-				const arr = []
-				for (const kk of s.kurse)
-					kk.id === k.id ? arr.push(kk) : arr.push(undefined)
-				map.set(k, arr)
-			}
-		return map;
-	});
 
 	async function drop_entferne_kurszuordnung(kurs: any) {
 		const schuelerid = props.schueler?.id;
@@ -174,10 +174,6 @@
 	function routeLaufbahnplanung() {
 		if (props.schueler !== undefined)
 			void props.gotoLaufbahnplanung(props.schueler.id);
-	}
-
-	function updateDragAndDropData(data: DndData | undefined) {
-		dragAndDropData.value = data;
 	}
 
 	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
@@ -305,6 +301,36 @@
 		if (idRegel === undefined)
 			return
 		await props.removeRegel(idRegel);
+	}
+
+
+	const fachwahlKurszuordnung = (idFach: number, idSchueler: number) : ComputedRef<GostBlockungsergebnisKurs | undefined> => computed(() =>
+		props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach) || undefined
+	);
+
+	const fachwahlKursart = (idFach: number, idSchueler: number) : ComputedRef<GostKursart> => computed(() =>
+		props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler, idFach)
+	);
+
+	const bgColorFachwahl = (idFach: number, idSchueler: number) : ComputedRef<string> =>  computed(() => {
+		const fwKurszuordnung = fachwahlKurszuordnung(idFach, idSchueler).value;
+		if (fwKurszuordnung !== undefined)
+			return "gray";
+		const f = props.getErgebnismanager().getFach(idFach);
+		const zulfach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
+		if (!zulfach)
+			return "#ffffff";
+		return zulfach.getHMTLFarbeRGB();
+	});
+
+	function getFachwahlKursname(idFach: number, idSchueler: number): string {
+		const fw = fachwahlKurszuordnung(idFach, idSchueler).value;
+		if (fw === undefined) {
+			const f = props.getErgebnismanager().getFach(idFach);
+			const fwKursart = fachwahlKursart(idFach, idSchueler).value;
+			return f.kuerzelAnzeige + "-" + fwKursart.kuerzel || "?";
+		}
+		return props.getErgebnismanager().getOfKursName(fw.id);
 	}
 
 </script>
