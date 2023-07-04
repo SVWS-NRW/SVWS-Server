@@ -10,18 +10,18 @@
 			<span class="py-0.5 font-medium">{{ kurs_name }}</span>
 			<span class="inline-flex items-center gap-1">
 				<span v-if="(allowRegeln && fach_gewaehlt && !blockung_aktiv)">
-					<svws-ui-icon class="cursor-pointer" @click.stop="verbieten_regel_toggle" :title="verbieten_regel ? 'Verboten' : 'Verbieten'">
+					<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle" :title="verbieten_regel ? 'Verboten' : 'Verbieten'">
 						<i-ri-forbid-fill v-if="verbieten_regel" class="inline-block" />
 						<i-ri-forbid-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
-					</svws-ui-icon>
-					<svws-ui-icon class="cursor-pointer" @click.stop="fixieren_regel_toggle" :title="fixier_regel ? 'Fixiert' : 'Fixieren'">
+					</span>
+					<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle" :title="fixier_regel ? 'Fixiert' : 'Fixieren'">
 						<i-ri-pushpin-fill v-if="fixier_regel" class="inline-block" />
 						<i-ri-pushpin-line v-if="!verbieten_regel && !fixier_regel" class="inline-block" />
-					</svws-ui-icon>
+					</span>
 				</span>
 				<span v-else>
-					<svws-ui-icon title="Verboten"> <i-ri-forbid-fill v-if="verbieten_regel" class="inline-block" /> </svws-ui-icon>
-					<svws-ui-icon title="Fixiert"> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block" /> </svws-ui-icon>
+					<span class="icon" title="Verboten"> <i-ri-forbid-fill v-if="verbieten_regel" class="inline-block" /> </span>
+					<span class="icon" title="Fixiert"> <i-ri-pushpin-fill v-if="fixier_regel" class="inline-block" /> </span>
 				</span>
 			</span>
 		</svws-ui-drop-data>
@@ -62,10 +62,7 @@
 	const is_draggable: ComputedRef<boolean> = computed(() => {
 		if (props.apiStatus.pending || blockung_aktiv.value)
 			return false;
-		for (const s of props.kurs.schueler)
-			if (s === props.schueler.id)
-				return true;
-		return false;
+		return props.getErgebnismanager().getOfKursSchuelerIDmenge(props.kurs.id).contains(props.schueler.id);
 	});
 
 	const is_drop_zone: ComputedRef<boolean> = computed(() => {

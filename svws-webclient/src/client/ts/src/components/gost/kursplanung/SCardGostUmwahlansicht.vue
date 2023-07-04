@@ -3,7 +3,7 @@
 		<template #actions>
 			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`">
 				<i-ri-group-line />
-				{{ schueler.vorname + ' ' + schueler.nachname }}
+				{{ 'Laufbahnplanung von ' + schueler.vorname + ' ' + schueler.nachname }}
 			</svws-ui-button>
 		</template>
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
