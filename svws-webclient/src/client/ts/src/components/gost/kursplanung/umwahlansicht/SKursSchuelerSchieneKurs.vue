@@ -76,28 +76,17 @@
 		return true;
 	});
 
-	const kurs_original: ComputedRef<GostBlockungKurs | undefined> = computed(() => props.getErgebnismanager().getKursG(props.kurs.id));
-
 	const kurs_name: ComputedRef<string> = computed(() => props.getErgebnismanager().getOfKursName(props.kurs.id))
 
 	const schueler_schriftlich: ComputedRef<number> = computed(() => props.getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(props.kurs.id));
 
-	const gostfach: ComputedRef<ZulaessigesFach | undefined> = computed(() => {
-		let fach
-		for (const f of props.getDatenmanager().faecherManager().faecher()) {
-			if (f.id === kurs_original.value?.fach_id) {
-				fach = f;
-				break;
-			}
-		}
-		return ZulaessigesFach.getByKuerzelASD(fach?.kuerzel || null);
-	});
-
 	const bgColor: ComputedRef<string> = computed(() => {
-		if (gostfach.value === undefined)
-			return "";
-		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id))
-			return gostfach.value.getHMTLFarbeRGB();
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(props.schueler.id, props.kurs.id)) {
+			const k = props.getDatenmanager().kursGet(props.kurs.id);
+			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
+			const zf = ZulaessigesFach.getByKuerzelASD(f?.kuerzel || null)
+			return zf.getHMTLFarbeRGB();
+		}
 		return "";
 	});
 
