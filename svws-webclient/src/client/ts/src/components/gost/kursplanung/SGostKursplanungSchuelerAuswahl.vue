@@ -54,7 +54,35 @@
 			<template #body>
 				<div role="row" class="data-table__tr data-table__tbody__tr" :class="{'data-table__tr--clicked': selected === s}"
 					v-for="(s, index) in schuelerFilter.filtered.value" @click="selected = s" :key="index">
-					<s-kurs-schueler-schueler :schueler="s" :get-ergebnismanager="getErgebnismanager" :schueler-filter="schuelerFilter" />
+					<div role="cell" class="data-table__td">
+						<div class="flex items-center justify-between gap-1 w-full">
+							<span>
+								{{ `${s.nachname}, ${s.vorname}` }}
+							</span>
+							<div class="flex items-center gap-1 cursor-pointer">
+								<svws-ui-tooltip v-if="s.status !== 2">
+									<span class="badge badge--light badge--lg badge--short">{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}</span>
+									<template #content>{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}</template>
+								</svws-ui-tooltip>
+								<svws-ui-tooltip>
+									<span class="badge badge--light badge--lg">{{ s.geschlecht }}</span>
+									<template #content>{{ s.geschlecht }}</template>
+								</svws-ui-tooltip>
+								<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value, }">
+									<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value">
+										<i-ri-alert-line /> <template #content> Kollision </template>
+									</svws-ui-tooltip>
+									<svws-ui-tooltip v-else-if="!kollision(s.id).value && nichtwahl(s.id).value">
+										<i-ri-forbid-2-line /> <template #content> Nichtverteilt </template>
+									</svws-ui-tooltip>
+									<svws-ui-tooltip v-else-if="kollision(s.id).value && nichtwahl(s.id).value" color="danger">
+										<i-ri-alert-fill /> <template #content> Kollision und Nichtverteilt </template>
+									</svws-ui-tooltip>
+									<div v-else class="icon opacity-25"> <i-ri-check-fill /> </div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</template>
 		</svws-ui-data-table>
@@ -66,8 +94,8 @@
 
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import type { WritableComputedRef } from "vue";
-	import { GostKursart } from "@core";
+	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { GostKursart, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -92,5 +120,16 @@
 		get: () => props.schueler,
 		set: (value) => { if (value !== undefined) void props.setSchueler(value); }
 	});
+
+	const kollision = (idSchueler: number) : ComputedRef<boolean> => computed(() => {
+		const kursid = props.schuelerFilter.kurs.value?.id;
+		if (kursid === undefined)
+			return props.getErgebnismanager().getOfSchuelerHatKollision(idSchueler);
+		return props.getErgebnismanager().getOfKursSchuelermengeMitKollisionen(kursid).contains(idSchueler);
+	});
+
+	const nichtwahl = (idSchueler: number) : ComputedRef<boolean> => computed(() =>
+		props.getErgebnismanager().getOfSchuelerHatNichtwahl(idSchueler)
+	);
 
 </script>
