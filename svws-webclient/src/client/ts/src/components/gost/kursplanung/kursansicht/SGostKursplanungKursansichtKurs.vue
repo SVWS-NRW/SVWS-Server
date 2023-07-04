@@ -1,14 +1,16 @@
 <template>
 	<svws-ui-table-row :style="{ 'background-color': bgColor }">
 		<template v-if="allowRegeln">
-			<svws-ui-table-cell align="center" class="cursor-pointer hover:text-black" :class="{'text-black' : kursdetail_anzeige, 'text-black/50' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige" title="Kursdetails anzeigen">
+			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black"
+				:class="{'text-black' : kursdetail_anzeige, 'text-black/50' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige"
+				title="Kursdetails anzeigen">
 				<div class="inline-block">
 					<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
 					<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
 				</div>
-			</svws-ui-table-cell>
+			</div>
 		</template>
-		<svws-ui-table-cell>
+		<div role="cell" class="data-table__td">
 			<div class="flex flex-grow items-center">
 				<template v-if="kurs.id === edit_name">
 					<span class="flex-shrink-0">{{ kursbezeichnung }}<span class="opacity-50">–</span></span>
@@ -20,8 +22,8 @@
 					</span>
 				</template>
 			</div>
-		</svws-ui-table-cell>
-		<svws-ui-table-cell :no-padding="allowRegeln">
+		</div>
+		<div role="cell" class="data-table__td" :no-padding="allowRegeln">
 			<template v-if="allowRegeln">
 				<svws-ui-multi-select :model-value="kurslehrer" @update:model-value="setKurslehrer($event as LehrerListeEintrag | undefined)" autocomplete :item-filter="lehrer_filter" removable headless
 					:items="mapLehrer" :item-text="(l: LehrerListeEintrag)=> `${l.kuerzel}`" />
@@ -29,26 +31,26 @@
 			<template v-else>
 				<span :class="{'opacity-50': !kurslehrer?.kuerzel}">{{ kurslehrer?.kuerzel || '—' }}</span>
 			</template>
-		</svws-ui-table-cell>
-		<svws-ui-table-cell align="center">
+		</div>
+		<div role="cell" class="data-table__td data-table__td__align-center">
 			<svws-ui-checkbox headless circle bw v-if="allowRegeln" :model-value="kurs.istKoopKurs" @update:model-value="setKoop(Boolean($event))" />
 			<svws-ui-icon v-else class="inline-block">
 				<i-ri-check-fill v-if="kurs.istKoopKurs" />
 				<i-ri-close-line v-else class="opacity-25" />
 			</svws-ui-icon>
-		</svws-ui-table-cell>
+		</div>
 		<template v-if="setze_kursdifferenz && kurs_blockungsergebnis">
-			<svws-ui-table-cell align="center" class="blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl" :class="{'border-b-transparent': kursOhneBorder}">
+			<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl" :class="{'border-b-transparent': kursOhneBorder}">
 				{{ kursdifferenz[2] }}
 				<i-ri-filter-line class="invisible absolute right-0 group-hover:visible opacity-25" />
-			</svws-ui-table-cell>
-			<svws-ui-table-cell align="center" class="blockung--kursdifferenz" @click="toggle_active_fachwahl" :class="{'border-b-transparent': kursOhneBorder}">
+			</div>
+			<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz" @click="toggle_active_fachwahl" :class="{'border-b-transparent': kursOhneBorder}">
 				{{ kursdifferenz[1] }}
-			</svws-ui-table-cell>
+			</div>
 		</template>
 		<template v-else>
-			<svws-ui-table-cell align="center" :class="{'border-b-transparent': kursOhneBorder}" />
-			<svws-ui-table-cell align="center" :class="{'border-b-transparent': kursOhneBorder}" />
+			<div role="cell" class="data-table__td data-table__td__align-center" :class="{'border-b-transparent': kursOhneBorder}" />
+			<div role="cell" class="data-table__td data-table__td__align-center" :class="{'border-b-transparent': kursOhneBorder}" />
 		</template>
 		<s-gost-kursplanung-kursansicht-kurs-schienen v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id" :schiene="schiene"
 			:blockung-aktiv="blockung_aktiv" :allow-regeln="allowRegeln" :kurs="kurs" :bg-color-nicht-moeglich="bgColor"
