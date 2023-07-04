@@ -67,11 +67,38 @@
 								</div>
 							</div>
 
-							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind. -->
-							<s-kurs-schueler-schiene-kurs v-for="kurs of schiene.kurse" :key="kurs.hashCode()" :kurs="kurs" :schueler="schueler"
-								:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
-								:api-status="apiStatus" :allow-regeln="allow_regeln" :add-regel="addRegel" :remove-regel="removeRegel"
-								:update-kurs-schueler-zuordnung="updateKursSchuelerZuordnung" :drag-and-drop-data="dragAndDropData" @dnd="updateDragAndDropData" />
+							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
+							<svws-ui-drag-data v-for="kurs of schiene.kurse" :key="kurs.id" tag="div" role="cell" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
+								class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative p-0.5"
+								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id, schueler.id).value }"
+								:draggable="is_draggable(kurs.id, schueler.id).value" @drag-start="drag_started" @drag-end="drag_ended">
+								<svws-ui-drop-data @drop="drop_aendere_kurszuordnung(kurs, schueler.id)" :drop-allowed="is_drop_zone(kurs).value"
+									class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor(kurs.id, schueler.id) }">
+									<span class="group-hover:bg-white rounded w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value">
+										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
+									</span>
+									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
+										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}
+									</span>
+									<span class="py-0.5 font-medium">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
+									<span class="inline-flex items-center gap-1">
+										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value && !getDatenmanager().daten().istAktiv)">
+											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
+												<i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" />
+												<i-ri-forbid-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
+											</span>
+											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id, schueler.id)" :title="fixier_regel(kurs.id, schueler.id).value ? 'Fixiert' : 'Fixieren'">
+												<i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
+												<i-ri-pushpin-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
+											</span>
+										</span>
+										<span v-else>
+											<span class="icon" title="Verboten"> <i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" /> </span>
+											<span class="icon" title="Fixiert"> <i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" /> </span>
+										</span>
+									</span>
+								</svws-ui-drop-data>
+							</svws-ui-drag-data>
 
 							<!-- Auffüllen mit leeren Zellen, falls in der Schiene nicht die maximale Anzahl von Kursen vorliegt. -->
 							<div v-for="n in (maxKurseInSchienen - schiene.kurse.size())" :key="n" role="cell" class="data-table__td" />
@@ -91,7 +118,7 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostFachwahl, type List } from "@core";
+	import { ArrayList, ZulaessigesFach, type GostBlockungKurs, type GostBlockungsergebnisKurs, type GostFachwahl, type List, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
@@ -174,4 +201,124 @@
 		props.getErgebnismanager().getOfSchieneSchuelermengeMitKollisionen(idSchiene).contains(idSchueler)
 	);
 
+
+	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
+		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
+			return false;
+		return props.getErgebnismanager().getOfKursSchuelerIDmenge(idKurs).contains(idSchueler);
+	});
+
+	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) : ComputedRef<boolean> => computed(() => {
+		if (dragAndDropData.value === undefined)
+			return false
+		const { id, fachID, kursart } = dragAndDropData.value;
+		if ((id != undefined) && (id === kurs.id))
+			return false;
+		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
+			return false;
+		return true;
+	});
+
+	function drag_started(e: DragEvent) {
+		const transfer = e.dataTransfer;
+		const data = JSON.parse(transfer?.getData('text/plain') || "") as DndData;
+		if (!data)
+			return;
+		dragAndDropData.value = data;
+	}
+
+	function drag_ended() {
+		dragAndDropData.value = undefined;
+	}
+
+	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs, idSchueler : number) {
+		const kurs_alt = dragAndDropData.value;
+		if (kurs_alt === undefined)
+			return;
+		if (!is_drop_zone(kurs_neu).value)
+			return;
+		await props.updateKursSchuelerZuordnung(idSchueler, kurs_neu.id, kurs_alt.id);
+		drag_ended();
+	}
+
+	function bgColor(idKurs : number, idSchueler : number) : string {
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs)) {
+			const k = props.getDatenmanager().kursGet(idKurs);
+			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
+			const zf = ZulaessigesFach.getByKuerzelASD(f?.kuerzel || null)
+			return zf.getHMTLFarbeRGB();
+		}
+		return "";
+	}
+
+	const fach_gewaehlt = (idSchueler: number, kurs: GostBlockungsergebnisKurs): ComputedRef<boolean> => computed(() =>
+		props.getErgebnismanager().getOfSchuelerHatFachwahl(idSchueler, kurs.fachID, kurs.kursart)
+	);
+
+	const fixier_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
+		// TODO ersetzen falls die folgende Methode im Manager effektiv implementiert ist: props.getErgebnismanager().getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
+		for (const regel of props.getDatenmanager().regelGetListe())
+			if ((regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) && (regel.parameter.get(0) === idSchueler) && (regel.parameter.get(1) === idKurs))
+				return regel.id;
+		return undefined;
+	});
+
+	const verbieten_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
+		// TODO ersetzen falls die folgende Methode im Manager effektiv implementiert ist: props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs)
+		for (const regel of props.getDatenmanager().regelGetListe())
+			if ((regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ) && (regel.parameter.get(0) === idSchueler) && (regel.parameter.get(1) === idKurs))
+				return regel.id;
+		return undefined;
+	});
+
+	const fixieren_regel_toggle = (idKurs: number, idSchueler: number) => fixier_regel(idKurs, idSchueler).value ? fixieren_regel_entfernen(idKurs, idSchueler) : fixieren_regel_hinzufuegen(idKurs, idSchueler);
+
+	const verbieten_regel_toggle = (idKurs: number, idSchueler: number) => verbieten_regel(idKurs, idSchueler).value ? verbieten_regel_entfernen(idKurs, idSchueler) : verbieten_regel_hinzufuegen(idKurs, idSchueler);
+
+	const regel_speichern = async (regel: GostBlockungRegel, idKurs: number, idSchueler: number) => {
+		regel.parameter.add(idSchueler);
+		regel.parameter.add(idKurs);
+		await props.addRegel(regel);
+	}
+
+	const fixieren_regel_hinzufuegen = async (idKurs: number, idSchueler: number) => {
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+		await regel_speichern(regel, idKurs, idSchueler);
+	}
+
+	const fixieren_regel_entfernen = async (idKurs: number, idSchueler: number) => {
+		const idRegel = fixier_regel(idKurs, idSchueler).value;
+		if (idRegel === undefined)
+			return
+		await props.removeRegel(idRegel);
+	}
+
+	const verbieten_regel_hinzufuegen = async (idKurs: number, idSchueler: number) => {
+		const regel = new GostBlockungRegel();
+		regel.typ = GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ;
+		await regel_speichern(regel, idKurs, idSchueler);
+	}
+
+	const verbieten_regel_entfernen = async (idKurs: number, idSchueler: number) => {
+		const idRegel = verbieten_regel(idKurs, idSchueler).value;
+		if (idRegel === undefined)
+			return
+		await props.removeRegel(idRegel);
+	}
+
 </script>
+
+
+<style lang="postcss" scoped>
+
+	.is-drop-zone {
+		@apply relative bg-primary/5;
+
+		&:before {
+			content: '';
+			@apply absolute inset-1 border-2 border-dashed border-primary pointer-events-none;
+		}
+	}
+
+</style>
