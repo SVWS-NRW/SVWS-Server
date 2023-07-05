@@ -32,6 +32,17 @@ public enum Jahrgaenge {
 
 
 	/**
+	 * Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte
+	 */
+	JG_90(new JahrgangsKatalogEintrag[]{
+		new JahrgangsKatalogEintrag(4090000000L, "90", Arrays.asList(
+			new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte"),
+			new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte")
+		), null, null)
+	}),
+
+
+	/**
 	 * Jahrgang E1: Schuleingangsphase, 1. Schulbesuchsjahr
 	 */
 	JG_E1(new JahrgangsKatalogEintrag[] {
@@ -79,6 +90,26 @@ public enum Jahrgaenge {
 					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Schuleingangsphase, 3. Schulbesuchsjahr"),
 					new JahrgangsKatalogEintragBezeichnung(Schulform.V, "Schuleingangsphase, 3. Schulbesuchsjahr")
 					), null, null)
+	}),
+
+
+	/**
+	 * Jahrgang 91: Vorkurs/ 1. Semester
+	 */
+	JG_91(new JahrgangsKatalogEintrag[]{
+		new JahrgangsKatalogEintrag(4091000000L, "91", Arrays.asList(
+			new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 1. Semester")
+		), null, null)
+	}),
+
+
+	/**
+	 * Jahrgang 92: Vorkurs/ 2. Semester
+	 */
+	JG_92(new JahrgangsKatalogEintrag[]{
+		new JahrgangsKatalogEintrag(4092000000L, "92", Arrays.asList(
+			new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 2. Semester")
+		), null, null)
 	}),
 
 
@@ -375,37 +406,6 @@ public enum Jahrgaenge {
 
 
 	/**
-	 * Jahrgang 90: Hausfrüherziehung für Hör- bzw. Sehgeschädigte
-	 */
-	JG_90(new JahrgangsKatalogEintrag[]{
-			new JahrgangsKatalogEintrag(4090000000L, "90", Arrays.asList(
-					new JahrgangsKatalogEintragBezeichnung(Schulform.KS, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte"),
-					new JahrgangsKatalogEintragBezeichnung(Schulform.S, "Hausfrüherziehung für Hör- bzw. Sehgeschädigte")
-					), null, null)
-	}),
-
-
-	/**
-	 * Jahrgang 91: Vorkurs/ 1. Semester
-	 */
-	JG_91(new JahrgangsKatalogEintrag[]{
-			new JahrgangsKatalogEintrag(4091000000L, "91", Arrays.asList(
-					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 1. Semester")
-					), null, null)
-	}),
-
-
-	/**
-	 * Jahrgang 92: Vorkurs/ 2. Semester
-	 */
-	JG_92(new JahrgangsKatalogEintrag[]{
-			new JahrgangsKatalogEintrag(4092000000L, "92", Arrays.asList(
-					new JahrgangsKatalogEintragBezeichnung(Schulform.WB, "Vorkurs / 2. Semester")
-					), null, null)
-	}),
-
-
-	/**
 	 * Jahrgang EF: Einführungsphase
 	 */
 	JG_EF(new JahrgangsKatalogEintrag[]{
@@ -664,71 +664,71 @@ public enum Jahrgaenge {
 	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Vorgänger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
-	 * @param jgVorher     der zu prüfende Jahrgang
+	 * @param vergleichsjahrgang     der zu prüfende Jahrgang
 	 * @param schulform    die Schulform
 	 * @param gliederung   die Schulgliederung
 	 *
 	 * @return true, falls jgVorher ein gültiger Vorgänger-Jahrgang dieses Jahrgangs ist.
 	 */
-	public boolean isVorgaenger(final Jahrgaenge jgVorher, final Schulform schulform, final Schulgliederung gliederung) {
+	public boolean isNachfolgerVon(final Jahrgaenge vergleichsjahrgang, final Schulform schulform, final Schulgliederung gliederung) {
 		if (schulform == null)
 			return false;
-		if (!this.hasSchulform(schulform) || ((jgVorher != null) && (!jgVorher.hasSchulform(schulform))))
+		if (!this.hasSchulform(schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hasSchulform(schulform))))
 			return false;
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		switch (this) {
 			case JG_00:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_01:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_02:
-				return jgVorher == JG_01;
+				return vergleichsjahrgang == JG_01;
 			case JG_03:
-				return (jgVorher == JG_02) || (jgVorher == JG_E2) || (jgVorher == JG_E3);
+				return (vergleichsjahrgang == JG_02) || (vergleichsjahrgang == JG_E2) || (vergleichsjahrgang == JG_E3);
 			case JG_04:
-				return (jgVorher == JG_03);
+				return (vergleichsjahrgang == JG_03);
 			case JG_05:
-				return (jgVorher == JG_04);
+				return (vergleichsjahrgang == JG_04);
 			case JG_06:
-				return (jgVorher == JG_05);
+				return (vergleichsjahrgang == JG_05);
 			case JG_07:
-				return (jgVorher == JG_06);
+				return (vergleichsjahrgang == JG_06);
 			case JG_08:
-				return (jgVorher == JG_07);
+				return (vergleichsjahrgang == JG_07);
 			case JG_09:
-				return (jgVorher == JG_08);
+				return (vergleichsjahrgang == JG_08);
 			case JG_10:
-				return (jgVorher == JG_09);
+				return (vergleichsjahrgang == JG_09);
 			case JG_11:
-				return (jgVorher == JG_10);
+				return (vergleichsjahrgang == JG_10);
 			case JG_12:
-				return (jgVorher == JG_11);
+				return (vergleichsjahrgang == JG_11);
 			case JG_13:
-				return (jgVorher == JG_12);
+				return (vergleichsjahrgang == JG_12);
 			case JG_71:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_85:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_86:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_90:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_91:
-				return jgVorher == null;
+				return vergleichsjahrgang == null;
 			case JG_92:
-				return jgVorher == JG_91;
+				return vergleichsjahrgang == JG_91;
 			case JG_E1:
-				return (jgVorher == JG_00) || (jgVorher == null);
+				return (vergleichsjahrgang == JG_00) || (vergleichsjahrgang == null);
 			case JG_E2:
-				return jgVorher == JG_E1;
+				return vergleichsjahrgang == JG_E1;
 			case JG_E3:
-				return jgVorher == JG_E2;
+				return vergleichsjahrgang == JG_E2;
 			case JG_EF:
-				return (gl == Schulgliederung.GY8) ? (jgVorher == JG_09) : (jgVorher == JG_10);
+				return (gl == Schulgliederung.GY8) ? (vergleichsjahrgang == JG_09) : (vergleichsjahrgang == JG_10);
 			case JG_Q1:
-				return jgVorher == JG_EF;
+				return vergleichsjahrgang == JG_EF;
 			case JG_Q2:
-				return jgVorher == JG_Q1;
+				return vergleichsjahrgang == JG_Q1;
 			default:
 				return false;
 		}
@@ -739,71 +739,213 @@ public enum Jahrgaenge {
 	 * Prüft, ob der angegebene Jahrgang bei der angegebenen Schulform und Gliederung ein gültiger Nachfolger-Jahrgang
 	 * dieses Jahrgangs ist.
 	 *
-	 * @param jgNachher    der zu prüfende Jahrgang
+	 * @param vergleichsjahrgang    der zu prüfende Jahrgang
 	 * @param schulform    die Schulform
 	 * @param gliederung   die Schulgliederung
 	 *
 	 * @return true, falls jgNachher ein gültiger Nachfolger-Jahrgang dieses Jahrgangs ist.
 	 */
-	public boolean isNachfolger(final Jahrgaenge jgNachher, final Schulform schulform, final Schulgliederung gliederung) {
+	public boolean isVorgaengerVon(final Jahrgaenge vergleichsjahrgang, final Schulform schulform, final Schulgliederung gliederung) {
 		if (schulform == null)
 			return false;
-		if (!this.hasSchulform(schulform) || ((jgNachher != null) && (!jgNachher.hasSchulform(schulform))))
+		if (!this.hasSchulform(schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hasSchulform(schulform))))
 			return false;
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		switch (this) {
 			case JG_00:
-				return jgNachher == JG_01;
+				return vergleichsjahrgang == JG_01;
 			case JG_01:
-				return jgNachher == JG_02;
+				return vergleichsjahrgang == JG_02;
 			case JG_02:
-				return jgNachher == JG_03;
+				return vergleichsjahrgang == JG_03;
 			case JG_03:
-				return jgNachher == JG_04;
+				return vergleichsjahrgang == JG_04;
 			case JG_04:
-				return jgNachher == JG_05;
+				return vergleichsjahrgang == JG_05;
 			case JG_05:
-				return jgNachher == JG_06;
+				return vergleichsjahrgang == JG_06;
 			case JG_06:
-				return jgNachher == JG_07;
+				return vergleichsjahrgang == JG_07;
 			case JG_07:
-				return jgNachher == JG_08;
+				return vergleichsjahrgang == JG_08;
 			case JG_08:
-				return jgNachher == JG_09;
+				return vergleichsjahrgang == JG_09;
 			case JG_09:
-				return (jgNachher == JG_10) || ((schulform == Schulform.GY) && ((gl == Schulgliederung.GY8) || (gl == Schulgliederung.DEFAULT)) && (jgNachher == JG_EF));
+				return (vergleichsjahrgang == JG_10) || ((schulform == Schulform.GY) && ((gl == Schulgliederung.GY8) || (gl == Schulgliederung.DEFAULT)) && (vergleichsjahrgang == JG_EF));
 			case JG_10:
-				return (jgNachher == JG_11) || ((schulform.daten.hatGymOb) && (jgNachher == JG_EF));
+				return (vergleichsjahrgang == JG_11) || ((schulform.daten.hatGymOb) && (vergleichsjahrgang == JG_EF));
 			case JG_11:
-				return (jgNachher == JG_11);
+				return (vergleichsjahrgang == JG_12);
 			case JG_12:
-				return (jgNachher == JG_12);
+				return (vergleichsjahrgang == JG_13);
 			case JG_13:
-				return (jgNachher == null);
+				return (vergleichsjahrgang == null);
 			case JG_71:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
 			case JG_85:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
 			case JG_86:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
 			case JG_90:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
 			case JG_91:
-				return (jgNachher == JG_92);
+				return (vergleichsjahrgang == JG_92);
 			case JG_92:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
 			case JG_E1:
-				return jgNachher == JG_E2;
+				return vergleichsjahrgang == JG_E2;
 			case JG_E2:
-				return (jgNachher == JG_E3) || (jgNachher == JG_03);
+				return (vergleichsjahrgang == JG_E3) || (vergleichsjahrgang == JG_03);
 			case JG_E3:
-				return jgNachher == JG_03;
+				return vergleichsjahrgang == JG_03;
 			case JG_EF:
-				return jgNachher == JG_Q1;
+				return vergleichsjahrgang == JG_Q1;
 			case JG_Q1:
-				return jgNachher == JG_Q2;
+				return vergleichsjahrgang == JG_Q2;
 			case JG_Q2:
-				return jgNachher == null;
+				return vergleichsjahrgang == null;
+			default:
+				return false;
+		}
+	}
+
+
+	/**
+	 * Prüft, ob dieser Jahrgang ein möglicher Nachfolger des übergebenen Vergleichsjahrgangs ist.
+	 * Da durch den Wechsel von G8 und G9 und den Wechsel von Sek-I (10) in die Sek-II eine Zuordnung unter Umständen
+	 * nur Schüler individuell entschieden werden kann, wird hier nur auf mögliche Nachfolger geprüft.
+	 *
+	 * Diese Methode berücksichtigt keine Schulformen und -gliederungen und liefert daher nur ein grobes Ergebnis
+	 *
+	 * @param Vergleichsjahrgang    der Jahrgang für den Vergleich zum gegebenen Jahrgang.
+	 *
+	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
+	 */
+	public boolean isMoeglicherNachfolgerVon(final Jahrgaenge Vergleichsjahrgang) {
+		switch (this) {
+			case JG_00:
+				return Vergleichsjahrgang == null;
+			case JG_01:
+				return Vergleichsjahrgang == null;
+			case JG_02:
+				return Vergleichsjahrgang == JG_01;
+			case JG_03:
+				return (Vergleichsjahrgang == JG_02) || (Vergleichsjahrgang == JG_E2) || (Vergleichsjahrgang == JG_E3);
+			case JG_04:
+				return (Vergleichsjahrgang == JG_03);
+			case JG_05:
+				return (Vergleichsjahrgang == JG_04);
+			case JG_06:
+				return (Vergleichsjahrgang == JG_05);
+			case JG_07:
+				return (Vergleichsjahrgang == JG_06);
+			case JG_08:
+				return (Vergleichsjahrgang == JG_07);
+			case JG_09:
+				return (Vergleichsjahrgang == JG_08);
+			case JG_10:
+				return (Vergleichsjahrgang == JG_09);
+			case JG_11:
+				return (Vergleichsjahrgang == JG_10);
+			case JG_12:
+				return (Vergleichsjahrgang == JG_11);
+			case JG_13:
+				return (Vergleichsjahrgang == JG_12);
+			case JG_71:
+				return Vergleichsjahrgang == null;
+			case JG_85:
+				return Vergleichsjahrgang == null;
+			case JG_86:
+				return Vergleichsjahrgang == null;
+			case JG_90:
+				return Vergleichsjahrgang == null;
+			case JG_91:
+				return Vergleichsjahrgang == null;
+			case JG_92:
+				return Vergleichsjahrgang == JG_91;
+			case JG_E1:
+				return (Vergleichsjahrgang == JG_00) || (Vergleichsjahrgang == null);
+			case JG_E2:
+				return Vergleichsjahrgang == JG_E1;
+			case JG_E3:
+				return Vergleichsjahrgang == JG_E2;
+			case JG_EF:
+				return (Vergleichsjahrgang == JG_09) || (Vergleichsjahrgang == JG_10);
+			case JG_Q1:
+				return Vergleichsjahrgang == JG_EF;
+			case JG_Q2:
+				return Vergleichsjahrgang == JG_Q1;
+			default:
+				return false;
+		}
+	}
+
+
+	/**
+	 * Prüft, ob dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
+	 * Da durch den Wechsel von G8 und G9 und den Wechsel von Sek-I (10) in die Sek-II eine Zuordnung unter Umständen
+	 * nur Schüler individuell entschieden werden kann, wird hier nur auf mögliche Vorgänger geprüft.
+	 *
+	 * Diese Methode berücksichtigt keine Schulformen und -gliederungen und liefert daher nur ein grobes Ergebnis
+	 *
+	 * @param Vergleichsjahrgang    der Jahrgang für den Vergleich zum gegebenen Jahrgang.
+	 *
+	 * @return true, falls dieser Jahrgang ein möglicher Vorgänger des übergebenen Vergleichsjahrgangs ist.
+	 */
+	public boolean isMoeglicherVorgaengerVon(final Jahrgaenge Vergleichsjahrgang) {
+		switch (this) {
+			case JG_00:
+				return Vergleichsjahrgang == JG_01;
+			case JG_01:
+				return Vergleichsjahrgang == JG_02;
+			case JG_02:
+				return Vergleichsjahrgang == JG_03;
+			case JG_03:
+				return Vergleichsjahrgang == JG_04;
+			case JG_04:
+				return Vergleichsjahrgang == JG_05;
+			case JG_05:
+				return Vergleichsjahrgang == JG_06;
+			case JG_06:
+				return Vergleichsjahrgang == JG_07;
+			case JG_07:
+				return Vergleichsjahrgang == JG_08;
+			case JG_08:
+				return Vergleichsjahrgang == JG_09;
+			case JG_09:
+				return (Vergleichsjahrgang == JG_10) || (Vergleichsjahrgang == JG_EF);
+			case JG_10:
+				return (Vergleichsjahrgang == JG_11) || (Vergleichsjahrgang == JG_EF);
+			case JG_11:
+				return (Vergleichsjahrgang == JG_12);
+			case JG_12:
+				return (Vergleichsjahrgang == JG_13);
+			case JG_13:
+				return (Vergleichsjahrgang == null);
+			case JG_71:
+				return Vergleichsjahrgang == null;
+			case JG_85:
+				return Vergleichsjahrgang == null;
+			case JG_86:
+				return Vergleichsjahrgang == null;
+			case JG_90:
+				return Vergleichsjahrgang == null;
+			case JG_91:
+				return (Vergleichsjahrgang == JG_92);
+			case JG_92:
+				return Vergleichsjahrgang == null;
+			case JG_E1:
+				return Vergleichsjahrgang == JG_E2;
+			case JG_E2:
+				return (Vergleichsjahrgang == JG_E3) || (Vergleichsjahrgang == JG_03);
+			case JG_E3:
+				return Vergleichsjahrgang == JG_03;
+			case JG_EF:
+				return Vergleichsjahrgang == JG_Q1;
+			case JG_Q1:
+				return Vergleichsjahrgang == JG_Q2;
+			case JG_Q2:
+				return Vergleichsjahrgang == null;
 			default:
 				return false;
 		}

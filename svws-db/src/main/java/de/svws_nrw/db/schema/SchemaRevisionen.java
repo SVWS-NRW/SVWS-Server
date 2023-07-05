@@ -48,9 +48,11 @@ public enum SchemaRevisionen {
 	 * Befüllen der Foreign-Keys auf die Tabelle K_Ort in den Tabellen K_AllgAdresse, K_Lehrer, Schueler, SchuelerErzAdr.
 	 *
 	 * Außerdem wird ein ggf. konfigurierte Quartalsmodus entfernt. Dabei gehen die "Zwischenstände" der vergangenen
-	 * Quartale verloren. Die Abschließenden Quartale des Halbjahres werden übernommen. Sollte das aktuelle Quartal
-	 * einer Schule im Quartalsmodus das 1. Quartal eine Halbjahres sein, so wird dieses als Grundlage für das Halbjahr
+	 * Quartale verloren. Die abschließenden Quartale des Halbjahres werden übernommen. Sollte das aktuelle Quartal
+	 * einer Schule im Quartalsmodus das 1. Quartal eines Halbjahres sein, so wird dieses als Grundlage für das Halbjahr
 	 * verwendet.
+	 *
+	 * Abschließend werden doppelte Einträge zur gleichen Sprache in der Schülersprachenfolge ggf. zusammengefasst
 	 */
 	REV_3(3, "2022-09-29"),
 

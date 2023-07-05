@@ -4,11 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.schule.Schulgliederung;
-import de.svws_nrw.db.DBDriver;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -1009,6 +1006,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			            )
 			        ) THEN
 			            RIGHT(CONCAT('00', CONVERT(ssf.JahrgangVon, CHAR)), 2)
+			        WHEN ((ssf.JahrgangVon IS NULL) AND (sszf.JahrgangAb IS NOT NULL))
+			        THEN
+			            sszf.JahrgangAb
 			        ELSE
 			            NULL
 			        END,
@@ -1283,7 +1283,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_SchuelerSprachenfolge, Schema.tab_SchuelerAbitur
 		);
 
-		add("Ergänze das Fach Haebräisch in der Sprachenfolge, wenn Hebraicum vorhanden, aber kein Hebräisch",
+		add("Ergänze das Fach Hebräisch in der Sprachenfolge, wenn Hebraicum vorhanden, aber kein Hebräisch",
 			"""
 			INSERT INTO SchuelerSprachenfolge (Schueler_ID, Sprache)
 			(
@@ -2753,53 +2753,4 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			Schema.tab_NichtMoeglAbiFachKombi, Schema.tab_EigeneSchule_Faecher
 		);
 	}
-
-
-	private static boolean bereiteSprachenfolgeFuerUniqueConstraintVor(final DBEntityManager conn, final Logger logger) {
-		logger.logLn("Im Anschluss - Fasse ggf. Einträge bei der Sprachenfolge zusammen, damit eine Unique-Constraint auf Schüler-ID und Sprache eingerichtet werden kann:");
-		final List<Object[]> tmpListSprachenfolgeDuplikate = conn.queryNative("SELECT Schueler_ID, Sprache FROM SchuelerSprachenfolge GROUP BY Schueler_ID, Sprache HAVING COUNT(*) > 1");
-		logger.modifyIndent(2);
-		for (final Object[] tmpSprachenfolgeDuplikat: tmpListSprachenfolgeDuplikate) {
-			final long schuelerID = (Long) tmpSprachenfolgeDuplikat[0];
-			final String sprache = (String) tmpSprachenfolgeDuplikat[1];
-			logger.logLn("... Duplikate für Schüler " + schuelerID + " bei der Sprache " + sprache + ": ");
-			logger.modifyIndent(2);
-			final List<Object[]> tmpDuplikate = conn.queryNative("SELECT ID, ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis FROM SchuelerSprachenfolge WHERE Schueler_ID = " + schuelerID + " AND Sprache = '" + sprache + "' ORDER BY ASDJahrgangVon, AbschnittVon");
-			final long[] ids = new long[tmpDuplikate.size()];
-			final String[] jgVon = new String[tmpDuplikate.size()];
-			final Short[] abschnittVon = new Short[tmpDuplikate.size()];
-			final String[] jgBis = new String[tmpDuplikate.size()];
-			final Short[] abschnittBis = new Short[tmpDuplikate.size()];
-			for (int i = 0; i < tmpDuplikate.size(); i++) {
-				 final Object[] duplikat = tmpDuplikate.get(i);
-				 ids[i] = (Long) duplikat[0];
-				 jgVon[i] = (String) duplikat[1];
-				 abschnittVon[i] = (Short) duplikat[2];
-				 jgBis[i] = (String) duplikat[3];
-				 abschnittBis[i] = (Short) duplikat[4];
-			}
-			// TODO Bestimme die ID, welche entfernt werden sollen
-
-			// TODO Entferne die Datensätze zu den IDs (siehe auskommentierter Block unten)
-//			int removed = conn.executeNativeDelete("DELETE FROM SchuelerSprachenfolge WHERE ID = " + id);
-//			if (removed != 1)
-//				logger.logLn("[Fehler] Datensatz mit der ID " + id + " konnte nicht entfernt werden.");
-//			else
-//				logger.logLn("Datensatz mit der ID " + id + " wurde entfernt.");
-//			logger.modifyIndent(-2);
-		}
-		logger.modifyIndent(-2);
-		return true;
-	}
-
-
-	@Override
-	public boolean runLast(final DBEntityManager conn, final Logger logger) {
-		if (conn.getDBDriver() != DBDriver.MARIA_DB) {
-			logger.logLn("DBMS wird für dieses Datenabank Revisions-Update nicht unterstützt.");
-			return false;
-		}
-		return bereiteSprachenfolgeFuerUniqueConstraintVor(conn, logger);
-	}
-
 }

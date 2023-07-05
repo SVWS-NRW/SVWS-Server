@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.schema.Schema;
@@ -53,12 +54,8 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 		);
 	}
 
-	@Override
-	public boolean runLast(final DBEntityManager conn, final Logger logger) {
-		if (conn.getDBDriver() != DBDriver.MARIA_DB) {
-			logger.logLn("DBMS wird für dieses Datenabank Revisions-Update nicht unterstützt.");
-			return false;
-		}
+
+	private static boolean entferneQuartalsmodus(final DBEntityManager conn, final Logger logger) {
 		final List<Integer> rowsAnzahlAbschnitte = conn.queryNative("SELECT AnzahlAbschnitte FROM EigeneSchule");
 		int anzahlAbschnitte = -1;
 		if ((rowsAnzahlAbschnitte.size() != 1) || (rowsAnzahlAbschnitte.get(0) == null))
@@ -278,13 +275,13 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					+ " JOIN Kurse k2 ON k2.Schuljahresabschnitts_ID = " + folgeAbschnittID
 					+ " AND k1.KurzBez = k2.KurzBez AND k1.Jahrgang_ID = k2.Jahrgang_ID AND k1.ASDJahrgang = k2.ASDJahrgang "
 					+ "AND k1.Fach_ID = k2.Fach_ID AND k1.KursartAllg = k2.KursartAllg "
-				    + "JOIN SchuelerLernabschnittsdaten sla ON s.Abschnitt_ID = sla.ID "
-				    + "AND (sla.Schueler_ID, k1.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) "
-				    + "AND (sla.Schueler_ID, k2.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) ";
+					+ "JOIN SchuelerLernabschnittsdaten sla ON s.Abschnitt_ID = sla.ID "
+					+ "AND (sla.Schueler_ID, k1.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) "
+					+ "AND (sla.Schueler_ID, k2.ID) IN (SELECT Schueler_ID, Kurs_ID FROM Kurs_Schueler) ";
 				final List<Long> tmpLeistungsdatenIDs = conn.queryNative(sql);
 				if (!tmpLeistungsdatenIDs.isEmpty()) {
 					sql = "UPDATE SchuelerLeistungsdaten SET Kurs_ID = NULL WHERE ID IN ";
-					sql += tmpLeistungsdatenIDs.stream().map(id -> "" + id).collect(Collectors.joining(",", "(", ")"));
+					sql += tmpLeistungsdatenIDs.stream().map(id -> String.valueOf(id)).collect(Collectors.joining(",", "(", ")"));
 					if (Integer.MIN_VALUE == conn.executeNativeUpdate(sql)) {
 						logger.logLn("Fehler beim Entfernen der Kurszuordnung in den Leistungsdaten.");
 						return false;
@@ -327,13 +324,373 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			// Und zum Abschluss werden die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule umgestellt
 			logger.logLn("- Stelle die Anzahl der Abschnitte und deren Bezeichnungen bei der Tabelle EigeneSchule um...");
 			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE EigeneSchule SET EigeneSchule.AnzahlAbschnitte = 2, EigeneSchule.AbschnittBez = 'Halbjahr', EigeneSchule.BezAbschnitt1 = '1. Hj.', EigeneSchule.BezAbschnitt2 = '2. Hj.', EigeneSchule.BezAbschnitt3 = NULL, EigeneSchule.BezAbschnitt4 = NULL")) {
-				logger.logLn("Fehler biem Umstellen der Tabelle EigeneSchule auf zwei Abschnitte.");
+				logger.logLn("Fehler beim Umstellen der Tabelle EigeneSchule auf zwei Abschnitte.");
+				logger.modifyIndent(-2);
+				return false;
+			}
+
+			// In der Sprachenfolge der Schüler werden auch Abschnitte gespeichert. Passe diese ebenfalls an.
+			logger.logLn("- Passe die Eintragungen der Abschnitte in der Sprachenfolge der Schülerinnen und Schüler um...");
+			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerSprachenfolge SET SchuelerSprachenfolge.AbschnittVon = 1 WHERE SchuelerSprachenfolge.AbschnittVon IN (1,2)")) {
+				logger.logLn("Fehler beim Umstellen der Tabelle SchuelerSprachenfolge auf zwei Abschnitte im Bereich AbschnittVon.");
+				logger.modifyIndent(-2);
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerSprachenfolge SET SchuelerSprachenfolge.AbschnittVon = 2 WHERE SchuelerSprachenfolge.AbschnittVon IN (3,4)")) {
+				logger.logLn("Fehler beim Umstellen der Tabelle SchuelerSprachenfolge auf zwei Abschnitte im Bereich AbschnittVon.");
+				logger.modifyIndent(-2);
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerSprachenfolge SET SchuelerSprachenfolge.AbschnittBis = 1 WHERE SchuelerSprachenfolge.AbschnittBis IN (1,2)")) {
+				logger.logLn("Fehler beim Umstellen der Tabelle SchuelerSprachenfolge auf zwei Abschnitte im Bereich AbschnittBis.");
+				logger.modifyIndent(-2);
+				return false;
+			}
+			if (Integer.MIN_VALUE == conn.executeNativeUpdate("UPDATE SchuelerSprachenfolge SET SchuelerSprachenfolge.AbschnittBis = 2 WHERE SchuelerSprachenfolge.AbschnittBis IN (3,4)")) {
+				logger.logLn("Fehler beim Umstellen der Tabelle SchuelerSprachenfolge auf zwei Abschnitte im Bereich AbschnittBis.");
 				logger.modifyIndent(-2);
 				return false;
 			}
 			logger.modifyIndent(-2);
 		}
 		return true;
+	}
+
+
+	private static boolean bereiteSprachenfolgeFuerUniqueConstraintVor(final DBEntityManager conn, final Logger logger) {
+		logger.logLn("Fasse ggf. Einträge bei der Sprachenfolge zusammen, damit eine Unique-Constraint auf Schüler-ID und Sprache eingerichtet werden kann:");
+		logger.modifyIndent(2);
+
+		boolean resultVorbereitung = true;
+
+		// Liste erstellen mit Schüler-IDs, in deren Sprachenfolge eine Sprache zweimal vorkommt.
+		final List<Object[]> listAlleSprachenfolgeDuplikate = conn.queryNative("SELECT Schueler_ID, Sprache FROM SchuelerSprachenfolge GROUP BY Schueler_ID, Sprache HAVING COUNT(*) > 1");
+
+		// Für besser lesbaren Zugriff auf Arrays die entsprechenden Indexwerte der Einträge benennen.
+		final int iID = 0;
+		final int iASDVon = 1;
+		final int iAbsVon = 2;
+		final int iASDBis = 3;
+		final int iAbsBis = 4;
+		final int iReihenfolge = 5;
+		final int iNiveau = 6;
+		final int iKlLat = 7;
+		final int iLat = 8;
+		final int iGrae = 9;
+		final int iHeb = 10;
+
+		for (final Object[] schuelerSprachenfolgeDuplikat: listAlleSprachenfolgeDuplikate) {
+			final long schuelerID = (Long) schuelerSprachenfolgeDuplikat[0];
+			final String sprache = (String) schuelerSprachenfolgeDuplikat[1];
+
+			logger.logLn("... Duplikate für Schüler mit der ID %d in der Sprache %s gefunden.".formatted(schuelerID, sprache));
+			logger.modifyIndent(2);
+
+			// Einlesen der doppelten Einträge in der Sprachenfolge in zwei DISJUNKTE Listen, einmal mit Sprachbeginn und einmal ohne Beginn.
+			List<Object[]> listDuplikateMITBeginn = conn.queryNative("SELECT ID, ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis, ReihenfolgeNr, Referenzniveau, KleinesLatinumErreicht, LatinumErreicht, GraecumErreicht, HebraicumErreicht FROM SchuelerSprachenfolge WHERE Schueler_ID = " + schuelerID + " AND Sprache = '" + sprache + "' AND ASDJahrgangVon IS NOT NULL AND ASDJahrgangVon != '' ORDER BY ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis");
+			List<Object[]> listDuplikateOHNEBeginn = conn.queryNative("SELECT ID, ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis, ReihenfolgeNr, Referenzniveau, KleinesLatinumErreicht, LatinumErreicht, GraecumErreicht, HebraicumErreicht FROM SchuelerSprachenfolge WHERE Schueler_ID = " + schuelerID + " AND Sprache = '" + sprache + "' AND (ASDJahrgangVon IS NULL OR ASDJahrgangVon = '') ORDER BY ASDJahrgangVon, AbschnittVon, ASDJahrgangBis, AbschnittBis");
+
+			// Werte für die späteren Vergleiche normalisieren.
+			werteNormalisieren(listDuplikateMITBeginn, false);
+			werteNormalisieren(listDuplikateOHNEBeginn, true);
+
+			// Sortiere die doppelten Einträge aus der Sprachenfolge nach ihrem Beginn, sofern vorhanden.
+			listDuplikateMITBeginn = listDuplikateMITBeginn.stream().filter(s -> (s[iASDVon] != null)).sorted((a, b) -> {
+				final Jahrgaenge aVon = Jahrgaenge.getByKuerzel((String) a[iASDVon]);
+				final Jahrgaenge bVon = Jahrgaenge.getByKuerzel((String) b[iASDVon]);
+				return aVon.compareTo(bVon);
+			}).toList();
+
+			// Initialisiere die Variablen für den späteren, finalen DB-Eintrag der Sprache mit Standardwerten
+			Long finalID = null;
+			String finalASDVon = null;
+			Integer finalAbsVon = null;
+			String finalASDBis = null;
+			Integer finalAbsBis = null;
+			Integer finalReihenfolge = null;
+			String finalNiveau = null;
+			Integer finalKlLat = 0;
+			Integer finalLat = 0;
+			Integer finalGrae = 0;
+			Integer finalHeb = 0;
+
+			/*
+				Anmerkungen zum folgenden Vorgehen beim Zusammenfassen:
+				#######################################################
+				Die Duplikate sollen zu einem Eintrag verschmolzen werden. Dabei werden überlappende Zeitbereiche zusammengefasst.
+				Sollten sich zwei disjunkte Bereiche ergeben, so wird der jüngste Bereich übernommen.
+				Vorrang haben immer die Einträge mit Sprachbeginn, da darüber später die Sprachbelegung definiert wird.
+				Ist ein Sprachanfang aber kein Sprachende angegeben, so wird das leere Sprachende übernommen, da dies bisher in Schild eine nicht abgeschlossene Sprache darstellte.
+				Sind weder Sprachanfang noch Sprachende vorhanden, so werden nur übrigen Felder ausgewertet.
+				Bei der Reihenfolge wird der kleinste Eintrag übernommen, beim Referenzniveau der größte.
+				Die Nachweise wie das Latinum werden gesetzt, wenn sie zumindest einmal vorhanden.
+			*/
+
+			// 1. Schritt: Es werden die Einträge zusammengefasst, die einen Sprachbeginn haben, sofern es damit mehrere Duplikate einer Sprache gibt.
+			if (!listDuplikateMITBeginn.isEmpty()) {
+				// Es gibt mindestens ein Duplikat mit Sprachbeginn. Wähle davon den ersten Eintrag, denn der hat den kleinsten Jahrgang im Beginn, wähle dies zur Initialisierung.
+				// Wenn es mehr als ein Duplikat zum Sprachbeginn gibt, fasse die Einträge entsprechend dem Kommentar oben zusammen.
+				// Dabei ist zu beachten, dass die Einträge nach Jahrgang des Sprachbeginns bereits aufsteigend sortiert sind.
+				for (Object[] eintragSprachenfolge : listDuplikateMITBeginn) {
+					if (finalID == null) {
+						finalID = (Long) eintragSprachenfolge[iID];
+						finalASDVon = (String) eintragSprachenfolge[iASDVon];
+						finalAbsVon = (Integer) eintragSprachenfolge[iAbsVon];
+						finalASDBis = (String) eintragSprachenfolge[iASDBis];
+						finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+						finalNiveau = (String) eintragSprachenfolge[iNiveau];
+						finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
+						finalLat = (Integer) eintragSprachenfolge[iLat];
+						finalGrae = (Integer) eintragSprachenfolge[iGrae];
+						finalHeb = (Integer) eintragSprachenfolge[iHeb];
+						continue;
+					}
+
+					final Jahrgaenge jgFinalBeginn = Jahrgaenge.getByKuerzel(finalASDVon);
+					final Jahrgaenge jgFinalEnde = Jahrgaenge.getByKuerzel(finalASDBis);
+					final Jahrgaenge jgAktuellBeginn = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDVon]);
+					final Jahrgaenge jgAktuellEnde = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDBis]);
+
+					// Der gesetzte finale Eintrag hat einen definierten Sprachbeginn und ein definiertes Ende.
+					// Wenn der aktuell betrachtet Jahrgang nicht innerhalb des finalen beginnt oder lückenlos daran anschließt, dann behalte nur den jüngsten Eintrag.
+					// Ansonsten werden beide Einträge verschmolzen (ELSE-Teil)
+					if (jgFinalEnde != null && jgAktuellBeginn.compareTo(jgFinalEnde) > 0
+						&& (!jgAktuellBeginn.isMoeglicherNachfolgerVon(jgFinalEnde)
+							|| 	(jgAktuellBeginn.isMoeglicherNachfolgerVon(jgFinalEnde)
+								//	(finalAbsBis == 1) || (eintragSprachenfolge[iAbsVon] == 2), dann grenzen die Einträge nicht aneinander.
+								&& ((finalAbsBis != null && finalAbsBis != 2) || ((eintragSprachenfolge[iAbsVon] != null) && ((Integer) eintragSprachenfolge[iAbsVon] != 1)))
+								)
+							)
+						) {
+						finalASDVon = (String) eintragSprachenfolge[iASDVon];
+						finalAbsVon = (Integer) eintragSprachenfolge[iAbsVon];
+						finalASDBis = (String) eintragSprachenfolge[iASDBis];
+						finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+						if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+							finalNiveau = (String) eintragSprachenfolge[iNiveau];
+						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
+						if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+							finalLat = (Integer) eintragSprachenfolge[iLat];
+						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+							finalGrae = (Integer) eintragSprachenfolge[iGrae];
+						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+							finalHeb = (Integer) eintragSprachenfolge[iHeb];
+					} else {
+						// Der aktuell betrachtete Eintrag beginnt vor bzw. mit dem bisher als final gesetzen Sprachbelegungsende. Verschmelze daher beide Einträge.
+						if (jgAktuellBeginn.compareTo(jgFinalBeginn) == 0 && ((finalAbsVon == null && eintragSprachenfolge[iAbsVon] != null) || (finalAbsVon != null && eintragSprachenfolge[iAbsVon] != null && ((Integer) eintragSprachenfolge[iAbsVon]) < finalAbsVon)))
+							finalAbsVon = (Integer) eintragSprachenfolge[iAbsVon];
+						if (jgFinalEnde != null && (jgAktuellEnde == null || jgAktuellEnde.compareTo(jgFinalEnde) > 0)) {
+							finalASDBis = (String) eintragSprachenfolge[iASDBis];
+							if (finalASDBis == null)
+								finalAbsBis = null;
+							else
+								finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+						}
+						if ((finalReihenfolge == null && (eintragSprachenfolge[iReihenfolge]) != null) || (finalReihenfolge != null && (eintragSprachenfolge[iReihenfolge]) != null && ((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))
+							finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+						if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+							finalNiveau = (String) eintragSprachenfolge[iNiveau];
+						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
+						if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+							finalLat = (Integer) eintragSprachenfolge[iLat];
+						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+							finalGrae = (Integer) eintragSprachenfolge[iGrae];
+						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+							finalHeb = (Integer) eintragSprachenfolge[iHeb];
+					}
+				}
+			}
+
+			// 2. Schritt: Informationen ohne Sprachbeginn mit den bisherigen Einträgen zusammenführen.
+			if (!listDuplikateOHNEBeginn.isEmpty()) {
+				for (Object[] eintragSprachenfolge : listDuplikateOHNEBeginn) {
+					if (finalID == null) {
+						// Wenn bisher kein Eintrag mit Sprachbeginn genutzt wurde, nehme den ersten Eintrag ohne Beginn.
+						finalID = (Long) eintragSprachenfolge[iID];
+						finalASDVon = null;
+						finalAbsVon = null;
+						finalASDBis = (String) eintragSprachenfolge[iASDBis];
+						finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+						finalNiveau = (String) eintragSprachenfolge[iNiveau];
+						finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
+						finalLat = (Integer) eintragSprachenfolge[iLat];
+						finalGrae = (Integer) eintragSprachenfolge[iGrae];
+						finalHeb = (Integer) eintragSprachenfolge[iHeb];
+						continue;
+					}
+					final Jahrgaenge jgFinalEnde = Jahrgaenge.getByKuerzel(finalASDBis);
+					final Jahrgaenge jgAktuellEnde = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDBis]);
+
+					if (jgFinalEnde != null && (jgAktuellEnde == null || jgAktuellEnde.compareTo(jgFinalEnde) > 0)) {
+						finalASDBis = (String) eintragSprachenfolge[iASDBis];
+						if (finalASDBis == null)
+							finalAbsBis = null;
+						else
+							finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+					}
+					if ((finalReihenfolge == null && (eintragSprachenfolge[iReihenfolge]) != null) || (finalReihenfolge != null && (eintragSprachenfolge[iReihenfolge]) != null && ((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))
+						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+					if (finalNiveau == null || (((eintragSprachenfolge[iNiveau]) != null) && (finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))
+						finalNiveau = (String) eintragSprachenfolge[iNiveau];
+					if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+						finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
+					if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+						finalLat = (Integer) eintragSprachenfolge[iLat];
+					if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+						finalGrae = (Integer) eintragSprachenfolge[iGrae];
+					if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+						finalHeb = (Integer) eintragSprachenfolge[iHeb];
+				}
+			}
+
+			// Falls kein Eintrag übernommen wurde, ist ein unerwarteter Fehler aufgetreten.
+			if (finalID == null)
+				resultVorbereitung = false;
+
+			// Nur wenn bisher kein Fehler aufgetreten ist, aktualisiere die Datenbank.
+			if (resultVorbereitung) {
+				// Alle Einträge entfernen, die nicht der ID des finalen Eintrags entsprechen:
+				for (Object[] objects : listDuplikateMITBeginn) {
+					Long idToDelete = (Long) objects[iID];
+					if (!idToDelete.equals(finalID)) {
+						int removed = conn.executeNativeDelete("DELETE FROM SchuelerSprachenfolge WHERE ID = %d".formatted(idToDelete));
+						if (removed == 1)
+							logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde entfernt.".formatted(idToDelete));
+						else {
+							logger.logLn("[Fehler] Datensatz mit der ID %d in SchuelerSprachenfolge konnte nicht entfernt werden.".formatted(idToDelete));
+							resultVorbereitung = false;
+						}
+					}
+				}
+				for (Object[] objects : listDuplikateOHNEBeginn) {
+					Long idToDelete = (Long) objects[iID];
+					if (!idToDelete.equals(finalID)) {
+						int removed = conn.executeNativeDelete("DELETE FROM SchuelerSprachenfolge WHERE ID = %d".formatted(idToDelete));
+						if (removed == 1)
+							logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde entfernt.".formatted(idToDelete));
+						else {
+							logger.logLn("[Fehler] Datensatz mit der ID %d in SchuelerSprachenfolge konnte nicht entfernt werden.".formatted(idToDelete));
+							resultVorbereitung = false;
+						}
+					}
+				}
+
+				// Den verbleibenden Eintrag mit den gewonnenen Werten aktualisieren.
+				// SQL-UPDATE-Command erzeugen. Dafür Werte SQL-konform umwandeln.
+				String updateCommand = 	"""
+									UPDATE SchuelerSprachenfolge
+									SET Schueler_ID=%d, ASDJahrgangVon=%s, AbschnittVon=%s, ASDJahrgangBis=%s, AbschnittBis=%s, Sprache=%s, ReihenfolgeNr=%s, Referenzniveau=%s, KleinesLatinumErreicht=%s, LatinumErreicht=%s, GraecumErreicht=%s, HebraicumErreicht=%s
+									WHERE ID = %d"""
+					.formatted(schuelerID, convertToSQL(finalASDVon), convertToSQL(finalAbsVon), convertToSQL(finalASDBis), convertToSQL(finalAbsBis), convertToSQL(sprache), convertToSQL(finalReihenfolge), convertToSQL(finalNiveau),
+						convertToSQL(finalKlLat), convertToSQL(finalLat), convertToSQL(finalGrae), convertToSQL(finalHeb), finalID);
+
+				int updated = conn.executeNativeUpdate(updateCommand);
+				if (updated == 1)
+					logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde aktualisiert.".formatted(finalID));
+				else {
+					logger.logLn("[Fehler] Datensatz mit der ID  %d in SchuelerSprachenfolge konnte nicht aktualisiert werden.".formatted(finalID));
+					resultVorbereitung = false;
+				}
+			}
+
+			logger.modifyIndent(-2);
+		}
+
+		logger.modifyIndent(-2);
+
+		return resultVorbereitung;
+	}
+
+	private static void werteNormalisieren(final List<Object[]> listDuplikateSprachenfolge, final boolean setBeginnNull) {
+		// Für besser lesbaren Zugriff auf Arrays die entsprechenden Indexwerte der Einträge benennen.
+		final int iASDVon = 1;
+		final int iAbsVon = 2;
+		final int iASDBis = 3;
+		final int iAbsBis = 4;
+		final int iReihenfolge = 5;
+		final int iNiveau = 6;
+		final int iKlLat = 7;
+		final int iLat = 8;
+		final int iGrae = 9;
+		final int iHeb = 10;
+
+		// Werte normalisieren
+		for (Object[] eintragSprachenfolge : listDuplikateSprachenfolge) {
+			if (setBeginnNull)
+				eintragSprachenfolge[iASDVon] = null;
+
+			if (eintragSprachenfolge[iASDVon] != null && eintragSprachenfolge[iASDVon].toString().isEmpty())
+				eintragSprachenfolge[iASDVon] = null;
+			if (eintragSprachenfolge[iASDVon] == null)
+				eintragSprachenfolge[iAbsVon] = null;
+			if (eintragSprachenfolge[iASDVon] != null) {
+				if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) <= 1))
+					eintragSprachenfolge[iAbsVon] = 1;
+				else if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) >= 2))
+					eintragSprachenfolge[iAbsVon] = 2;
+				else
+					eintragSprachenfolge[iAbsVon] = null;
+			}
+
+			if (eintragSprachenfolge[iASDBis] != null && eintragSprachenfolge[iASDBis].toString().isEmpty())
+				eintragSprachenfolge[iASDBis] = null;
+			if (eintragSprachenfolge[iASDBis] == null)
+				eintragSprachenfolge[iAbsBis] = null;
+			if (eintragSprachenfolge[iASDBis] != null) {
+				if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) <= 1))
+					eintragSprachenfolge[iAbsBis] = 1;
+				else if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) >= 2))
+					eintragSprachenfolge[iAbsBis] = 2;
+				else
+					eintragSprachenfolge[iAbsBis] = null;
+			}
+
+			if (eintragSprachenfolge[iReihenfolge] != null && ((Integer) eintragSprachenfolge[iReihenfolge]) <= 0)
+				eintragSprachenfolge[iReihenfolge] = null;
+			if (eintragSprachenfolge[iNiveau] != null && eintragSprachenfolge[iNiveau].toString().isEmpty())
+				eintragSprachenfolge[iNiveau] = null;
+			if (eintragSprachenfolge[iKlLat] == null || (((Integer) eintragSprachenfolge[iKlLat]) != 0 && ((Integer) eintragSprachenfolge[iKlLat]) != 1))
+				eintragSprachenfolge[iKlLat] = 0;
+			if (eintragSprachenfolge[iLat] == null || (((Integer) eintragSprachenfolge[iLat]) != 0 && ((Integer) eintragSprachenfolge[iLat]) != 1))
+				eintragSprachenfolge[iLat] = 0;
+			if (eintragSprachenfolge[iGrae] == null || (((Integer) eintragSprachenfolge[iGrae]) != 0 && ((Integer) eintragSprachenfolge[iGrae]) != 1))
+				eintragSprachenfolge[iGrae] = 0;
+			if (eintragSprachenfolge[iHeb] == null || (((Integer) eintragSprachenfolge[iHeb]) != 0 && ((Integer) eintragSprachenfolge[iHeb]) != 1))
+				eintragSprachenfolge[iHeb] = 0;
+		}
+	}
+
+	private static String convertToSQL(final String value) {
+		if (value == null)
+			return "NULL";
+		else
+			return "'" + value + "'";
+	}
+
+	private static String convertToSQL(final Number value) {
+		if (value == null)
+			return "NULL";
+		else
+			return value.toString();
+	}
+
+
+	@Override
+	public boolean runLast(final DBEntityManager conn, final Logger logger) {
+		if (conn.getDBDriver() != DBDriver.MARIA_DB) {
+			logger.logLn("DBMS wird für dieses Datenbank Revisions-Update nicht unterstützt.");
+			return false;
+		}
+
+		if (!entferneQuartalsmodus(conn, logger))
+			return false;
+
+		return bereiteSprachenfolgeFuerUniqueConstraintVor(conn, logger);
 	}
 
 }

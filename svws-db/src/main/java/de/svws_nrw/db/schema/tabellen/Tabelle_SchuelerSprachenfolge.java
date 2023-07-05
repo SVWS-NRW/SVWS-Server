@@ -11,6 +11,7 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SchuelerSprachenfolge.
@@ -114,17 +115,24 @@ public class Tabelle_SchuelerSprachenfolge extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachenfolge_Schueler_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerSprachenfolge_Schueler_FK = addForeignKey(
-			"SchuelerSprachenfolge_Schueler_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-		);
+		"SchuelerSprachenfolge_Schueler_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
+	);
 
 
 	/** Die Definition des Non-Unique-Index SchuelerSprachenfolge_IDX1 */
 	public SchemaTabelleIndex index_SchuelerSprachenfolge_IDX1 = addIndex("SchuelerSprachenfolge_IDX1",
-			col_Schueler_ID
-		);
+		col_Schueler_ID
+	);
+
+	/** Die Definition des Unique-Index SchuelerSprachenfolge_UC1 */
+	public SchemaTabelleUniqueIndex unique_SchuelerSprachenfolge_UC1 = addUniqueIndex("SchuelerSprachenfolge_UC1",
+		col_Schueler_ID,
+		col_Sprache
+	)
+	.setRevision(SchemaRevisionen.REV_3);
 
 
 	/**
