@@ -86,9 +86,31 @@ abstract class NodePluginConfig {
 	}
 	
 	URL getDownloadURL() {
+		if (project.hasProperty('node_download_url'))
+			return new URL(project.node_download_url + this.version.get() + "/" + this.getCompressedFilenameExt());
+		def downloadUrl = System.getenv("NODE_DOWNLOAD_URL")
+		if (downloadUrl != null)
+			return new URL(downloadUrl + this.version.get() + "/" + this.getCompressedFilenameExt());
 		return new URL(this.url.get() + this.version.get() + "/" + this.getCompressedFilenameExt());
 	}
+	
+	String getDownloadUser() {
+		if (project.hasProperty('node_download_user'))
+			return project.node_download_user;
+		def downloadUser = System.getenv("NODE_DOWNLOAD_USER")
+		if (downloadUser != null)
+			return downloadUser;
+		return null;		
+	}
 
+	String getDownloadPasswd() {
+		if (project.hasProperty('node_download_passwd'))
+			return project.node_download_passwd;
+		def downloadPasswd = System.getenv("NODE_DOWNLOAD_PASSWD")
+		if (downloadPasswd != null)
+			return downloadPasswd;
+		return "";		
+	}
 
 	String getDownloadDirectory() {
 		return "${project.rootProject.projectDir}/download";

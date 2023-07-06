@@ -27,8 +27,16 @@ abstract class NodeDownload extends DefaultTask {
 		} else {
 			project.mkdir(downloadPath);
 			def url = cfg.getDownloadURL();
+			def urlConnection = url.openConnection();
+			def username = cfg.getDownloadUser();
+			if (username != null) {
+				def userpasswd = cfg.getDownloadPasswd();
+				def cred = username + ":" + userpasswd;
+				def auth = "Basic " + cred.bytes.encodeBase64().toString(); 
+				urlConnection.setRequestProperty ("Authorization", auth);
+			}
 			println "Downloading ${filename} from ${url}...";
-			url.withInputStream { i -> file.withOutputStream { it << i } }
+			file.append(urlConnection.getInputStream());
 		}
 
     	def compFilename = cfg.getCompressedFilename();
