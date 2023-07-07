@@ -88,13 +88,13 @@
 	})
 
 	const filterFehler: WritableComputedRef<boolean> = computed({
-		get: () => props.config.getValue('gost.laufbahnplanung.filterFehler') === 'true',
-		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterFehler', value === true ? 'true' : 'false')
+		get: () => props.config.getValue('gost.laufbahnfehler.filterFehler') === 'true',
+		set: (value) =>	void props.config.setValue('gost.laufbahnfehler.filterFehler', value === true ? 'true' : 'false')
 	});
 
 	const filterExterne: WritableComputedRef<boolean> = computed({
-		get: () => props.config.getValue('gost.laufbahnplanung.filterExterne') === 'true',
-		set: (value) =>	void props.config.setValue('gost.laufbahnplanung.filterExterne', value === true ? 'true' : 'false')
+		get: () => props.config.getValue('gost.laufbahnfehler.filterExterne') === 'true',
+		set: (value) =>	void props.config.setValue('gost.laufbahnfehler.filterExterne', value === true ? 'true' : 'false')
 	});
 
 	const art: WritableComputedRef<'ef1'|'gesamt'|'auto'> = computed<'ef1'|'gesamt'|'auto'>({

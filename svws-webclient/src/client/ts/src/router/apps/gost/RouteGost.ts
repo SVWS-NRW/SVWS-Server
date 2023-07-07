@@ -10,10 +10,10 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 import { routeGostFaecher } from "~/router/apps/gost/faecher/RouteGostFaecher";
-import { routeGostJahrgangsdaten } from "~/router/apps/gost/jahrgangsdaten/RouteGostJahrgangsdaten";
+import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
 import { routeGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
-import { routeGostLaufbahnplanung } from "~/router/apps/gost/laufbahnplanung/RouteGostLaufbahnplanung";
+import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteGostLaufbahnfehler";
 
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 
@@ -33,14 +33,14 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		super.text = "Oberstufe";
 		super.setView("liste", SGostAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeGostJahrgangsdaten,
 			routeGostFaecher,
-			routeGostLaufbahnplanung,
+			routeGostBeratung,
+			routeGostLaufbahnfehler,
 			routeGostFachwahlen,
 			routeGostKursplanung,
 			routeGostKlausurplanung
 		];
-		super.defaultChild = routeGostJahrgangsdaten;
+		super.defaultChild = routeGostFaecher;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {

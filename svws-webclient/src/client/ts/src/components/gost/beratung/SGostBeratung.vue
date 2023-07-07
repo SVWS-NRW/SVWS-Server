@@ -12,9 +12,9 @@
 
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { GostStammdatenProps } from "./SGostStammdatenProps";
+	import type { GostBeratungProps } from "./SGostBeratungProps";
 
-	const props = defineProps<GostStammdatenProps>();
+	const props = defineProps<GostBeratungProps>();
 
 	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten().abiturjahr > 0));
 

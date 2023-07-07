@@ -2,7 +2,7 @@ import type { GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, List } from "
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { Config } from "~/components/Config";
 
-export interface GostLaufbahnplanungProps {
+export interface GostLaufbahnfehlerProps {
 	config: Config,
 	listBelegpruefungsErgebnisse: () => List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: () => GostBelegpruefungsArt;

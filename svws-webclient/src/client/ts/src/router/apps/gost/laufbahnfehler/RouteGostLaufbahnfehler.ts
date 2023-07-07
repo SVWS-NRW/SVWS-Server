@@ -6,26 +6,26 @@ import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteGost } from "~/router/apps/gost/RouteGost";
 
-import { RouteDataGostLaufbahnplanung } from "~/router/apps/gost/laufbahnplanung/RouteDataGostLaufbahnplanung";
+import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/RouteDataGostLaufbahnfehler";
 
 import { ConfigElement } from "~/components/Config";
-import type { GostLaufbahnplanungProps } from "~/components/gost/laufbahnplanung/SGostLaufbahnplanungProps";
+import type { GostLaufbahnfehlerProps } from "~/components/gost/laufbahnfehler/SGostLaufbahnfehlerProps";
 
-const SGostLaufbahnplanung = () => import("~/components/gost/laufbahnplanung/SGostLaufbahnplanung.vue");
+const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
-export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnplanung, RouteGost> {
+export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehler, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.laufbahnplanung", "laufbahnplanung", SGostLaufbahnplanung, new RouteDataGostLaufbahnplanung());
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.laufbahnfehler", "laufbahnfehler", SGostLaufbahnfehler, new RouteDataGostLaufbahnfehler());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Laufbahnplanung";
+		super.text = "Übersicht Laufbahnen";
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
 		api.config.addElements([
-			new ConfigElement("gost.laufbahnplanung.filterFehler", "user", "true"),
-			new ConfigElement("gost.laufbahnplanung.filterExterne", "user", "false")
+			new ConfigElement("gost.laufbahnfehler.filterFehler", "user", "true"),
+			new ConfigElement("gost.laufbahnfehler.filterExterne", "user", "false")
 		]);
 	}
 
@@ -65,7 +65,7 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 		return { name: this.name, params: { abiturjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): GostLaufbahnplanungProps {
+	public getProps(to: RouteLocationNormalized): GostLaufbahnfehlerProps {
 		return {
 			config: api.config,
 			listBelegpruefungsErgebnisse: () => this.data.listBelegpruefungsErgebnisse,
@@ -80,4 +80,4 @@ export class RouteGostLaufbahnplanung extends RouteNode<RouteDataGostLaufbahnpla
 
 }
 
-export const routeGostLaufbahnplanung = new RouteGostLaufbahnplanung();
+export const routeGostLaufbahnfehler = new RouteGostLaufbahnfehler();

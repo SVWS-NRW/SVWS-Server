@@ -9,27 +9,27 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 
 
-interface RouteStateDataGostLaufbahnplanung {
+interface RouteStateDataGostLaufbahnfehler {
 	abiturjahr: number;
 	listBelegpruefungsErgebnisse: List<GostBelegpruefungsErgebnisse>;
 	gostBelegpruefungsArt: GostBelegpruefungsArt;
 }
 
-export class RouteDataGostLaufbahnplanung  {
+export class RouteDataGostLaufbahnfehler  {
 
-	private static _defaultState: RouteStateDataGostLaufbahnplanung = {
+	private static _defaultState: RouteStateDataGostLaufbahnfehler = {
 		abiturjahr: -1,
 		listBelegpruefungsErgebnisse: new ArrayList(),
 		gostBelegpruefungsArt: GostBelegpruefungsArt.GESAMT,
 	}
 
-	private _state = shallowRef(RouteDataGostLaufbahnplanung._defaultState);
+	private _state = shallowRef(RouteDataGostLaufbahnfehler._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateDataGostLaufbahnplanung>) {
-		this._state.value = Object.assign({ ... RouteDataGostLaufbahnplanung._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateDataGostLaufbahnfehler>) {
+		this._state.value = Object.assign({ ... RouteDataGostLaufbahnfehler._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateDataGostLaufbahnplanung>) {
+	private setPatchedState(patch: Partial<RouteStateDataGostLaufbahnfehler>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 

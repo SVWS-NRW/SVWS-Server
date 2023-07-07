@@ -10,7 +10,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
-import { routeGostJahrgangsdaten } from "~/router/apps/gost/jahrgangsdaten/RouteGostJahrgangsdaten";
+import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
 
 interface RouteStateGost {
 	params: RouteParams;
@@ -35,7 +35,7 @@ export class RouteDataGost {
 		mapAbiturjahrgaenge: new Map(),
 		mapJahrgaenge: new Map(),
 		mapJahrgaengeOhneAbiJahrgang: new Map(),
-		view: routeGostJahrgangsdaten
+		view: routeGostBeratung
 	}
 
 	private _state = shallowRef<RouteStateGost>(RouteDataGost._defaultState);
@@ -256,7 +256,7 @@ export class RouteDataGost {
 			// await RouteManager.doRoute({ name: routeGost.name, params: { } });
 			return;
 		}
-		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostJahrgangsdaten.name : routeGost.selectedChild.name;
+		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostBeratung.name : routeGost.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
 	}
 

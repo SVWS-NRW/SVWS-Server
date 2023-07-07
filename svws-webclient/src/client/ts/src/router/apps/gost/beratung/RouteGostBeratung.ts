@@ -5,24 +5,24 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 
-import type { GostStammdatenProps } from "~/components/gost/stammdaten/SGostStammdatenProps";
+import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratungProps";
 
-const SGostStammdaten = () => import("~/components/gost/stammdaten/SGostStammdaten.vue");
+const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 
-export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
+export class RouteGostBeratung extends RouteNode<unknown, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.jahrgangsdaten", "daten", SGostStammdaten);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.beratung", "beratung", SGostBeratung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Allgemein";
+		super.text = "Beratung";
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
 		return { name: this.name, params: { abiturjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): GostStammdatenProps {
+	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
@@ -31,4 +31,4 @@ export class RouteGostJahrgangsdaten extends RouteNode<unknown, RouteGost> {
 
 }
 
-export const routeGostJahrgangsdaten = new RouteGostJahrgangsdaten();
+export const routeGostBeratung = new RouteGostBeratung();
