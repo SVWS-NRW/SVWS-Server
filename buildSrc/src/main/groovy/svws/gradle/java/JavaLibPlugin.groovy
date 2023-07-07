@@ -3,6 +3,7 @@ package svws.gradle.java;
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.JavaVersion
 import org.gradle.api.tasks.Exec
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.JavaExec
@@ -119,8 +120,8 @@ class JavaLibPlugin implements Plugin<Project> {
     	project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.9.3');
     	project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.9.3');
 
-		project.sourceCompatibility = 17
-		project.targetCompatibility = 17
+		project.java.sourceCompatibility = JavaVersion.VERSION_17
+		project.java.targetCompatibility = JavaVersion.VERSION_17
 
 		project.tasks.withType(JavaCompile.class, {
 			options.encoding = 'UTF-8'
