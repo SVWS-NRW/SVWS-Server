@@ -36,16 +36,17 @@ task copyPublishedArtifacts(type: Copy) {
 /*
  Verpackt die SVWS-Artefakte als tar.gz
  */
-task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {
-	archiveFileName = "linux-installer-"+project.ext.svwsArtifactVersion+".tar.gz"
+task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {	
+	archiveBaseName = "linux-installer"
+	archiveVersion = project.ext.svwsArtifactVersion
+	archiveExtension = "tar.gz"
+	compression = Compression.GZIP
 	from ("$projectDir/svws"){
 		into "svws"
 	}
 	from ("$projectDir/init-scripts"){
 		into "init-scripts"
 	}
-	extension 'tar.gz'
-	compression = Compression.GZIP
 }
 
 
