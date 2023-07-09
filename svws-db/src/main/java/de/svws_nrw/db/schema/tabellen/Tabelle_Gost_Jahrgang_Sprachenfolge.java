@@ -20,7 +20,7 @@ public class Tabelle_Gost_Jahrgang_Sprachenfolge extends SchemaTabelle {
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten - Sprachenfolge: Schuljahr, in welchem der Jahrgang das Abitur macht");
 
 	/** Die Definition der Tabellenspalte Sprache */
-	public SchemaTabelleSpalte col_Sprache = add("Sprache", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+	public SchemaTabelleSpalte col_Sprache = add("Sprache", SchemaDatentypen.VARCHAR, true).setDatenlaenge(2)
 		.setNotNull()
 		.setJavaComment("Gymnasiale Oberstufe - Jahrgangsdaten - Sprachenfolge: Atomares Sprachkürzel des Sprach-Faches");
 

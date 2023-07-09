@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { Abiturdaten, GostJahrgangFachkombination, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
+import type { Abiturdaten, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
 	SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
 	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr } from "@core";

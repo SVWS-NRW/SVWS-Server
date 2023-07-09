@@ -644,7 +644,7 @@ public class APIGost {
      * @return die Sprachbelegung des Abiturjahrgangs
      */
     @GET
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache : \\s+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
     @Operation(summary = "Liest für die gymnasiale Oberstufe die Default-Sprachbelegung von dem angegebenen Abiturjahrgang aus.",
                description = "Liest für die gymnasiale Oberstufe die Default-Sprachbelegung von dem angegebenen Abiturjahrgang aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Sprachbelegung besitzt.")
@@ -674,7 +674,7 @@ public class APIGost {
      * @return die HTTP-Antwort
      */
     @PATCH
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache : \\s+}")
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
     @Operation(summary = "Passt die Sprachbelegung der Vorlage des angegebenen Abiturjahrgangs an.",
     description = "Passt die Sprachbelegung der Vorlage des angegebenen Abiturjahrgangs an. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Sprachbelegung besitzt.")
@@ -693,6 +693,38 @@ public class APIGost {
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostJahrgangLaufbahnplanung(conn)).patchSprachbelegung(abiturjahr, sprache, is);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen einer Sprachbelegung aus der Vorlage des angegebenen Abiturjahrgangs.
+     *
+     * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param abiturjahr   das Abiturjahr
+     * @param sprache      das Sprachkürzel
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Sprachbelegung
+     */
+    @DELETE
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
+    @Operation(summary = "Entfernt eine Sprachbelegung aus der Vorlage für die Laufbahnplanung des angegebenen Abiturjahrgangs.",
+    description = "Entfernt eine Sprachbelegung aus der Vorlage für die Laufbahnplanung des angegebenen Abiturjahrgangs."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Sprachbelegung hat.")
+    @ApiResponse(responseCode = "200", description = "Die Sprachbelegung wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Sprachbelegung zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Keine Sprachbelegung vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteGostAbiturjahrgangSprachbelegung(
+    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("sprache") final String sprache,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+    		return (new DataGostJahrgangLaufbahnplanung(conn)).deleteSprachbelegung(abiturjahr, sprache);
     	}
     }
 

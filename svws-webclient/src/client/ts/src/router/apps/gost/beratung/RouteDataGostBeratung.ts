@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag} from "@core";
+import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag, Sprachbelegung} from "@core";
 import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr} from "@core";
 
@@ -121,6 +121,20 @@ export class RouteDataGostBeratung  {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
+	setSprachbelegung = async (sprache: string, belegung: Partial<Sprachbelegung>) => {
+		await api.server.patchGostAbiturjahrgangSprachbelegung(belegung, api.schema, this.auswahl, sprache);
+		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
+		this._state.value.abiturdaten = abiturdaten;
+		await this.setGostBelegpruefungErgebnis();
+	}
+
+	deleteSprachbelegung = async (sprache: string) => {
+		await api.server.deleteGostAbiturjahrgangSprachbelegung(api.schema, this.auswahl, sprache);
+		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
+		this._state.value.abiturdaten = abiturdaten;
+		await this.setGostBelegpruefungErgebnis();
+	}
+
 	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
 		return api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
 	}
@@ -161,11 +175,8 @@ export class RouteDataGostBeratung  {
 	resetFachwahlen = async () => {
 		await api.server.resetGostAbiturjahrgangFachwahlen(api.schema, this.auswahl);
 		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
-		const abiturdatenManager = await this.createAbiturdatenmanager(abiturdaten);
-		if (abiturdatenManager === undefined)
-			return;
-		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
-		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
+		this._state.value.abiturdaten = abiturdaten;
+		await this.setGostBelegpruefungErgebnis();
 	}
 
 }

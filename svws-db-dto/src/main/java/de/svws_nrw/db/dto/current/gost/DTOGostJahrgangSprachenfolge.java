@@ -6,6 +6,7 @@ import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
+@IdClass(DTOGostJahrgangSprachenfolgePK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Jahrgang_Sprachenfolge")
 @NamedQuery(name = "DTOGostJahrgangSprachenfolge.all", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e")
@@ -28,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOGostJahrgangSprachenfolge.reihenfolgenr.multiple", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.ReihenfolgeNr IN :value")
 @NamedQuery(name = "DTOGostJahrgangSprachenfolge.asdjahrgangvon", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.ASDJahrgangVon = :value")
 @NamedQuery(name = "DTOGostJahrgangSprachenfolge.asdjahrgangvon.multiple", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.ASDJahrgangVon IN :value")
-@NamedQuery(name = "DTOGostJahrgangSprachenfolge.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang = ?1")
-@NamedQuery(name = "DTOGostJahrgangSprachenfolge.all.migration", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang IS NOT NULL")
+@NamedQuery(name = "DTOGostJahrgangSprachenfolge.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang = ?1 AND e.Sprache = ?2")
+@NamedQuery(name = "DTOGostJahrgangSprachenfolge.all.migration", query = "SELECT e FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang IS NOT NULL AND e.Sprache IS NOT NULL")
 @JsonPropertyOrder({"Abi_Jahrgang", "Sprache", "ReihenfolgeNr", "ASDJahrgangVon"})
 public final class DTOGostJahrgangSprachenfolge {
 
@@ -40,6 +42,7 @@ public final class DTOGostJahrgangSprachenfolge {
 	public int Abi_Jahrgang;
 
 	/** Gymnasiale Oberstufe - Jahrgangsdaten - Sprachenfolge: Atomares Sprachkürzel des Sprach-Faches */
+	@Id
 	@Column(name = "Sprache")
 	@JsonProperty
 	public String Sprache;
@@ -84,7 +87,14 @@ public final class DTOGostJahrgangSprachenfolge {
 		if (getClass() != obj.getClass())
 			return false;
 		DTOGostJahrgangSprachenfolge other = (DTOGostJahrgangSprachenfolge) obj;
-		return Abi_Jahrgang == other.Abi_Jahrgang;
+		if (Abi_Jahrgang != other.Abi_Jahrgang)
+			return false;
+		if (Sprache == null) {
+			if (other.Sprache != null)
+				return false;
+		} else if (!Sprache.equals(other.Sprache))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -92,6 +102,8 @@ public final class DTOGostJahrgangSprachenfolge {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Integer.hashCode(Abi_Jahrgang);
+
+		result = prime * result + ((Sprache == null) ? 0 : Sprache.hashCode());
 		return result;
 	}
 

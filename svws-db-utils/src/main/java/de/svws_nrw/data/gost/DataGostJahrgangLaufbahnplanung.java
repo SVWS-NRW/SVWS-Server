@@ -289,6 +289,38 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	}
 
 
+	/**
+	 * Entfernt den Sprachenfolgen-Eintrag in der Vorlage für die Laufbahnplanung
+	 * des angegebenen Abiturjahrgangs.
+	 *
+	 * @param abijahr   der Abiturjahrgang
+	 * @param kuerzel   das Sprachkürzel für den Eintrag der Sprachenfolge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteSprachbelegung(final Integer abijahr, final String kuerzel) {
+		try {
+			conn.transactionBegin();
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOGostJahrgangSprachenfolge sf = conn.queryByKey(DTOGostJahrgangSprachenfolge.class, abijahr, kuerzel);
+			final Sprachbelegung daten = new Sprachbelegung();
+			daten.sprache = kuerzel;
+			if (sf != null) {
+				daten.reihenfolge = sf.ReihenfolgeNr;
+				daten.belegungVonJahrgang = sf.ASDJahrgangVon;
+				daten.belegungVonAbschnitt = 1;
+			}
+			conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang = %d AND e.Sprache = '%s'".formatted(abijahr, kuerzel));
+    		conn.transactionCommit();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception exception) {
+			conn.transactionRollback();
+			if (exception instanceof final WebApplicationException webex)
+				return webex.getResponse();
+			throw exception;
+		}
+	}
+
 
 	/**
 	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.

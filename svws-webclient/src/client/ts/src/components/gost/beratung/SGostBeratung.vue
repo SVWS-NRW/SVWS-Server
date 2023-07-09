@@ -18,6 +18,30 @@
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
 			<div class="flex flex-col gap-12">
+				<svws-ui-content-card title="Vorlage für Sprachbelegungen anpassen">
+					<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
+						<template #body>
+							<div v-for="belegung in abiturdatenManager().getSprachendaten().belegungen" :key="belegung.sprache" role="row" class="data-table__tr data-table__tbody__tr">
+								<div role="cell" class="data-table__td"> {{ belegung.sprache }} </div>
+								<div role="cell" class="data-table__td"> {{ belegung.reihenfolge }} </div>
+								<div role="cell" class="data-table__td"> {{ belegung.belegungVonJahrgang }} </div>
+								<div role="cell" class="data-table__td"> <svws-ui-button type="trash" @click="deleteSprachbelegung(belegung.sprache)" /> </div>
+							</div>
+						</template>
+						<template #footer>
+							<div role="row" class="data-table__tr data-table__tbody__tr">
+								<div role="cell" class="data-table__td"> Neu </div>
+								<div role="cell" class="data-table__td"> RF </div>
+								<div role="cell" class="data-table__td"> JG </div>
+								<div role="cell" class="data-table__td">
+									<svws-ui-button type="icon" @click="addSprachbelegung()" size="small">
+										<i-ri-add-circle-line />
+									</svws-ui-button>
+								</div>
+							</div>
+						</template>
+					</svws-ui-data-table>
+				</svws-ui-content-card>
 				<svws-ui-content-card title="Textvorlagen für die Laufbahnplanung">
 					<div class="flex flex-col gap-4">
 						<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
@@ -41,8 +65,16 @@
 	import { onMounted, computed, ref, type ComputedRef } from "vue";
 	import type { GostBeratungProps } from "./SGostBeratungProps";
 	import type { GostJahrgangsdaten } from "@core";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<GostBeratungProps>();
+
+	const cols: Array<DataTableColumn> = [
+		{ key: "Sprache", label: "Sprache", span: 0.5, minWidth: 2 },
+		{ key: "Folge", label: "Folge", span: 1.5, minWidth: 2},
+		{ key: "Beginn", label: "Beginn", align: 'center', span: 0.25, minWidth: 2 },
+		{ key: "", label: "", align: 'center', span: 0.25, minWidth: 2 },
+	];
 
 	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten().abiturjahr > 0));
 
@@ -53,6 +85,13 @@
 
 	async function doPatch(data: Partial<GostJahrgangsdaten>) {
 		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
+	}
+
+	async function addSprachbelegung() {
+		const sprache = 'S';
+		const reihenfolge = 2;
+		const belegungVonJahrgang = '06';
+		await props.setSprachbelegung(sprache, { reihenfolge, belegungVonJahrgang });
 	}
 
 	// Check if component is mounted

@@ -31,7 +31,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 		try {
 			await this.data.ladeDaten(abiturjahr);
 		} catch(error) {
-			return routeGost.getRoute(abiturjahr);
+			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Fehler beim Laden der Daten"));
 		}
 	}
 
@@ -45,6 +45,8 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			setWahl: this.data.setWahl,
+			setSprachbelegung: this.data.setSprachbelegung,
+			deleteSprachbelegung: this.data.deleteSprachbelegung,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,
