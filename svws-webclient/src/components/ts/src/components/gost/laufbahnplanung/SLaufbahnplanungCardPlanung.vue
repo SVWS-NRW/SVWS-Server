@@ -1,28 +1,9 @@
 <template>
 	<svws-ui-content-card class="table--with-background sticky top-8">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
-				<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbogen herunterladen">Wahlbogen herunterladen</svws-ui-button>
-				<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung">Exportieren <i-ri-upload-2-line /></svws-ui-button>
-				<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
-					<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal">Importieren…<i-ri-download-2-line /></svws-ui-button>
-				</s-laufbahnplanung-import-modal>
-				<svws-ui-button size="small" :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button size="small" type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
-				<svws-ui-button size="small" :type="istManuellerModus ? 'error' : 'transparent'" @click="switchManuellerModus" :title="istManuellerModus ? 'Manuellen Modus deaktivieren' : 'Manuellen Modus aktivieren'">
-					Manueller Modus
-					<template v-if="istManuellerModus">
-						<svg width="1.2em" height="1.2em" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 16V5.75C3 5.06 3.56 4.5 4.25 4.5S5.5 5.06 5.5 5.75V12H6.5V2.75C6.5 2.06 7.06 1.5 7.75 1.5C8.44 1.5 9 2.06 9 2.75V12H10V1.25C10 .56 10.56 0 11.25 0S12.5 .56 12.5 1.25V12H13.5V3.25C13.5 2.56 14.06 2 14.75 2S16 2.56 16 3.25V15H16.75L18.16 11.47C18.38 10.92 18.84 10.5 19.4 10.31L20.19 10.05C21 9.79 21.74 10.58 21.43 11.37L18.4 19C17.19 22 14.26 24 11 24C6.58 24 3 20.42 3 16Z" /></svg>
-					</template>
-				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="reset_fachwahlen" />
-				<svws-ui-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
-			</svws-ui-sub-nav>
-		</Teleport>
 		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()"
 			:columns="cols" panel-height overflow-x-hidden>
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
 					<div role="columnheader"
 						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
 						<div class="data-table__th-wrapper">
@@ -64,7 +45,7 @@
 						</div>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': istManuellerModus}" :title="istManuellerModus ? 'Manueller Modus aktiviert' : ''">
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
 					<svws-ui-table-cell thead>
 						Kürzel
 					</svws-ui-table-cell>
@@ -106,7 +87,7 @@
 			<template #body>
 				<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
 					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :manueller-modus="istManuellerModus" @update:wahl="onUpdateWahl" />
+						:fach="row" :manueller-modus="manuellerModus" @update:wahl="onUpdateWahl" />
 				</template>
 			</template>
 			<template #footer>
@@ -239,42 +220,20 @@
 <script setup lang="ts">
 
 	import type { ComputedRef } from "vue";
-	import {computed, onMounted, ref} from "vue";
+	import {computed } from "vue";
 
-	import type { SchuelerListeEintrag, AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten, GostLaufbahnplanungDaten } from "@core";
-	import { GostHalbjahr } from "@core";
+	import type { AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
 	const props = defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
-		getPdfWahlbogen: () => Promise<Blob>;
-		exportLaufbahnplanung: () => Promise<Blob>;
-		importLaufbahnplanung: (data: FormData) => Promise<boolean>;
-		item: SchuelerListeEintrag;
-		zwischenspeicher?: GostLaufbahnplanungDaten;
-		saveLaufbahnplanung: () => Promise<void>;
-		restoreLaufbahnplanung: () => Promise<void>;
+		manuellerModus: boolean;
 	}>();
 
 	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
 		await props.setWahl(fachID, wahl);
-	}
-
-	async function reset_fachwahlen() {
-		for (const fachbelegung of props.abiturdatenManager().getFachbelegungen()) {
-			const fach = props.abiturdatenManager().getFach(fachbelegung);
-			if (fach) {
-				const fachwahl = props.abiturdatenManager().getSchuelerFachwahl(fach.id);
-				for (const hj of GostHalbjahr.values()) {
-					if (!props.abiturdatenManager().istBewertet(hj))
-						fachwahl.halbjahre[hj.id] = null;
-				}
-				fachwahl.abiturFach = null;
-				await onUpdateWahl(fach.id, fachwahl);
-			}
-		}
 	}
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getAnrechenbareKurse());
@@ -295,33 +254,6 @@
 		return q.reduce((p, c) => p + c, 0) / 4;
 	});
 
-	const istManuellerModus = ref(false)
-	function switchManuellerModus() {
-		istManuellerModus.value = istManuellerModus.value ? false : true;
-	}
-
-	async function download_file() {
-		const pdf = await props.getPdfWahlbogen();
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(pdf);
-		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
-			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".pdf";
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
-	}
-
-	async function export_laufbahnplanung() {
-		const gzip = await props.exportLaufbahnplanung();
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(gzip);
-		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
-			+ props.item.nachname + "_" + props.item.vorname + "-" + props.item.id + ".lp";
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
-	}
-
 	const cols: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75},
 		{ key: "bezeichnung", label: "Bezeichnung", align: 'center', span: 3, minWidth: 12 },
@@ -336,12 +268,6 @@
 		{ key: "q2_2", label: "Q2.2", align: 'center', fixedWidth: 4.5 },
 		{ key: "abiturfach", label: "Abiturfach", align: 'center', fixedWidth: 4.5 }
 	];
-
-	// Check if component is mounted
-	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
 
 </script>
 
