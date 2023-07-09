@@ -632,6 +632,35 @@ public class APIGost {
 
 
     /**
+     * Die OpenAPI-Methode für das Zurücksetzen der Fachwahlen in der Vorlage
+     * für die Laufbahnplanung in dem angegebenen Abiturjahrgang.
+     *
+     * @param schema       das Datenbankschema
+     * @param abiturjahr   der Abitur-Jahrgang dessen Fachwahlen zurückgesetzt werden
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/reset")
+    @Operation(summary = "Setzt die Fachwahlen in der Vorlage für eine Laufbahnplanung in dem angegebenen Abiturjahrgang zurück.",
+    description = "Setzt die Fachwahlen in der Vorlage für eine Laufbahnplanung in dem angegebenen Abiturjahrgang zurück."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.")
+    @ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich zurückgesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.")
+    @ApiResponse(responseCode = "404", description = "Der Abiturjahrgang wurde nicht gefunden.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response resetGostAbiturjahrgangFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+    		return (new DataGostJahrgangLaufbahnplanung(conn)).reset(abiturjahr);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

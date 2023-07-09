@@ -3,8 +3,8 @@ import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../cor
 import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostLaufbahnplanungFachkombinationTyp } from '../../../core/types/gost/GostLaufbahnplanungFachkombinationTyp';
 import type { Comparator } from '../../../java/util/Comparator';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
@@ -35,6 +35,11 @@ export class GostFaecherManager extends JavaObject {
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
 	private readonly _map : HashMap<number, GostFach> = new HashMap();
+
+	/**
+	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches
+	 */
+	private readonly _mapByKuerzel : HashMap<string, List<GostFach>> = new HashMap();
 
 	/**
 	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
@@ -110,6 +115,12 @@ export class GostFaecherManager extends JavaObject {
 		if (this._map.containsKey(fach.id))
 			return false;
 		this._map.put(fach.id, fach);
+		let listForKuerzel : List<GostFach> | null = this._mapByKuerzel.get(fach.kuerzel);
+		if (listForKuerzel === null) {
+			listForKuerzel = new ArrayList();
+			this._mapByKuerzel.put(fach.kuerzel, listForKuerzel);
+		}
+		listForKuerzel.add(fach);
 		const added : boolean = this._faecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
@@ -248,6 +259,18 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getOrException(idFach : number) : GostFach {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map, idFach);
+	}
+
+	/**
+	 * Liefert die Liste der Fächer für das angegebene Statistik-Kürzel zurück.
+	 *
+	 * @param kuerzel   das Statistik-Kürzel des gesuchten Faches
+	 *
+	 * @return eine Liste der Fächer, welche das angegebene Statistik-Kürzel haben
+	 */
+	public getByKuerzel(kuerzel : string) : List<GostFach> {
+		const faecher : List<GostFach> | null = this._mapByKuerzel.get(kuerzel);
+		return (faecher === null) ? new ArrayList() : faecher;
 	}
 
 	/**

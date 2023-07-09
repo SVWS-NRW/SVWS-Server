@@ -247,6 +247,37 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Führt eine Update-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
 	 * darum muss manuell gehandhabt werden.
 	 *
+	 * @param query   die JPQL-Anfrage
+	 *
+	 * @return die Anzahl der aktualisierten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	public int transactionExecuteUpdate(final String query) {
+		try {
+			return em.createQuery(query).executeUpdate();
+		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
+			return Integer.MIN_VALUE;
+		}
+	}
+
+
+	/**
+	 * Führt eine Delete-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden.
+	 *
+	 * @param query   die JPQL-Anfrage
+	 *
+	 * @return die Anzahl der gelöschten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	public int transactionExecuteDelete(final String query) {
+		return transactionExecuteUpdate(query);
+	}
+
+
+
+	/**
+	 * Führt eine Update-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden.
+	 *
 	 * @param sqlQuery   der SQL-Befehl
 	 *
 	 * @return die Anzahl der aktualisierten Entities oder Integer.MIN_VALUE im Fehlerfall

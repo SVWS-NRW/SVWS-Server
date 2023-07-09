@@ -1,19 +1,27 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.gost.Abiturdaten;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -188,6 +196,103 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			}
 		}
 		return Response.status(Status.OK).build();
+	}
+
+
+
+	/**
+	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.
+	 * Handelt es sich um den Vorlage-Abiturjahrgang, so werden alle Fachwahlen entfernt.
+	 * Ansonsten werden die Faten aus dem Vorlage-Abiturjahrgang übernommen.
+	 *
+	 * @param abijahr   der Abiturjahrgang
+	 *
+	 * @return Die HTTP-Response der Operation
+	 */
+	public Response reset(final Integer abijahr) {
+		try {
+			conn.transactionBegin();
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+			if (jahrgang == null)
+				return OperationError.NOT_FOUND.getResponse();
+			if (abijahr == -1) {
+				final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
+				conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
+				conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
+				// Setze Default-Einträge für die Fächer Deutsch, Mathematik und Sport und für die Sprachenfolge bei Englisch
+				final @NotNull List<@NotNull GostFach> d = faecherManager.getByKuerzel(ZulaessigesFach.D.daten.kuerzelASD);
+				if (d.size() == 1) {
+					final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, d.get(0).id);
+					fw.EF1_Kursart = "S";
+					fw.EF2_Kursart = "S";
+					fw.Q11_Kursart = "S";
+					fw.Q12_Kursart = "S";
+					fw.Q21_Kursart = "S";
+					fw.Q22_Kursart = "M";
+					conn.transactionPersist(fw);
+				}
+				final @NotNull List<@NotNull GostFach> m = faecherManager.getByKuerzel(ZulaessigesFach.M.daten.kuerzelASD);
+				if (m.size() == 1) {
+					final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, m.get(0).id);
+					fw.EF1_Kursart = "S";
+					fw.EF2_Kursart = "S";
+					fw.Q11_Kursart = "S";
+					fw.Q12_Kursart = "S";
+					fw.Q21_Kursart = "S";
+					fw.Q22_Kursart = "M";
+					conn.transactionPersist(fw);
+				}
+				final @NotNull List<@NotNull GostFach> sp = faecherManager.getByKuerzel(ZulaessigesFach.SP.daten.kuerzelASD);
+				if (sp.size() == 1) {
+					final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, sp.get(0).id);
+					fw.EF1_Kursart = "M";
+					fw.EF2_Kursart = "M";
+					fw.Q11_Kursart = "M";
+					fw.Q12_Kursart = "M";
+					fw.Q21_Kursart = "M";
+					fw.Q22_Kursart = "M";
+					conn.transactionPersist(fw);
+				}
+				final DTOGostJahrgangSprachenfolge sfE = new DTOGostJahrgangSprachenfolge(abijahr, "E");
+				sfE.ReihenfolgeNr = 1;
+				sfE.ASDJahrgangVon = Jahrgaenge.JG_05.daten.kuerzel;
+				conn.transactionPersist(sfE);
+				conn.transactionCommit();
+				return Response.status(Status.NO_CONTENT).build();
+			}
+	    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", -1, DTOGostJahrgangFachbelegungen.class);
+	        final List<DTOGostJahrgangSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOGostJahrgangSprachenfolge.abi_jahrgang", -1, DTOGostJahrgangSprachenfolge.class);
+			conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
+			conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangSprachenfolge e WHERE e.Abi_Jahrgang = %d".formatted(abijahr));
+			for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
+				final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(abijahr, dto.Fach_ID);
+				fw.EF1_Kursart = dto.EF1_Kursart;
+				fw.EF2_Kursart = dto.EF2_Kursart;
+				fw.Q11_Kursart = dto.Q11_Kursart;
+				fw.Q12_Kursart = dto.Q11_Kursart;
+				fw.Q21_Kursart = dto.Q21_Kursart;
+				fw.Q22_Kursart = dto.Q22_Kursart;
+				fw.AbiturFach = dto.AbiturFach;
+				fw.Bemerkungen = dto.Bemerkungen;
+				conn.transactionPersist(fw);
+			}
+			for (final DTOGostJahrgangSprachenfolge dto : dtoSprachenfolge) {
+				final DTOGostJahrgangSprachenfolge sf = new DTOGostJahrgangSprachenfolge(abijahr, dto.Sprache);
+				sf.ReihenfolgeNr = dto.ReihenfolgeNr;
+				sf.ASDJahrgangVon = dto.ASDJahrgangVon;
+				conn.transactionPersist(sf);
+			}
+			conn.transactionCommit();
+			return Response.status(Status.NO_CONTENT).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
 	}
 
 }

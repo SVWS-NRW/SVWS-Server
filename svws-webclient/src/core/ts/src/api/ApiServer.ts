@@ -2677,6 +2677,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode resetGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahl/reset
+	 *
+	 * Setzt die Fachwahlen in der Vorlage für eine Laufbahnplanung in dem angegebenen Abiturjahrgang zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich zurückgesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.
+	 *   Code 404: Der Abiturjahrgang wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 */
+	public async resetGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<void> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/reset"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlstatistik
 	 *
 	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
