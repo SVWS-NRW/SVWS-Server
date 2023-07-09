@@ -1,10 +1,9 @@
 package de.svws_nrw.data.gost;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -12,7 +11,7 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.core.data.schueler.Sprachendaten;
+import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
@@ -23,6 +22,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
@@ -33,6 +33,8 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -240,9 +242,19 @@ public final class DBUtilsGostLaufbahn {
     	abidaten.schuelerID = -1;
     	abidaten.abiturjahr = abijahr;
     	abidaten.schuljahrAbitur = abijahr - 1;
-    	abidaten.sprachendaten = new Sprachendaten();    // TODO auch Default für den Jahrgang in der DB zur Verfügung stellen?
-    	abidaten.sprachendaten.schuelerID = -1;
+		// Lese die Vorlage für die Sprachenfolge ein
 		abidaten.bilingualeSprache = null;               // TODO ggf. auch ein alternatives Defaulting für den bilingualen Zweig erlauben
+    	abidaten.sprachendaten.schuelerID = -1;
+        final List<DTOGostJahrgangSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOGostJahrgangSprachenfolge.abi_jahrgang", abijahr, DTOGostJahrgangSprachenfolge.class);
+        for (final DTOGostJahrgangSprachenfolge dtoSprachbelegung : dtoSprachenfolge) {
+			if (dtoSprachbelegung.ASDJahrgangVon == null)
+				continue;
+			final Sprachbelegung belegung = new Sprachbelegung();
+			belegung.sprache = dtoSprachbelegung.Sprache;
+			belegung.reihenfolge = dtoSprachbelegung.ReihenfolgeNr;
+			belegung.belegungVonJahrgang = dtoSprachbelegung.ASDJahrgangVon;
+			abidaten.sprachendaten.belegungen.add(belegung);
+        }
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = false;  // Da es sich um eine Vorlage handelt, sind die Halbjahre nicht bewertet
 		// Füge gewählte Fächer hinzu

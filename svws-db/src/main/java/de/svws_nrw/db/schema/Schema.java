@@ -64,6 +64,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Blockung_Zwischenergebnisse_K
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Beratungslehrer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Fachkombinationen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Fachwahlen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Sprachenfolge;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgang_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Jahrgangsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Gost_Klausuren_Kalenderinformationen;
@@ -334,8 +335,11 @@ public final class Schema {
 	/** Tabelle Gost_Jahrgangsdaten */
 	public static final Tabelle_Gost_Jahrgangsdaten tab_Gost_Jahrgangsdaten = add(new Tabelle_Gost_Jahrgangsdaten());
 
-	/** Tabelle Gost_Jahrgangsdaten */
-	public static final Tabelle_Gost_Jahrgang_Fachwahlen tab_Gost_Jahrgang_fachwahlen = add(new Tabelle_Gost_Jahrgang_Fachwahlen());
+	/** Tabelle Gost_Jahrgang_Fachwahlen */
+	public static final Tabelle_Gost_Jahrgang_Fachwahlen tab_Gost_Jahrgang_Fachwahlen = add(new Tabelle_Gost_Jahrgang_Fachwahlen());
+
+	/** Tabelle Gost_Jahrgang_Sprachenfolge */
+	public static final Tabelle_Gost_Jahrgang_Sprachenfolge tab_Gost_Jahrgang_Sprachenfolge = add(new Tabelle_Gost_Jahrgang_Sprachenfolge());
 
 	/** Tabelle Gost_Blockung */
 	public static final Tabelle_Gost_Blockung tab_Gost_Blockung = add(new Tabelle_Gost_Blockung());

@@ -9,6 +9,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
@@ -251,6 +252,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostJahrgangFachbelegungen.class.getSimpleName(), DTOGostJahrgangFachbelegungen.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangFachkombinationen.class.getSimpleName(), DTOGostJahrgangFachkombinationen.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangFaecher.class.getSimpleName(), DTOGostJahrgangFaecher.class);
+             mapDTOName2DTOClass.put(DTOGostJahrgangSprachenfolge.class.getSimpleName(), DTOGostJahrgangSprachenfolge.class);
              mapDTOName2DTOClass.put(DTOGostJahrgangsdaten.class.getSimpleName(), DTOGostJahrgangsdaten.class);
              mapDTOName2DTOClass.put(DTOGostSchueler.class.getSimpleName(), DTOGostSchueler.class);
              mapDTOName2DTOClass.put(DTOGostSchuelerFachbelegungen.class.getSimpleName(), DTOGostSchuelerFachbelegungen.class);
@@ -496,6 +498,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Jahrgang_Fachwahlen", DTOGostJahrgangFachbelegungen.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Fachkombinationen", DTOGostJahrgangFachkombinationen.class);
              mapTablename2DTOClass.put("Gost_Jahrgang_Faecher", DTOGostJahrgangFaecher.class);
+             mapTablename2DTOClass.put("Gost_Jahrgang_Sprachenfolge", DTOGostJahrgangSprachenfolge.class);
              mapTablename2DTOClass.put("Gost_Jahrgangsdaten", DTOGostJahrgangsdaten.class);
              mapTablename2DTOClass.put("Gost_Schueler", DTOGostSchueler.class);
              mapTablename2DTOClass.put("Gost_Schueler_Fachwahlen", DTOGostSchuelerFachbelegungen.class);
