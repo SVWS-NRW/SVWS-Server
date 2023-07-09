@@ -113,19 +113,17 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse();
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-		if ((fach == null) || (fach.IstOberstufenFach == null) || !fach.IstOberstufenFach)
+		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
 			return OperationError.NOT_FOUND.getResponse();
 		final DTOGostSchuelerFachbelegungen fachbelegung = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.ID, fach.ID);
-		if (fachbelegung == null)
-			return OperationError.NOT_FOUND.getResponse();
 		final GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
-		fachwahl.halbjahre[0] = fachbelegung.EF1_Kursart;
-		fachwahl.halbjahre[1] = fachbelegung.EF2_Kursart;
-		fachwahl.halbjahre[2] = fachbelegung.Q11_Kursart;
-		fachwahl.halbjahre[3] = fachbelegung.Q12_Kursart;
-		fachwahl.halbjahre[4] = fachbelegung.Q21_Kursart;
-		fachwahl.halbjahre[5] = fachbelegung.Q22_Kursart;
-		fachwahl.abiturFach = fachbelegung.AbiturFach;
+		fachwahl.halbjahre[0] = (fachbelegung == null) ? null : fachbelegung.EF1_Kursart;
+		fachwahl.halbjahre[1] = (fachbelegung == null) ? null : fachbelegung.EF2_Kursart;
+		fachwahl.halbjahre[2] = (fachbelegung == null) ? null : fachbelegung.Q11_Kursart;
+		fachwahl.halbjahre[3] = (fachbelegung == null) ? null : fachbelegung.Q12_Kursart;
+		fachwahl.halbjahre[4] = (fachbelegung == null) ? null : fachbelegung.Q21_Kursart;
+		fachwahl.halbjahre[5] = (fachbelegung == null) ? null : fachbelegung.Q22_Kursart;
+		fachwahl.abiturFach = (fachbelegung == null) ? null : fachbelegung.AbiturFach;
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(fachwahl).build();
 	}
 
