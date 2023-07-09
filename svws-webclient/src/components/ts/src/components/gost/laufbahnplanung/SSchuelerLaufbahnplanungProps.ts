@@ -19,4 +19,5 @@ export interface SchuelerLaufbahnplanungProps {
 	zwischenspeicher?: GostLaufbahnplanungDaten;
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
+	resetFachwahlen: () => Promise<void>;
 }

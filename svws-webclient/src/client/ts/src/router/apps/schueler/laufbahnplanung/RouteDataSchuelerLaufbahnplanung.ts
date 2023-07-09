@@ -213,5 +213,22 @@ export class RouteDataSchuelerLaufbahnplanung {
 			}
 		}
 	}
+
+	// TODO Optimierung der Methode durch eine geeignete Implementierung im Server und einen einmaligen Aufruf
+	resetFachwahlen = async () => {
+		for (const fachbelegung of this.abiturdatenManager.getFachbelegungen()) {
+			const fach = this.abiturdatenManager.getFach(fachbelegung);
+			if (fach) {
+				const fachwahl = this.abiturdatenManager.getSchuelerFachwahl(fach.id);
+				for (const hj of GostHalbjahr.values()) {
+					if (!this.abiturdatenManager.istBewertet(hj))
+						fachwahl.halbjahre[hj.id] = null;
+				}
+				fachwahl.abiturFach = null;
+				await this.setWahl(fach.id, fachwahl);
+			}
+		}
+	}
+
 }
 

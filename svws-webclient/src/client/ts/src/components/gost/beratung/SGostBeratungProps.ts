@@ -10,4 +10,5 @@ export interface GostBeratungProps {
 	abiturdatenManager: () => AbiturdatenManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
+	resetFachwahlen: () => Promise<void>;
 }

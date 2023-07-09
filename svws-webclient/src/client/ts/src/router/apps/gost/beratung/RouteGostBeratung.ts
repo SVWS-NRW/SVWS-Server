@@ -51,6 +51,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			abiturdatenManager: () => this.data.abiturdatenManager,
 			mapLehrer: this.data.mapLehrer,
 			id: this.data.id,
+			resetFachwahlen: this.data.resetFachwahlen,
 		};
 	}
 

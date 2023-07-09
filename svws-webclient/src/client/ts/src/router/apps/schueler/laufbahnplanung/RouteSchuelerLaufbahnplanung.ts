@@ -68,6 +68,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			zwischenspeicher: this.data.zwischenspeicher,
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
+			resetFachwahlen: this.data.resetFachwahlen,
 		};
 	}
 
