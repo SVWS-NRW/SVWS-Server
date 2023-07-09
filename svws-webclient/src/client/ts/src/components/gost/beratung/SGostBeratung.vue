@@ -17,10 +17,18 @@
 				:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
-			<div class="flex flex-col gap-16">
-				<s-card-gost-text-beratungsbogen :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
-				<s-card-gost-text-mailversand :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
-				<s-card-gost-beratungslehrer v-if="istAbiturjahrgang" :jahrgangsdaten="jahrgangsdaten" />
+			<div class="flex flex-col gap-12">
+				<svws-ui-content-card title="Textvorlagen für die Laufbahnplanung">
+					<div class="flex flex-col gap-4">
+						<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
+							@update:model-value="doPatch({ textBeratungsbogen: String($event) })" resizeable="vertical" autoresize />
+						<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
+							@update:model-value="doPatch({ textMailversand: String($event) })" resizeable="vertical" autoresize />
+					</div>
+				</svws-ui-content-card>
+				<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="opacity-50">
+					<span>Hier kommen die Beratungslehrer hin.</span>
+				</svws-ui-content-card>
 				<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
 					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 			</div>
@@ -32,6 +40,7 @@
 
 	import { onMounted, computed, ref, type ComputedRef } from "vue";
 	import type { GostBeratungProps } from "./SGostBeratungProps";
+	import type { GostJahrgangsdaten } from "@core";
 
 	const props = defineProps<GostBeratungProps>();
 
@@ -40,6 +49,10 @@
 	const istManuellerModus = ref(false)
 	function switchManuellerModus() {
 		istManuellerModus.value = istManuellerModus.value ? false : true;
+	}
+
+	async function doPatch(data: Partial<GostJahrgangsdaten>) {
+		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
 	}
 
 	// Check if component is mounted
