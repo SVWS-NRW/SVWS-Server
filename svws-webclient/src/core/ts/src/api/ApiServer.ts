@@ -139,6 +139,7 @@ import { SchulgliederungKatalogEintrag } from '../core/data/schule/Schulgliederu
 import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
+import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
@@ -2627,7 +2628,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Abiturjahrgang
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abiturdaten
+	 *     - Rückgabe-Typ: GostSchuelerFachwahl
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Abiturjahrgang auszulesen.
 	 *   Code 404: Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
 	 *
@@ -2637,14 +2638,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Abiturjahrgang
 	 */
-	public async getGostAbiturjahrgangFachwahl(schema : string, abiturjahr : number, fachid : number) : Promise<Abiturdaten> {
+	public async getGostAbiturjahrgangFachwahl(schema : string, abiturjahr : number, fachid : number) : Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{fachid\s*(:[^}]+)?}/g, fachid.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return Abiturdaten.transpilerFromJSON(text);
+		return GostSchuelerFachwahl.transpilerFromJSON(text);
 	}
 
 
@@ -2654,10 +2655,10 @@ export class ApiServer extends BaseApi {
 	 * Passt die Fachwahl der Vorlage des angegebenen Abiturjahrgangs in Bezug auf ein Fach der Gymnasiale Oberstufe an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Fachwahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Fachwahlen integriert.
+	 *   Code 203: Der Patch wurde erfolgreich in die Fachwahlen integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen zu ändern.
-	 *   Code 404: Kein Schüler- oder Fach-Eintrag mit der angegebenen ID gefunden
+	 *   Code 404: Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe oder für das Fach gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -2841,6 +2842,63 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SchuelerListeEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/sprachbelegung/{sprache : \s+}
+	 *
+	 * Liest für die gymnasiale Oberstufe die Default-Sprachbelegung von dem angegebenen Abiturjahrgang aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Sprachbelegung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachbelegung für den angegebenen Abiturjahrgang
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachbelegung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung eines Abiturjahrgang auszulesen.
+	 *   Code 404: Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 *
+	 * @returns Die Sprachbelegung für den angegebenen Abiturjahrgang
+	 */
+	public async getGostAbiturjahrgangSprachbelegung(schema : string, abiturjahr : number, sprache : string) : Promise<Sprachbelegung> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache : \\s+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Sprachbelegung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostAbiturjahrgangSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/sprachbelegung/{sprache : \s+}
+	 *
+	 * Passt die Sprachbelegung der Vorlage des angegebenen Abiturjahrgangs an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Sprachbelegung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Der Patch wurde erfolgreich in die Sprachbelegung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.
+	 *   Code 404: Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Sprachbelegung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 */
+	public async patchGostAbiturjahrgangSprachbelegung(data : Partial<Sprachbelegung>, schema : string, abiturjahr : number, sprache : string) : Promise<void> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache : \\s+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

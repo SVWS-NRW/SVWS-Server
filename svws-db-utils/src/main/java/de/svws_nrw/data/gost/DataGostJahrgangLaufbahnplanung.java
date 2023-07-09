@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
+import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
@@ -195,7 +196,96 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 				conn.transactionRollback();
 			}
 		}
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+
+	/**
+	 * Ermittelt den Sprachenfolgen-Eintrag in der Vorlage für die Laufbahnplanung
+	 * des angegebenen Abiturjahrgangs.
+	 *
+	 * @param abijahr   der Abiturjahrgang
+	 * @param kuerzel   das Sprachkürzel für den Eintrag der Sprachenfolge
+	 *
+	 * @return Die HTTP-Response der Get-Operation
+	 */
+	public Response getSprachbelegung(final Integer abijahr, final String kuerzel) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+		if (jahrgang == null)
+			return OperationError.NOT_FOUND.getResponse();
+		// Prüfe, ob die Sprache bei den Fächern vorkommt ...
+		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
+		if (faecherManager.getBySprachkuerzel(kuerzel).isEmpty())
+			return OperationError.NOT_FOUND.getResponse();
+		// Ermittle den Eintrag in der Sprachenfolge
+		final DTOGostJahrgangSprachenfolge sf = conn.queryByKey(DTOGostJahrgangSprachenfolge.class, abijahr, kuerzel);
+		final Sprachbelegung sfe = new Sprachbelegung();
+		sfe.sprache = kuerzel;
+		if (sf != null) {
+			sfe.reihenfolge = sf.ReihenfolgeNr;
+			sfe.belegungVonJahrgang = sf.ASDJahrgangVon;
+			sfe.belegungVonAbschnitt = 1;
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(sfe).build();
+	}
+
+
+
+	/**
+	 * Passt den Sprachenfolgen-Eintrag in der Vorlage für die Laufbahnplanung
+	 * des angegebenen Abiturjahrgangs an.
+	 *
+	 * @param abijahr   der Abiturjahrgang
+	 * @param kuerzel   das Sprachkürzel für den Eintrag der Sprachenfolge
+	 * @param is        der {@link InputStream} mit dem JSON-Patch für den Sprachenfolgen-Eintrag
+	 *
+	 * @return Die HTTP-Response der Patch-Operation
+	 */
+	public Response patchSprachbelegung(final Integer abijahr, final String kuerzel, final InputStream is) {
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() > 0) {
+			try {
+				conn.transactionBegin();
+				DBUtilsGost.pruefeSchuleMitGOSt(conn);
+				final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+				if (jahrgang == null)
+					return OperationError.NOT_FOUND.getResponse();
+				// Prüfe, ob die Sprache bei den Fächern vorkommt ...
+				final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherListeGost(conn, abijahr);
+				if (faecherManager.getBySprachkuerzel(kuerzel).isEmpty())
+					return OperationError.NOT_FOUND.getResponse();
+				// Bestimme die Sprachbelegungen in der DB. Liegt keine vor, so erstelle eine neue Sprachbelegung in der DB, um den Patch zu speichern
+				DTOGostJahrgangSprachenfolge sprachbelegung = conn.queryByKey(DTOGostJahrgangSprachenfolge.class, abijahr, kuerzel);
+				if (sprachbelegung == null)
+					sprachbelegung = new DTOGostJahrgangSprachenfolge(abijahr, kuerzel);
+				for (final Entry<String, Object> entry : map.entrySet()) {
+					final String key = entry.getKey();
+					final Object value = entry.getValue();
+					switch (key) {
+						case "reihenfolge" -> sprachbelegung.ReihenfolgeNr = JSONMapper.convertToIntegerInRange(value, true, 1, 10);
+						case "belegungVonJahrgang" -> {
+							final String jg = JSONMapper.convertToString(value, true, false, 2);
+							if (Jahrgaenge.getByKuerzel(jg) == null)
+								throw OperationError.CONFLICT.exception();
+							sprachbelegung.ASDJahrgangVon = jg;
+						}
+						default -> throw OperationError.BAD_REQUEST.exception();
+					}
+				}
+				conn.transactionPersist(sprachbelegung);
+				conn.transactionCommit();
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webAppException)
+					return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			} finally {
+				// Perform a rollback if necessary
+				conn.transactionRollback();
+			}
+		}
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 

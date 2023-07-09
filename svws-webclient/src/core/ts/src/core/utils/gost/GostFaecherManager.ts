@@ -42,6 +42,11 @@ export class GostFaecherManager extends JavaObject {
 	private readonly _mapByKuerzel : HashMap<string, List<GostFach>> = new HashMap();
 
 	/**
+	 * Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels
+	 */
+	private readonly _mapBySprachkuerzel : HashMap<string, List<GostFach>> = new HashMap();
+
+	/**
 	 * Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen.
 	 */
 	private readonly _leitfaecher : List<GostFach> = new ArrayList();
@@ -115,12 +120,21 @@ export class GostFaecherManager extends JavaObject {
 		if (this._map.containsKey(fach.id))
 			return false;
 		this._map.put(fach.id, fach);
+		const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		let listForKuerzel : List<GostFach> | null = this._mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel === null) {
 			listForKuerzel = new ArrayList();
 			this._mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
+		if (fach.istFremdsprache) {
+			let listForSprachkuerzel : List<GostFach> | null = this._mapBySprachkuerzel.get(zf.daten.kuerzel);
+			if (listForSprachkuerzel === null) {
+				listForSprachkuerzel = new ArrayList();
+				this._mapBySprachkuerzel.put(zf.daten.kuerzel, listForSprachkuerzel);
+			}
+			listForSprachkuerzel.add(fach);
+		}
 		const added : boolean = this._faecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
@@ -270,6 +284,18 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public getByKuerzel(kuerzel : string) : List<GostFach> {
 		const faecher : List<GostFach> | null = this._mapByKuerzel.get(kuerzel);
+		return (faecher === null) ? new ArrayList() : faecher;
+	}
+
+	/**
+	 * Liefert die Liste der Fächer für das angegebene Sprachkürzel zurück.
+	 *
+	 * @param sprache   das Sprachkürzel der gesuchten Sprache
+	 *
+	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
+	 */
+	public getBySprachkuerzel(sprache : string) : List<GostFach> {
+		const faecher : List<GostFach> | null = this._mapBySprachkuerzel.get(sprache);
 		return (faecher === null) ? new ArrayList() : faecher;
 	}
 

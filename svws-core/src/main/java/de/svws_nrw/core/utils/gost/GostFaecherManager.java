@@ -37,6 +37,9 @@ public class GostFaecherManager {
 	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand des Statistik-Kürzels des Faches */
 	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostFach>> _mapByKuerzel = new HashMap<>();
 
+	/** Eine HashMap für den schnellen Zugriff auf die Fremdsprachen-Fächer anhand des Sprachenkürzels */
+	private final @NotNull HashMap<@NotNull String, @NotNull List<@NotNull GostFach>> _mapBySprachkuerzel = new HashMap<>();
+
 	/** Eine Map für den schnellen Zugriff auf die Fächer, welche als Leitfächer zur Verfügung stehen. */
 	private final @NotNull List<@NotNull GostFach> _leitfaecher = new ArrayList<>();
 
@@ -96,12 +99,21 @@ public class GostFaecherManager {
 		if (_map.containsKey(fach.id))
 			return false;
 		_map.put(fach.id, fach);
+		final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		List<@NotNull GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel == null) {
 			listForKuerzel = new ArrayList<>();
 			_mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
+		if (fach.istFremdsprache) {
+			List<@NotNull GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(zf.daten.kuerzel);
+			if (listForSprachkuerzel == null) {
+				listForSprachkuerzel = new ArrayList<>();
+				_mapBySprachkuerzel.put(zf.daten.kuerzel, listForSprachkuerzel);
+			}
+			listForSprachkuerzel.add(fach);
+		}
 		final boolean added = _faecher.add(fach);
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
@@ -254,6 +266,19 @@ public class GostFaecherManager {
 	 */
 	public @NotNull List<@NotNull GostFach> getByKuerzel(final @NotNull String kuerzel) {
 		final List<@NotNull GostFach> faecher = _mapByKuerzel.get(kuerzel);
+		return (faecher == null) ? new ArrayList<>() : faecher;
+	}
+
+
+	/**
+	 * Liefert die Liste der Fächer für das angegebene Sprachkürzel zurück.
+	 *
+	 * @param sprache   das Sprachkürzel der gesuchten Sprache
+	 *
+	 * @return eine Liste der Fächer, welche das angegebene Sprachkürzel haben
+	 */
+	public @NotNull List<@NotNull GostFach> getBySprachkuerzel(final @NotNull String sprache) {
+		final List<@NotNull GostFach> faecher = _mapBySprachkuerzel.get(sprache);
 		return (faecher == null) ? new ArrayList<>() : faecher;
 	}
 
