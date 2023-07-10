@@ -83,5 +83,11 @@ export class RouteDataGostLaufbahnfehler  {
 		}
 	}
 
+	resetFachwahlenAlle = async () => {
+		console.log("TODO Funktion zum Löschen aller Fachwahlen in der API implementieren...");
+//		await api.server.resetGostSchuelerFachwahlenFuerAbiturjahrgang(api.schema, this.abiturjahr);
+//		await this.setAbiturjahr(this.abiturjahr);
+	}
+
 }
 

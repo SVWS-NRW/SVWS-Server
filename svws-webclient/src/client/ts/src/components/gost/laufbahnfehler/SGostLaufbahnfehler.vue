@@ -5,6 +5,7 @@
 				<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
 					Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
 				</svws-ui-button>
+				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<svws-ui-content-card>

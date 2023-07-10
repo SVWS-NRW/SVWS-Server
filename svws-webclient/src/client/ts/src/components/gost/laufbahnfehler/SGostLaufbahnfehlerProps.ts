@@ -9,6 +9,7 @@ export interface GostLaufbahnfehlerProps {
 	setGostBelegpruefungsArt: (value: GostBelegpruefungsArt) => Promise<void>;
 	gotoLaufbahnplanung: (d: number) => Promise<void>;
 	getPdfWahlbogen: () => Promise<Blob>;
+	resetFachwahlenAlle: () => Promise<void>;
 	abiturjahr: number;
 	apiStatus: ApiStatus;
 }
