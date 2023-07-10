@@ -45,6 +45,10 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		}
 	}
 
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await this.data.clear();
+	}
+
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id }};
 	}

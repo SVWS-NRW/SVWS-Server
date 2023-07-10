@@ -49,6 +49,11 @@ export class RouteDataSchuelerLaufbahnplanung {
 	private commit(): void {
 		this._state.value = { ... this._state.value };
 	}
+
+	public async clear() {
+		this.setPatchedDefaultState({});
+	}
+
 	public async ladeFachkombinationen() {
 		if (this._state.value.gostJahrgang === undefined)
 			return;

@@ -20,6 +20,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -412,6 +413,38 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			sf.ReihenfolgeNr = dto.ReihenfolgeNr;
 			sf.ASDJahrgangVon = dto.ASDJahrgangVon;
 			conn.transactionPersist(sf);
+		}
+	}
+
+
+	/**
+	 * Setzt die Fachwahlen des angegebenen Schülers mit den Vorgabe-Fachwahlen des
+	 * angegebenen Schülers zurück. Es werden die existierenden Fachwahlen entfernt
+	 * und die Fachwahlen aus dem Abiturjahrgang übernommen.
+	 *
+	 * Hinweis: Es muss eine Transaktion auf der Datenbankverbindung aktiv sein
+	 *
+	 * @param conn         die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
+	 * @param jahrgang     die Daten zum Abiturjahrgang
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 */
+	public static void transactionResetSchueler(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang, final long idSchueler) throws WebApplicationException {
+		final int abijahr = jahrgang.Abi_Jahrgang;
+    	final List<DTOGostJahrgangFachbelegungen> dtoFachwahlen = conn.queryNamed("DTOGostJahrgangFachbelegungen.abi_jahrgang", abijahr, DTOGostJahrgangFachbelegungen.class);
+		conn.transactionExecuteDelete("DELETE FROM DTOGostSchuelerFachbelegungen e WHERE e.Schueler_ID = %d".formatted(idSchueler));
+		for (final DTOGostJahrgangFachbelegungen dto : dtoFachwahlen) {
+			final DTOGostSchuelerFachbelegungen fw = new DTOGostSchuelerFachbelegungen(idSchueler, dto.Fach_ID);
+			fw.EF1_Kursart = dto.EF1_Kursart;
+			fw.EF2_Kursart = dto.EF2_Kursart;
+			fw.Q11_Kursart = dto.Q11_Kursart;
+			fw.Q12_Kursart = dto.Q11_Kursart;
+			fw.Q21_Kursart = dto.Q21_Kursart;
+			fw.Q22_Kursart = dto.Q22_Kursart;
+			fw.AbiturFach = dto.AbiturFach;
+			fw.Bemerkungen = dto.Bemerkungen;
+			conn.transactionPersist(fw);
 		}
 	}
 

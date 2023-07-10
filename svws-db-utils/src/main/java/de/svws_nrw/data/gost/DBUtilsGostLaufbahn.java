@@ -47,6 +47,44 @@ public final class DBUtilsGostLaufbahn {
 	}
 
 	/**
+	 * Ermittelt die Daten für den Schüler der gymnasialen Oberstufe. Ist kein Schüler angelegt, so wird dieser mit den
+	 * Default-Daten des Jahrgangs angelegt.
+	 *
+	 * @param conn         die zu nutzende Datenbank-Verbindung
+	 * @param idSchueler   die ID des Schülers
+	 * @param abijahr      der Abiturjahrgang
+	 *
+	 * @return die Daten des Schülers
+	 */
+	public static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) {
+		try {
+			conn.transactionBegin();
+    		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
+			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+			if (jahrgang == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Lese den Schüler aus
+	    	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, idSchueler);
+	    	if (dtoGostSchueler == null) {
+	    		dtoGostSchueler = new DTOGostSchueler(idSchueler, false);
+	    		if (!conn.transactionPersist(dtoGostSchueler))
+	    			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+	    		// Initialisiere die Laufbahnplanung mit Default-Einträgen
+	    		DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
+	    	}
+			conn.transactionCommit();
+			return dtoGostSchueler;
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				throw webAppException;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
+	}
+
+	/**
 	 * Ermittelt die für die Laufbahnplanung der gymnasialen Oberstufe relevanten Daten für
 	 * den Schüler mit der angegebenen ID aus den in der Datenbank gespeicherten
 	 * Laufbahnplanungstabellen und ggf. den Abiturtabellen.
@@ -74,12 +112,7 @@ public final class DBUtilsGostLaufbahn {
     		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
     	final Integer abiturjahr = DBUtilsGost.getAbiturjahr(schule.Schulform, aktAbschnitt, dtoAbschnitt.Jahr);
     	final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherListeGost(conn, abiturjahr);
-    	DTOGostSchueler dtoGostSchueler = conn.queryByKey(DTOGostSchueler.class, id);
-    	if (dtoGostSchueler == null) {
-    		dtoGostSchueler = new DTOGostSchueler(id, false);
-    		if (!conn.persist(dtoGostSchueler))
-    			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-    	}
+    	getSchuelerOrInit(conn, id, abiturjahr);   // Initialisiere die Daten des Schülers, falls er nicht bereits angelegt wurde
     	final Map<Long, DTOGostSchuelerFachbelegungen> dtoFachwahlen =
     			conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", id, DTOGostSchuelerFachbelegungen.class)
     			.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
