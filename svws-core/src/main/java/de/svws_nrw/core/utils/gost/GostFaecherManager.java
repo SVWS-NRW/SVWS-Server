@@ -106,7 +106,7 @@ public class GostFaecherManager {
 			_mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
-		if (fach.istFremdsprache) {
+		if (fach.istFremdsprache && zf.daten.istFremdsprache) {
 			List<@NotNull GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(zf.daten.kuerzel);
 			if (listForSprachkuerzel == null) {
 				listForSprachkuerzel = new ArrayList<>();

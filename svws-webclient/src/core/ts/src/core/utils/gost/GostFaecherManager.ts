@@ -127,7 +127,7 @@ export class GostFaecherManager extends JavaObject {
 			this._mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
-		if (fach.istFremdsprache) {
+		if (fach.istFremdsprache && zf.daten.istFremdsprache) {
 			let listForSprachkuerzel : List<GostFach> | null = this._mapBySprachkuerzel.get(zf.daten.kuerzel);
 			if (listForSprachkuerzel === null) {
 				listForSprachkuerzel = new ArrayList();
