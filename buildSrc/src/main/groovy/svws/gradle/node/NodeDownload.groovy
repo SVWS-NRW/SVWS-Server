@@ -36,7 +36,9 @@ abstract class NodeDownload extends DefaultTask {
 				urlConnection.setRequestProperty ("Authorization", auth);
 			}
 			println "Downloading ${filename} from ${url}...";
-			file.append(urlConnection.getInputStream());
+			def is = urlConnection.getInputStream();
+			file.append(is);
+			is.close();
 		}
 
     	def compFilename = cfg.getCompressedFilename();
