@@ -22,6 +22,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
@@ -498,6 +499,37 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			} else {
 				transactionResetJahrgang(conn, jahrgang);
 			}
+			conn.transactionCommit();
+			return Response.status(Status.NO_CONTENT).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
+	}
+
+
+	/**
+	 * Setzt die Fachwahlen bei allen (!) Schülern des angegebenen Abiturjahrgangs
+	 * zurück.
+	 *
+	 * @param abijahr   der Abiturjahrgang
+	 *
+	 * @return Die HTTP-Response der Operation
+	 */
+	public Response resetSchuelerAlle(final Integer abijahr) {
+		try {
+			conn.transactionBegin();
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+			if (jahrgang == null)
+				return OperationError.NOT_FOUND.getResponse();
+			final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
+			for (final DTOSchueler schueler : listSchueler)
+				transactionResetSchueler(conn, jahrgang, schueler.ID);
 			conn.transactionCommit();
 			return Response.status(Status.NO_CONTENT).build();
 		} catch (final Exception e) {
