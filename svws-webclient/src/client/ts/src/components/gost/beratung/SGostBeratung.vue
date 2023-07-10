@@ -21,7 +21,7 @@
 				<svws-ui-content-card title="Vorlage für Sprachbelegungen anpassen">
 					<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 						<template #body>
-							<div v-for="belegung in abiturdatenManager().getSprachendaten().belegungen" :key="belegung.sprache" role="row" class="data-table__tr data-table__tbody__tr">
+							<div v-for="belegung in belegungen" :key="belegung.sprache" role="row" class="data-table__tr data-table__tbody__tr">
 								<div role="cell" class="data-table__td"> {{ belegung.sprache }} </div>
 								<div role="cell" class="data-table__td"> {{ belegung.reihenfolge }} </div>
 								<div role="cell" class="data-table__td"> {{ belegung.belegungVonJahrgang }} </div>
@@ -29,12 +29,18 @@
 							</div>
 						</template>
 						<template #footer>
-							<div role="row" class="data-table__tr data-table__tbody__tr">
-								<div role="cell" class="data-table__td"> Neu </div>
-								<div role="cell" class="data-table__td"> RF </div>
-								<div role="cell" class="data-table__td"> JG </div>
+							<div v-if="!sprachen.isEmpty()" role="row" class="data-table__tr data-table__tbody__tr bg-light">
 								<div role="cell" class="data-table__td">
-									<svws-ui-button type="icon" @click="addSprachbelegung()" size="small">
+									<svws-ui-multi-select :items="sprachen" :item-text="(i : string) => i"
+										title="Sprache" v-model="sprache" class="placeholder--visible" headless />
+								</div>
+								<div role="cell" class="data-table__td"> {{ reihenfolge }} </div>
+								<div role="cell" class="data-table__td">
+									<svws-ui-multi-select :items="jahrgaenge" :item-text="(i : Jahrgaenge) => i.daten.kuerzel"
+										title="Ab Jahrgang" v-model="jahrgang" class="placeholder--visible" headless />
+								</div>
+								<div role="cell" class="data-table__td">
+									<svws-ui-button v-if="sprache !== undefined" type="icon" @click="addSprachbelegung()" size="small">
 										<i-ri-add-circle-line />
 									</svws-ui-button>
 								</div>
@@ -62,9 +68,9 @@
 
 <script setup lang="ts">
 
-	import { onMounted, computed, ref, type ComputedRef } from "vue";
+	import { onMounted, computed, ref, type Ref, type ComputedRef } from "vue";
 	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import type { GostJahrgangsdaten } from "@core";
+	import { Jahrgaenge, type GostJahrgangsdaten, type List, type Sprachbelegung, ArrayList } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<GostBeratungProps>();
@@ -87,11 +93,39 @@
 		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
 	}
 
+	const belegungen: ComputedRef<List<Sprachbelegung>> = computed(() => {
+		const result : List<Sprachbelegung> = new ArrayList(props.abiturdatenManager().getSprachendaten().belegungen);
+		result.sort({ compare(a : Sprachbelegung, b : Sprachbelegung) { return ((a.reihenfolge === null) ? 0 : a.reihenfolge) - ((b.reihenfolge === null) ? 0 : b.reihenfolge); } });
+		return result;
+	});
+
+	const sprachen: ComputedRef<List<string>> = computed(() => {
+		const sprachen = props.abiturdatenManager().faecher().getFremdsprachenkuerzel();
+		for (const belegung of props.abiturdatenManager().getSprachendaten().belegungen)
+			sprachen.removeElementAt(sprachen.indexOf(belegung.sprache));
+		return sprachen;
+	});
+
+	const sprache: Ref<string | undefined> = ref(undefined);
+
+	const reihenfolge: ComputedRef<number> = computed(() => {
+		const set : Set<number> = new Set();
+		for (const belegung of props.abiturdatenManager().getSprachendaten().belegungen)
+			if (belegung.reihenfolge !== null)
+				set.add(belegung.reihenfolge);
+		for (let i = 1; i < set.size + 2; i++)
+			if (!set.has(i))
+				return i;
+		return 1;
+	});
+
+	const jahrgang: Ref<Jahrgaenge> = ref(Jahrgaenge.JG_05);
+
+	const jahrgaenge: Jahrgaenge[] = [ Jahrgaenge.JG_05, Jahrgaenge.JG_06, Jahrgaenge.JG_07, Jahrgaenge.JG_08, Jahrgaenge.JG_09, Jahrgaenge.JG_10, Jahrgaenge.JG_EF];
+
 	async function addSprachbelegung() {
-		const sprache = 'S';
-		const reihenfolge = 2;
-		const belegungVonJahrgang = '06';
-		await props.setSprachbelegung(sprache, { reihenfolge, belegungVonJahrgang });
+		if (sprache.value !== undefined)
+			await props.setSprachbelegung(sprache.value, { reihenfolge: reihenfolge.value, belegungVonJahrgang: jahrgang.value.daten.kuerzel });
 	}
 
 	// Check if component is mounted

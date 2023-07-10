@@ -315,6 +315,20 @@ public class GostFaecherManager {
 
 
 	/**
+	 * Gibt eine Liste aller Fremdsprachen-Kürzel zurück, welche bei
+	 * den im Manager enthaltenen Fächer definiert sind.
+	 *
+	 * @return die Liste der Fremdsprachen-Kürzel
+	 */
+	public @NotNull List<@NotNull String> getFremdsprachenkuerzel() {
+		final @NotNull List<@NotNull String> result =  new ArrayList<>();
+		result.addAll(_mapBySprachkuerzel.keySet());
+		result.sort((final @NotNull String a, final @NotNull String b) -> a.compareToIgnoreCase(b));
+		return result;
+	}
+
+
+	/**
 	 * Liefert die interne Liste mit den Fachkombinationen zurück.
 	 *
 	 * @return die interne Liste mit den Fachkombinationen

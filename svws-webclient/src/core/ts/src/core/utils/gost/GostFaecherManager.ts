@@ -328,6 +328,19 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt eine Liste aller Fremdsprachen-Kürzel zurück, welche bei
+	 * den im Manager enthaltenen Fächer definiert sind.
+	 *
+	 * @return die Liste der Fremdsprachen-Kürzel
+	 */
+	public getFremdsprachenkuerzel() : List<string> {
+		const result : List<string> = new ArrayList();
+		result.addAll(this._mapBySprachkuerzel.keySet());
+		result.sort({ compare : (a: string, b: string) => JavaString.compareToIgnoreCase(a, b) });
+		return result;
+	}
+
+	/**
 	 * Liefert die interne Liste mit den Fachkombinationen zurück.
 	 *
 	 * @return die interne Liste mit den Fachkombinationen
