@@ -198,7 +198,10 @@ task assembleClient(type: NpmRun) {
 	dependsOn copyConfigClient
 	group "build"
 	args = ['build']
-	inputs.files file("$projectDir/src/client/ts")
+	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, 
+		fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" }, 
+		fileTree("$projectDir/src/components/ts").matching { exclude "dist", ".histoire" }, 
+		file("$projectDir/src/client/ts")
 	outputs.dir file("$buildDir/output")
 	workingDir = file("$projectDir/src/client/ts")
 }
