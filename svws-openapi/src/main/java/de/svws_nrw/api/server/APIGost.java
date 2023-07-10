@@ -961,6 +961,33 @@ public class APIGost {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für das Zurücksetzen der Fachwahlen eines Schülers.
+     *
+     * @param schema       das Datenbankschema
+     * @param schuelerid   die ID des Schülers, dessen Fachwahlen zurückgesetzt werden
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/schueler/{schuelerid : \\d+}/fachwahl/reset")
+    @Operation(summary = "Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück.",
+    description = "Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.")
+    @ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich zurückgesetzt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.")
+    @ApiResponse(responseCode = "404", description = "Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response resetGostSchuelerFachwahlen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+    		return (new DataGostSchuelerLaufbahnplanung(conn)).reset(schuelerid);
+    	}
+    }
+
 
 	/**
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.

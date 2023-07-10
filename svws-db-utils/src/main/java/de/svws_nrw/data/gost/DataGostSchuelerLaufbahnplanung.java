@@ -798,4 +798,53 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Setzt die Fachwahlen für den angegebenen Schüler zurück.
+	 * Liegen bereits bewertete Halbjahre vor, so werden die zukünftigen Fachwahlen entfernt.
+	 * Ansonsten wir die Vorlage für die Fachwahlen des Abiturjahrgangs übernommen.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return Die HTTP-Response der Operation
+	 */
+	public Response reset(final long idSchueler) {
+		try {
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, idSchueler);
+			conn.transactionBegin();
+			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abidaten.abiturjahr);
+			if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id]) {
+				DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
+				conn.transactionCommit();
+				return Response.status(Status.NO_CONTENT).build();
+			}
+			final List<DTOGostSchuelerFachbelegungen> fachwahlen = conn.queryNamed("DTOGostSchuelerFachbelegungen.schueler_id", idSchueler, DTOGostSchuelerFachbelegungen.class);
+			for (final DTOGostSchuelerFachbelegungen fw : fachwahlen) {
+				fw.AbiturFach = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF1.id])
+					fw.EF1_Kursart = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.EF2.id])
+					fw.EF2_Kursart = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id])
+					fw.Q11_Kursart = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
+					fw.Q12_Kursart = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id])
+					fw.Q21_Kursart = null;
+				if (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id])
+					fw.Q22_Kursart = null;
+				conn.transactionPersist(fw);
+			}
+			conn.transactionCommit();
+			return Response.status(Status.NO_CONTENT).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
+	}
+
 }

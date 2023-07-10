@@ -5166,6 +5166,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode resetGostSchuelerFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/reset
+	 *
+	 * Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 203: Die Fachwahlen wurden erfolgreich zurückgesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.
+	 *   Code 404: Der Schüler bzw. der zugehörige Abiturjahrgang wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 */
+	public async resetGostSchuelerFachwahlen(schema : string, schuelerid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/reset"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostSchuelerLaufbahnplanungBeratungsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/laufbahnplanung/beratungsdaten
 	 *
 	 * Passt die Beratungsdaten für die Laufbahnplanung der gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Beratungsdaten besitzt.
