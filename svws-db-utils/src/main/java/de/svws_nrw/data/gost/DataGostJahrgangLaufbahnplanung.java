@@ -418,6 +418,34 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 
 	/**
 	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.
+	 * Es werden alle existierenden Fachwahlen entfernt und die Fachwahlen
+	 * aus dem Vorlage-Abiturjahrgang übernommen.
+	 *
+	 * Hinweis: Es wird eine eigene Transaktion für diese Operation verwendet
+	 *
+	 * @param conn       die zu nutzende Datenbank-Verbindung
+	 * @param jahrgang   die Daten zum Abiturjahrgang
+	 *
+	 * @throws WebApplicationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
+	 */
+	public static void resetJahrgang(final DBEntityManager conn, final DTOGostJahrgangsdaten jahrgang) throws WebApplicationException {
+		try {
+			conn.transactionBegin();
+			transactionResetJahrgang(conn, jahrgang);
+			conn.transactionCommit();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				throw webAppException;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
+	}
+
+
+	/**
+	 * Setzt die Vorlage-Fachwahlen für den angegebenen Abiturjahrgang zurück.
 	 * Handelt es sich um den Vorlage-Abiturjahrgang, so werden alle Fachwahlen entfernt.
 	 * Ansonsten werden die Faten aus dem Vorlage-Abiturjahrgang übernommen.
 	 *

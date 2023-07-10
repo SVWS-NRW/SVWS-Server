@@ -35,6 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -200,6 +201,15 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			if (!conn.persistAll(gostFaecherKombis))
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 		}
+		// Kopiere die Vorlage für neue Laufbahnplanungen aus dem Vorlage-Jahrgang
+		try {
+			DataGostJahrgangLaufbahnplanung.resetJahrgang(conn, jahrgangsdaten);
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		}
+
 		// Bestimme die Fachwahlen aus ggf. schon bestehenden Lernabschnitten
 		final Jahrgaenge jg = Jahrgaenge.getByKuerzel(jahrgang.ASDJahrgang);
 		if ((jg == Jahrgaenge.JG_EF) || (jg == Jahrgaenge.JG_Q1) || (jg == Jahrgaenge.JG_Q2)) {
@@ -208,7 +218,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			final List<DTOViewGostSchuelerAbiturjahrgang> schueler = conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
 			if ((schueler != null) && (!schueler.isEmpty())) {
 				final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-				final List<Integer> abschnitte = schule.AnzahlAbschnitte == 4 ? Arrays.asList(2, 4) : Arrays.asList(1, 2);
+				final List<Integer> abschnitte = Arrays.asList(1, 2);
 				final List<DTOSchuljahresabschnitte> schuljahresabschnitte = conn.queryNamed("DTOSchuljahresabschnitte.abschnitt.multiple", abschnitte, DTOSchuljahresabschnitte.class);
 				final List<Long> schuljahresabschnittIDs = schuljahresabschnitte.stream().map(a -> a.ID).toList();
 				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = schuljahresabschnitte.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
@@ -234,8 +244,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(sla.Schuljahresabschnitts_ID);
 						if (schuljahresabschnitt == null)
 							continue;
-						final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang,
-								schule.AnzahlAbschnitte == 4 ? schuljahresabschnitt.Abschnitt / 2 : schuljahresabschnitt.Abschnitt);
+						final GostHalbjahr halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(sla.ASDJahrgang, schuljahresabschnitt.Abschnitt);
 						if (halbjahr == null)
 							continue;
 						for (final DTOSchuelerLeistungsdaten sld : slds) {
