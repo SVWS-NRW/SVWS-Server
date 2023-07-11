@@ -13,15 +13,18 @@
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ 'background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :class="{ 'data-table__td__disabled': !istFremdsprache, 'text-black/25': sprachenfolgeNr === 0 }" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :class="{ 'data-table__td__disabled': !istFremdsprache }" :style="{ 'background-color': bgColor }">
 			<template v-if="istFremdsprache">
-				{{ sprachenfolgeNr === 0 ? "—" : sprachenfolgeNr }}
+				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :class="{ 'data-table__td__disabled': !istFremdsprache}" :style="{ 'background-color': bgColor }">
 			<template v-if="istFremdsprache">
-				<span v-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25">—</span>
-				{{ sprachenfolgeJahrgang }}
+				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
+				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
+				<span v-else> {{ sprachenfolgeJahrgang }} </span>
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
@@ -106,12 +109,15 @@
 		GostKursart, SprachendatenUtils, ZulaessigesFach } from "@core";
 	import { computed } from "vue";
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
 		manuellerModus: boolean;
-	}>();
+		ignoriereSprachenfolge? : boolean;
+	}>(), {
+		ignoriereSprachenfolge: false,
+	});
 
 	const emit = defineEmits<{
 		(e: 'update:wahl', fachID: number, wahl: GostSchuelerFachwahl): void,
@@ -188,7 +194,7 @@
 
 
 	const istMoeglich: ComputedRef<boolean[]> = computed(() => {
-		if (props.fach.istFremdsprache && !getFallsSpracheMoeglich.value)
+		if (props.fach.istFremdsprache && ((!props.ignoriereSprachenfolge) && !getFallsSpracheMoeglich.value))
 			return [ false, false, false, false, false, false ];
 		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
 		const result = [ false, false, false, false, false, false ];

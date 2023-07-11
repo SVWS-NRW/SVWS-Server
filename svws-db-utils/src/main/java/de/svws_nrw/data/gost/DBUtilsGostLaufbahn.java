@@ -1,6 +1,5 @@
 package de.svws_nrw.data.gost;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -17,12 +16,12 @@ import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
-import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangSprachenfolge;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
@@ -275,17 +274,14 @@ public final class DBUtilsGostLaufbahn {
     	abidaten.schuelerID = -1;
     	abidaten.abiturjahr = abijahr;
     	abidaten.schuljahrAbitur = abijahr - 1;
-		// Lese die Vorlage für die Sprachenfolge ein
+		// Erstelle Fake-Einträge für die Sprachenfolge, da die konkrete Belegung der Schüler in der Sprachenfolge unklar ist
 		abidaten.bilingualeSprache = null;               // TODO ggf. auch ein alternatives Defaulting für den bilingualen Zweig erlauben
     	abidaten.sprachendaten.schuelerID = -1;
-        final List<DTOGostJahrgangSprachenfolge> dtoSprachenfolge = conn.queryNamed("DTOGostJahrgangSprachenfolge.abi_jahrgang", abijahr, DTOGostJahrgangSprachenfolge.class);
-        for (final DTOGostJahrgangSprachenfolge dtoSprachbelegung : dtoSprachenfolge) {
-			if (dtoSprachbelegung.ASDJahrgangVon == null)
-				continue;
+    	for (final String sprachkuerzel : gostFaecher.getFremdsprachenkuerzel()) {
 			final Sprachbelegung belegung = new Sprachbelegung();
-			belegung.sprache = dtoSprachbelegung.Sprache;
-			belegung.reihenfolge = dtoSprachbelegung.ReihenfolgeNr;
-			belegung.belegungVonJahrgang = dtoSprachbelegung.ASDJahrgangVon;
+			belegung.sprache = sprachkuerzel;
+			belegung.reihenfolge = 1;
+			belegung.belegungVonJahrgang = Jahrgaenge.JG_05.daten.kuerzel;
 			abidaten.sprachendaten.belegungen.add(belegung);
         }
 		for (final GostHalbjahr hj : GostHalbjahr.values())

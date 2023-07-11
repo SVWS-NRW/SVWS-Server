@@ -45,8 +45,6 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			setWahl: this.data.setWahl,
-			setSprachbelegung: this.data.setSprachbelegung,
-			deleteSprachbelegung: this.data.deleteSprachbelegung,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gostBelegpruefungsArt: () => this.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,

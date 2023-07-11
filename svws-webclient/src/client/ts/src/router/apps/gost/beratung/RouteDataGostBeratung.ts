@@ -121,20 +121,6 @@ export class RouteDataGostBeratung  {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	setSprachbelegung = async (sprache: string, belegung: Partial<Sprachbelegung>) => {
-		await api.server.patchGostAbiturjahrgangSprachbelegung(belegung, api.schema, this.auswahl, sprache);
-		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
-		this._state.value.abiturdaten = abiturdaten;
-		await this.setGostBelegpruefungErgebnis();
-	}
-
-	deleteSprachbelegung = async (sprache: string) => {
-		await api.server.deleteGostAbiturjahrgangSprachbelegung(api.schema, this.auswahl, sprache);
-		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
-		this._state.value.abiturdaten = abiturdaten;
-		await this.setGostBelegpruefungErgebnis();
-	}
-
 	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
 		return api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
 	}

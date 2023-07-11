@@ -31,12 +31,12 @@ import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
+import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
 import de.svws_nrw.data.gost.DataGostBlockungKurs;
 import de.svws_nrw.data.gost.DataGostBlockungKursLehrer;
@@ -53,7 +53,6 @@ import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -628,103 +627,6 @@ public class APIGost {
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
     		return (new DataGostJahrgangLaufbahnplanung(conn)).patchFachwahl(abiturjahr, fach_id, is);
-    	}
-    }
-
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage einer Sprachbelegung der Gymnasialen Oberstufe in der Vorlage
-     * eines Abiturjahrgangs.
-     *
-     * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abiturjahr   das Abiturjahr
-     * @param sprache      das Sprachkürzel
-     * @param request      die Informationen zur HTTP-Anfrage
-     *
-     * @return die Sprachbelegung des Abiturjahrgangs
-     */
-    @GET
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
-    @Operation(summary = "Liest für die gymnasiale Oberstufe die Default-Sprachbelegung von dem angegebenen Abiturjahrgang aus.",
-               description = "Liest für die gymnasiale Oberstufe die Default-Sprachbelegung von dem angegebenen Abiturjahrgang aus. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Sprachbelegung besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Sprachbelegung für den angegebenen Abiturjahrgang",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = Sprachbelegung.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung eines Abiturjahrgang auszulesen.")
-    @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostAbiturjahrgangSprachbelegung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("sprache") final String sprache, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostJahrgangLaufbahnplanung(conn)).getSprachbelegung(abiturjahr, sprache);
-    	}
-    }
-
-
-    /**
-     * Die OpenAPI-Methode für das Anpassen einer Sprachbelegung für die Vorlage des angegebenen Abiturjahrgangs.
-     *
-     * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param abiturjahr   das Abiturjahr
-     * @param sprache      das Sprachkürzel
-     * @param is           der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-     * @param request      die Informationen zur HTTP-Anfrage
-     *
-     * @return die HTTP-Antwort
-     */
-    @PATCH
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
-    @Operation(summary = "Passt die Sprachbelegung der Vorlage des angegebenen Abiturjahrgangs an.",
-    description = "Passt die Sprachbelegung der Vorlage des angegebenen Abiturjahrgangs an. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen der Sprachbelegung besitzt.")
-    @ApiResponse(responseCode = "203", description = "Der Patch wurde erfolgreich in die Sprachbelegung integriert.")
-    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Abiturjahrgang mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchGostAbiturjahrgangSprachbelegung(
-    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("sprache") final String sprache,
-    		@RequestBody(description = "Der Patch für die Sprachbelegung", required = true, content =
-    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachbelegung.class))) final InputStream is,
-    		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostJahrgangLaufbahnplanung(conn)).patchSprachbelegung(abiturjahr, sprache, is);
-    	}
-    }
-
-
-    /**
-     * Die OpenAPI-Methode für das Entfernen einer Sprachbelegung aus der Vorlage des angegebenen Abiturjahrgangs.
-     *
-     * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param abiturjahr   das Abiturjahr
-     * @param sprache      das Sprachkürzel
-     * @param request      die Informationen zur HTTP-Anfrage
-     *
-     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Sprachbelegung
-     */
-    @DELETE
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/sprachbelegung/{sprache}")
-    @Operation(summary = "Entfernt eine Sprachbelegung aus der Vorlage für die Laufbahnplanung des angegebenen Abiturjahrgangs.",
-    description = "Entfernt eine Sprachbelegung aus der Vorlage für die Laufbahnplanung des angegebenen Abiturjahrgangs."
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen der Sprachbelegung hat.")
-    @ApiResponse(responseCode = "200", description = "Die Sprachbelegung wurde erfolgreich entfernt.",
-                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Sprachbelegung zu entfernen.")
-    @ApiResponse(responseCode = "404", description = "Keine Sprachbelegung vorhanden")
-    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response deleteGostAbiturjahrgangSprachbelegung(
-    		@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("sprache") final String sprache,
-    		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostJahrgangLaufbahnplanung(conn)).deleteSprachbelegung(abiturjahr, sprache);
     	}
     }
 

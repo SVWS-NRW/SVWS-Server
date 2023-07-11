@@ -1,43 +1,37 @@
 <template>
 	<svws-ui-content-card class="table--with-background sticky top-8">
-		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()"
-			:columns="cols" panel-height overflow-x-hidden>
+		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Fach
 							</div>
 						</div>
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Sprachen
 							</div>
 						</div>
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								EF
 							</div>
 						</div>
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Qualifikationsphase
 							</div>
 						</div>
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
+					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
 								Abitur
@@ -87,7 +81,7 @@
 			<template #body>
 				<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
 					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :manueller-modus="manuellerModus" @update:wahl="onUpdateWahl" />
+						:fach="row" :manueller-modus="manuellerModus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
 				</template>
 			</template>
 			<template #footer>
@@ -225,12 +219,15 @@
 	import type { AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
 	import type { DataTableColumn } from "@svws-nrw/svws-ui";
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		manuellerModus: boolean;
-	}>();
+		ignoriereSprachenfolge? : boolean;
+	}>(), {
+		ignoriereSprachenfolge: false,
+	});
 
 	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
 		await props.setWahl(fachID, wahl);
