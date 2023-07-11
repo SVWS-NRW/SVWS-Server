@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import type { RouteParams } from "vue-router";
 
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
-import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList } from "@core";
+import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -85,8 +85,11 @@ export class RouteDataGost {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsListeEintrag>();
-		for (const j of listJahrgaenge)
-			mapJahrgaenge.set(j.id, j);
+		for (const j of listJahrgaenge) {
+			const jg : Jahrgaenge | null = Jahrgaenge.getByKuerzel(j.kuerzelStatistik);
+			if ((jg !== null) && (jg.hasSchulform(api.schulform)))
+				mapJahrgaenge.set(j.id, j);
+		}
 		return mapJahrgaenge;
 	}
 
