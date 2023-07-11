@@ -56,17 +56,17 @@ abstract class NodePluginConfig {
 			return "win";
 		if (os.isMacOsX())
 			return "darwin";
-		throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+		throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 	}
 	
 	String getArchString() { 
-    	if ("x86_64".equals(arch) || "amd64".equals(arch) || "x64".equals(arch) || "x86-64".equals(arch))
+    	if (["x86_64", "amd64", "x64", "x86-64"].contains(arch))
 			return "x64";
-    	if ("arm64".equals(arch) || "arm-v8".equals(arch))
+    	if (["arm64", "arm-v8", "aarch64"].contains(arch))
 			return "arm64";
-		if ("ppc64".equals(arch))
+		if (["ppc64"].contains(arch))
 		    return "ppc64le";
-		throw new Exception("Unsupported operating system architecture ' + os.getName() + ' ' + arch + ' for the node plugin!")
+		throw new Exception("Unsupported operating system architecture ${os.getName()} ${arch} for the node plugin!")
 	}
 	
 	String getCompressedFileType() {
@@ -74,7 +74,7 @@ abstract class NodePluginConfig {
 			return "tar.gz";
 		if (os.isWindows())
 			return "zip";
-		throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+		throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 	}
 	
 	String getCompressedFilename() {
@@ -129,7 +129,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/bin/npm";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
@@ -141,7 +141,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/bin/npx";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
@@ -153,7 +153,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/lib/node_modules/corepack/shims/pnpm";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
@@ -165,7 +165,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/lib/node_modules/corepack/shims/pnpx";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
@@ -177,7 +177,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/lib/node_modules/typescript/bin/tsc";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
@@ -189,7 +189,7 @@ abstract class NodePluginConfig {
 		} else if (os.isMacOsX()) {
 	   		return "${project.rootProject.projectDir}/node/lib/node_modules/typescript/bin/tsserver";
 		} else {
-			throw new Exception("Unsupported operating system ' + os.getName() + ' for the node plugin!");
+			throw new Exception("Unsupported operating system ${os.getName()} for the node plugin!");
 		}
 	}
 
