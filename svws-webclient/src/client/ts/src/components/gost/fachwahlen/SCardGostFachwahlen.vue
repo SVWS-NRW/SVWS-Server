@@ -3,296 +3,26 @@
 		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
+					<div role="columnheader" v-for="heading in colHeadings" :key="heading.text" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate"
+						:class="{ [`col-span-${heading.cols.length}`]: true }">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
-								Fach
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								EF.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								EF.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q1.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q1.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-5 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q2.1
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-5 data-table__th__separate	">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Q2.2
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate	">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Abiturfach
+								{{ heading.text }}
 							</div>
 						</div>
 					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Kürzel
+					<template v-for="heading in colHeadings" :key="heading.text">
+						<div v-for="(h, n) in heading.cols" :key="n" role="columnheader" class="data-table__th data-table__thead__th"
+							:class="{ 'data-table__th__align-center': h.center, 'data-table__th__separate': (n === heading.cols.length - 1) }">
+							<div class="data-table__th-wrapper">
+								<div class="data-table__th-title">
+									{{ h.text }}
+								</div>
 							</div>
 						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Fach
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								LK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								LK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								ZK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								LK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								M
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								S
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								GK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								ZK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								LK
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								3
-							</div>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								4
-							</div>
-						</div>
-					</div>
+					</template>
 				</div>
 			</template>
 			<template #body>
@@ -406,6 +136,17 @@
 	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlen.toArray() as GostStatistikFachwahl[]);
 
 	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+
+	const colHeadings: Array<{ text: string, cols: Array<{ text: string, center? : boolean }> }> = [
+		{ text: "Fach", cols: [ { text : "Kürzel" }, { text: "Fach" } ] },
+		{ text: "EF.1", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true } ] },
+		{ text: "EF.2", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true } ] },
+		{ text: "Q1.1", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true }, { text : "LK", center: true } ] },
+		{ text: "Q1.2", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true }, { text : "LK", center: true } ] },
+		{ text: "Q2.1", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true }, { text : "ZK", center: true }, { text : "LK", center: true } ] },
+		{ text: "Q2.2", cols: [ { text : "M", center: true }, { text : "S", center: true }, { text : "GK", center: true }, { text : "ZK", center: true }, { text : "LK", center: true } ] },
+		{ text: "Abiturfach", cols: [ { text : "3", center: true }, { text : "4", center: true } ] },
+	]
 
 	const cols: Array<DataTableColumn> = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.5, minWidth: 6 },
