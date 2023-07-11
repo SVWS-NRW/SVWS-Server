@@ -21,6 +21,7 @@ module.exports = {
 			"./src/client/ts/tsconfig.json",
 			"./src/client-test/ts/tsconfig.json",
 			"./src/ui/ts/tsconfig.json",
+			"./src/browser-test/ts/tsconfig.json",
 		]
 	},
 	rules: {
