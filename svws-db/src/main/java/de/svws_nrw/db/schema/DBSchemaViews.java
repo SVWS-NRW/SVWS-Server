@@ -208,7 +208,7 @@ public final class DBSchemaViews {
 				6, null,
                 """
                 Schueler
-                JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID
+                JOIN Schuljahresabschnitte ON Schueler.Schuljahresabschnitts_ID = Schuljahresabschnitte.ID AND Schueler.Geloescht <> '+'
                 JOIN SchuelerLernabschnittsdaten ON Schueler.Schuljahresabschnitts_ID = SchuelerLernabschnittsdaten.Schuljahresabschnitts_ID
                   AND Schueler.ID = SchuelerLernabschnittsdaten.Schueler_ID AND SchuelerLernabschnittsdaten.WechselNr IS NULL
                 JOIN EigeneSchule_Jahrgaenge ON SchuelerLernabschnittsdaten.Jahrgang_ID = EigeneSchule_Jahrgaenge.ID
