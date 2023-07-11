@@ -343,7 +343,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public hidden(params?: RouteParams): boolean {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
-		if (api.authenticated && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
+		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
 			return false;
 		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
