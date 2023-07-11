@@ -14,7 +14,7 @@
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<template v-for="heading in colHeadings" :key="heading.text">
-						<div v-for="(h, n) in heading.cols" :key="n" role="columnheader" class="data-table__th data-table__thead__th"
+						<div role="columnheader" v-for="(h, n) in heading.cols" :key="n" class="data-table__th data-table__thead__th"
 							:class="{ 'data-table__th__align-center': h.center, 'data-table__th__separate': (n === heading.cols.length - 1) }">
 							<div class="data-table__th-wrapper">
 								<div class="data-table__th-title">
@@ -26,95 +26,12 @@
 				</div>
 			</template>
 			<template #body>
-				<div v-for="row in rows"
-					:key="row.id"
-					class="data-table__tr data-table__tbody__tr"
-					:style="{ 'background-color': getBgColor(row) }"
-					role="row">
-					<div role="cell" class="data-table__td" :style="{ 'background-color': getBgColor(row) }">
-						{{ row.kuerzel }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__separate" :style="{ 'background-color': getBgColor(row) }">
-						{{ row.bezeichnung }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[0] === null || row.fachwahlen[0].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[0].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[0] === null || row.fachwahlen[0].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[0] .wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[0] === null || row.fachwahlen[0].wahlenGK === 0 ? "" : row.fachwahlen[0].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[1] === null || row.fachwahlen[1].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[1].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[1] === null || row.fachwahlen[1].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[1].wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[1] === null || row.fachwahlen[1].wahlenGK === 0 ? "" : row.fachwahlen[1].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[2] === null || row.fachwahlen[2].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[2].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[2] === null || row.fachwahlen[2].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[2].wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[2] === null || row.fachwahlen[2].wahlenGK === 0 ? "" : row.fachwahlen[2].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[2] === null || row.fachwahlen[2].wahlenLK === 0 ? "" : row.fachwahlen[2].wahlenLK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[3] === null || row.fachwahlen[3].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[3].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[3] === null || row.fachwahlen[3].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[3].wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[3] === null || row.fachwahlen[3].wahlenGK === 0 ? "" : row.fachwahlen[3].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[3] === null || row.fachwahlen[3].wahlenLK === 0 ? "" : row.fachwahlen[3].wahlenLK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[4] === null || row.fachwahlen[4].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[4].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[4] === null || row.fachwahlen[4].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[4].wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[4] === null || row.fachwahlen[4].wahlenGK === 0 ? "" : row.fachwahlen[4].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[4] === null || row.fachwahlen[4].wahlenZK === 0 ? "" : row.fachwahlen[4].wahlenZK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[4] === null || row.fachwahlen[4].wahlenLK === 0 ? "" : row.fachwahlen[4].wahlenLK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[5] === null || row.fachwahlen[5].wahlenGKMuendlich === 0 ? "" : row.fachwahlen[5].wahlenGKMuendlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[5] === null || row.fachwahlen[5].wahlenGKSchriftlich === 0 ? "" : row.fachwahlen[5].wahlenGKSchriftlich }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[5] === null || row.fachwahlen[5].wahlenGK === 0 ? "" : row.fachwahlen[5].wahlenGK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.fachwahlen[5] === null || row.fachwahlen[5].wahlenZK === 0 ? "" : row.fachwahlen[5].wahlenZK }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-						{{ row.fachwahlen[5]?.wahlenLK || "" }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.wahlenAB3 || "" }}
-					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center">
-						{{ row.wahlenAB4 || "" }}
-					</div>
+				<div role="row" v-for="row in rows" :key="row.id" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': getBgColor(row) }">
+					<template v-for="heading in colHeadings" :key="heading.text">
+						<div role="cell" v-for="(h, n) in heading.cols" :key="n" class="data-table__td" :class="{ 'data-table__th__align-center': h.center, 'data-table__th__separate': (n === heading.cols.length - 1) }">
+							{{ getData(row, heading.text, h.text) }}
+						</div>
+					</template>
 				</div>
 			</template>
 		</svws-ui-data-table>
@@ -126,7 +43,7 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { GostStatistikFachwahl, List} from "@core";
-	import { ZulaessigesFach } from "@core";
+	import { GostHalbjahr, ZulaessigesFach } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
@@ -136,6 +53,31 @@
 	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlen.toArray() as GostStatistikFachwahl[]);
 
 	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+
+	function getData(row: GostStatistikFachwahl, group: string, item: string) {
+		if ((group === "Fach") && (item === "Kürzel"))
+			return row.kuerzel;
+		if ((group === "Fach") && (item === "Fach"))
+			return row.bezeichnung;
+		if ((group === "Abiturfach") && (item === "3"))
+			return row.wahlenAB3 || "";
+		if ((group === "Abiturfach") && (item === "4"))
+			return row.wahlenAB4 || "";
+		const hj = GostHalbjahr.fromKuerzel(group);
+		if (hj === null)
+			return "";
+		const fw = row.fachwahlen[hj.id];
+		if (fw === null)
+			return "";
+		switch (item) {
+			case "M": return fw.wahlenGKMuendlich === 0 ? "" : fw.wahlenGKMuendlich;
+			case "S": return fw.wahlenGKSchriftlich === 0 ? "" : fw.wahlenGKSchriftlich;
+			case "GK": return fw.wahlenGK === 0 ? "" : fw.wahlenGK;
+			case "ZK": return fw.wahlenZK === 0 ? "" : fw.wahlenZK;
+			case "LK": return fw.wahlenLK === 0 ? "" : fw.wahlenLK;
+		}
+		return "";
+	}
 
 	const colHeadings: Array<{ text: string, cols: Array<{ text: string, center? : boolean }> }> = [
 		{ text: "Fach", cols: [ { text : "Kürzel" }, { text: "Fach" } ] },
@@ -178,4 +120,5 @@
 		{ key: "AB3", label: "3", align: 'center', span: 0.25, minWidth: 2.5 },
 		{ key: "AB4", label: "4", align: 'center', span: 0.25, minWidth: 2.5 }
 	];
+
 </script>
