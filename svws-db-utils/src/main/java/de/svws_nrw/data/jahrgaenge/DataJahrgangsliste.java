@@ -41,6 +41,8 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		eintrag.idFolgejahrgang = j.Folgejahrgang_ID;
 		eintrag.sortierung = j.Sortierung;
 		eintrag.istSichtbar = j.Sichtbar;
+		eintrag.gueltigVon = j.GueltigVon;
+		eintrag.gueltigBis = j.GueltigBis;
 		return eintrag;
 	};
 

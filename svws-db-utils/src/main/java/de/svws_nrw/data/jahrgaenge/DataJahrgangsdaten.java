@@ -40,6 +40,8 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 		daten.idFolgejahrgang = jahrgang.Folgejahrgang_ID;
 		daten.sortierung = jahrgang.Sortierung;
 		daten.istSichtbar = jahrgang.Sichtbar;
+		daten.gueltigVon = jahrgang.GueltigVon;
+		daten.gueltigBis = jahrgang.GueltigBis;
 		return daten;
 	};
 
