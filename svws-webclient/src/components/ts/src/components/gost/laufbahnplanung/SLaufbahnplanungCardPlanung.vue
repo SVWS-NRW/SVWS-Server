@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card class="table--with-background sticky top-8">
+	<svws-ui-content-card :title="title" class="table--with-background sticky top-8">
 		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
@@ -225,7 +225,9 @@
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 		manuellerModus: boolean;
 		ignoriereSprachenfolge? : boolean;
+		title?: string | undefined;
 	}>(), {
+		title: undefined,
 		ignoriereSprachenfolge: false,
 	});
 

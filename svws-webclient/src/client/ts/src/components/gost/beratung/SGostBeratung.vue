@@ -13,7 +13,8 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<div class="flex-grow">
-			<s-laufbahnplanung-card-planung :abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus"
+			<s-laufbahnplanung-card-planung title="Vorlage für Laufbahnplanungen von Schülern des Abiturjahrgangs"
+				:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus"
 				:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
