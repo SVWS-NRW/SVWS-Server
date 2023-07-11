@@ -52,6 +52,17 @@ public class GostKlausurraumManager {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
+	 * @param idRaum die ID des Klausurraums
+	 *
+	 * @return den Klausurraum
+	 */
+	public @NotNull GostKlausurraum getKlausurraum(final long idRaum) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, idRaum);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
 	 * @return die Liste der Klausurräume
 	 */
 	public @NotNull List<@NotNull GostKlausurraum> getKlausurraeume() {
@@ -77,6 +88,19 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifListAddsDuplicate("_stunden", _stunden, stunde);
 		DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, stunde.idRaum);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumStundenList", MapUtils.getOrCreateArrayList(_mapRaumStunden, stunde.idRaum), stunde);
+	}
+
+	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum
+	 * geändert hat.
+	 *
+	 * @param r das GostKlausurraum-Objekt
+	 */
+	public void patchKlausurraum(final @NotNull GostKlausurraum r) {
+		DeveloperNotificationException.ifListRemoveFailes("_raeume", _raeume, r);
+		DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, r.id);
+		_raeume.add(r);
+		_mapIdRaum.put(r.id, r);
 	}
 
 

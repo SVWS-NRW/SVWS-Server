@@ -30,6 +30,7 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 			kursmanager: routeGostKlausurplanung.data.kursManager,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 			erzeugeKlausurraum: routeGostKlausurplanung.data.erzeugeKlausurraum,
+			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
 			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 		}
 	}

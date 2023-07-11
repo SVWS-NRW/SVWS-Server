@@ -89,7 +89,7 @@
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
-		patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
+		patchKlausurterminDatum: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
 		stundenplanmanager: StundenplanManager;
 	}>();
 
@@ -163,7 +163,7 @@
 	const onDrop = async (item: GostKlausurtermin, date: Date | null, stunde: number) => {
 		const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
 		if (termin !== null) {
-			await props.patchKlausurtermin(termin.id, {datum: formatDate(date), startzeit: date !== null ? props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.fromIDorException(date.getDay()), stunde).stundenbeginn : null});
+			await props.patchKlausurterminDatum(termin.id, {datum: formatDate(date), startzeit: date !== null ? props.stundenplanmanager.getZeitrasterByWochentagStunde(Wochentag.fromIDorException(date.getDay()), stunde).stundenbeginn : null});
 		}
 	};
 

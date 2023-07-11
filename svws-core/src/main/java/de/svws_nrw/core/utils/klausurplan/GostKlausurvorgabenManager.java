@@ -158,8 +158,8 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe gibGostKlausurvorgabe(final long idVorgabe) {
-		return _mapIdKlausurvorgabe.get(idVorgabe);
+	public @NotNull GostKlausurvorgabe gibGostKlausurvorgabe(final long idVorgabe) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurvorgabe, idVorgabe);
 	}
 
 	/**

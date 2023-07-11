@@ -160,8 +160,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe | null {
-		return this._mapIdKlausurvorgabe.get(idVorgabe);
+	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, idVorgabe);
 	}
 
 	/**

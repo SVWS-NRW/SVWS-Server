@@ -129,7 +129,7 @@ public class GostKursklausurManager {
 	 * @param datum das neue Datum der Klausur
 	 *
 	 */
-	public void patchKlausurterminDatum(final @NotNull Long id, final @NotNull String datum) {
+	public void patchKlausurterminDatum(final @NotNull Long id, final String datum) {
 		final @NotNull GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, id);
 		if (termin.datum != null)
 			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(_mapDateKlausurtermin, termin.datum), termin);
@@ -419,8 +419,8 @@ public class GostKursklausurManager {
 	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
-	public GostKlausurtermin gibGostKlausurtermin(final long idTermin) {
-		return _mapIdKlausurtermin.get(idTermin);
+	public @NotNull GostKlausurtermin gibKlausurtermin(final long idTermin) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, idTermin);
 	}
 
 	/**
@@ -454,17 +454,6 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermine() {
 		return _termine;
-	}
-
-	/**
-	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 *
-	 * @param idTermin die ID des GostKlausurtermins
-	 *
-	 * @return das GostKlausurtermin-Objekt
-	 */
-	public GostKlausurtermin gibKlausurtermin(final long idTermin) {
-		return _mapIdKlausurtermin.get(idTermin);
 	}
 
 	/**

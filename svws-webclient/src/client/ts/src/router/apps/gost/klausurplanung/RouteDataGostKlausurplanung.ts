@@ -312,10 +312,10 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
+	patchKlausurterminDatum = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
 		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.gibKlausurtermin(id);
-		if (oldTtermin.datum !== termin.datum)
+		if (termin.datum !== undefined && oldTtermin.datum !== termin.datum)
 			this.kursklausurmanager.patchKlausurterminDatum(id, termin.datum);
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
@@ -337,10 +337,21 @@ export class RouteDataGostKlausurplanung {
 	erzeugeKlausurraum = async (raum: GostKlausurraum): Promise<GostKlausurraum> => {
 		api.status.start();
 		const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
-		//this.klausurvorgabenmanager.addKlausurvorgabe(neueVorgabe);
 		this.commit();
 		api.status.stop();
 		return neuerRaum;
+	}
+
+	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager): Promise<boolean> => {
+		api.status.start();
+		const oldRaum: GostKlausurraum = manager.getKlausurraum(id);
+		Object.assign(oldRaum, raum);
+		manager.patchKlausurraum(oldRaum);
+		Object.assign(oldRaum, raum);
+		await api.server.patchGostKlausurenRaum(raum, api.schema, id);
+		this.commit();
+		api.status.stop();
+		return true;
 	}
 
 	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {

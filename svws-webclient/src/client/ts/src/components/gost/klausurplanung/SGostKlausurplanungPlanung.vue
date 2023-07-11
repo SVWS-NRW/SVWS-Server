@@ -22,7 +22,9 @@
 					<s-gost-klausurplanung-planung-raum v-for="raum in raummanager?.getKlausurraeume()"
 						:key="raum.id"
 						:stundenplanmanager="stundenplanmanager"
-						:raum="raum" />
+						:raum="raum"
+						:manager="(raummanager as GostKlausurraumManager)"
+						:patch-klausurraum="patchKlausurraum" />
 				</div>
 			</div>
 		</div>
@@ -42,6 +44,7 @@
 		kursmanager: KursManager;
 		stundenplanmanager: StundenplanManager;
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
+		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
 	}>();
 

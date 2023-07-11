@@ -51,6 +51,17 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
+	 * @param idRaum die ID des Klausurraums
+	 *
+	 * @return den Klausurraum
+	 */
+	public getKlausurraum(idRaum : number) : GostKlausurraum {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdRaum, idRaum);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
 	 * @return die Liste der Klausurräume
 	 */
 	public getKlausurraeume() : List<GostKlausurraum> {
@@ -76,6 +87,19 @@ export class GostKlausurraumManager extends JavaObject {
 		DeveloperNotificationException.ifListAddsDuplicate("_stunden", this._stunden, stunde);
 		DeveloperNotificationException.ifMapGetIsNull(this._mapIdRaum, stunde.idRaum);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumStundenList", MapUtils.getOrCreateArrayList(this._mapRaumStunden, stunde.idRaum), stunde);
+	}
+
+	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum
+	 * geändert hat.
+	 *
+	 * @param r das GostKlausurraum-Objekt
+	 */
+	public patchKlausurraum(r : GostKlausurraum) : void {
+		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, r);
+		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, r.id);
+		this._raeume.add(r);
+		this._mapIdRaum.put(r.id, r);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

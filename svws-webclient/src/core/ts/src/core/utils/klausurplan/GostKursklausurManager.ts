@@ -137,7 +137,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param id die ID des GostKlausurtermin-Objekts
 	 * @param datum das neue Datum der Klausur
 	 */
-	public patchKlausurterminDatum(id : number, datum : string) : void {
+	public patchKlausurterminDatum(id : number, datum : string | null) : void {
 		const termin : GostKlausurtermin = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, id);
 		if (termin.datum !== null)
 			DeveloperNotificationException.ifListRemoveFailes("_mapDateKlausurterminList", DeveloperNotificationException.ifMapGetIsNull(this._mapDateKlausurtermin, termin.datum), termin);
@@ -391,8 +391,8 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return das GostKlausurtermin-Objekt
 	 */
-	public gibGostKlausurtermin(idTermin : number) : GostKlausurtermin | null {
-		return this._mapIdKlausurtermin.get(idTermin);
+	public gibKlausurtermin(idTermin : number) : GostKlausurtermin {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, idTermin);
 	}
 
 	/**
@@ -426,17 +426,6 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public getKlausurtermine() : List<GostKlausurtermin> {
 		return this._termine;
-	}
-
-	/**
-	 * Gibt das GostKlausurtermin-Objekt zur übergebenen id zurück.
-	 *
-	 * @param idTermin die ID des GostKlausurtermins
-	 *
-	 * @return das GostKlausurtermin-Objekt
-	 */
-	public gibKlausurtermin(idTermin : number) : GostKlausurtermin | null {
-		return this._mapIdKlausurtermin.get(idTermin);
 	}
 
 	/**
