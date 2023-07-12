@@ -59,7 +59,7 @@
 					<span class="absolute -right-1">
 						<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
 							<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
-								<i-ri-close-line @click="deleteFachwahl" />
+								<i-ri-close-line @click="deleteFachwahl(halbjahr)" />
 							</svws-ui-button>
 							<template #content>
 								<template v-if="istBewertet(halbjahr)">

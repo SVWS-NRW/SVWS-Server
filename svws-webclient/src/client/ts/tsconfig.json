@@ -16,6 +16,8 @@
 		"postcss.config.cjs",
 		"src/**/*",
 		"src/**/*.vue",
-		"components.d.ts"
+		"components.d.ts",
+		"../../ui/ts/src/",
+		"../../components/ts/src/"
 	]
 }

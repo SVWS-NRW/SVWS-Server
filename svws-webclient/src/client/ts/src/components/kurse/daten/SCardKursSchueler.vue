@@ -7,8 +7,8 @@
 					{{ rowData.nachname }}
 				</span>
 			</template>
-			<template #cell(status)="{ value }">
-				<span>{{ SchuelerStatus.fromID(value).bezeichnung }}</span>
+			<template #cell(status)="{ value }: { value: number}">
+				<span>{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>

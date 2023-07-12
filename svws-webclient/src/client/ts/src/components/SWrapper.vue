@@ -9,10 +9,10 @@
 			<svws-ui-notification type="error">
 				<template #header>
 					{{ error.name }}
-					<template v-if="error.name === 'DeveloperNotificationException'">
+					<template v-if="error instanceof DeveloperNotificationException">
 						<br>Programmierfehler: Bitte melden Sie diesen Fehler.
 					</template>
-					<template v-if="error.name === 'UserNotificationException'">
+					<template v-if="error instanceof UserNotificationException">
 						<br>Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.
 					</template>
 				</template>
@@ -26,11 +26,11 @@
 </template>
 
 <script setup lang="ts">
+	import { DeveloperNotificationException, UserNotificationException } from '@core';
 	import { onErrorCaptured, ref } from 'vue';
 	import { api } from '~/router/Api';
 
 	const errors = ref<Error[]>([]);
-
 	window.addEventListener("unhandledrejection", function (event) {
 		api.status.stop();
 		errors.value.push(new Error(event.reason))

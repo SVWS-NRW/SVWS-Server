@@ -72,7 +72,7 @@
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(() => {
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN;
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
 		const regeln = props.getDatenmanager().regelGetListe();
 		if (!regeln)
 			return undefined;
@@ -86,7 +86,7 @@
 		if (lehrer_regel.value !== undefined)
 			return;
 		const r = new GostBlockungRegel();
-		const regel_typ = GostKursblockungRegelTyp.LEHRKRAFT_BEACHTEN
+		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
 		r.typ = regel_typ.typ;
 		r.parameter.add(1);
 		await props.addRegel(r);
