@@ -1,13 +1,13 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -479,6 +479,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public Response berechne(final long id, final long zeit) {
 		// Erzeuge den Input für den Kursblockungsalgorithmus
 		final GostBlockungsdatenManager manager = getBlockungsdatenManagerFromDB(id);
+		if (manager.daten().fachwahlen.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("Keine Fachwahlen für den Abiturjahrgang gefunden.");
+		if (manager.faecherManager().faecher().isEmpty())
+			return OperationError.NOT_FOUND.getResponse("Keine Fächer für den Abiturjahrgang gefunden.");
+		if (manager.daten().kurse.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("Es sind keine Kurse für die Blockung angelegt.");
+
 		manager.setMaxTimeMillis(zeit);
 
 		final KursblockungAlgorithmus algo = new KursblockungAlgorithmus();
