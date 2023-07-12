@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 
-	import type { GostFachwahlenCardAllgemeinProps } from "./SGostFachwahlenCardAllgemeinProps";
+	import type { GostFachwahlenAllgemeinProps } from "./SGostFachwahlenAllgemeinProps";
 
-	const props = defineProps<GostFachwahlenCardAllgemeinProps>();
+	const props = defineProps<GostFachwahlenAllgemeinProps>();
 
 </script>

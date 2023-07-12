@@ -3,9 +3,18 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { type RouteGost} from "~/router/apps/gost/RouteGost";
+import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
 
 import { RouteDataGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteDataGostFachwahlen";
+
+import { routeGostFachwahlenAllgemein } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAllgemein";
+import { routeGostFachwahlenAbitur } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAbitur";
+import { routeGostFachwahlenAbiturFach } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenAbiturFach";
+import { routeGostFachwahlenFach } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenFach";
+import { routeGostFachwahlenFachHalbjahr } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenFachHalbjahr";
+import { routeGostFachwahlenHalbjahr } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenHalbjahr";
+import { routeGostFachwahlenLeistungskurse } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenLeistungskurse";
+import { routeGostFachwahlenZusatzkurse } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenZusatzkurse";
 
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
 
@@ -22,6 +31,17 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
+		super.children = [
+			routeGostFachwahlenAllgemein,
+			routeGostFachwahlenAbitur,
+			routeGostFachwahlenAbiturFach,
+			routeGostFachwahlenFach,
+			routeGostFachwahlenFachHalbjahr,
+			routeGostFachwahlenHalbjahr,
+			routeGostFachwahlenLeistungskurse,
+			routeGostFachwahlenZusatzkurse,
+		];
+		super.defaultChild = routeGostFachwahlenAllgemein;
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -31,26 +51,19 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to.name === this.name) {
-			if (this.parent === undefined)
-				throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-			const abiturjahr = parseInt(to_params.abiturjahr);
-			if (abiturjahr === undefined || abiturjahr === -1)
-				return { name: this.parent.defaultChild!.name, params: { abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
-		}
-		return true;
-	}
-
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
-			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			return new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		if (abiturjahr === undefined || abiturjahr === -1)
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr: routeGost.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
 		await this.data.setEintrag(abiturjahr);
+		if (to.name === this.name)
+			return this.defaultChild!.getRoute(abiturjahr);
+	}
+
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		await this.data.setEintrag(-1);
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {
@@ -60,6 +73,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {
 		return {
 			fachwahlen: this.data.fachwahlen,
+			doSelect: this.data.doSelect,
 		};
 	}
 

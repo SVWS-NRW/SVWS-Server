@@ -1,5 +1,5 @@
 import type { List, GostStatistikFachwahl } from "@core";
 
-export interface GostFachwahlenCardAllgemeinProps {
+export interface GostFachwahlenAbiturProps {
 	fachwahlen: List<GostStatistikFachwahl>;
 }
