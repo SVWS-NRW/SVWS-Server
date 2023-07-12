@@ -2,7 +2,7 @@
 
 An dieser Stelle werden die Einstellungen zu der Laufbahnberatung und -planung in den einzelnen Abiturjahrgängen vorgenommen.
 
-Dies betrifft
+Dies betrifft:
 * das Festlegen der Beratungslehrer für diesen Abiturjahrgang
 * die Vorlage für den Beratungstext auf dem Wahlbogen
 * die Vorlage für den Mailtext bei einem Versand der Laufbahnplanungsdatei

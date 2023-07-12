@@ -12,6 +12,8 @@
 	},
 	"include": [
 		"*.ts",
+		"tailwind.config.cjs",
+		"postcss.config.cjs",
 		"src/**/*",
 		"src/**/*.vue",
 		"components.d.ts"

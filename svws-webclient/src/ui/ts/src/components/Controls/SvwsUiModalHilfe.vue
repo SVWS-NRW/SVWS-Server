@@ -11,7 +11,9 @@
 				</div>
 			</template>
 			<template #modalDescription>
-				<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
+				<div class="prose">
+					<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
+				</div>
 			</template>
 		</svws-ui-modal>
 	</div>
