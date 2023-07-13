@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,12 @@ public class GostKlausurraumManager {
 
 	/** Eine Map idRaum -> Liste von Stunden */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKlausurraumstunde>> _mapRaumStunden = new HashMap<>();
+
+	/** Ein Comparator für die GostKlausurräume. */
+	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaumId = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> {
+		return Long.compare(a.id, b.id);
+	};
+
 
 
 	/**
@@ -76,6 +83,7 @@ public class GostKlausurraumManager {
 	 */
 	public void addKlausurraum(final @NotNull GostKlausurraum raum) {
 		DeveloperNotificationException.ifListAddsDuplicate("_raeume", _raeume, raum);
+		_raeume.sort(_compRaumId);
 		DeveloperNotificationException.ifMapPutOverwrites(_mapIdRaum, raum.id, raum);
 	}
 

@@ -20,7 +20,7 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 	}>();
 
-	const stundenplanRaumSelected = ref<StundenplanRaum | null>(props.raum.idStundenplanRaum === null ? null : props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum));
+	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum));
 	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum) : null;
 
 </script>
