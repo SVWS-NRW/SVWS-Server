@@ -1,7 +1,7 @@
 <template>
-	<template v-if="visible">
+	<template v-if="!getErgebnisse().isEmpty()">
 		<svws-ui-data-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" selectable class="mt-10 z-20 relative"
-			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="rows_ergebnisse" :count="selected_ergebnisse.length !== rows_ergebnisse.size()">
+			:columns="[{ key: 'id', label: 'ID'}, { key: 'bewertung', label: 'Bewertungen', span: 10 }]" :items="getErgebnisse()" :count="selected_ergebnisse.length !== getErgebnisse().size()">
 			<template #header(bewertung)>
 				<div style="flex-grow: 10;" class="inline-flex">
 					<svws-ui-tooltip position="top">
@@ -21,7 +21,7 @@
 				</div>
 			</template>
 			<template #cell(bewertung)="{ rowData: row }">
-				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer" v-if="rows_ergebnisse.contains(row)">
+				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer" v-if="getErgebnisse().contains(row)">
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 						<template #content>
@@ -75,19 +75,19 @@
 						</template>
 					</svws-ui-tooltip>
 				</span>
-				<div v-if="(row.id === auswahlErgebnis?.id && !blockung_aktiv)" class="flex gap-1">
+				<div v-if="(row.id === auswahlErgebnis?.id && !istAktiveBlockung())" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen."> Ableiten </svws-ui-button>
-					<svws-ui-button v-if="rows_ergebnisse.size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending || selected_ergebnisse.length > 0" title="Ergebnis löschen" />
+					<svws-ui-button v-if="getErgebnisse().size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending || selected_ergebnisse.length > 0" title="Ergebnis löschen" />
 				</div>
 			</template>
 			<template #footerActions>
-				<span v-if="selected_ergebnisse.length === rows_ergebnisse.size()" class="text-sm normal-case mr-auto inline-flex items-center gap-0.5">
+				<span v-if="selected_ergebnisse.length === getErgebnisse().size()" class="text-sm normal-case mr-auto inline-flex items-center gap-0.5">
 					<i-ri-alert-fill class="text-error" />
 					<span>Es muss mindestens ein Ergebnis behalten werden.</span>
 				</span>
-				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== rows_ergebnisse.size()" class="flex items-center justify-end pr-1 h-full">
+				<div v-if="selected_ergebnisse.length > 0 && selected_ergebnisse.length !== getErgebnisse().size()" class="flex items-center justify-end pr-1 h-full">
 					<svws-ui-button @click="remove_ergebnisse" type="trash" class="cursor-pointer"
-						:disabled="selected_ergebnisse.length > rows_ergebnisse.size() - 1" />
+						:disabled="selected_ergebnisse.length > getErgebnisse().size() - 1" />
 				</div>
 			</template>
 		</svws-ui-data-table>
@@ -96,11 +96,10 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
+	import { ref } from 'vue';
+	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
 	import type { DataTableItem } from "@ui";
-	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -113,13 +112,15 @@
 		apiStatus: ApiStatus;
 	}>();
 
-	const selected_ergebnisse: Ref<GostBlockungsergebnisListeneintrag[]> = ref([]);
+	const selected_ergebnisse = ref<GostBlockungsergebnisListeneintrag[]>([]);
 
-	const rows_ergebnisse: ComputedRef<List<GostBlockungsergebnisListeneintrag>> = computed(() =>
-		props.getDatenmanager().ergebnisGetListeSortiertNachBewertung());
+	function getErgebnisse() : List<GostBlockungsergebnisListeneintrag> {
+		return props.getDatenmanager().ergebnisGetListeSortiertNachBewertung();
+	}
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() =>
-		props.getDatenmanager().daten().istAktiv);
+	function istAktiveBlockung() : boolean {
+		return props.getDatenmanager().daten().istAktiv;
+	}
 
 	async function remove_ergebnisse() {
 		if (props.halbjahr === undefined)
@@ -154,14 +155,11 @@
 	}
 	function colorMix(ergebnis: DataTableItem): string {
 		const combined = (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id))
-                       + (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
-                       + (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))
-                       + (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id));
+			+ (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
+			+ (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))
+			+ (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id));
 		return `hsl(${Math.round((1 - (combined > 1 ? 1 : combined)) * 120)},100%,70%)`
 	}
-
-	const visible: ComputedRef<boolean> = computed(() =>
-		props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 0);
 
 </script>
 
