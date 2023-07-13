@@ -8,7 +8,7 @@ export class ApiConnection {
 	protected _authenticated: boolean = false;
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname: string = window.location.hostname + ":" + window.location.port;
+	protected _hostname: string = 'localhost'
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -140,7 +140,7 @@ export class ApiConnection {
 		try {
 			return await this.connect(host);
 		} catch (error) {
-			console.log(`Verbindung zum SVWS-Server unter https://${host}`);
+			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`, error);
 		}
 		const hostname = url.hostname;
 		if (host !== hostname) {

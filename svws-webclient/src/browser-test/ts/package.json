@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.36.0-alpha-jun-25-2023"
+    "@playwright/test": "^1.36.0"
   }
 }
