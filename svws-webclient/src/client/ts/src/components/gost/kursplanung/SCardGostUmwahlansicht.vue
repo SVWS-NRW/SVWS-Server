@@ -177,11 +177,7 @@
 	}
 
 	const maxKurseInSchienen: ComputedRef<number> = computed(() => {
-		let max = 0;
-		const schienen = props.getErgebnismanager().getMengeAllerSchienen();
-		for (let i = 0; i < schienen.size(); i++)
-			max = Math.max(max, schienen.get(i).kurse.size());
-		return max;
+		return props.getErgebnismanager().getOfSchieneMaxKursanzahl();
 	});
 
 	function calculateColumns(): DataTableColumn[] {
@@ -194,14 +190,14 @@
 	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
 
 	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) : ComputedRef<boolean> => computed(() =>
-		props.getErgebnismanager().getOfSchieneSchuelermengeMitKollisionen(idSchiene).contains(idSchueler)
+		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)
 	);
 
 
 	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
 		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
 			return false;
-		return props.getErgebnismanager().getOfKursSchuelerIDmenge(idKurs).contains(idSchueler);
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs);
 	});
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) : ComputedRef<boolean> => computed(() => {
@@ -252,18 +248,14 @@
 	);
 
 	const fixier_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
-		// TODO ersetzen falls die folgende Methode im Manager effektiv implementiert ist: props.getErgebnismanager().getOfSchuelerOfKursIstFixiert(idSchueler, idKurs)
-		for (const regel of props.getDatenmanager().regelGetListe())
-			if ((regel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) && (regel.parameter.get(0) === idSchueler) && (regel.parameter.get(1) === idKurs))
-				return regel.id;
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
+		    return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 
 	const verbieten_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
-		// TODO ersetzen falls die folgende Methode im Manager effektiv implementiert ist: props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(idSchueler, idKurs)
-		for (const regel of props.getDatenmanager().regelGetListe())
-			if ((regel.typ === GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ) && (regel.parameter.get(0) === idSchueler) && (regel.parameter.get(1) === idKurs))
-				return regel.id;
+		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler, idKurs))
+		    return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 

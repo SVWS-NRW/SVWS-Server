@@ -100,16 +100,16 @@ export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<Gos
 	public static readonly KURS_ZUSAMMEN_MIT_KURS : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_ZUSAMMEN_MIT_KURS", 8, 8, "Kurs zusammen mit Kurs", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.KURS_ID));
 
 	/**
-	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
-	 */
-	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 9, 10, "Lehrkräfte beachten", Arrays.asList());
-
-	/**
 	 *  Der Regel-Typ zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
 	 *  - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 *  - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
-	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 10, 9, "Fülle Kurs mit Dummy SuS auf.", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
+	public static readonly KURS_MIT_DUMMY_SUS_AUFFUELLEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("KURS_MIT_DUMMY_SUS_AUFFUELLEN", 9, 9, "Fülle Kurs mit Dummy SuS auf.", Arrays.asList(GostKursblockungRegelParameterTyp.KURS_ID, GostKursblockungRegelParameterTyp.GANZZAHL));
+
+	/**
+	 *  Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
+	 */
+	public static readonly LEHRKRAEFTE_BEACHTEN : GostKursblockungRegelTyp = new GostKursblockungRegelTyp("LEHRKRAEFTE_BEACHTEN", 10, 10, "Lehrkräfte beachten", Arrays.asList());
 
 	/**
 	 * Die ID des Regel-Typs

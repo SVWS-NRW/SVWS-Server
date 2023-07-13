@@ -117,11 +117,6 @@ public enum GostKursblockungRegelTyp {
 			)),
 
 	/**
-	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
-	 */
-	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList()),
-
-	/**
 	 * Der Regel-Typ zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
@@ -129,7 +124,12 @@ public enum GostKursblockungRegelTyp {
 	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Fülle Kurs mit Dummy SuS auf.", Arrays.asList(
 			GostKursblockungRegelParameterTyp.KURS_ID,
 			GostKursblockungRegelParameterTyp.GANZZAHL
-			));
+			)),
+
+	/**
+	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.
+	 */
+	LEHRKRAEFTE_BEACHTEN(10, "Lehrkräfte beachten", Arrays.asList());
 
 
 	/** Die ID des Regel-Typs */

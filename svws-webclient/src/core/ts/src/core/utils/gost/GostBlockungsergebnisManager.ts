@@ -1104,6 +1104,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler in der Schiene mehr als einen Kurs belegt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idSchiene   Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Schüler in der Schiene mehr als einen Kurs belegt hat.
+	 */
+	public getOfSchuelerOfSchieneHatKollision(idSchueler : number, idSchiene : number) : boolean {
+		return this._map2D_schuelerID_schienenID_kurse.getNonNullOrException(idSchueler, idSchiene).size() > 1;
+	}
+
+	/**
 	 * Liefert die zu (idSchueler, idFach) die jeweilige Kursart. <br>
 	 *
 	 * @param idSchueler Die Datenbank-ID des Schülers.
@@ -1804,6 +1816,18 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchieneRemoveAllowed(idShiene : number) : boolean {
 		return this.getSchieneE(idShiene).kurse.isEmpty();
+	}
+
+	/**
+	 * Liefert die maximale Anzahl an Kursen, die es in einer Schiene gibt.
+	 *
+	 * @return die maximale Anzahl an Kursen, die es in einer Schiene gibt.
+	 */
+	public getOfSchieneMaxKursanzahl() : number {
+		let max : number = 0;
+		for (const schiene of this._ergebnis.schienen)
+			max = Math.max(max, schiene.kurse.size());
+		return max;
 	}
 
 	/**

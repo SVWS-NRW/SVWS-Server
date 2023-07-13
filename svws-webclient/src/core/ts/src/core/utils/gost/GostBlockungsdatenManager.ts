@@ -4,6 +4,7 @@ import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/Gost
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
@@ -117,6 +118,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
 	 */
 	private readonly _map_regeltyp_regeln : HashMap<GostKursblockungRegelTyp, List<GostBlockungRegel>> = new HashMap();
+
+	/**
+	 * Eine interne Hashmap zum Multi-Key-Zugriff auf die Regeln eines bestimmten {@link GostKursblockungRegelTyp}.
+	 */
+	private readonly _map_multikey_regeln : HashMap<LongArrayKey, GostBlockungRegel> = new HashMap();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID.
@@ -657,11 +663,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
 	 */
 	public kursGetIstVerbotenInSchiene(idKurs : number, idSchiene : number) : boolean {
+		if (this.kursGetHatSperrungInSchiene(idKurs, idSchiene))
+			return true;
 		const nummer : number = this.schieneGet(idSchiene).nummer;
 		const kursart : number = this.kursGet(idKurs).kursart;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
-				return true;
 		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
 			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) {
 				if (regel.parameter.get(0) !== kursart)
@@ -686,45 +691,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
 	 */
 	public kursGetHatSperrungInSchiene(idKurs : number, idSchiene : number) : boolean {
-		const nummer : number = this.schieneGet(idSchiene).nummer;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
-				return true;
-		return false;
-	}
-
-	/**
-	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
-	 *
-	 * @param idKurs     Die Datenbank-ID des Kurses.
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
-	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
-	 */
-	public kursGetHatFixierungInSchiene(idKurs : number, idSchiene : number) : boolean {
-		const nummer : number = this.schieneGet(idSchiene).nummer;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
-				return true;
-		return false;
-	}
-
-	/**
-	 * Liefert die Regel, welche den Kurs in einer Schiene fixiert hat.
-	 *
-	 * @param idKurs     Die Datenbank-ID des Kurses.
-	 * @param idSchiene  Die Datenbank-ID der Schiene.
-	 *
-	 * @return die Regel, welche den Kurs in einer Schiene fixiert hat.
-	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
-	 */
-	public kursGetRegelFixierungInSchiene(idKurs : number, idSchiene : number) : GostBlockungRegel {
-		const nummer : number = this.schieneGet(idSchiene).nummer;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
-				return regel;
-		throw new DeveloperNotificationException("Kurs " + idKurs + " ist nicht fixiert in Schiene " + idSchiene + "!")
+		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		return this._map_multikey_regeln.containsKey(key);
 	}
 
 	/**
@@ -737,11 +706,39 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
 	 */
 	public kursGetRegelGesperrtInSchiene(idKurs : number, idSchiene : number) : GostBlockungRegel {
-		const nummer : number = this.schieneGet(idSchiene).nummer;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
-				return regel;
-		throw new DeveloperNotificationException("Kurs " + idKurs + " ist nicht gesperrt in Schiene " + idSchiene + "!")
+		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		return DeveloperNotificationException.ifNull("Kurs " + idKurs + " ist nicht gesperrt in Schiene " + idSchiene + "!", this._map_multikey_regeln.get(key));
+	}
+
+	/**
+	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public kursGetHatFixierungInSchiene(idKurs : number, idSchiene : number) : boolean {
+		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		return this._map_multikey_regeln.containsKey(key);
+	}
+
+	/**
+	 * Liefert die Regel, welche den Kurs in einer Schiene fixiert hat.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Regel, welche den Kurs in einer Schiene fixiert hat.
+	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
+	 */
+	public kursGetRegelFixierungInSchiene(idKurs : number, idSchiene : number) : GostBlockungRegel {
+		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		return DeveloperNotificationException.ifNull("Kurs " + idKurs + " ist nicht fixiert in Schiene " + idSchiene + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -1005,8 +1002,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		DeveloperNotificationException.ifTrue("Der Typ(" + regel.typ + ") der Regel(" + regel.id + ") ist unbekannt!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRegel_regel, regel.id, regel);
 		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).add(regel);
+		this._map_multikey_regeln.put(multikey, regel);
 		this._daten.regeln.add(regel);
 	}
 
@@ -1115,9 +1114,20 @@ export class GostBlockungsdatenManager extends JavaObject {
 		UserNotificationException.ifTrue("Ein Löschen einer Regel ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const regel : GostBlockungRegel = this.regelGet(idRegel);
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
 		this._map_idRegel_regel.remove(idRegel);
 		MapUtils.getOrCreateArrayList(this._map_regeltyp_regeln, typ).remove(regel);
+		this._map_multikey_regeln.remove(multikey);
 		this._daten.regeln.remove(regel);
+	}
+
+	private static regelToMultikey(regel : GostBlockungRegel) : LongArrayKey {
+		const size : number = regel.parameter.size();
+		const keys : Array<number> | null = Array(size + 1).fill(0);
+		keys[0] = regel.typ;
+		for (let i : number = 1; i <= size; i++)
+			keys[i] = regel.parameter.get(i - 1).valueOf();
+		return new LongArrayKey(keys);
 	}
 
 	/**
@@ -1363,6 +1373,62 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetListeOfFachwahlen(pSchuelerID : number) : List<GostFachwahl> {
 		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_idSchueler_fachwahlen.get(pSchuelerID));
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_VERBIETEN_IN_KURS} im angegebenen Kurs verboten ist.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_VERBIETEN_IN_KURS} im angegebenen Kurs verboten ist.
+	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
+	 */
+	public schuelerGetIstVerbotenInKurs(idSchueler : number, idKurs : number) : boolean {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
+		return this._map_multikey_regeln.containsKey(key);
+	}
+
+	/**
+	 * Liefert die Regel, welche den Schüler in einem Kurs verbietet.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche den Schüler in einem Kurs verbietet.
+	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
+	 */
+	public schuelerGetRegelVerbotenInKurs(idSchueler : number, idKurs : number) : GostBlockungRegel {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
+		return DeveloperNotificationException.ifNull("Schüler " + idSchueler + " ist nicht verboten in Kurs " + idKurs + "!", this._map_multikey_regeln.get(key));
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS} im angegebenen Kurs fixiert ist.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler aufgrund der Regel {@link GostKursblockungRegelTyp#SCHUELER_FIXIEREN_IN_KURS} im angegebenen Kurs fixiert ist.
+	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
+	 */
+	public schuelerGetIstFixiertInKurs(idSchueler : number, idKurs : number) : boolean {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+		return this._map_multikey_regeln.containsKey(key);
+	}
+
+	/**
+	 * Liefert die Regel, welche den Schüler in einem Kurs fixiert.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche den Schüler in einem Kurs fixiert.
+	 * @throws DeveloperNotificationException falls der Schüler oder der Kurs in der Blockung nicht existiert.
+	 */
+	public schuelerGetRegelFixiertInKurs(idSchueler : number, idKurs : number) : GostBlockungRegel {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
+		return DeveloperNotificationException.ifNull("Schüler " + idSchueler + " ist nicht fixiert in Kurs " + idKurs + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**

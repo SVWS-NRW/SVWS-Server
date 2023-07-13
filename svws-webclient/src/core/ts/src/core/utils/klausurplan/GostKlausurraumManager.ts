@@ -1,12 +1,14 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
 import { GostKlausurraum } from '../../../core/data/gost/klausuren/GostKlausurraum';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostKlausurraumstunde } from '../../../core/data/gost/klausuren/GostKlausurraumstunde';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostKlausurraumManager extends JavaObject {
 
@@ -29,6 +31,13 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Eine Map idRaum -> Liste von Stunden
 	 */
 	private readonly _mapRaumStunden : JavaMap<number, List<GostKlausurraumstunde>> = new HashMap();
+
+	/**
+	 * Ein Comparator für die GostKlausurräume.
+	 */
+	private static readonly _compRaumId : Comparator<GostKlausurraum> = { compare : (a: GostKlausurraum, b: GostKlausurraum) => {
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 
 	/**
@@ -75,6 +84,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public addKlausurraum(raum : GostKlausurraum) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_raeume", this._raeume, raum);
+		this._raeume.sort(GostKlausurraumManager._compRaumId);
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdRaum, raum.id, raum);
 	}
 
