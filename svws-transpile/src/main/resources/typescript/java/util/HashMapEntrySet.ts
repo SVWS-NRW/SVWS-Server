@@ -5,32 +5,33 @@ import type { JavaIterator } from './JavaIterator';
 import { JavaMapEntry } from './JavaMapEntry';
 import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../lang/UnsupportedOperationException';
+import { HashMap } from './HashMap';
 
 export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMapEntry<K, V>> {
 
-	protected readonly _map : Map<K, JavaMapEntry<K, V>>;
+	protected readonly _map : HashMap<K, V>;
 
-	public constructor(map : Map<K, JavaMapEntry<K, V>>) {
+	public constructor(map : HashMap<K, V>) {
 		super();
 		this._map = map;
 	}
 
 	size(): number {
-		return this._map.size;
+		return this._map.size();
 	}
 
 	isEmpty(): boolean {
-		return this._map.size === 0;
+		return this._map.isEmpty();
 	}
 
 	contains(entry: any): boolean {
-		for (const [k, e] of this._map) {
-			if (e === entry)
-				return true;
-			if ((e instanceof JavaMapEntry) && (e.equals(entry)))
-				return true;
-		}
-		return false;
+		if (!(entry instanceof JavaMapEntry))
+			return false;
+		const e = entry as JavaMapEntry<any, any>;
+		const mapvalue = this._map.get(e.getKey());
+		if (mapvalue === null)
+			return false;
+		return JavaObject.equalsTranspiler(e.getValue(), mapvalue);
 	}
 
 	iterator(): JavaIterator<JavaMapEntry<K, V>> {
@@ -55,7 +56,7 @@ export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMap
 	public toArray<T>(__param0? : Array<T>) : Array<T> | Array<unknown> {
 		if ((typeof __param0 === "undefined") || (__param0 == null) || (__param0.length < this.size())) {
 			const r : Array<JavaMapEntry<K,V>> = [];
-			for (const [k, e] of this._map)
+			for (const e of this._map)
 				r.push(e);
 			return r;
 		} else if (Array.isArray(__param0)) {
@@ -92,8 +93,8 @@ export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMap
 		this._map.clear();
 	}
 
-	[Symbol.iterator](): Iterator<JavaMapEntry<K, V>, any, undefined> {
-		return this._map.values();
+	[Symbol.iterator](): Iterator<JavaMapEntry<K, V>> {
+		return this._map[Symbol.iterator]();
 	}
 
 }

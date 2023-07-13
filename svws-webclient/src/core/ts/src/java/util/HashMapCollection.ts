@@ -6,33 +6,27 @@ import type { JavaMapEntry } from './JavaMapEntry';
 
 import { JavaObject } from '../../java/lang/JavaObject';
 import { UnsupportedOperationException } from '../../java/lang/UnsupportedOperationException';
+import { HashMap } from './HashMap';
 
 
 export class HashMapCollection<K, V> implements Collection<V> {
 
-	protected readonly _map : Map<K, JavaMapEntry<K, V>>;
+	protected readonly _map : HashMap<K, V>;
 
-	public constructor(map : Map<K, JavaMapEntry<K, V>>) {
+	public constructor(map : HashMap<K, V>) {
 		this._map = map;
 	}
 
 	size(): number {
-		return this._map.size;
+		return this._map.size();
 	}
 
 	isEmpty(): boolean {
-		return this._map.size === 0;
+		return this._map.isEmpty();
 	}
 
 	contains(value: any): boolean {
-		for (const [k, e] of this._map) {
-			const v : V = e.getValue();
-			if (v === value)
-				return true;
-			if ((v instanceof JavaObject) && (v.equals(value)))
-				return true;
-		}
-		return false;
+		return this._map.containsValue(value);
 	}
 
 	iterator(): JavaIterator<V> {
@@ -110,10 +104,10 @@ export class HashMapCollection<K, V> implements Collection<V> {
 		const iter = this._map[Symbol.iterator]();
 		const result : Iterator<V> = {
 			next() : IteratorResult<V> {
-				const result : IteratorResult<[K, JavaMapEntry<K, V>], any> = iter.next();
+				const result : IteratorResult<JavaMapEntry<K, V>> = iter.next();
 				if (result.done === true)
 					return { value : null, done : true };
-				return { value : result.value[1].getValue(), done : false };
+				return { value : result.value.getValue(), done : false };
 			}
 		};
 		return result;
@@ -129,7 +123,8 @@ export class HashMapCollection<K, V> implements Collection<V> {
 
 	toString(): string | null {
 		let res = '[';
-		this._map.forEach(e => res + (e.getValue() as unknown as JavaObject).toString() + ', ');
+		for (const e of this._map)
+			res + (e.getValue() as unknown as JavaObject).toString() + ', ';
 		res = res.substring(-2, 0);
 		res = res + ']';
 		return res;
