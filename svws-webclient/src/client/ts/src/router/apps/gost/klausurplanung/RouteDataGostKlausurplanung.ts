@@ -286,8 +286,9 @@ export class RouteDataGostKlausurplanung {
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number): Promise<boolean> => {
 		api.status.start();
 		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, id);
-		Object.assign(this.klausurvorgabenmanager.gibGostKlausurvorgabe(id), vorgabe);
-		this.klausurvorgabenmanager.updateKlausurvorgabe(vorgabe);
+		const oldVorgabe = this.klausurvorgabenmanager.gibGostKlausurvorgabe(id);
+		Object.assign(oldVorgabe, vorgabe);
+		this.klausurvorgabenmanager.updateKlausurvorgabe(oldVorgabe);
 		this.commit();
 		api.status.stop();
 		return true;

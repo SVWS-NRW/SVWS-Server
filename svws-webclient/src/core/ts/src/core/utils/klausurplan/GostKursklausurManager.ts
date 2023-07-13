@@ -4,10 +4,12 @@ import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklaus
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
+import type { Comparator } from '../../../java/util/Comparator';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
@@ -72,6 +74,17 @@ export class GostKursklausurManager extends JavaObject {
 	 * Eine Map date -> GostKlausurtermin
 	 */
 	private readonly _mapDateKlausurtermin : JavaMap<string, List<GostKlausurtermin>> = new HashMap();
+
+	/**
+	 * Ein Comparator für die GostKlausurtermine.
+	 */
+	private static readonly _compDatum : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
+		if (a.datum === null)
+			return +1;
+		if (b.datum === null)
+			return -1;
+		return JavaString.compareTo(a.datum, b.datum);
+	} };
 
 
 	/**
@@ -438,6 +451,36 @@ export class GostKursklausurManager extends JavaObject {
 	public getKlausurtermineByQuartal(quartal : number) : List<GostKlausurtermin> {
 		const termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 		return termine !== null ? termine : new ArrayList();
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen ein Datum gesetzt ist
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public getKlausurtermineMitDatum() : List<GostKlausurtermin> {
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		for (const termin of this._termine)
+			if (termin.datum !== null)
+				termineMitDatum.add(termin);
+		termineMitDatum.sort(GostKursklausurManager._compDatum);
+		return termineMitDatum;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein Datum gesetzt ist
+	 *
+	 * @param quartal die Nummer des Quartals
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public getKlausurtermineMitDatumByQuartal(quartal : number) : List<GostKlausurtermin> {
+		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
+		for (const termin of this.getKlausurtermineByQuartal(quartal))
+			if (termin.datum !== null)
+				termineMitDatum.add(termin);
+		termineMitDatum.sort(GostKursklausurManager._compDatum);
+		return termineMitDatum;
 	}
 
 	/**

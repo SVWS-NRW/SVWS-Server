@@ -1,6 +1,7 @@
 package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,16 @@ public class GostKursklausurManager {
 
 	/** Eine Map date -> GostKlausurtermin */
 	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _mapDateKlausurtermin = new HashMap<>();
+
+
+	/** Ein Comparator für die GostKlausurtermine. */
+	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compDatum = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
+		if (a.datum == null)
+			return +1;
+		if (b.datum == null)
+			return -1;
+		return a.datum.compareTo(b.datum);
+	};
 
 
 	/**
@@ -466,6 +477,36 @@ public class GostKursklausurManager {
 	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByQuartal(final int quartal) {
 		final List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
 		return termine != null ? termine : new ArrayList<>();
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen ein Datum gesetzt ist
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineMitDatum() {
+		final List<@NotNull GostKlausurtermin> termineMitDatum = new ArrayList<>();
+		for (@NotNull final GostKlausurtermin termin : _termine)
+			if (termin.datum != null)
+				termineMitDatum.add(termin);
+		termineMitDatum.sort(_compDatum);
+		return termineMitDatum;
+	}
+
+	/**
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein Datum gesetzt ist
+	 *
+	 * @param quartal die Nummer des Quartals
+	 *
+	 * @return die Liste von GostKlausurtermin-Objekten
+	 */
+	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineMitDatumByQuartal(final int quartal) {
+		final List<@NotNull GostKlausurtermin> termineMitDatum = new ArrayList<>();
+		for (@NotNull final GostKlausurtermin termin : getKlausurtermineByQuartal(quartal))
+			if (termin.datum != null)
+				termineMitDatum.add(termin);
+		termineMitDatum.sort(_compDatum);
+		return termineMitDatum;
 	}
 
 	/**

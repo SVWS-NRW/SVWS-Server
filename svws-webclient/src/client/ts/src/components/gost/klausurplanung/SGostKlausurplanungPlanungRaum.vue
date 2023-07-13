@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Kausurraum">
-		<SvwsUiMultiSelect title="Raum auswählen"
+		<svws-ui-multi-select title="Raum auswählen"
 			v-model="stundenplanRaumSelected"
 			@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, manager)"
 			:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"

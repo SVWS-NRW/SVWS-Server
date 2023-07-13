@@ -1,23 +1,22 @@
 <template>
-	<svws-ui-content-card>
-		<div class="flex h-full gap-4 mt-4">
-			<div class="flex flex-col">
-				<div class="text-headline-md">Zu Planen:</div>
-				<ul class="flex flex-col gap-y-1">
-					<li v-for="termin in termine" :key="termin.id">
-						<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
-							:faecher-manager="faecherManager"
-							:map-lehrer="mapLehrer"
-							:termin="termin"
-							:kursmanager="kursmanager"
-							:class="calculatCssClasses(termin)"
-							@click="chooseTermin(termin);$event.stopPropagation()" />
-					</li>
-				</ul>
-			</div>
-			<div class="flex flex-row flex-wrap gap-4 w-full">
-				<div v-if="selectedTermin === null" class="text-headline">Bitte Termin durch Klick auswählen!</div>
-				<div v-else>
+	<div class="flex h-full gap-4 mt-4">
+		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">
+			<ul class="flex flex-col gap-y-1">
+				<li v-for="termin in termine" :key="termin.id">
+					<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
+						:faecher-manager="faecherManager"
+						:map-lehrer="mapLehrer"
+						:termin="termin"
+						:kursmanager="kursmanager"
+						:class="calculatCssClasses(termin)"
+						@click="chooseTermin(termin);$event.stopPropagation()" />
+				</li>
+			</ul>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="&nbsp;">
+			<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
+			<div v-else>
+				<div class="flex flex-col flex-wrap gap-4 w-full">
 					<svws-ui-button type="primary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum</svws-ui-button>
 					<s-gost-klausurplanung-planung-raum v-for="raum in raummanager?.getKlausurraeume()"
 						:key="raum.id"
@@ -27,8 +26,8 @@
 						:patch-klausurraum="patchKlausurraum" />
 				</div>
 			</div>
-		</div>
-	</svws-ui-content-card>
+		</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -70,7 +69,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = computed(() => props.kursklausurmanager().getKlausurtermine());
+	const termine = computed(() => props.kursklausurmanager().getKlausurtermineMitDatum());
 
 	const calculatCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,
