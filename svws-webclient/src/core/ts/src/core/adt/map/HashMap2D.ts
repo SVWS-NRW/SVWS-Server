@@ -202,6 +202,20 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		return this.getSubMapOrException(key1).keySet();
 	}
 
+	/**
+	 * Liefert die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
+	 */
+	public getSubMapSizeOrZero(key1 : K1) : number {
+		const map2 : JavaMap<K2, V | null> | null = this._map.get(key1);
+		if (map2 === null)
+			return 0;
+		return map2.size();
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}
