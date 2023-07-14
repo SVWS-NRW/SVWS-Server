@@ -25,7 +25,15 @@
 						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
 							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
 						</s-gost-kursplanung-remove-blockung-modal>
-						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending">Berechnen</svws-ui-button>
+						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung"> Berechnen </svws-ui-button>
+						<svws-ui-tooltip position="top" v-else>
+							<svws-ui-button size="small" type="secondary" disabled> Berechnen </svws-ui-button>
+							<template #content>
+								<div class="normal-case text-base rich-text">
+									Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
+								</div>
+							</template>
+						</svws-ui-tooltip>
 					</div>
 				</div>
 			</template>
@@ -82,6 +90,12 @@
 			return false;
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
+
+	const allow_berechne_blockung = computed(()=>
+		props.getDatenmanager().fachwahlGetAnzahl() > 0
+		&& props.getDatenmanager().getFaecherAnzahl() > 0
+		&& props.getDatenmanager().kursGetAnzahl() > 0
+	)
 
 	async function select_blockungauswahl(blockung: DataTableItem | null) {
 		if ((blockung === null) || props.apiStatus.pending)
