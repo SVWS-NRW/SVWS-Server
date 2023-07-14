@@ -217,5 +217,18 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		return getSubMapOrException(key1).keySet();
 	}
 
+	/**
+	 * Liefert die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return die Anzahl an Mappings, der des Pfades (key1) oder 0, falls der Pfad nicht existiert.
+	 */
+	public int getSubMapSizeOrZero(final @NotNull K1 key1) {
+		final Map<@NotNull K2, V> map2 = _map.get(key1);
+		if (map2 == null)
+			return 0;
+		return map2.size();
+	}
 
 }

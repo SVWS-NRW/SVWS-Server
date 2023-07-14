@@ -165,7 +165,7 @@ public class GostBlockungsergebnisManager {
 		_ergebnis.bewertung.kursdifferenzHistogramm = new int[_parent.schuelerGetAnzahl() + 1];
 
 		// Bewertungskriterium 2a (Nicht zugeordnete Fachwahlen)
-		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet += _parent.daten().fachwahlen.size();
+		_ergebnis.bewertung.anzahlSchuelerNichtZugeordnet = _parent.daten().fachwahlen.size();
 
 		// Schienen von '_parent' kopieren und hinzufügen.
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
@@ -1050,13 +1050,9 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 */
 	public boolean getOfSchuelerHatNichtwahl(final long idSchueler) {
-
-		if (_map2D_schuelerID_fachID_kurs.containsKey1(idSchueler))
-			for (final @NotNull long idFach : _map2D_schuelerID_fachID_kurs.getKeySetOf(idSchueler))
-				if (_map2D_schuelerID_fachID_kurs.getOrNull(idSchueler, idFach) == null)
-					return true;
-
-		return false;
+		final int nIst = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler).size();
+		final int nSoll = _map2D_schuelerID_fachID_kurs.getSubMapSizeOrZero(idSchueler);
+		return nIst < nSoll;
 	}
 
 	/**
