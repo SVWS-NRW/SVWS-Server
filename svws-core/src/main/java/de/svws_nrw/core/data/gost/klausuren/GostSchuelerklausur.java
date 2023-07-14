@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "der Stundenplan eines Schülers.")
 @TranspilerDTO
-public class Schuelerklausur {
+public class GostSchuelerklausur {
 
 	/** Die ID des Stundenplans. */
 	@Schema(description = "die ID des Stundenplans", example = "815")
@@ -29,8 +29,8 @@ public class Schuelerklausur {
 	@Schema(description = "das Zeitraster des Stundenplans")
 	public long idSchueler = -1;
 
-	/** Das Datum, ab dem der Stundenpland gültig ist. */
-	@Schema(description = "das Datum, ab dem der Stundenpland gültig ist", example = "1.1.1899")
-	public String startzeit = null;
+	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins. */
+	@Schema(description = "die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins", example = "540")
+	public Integer startzeit = null;
 
 }

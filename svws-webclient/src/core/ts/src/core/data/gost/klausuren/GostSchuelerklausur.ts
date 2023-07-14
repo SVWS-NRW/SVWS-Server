@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 
-export class Schuelerklausur extends JavaObject {
+export class GostSchuelerklausur extends JavaObject {
 
 	/**
 	 * Die ID des Stundenplans.
@@ -23,9 +23,9 @@ export class Schuelerklausur extends JavaObject {
 	public idSchueler : number = -1;
 
 	/**
-	 * Das Datum, ab dem der Stundenpland gültig ist.
+	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins.
 	 */
-	public startzeit : string | null = null;
+	public startzeit : number | null = null;
 
 
 	public constructor() {
@@ -33,12 +33,12 @@ export class Schuelerklausur extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausuren.Schuelerklausur'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): Schuelerklausur {
+	public static transpilerFromJSON(json : string): GostSchuelerklausur {
 		const obj = JSON.parse(json);
-		const result = new Schuelerklausur();
+		const result = new GostSchuelerklausur();
 		if (typeof obj.idSchuelerklausur === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuelerklausur');
 		result.idSchuelerklausur = obj.idSchuelerklausur;
@@ -55,19 +55,19 @@ export class Schuelerklausur extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : Schuelerklausur) : string {
+	public static transpilerToJSON(obj : GostSchuelerklausur) : string {
 		let result = '{';
 		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
 		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
 		result += '"idTermin" : ' + obj.idTermin + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<Schuelerklausur>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausur>) : string {
 		let result = '{';
 		if (typeof obj.idSchuelerklausur !== "undefined") {
 			result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
@@ -82,7 +82,7 @@ export class Schuelerklausur extends JavaObject {
 			result += '"idSchueler" : ' + obj.idSchueler + ',';
 		}
 		if (typeof obj.startzeit !== "undefined") {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : '"' + obj.startzeit + '"') + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -91,6 +91,6 @@ export class Schuelerklausur extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausuren_Schuelerklausur(obj : unknown) : Schuelerklausur {
-	return obj as Schuelerklausur;
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostSchuelerklausur(obj : unknown) : GostSchuelerklausur {
+	return obj as GostSchuelerklausur;
 }

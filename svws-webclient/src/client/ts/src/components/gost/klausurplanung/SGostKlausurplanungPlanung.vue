@@ -16,15 +16,15 @@
 		<svws-ui-content-card title="&nbsp;">
 			<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
 			<div v-else>
-				<div class="flex flex-col flex-wrap gap-4 w-full">
-					<svws-ui-button type="primary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum</svws-ui-button>
-					<s-gost-klausurplanung-planung-raum v-for="raum in raummanager?.getKlausurraeume()"
-						:key="raum.id"
-						:stundenplanmanager="stundenplanmanager"
-						:raum="raum"
-						:manager="(raummanager as GostKlausurraumManager)"
-						:patch-klausurraum="patchKlausurraum" />
-				</div>
+				<s-gost-klausurplanung-planung-termin :termin="selectedTermin"
+					:kursklausurmanager="kursklausurmanager"
+					:faecher-manager="faecherManager"
+					:map-lehrer="mapLehrer"
+					:kursmanager="kursmanager"
+					:raummanager="(raummanager as GostKlausurraumManager)"
+					:stundenplanmanager="stundenplanmanager"
+					:erzeuge-klausurraum="erzeugeKlausurraum"
+					:patch-klausurraum="patchKlausurraum" />
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager } from '@core';
-	import { GostKlausurraum } from '@core';
+	import type { GostKlausurraum } from '@core';
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -46,15 +46,6 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
 	}>();
-
-	const erzeugeNeuenRaum = async () => {
-		if (selectedTermin.value === null)
-			return null;
-		let nR = new GostKlausurraum();
-		nR.idTermin = selectedTermin.value.id;
-		nR = await props.erzeugeKlausurraum(nR);
-		raummanager.value?.addKlausurraum(nR);
-	}
 
 	const raummanager = ref<GostKlausurraumManager | null>(null);
 
