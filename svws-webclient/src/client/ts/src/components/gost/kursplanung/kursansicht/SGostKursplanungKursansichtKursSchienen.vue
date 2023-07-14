@@ -54,14 +54,13 @@
 			<div v-if="istGesperrt" class="icon"> <i-ri-lock2-line class="inline-block" /> </div>
 		</div>
 	</div>
-	<s-gost-kursplanung-kursansicht-modal-regel-kurse v-model="isModalOpen_KurseZusammen" :get-datenmanager="getDatenmanager"
-		:kurs1-id="kurs1?.id" :kurs2-id="kurs.id" :add-regel="addRegel" />
+	<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager"
+		:kurs1-id="kurs1ID" :kurs2-id="kurs.id" :add-regel="addRegel" ref="modal" />
 </template>
 
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostBlockungsergebnisSchiene, List} from "@core";
-	import type { ComputedRef, Ref } from "vue";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
 	import { computed, ref } from "vue";
@@ -85,9 +84,10 @@
 		"update:modelValue": [drag_data: {kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined}];
 	}>();
 
-	const kurs_blockungsergebnis: ComputedRef<GostBlockungsergebnisKurs> = computed(() => props.getErgebnismanager().getKursE(props.kurs.id));
+	const modal = ref();
+	const kurs_blockungsergebnis = computed<GostBlockungsergebnisKurs>(() => props.getErgebnismanager().getKursE(props.kurs.id));
 
-	const selected_kurs: ComputedRef<boolean> = computed(() => {
+	const selected_kurs = computed<boolean>(() => {
 		const filter_kurs_id = props.schuelerFilter?.kurs?.value?.id;
 		return (kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === filter_kurs_id)
 	});
@@ -115,7 +115,7 @@
 		emit("update:modelValue", {kurs: undefined, schiene: undefined});
 	}
 
-	const is_drop_zone = computed(() => {
+	const is_drop_zone = computed<boolean>(() => {
 		if (!props.modelValue.kurs || !props.modelValue.schiene)
 			return false;
 		if ( (props.modelValue.kurs.id === props.kurs.id) && (kurs_schiene_zugeordnet.value) )
@@ -123,17 +123,15 @@
 		return true;
 	});
 
-	const isModalOpen_KurseZusammen: Ref<boolean> = ref(false);
-
-	let kurs1: GostBlockungsergebnisKurs | undefined = undefined;
+	const kurs1ID = ref(0);
 
 	async function drop_aendere_kursschiene(drag_data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, schiene: GostBlockungsergebnisSchiene) {
 		if (!drag_data.kurs || !drag_data.schiene || kurs_blockungsergebnis.value === undefined)
 			return;
 
 		if (drag_data.kurs.id !== kurs_blockungsergebnis.value.id) {
-			kurs1 = drag_data.kurs;
-			isModalOpen_KurseZusammen.value = true;
+			kurs1ID.value = drag_data.kurs.id;
+			modal.value.openModal();
 			return;
 		}
 
@@ -143,7 +141,6 @@
 				const s = props.getErgebnismanager().getSchieneG(schiene.id);
 				await fixieren_regel_entfernen(s);
 			}
-
 			await props.updateKursSchienenZuordnung(drag_data.kurs.id, drag_data.schiene.id, schiene.id);
 		}
 	}

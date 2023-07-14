@@ -10,6 +10,7 @@
 			:data="{schiene}"
 			class="select-none cursor-grab text-center"
 			:draggable="true"
+			@click="openModal"
 			@drag-start="drag_started"
 			@drag-end="emit('dnd', undefined)">
 			<span class="rounded w-3 absolute top-0 left-0">
@@ -18,7 +19,7 @@
 			<i-ri-lock-unlock-line class="inline-block" />
 		</svws-ui-drag-data>
 	</svws-ui-drop-data>
-	<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" v-model="isModalOpen_RegelSchienen" :von="von" :bis="bis" />
+	<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" :von="von" :bis="bis" ref="modal" />
 </template>
 
 <script setup lang="ts">
@@ -36,10 +37,10 @@
 	const emit = defineEmits<{
 		(e: 'dnd', data: { schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined): void;
 	}>()
-	const isModalOpen_RegelSchienen: Ref<boolean> = ref(false);
 
-	const von: Ref<GostBlockungSchiene> = ref(props.schiene)
-	const bis: Ref<GostBlockungSchiene> = ref(props.schiene)
+	const von: Ref<GostBlockungSchiene> = ref(props.schiene);
+	const bis: Ref<GostBlockungSchiene> = ref(props.schiene);
+	const modal = ref();
 
 	const is_drop_zone: ComputedRef<boolean> = computed(() => {
 		if (props.dragAndDropData === undefined)
@@ -51,14 +52,10 @@
 	});
 
 	function openModal(data: { schiene: GostBlockungSchiene | undefined, kurs?: undefined }) {
-		if (data === undefined || data.kurs !== undefined)
-			return;
-		if (data.schiene && props.schiene.id !== data.schiene.id) {
-			von.value = data.schiene;
-			bis.value = props.schiene;
-			isModalOpen_RegelSchienen.value = true;
-			data.schiene = undefined
-		}
+		von.value = data.schiene || props.schiene;
+		bis.value = props.schiene;
+		data.schiene = undefined;
+		modal.value.openModal();
 	}
 
 	function drag_started(e: DragEvent) {

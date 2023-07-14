@@ -20,13 +20,12 @@
 		restoreBlockung: () => Promise<void>;
 	}>();
 
-	const modal = ref();
-
 	async function activate_recovery() {
 		modal.value.closeModal();
 		await props.restoreBlockung();
 	}
 
+	const modal = ref();
 	const openModal = () => {
 		modal.value.openModal();
 	}

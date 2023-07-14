@@ -17,40 +17,24 @@
 <script setup lang="ts">
 
 	import type { GostBlockungSchiene} from "@core";
+	import type { ShallowRef} from "vue";
 	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@core";
-	import type { Ref, ShallowRef} from "vue";
-	import { ref, shallowRef, watch } from "vue";
+	import { ref, shallowRef } from "vue";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		modelValue: boolean;
 		von: GostBlockungSchiene;
 		bis: GostBlockungSchiene;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'update:modelValue', v: boolean): void;
-	}>()
-
-	const modal: Ref<any> = ref(null);
-
-	watch(() => props.modelValue, (newValue : boolean, oldValue : boolean) => {
-		if (newValue !== oldValue) {
-			if (newValue)
-				modal.value.openModal();
-			else
-				modal.value.closeModal();
-		}
-	});
-
-	function close() {
-		emit('update:modelValue', false);
-	}
+	const modal = ref();
+	const openModal = () => modal.value.openModal();
+	defineExpose({ openModal });
 
 	const kursart: ShallowRef<GostKursart> = shallowRef(GostKursart.GK)
 
 	async function regel_hinzufuegen(regeltyp: GostKursblockungRegelTyp) {
-		close();
+		modal.value.closeModal();
 		const regel = new GostBlockungRegel();
 		regel.typ = regeltyp.typ;
 		regel.parameter.add(kursart.value.id);
