@@ -4,7 +4,7 @@
 			<span class="text-headline-sm w-1/2">
 				{{ regelTyp.bezeichnung }}
 			</span>
-			<svws-ui-button @click="regel_hinzufuegen" type="secondary" size="small" :disabled="modelValue?.typ === regelTyp.typ" class="-mt-0.5">
+			<svws-ui-button @click="regel_hinzufuegen" type="secondary" size="small" :disabled="modelValue?.typ === regelTyp.typ" class="-mt-0.5" v-if="!disabled">
 				Regel <i-ri-add-circle-line class="-mr-1" />
 			</svws-ui-button>
 		</div>
@@ -12,9 +12,9 @@
 			<div class="cursor-pointer" :class="{'text-primary font-bold':r===modelValue}" @click="select_regel(r)">
 				<slot name="beschreibung" :regel="r" />
 			</div>
-			<svws-ui-button type="trash" @click="regel_entfernen(r)" />
+			<svws-ui-button type="trash" @click="regel_entfernen(r)" v-if="!disabled" />
 		</div>
-		<div v-if="modelValue?.typ === regelTyp.typ" class="px-3 pt-5 pb-3 -mx-3">
+		<div v-if="modelValue?.typ === regelTyp.typ && !disabled" class="px-3 pt-5 pb-3 -mx-3">
 			<div class="inline-flex items-center gap-2 w-full">
 				<slot />
 			</div>
@@ -39,6 +39,7 @@
 		modelValue: GostBlockungRegel | undefined;
 		regelTyp: GostKursblockungRegelTyp;
 		regeln: GostBlockungRegel[];
+		disabled: boolean;
 	}>()
 
 	const emit = defineEmits<{

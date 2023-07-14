@@ -1,6 +1,6 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)">
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
 		<template #beschreibung="{ regel: r }">
 			{{ GostKursart.fromID(r.parameter.get(0)).beschreibung }} alleine in Schiene {{ r.parameter.get(1) }} bis {{ r.parameter.get(2) }}
 		</template>
@@ -16,15 +16,16 @@
 <script setup lang="ts">
 
 	import type { GostBlockungRegel, GostBlockungSchiene} from "@core";
-	import { GostKursart, GostKursblockungRegelTyp } from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
 	import { useRegelParameterKursart, useRegelParameterSchiene } from '../composables';
+	import { GostKursart, GostKursblockungRegelTyp } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
 		schienen: GostBlockungSchiene[];
 		regeln: GostBlockungRegel[];
+		disabled: boolean;
 	}>();
 
 	const emit = defineEmits<{

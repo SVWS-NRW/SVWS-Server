@@ -12,26 +12,21 @@
 				:ergebnis-hochschreiben="ergebnisHochschreiben"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs">
 				<template #triggerRegeln>
-					<svws-ui-button @click="onToggle" :disabled="!allow_regeln" size="small" type="transparent">
+					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
 						<i-ri-settings3-line />
 						<span class="pr-1">Regeln zur Blockung</span>
-						<template #badge v-if="regelzahl">
-							{{ regelzahl }}
-						</template>
+						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 					</svws-ui-button>
 				</template>
 			</s-card-gost-kursansicht>
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
-				<aside class="app-layout--aside max-w-2xl h-auto" v-if="allow_regeln && !collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
+				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
 						<h2 class="text-headline-md flex justify-between pl-5 pt-4">
 							<span class="text-headline">Regeln zur Blockung</span>
-							<svws-ui-button type="transparent" @click="onToggle">
-								Schließen
-								<i-ri-close-line />
-							</svws-ui-button>
+							<svws-ui-button type="transparent" @click="onToggle"> Schließen <i-ri-close-line /> </svws-ui-button>
 						</h2>
 						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
 							:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" />
@@ -47,18 +42,14 @@
 </template>
 
 <script setup lang="ts">
-
-	import type { ComputedRef, Ref} from "vue";
-	import { computed, ref } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
+	import { computed, ref } from "vue";
 
 	const props = defineProps<GostKursplanungProps>();
 
-	const collapsed: Ref<boolean> = ref(true);
+	const collapsed = ref<boolean>(true);
 
-	const regelzahl: ComputedRef<number> = computed(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
-
-	const allow_regeln: ComputedRef<boolean> = computed(() => props.hatBlockung ? props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1 : false);
+	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;

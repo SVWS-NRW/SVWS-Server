@@ -1,7 +1,7 @@
 <template>
 	<div class="pl-5 pr-3 bg-light rounded-lg mb-3">
 		<div class="flex gap-4 px-3 pt-4 pb-3 -mx-3">
-			<svws-ui-toggle v-model="hatRegel">
+			<svws-ui-toggle v-model="hatRegel" :disabled="disabled">
 				{{ regel_typ.bezeichnung }}
 			</svws-ui-toggle>
 		</div>
@@ -10,11 +10,11 @@
 
 <script setup lang="ts">
 	import { GostBlockungRegel, GostKursblockungRegelTyp } from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		regeln: GostBlockungRegel[];
+		disabled: boolean;
 	}>();
 
 	const emit = defineEmits<{
@@ -25,7 +25,7 @@
 
 	const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN
 
-	const hatRegel: WritableComputedRef<boolean> = computed({
+	const hatRegel = computed<boolean>({
 		get: () => props.regeln.length === 0 ? false : true,
 		set: (val) => {
 			if (val === true) {
