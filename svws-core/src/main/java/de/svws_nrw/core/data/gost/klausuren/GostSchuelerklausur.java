@@ -23,7 +23,7 @@ public class GostSchuelerklausur {
 
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")
-	public long idTermin = -1;
+	public Long idTermin = null;
 
 	/** Das Zeitraster des Stundenplans. */
 	@Schema(description = "das Zeitraster des Stundenplans")

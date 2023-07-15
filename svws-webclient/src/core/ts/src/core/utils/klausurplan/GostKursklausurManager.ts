@@ -258,6 +258,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das GostKursklausur-Objekt zur übergebenen Id
+	 *
+	 * @param id die ID der Kursklausur
+	 *
+	 * @return das GostKursklausur-Objekt
+	 */
+	public getKursklausurById(id : number) : GostKursklausur {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKursklausur, id);
+	}
+
+	/**
 	 * Liefert das GostKursklausur-Objekt zum übergebenen Termin und Kurs
 	 *
 	 * @param idTermin die ID des Klausurtermins

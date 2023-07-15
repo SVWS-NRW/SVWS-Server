@@ -8,6 +8,7 @@
 				:map-lehrer="mapLehrer" />
 		</table>
 	</svws-ui-content-card>
+	Termin {{ termin.id }}
 	<div class="flex flex-col flex-wrap gap-4 w-full">
 		<svws-ui-button type="primary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum</svws-ui-button>
 		<s-gost-klausurplanung-planung-raum v-for="raum in raummanager?.getKlausurraeume()"
@@ -36,7 +37,8 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 	}>();
 
-	const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
+	//const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
+	const klausurenOhneRaum = props.raummanager.getKursklausuren(props.kursklausurmanager());
 
 	const erzeugeNeuenRaum = async () => {
 		let nR = new GostKlausurraum();

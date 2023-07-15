@@ -359,9 +359,10 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
 		const stunden = await api.server.getGostKlausurenRaumstundenTermin(api.schema, termin.id);
+		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausuren(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, stunden);
+		return new GostKlausurraumManager(raeume, stunden, schuelerklausuren);
 	}
 
 }

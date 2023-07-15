@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -39,22 +40,29 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		return this.getList();
 	}
 
-	/**
-	 * Gibt die Liste der Schuelerklausuren einer Jahrgangsstufe zu den gegebenen Kursklausuren zurück.
-	 *
-	 * @param kursKlausurIds die Liste der KlausurIds
-	 *
-	 * @return die Liste der Kursklausuren
-	 */
-	public Response getSchuelerKlausuren(final List<Long> kursKlausurIds) {
+	private List<GostSchuelerklausur> getSchuelerKlausuren(final long terminId) {
+		final List<Long> kursKlausurIds = conn
+				.queryNamed("DTOGostKlausurenKursklausuren.termin_id", terminId, DTOGostKlausurenKursklausuren.class)
+				.stream()
+				.map(k -> k.ID)
+				.distinct()
+				.toList();
+
 		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = conn
 				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursKlausurIds, DTOGostKlausurenSchuelerklausuren.class);
+
+		// Schuelerklausuren entfernen, die an anderem Termin stattfinden sollen.
+		listSchuelerklausuren.removeAll(listSchuelerklausuren.stream().filter(sk -> sk.Termin_ID != null && sk.Termin_ID != terminId).toList());
+
+		// Schuelerklausuren ohne zugehörige Kursklausur hinzufügen (z.B. Nachschreiber)
+		listSchuelerklausuren.addAll(conn
+				.queryNamed("DTOGostKlausurenSchuelerklausuren.termin_id", terminId, DTOGostKlausurenSchuelerklausuren.class));
 
 		final List<GostSchuelerklausur> daten = new ArrayList<>();
 		for (final DTOGostKlausurenSchuelerklausuren s : listSchuelerklausuren)
 			daten.add(dtoMapper.apply(s));
 
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 	/**
@@ -129,7 +137,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerKlausuren(id)).build();
 	}
 
 }

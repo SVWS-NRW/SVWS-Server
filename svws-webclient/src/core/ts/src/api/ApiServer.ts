@@ -58,6 +58,7 @@ import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbah
 import { GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
 import { GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
+import { GostSchuelerklausur } from '../core/data/gost/klausuren/GostSchuelerklausur';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
@@ -4427,6 +4428,61 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurraumstunde.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/{id : \d+}
+	 *
+	 * Patcht einen Gost-Schuelerklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Schuelerklausur besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Schuelerklausur integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schuelerklausuren zu ändern.
+	 *   Code 404: Kein Schuelerklausur-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostSchuelerklausur>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchGostKlausurenSchuelerklausur(data : Partial<GostSchuelerklausur>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = GostSchuelerklausur.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\d+}
+	 *
+	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Schuelerklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostSchuelerklausur>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Liste der Schuelerklausuren.
+	 */
+	public async getGostKlausurenSchuelerklausuren(schema : string, id : number) : Promise<List<GostSchuelerklausur>> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termin/{id : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostSchuelerklausur>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostSchuelerklausur.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

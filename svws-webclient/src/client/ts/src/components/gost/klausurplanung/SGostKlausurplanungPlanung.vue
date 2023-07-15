@@ -54,8 +54,8 @@
 			selectedTermin.value = null;
 			return;
 		}
-		selectedTermin.value = termin;
 		raummanager.value = await props.erzeugeKlausurraummanager(termin);
+		selectedTermin.value = termin;
 	}
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
