@@ -312,7 +312,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 */
 	public ergebnisGetListeSortiertNachBewertung() : List<GostBlockungsergebnisListeneintrag> {
-		return this._daten.ergebnisse;
+		const result : List<GostBlockungsergebnisListeneintrag> = new ArrayList(this._daten.ergebnisse);
+		return result;
 	}
 
 	/**

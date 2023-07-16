@@ -269,7 +269,8 @@ public class GostBlockungsdatenManager {
 	 * @return Eine sortierte Menge der {@link GostBlockungsergebnisListeneintrag} nach ihrer Bewertung.
 	 */
 	public @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> ergebnisGetListeSortiertNachBewertung() {
-		return _daten.ergebnisse;
+		final @NotNull List<@NotNull GostBlockungsergebnisListeneintrag> result = new ArrayList<>(_daten.ergebnisse);
+		return result;
 	}
 
 	/**
