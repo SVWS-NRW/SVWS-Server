@@ -18,6 +18,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -47,13 +48,18 @@ public final class DataStundenplan extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response get(final Long id) {
-		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+	/**
+	 * Gibt den Stundenplan zur angegebenen ID zurück.
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param id   die ID des Stundenplans
+	 *
+	 * @return das Stundenplan-Objekt
+	 */
+	public static Stundenplan getStundenplan(final @NotNull DBEntityManager conn, final long id) {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
+			return null;
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, id);
@@ -76,7 +82,17 @@ public final class DataStundenplan extends DataManager<Long> {
 		daten.pausenzeiten.addAll(pausenzeiten);
 		daten.aufsichtsbereiche.addAll(aufsichtsbereiche);
 		daten.kalenderwochenZuordnung.addAll(kalenderwochenzuordnung);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+		final Stundenplan stundenplan = DataStundenplan.getStundenplan(conn, id);
+		if (stundenplan == null)
+			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
 
