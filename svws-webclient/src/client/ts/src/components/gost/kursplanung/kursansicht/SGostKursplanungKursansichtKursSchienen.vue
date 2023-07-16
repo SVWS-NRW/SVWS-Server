@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-drop-data v-slot="{ active }" v-if="!blockungAktiv"
+	<svws-ui-drop-data v-if="!blockungAktiv" tag="div" role="cell" v-slot="{ active }"
 		class="data-table__td data-table__td__no-padding data-table__td__align-center"
 		:class="{
 			'bg-white/50': modelValue.kurs?.id === kurs.id && modelValue.schiene?.id !== schiene.id,
@@ -7,25 +7,16 @@
 			'data-table__td__disabled': schiene_verboten,
 		}"
 		:style="{'background-color': schiene_verboten ? bgColorNichtMoeglich : ''}"
-		tag="div"
-		role="cell"
-		:drop-allowed="is_drop_zone"
-		@drop="drop_aendere_kursschiene($event, schiene)">
-		<svws-ui-drag-data v-if="kurs_schiene_zugeordnet"
-			:key="kurs.id"
-			tag="div"
-			:data="{kurs, schiene}"
+		:drop-allowed="is_drop_zone" @drop="drop_aendere_kursschiene($event, schiene)">
+		<svws-ui-drag-data v-if="kurs_schiene_zugeordnet" tag="div" :draggable="true" :key="kurs.id" :data="{kurs, schiene}"
 			class="select-none w-full h-full rounded flex items-center justify-center relative group text-black"
-			:draggable="true"
 			:class="{
 				'bg-light text-primary font-bold': selected_kurs,
 				'bg-light/75': !selected_kurs,
 				'p-0.5': !active && !is_drop_zone,
 				'p-0': active || is_drop_zone,
 			}"
-			@drag-start="drag_started"
-			@drag-end="drag_ended"
-			@click="toggle_active_kurs">
+			@drag-start="drag_started" @drag-end="drag_ended" @click="toggle_active_kurs">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
 			<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 				<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
@@ -45,17 +36,15 @@
 		</div>
 	</svws-ui-drop-data>
 	<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
-		<div v-if="kurs_schiene_zugeordnet"
+		<div v-if="kurs_schiene_zugeordnet" @click="toggle_active_kurs"
 			class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
-			:class="{'bg-light text-primary font-bold border border-black/50': selected_kurs, 'bg-white/50 border border-black/25': !selected_kurs}"
-			@click="toggle_active_kurs">
+			:class="{'bg-light text-primary font-bold border border-black/50': selected_kurs, 'bg-white/50 border border-black/25': !selected_kurs}">
 			{{ kurs_blockungsergebnis?.schueler.size() }}
 			<div class="icon absolute right-1" v-if="istFixiert"> <i-ri-pushpin-fill class="inline-block" /> </div>
 			<div v-if="istGesperrt" class="icon"> <i-ri-lock2-line class="inline-block" /> </div>
 		</div>
 	</div>
-	<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager"
-		:kurs1-id="kurs1ID" :kurs2-id="kurs.id" :add-regel="addRegel" ref="modal" />
+	<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :kurs1-id="kurs1ID" :kurs2-id="kurs.id" :add-regel="addRegel" ref="modal" />
 </template>
 
 <script setup lang="ts">

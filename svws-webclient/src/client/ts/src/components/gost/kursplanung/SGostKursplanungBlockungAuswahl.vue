@@ -1,6 +1,7 @@
 <template>
 	<template v-if="visible">
-		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :columns="[{ key: 'name', label: 'Blockung' }]" :items="rows" class="mt-10">
+		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl"
+			:items="mapBlockungen().values()" :columns="[{ key: 'name', label: 'Blockung' }]" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
 				<div class="flex justify-between w-full items-start">
 					<div class="flex items-center gap-1">
@@ -9,16 +10,14 @@
 								{{ row.name }}
 							</span>
 							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
-								@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false" @update:model-value="(value) => patch_blockung(String(value), (row as unknown as GostBlockungListeneintrag).id)" />
+								@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false"
+								@update:model-value="(value) => patch_blockung(String(value), row.id)" />
 						</div>
 						<div v-else>
 							<span>{{ row.name }}</span>
 						</div>
 						<svws-ui-tooltip v-if="row.istAktiv" position="right">
-							<i-ri-pushpin-line />
-							<template #content>
-								Aktivierte Blockung
-							</template>
+							<i-ri-pushpin-line /> <template #content> Aktivierte Blockung </template>
 						</svws-ui-tooltip>
 					</div>
 					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="inline-flex gap-1 h-5">
@@ -74,13 +73,6 @@
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 		restoreBlockung: () => Promise<void>;
 	}>();
-
-	const rows: ComputedRef<GostBlockungListeneintrag[]> = computed(() => {
-		const result: GostBlockungListeneintrag[] = [];
-		for (const bl of props.mapBlockungen().values())
-			result.push(bl);
-		return result;
-	});
 
 	const edit_blockungsname: Ref<boolean> = ref(false);
 

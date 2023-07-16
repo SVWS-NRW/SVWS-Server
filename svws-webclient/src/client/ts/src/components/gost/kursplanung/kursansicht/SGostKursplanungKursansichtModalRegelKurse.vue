@@ -6,8 +6,8 @@
 				Sollen die Kurse {{ getDatenmanager().kursGetName(kurs1Id) }} und {{ getDatenmanager().kursGetName(kurs2Id) }} immer oder nie zusammen auf einer Schiene liegen?
 			</div>
 			<div class="flex gap-1">
-				<svws-ui-button @click="regelImmerZusammen">Immer</svws-ui-button>
-				<svws-ui-button @click="regelNieZusammen">Nie</svws-ui-button>
+				<svws-ui-button @click="regelImmerZusammen"> Immer </svws-ui-button>
+				<svws-ui-button @click="regelNieZusammen"> Nie </svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
