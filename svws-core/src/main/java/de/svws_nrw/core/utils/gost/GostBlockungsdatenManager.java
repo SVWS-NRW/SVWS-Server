@@ -644,8 +644,10 @@ public class GostBlockungsdatenManager {
 		final int nummer = schieneGet(idSchiene).nummer;
 		final int kursart = kursGet(idKurs).kursart;
 
+		// KURSART_ALLEIN_IN_SCHIENEN_VON_BIS
+		// Zugriff ist O(1) durch "regelGetListeOfTyp" und da jede Regel dieses Typs getestet werden muss.
 		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
-			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) { // Nummer innerhalb des Intervalls.
+			if (nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2)) { // Schiene im Intervall?
 				if (regel.parameter.get(0) != kursart)
 					return true;
 			} else {
@@ -653,8 +655,10 @@ public class GostBlockungsdatenManager {
 					return true;
 			}
 
+		// KURSART_SPERRE_SCHIENEN_VON_BIS
+		// Zugriff ist O(1) durch "regelGetListeOfTyp" und da jede Regel dieses Typs getestet werden muss.
 		for (final @NotNull GostBlockungRegel regel :  regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			if ((nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2))  // Nummer innerhalb des Intervalls.
+			if ((nummer >= regel.parameter.get(1) && nummer <= regel.parameter.get(2))  // Schiene im Intervall?
 				&& (regel.parameter.get(0) == kursart))
 					return true;
 
