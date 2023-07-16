@@ -43,7 +43,7 @@ public class Tabelle_Gost_Klausuren_Raeume_Stunden extends SchemaTabelle {
 			"Gost_Klausuren_Raeume_Stunden_Zeitraster_ID_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Zeitraster_ID, Schema.tab_Katalog_Zeitraster.col_ID)
+			new Pair<>(col_Zeitraster_ID, Schema.tab_Stundenplan_Zeitraster.col_ID)
 		);
 
 	/** Die Definition des Unique-Index Gost_Klausuren_Raueme_Stunden_UC1 */
