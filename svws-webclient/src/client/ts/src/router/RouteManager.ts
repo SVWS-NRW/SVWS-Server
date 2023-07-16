@@ -46,6 +46,11 @@ export class RouteManager {
 		const manager = RouteManager._instance;
 		if (manager === undefined)
 			throw new Error("Unzulässiger Zugriff auf den RouteManager bevor eine Instanz erzeugt wurde.");
+		// Ignoriere Aufruf, wenn der manager bereits in einem Routing-Vorgang ist. Dies kann sonst das aktuelle Routing canceln
+		// und zu ungültigen Zuständen führen
+		if (manager.active)
+			return;
+		// Führe das Routing durch...
 		await manager.router.push(to);
 	}
 
