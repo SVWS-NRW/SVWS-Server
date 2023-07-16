@@ -170,6 +170,7 @@ export { GostKlausurtermin } from './core/data/gost/klausuren/GostKlausurtermin'
 export { GostKlausurvorgabe } from './core/data/gost/klausuren/GostKlausurvorgabe';
 export { GostKursklausur } from './core/data/gost/klausuren/GostKursklausur';
 export { GostSchuelerklausur } from './core/data/gost/klausuren/GostSchuelerklausur';
+export { GostSchuelerklausurraumstunde } from './core/data/gost/klausuren/GostSchuelerklausurraumstunde';
 export { JahrgangsDaten } from './core/data/jahrgang/JahrgangsDaten';
 export { JahrgangsKatalogEintrag } from './core/data/jahrgang/JahrgangsKatalogEintrag';
 export { JahrgangsKatalogEintragBezeichnung } from './core/data/jahrgang/JahrgangsKatalogEintragBezeichnung';

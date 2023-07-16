@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,7 +64,11 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final List<GostKursklausur> daten = new ArrayList<>();
 
 		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
+				.setParameter("jgid", _abiturjahr)
+				.setParameter("hj", GostHalbjahr.fromID(halbjahr))
+				.getResultList()
+				.stream()
+				.collect(Collectors.toMap(v -> v.ID, v -> v));
 
 		if (mapVorgaben.isEmpty()) {
 			// TODO Errorhandling nötig?
@@ -103,6 +108,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return daten;
 	}
 
+
+
+
 	/**
 	 * TODO
 	 *
@@ -133,9 +141,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public static Function5<DTOGostKlausurenKursklausuren, GostKlausurvorgabe, DTOKurs, List<DTOGostKlausurenSchuelerklausuren>, GostKursklausur> dtoMapper = (final DTOGostKlausurenKursklausuren k,
 			final GostKlausurvorgabe v, final DTOKurs kurs, final List<DTOGostKlausurenSchuelerklausuren> sKlausuren) -> {
-		final GostKursklausur kk = new GostKursklausur();
-		kk.id = k.ID;
-		kk.idVorgabe = k.Vorgabe_ID;
+		final GostKursklausur kk = DataGostKlausurenKursklausur.dtoMapper2.apply(k);
 		kk.abijahr = v.abiJahrgang;
 		kk.auswahlzeit = v.auswahlzeit;
 		kk.bemerkungVorgabe = v.bemerkungVorgabe;
@@ -144,7 +150,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.idFach = v.idFach;
 		kk.quartal = v.quartal;
 		kk.halbjahr = v.halbjahr;
-		kk.idKurs = k.Kurs_ID;
 		kk.kursKurzbezeichnung = kurs.KurzBez;
 		kk.idLehrer = kurs.Lehrer_ID;
 		try {
@@ -155,13 +160,26 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			// TODO ExceptionHandling?
 		}
-		kk.idTermin = k.Termin_ID;
 		kk.istAudioNotwendig = v.istAudioNotwendig;
 		kk.istMdlPruefung = v.istMdlPruefung;
 		kk.istVideoNotwendig = v.istVideoNotwendig;
-		kk.startzeit = k.Startzeit;
 		if (sKlausuren != null)
 			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();
+		return kk;
+	};
+
+	/**
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
+	 * {@link DTOGostKlausurenKursklausuren} in einen Core-DTO
+	 * {@link GostKursklausur}.
+	 */
+	public static final Function<DTOGostKlausurenKursklausuren, GostKursklausur> dtoMapper2 = (final DTOGostKlausurenKursklausuren k) -> {
+		final GostKursklausur kk = new GostKursklausur();
+		kk.id = k.ID;
+		kk.idVorgabe = k.Vorgabe_ID;
+		kk.idKurs = k.Kurs_ID;
+		kk.idTermin = k.Termin_ID;
+		kk.startzeit = k.Startzeit;
 		return kk;
 	};
 

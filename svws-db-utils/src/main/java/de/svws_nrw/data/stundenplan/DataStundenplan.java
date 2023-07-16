@@ -18,7 +18,6 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -56,7 +55,7 @@ public final class DataStundenplan extends DataManager<Long> {
 	 *
 	 * @return das Stundenplan-Objekt
 	 */
-	public static Stundenplan getStundenplan(final @NotNull DBEntityManager conn, final long id) {
+	public static Stundenplan getStundenplan(final DBEntityManager conn, final long id) {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
 			return null;

@@ -1,6 +1,7 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenKalenderinformation;
@@ -17,6 +18,7 @@ import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenKursklausur;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaum;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenRaumstunde;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausur;
+import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenSchuelerklausurraumstunde;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenTermin;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausurenVorgabe;
 import de.svws_nrw.db.DBEntityManager;
@@ -737,9 +739,38 @@ public class APIGostKlausuren {
     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurraumstunde zu löschen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteGostKlausurenRaumStunde(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+	public Response deleteGostKlausurenRaumStunde(@PathParam("schema") final String schema,
+			@PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) { // TODO Anpassung der Benutzerrechte
 			return (new DataGostKlausurenRaumstunde(conn)).delete(id);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param schema     das Datenbankschema
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param raumid         die Id des Klausurraums
+	 * @param schuelerklausurIds         die Ids der GostSchuelerklausuren
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/schuelerklausuren/zuraum/{raumid : -?\\d+}")
+	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurraumstunde.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response setzeRaumZuSchuelerklausuren(@PathParam("schema") final String schema,
+			@PathParam("raumid") final long raumid,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerklausurIds,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).setzeRaumZuSchuelerklausuren(raumid, schuelerklausurIds);
 		}
 	}
 

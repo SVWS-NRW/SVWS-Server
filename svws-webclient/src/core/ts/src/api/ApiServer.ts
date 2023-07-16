@@ -4487,6 +4487,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setzeRaumZuSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\d+}
+	 *
+	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurraumstunde
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} raumid - der Pfad-Parameter raumid
+	 *
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 */
+	public async setzeRaumZuSchuelerklausuren(data : List<number>, schema : string, raumid : number) : Promise<GostKlausurraumstunde> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{raumid\s*(:[^}]+)?}/g, raumid.toString());
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurraumstunde.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}
 	 *
 	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
