@@ -230,7 +230,7 @@ public class GostBlockungsergebnisManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_kollisionen, gSchueler.id, 0);
 			// Map: schuelerID --> (fachID --> Kurs)
 			// _map2D_schuelerID_fachID_kurs nicht nötig
-			// _map2D_schuelerID_schienenID_kurse nicht nötig
+			// _map2D_schuelerID_schienenID_kurse nicht nötig --> wird später in der Schüler-Schienen-Schleife initialisiert.
 		}
 
 		// _map2D_schuelerID_fachID_kurs: Fachwahlen kopieren und hinzufügen
@@ -1043,7 +1043,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
+	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 *
@@ -1090,7 +1090,7 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
 	 */
 	public boolean getOfSchuelerHatKollision(final long idSchueler) {
-		return getOfSchuelerAnzahlKollisionen(idSchueler) > 0;
+		return DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kollisionen, idSchueler) > 0;
 	}
 
 	/**
@@ -1464,6 +1464,30 @@ public class GostBlockungsergebnisManager {
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull Set<@NotNull GostBlockungsergebnisKurs>> getOfSchuelerMapIDzuUngueltigeKurse() {
 		return _map_schuelerID_ungueltige_kurse;
+	}
+
+
+	/**
+	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.<br>
+	 * Die Methode geht davon aus, dass der Schüler dem Kurs zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.
+	 */
+	public boolean getOfSchuelerOfKursHatKollision(final long idSchueler, final long idKurs) {
+		// Schnelltest, ob der Schüler überhaupt eine Kollision hat.
+		if (!getOfSchuelerHatKollision(idSchueler))
+			return false;
+
+		// Überprüfe, ob die Schienen des Kurses beim Schüler mehrfachbelegt sind.
+		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
+		for (final @NotNull Long idSchiene : kurs.schienen)
+			if (getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene).size() > 1)
+				return true;
+
+		return false;
 	}
 
 	// #########################################################################

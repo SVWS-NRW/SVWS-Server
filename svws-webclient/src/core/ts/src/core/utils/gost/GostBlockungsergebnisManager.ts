@@ -953,7 +953,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat. <br>
+	 * Liefert TRUE, falls der Schüler mindestens eine Nichtwahl hat.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 *
@@ -999,7 +999,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler mindestens eine Kollision hat.
 	 */
 	public getOfSchuelerHatKollision(idSchueler : number) : boolean {
-		return this.getOfSchuelerAnzahlKollisionen(idSchueler) > 0;
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kollisionen, idSchueler) > 0;
 	}
 
 	/**
@@ -1345,6 +1345,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerMapIDzuUngueltigeKurse() : JavaMap<number, JavaSet<GostBlockungsergebnisKurs>> {
 		return this._map_schuelerID_ungueltige_kurse;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.<br>
+	 * Die Methode geht davon aus, dass der Schüler dem Kurs zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.
+	 */
+	public getOfSchuelerOfKursHatKollision(idSchueler : number, idKurs : number) : boolean {
+		if (!this.getOfSchuelerHatKollision(idSchueler))
+			return false;
+		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
+		for (const idSchiene of kurs.schienen)
+			if (this.getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene!).size() > 1)
+				return true;
+		return false;
 	}
 
 	/**

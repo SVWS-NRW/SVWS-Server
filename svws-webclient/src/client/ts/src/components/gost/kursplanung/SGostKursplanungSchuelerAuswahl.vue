@@ -125,7 +125,7 @@
 		const kursid = props.schuelerFilter.kurs.value?.id;
 		if (kursid === undefined)
 			return props.getErgebnismanager().getOfSchuelerHatKollision(idSchueler);
-		return props.getErgebnismanager().getOfKursSchuelermengeMitKollisionen(kursid).contains(idSchueler);
+		return props.getErgebnismanager().getOfSchuelerOfKursHatKollision(idSchueler, kursid);
 	});
 
 	const nichtwahl = (idSchueler: number) : ComputedRef<boolean> => computed(() =>
