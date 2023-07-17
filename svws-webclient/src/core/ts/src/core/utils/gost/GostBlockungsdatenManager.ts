@@ -42,6 +42,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _faecherManager : GostFaecherManager;
 
 	/**
+	 * Ein Comparator für Kurse der Blockung. Dieser vergleicht nur die Kursnummern!
+	 */
+	private static readonly _compKursnummer : Comparator<GostBlockungKurs> = { compare : (a: GostBlockungKurs, b: GostBlockungKurs) => JavaInteger.compare(a.nummer, b.nummer) };
+
+	/**
 	 * Ein Comparator für Schienen der Blockung
 	 */
 	private static readonly _compSchiene : Comparator<GostBlockungSchiene> = { compare : (a: GostBlockungSchiene, b: GostBlockungSchiene) => JavaInteger.compare(a.nummer, b.nummer) };
@@ -103,6 +108,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Kurse anhand ihrer Datenbank-ID.
 	 */
 	private readonly _map_idKurs_kurs : HashMap<number, GostBlockungKurs> = new HashMap();
+
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Listen der Kurse, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs.
+	 */
+	private readonly _map2d_idFach_idKursart_kurse : HashMap2D<number, number, List<GostBlockungKurs>> = new HashMap2D();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID.
@@ -499,6 +509,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifGreater("pKurs.anzahlSchienen", kurs.anzahlSchienen, nSchienen);
 		DeveloperNotificationException.ifSmaller("pKurs.nummer", kurs.nummer, 1);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKurs_kurs, kurs.id, kurs);
+		let tmpKurse : List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(kurs.fach_id, kurs.kursart);
+		if (tmpKurse === null) {
+			tmpKurse = new ArrayList();
+			this._map2d_idFach_idKursart_kurse.put(kurs.fach_id, kurs.kursart, tmpKurse);
+		}
+		tmpKurse.add(kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_fach_kursart_kursnummer", this._list_kurse_sortiert_fach_kursart_kursnummer, kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_kursart_fach_kursnummer", this._list_kurse_sortiert_kursart_fach_kursnummer, kurs);
 		this._daten.kurse.add(kurs);
@@ -630,6 +646,23 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine nach Kursnummer sortiere Liste der Kurse für das angegebenen Fach und die
+	 * angegegebene Kursart.
+	 *
+	 * @param idFach      die ID des Fachs
+	 * @param idKursart   die ID der Kursart
+	 *
+	 * @return die sortiere Liste der Kurse für das Fach und die Kursart
+	 */
+	public kursGetListeByFachUndKursart(idFach : number, idKursart : number) : List<GostBlockungKurs> {
+		const liste : List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
+		if (liste === null)
+			return new ArrayList();
+		liste.sort(GostBlockungsdatenManager._compKursnummer);
+		return liste;
+	}
+
+	/**
 	 * Liefert alle Lehrkräfte eines Kurses sortiert nach {@link GostBlockungKursLehrer#reihenfolge}.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
@@ -754,6 +787,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
+		const tmpKurse : List<GostBlockungKurs> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
+		tmpKurse.remove(kurs);
+		if (tmpKurse.isEmpty())
+			this._map2d_idFach_idKursart_kurse.removeOrException(kurs.fach_id, kurs.kursart);
 		this._map_idKurs_kurs.remove(idKurs);
 		this._daten.kurse.remove(kurs);
 	}

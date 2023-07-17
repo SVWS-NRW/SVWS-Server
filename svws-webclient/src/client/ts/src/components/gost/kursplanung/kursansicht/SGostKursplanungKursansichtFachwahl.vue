@@ -1,5 +1,5 @@
 <template>
-	<template v-if="kurszahlen.get(kursart.id) === 0 && wahlen.get(kursart.id) && allowRegeln">
+	<template v-if="getDatenmanager().kursGetListeByFachUndKursart(fach.id, kursart.id).isEmpty() && wahlen.get(kursart.id) && allowRegeln">
 		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled-light" :style="{ 'background-color': bgColor }" :key="kursart.id">
 			<div role="cell" class="data-table__td" />
 			<div role="cell" class="data-table__td text-black/50">
@@ -25,7 +25,7 @@
 		</div>
 	</template>
 	<template v-else>
-		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in vorhandene_kurse(kursart)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
+		<s-gost-kursplanung-kursansicht-kurs v-for="kurs in getDatenmanager().kursGetListeByFachUndKursart(fach.id, kursart.id)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
 			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager"
 			:hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -70,15 +70,7 @@
 		allowRegeln: boolean;
 	}>();
 
-	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
-		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB()}, rgb(75,75,75)`);*/
-
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
-
-	// const selected_fachwahl: ComputedRef<boolean> = computed(() => {
-	// 	const filter_fach_id = props.schuelerFilter?.fach?.value;
-	// 	return (kurs_blockungsergebnis.value !== undefined) && (kurs_blockungsergebnis.value?.id === filter_kurs_id)
-	// });
 
 	function toggle_active_fachwahl() {
 		if (props.schuelerFilter === undefined)
@@ -90,36 +82,6 @@
 		else
 			props.schuelerFilter.reset();
 	}
-
-	const kurszahlen: ComputedRef<Map<number, number>> = computed(() => {
-		const kurszahlen : Map<number, number> = new Map();
-		for (const kursart of GostKursart.values())
-			kurszahlen.set(kursart.id, 0);
-		for (const k of sorted_kurse.value) {
-			if (k.fach_id !== props.fach.id)
-				continue;
-			let anzahl = kurszahlen.get(k.kursart);
-			anzahl = (anzahl === undefined) ? 1 : anzahl + 1;
-			kurszahlen.set(k.kursart, anzahl);
-		}
-		return kurszahlen;
-	});
-
-	function vorhandene_kurse(kursart: GostKursart): GostBlockungKurs[] {
-		const liste = [];
-		for (const kurs of sorted_kurse.value)
-			if (kurs.fach_id === props.fach.id && kurs.kursart === kursart.id)
-				liste.push(kurs);
-		return liste;
-	}
-
-	const sort_by: ComputedRef<string> = computed(() => props.config.getValue('gost.kursansicht.sortierung'));
-
-	const sorted_kurse: ComputedRef<List<GostBlockungKurs>> = computed(() => {
-		if (sort_by.value === 'kursart')
-			return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
-		else return props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
-	})
 
 	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().schieneGetListe())
 

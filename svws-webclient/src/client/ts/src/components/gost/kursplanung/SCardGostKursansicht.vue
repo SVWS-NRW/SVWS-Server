@@ -34,8 +34,7 @@
 				</svws-ui-tooltip>
 			</h3>
 		</div>
-		<svws-ui-data-table :items="GostKursart.values()"
-			:columns="cols" disable-footer>
+		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
