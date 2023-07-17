@@ -1,29 +1,30 @@
 <template>
 	<svws-ui-content-card overflow-scroll class="-mt-0.5">
-		<svws-ui-data-table :model-value="filtered" v-model:clicked="selected" clickable :items="undefined"
-			:filter="true" :filter-reverse="false"
+		<svws-ui-data-table :model-value="schuelerFilter.filtered.value" v-model:clicked="selected" clickable :items="undefined"
+			:filter="true" :filter-reverse="false" :filter-hide="false" :filter-open="true"
 			:no-data="schuelerFilter.filtered.value.length <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
 			<template #search>
 				<div class="mb-1 3xl:mb-0.5">
-					<svws-ui-text-input type="search" v-model="schuelerFilter.name.value" placeholder="Suche" />
+					<svws-ui-text-input type="search" v-model="schuelerFilter.name" placeholder="Suche" />
 				</div>
 			</template>
 			<template #filter>
 				<svws-ui-radio-group class="radio--row col-span-full">
-					<svws-ui-radio-option v-model="kurs_filter_toggle" :value="!kurs_filter_toggle" name="Filter" label="Kursfilter" :force-checked="kurs_filter_toggle ?? false">
+					<svws-ui-radio-option v-model="schuelerFilter.kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter">
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="fach_filter_toggle" :value="!fach_filter_toggle" name="FilterFa" label="Fachfilter" :force-checked="fach_filter_toggle ?? false">
+					<svws-ui-radio-option v-model="schuelerFilter.fach_toggle.value" value="fach" name="Fach" label="Fachfilter">
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
+					<svws-ui-radio-option v-model="schuelerFilter.alle_toggle.value" value="alle" name="Alle" label="Alle" :icon="false" />
 				</svws-ui-radio-group>
-				<svws-ui-input-wrapper class="col-span-full" v-if="kurs_filter_toggle">
-					<svws-ui-multi-select v-model="schuelerFilter.kurs.value" :items="schuelerFilter.getKurse()"
+				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter.kurs_toggle.value === 'kurs'">
+					<svws-ui-multi-select v-model="schuelerFilter.kurs" :items="schuelerFilter.getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</svws-ui-input-wrapper>
-				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="fach_filter_toggle">
+				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="schuelerFilter.fach_toggle.value === 'fach'">
 					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
-					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart.value" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
+					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">
@@ -85,6 +86,9 @@
 					</div>
 				</div>
 			</template>
+			<template #footer>
+				M: {{ schuelerFilter.statistics.value.m }} W: {{ schuelerFilter.statistics.value.w }} D: {{ schuelerFilter.statistics.value.d }} X: {{ schuelerFilter.statistics.value.x }} muendl: {{ schuelerFilter.statistics.value.muendlich }} schriftl: {{ schuelerFilter.statistics.value.schriftlich }}
+			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-ungueltige-kurswahl-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" />
 	</svws-ui-content-card>
@@ -100,21 +104,17 @@
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
-	const kurs_filter_toggle = props.schuelerFilter.kurs_filter_toggle();
-	const fach_filter_toggle = props.schuelerFilter.fach_filter_toggle();
 	const radio_filter = props.schuelerFilter.radio_filter();
 
 	const fach: WritableComputedRef<GostFach|undefined> = computed({
 		get: () => {
 			for (const fach of props.faecherManager.faecher())
-				if (fach.id === props.schuelerFilter.fach.value)
+				if (fach.id === props.schuelerFilter.fach)
 					return fach;
 			return undefined
 		},
-		set: (value) => props.schuelerFilter.fach.value = value?.id
+		set: (value) => props.schuelerFilter.fach = value?.id
 	})
-
-	const filtered = computed(()=> [...props.schuelerFilter.filtered.value.values()]);
 
 	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = computed({
 		get: () => props.schueler,
@@ -122,7 +122,7 @@
 	});
 
 	const kollision = (idSchueler: number) : ComputedRef<boolean> => computed(() => {
-		const kursid = props.schuelerFilter.kurs.value?.id;
+		const kursid = props.schuelerFilter.kurs?.id;
 		if (kursid === undefined)
 			return props.getErgebnismanager().getOfSchuelerHatKollision(idSchueler);
 		return props.getErgebnismanager().getOfSchuelerOfKursHatKollision(idSchueler, kursid);

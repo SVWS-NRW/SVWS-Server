@@ -69,9 +69,9 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-line class="invisible absolute right-0 group-hover:visible opacity-25" />
+						<i-ri-filter-line class="absolute right-0" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-primary' : 'invisible group-hover:visible opacity-25'" />
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz" @click="toggle_active_fachwahl(kurs)" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
+					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
 						{{ kursdifferenz(kurs).value[1] }}
 					</div>
 				</template>
@@ -192,9 +192,9 @@
 	function toggleSchuelerFilterFachwahl(idFach: number, kursart: GostKursart) {
 		if (props.schuelerFilter === undefined)
 			return;
-		if (props.schuelerFilter.fach.value !== idFach) {
-			props.schuelerFilter.kursart.value = kursart;
-			props.schuelerFilter.fach.value = idFach;
+		if (props.schuelerFilter.fach !== idFach) {
+			props.schuelerFilter.kursart = kursart;
+			props.schuelerFilter.fach = idFach;
 		} else {
 			props.schuelerFilter.reset();
 		}
@@ -238,9 +238,9 @@
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
 		if (props.schuelerFilter === undefined)
 			return;
-		if (props.schuelerFilter.fach.value !== kurs.fach_id) {
-			props.schuelerFilter.kursart.value = GostKursart.fromID(kurs.kursart);
-			props.schuelerFilter.fach.value = kurs.fach_id;
+		if (props.schuelerFilter.fach !== kurs.fach_id) {
+			props.schuelerFilter.kursart = GostKursart.fromID(kurs.kursart);
+			props.schuelerFilter.fach = kurs.fach_id;
 		}
 		else
 			props.schuelerFilter.reset();
@@ -332,15 +332,15 @@
 
 	const istKursAusgewaehlt = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
 		const k = props.getErgebnismanager().getKursE(kurs.id);
-		const filter_kurs_id = props.schuelerFilter?.kurs?.value?.id;
+		const filter_kurs_id = props.schuelerFilter?.kurs?.id;
 		return (k !== undefined) && (k.id === filter_kurs_id);
 	});
 
 	function toggleKursAusgewaehlt(kurs : GostBlockungKurs) {
 		if (props.schuelerFilter === undefined)
 			return;
-		if (props.schuelerFilter.kurs.value?.id !== kurs.id)
-			props.schuelerFilter.kurs.value = kurs;
+		if (props.schuelerFilter.kurs?.id !== kurs.id)
+			props.schuelerFilter.kurs = kurs;
 		else
 			props.schuelerFilter.reset();
 	}
