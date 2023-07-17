@@ -56,7 +56,7 @@ public class GostKlausurraumManager {
 	 * @param stunden   die Liste der GostKlausurraumstunden eines Gost-Klausurtermins
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des Gost-Klausurtermins
 	 */
-	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> stunden, @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> stunden, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
 		for (final @NotNull GostKlausurraum r : raeume)
 			addKlausurraum(r);
 		for (final @NotNull GostKlausurraumstunde s : stunden)
@@ -139,7 +139,7 @@ public class GostKlausurraumManager {
 	 * @return die Liste der GostKursklausuren
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(final @NotNull GostKursklausurManager manager) {
-		List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
+		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		for (final long kkId : _mapKkidSk.keySet()) {
 			kursklausuren.add(manager.getKursklausurById(kkId));
 		}

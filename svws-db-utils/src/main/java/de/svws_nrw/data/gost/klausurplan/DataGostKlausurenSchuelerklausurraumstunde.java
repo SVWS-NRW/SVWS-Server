@@ -16,7 +16,6 @@ import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurraumstunde;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.klausurplan.GostKlausurvorgabenManager;
 import de.svws_nrw.core.utils.klausurplan.GostKursklausurManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
@@ -59,6 +58,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		return this.getList();
 	}
 
+	/**
+	 * TODO
+	 *
+	 * @param idRaum   TODO
+	 * @param idsSchuelerklausuren   TODO
+	 *
+	 * @return TODO
+	 */
 	public Response setzeRaumZuSchuelerklausuren(final long idRaum, final List<Long> idsSchuelerklausuren) {
 		// Raum und Termin holen
 		final DTOGostKlausurenRaeume raum = conn.queryByKey(DTOGostKlausurenRaeume.class, idRaum);
