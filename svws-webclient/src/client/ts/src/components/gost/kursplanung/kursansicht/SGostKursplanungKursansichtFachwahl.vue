@@ -210,7 +210,7 @@
 	const tmp_name = ref("");
 	const kursdetail_anzeige = ref<boolean>(false);
 
-	const drag_data = ref<{ kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined }>({schiene: undefined, kurs: undefined})
+	const dragDataKursSchiene = ref<{ kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined }>({schiene: undefined, kurs: undefined})
 
 	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
@@ -350,25 +350,25 @@
 		const data = JSON.parse(transfer?.getData('text/plain') || "") as { kurs: GostBlockungKurs; schiene: GostBlockungSchiene } | undefined;
 		if (!data)
 			return;
-		drag_data.value = data;
+		dragDataKursSchiene.value = data;
 	}
 
 	function dragKursEnded() {
-		drag_data.value = {kurs: undefined, schiene: undefined};
+		dragDataKursSchiene.value = {kurs: undefined, schiene: undefined};
 	}
 
 	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (drag_data.value.kurs !== undefined) && (drag_data.value.schiene !== undefined) && (drag_data.value.kurs.id === kurs.id) && (drag_data.value.schiene.id !== schiene.id);
+		return (dragDataKursSchiene.value.kurs !== undefined) && (dragDataKursSchiene.value.schiene !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id !== schiene.id);
 	});
 
 	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (drag_data.value.kurs !== undefined) && (drag_data.value.schiene !== undefined) && (drag_data.value.kurs.id === kurs.id) && (drag_data.value.schiene.id === schiene.id);
+		return (dragDataKursSchiene.value.kurs !== undefined) && (dragDataKursSchiene.value.schiene !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id === schiene.id);
 	});
 
 	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		if (drag_data.value.kurs === undefined || drag_data.value.schiene === undefined)
+		if (dragDataKursSchiene.value.kurs === undefined || dragDataKursSchiene.value.schiene === undefined)
 			return false;
-		if ((drag_data.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
+		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
 			return false;
 		return true;
 	});

@@ -16,19 +16,22 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungSchiene} from "@core";
-	import type { ShallowRef} from "vue";
-	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp } from "@core";
-	import { ref, shallowRef } from "vue";
+	import { ref, shallowRef, type ShallowRef } from "vue";
+	import { GostBlockungRegel, GostKursart, GostKursblockungRegelTyp, GostBlockungSchiene } from "@core";
 
 	const props = defineProps<{
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		von: GostBlockungSchiene;
-		bis: GostBlockungSchiene;
 	}>();
 
+	const von = ref<GostBlockungSchiene>(new GostBlockungSchiene());
+	const bis = ref<GostBlockungSchiene>(new GostBlockungSchiene());
+
 	const modal = ref();
-	const openModal = () => modal.value.openModal();
+	const openModal = (schieneVon: GostBlockungSchiene, schieneBis: GostBlockungSchiene) => {
+		von.value = schieneVon;
+		bis.value = schieneBis;
+		modal.value.openModal();
+	};
 	defineExpose({ openModal });
 
 	const kursart: ShallowRef<GostKursart> = shallowRef(GostKursart.GK)
@@ -38,8 +41,8 @@
 		const regel = new GostBlockungRegel();
 		regel.typ = regeltyp.typ;
 		regel.parameter.add(kursart.value.id);
-		regel.parameter.add(props.von.nummer);
-		regel.parameter.add(props.bis.nummer);
+		regel.parameter.add(von.value.nummer);
+		regel.parameter.add(bis.value.nummer);
 		await props.addRegel(regel);
 	}
 

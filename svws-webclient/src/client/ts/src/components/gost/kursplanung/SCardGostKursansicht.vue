@@ -109,7 +109,20 @@
 					<svws-ui-table-cell thead align="center" tooltip="Differenz">Diff</svws-ui-table-cell>
 					<!--Schienen-->
 					<template v-if="allow_regeln">
-						<s-gost-kursplanung-kursansicht-schiene-dragable v-for="s in schienen" :key="s.id" :schiene="s" :add-regel="addRegel" :drag-and-drop-data="dragAndDropData" @dnd="dragAndDropData=$event" />
+						<template v-for="schiene in schienen" :key="schiene.id">
+							<svws-ui-drop-data tag="div" :drop-allowed="istDropZoneSchiene(schiene).value" @drop="openModalRegelKursartSchiene(schiene, $event)"
+								class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black relative group"
+								:class="{ 'bg-primary/5 text-primary hover:text-primary': istDropZoneSchiene(schiene).value, }">
+								<svws-ui-drag-data tag="div" :key="schiene.id" :data="{ schiene }" @click="openModalRegelKursartSchiene(schiene, { schiene })"
+									class="select-none cursor-grab text-center"
+									:draggable="true" @drag-start="dragSchieneStarted" @drag-end="dragSchieneEnded">
+									<span class="rounded w-3 absolute top-0 left-0">
+										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
+									</span>
+									<i-ri-lock-unlock-line class="inline-block" />
+								</svws-ui-drag-data>
+							</svws-ui-drop-data>
+						</template>
 					</template>
 					<div v-else role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center normal-case font-normal text-black/50" :style="{'gridColumn': 'span ' + schienen.size()}">
 						<span class="inline-flex items-center gap-1"><i-ri-information-line />Regeln können in diesem Ergebnis nicht erstellt werden.</span>
@@ -148,6 +161,7 @@
 				</template>
 			</template>
 		</svws-ui-data-table>
+		<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" ref="modalRegelKursartSchienen" />
 	</svws-ui-content-card>
 </template>
 
@@ -195,7 +209,6 @@
 	}>();
 
 	const edit_schienenname: Ref<number|undefined> = ref()
-	const dragAndDropData: Ref<{ schiene: GostBlockungSchiene | undefined, kurs?: undefined } | undefined> = ref(undefined);
 
 	const sort_by: WritableComputedRef<string> = computed({
 		get: () => props.config.getValue('gost.kursansicht.sortierung'),
@@ -295,6 +308,32 @@
 			case GostKursart.VTF: return (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0;
 			default: return 0;
 		}
+	}
+
+
+	const dragDataKursartSchiene = ref<{ schiene: GostBlockungSchiene | undefined }>({ schiene : undefined });
+
+	const modalRegelKursartSchienen = ref();
+
+	const istDropZoneSchiene = (schiene: GostBlockungSchiene) : ComputedRef<boolean> => computed(() => {
+		const dragSchiene = dragDataKursartSchiene.value.schiene;
+		return (dragSchiene !== undefined && (dragSchiene.id !== schiene.id));
+	});
+
+	function openModalRegelKursartSchiene(schiene: GostBlockungSchiene, data: { schiene: GostBlockungSchiene }) {
+		modalRegelKursartSchienen.value.openModal(data.schiene, schiene);
+	}
+
+	function dragSchieneStarted(e: DragEvent) {
+		const transfer = e.dataTransfer;
+		const data = JSON.parse(transfer?.getData('text/plain') || "");
+		if (data === undefined)
+			return;
+		dragDataKursartSchiene.value = data;
+	}
+
+	function dragSchieneEnded() {
+		dragDataKursartSchiene.value.schiene = undefined;
 	}
 
 </script>
