@@ -119,11 +119,12 @@
 
 			<template #body>
 				<template v-if="sort_by==='fach_id'">
-					<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
+					<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fachwahlen="fachwahlen" :kursart="kursart"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
@@ -132,10 +133,11 @@
 				</template>
 				<template v-else>
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-						<template v-for="fach in mapFachwahlStatistik.values()" :key="fach.id">
-							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fach="fach" :kursart="kursart" :halbjahr="halbjahr.id"
+						<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
+							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fachwahlen="fachwahlen" :kursart="kursart"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
+								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
@@ -149,13 +151,13 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import { GostKursart } from "@core";
+	import { computed, onMounted, ref } from "vue";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-	import {computed, onMounted, ref} from "vue";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type {DataTableColumn} from "@ui";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten;
@@ -269,4 +271,21 @@
 	onMounted(() => {
 		isMounted.value = true;
 	});
+
+	function getAnzahlFachwahlen(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : number {
+		const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
+		const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
+		if (gostfach === null)
+			return 0;
+		const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
+		switch (kursart) {
+			case GostKursart.LK: return fach_halbjahr.wahlenLK;
+			case GostKursart.GK: return (zulFach === ZulaessigesFach.PX) || (zulFach === ZulaessigesFach.VX) ? 0 : fach_halbjahr.wahlenGK;
+			case GostKursart.ZK: return fach_halbjahr.wahlenZK;
+			case GostKursart.PJK: return (zulFach === ZulaessigesFach.PX) ? fach_halbjahr.wahlenGK : 0;
+			case GostKursart.VTF: return (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0;
+			default: return 0;
+		}
+	}
+
 </script>
