@@ -163,7 +163,7 @@ export { GostLeistungenFachwahl } from './core/data/gost/GostLeistungenFachwahl'
 export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
-export { GostCollectionSkrsKrs } from './core/data/gost/klausuren/GostCollectionSkrsKrs';
+export { GostKlausurenCollectionSkrsKrs } from './core/data/gost/klausuren/GostKlausurenCollectionSkrsKrs';
 export { GostKlausurenKalenderinformation } from './core/data/gost/klausuren/GostKlausurenKalenderinformation';
 export { GostKlausurraum } from './core/data/gost/klausuren/GostKlausurraum';
 export { GostKlausurraumstunde } from './core/data/gost/klausuren/GostKlausurraumstunde';

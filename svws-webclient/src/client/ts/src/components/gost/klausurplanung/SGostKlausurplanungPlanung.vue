@@ -24,14 +24,15 @@
 					:raummanager="(raummanager as GostKlausurraumManager)"
 					:stundenplanmanager="stundenplanmanager"
 					:erzeuge-klausurraum="erzeugeKlausurraum"
-					:patch-klausurraum="patchKlausurraum" />
+					:patch-klausurraum="patchKlausurraum"
+					:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />/>
 			</div>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager } from '@core';
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostSchuelerklausur, List, GostKlausurenCollectionSkrsKrs } from '@core';
 	import type { GostKlausurraum } from '@core';
 	import { computed, ref } from 'vue';
 
@@ -45,6 +46,7 @@
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
+		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>();
 
 	const raummanager = ref<GostKlausurraumManager | null>(null);

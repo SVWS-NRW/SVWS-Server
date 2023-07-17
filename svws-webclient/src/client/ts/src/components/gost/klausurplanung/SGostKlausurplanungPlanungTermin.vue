@@ -15,13 +15,14 @@
 			:key="raum.id"
 			:stundenplanmanager="stundenplanmanager"
 			:raum="raum"
-			:manager="(raummanager as GostKlausurraumManager)"
-			:patch-klausurraum="patchKlausurraum" />
+			:raummanager="(raummanager as GostKlausurraumManager)"
+			:patch-klausurraum="patchKlausurraum"
+			:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur } from '@core';
+	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List } from '@core';
 	import { GostKlausurraum } from '@core';
 	import { computed, ref } from 'vue';
 
@@ -35,6 +36,7 @@
 		raummanager: GostKlausurraumManager;
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
+		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>();
 
 	//const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);

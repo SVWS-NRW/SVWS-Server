@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurenKalenderinformation;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
@@ -760,10 +761,10 @@ public class APIGostKlausuren {
 	@Path("/schuelerklausuren/zuraum/{raumid : -?\\d+}")
 	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
-	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurraumstunde.class)))
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response setzeRaumZuSchuelerklausuren(@PathParam("schema") final String schema,
+	public Response setzeGostSchuelerklausurenZuRaum(@PathParam("schema") final String schema,
 			@PathParam("raumid") final long raumid,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerklausurIds,

@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "die Sammlung von neuen GostKlausurraumstunden und GostSchuelerklausurraumstunden, wenn Schülerklausuren über die API einem Raum zugewiesen werden.")
 @TranspilerDTO
-public class GostCollectionSkrsKrs {
+public class GostKlausurenCollectionSkrsKrs {
 
 	/** Die ID der Schülerklausur. */
 	@Schema(description = "die ID der Schülerklausur", example = "")

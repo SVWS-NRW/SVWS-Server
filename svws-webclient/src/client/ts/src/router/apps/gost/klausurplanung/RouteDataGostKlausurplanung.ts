@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt} from "@core";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager } from "@core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostCollectionSkrsKrs, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -363,6 +363,14 @@ export class RouteDataGostKlausurplanung {
 		this.commit();
 		api.status.stop();
 		return new GostKlausurraumManager(raeume, stunden, schuelerklausuren);
+	}
+
+	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum, sks: List<GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
+		api.status.start();
+		const schuelerklausuren = await api.server.setzeGostSchuelerklausurenZuRaum(Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur)), api.schema, raum.id);
+		this.commit();
+		api.status.stop();
+		return schuelerklausuren;
 	}
 
 }

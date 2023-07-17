@@ -204,6 +204,17 @@ export class GostKlausurraumManager extends JavaObject {
 		return kursklausuren;
 	}
 
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idKlausur die Id der Kursklausur
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public getSchuelerklausurenByKursklausur(idKlausur : number) : List<GostSchuelerklausur> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapKkidSk, idKlausur);
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplan.GostKlausurraumManager'].includes(name);
 	}

@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import de.svws_nrw.core.data.gost.klausuren.GostCollectionSkrsKrs;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
@@ -142,7 +142,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<StundenplanZeitraster> zeitrasterRaum = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
 				maxEnd - minStart);
 
-		final GostCollectionSkrsKrs result = new GostCollectionSkrsKrs();
+		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 
 		try {
 			conn.transactionBegin();

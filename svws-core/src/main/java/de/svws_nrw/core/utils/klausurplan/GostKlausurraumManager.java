@@ -180,4 +180,15 @@ public class GostKlausurraumManager {
 		return kursklausuren;
 	}
 
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idKlausur die Id der Kursklausur
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausur> getSchuelerklausurenByKursklausur(final long idKlausur) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapKkidSk, idKlausur);
+	}
+
 }

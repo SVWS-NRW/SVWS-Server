@@ -4,7 +4,7 @@ import type { List } from '../../../../java/util/List';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausuren/GostKlausurraumstunde';
 import { GostSchuelerklausurraumstunde } from '../../../../core/data/gost/klausuren/GostSchuelerklausurraumstunde';
 
-export class GostCollectionSkrsKrs extends JavaObject {
+export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 	/**
 	 * Die ID der Schülerklausur.
@@ -22,12 +22,12 @@ export class GostCollectionSkrsKrs extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausuren.GostCollectionSkrsKrs'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): GostCollectionSkrsKrs {
+	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkrsKrs {
 		const obj = JSON.parse(json);
-		const result = new GostCollectionSkrsKrs();
+		const result = new GostKlausurenCollectionSkrsKrs();
 		if ((obj.raumstunden !== undefined) && (obj.raumstunden !== null)) {
 			for (const elem of obj.raumstunden) {
 				result.raumstunden?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
@@ -41,7 +41,7 @@ export class GostCollectionSkrsKrs extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : GostCollectionSkrsKrs) : string {
+	public static transpilerToJSON(obj : GostKlausurenCollectionSkrsKrs) : string {
 		let result = '{';
 		if (!obj.raumstunden) {
 			result += '"raumstunden" : []';
@@ -72,7 +72,7 @@ export class GostCollectionSkrsKrs extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<GostCollectionSkrsKrs>) : string {
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionSkrsKrs>) : string {
 		let result = '{';
 		if (typeof obj.raumstunden !== "undefined") {
 			if (!obj.raumstunden) {
@@ -109,6 +109,6 @@ export class GostCollectionSkrsKrs extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausuren_GostCollectionSkrsKrs(obj : unknown) : GostCollectionSkrsKrs {
-	return obj as GostCollectionSkrsKrs;
+export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurenCollectionSkrsKrs(obj : unknown) : GostKlausurenCollectionSkrsKrs {
+	return obj as GostKlausurenCollectionSkrsKrs;
 }
