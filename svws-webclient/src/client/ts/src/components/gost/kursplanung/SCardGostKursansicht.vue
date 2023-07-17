@@ -121,7 +121,8 @@
 				<template v-if="sort_by==='fach_id'">
 					<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fachwahlen="fachwahlen" :kursart="kursart"
+							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
+								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -134,7 +135,8 @@
 				<template v-else>
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 						<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
-							<s-gost-kursplanung-kursansicht-fachwahl :config="config" :fachwahlen="fachwahlen" :kursart="kursart"
+							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
+								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -153,7 +155,9 @@
 
 	import { computed, onMounted, ref } from "vue";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager,
+		GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten,
+		GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
@@ -200,6 +204,11 @@
 				value = 'kursart'
 			void props.config.setValue('gost.kursansicht.sortierung', value);
 		}
+	});
+
+	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : ComputedRef<boolean> => computed(() => {
+		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
+		return (anzahl > 0) || (allow_regeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
 	});
 
 	const blockungsname: ComputedRef<string> = computed(() => props.getDatenmanager().daten().name);

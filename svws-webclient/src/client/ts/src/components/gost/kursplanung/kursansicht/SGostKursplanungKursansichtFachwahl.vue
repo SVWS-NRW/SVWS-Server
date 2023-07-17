@@ -1,5 +1,5 @@
 <template>
-	<template v-if="getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).isEmpty() && fachwahlenAnzahl !== 0 && allowRegeln">
+	<template v-if="listeDerKurse.isEmpty() && fachwahlenAnzahl !== 0 && allowRegeln">
 		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled-light" :style="{ 'background-color': bgColor }" :key="kursart.id">
 			<div role="cell" class="data-table__td" />
 			<div role="cell" class="data-table__td text-black/50">
@@ -25,7 +25,7 @@
 		</div>
 	</template>
 	<template v-else>
-		<template v-for="kurs in getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id)" :key="kurs.id">
+		<template v-for="kurs in listeDerKurse" :key="kurs.id">
 			<div role="row" class="data-table__tr" :style="{ 'background-color': bgColor }">
 				<template v-if="allowRegeln">
 					<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black"
@@ -145,14 +145,8 @@
 				:kurs="kurs" :kurse-mit-kursart="kurseMitKursart(kurs).value" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
-			<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
 		</template>
-		<!-- <s-gost-kursplanung-kursansicht-kurs v-for="kurs in getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id)" :key="kurs.id" :kurs="kurs" :bg-color="bgColor"
-			:map-lehrer="mapLehrer" :allow-regeln="allowRegeln" :schueler-filter="schuelerFilter" :get-datenmanager="getDatenmanager"
-			:hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
-			:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
-			:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
-			:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" /> -->
+		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
 	</template>
 </template>
 
@@ -160,7 +154,8 @@
 
 	import { ref, type ComputedRef, computed } from "vue";
 	import type { GostBlockungKurs, GostStatistikFachwahl, LehrerListeEintrag, GostFaecherManager, GostBlockungKursLehrer,
-		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungSchiene, List, GostBlockungsergebnisSchiene } from "@core";
+		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungSchiene, List,
+		GostBlockungsergebnisSchiene } from "@core";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
 	import type { Config } from "~/components/Config";
@@ -216,6 +211,10 @@
 	const kursdetail_anzeige = ref<boolean>(false);
 
 	const drag_data = ref<{ kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined }>({schiene: undefined, kurs: undefined})
+
+	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
+		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
+	});
 
 	function editKursSuffix(kurs: GostBlockungKurs) {
 		edit_name.value = kurs.id;
