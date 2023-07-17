@@ -115,11 +115,6 @@
 
 	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
-	const kuerzel = computed(()=> props.getErgebnismanager().getFach(props.kurs.fach_id).kuerzel);
-
-	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() =>
-		`color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(kuerzel.value).getHMTLFarbeRGB()}, rgb(255,255,255)`);*/
-
 	function toggle_active_fachwahl() {
 		if (props.schuelerFilter === undefined)
 			return;
