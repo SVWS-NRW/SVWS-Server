@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
@@ -33,11 +34,13 @@ public class GostKlausurraumManager {
 	/** Eine Map idRaum -> Liste von Stunden */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKlausurraumstunde>> _mapRaumStunden = new HashMap<>();
 
+	/** Eine Map idRaum, idZeitraster -> Klausurraumstunde */
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull GostKlausurraumstunde> _mapRaumZeitrasterStunde = new HashMap2D<>();
+
 	/** Ein Comparator für die GostKlausurräume. */
 	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaumId = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> {
 		return Long.compare(a.id, b.id);
 	};
-
 
 	/** Die Schuelerklausuren, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostSchuelerklausur> _schuelerklausuren = new ArrayList<>();
@@ -45,25 +48,43 @@ public class GostKlausurraumManager {
 	/** Eine Map Kursklausur-Id -> Liste von GostSchuelerklausuren */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausur>> _mapKkidSk = new HashMap<>();
 
-
-
+	/**
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
+	 *
+	 * @param raum            der Gost-Klausurraum
+	 * @param stunden           die Liste der GostKlausurraumstunden eines
+	 *                          Gost-Klausurtermins
+	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 *                          Gost-Klausurtermins
+	 */
+	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+		addKlausurraum(raum);
+		for (final @NotNull GostKlausurraumstunde s : stunden)
+			addKlausurraumstunde(s);
+		for (final @NotNull GostSchuelerklausur k : schuelerklausuren)
+			addSchuelerklausur(k);
+	}
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
-	 * @param raeume die Liste der GostKlausurräume eines Gost-Klausurtermins
-	 * @param stunden   die Liste der GostKlausurraumstunden eines Gost-Klausurtermins
-	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des Gost-Klausurtermins
+	 * @param raeume            die Liste der GostKlausurräume eines
+	 *                          Gost-Klausurtermins
+	 * @param stunden           die Liste der GostKlausurraumstunden eines
+	 *                          Gost-Klausurtermins
+	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
+	 *                          Gost-Klausurtermins
 	 */
-	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> stunden, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
+			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
 		for (final @NotNull GostKlausurraum r : raeume)
 			addKlausurraum(r);
 		for (final @NotNull GostKlausurraumstunde s : stunden)
 			addKlausurraumstunde(s);
 		for (final @NotNull GostSchuelerklausur k : schuelerklausuren)
 			addSchuelerklausur(k);
-
 	}
 
 	/**
@@ -89,6 +110,18 @@ public class GostKlausurraumManager {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
+	 * @param idRaum die ID des Klausurraums
+	 * @param idZeitraster die ID des Zeitrasters
+	 *
+	 * @return die Klausurraumstunde
+	 */
+	public GostKlausurraumstunde getKlausurraumstundeByRaumZeitraster(final long idRaum, final long idZeitraster) {
+		return _mapRaumZeitrasterStunde.getOrNull(idRaum, idZeitraster);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
 	 * @param raum das Gost-Klausurraum-Objekt
 	 */
 	public void addKlausurraum(final @NotNull GostKlausurraum raum) {
@@ -106,6 +139,7 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifListAddsDuplicate("_stunden", _stunden, stunde);
 		DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, stunde.idRaum);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumStundenList", MapUtils.getOrCreateArrayList(_mapRaumStunden, stunde.idRaum), stunde);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_mapRaumZeitrasterStunde, stunde.idRaum, stunde.idZeitraster, stunde);
 	}
 
 	/**
@@ -119,8 +153,8 @@ public class GostKlausurraumManager {
 	}
 
 	/**
-	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum
-	 * geändert hat.
+	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum geändert
+	 * hat.
 	 *
 	 * @param r das GostKlausurraum-Objekt
 	 */
@@ -139,12 +173,11 @@ public class GostKlausurraumManager {
 	 * @return die Liste der GostKursklausuren
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausuren(final @NotNull GostKursklausurManager manager) {
-		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
+		List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		for (final long kkId : _mapKkidSk.keySet()) {
 			kursklausuren.add(manager.getKursklausurById(kkId));
 		}
 		return kursklausuren;
 	}
-
 
 }
