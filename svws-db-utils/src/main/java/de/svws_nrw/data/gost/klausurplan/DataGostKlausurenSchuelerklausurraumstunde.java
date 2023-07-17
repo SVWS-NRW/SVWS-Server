@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
+import de.svws_nrw.core.data.gost.klausuren.GostCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
@@ -62,7 +64,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	/**
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
-	 * @param idRaum die ID des Klausurraums
+	 * @param idRaum               die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
 	 *
 	 * @return die Antwort
@@ -73,9 +75,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, raum.idTermin);
 
 		final List<GostSchuelerklausur> listSchuelerklausuren = new ArrayList<>();
-		final List<GostKursklausur> listKursklausuren = new ArrayList<>();
 
-		// Schon im Raum existente Schülerklausuren und Kursklausuren ermitteln
+		// Neue Schülerklausuren ermitteln
+		final List<GostSchuelerklausur> listSchuelerklausurenNeu = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", idsSchuelerklausuren, DTOGostKlausurenSchuelerklausuren.class)
+				.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
+		if (listSchuelerklausurenNeu.isEmpty())
+			throw OperationError.NOTHING_TO_DO.exception(); // TODO Exceptionhandling
+
+		// Schon im Raum existente Schülerklausuren ermitteln
 		final List<DTOGostKlausurenRaeumeStunden> listKlausurraumstunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class);
 		if (!listKlausurraumstunden.isEmpty()) {
 			final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> listSchuelerklausurenSchonImRaumRaumStunden = conn.queryNamed(
@@ -87,23 +94,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 								.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple",
 										listSchuelerklausurenSchonImRaumRaumStunden.stream().map(skrs -> skrs.Schuelerklausur_ID).distinct().toList(), DTOGostKlausurenSchuelerklausuren.class)
 								.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList());
-				listKursklausuren.addAll(conn
-						.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", listSchuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct().toList(), DTOGostKlausurenKursklausuren.class)
-						.stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList());
 			}
 		}
 
-		// Neue Schülerklausuren und Kursklausuren ermitteln
-		final List<GostSchuelerklausur> listSchuelerklausurenNeu = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", idsSchuelerklausuren, DTOGostKlausurenSchuelerklausuren.class)
-				.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList();
-		if (listSchuelerklausurenNeu.isEmpty())
-			throw OperationError.NOTHING_TO_DO.exception(); // TODO Exceptionhandling
-		final List<GostKursklausur> listKursklausurenNeu = conn
-				.queryNamed("DTOGostKlausurenKursklausuren.id.multiple", listSchuelerklausurenNeu.stream().map(sk -> sk.idKursklausur).distinct().toList(), DTOGostKlausurenKursklausuren.class)
-				.stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
+		final List<GostKursklausur> listKursklausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.id.multiple",
+				Stream.concat(listSchuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct(), listSchuelerklausurenNeu.stream().map(sk -> sk.idKursklausur).distinct()).distinct().toList(),
+				DTOGostKlausurenKursklausuren.class).stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
 
 		listSchuelerklausuren.addAll(listSchuelerklausurenNeu);
-		listKursklausuren.addAll(listKursklausurenNeu);
 
 		// TODO: Richtige Stundenplan-ID verwenden
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, 1L), new ArrayList<>(), new ArrayList<>(), null);
@@ -114,8 +112,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
 
-		final List<GostKlausurraumstunde> listRaumstunden = conn
-				.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class).stream()
+		final List<GostKlausurraumstunde> listRaumstunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class).stream()
 				.map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();
 
 		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren);
@@ -145,28 +142,39 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<StundenplanZeitraster> zeitrasterRaum = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
 				maxEnd - minStart);
 
+		final GostCollectionSkrsKrs result = new GostCollectionSkrsKrs();
+
 		try {
 			conn.transactionBegin();
 			// Bestimme die ID der ersten neuen Klausurraumstunde
 			final DTODBAutoInkremente lastKrsID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
 			long idKrs = lastKrsID == null ? 1 : lastKrsID.MaxID + 1;
 
-			// Lege die Raumstunden für den gesamten Raum an
+			// Lege die Raumstunden für den gesamten Raum an (Befüllen der Tabelle
+			// Gost_Klausuren_Raeume_Stunden)
 			for (final StundenplanZeitraster stunde : zeitrasterRaum) {
 				if (raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id) == null) {
-					DTOGostKlausurenRaeumeStunden stundeNeu = new DTOGostKlausurenRaeumeStunden(idKrs++, idRaum, stunde.id);
-					raumManager.addKlausurraumstunde(DataGostKlausurenRaumstunde.dtoMapper.apply(stundeNeu));
-					conn.transactionPersist(stundeNeu);
+					DTOGostKlausurenRaeumeStunden dtoStundeNeu = new DTOGostKlausurenRaeumeStunden(idKrs++, idRaum, stunde.id);
+					GostKlausurraumstunde stundeNeu = DataGostKlausurenRaumstunde.dtoMapper.apply(dtoStundeNeu);
+					raumManager.addKlausurraumstunde(stundeNeu);
+					result.raumstunden.add(stundeNeu);
+					conn.transactionPersist(dtoStundeNeu);
 				}
 			}
 
+			// Lege die Schuelerklausurraumstunden für jede Klausur an (Befüllen der Tabelle
+			// Gost_Klausuren_Schuelerklausuren_Raeume_Stunden)
 			for (final GostSchuelerklausur sk : listSchuelerklausurenNeu) {
 				final GostKursklausur kk = kursklausurManager.getKursklausurById(sk.idKursklausur);
 				final GostKlausurvorgabe v = vorgabenManager.gibGostKlausurvorgabe(kk.idVorgabe);
 				final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : termin.Startzeit);
-				final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit, v.dauer);
+				final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
+						startzeit, v.dauer);
+				conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden v WHERE v.Schuelerklausur_ID = %d".formatted(sk.idSchuelerklausur));
 				for (final StundenplanZeitraster stunde : zeitrasterSk) {
-					conn.transactionPersist(new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur, raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id));
+					DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur, raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
+					conn.transactionPersist(skRaumStundeNeu);
+					result.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 				}
 			}
 
@@ -180,7 +188,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			conn.transactionRollback();
 		}
 
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(zeitrasterRaum).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
 	/**
@@ -188,11 +196,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * {@link DTOGostKlausurenRaeumeStunden} in einen Core-DTO
 	 * {@link GostKlausurraumstunde}.
 	 */
-	public static final Function<DTOGostKlausurenRaeumeStunden, GostKlausurraumstunde> dtoMapper = (final DTOGostKlausurenRaeumeStunden z) -> {
-		final GostKlausurraumstunde daten = new GostKlausurraumstunde();
-		daten.id = z.ID;
-		daten.idRaum = z.Klausurraum_ID;
-		daten.idZeitraster = z.Zeitraster_ID;
+	public static final Function<DTOGostKlausurenSchuelerklausurenRaeumeStunden, GostSchuelerklausurraumstunde> dtoMapper = (final DTOGostKlausurenSchuelerklausurenRaeumeStunden z) -> {
+		final GostSchuelerklausurraumstunde daten = new GostSchuelerklausurraumstunde();
+		daten.idRaumstunde = z.KlausurRaumStunde_ID;
+		daten.idSchuelerklausur = z.Schuelerklausur_ID;
 		return daten;
 	};
 
@@ -218,7 +225,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 		final List<GostKlausurraumstunde> daten = new ArrayList<>();
 		for (final DTOGostKlausurenRaeumeStunden s : stunden)
-			daten.add(dtoMapper.apply(s));
+			daten.add(DataGostKlausurenRaumstunde.dtoMapper.apply(s));
 		return daten;
 	}
 
@@ -279,7 +286,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			conn.transactionRollback();
 		}
 
-		final GostKlausurraumstunde daten = dtoMapper.apply(raumstunde);
+		final GostKlausurraumstunde daten = DataGostKlausurenRaumstunde.dtoMapper.apply(raumstunde);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
